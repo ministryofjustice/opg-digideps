@@ -206,8 +206,7 @@ class ReportTestHelper
 
     private static function completeBankAccounts(Report $report): void
     {
-        $ba = new BankAccount()
-            ->setReport($report)
+        $ba = new BankAccount($report)
             ->setClosingBalance(1000)
             ->setAccountNumber('1234');
 
@@ -258,7 +257,7 @@ class ReportTestHelper
             $report,
             'care-fees',
             false,
-            10.0
+            '10.0'
         );
 
         $report->setDebtManagement('Slowly paying it off');

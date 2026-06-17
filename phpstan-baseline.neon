@@ -289,13 +289,13 @@ parameters:
 			path: api/app/src/Controller/CoDeputyController.php
 
 		-
-			message: '#^Cannot call method getIdOfClientWithDetails\(\) on Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
+			message: '#^Cannot call method getIdOfClientWithDetails\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/src/Controller/CoDeputyController.php
 
 		-
-			message: '#^Cannot call method isCoDeputy\(\) on Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
+			message: '#^Cannot call method isCoDeputy\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/src/Controller/CoDeputyController.php
@@ -334,12 +334,6 @@ parameters:
 			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 2
-			path: api/app/src/Controller/NoteController.php
-
-		-
-			message: '#^Parameter \#1 \$lastModifiedBy of method OPG\\Digideps\\Backend\\Entity\\Note\:\:setLastModifiedBy\(\) expects OPG\\Digideps\\Backend\\Entity\\User, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: api/app/src/Controller/NoteController.php
 
 		-
@@ -415,43 +409,13 @@ parameters:
 			path: api/app/src/Controller/Report/AccountController.php
 
 		-
-			message: '#^Parameter \#1 \$accountNumber of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setAccountNumber\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$accountNumber of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setAccountNumber\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Controller/Report/AccountController.php
 
 		-
-			message: '#^Parameter \#1 \$accountType of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setAccountType\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/AccountController.php
-
-		-
-			message: '#^Parameter \#1 \$bank of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setBank\(\) expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/AccountController.php
-
-		-
-			message: '#^Parameter \#1 \$bank of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setBank\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/AccountController.php
-
-		-
-			message: '#^Parameter \#1 \$closingBalance of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setClosingBalance\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/AccountController.php
-
-		-
-			message: '#^Parameter \#1 \$isJointAccount of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setIsJointAccount\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/AccountController.php
-
-		-
-			message: '#^Parameter \#1 \$openingBalance of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setOpeningBalance\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$accountType of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setAccountType\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Controller/Report/AccountController.php
@@ -463,13 +427,7 @@ parameters:
 			path: api/app/src/Controller/Report/AccountController.php
 
 		-
-			message: '#^Parameter \#1 \$sortCode of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setSortCode\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/AccountController.php
-
-		-
-			message: '#^Parameter \#1 \$sortCode of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setSortCode\(\) expects string, null given\.$#'
+			message: '#^Parameter \#1 \$sortCode of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setSortCode\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Controller/Report/AccountController.php
@@ -1477,12 +1435,6 @@ parameters:
 			path: api/app/src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: '#^Parameter \#1 \$archivedBy of method OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission\:\:setArchivedBy\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ReportSubmissionController.php
-
-		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -1496,12 +1448,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$storageReference of method OPG\\Digideps\\Backend\\Entity\\Report\\Document\:\:setStorageReference\(\) expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: '#^Parameter \#1 \$user of method OPG\\Digideps\\Backend\\Entity\\Report\\Document\:\:setSynchronisedBy\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Controller/Report/ReportSubmissionController.php
@@ -1621,13 +1567,13 @@ parameters:
 			path: api/app/src/Controller/RestController.php
 
 		-
-			message: '#^Cannot call method getDeputyUid\(\) on Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
+			message: '#^Cannot call method getDeputyUid\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/src/Controller/RestController.php
 
 		-
-			message: '#^Cannot call method getRoles\(\) on Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
+			message: '#^Cannot call method getRoles\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/src/Controller/RestController.php
@@ -1651,7 +1597,7 @@ parameters:
 			path: api/app/src/Controller/SatisfactionController.php
 
 		-
-			message: '#^Cannot call method getRoleName\(\) on Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
+			message: '#^Cannot call method getRoleName\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/src/Controller/SatisfactionController.php
@@ -1885,7 +1831,7 @@ parameters:
 			path: api/app/src/Controller/UserResearchController.php
 
 		-
-			message: '#^Parameter \#2 \$user of method OPG\\Digideps\\Backend\\Repository\\UserResearchResponseRepository\:\:create\(\) expects OPG\\Digideps\\Backend\\Entity\\User, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
+			message: '#^Parameter \#2 \$user of method OPG\\Digideps\\Backend\\Repository\\UserResearchResponseRepository\:\:create\(\) expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Controller/UserResearchController.php
@@ -2425,60 +2371,6 @@ parameters:
 			path: api/app/src/Domain/Deputyship/DeputyshipProcessingRawDbAccess.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\AssetInterface\:\:getType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/AssetInterface.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\AssetInterface\:\:getValue\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/AssetInterface.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\BankAccountInterface\:\:getAccountTypeText\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/BankAccountInterface.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\BankAccountInterface\:\:getBank\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/BankAccountInterface.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\BankAccountInterface\:\:getClosingBalance\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/BankAccountInterface.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\BankAccountInterface\:\:getIsClosed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/BankAccountInterface.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\BankAccountInterface\:\:getIsJointAccount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/BankAccountInterface.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\BankAccountInterface\:\:getNameOneLine\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/BankAccountInterface.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\BankAccountInterface\:\:getOpeningBalance\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/BankAccountInterface.php
-
-		-
 			message: '#^Binary operation "\-" between mixed and 1 results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -2845,200 +2737,8 @@ parameters:
 			path: api/app/src/Entity/Report/Action.php
 
 		-
-			message: '#^Cannot call method setNoAssetToAdd\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/Entity/Report/Asset.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:getType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/Asset.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:getValue\(\) should return string but returns float\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/Asset.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:setType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/Asset.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:setType\(\) has parameter \$type with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/Asset.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:\$id \(int\) does not accept null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/Asset.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:\$report \(OPG\\Digideps\\Backend\\Entity\\Report\\Report\) does not accept OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/Asset.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:\$type \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/Asset.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:\$value \(float\) does not accept string\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/Asset.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetOther\:\:getAssetType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetOther.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetOther\:\:getType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetOther.php
-
-		-
-			message: '#^Binary operation "/" between mixed and 100 results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:deleteUnusedData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:getAddress\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:getAssetType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:getHasCharges\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:getHasMortgage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:getIsRentedOut\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:getIsSubjectToEquityRelease\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:getMortgageOutstandingAmount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:getOccupants\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:getOwned\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:getOwnedPercentage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:getPostcode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:getRentAgreementEndDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:getRentIncomeMonth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:getType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setAddress\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setAddress2\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setCounty\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setHasCharges\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setHasCharges\(\) has parameter \$hasCharges with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setHasMortgage\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/Entity/Report/AssetProperty.php
 
@@ -3049,44 +2749,8 @@ parameters:
 			path: api/app/src/Entity/Report/AssetProperty.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setIsRentedOut\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setIsRentedOut\(\) has parameter \$isRentedOut with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setIsSubjectToEquityRelease\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setIsSubjectToEquityRelease\(\) has parameter \$isSubjectToEquityRelease with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setMortgageOutstandingAmount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setMortgageOutstandingAmount\(\) has parameter \$mortgageOutstandingAmount with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setOccupants\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/Entity/Report/AssetProperty.php
 
@@ -3097,49 +2761,7 @@ parameters:
 			path: api/app/src/Entity/Report/AssetProperty.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setOwned\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setOwned\(\) has parameter \$owned with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setOwnedPercentage\(\) has parameter \$ownedPercentage with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setPostcode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setRentAgreementEndDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setRentAgreementEndDate\(\) has parameter \$rentAgreementEndDate with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setRentIncomeMonth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setRentIncomeMonth\(\) has parameter \$rentIncomeMonth with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: api/app/src/Entity/Report/AssetProperty.php
@@ -3169,18 +2791,6 @@ parameters:
 			path: api/app/src/Entity/Report/AssetProperty.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:\$isSubjectToEquityRelease has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:\$mortgageOutstandingAmount \(float\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:\$occupants \(string\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -3193,140 +2803,20 @@ parameters:
 			path: api/app/src/Entity/Report/AssetProperty.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:\$ownedPercentage \(float\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:\$rentAgreementEndDate \(DateTime\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:\$rentIncomeMonth \(float\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Cannot access offset string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:\$isClosed \(bool\|null\) is never assigned null so it can be removed from the property type\.$#'
+			identifier: property.unusedType
 			count: 1
 			path: api/app/src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:getAccountTypeText\(\) should return string but returns mixed\.$#'
-			identifier: return.type
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:\$meta \(string\|null\) is never assigned string so it can be removed from the property type\.$#'
+			identifier: property.unusedType
 			count: 1
 			path: api/app/src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:getClosingBalance\(\) should return string but returns float\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:getIsJointAccount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:getMeta\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:getOpeningBalance\(\) should return string but returns float\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setAccountType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setId\(\) has parameter \$id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setId\(\) should return int but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setMeta\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setMeta\(\) has parameter \$meta with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:\$closingBalance \(float\) does not accept string\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:\$id \(int\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:\$meta has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:\$openingBalance \(float\) does not accept string\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:\$report \(OPG\\Digideps\\Backend\\Entity\\Report\\Report\) does not accept OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:\$types has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:\$typesNotRequiringBankName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:\$typesNotRequiringSortCode has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:\$meta is never read, only written\.$#'
+			identifier: property.onlyWritten
 			count: 1
 			path: api/app/src/Entity/Report/BankAccount.php
 
@@ -3452,12 +2942,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setAmount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/Debt.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setAmountAndDetails\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: api/app/src/Entity/Report/Debt.php
@@ -4105,12 +3589,6 @@ parameters:
 			path: api/app/src/Entity/Report/ProfServiceFee.php
 
 		-
-			message: '#^Binary operation "\+\=" between mixed and string results in an error\.$#'
-			identifier: assignOp.invalid
-			count: 1
-			path: api/app/src/Entity/Report/Report.php
-
-		-
 			message: '#^Cannot call method diff\(\) on DateTime\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -4137,12 +3615,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getSectionsSettings\(\) should return array\<string, array\<string\>\> but returns array\<string, array\>\.$#'
 			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Ternary operator condition is always false\.$#'
-			identifier: ternary.alwaysFalse
 			count: 1
 			path: api/app/src/Entity/Report/Report.php
 
@@ -6763,37 +6235,7 @@ parameters:
 			path: api/app/src/Service/PreRegistrationVerificationService.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:isEqual\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: api/app/src/Service/ReportService.php
-
-		-
-			message: '#^Parameter \#1 \$address of method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setAddress\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Service/ReportService.php
-
-		-
-			message: '#^Parameter \#1 \$isJointAccount of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setIsJointAccount\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Service/ReportService.php
-
-		-
-			message: '#^Parameter \#1 \$postcode of method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setPostcode\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Service/ReportService.php
-
-		-
 			message: '#^Parameter \#1 \$reportType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Service/ReportService.php
-
-		-
-			message: '#^Parameter \#1 \$title of method OPG\\Digideps\\Backend\\Entity\\Report\\AssetOther\:\:setTitle\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Service/ReportService.php
@@ -7465,12 +6907,6 @@ parameters:
 			path: api/app/src/TestHelpers/ReportTestHelper.php
 
 		-
-			message: '#^Parameter \#1 \$closingBalance of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setClosingBalance\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/TestHelpers/ReportTestHelper.php
-
-		-
 			message: '#^Parameter \#1 \$t of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:addMoneyTransaction\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction, mixed given\.$#'
 			identifier: argument.type
 			count: 3
@@ -7941,12 +7377,6 @@ parameters:
 		-
 			message: '#^Cannot call method setMentalAssessmentDate\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: api/app/src/v2/Fixture/ReportSection.php
-
-		-
-			message: '#^Parameter \#1 \$closingBalance of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setClosingBalance\(\) expects string, int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: api/app/src/v2/Fixture/ReportSection.php
 
@@ -21313,12 +20743,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/AssetControllerTest.php
 
 		-
-			message: '#^Cannot call method format\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -23263,12 +22687,6 @@ parameters:
 			path: api/app/tests/Integration/Fixtures.php
 
 		-
-			message: '#^Parameter \#1 \$closingBalance of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setClosingBalance\(\) expects string, float given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
 			message: '#^Parameter \#1 \$dql of method Doctrine\\ORM\\EntityManager\:\:createQuery\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -24919,36 +24337,6 @@ parameters:
 			path: api/app/tests/Unit/Entity/ClientTest.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:getTitle\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: api/app/tests/Unit/Entity/Report/AssetTest.php
-
-		-
-			message: '#^Cannot call method getOccupants\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Unit/Entity/Report/AssetTest.php
-
-		-
-			message: '#^Cannot call method setOwnedPercentage\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Unit/Entity/Report/AssetTest.php
-
-		-
-			message: '#^Cannot call method setValue\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Unit/Entity/Report/AssetTest.php
-
-		-
-			message: '#^Parameter \#1 \$value of method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:setValue\(\) expects string, float given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Unit/Entity/Report/AssetTest.php
-
-		-
 			message: '#^Call to an undefined method Mockery\\MockInterface\:\:getExpensesTotal\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -25033,12 +24421,6 @@ parameters:
 			path: api/app/tests/Unit/Entity/Report/ReportTest.php
 
 		-
-			message: '#^Parameter \#1 \$closingBalance of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setClosingBalance\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/tests/Unit/Entity/Report/ReportTest.php
-
-		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -25066,12 +24448,6 @@ parameters:
 			message: '#^Parameter \#1 \$moneyTransactions of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setMoneyTransactions\(\) expects Doctrine\\Common\\Collections\\Collection\<int, OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\>, Doctrine\\Common\\Collections\\ArrayCollection\<int, mixed\> given\.$#'
 			identifier: argument.type
 			count: 1
-			path: api/app/tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Parameter \#1 \$openingBalance of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setOpeningBalance\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 5
 			path: api/app/tests/Unit/Entity/Report/ReportTest.php
 
 		-
@@ -25617,18 +24993,6 @@ parameters:
 		-
 			message: '#^Cannot call method getType\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Cannot call method setOwned\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\ReportServiceTest\:\:\$asset1 \(OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\) does not accept mixed\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: api/app/tests/Unit/Service/ReportServiceTest.php
 
