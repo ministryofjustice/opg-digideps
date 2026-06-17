@@ -19,7 +19,7 @@
                         {{ 'existPage.form.giftsExist.label' | trans(transOptions,transDomain)  }}
                     </th>
                     <td class="govuk-table__cell govuk-!-width-one-half">
-                        {{ report.giftsExist | capitalize }}
+                        {{ (report.giftsExist) ? report.giftsExist | capitalize : 'not entered' }}
                     </td>
                 </tr>
             </tbody>

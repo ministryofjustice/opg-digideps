@@ -1,15 +1,14 @@
-{% set append104 = report.get104TransSuffix %}
 {% set page = 'summaryPage' %}
 <h2 class="govuk-heading-m">Contacts</h2>
 
 <div class="govuk-summary-card">
     <div class="govuk-summary-card__title-wrapper">
-        <h2 class="govuk-summary-card__title govuk-!-width-one-half">
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
             Question
-        </h2>
-        <h2 class="govuk-summary-card__title govuk-!-width-one-half">
+        </h3>
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
             Answer
-        </h2>
+        </h3>
     </div>
 
     <div class="govuk-summary-card__content">
@@ -20,7 +19,7 @@
                         {{ 'existPage.form.hasContacts.label' | trans(transOptions,transDomain)  }}
                     </th>
                     <td class="govuk-table__cell govuk-!-width-one-half">
-                        {{ report.hasContacts | capitalize }}
+                        {{ (report.hasContacts) ? report.hasContacts | capitalize : 'not entered' }}
                     </td>
                 </tr>
                 {% if report.reasonForNoContacts %}
@@ -41,9 +40,9 @@
 {% if report.contacts | length > 0 %}
     <div class="govuk-summary-card">
         <div class="govuk-summary-card__title-wrapper">
-            <h2 class="govuk-summary-card__title">
+            <h3 class="govuk-summary-card__title">
                 {{ (page ~ '.listOfContacts') | trans({},transDomain) }}
-            </h2>
+            </h3>
         </div>
         <div class="govuk-summary-card__content">
             <table class="govuk-table">
