@@ -1,0 +1,88 @@
+<h2 class="govuk-heading-m">{{ ('startPage.pageTitle') | trans(transOptions,transDomain) }}</h2>
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+            Question
+        </h3>
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+            Answer
+        </h3>
+    </div>
+
+    <div class="govuk-summary-card__content">
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                    {{ ('existPage.form.paidForAnything.label') | trans(transOptions,transDomain) }}
+                </th>
+                <td class="govuk-table__cell govuk-!-width-one-half">
+                    {{ (report.paidForAnything) ? report.paidForAnything | capitalize : 'not entered' }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if report.paidForAnything == 'yes' and report.expenses | length > 0 %}
+{% set width = (report.canLinkToBankAccounts) ? 'one-third' : 'two-thirds'%}
+{% set total = 0 %}
+    <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+            <h3 class="govuk-summary-card__title">
+                List of expenses
+            </h3>
+        </div>
+
+        <div class="govuk-summary-card__content">
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header govuk-!-width-{{ width }}">
+                            {{ ('form.explanation.label') | trans(transOptions,transDomain) }}
+                        </th>
+                        {% if report.canLinkToBankAccounts %}
+                            <th scope="col" class="govuk-table__header govuk-!-width-{{ width }}">
+                                Bank account
+                            </th>
+                        {% endif %}
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                            {{ ('form.amount.label') | trans(transOptions,transDomain) }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    {% for expense in report.expenses %}
+                    {% set total = total + expense.amount %}
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell govuk-!-width-{{ width }}">
+                                {{ expense.explanation }}
+                            </td>
+                        {% if report.canLinkToBankAccounts %}
+                            <td class="govuk-table__cell govuk-!-width-{{ width }}">
+                                {{ (expense.bankAccount) ? expense.bankAccount.nameOneLine : 'not entered' | trans({}, 'common') }}
+                            </td>
+                        {% endif %}
+                            <td class="govuk-table__cell govuk-!-width-one-third">
+                                &pound;{{ expense.amount | money_format }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__header govuk-!-width-{{ width }}">
+                            Total amount
+                        </td>
+                    {% if report.canLinkToBankAccounts %}
+                        <td class="govuk-table__cell govuk-!-width-one-third"></td>
+                    {% endif %}
+                        <td class="govuk-table__header govuk-!-width-one-third">
+                            &pound;{{ total | money_format }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}

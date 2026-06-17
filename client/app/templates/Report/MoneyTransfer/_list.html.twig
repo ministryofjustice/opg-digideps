@@ -61,16 +61,16 @@
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header">
-                    Transferred from
+                    {{ 'summaryPage.accountFrom' | trans }}
                 </th>
                 <th scope="col" class="govuk-table__header">
-                    Transferred to
+                    {{ 'summaryPage.accountTo' | trans }}
                 </th>
                 <th scope="col" class="govuk-table__header">
-                    Description
+                    {{ 'summaryPage.description' | trans }}
                 </th>
                 <th scope="col" class="govuk-table__header govuk-table__header--numeric">
-                    Amount
+                    {{ 'summaryPage.amount' | trans }}
                 </th>
                 {% if not hideEditLink %}
                     <th scope="col" class="govuk-table__header govuk-table__header--numeric">

@@ -9,6 +9,7 @@
     "@aws-sdk/client-fis": "^3.1006.0",
     "@aws-sdk/client-secrets-manager": "^3.1006.0",
     "puppeteer": "^24.39.0",
-    "puppeteer-cluster": "^0.25.0"
+    "puppeteer-cluster": "^0.25.0",
+    "ws": "^8.21.0"
   }
 }
