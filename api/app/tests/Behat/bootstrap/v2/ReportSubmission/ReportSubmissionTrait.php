@@ -329,6 +329,24 @@ trait ReportSubmissionTrait
         $this->clickLink($status);
     }
 
+    #[Then('I should not see the submission under the :status tab with the court order number of the user I am interacting with')]
+    #[Then('I should see the submission under the :status tab with the court order number of the user I am interacting with')]
+    public function submissionBehaviourBasedOnStatus(string $status): void
+    {
+        $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
+        $reportPdfRow = $this->getSession()->getPage()->find('css', "table tr:contains('$caseNumber')");
+
+        if ($status === 'New') {
+            if (!is_null($reportPdfRow)) {
+                throw new BehatException("The submission ($caseNumber) appears in the new column when it should not appear");
+            }
+        } elseif ($status === 'Pending') {
+            if (is_null($reportPdfRow)) {
+                    throw new BehatException("The submission ($caseNumber) does not appear in the pending column when it should appear");
+            }
+        }
+    }
+
     private function assertRowWithStatusAppears(string $searchTerm, string $status): void
     {
         $reportPdfRow = $this->getSession()->getPage()->find(
