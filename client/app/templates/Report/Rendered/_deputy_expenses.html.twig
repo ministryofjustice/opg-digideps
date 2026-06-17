@@ -18,7 +18,7 @@
                     {{ ('existPage.form.paidForAnything.label') | trans(transOptions,transDomain) }}
                 </th>
                 <td class="govuk-table__cell govuk-!-width-one-half">
-                    {{ report.paidForAnything | capitalize }}
+                    {{ (report.paidForAnything) ? report.paidForAnything | capitalize : 'not entered' }}
                 </td>
             </tr>
             </tbody>
@@ -27,6 +27,7 @@
 </div>
 
 {% if report.paidForAnything == 'yes' and report.expenses | length > 0 %}
+{% set width = (report.canLinkToBankAccounts) ? 'one-third' : 'two-thirds'%}
 {% set total = 0 %}
     <div class="govuk-summary-card">
         <div class="govuk-summary-card__title-wrapper">
@@ -39,9 +40,14 @@
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header govuk-!-width-two-thirds">
+                        <th scope="col" class="govuk-table__header govuk-!-width-{{ width }}">
                             {{ ('form.explanation.label') | trans(transOptions,transDomain) }}
                         </th>
+                        {% if report.canLinkToBankAccounts %}
+                            <th scope="col" class="govuk-table__header govuk-!-width-{{ width }}">
+                                Bank account
+                            </th>
+                        {% endif %}
                         <th scope="col" class="govuk-table__header govuk-!-width-one-third">
                             {{ ('form.amount.label') | trans(transOptions,transDomain) }}
                         </th>
@@ -49,21 +55,28 @@
                 </thead>
                 <tbody class="govuk-table__body">
                     {% for expense in report.expenses %}
-                        {% set total = total + expense.amount %}
-
+                    {% set total = total + expense.amount %}
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell govuk-!-width-two-thirds">
+                            <td class="govuk-table__cell govuk-!-width-{{ width }}">
                                 {{ expense.explanation }}
                             </td>
+                        {% if report.canLinkToBankAccounts %}
+                            <td class="govuk-table__cell govuk-!-width-{{ width }}">
+                                {{ (expense.bankAccount) ? expense.bankAccount.nameOneLine : 'not entered' | trans({}, 'common') }}
+                            </td>
+                        {% endif %}
                             <td class="govuk-table__cell govuk-!-width-one-third">
                                 &pound;{{ expense.amount | money_format }}
                             </td>
                         </tr>
                     {% endfor %}
                     <tr class="govuk-table__row">
-                        <td class="govuk-table__header govuk-!-width-two-thirds">
+                        <td class="govuk-table__header govuk-!-width-{{ width }}">
                             Total amount
                         </td>
+                    {% if report.canLinkToBankAccounts %}
+                        <td class="govuk-table__cell govuk-!-width-one-third"></td>
+                    {% endif %}
                         <td class="govuk-table__header govuk-!-width-one-third">
                             &pound;{{ total | money_format }}
                         </td>
