@@ -53,6 +53,7 @@ final class AttemptsInTimeCheckerTest extends TestCase
     #[DataProvider('attempts')]
     public function testMaxAttemptsReached(array $triggers, array $attemptsTimeStampToExpected): void
     {
+        /** @var array<int, int> $trigger */
         foreach ($triggers as $trigger) {
             list($maxAttempts, $interval) = $trigger;
             $this->sut->addTrigger($maxAttempts, $interval);
