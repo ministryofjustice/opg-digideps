@@ -133,8 +133,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
             throw new TooManyLoginAttemptsAuthenticationException($interval);
         }
 
-        // rethrow as a new 498 code exception; if any other code is used, this causes a 500 error in the frontend
-        throw new AuthenticationException($exception->getMessage(), 498);
+        throw $exception;
     }
 
     private function hasRequiredLoginDetails(Request $request): bool
