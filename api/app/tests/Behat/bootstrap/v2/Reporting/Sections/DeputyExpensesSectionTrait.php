@@ -34,9 +34,6 @@ trait DeputyExpensesSectionTrait
         $this->clickLink('Start deputy expenses');
     }
 
-    /**
-     * @When I view the deputy expenses report section
-     */
     public function iViewDeputyExpensesSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();

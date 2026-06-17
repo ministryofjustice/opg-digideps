@@ -26,9 +26,6 @@ trait ClientBenefitsCheckSectionTrait
         $this->clickLink('Start');
     }
 
-    /**
-     * @When I navigate to the client benefits check report section
-     */
     public function iNavigateToBenefitsCheckSection(): void
     {
         $this->clickLink('Benefits check and money others received');

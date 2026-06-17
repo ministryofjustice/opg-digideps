@@ -20,9 +20,6 @@ trait ContactsSectionTrait
         $this->clickLink('Start contacts');
     }
 
-    /**
-     * @Given I view the contacts report section
-     */
     public function iViewContactsSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();

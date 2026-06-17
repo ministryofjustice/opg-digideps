@@ -8,9 +8,6 @@ use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait AdditionalInformationSectionTrait
 {
-    /**
-     * @Given I view the additional information report section
-     */
     public function iViewAdditionalInformationSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();

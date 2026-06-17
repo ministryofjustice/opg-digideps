@@ -17,9 +17,6 @@ trait DecisionSectionTrait
         $this->clickLink('Start decisions');
     }
 
-    /**
-     * @Given I view the decisions report section
-     */
     public function iViewDecisionsSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();

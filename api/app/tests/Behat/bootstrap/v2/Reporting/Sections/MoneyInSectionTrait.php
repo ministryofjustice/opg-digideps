@@ -45,9 +45,6 @@ trait MoneyInSectionTrait
     private array $moneyTypeCategoriesCompleted = [];
     private array $moneyInTransaction = [];
 
-    /**
-     * @When I view the money in report section
-     */
     public function iViewMoneyInSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
@@ -91,7 +88,6 @@ trait MoneyInSectionTrait
 
     /**
      * @Given I have :moneyType to report on
-     * @Given I have a/an :moneyType to report on
      */
     public function iHaveMoneyTypeToReportOn(string $moneyType): void
     {
@@ -171,9 +167,6 @@ trait MoneyInSectionTrait
         $this->moneyInTransaction[] = [$this->currentMoneyTypeReportingOn => $value];
     }
 
-    /**
-     * @Then I should see the money in summary
-     */
     public function iShouldSeeTheMoneyInSummary(): bool
     {
         return $this->iAmOnPage('/report\/.*\/money-in\/summary.*$/');
@@ -215,9 +208,6 @@ trait MoneyInSectionTrait
         $this->pressButton('Yes, remove item of income');
     }
 
-    /**
-     * @Then I should be on the delete page
-     */
     public function iShouldBeOnTheDeletePage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/money-in\/.*\/delete$/');

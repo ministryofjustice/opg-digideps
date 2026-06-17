@@ -2,9 +2,9 @@
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
-use Tests\OPG\Digideps\Backend\Behat\BehatException;
 use Behat\Step\Then;
 use Behat\Step\When;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait ReportingSectionsTrait
 {
@@ -118,13 +118,11 @@ trait ReportingSectionsTrait
         );
     }
 
-    #[When('I choose to save and add another')]
     public function iChooseToSaveAndAddAnother(): void
     {
         $this->pressButton('Save and add another');
     }
 
-    #[When('I choose to save and continue')]
     public function iChooseToSaveAndContinue(): void
     {
         $this->pressButton('Save and continue');

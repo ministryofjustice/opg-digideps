@@ -129,9 +129,6 @@ trait MoneyTransferSectionTrait
         $this->fillinField('money_transfers_type[description]', 'edited transfer');
     }
 
-    /**
-     * @Then I should be on the money transfer delete page
-     */
     public function iShouldBeOnTheMoneyTransferDeletePage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/money-transfers\/.*\/delete$/');

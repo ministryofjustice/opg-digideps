@@ -11,15 +11,12 @@ trait GiftsSectionTrait
 {
     private int $giftId = 0;
 
-
-    #[When('I view the gifts report section')]
     public function iViewGiftsSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
         $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'gifts');
         $this->visitPath($reportSectionUrl);
     }
-
 
     #[When('I view and start the gifts report section')]
     public function iViewAndStartGiftsSection(): void
@@ -28,21 +25,18 @@ trait GiftsSectionTrait
         $this->clickLink('Start gifts');
     }
 
-    #[When('I choose no and save on gifts exist section')]
     public function iChooseNoOnGiftsExistSection(): void
     {
         $this->chooseOption('yes_no[giftsExist]', 'no', 'gifts');
         $this->pressButton('Save and continue');
     }
 
-    #[When('I choose yes and save on gifts exist section')]
     public function iChooseYesOnGiftsExistSection(): void
     {
         $this->chooseOption('yes_no[giftsExist]', 'yes', 'gifts');
         $this->pressButton('Save and continue');
     }
 
-    #[When('I fill in gift description and amount')]
     public function iFillGiftDescriptionAndAmount(bool $addAnother): void
     {
         ++$this->giftId;
@@ -53,7 +47,6 @@ trait GiftsSectionTrait
         $this->selectOption('gifts_single[addAnother]', $addAnother ? 'yes' : 'no');
     }
 
-    #[When('I edit first gift description and amount')]
     public function iEditGiftDescriptionAndAmount(): void
     {
         $locator = "//td[normalize-space()='random-gift-1']/..";
@@ -63,13 +56,11 @@ trait GiftsSectionTrait
         $this->editFieldAnswerInSection($giftRow, 'gifts_single[explanation]', $this->faker->sentence(4), 'gifts1', false);
     }
 
-    #[When('I follow edit link for gifts section')]
     public function iFollowEditLinkForGifts(): void
     {
         $this->iClickBasedOnAttributeTypeAndValue('a', 'id', 'edit-gifts');
     }
 
-    #[When('I follow the edit link for whether gifts exist')]
     public function iFollowEditExistsLink(): void
     {
         $urlRegex = '/report\/.*\/gifts\/exist\?from\=summary$/';

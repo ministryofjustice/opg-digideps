@@ -52,9 +52,6 @@ trait MoneyInShortSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @Given I have no payments going out
-     */
     public function iHaveNoPaymentsGoingOut(): void
     {
         $this->iAmOnMoneyInShortCategoryPage();
@@ -62,16 +59,12 @@ trait MoneyInShortSectionTrait
         $this->iAnswerToHavingOneOffPaymentsOver1k('no');
     }
 
-    /**
-     * @When I select no categories for money in
-     */
     public function iSelectNoCategoriesForMoneyIn(): void
     {
         $this->pressButton('Save and continue');
     }
 
     /**
-     * @When I don't select a one off payment option
      * @When I don't select a category for money in
      */
     public function iDontSelectOneOffPayment(): void
@@ -83,7 +76,6 @@ trait MoneyInShortSectionTrait
      *
      * @throws BehatException
      */
-    #[Then('I should see a select option validation error')]
     public function iShouldSeeSelectOptionValidationError(): void
     {
         $this->assertOnErrorMessage("Please select either 'Yes' or 'No'");
@@ -117,7 +109,6 @@ trait MoneyInShortSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    #[Given('I have a single one-off payments over £1k')]
     public function iHaveASingleOneOffPaymentOver1k(): void
     {
         $this->chooseOption(
@@ -225,7 +216,6 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     *
      * @throws BehatException
      */
     #[Then('I should the see correct validation message')]
@@ -263,7 +253,6 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     *
      * @throws BehatException
      */
     #[Then('I should see the expected money in section summary')]
@@ -284,7 +273,6 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     *
      * @throws BehatException
      */
     #[Then('/^there should be "([^"]*)" one off payments displayed on the money in summary page$/')]
@@ -313,7 +301,6 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     *
      * @throws BehatException
      */
     #[Given('/^I delete the transaction from the summary page$/')]
@@ -345,7 +332,6 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     *
      * @throws BehatException
      */
     #[Then('/^I edit the answer to the money in one off payment over 1k$/')]
@@ -357,7 +343,6 @@ trait MoneyInShortSectionTrait
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
 
-    #[When('/^I select the "([^"]*)" category for money in short$/')]
     public function iSelectTheCategoryForMoneyInShort(string $category): void
     {
         $optionIndex = array_search($category, $this->moneyInShortTypeDictionary);
@@ -377,7 +362,6 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     *
      * @throws BehatException
      */
     #[Then('/^I should see the correct validation message for no category selected$/')]

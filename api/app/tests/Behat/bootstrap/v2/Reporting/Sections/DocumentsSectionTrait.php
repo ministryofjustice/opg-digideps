@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
+use Behat\Mink\Exception\ElementNotFoundException;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
-use Behat\Mink\Exception\ElementNotFoundException;
 
 trait DocumentsSectionTrait
 {
@@ -79,10 +79,6 @@ trait DocumentsSectionTrait
         }
     }
 
-    /**
-     * @Then the documents summary page should contain the documents I uploaded
-     * @Then the documents uploads page should contain the documents I uploaded
-     */
     public function theDocumentsSummaryPageShouldContainDocumentsIUploaded(): void
     {
         if (empty($this->uploadedDocumentFilenames)) {
@@ -141,10 +137,6 @@ trait DocumentsSectionTrait
         }
     }
 
-    /**
-     * @When I upload one valid document
-     * @When I attempt to upload one valid document
-     */
     public function iUploadOneValidDocument(): void
     {
         $this->uploadFiles([$this->validJpegFilename]);
@@ -254,11 +246,6 @@ trait DocumentsSectionTrait
         }
     }
 
-    /**
-     * @When I remove one document I uploaded
-     *
-     * @Given /^I remove the "([^"]*)" document I uploaded$/
-     */
     public function iRemoveOneDocumentIUploaded(?string $fileName = null): void
     {
         if ($fileName) {

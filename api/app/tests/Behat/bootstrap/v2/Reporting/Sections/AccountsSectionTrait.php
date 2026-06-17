@@ -11,9 +11,6 @@ trait AccountsSectionTrait
     private array $accountList = [];
     private int $countOfAccountsAdded = 1;
 
-    /**
-     * @When I view and start the accounts report section
-     */
     public function iViewAndStartAccountsSection(): void
     {
         $this->iVisitAccountsSection();

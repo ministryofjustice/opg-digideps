@@ -73,9 +73,6 @@ trait ActionsSectionTrait
         );
     }
 
-    /**
-     * @Given I choose no and save on gifts actions section
-     */
     public function iChooseNoAndSaveOnGiftsActionsSection(): void
     {
         $this->fillInActionsForm(

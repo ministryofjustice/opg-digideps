@@ -169,9 +169,6 @@ trait VisitsCareSectionTrait
         $this->iAmOnVisitsCareSummaryPage();
     }
 
-    /**
-     * @Given I confirm there are no plans to move the client to a new residence
-     */
     public function iChooseNoOnPlansToMoveClient(): void
     {
         $this->chooseOption('visits_care[planMoveNewResidence]', 'no', 'MoveResidence');
@@ -180,9 +177,6 @@ trait VisitsCareSectionTrait
         $this->iAmOnVisitsCareSummaryPage();
     }
 
-    /**
-     * @Given I confirm there are plans to to move the client to a new residence
-     */
     public function iChooseYesOnPlansToMoveClient(): void
     {
         $this->chooseOption('visits_care[planMoveNewResidence]', 'yes', 'MoveResidence');

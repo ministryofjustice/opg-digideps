@@ -142,7 +142,6 @@ trait DeputyCostsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    #[When('I do not have interim deputy costs to declare')]
     public function iDoNotHaveInterimDeputyCosts(): void
     {
         $this->iAmOnDeputyCostsInterimExistsPage();
@@ -268,7 +267,6 @@ trait DeputyCostsSectionTrait
 
         $this->pressButton('Save and continue');
     }
-
 
     #[When('I declare :numberOfCosts previous cost(s) with valid dates and amounts')]
     public function iDeclarePreviousCostsAndDates(int $numberOfCosts): void
@@ -648,7 +646,6 @@ trait DeputyCostsSectionTrait
 
         $this->iAmOnDeputyCostsInterimPage();
     }
-
 
     #[When('I don\'t enter an SCCO assessed cost amount')]
     public function iDontEnterAnSccoAssessedCostAmount(): void

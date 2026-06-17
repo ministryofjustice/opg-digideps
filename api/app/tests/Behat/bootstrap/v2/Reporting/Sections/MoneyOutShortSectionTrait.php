@@ -43,7 +43,6 @@ trait MoneyOutShortSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    #[When('I have made no payments out')]
     public function iHaveMadeNoPaymentsOut(): void
     {
         $this->iAmOnMoneyOutShortCategoryPage();
@@ -289,7 +288,6 @@ trait MoneyOutShortSectionTrait
         }
     }
 
-    #[When('/^I delete the transaction from the money out summary page$/')]
     public function iDeleteTheTransactionFromTheMoneyOutSummaryPage(): void
     {
         $this->clickLink('Remove');
@@ -299,7 +297,6 @@ trait MoneyOutShortSectionTrait
         $this->moneyOutShortOneOff = [];
     }
 
-    #[Then('I should be on the delete page')]
     private function iShouldBeOnTheMoneyOutShortDeletePage(): bool
     {
         return $this->iAmOnPage(sprintf('/report\/.*\/money-out-short\/.*\/delete$/'));
