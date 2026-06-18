@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Frontend\Service;
 
 use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Exception\RestClientException;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -50,6 +51,18 @@ class DeputyProvider implements UserProviderInterface
     }
 
     public function loadUserByIdentifier(string $identifier): User
+    {
+        try {
+            $user = $this->loadUserByIdentifierUnsafe($identifier);
+        } catch (RestClientException $exception) {
+            $this->logger->warning("Retrying fetching user entity with id {$identifier} during authentication. Reason: {$exception->getMessage()}");
+            $user = $this->loadUserByIdentifierUnsafe($identifier);
+        }
+
+            return $user;
+    }
+
+    private function loadUserByIdentifierUnsafe(string $identifier): User
     {
         return $this->restClient
             // the userId needs to be told to the RestClient, as the user is not logged in yet
