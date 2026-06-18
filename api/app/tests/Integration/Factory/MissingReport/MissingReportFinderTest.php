@@ -14,13 +14,13 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Factory\MissingReport\MissingReportFinder;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use Doctrine\ORM\Id\AssignedGenerator;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 class MissingReportFinderTest extends ApiIntegrationTestCase
 {
     /**
      * @var int $oldGeneratorType
-     * @phpstan-var ClassMetadataInfo::GENERATOR_TYPE_* $oldGeneratorType
+     * @phpstan-var ClassMetadata::GENERATOR_TYPE_* $oldGeneratorType
      */
     private int $oldGeneratorType;
     private AbstractIdGenerator $oldGenerator;
@@ -33,7 +33,7 @@ class MissingReportFinderTest extends ApiIntegrationTestCase
         $this->oldGeneratorType = $metadata->generatorType;
         $this->oldGenerator = $metadata->idGenerator;
 
-        $metadata->setIdGeneratorType(ClassMetadataInfo::GENERATOR_TYPE_NONE);
+        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
         $metadata->setIdGenerator(new AssignedGenerator());
     }
 
