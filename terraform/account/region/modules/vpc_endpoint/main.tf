@@ -10,7 +10,6 @@ resource "aws_vpc_endpoint" "vpc_endpoint" {
 
 #tfsec:ignore:aws-vpc-add-description-to-security-group - can't replace these, will have to be two part PR
 resource "aws_security_group" "vpc_endpoint" {
-  description = "Security group for ${var.service_short_title} VPC endpoint"
   name_prefix = "${var.service_short_title}_endpoint"
   vpc_id      = var.vpc.id
   tags        = merge(var.tags, { Name = "${var.service_short_title}_endpoint" })
