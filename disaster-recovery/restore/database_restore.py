@@ -41,22 +41,25 @@ class SnapshotManagement:
         self.environment = environment
         self.backup_account = environments["backup"]
         self.role = "digideps-ci-boundary" if os.getenv("CI") else "breakglass"
-        self.backup_role = (
+        self.cross_account_role = (
             "cross-acc-db-restore.digideps-development"
             if os.getenv("CI")
             else "breakglass"
         )
         self.role_to_assume = str(f"arn:aws:iam::{self.account}:role/{self.role}")
-        self.backup_role_to_assume = str(
-            f"arn:aws:iam::{self.backup_account}:role/{self.backup_role}"
+        self.cross_account_role_to_assume = str(
+            f"arn:aws:iam::{self.backup_account}:role/{self.cross_account_role}"
         )
         self.region = "eu-west-1"
         self.client = None
         self.client_kms = None
         self.client_aws_backup = None
-        self.client_backup_rds = None
-        self.client_backup_kms = None
+        self.client_cross_account_rds = None
+        self.client_cross_account_kms = None
+        self.client_cross_account_aws_backup = None
         self.restore_from_remote = restore_from_remote
+        self.backup_vault_name = f"backup-vault-{self.environment}"
+        self.remote_vault_name = f"digideps-eu-west-1-{self.environment}-backup"
         self.example_var = None
         self.instances = []
         self.db_cluster_identifier_source = cluster_from
@@ -106,14 +109,13 @@ class SnapshotManagement:
         self.AutoMinorVersionUpgrade = True
         self.AWSBackup = aws_backup
 
-    def get_latest_recovery_point_arn(self):
+    def get_latest_recovery_point_same_account(self):
         cluster_name = self.db_cluster_identifier_source
         client = self.client_aws_backup
 
-        # List recovery points for the given resource in the specified vault
         paginator = client.get_paginator("list_recovery_points_by_resource")
         pages = paginator.paginate(
-            ResourceArn=f"arn:aws:rds:eu-west-1:{self.account}:cluster:{cluster_name}"
+            ResourceArn=f"arn:aws:rds:{self.region}:{self.account}:cluster:{cluster_name}"
         )
 
         latest_arn = None
@@ -122,11 +124,48 @@ class SnapshotManagement:
         for page in pages:
             for rp in page.get("RecoveryPoints", []):
                 creation_date = rp.get("CreationDate")
-                current_recovery_point_arn = rp.get("RecoveryPointArn")
-            if creation_date and (latest_time is None or creation_date > latest_time):
-                if "recovery-point:continuous" in current_recovery_point_arn:
+                arn = rp.get("RecoveryPointArn")
+
+                if creation_date and (
+                    latest_time is None or creation_date > latest_time
+                ):
+                    if "continuous" in arn:
+                        latest_time = creation_date
+                        latest_arn = arn
+
+        if not latest_arn:
+            raise Exception("No recovery point found in same account")
+
+        self.recovery_point_arn = latest_arn
+
+    def get_latest_recovery_point_cross_account(self):
+        client = self.client_cross_account_aws_backup  # backup account client
+
+        paginator = client.get_paginator("list_recovery_points_by_backup_vault")
+        pages = paginator.paginate(BackupVaultName=self.remote_vault_name)
+
+        latest_arn = None
+        latest_time = None
+
+        target_arn = f"arn:aws:rds:{self.region}:{self.account}:cluster:{self.db_cluster_identifier_source}"
+
+        print(f"Searching vault {self.remote_vault_name} for cluster {target_arn}")
+        for page in pages:
+            for rp in page.get("RecoveryPoints", []):
+                if rp.get("ResourceArn") != target_arn:
+                    continue
+
+                creation_date = rp.get("CreationDate")
+                arn = rp.get("RecoveryPointArn")
+
+                if creation_date and (
+                    latest_time is None or creation_date > latest_time
+                ):
                     latest_time = creation_date
-                    latest_arn = current_recovery_point_arn
+                    latest_arn = arn
+
+        if not latest_arn:
+            raise Exception("No cross-account recovery point found in vault")
 
         self.recovery_point_arn = latest_arn
 
@@ -145,9 +184,17 @@ class SnapshotManagement:
                 and self.DeletionProtection
             ):
                 self.drop_protection()
+
             if self.AWSBackup:
-                self.get_latest_recovery_point_arn()
+                if self.restore_from_remote:
+                    self.create_cross_account_client_session()
+                    self.get_latest_recovery_point_cross_account()
+                    self.copy_recovery_point_to_target()
+                else:
+                    self.get_latest_recovery_point_same_account()
+
                 print(f"Latest Recovery Point ARN: {self.recovery_point_arn}")
+
         else:
             print("Please set a cluster_from parameter")
             sys.exit(1)
@@ -163,23 +210,23 @@ class SnapshotManagement:
         self.KmsKeyIdLocal = self.get_kms_key(key_alias_local)
 
         if self.AWSBackup:
-            # Handles the point in time recovery internally if set
             self.restore_from_recovery_point()
-        else:
-            if self.do_point_in_time_restore:
-                if self.SnapshotIdentifier is not None:
-                    if self.restore_from_remote:
-                        self.create_backup_client_session()
-                        self.KmsKeyId = self.get_kms_key(key_alias_remote)
-                        self.share_snapshot_with_digideps()
-                        self.copy_snapshot_to_manual_digideps()
-                    self.restore_from_snapshot()
-                else:
-                    print(
-                        "No snapshot specified. Either specify snapshot or do point in time recovery"
-                    )
-            else:
-                self.restore_to_point_in_time()
+
+        # else:
+        #     if self.do_point_in_time_restore:
+        #         if self.SnapshotIdentifier is not None:
+        #             if self.restore_from_remote:
+        #                 self.create_cross_account_client_session()
+        #                 self.KmsKeyId = self.get_kms_key(key_alias_remote)
+        #                 self.share_snapshot_with_digideps()
+        #                 self.copy_snapshot_to_manual_digideps()
+        #             self.restore_from_snapshot()
+        #         else:
+        #             print(
+        #                 "No snapshot specified. Either specify snapshot or do point in time recovery"
+        #             )
+        #     else:
+        #         self.restore_to_point_in_time()
 
         print("Process has finished. Please go and check your databases")
 
@@ -286,8 +333,49 @@ class SnapshotManagement:
         if self.EngineMode != "serverless":
             self.create_db_instances()
 
-        if self.same_target:
-            self.overwrite_existing_cluster()
+        # PUT BACK AFTER
+        # if self.same_target:
+        #     self.overwrite_existing_cluster()
+
+    def copy_recovery_point_to_target(self):
+        print(f"Copying recovery point {self.recovery_point_arn} to target account...")
+
+        destination_vault_arn = f"arn:aws:backup:{self.region}:{self.account}:backup-vault:{self.backup_vault_name}"
+
+        copy_job = self.client_cross_account_aws_backup.start_copy_job(
+            RecoveryPointArn=self.recovery_point_arn,
+            SourceBackupVaultName=self.remote_vault_name,
+            DestinationBackupVaultArn=destination_vault_arn,
+            IamRoleArn=f"arn:aws:iam::{self.backup_account}:role/service-role/AWSBackupDefaultServiceRole",
+        )
+
+        copy_job_id = copy_job["CopyJobId"]
+        print(f"Started copy job: {copy_job_id}")
+
+        self.wait_for_copy_job(copy_job_id)
+
+        # After copy, recovery point ARN changes — fetch new one
+        self.get_latest_recovery_point_same_account()
+
+    def wait_for_copy_job(self, copy_job_id):
+        print("Waiting for copy job to complete...")
+
+        while True:
+            response = self.client_cross_account_aws_backup.describe_copy_job(
+                CopyJobId=copy_job_id
+            )
+
+            status = response["CopyJob"]["State"]
+
+            print(f"Copy job status: {status}")
+
+            if status == "COMPLETED":
+                print("Copy completed ✅")
+                return
+            elif status in ["FAILED", "EXPIRED"]:
+                raise Exception(f"Copy job failed: {response}")
+
+            time.sleep(15)
 
     def restore_cluster_recovery_point(self):
         metadata = {
@@ -636,7 +724,7 @@ class SnapshotManagement:
         print(
             f"Sharing snapshot {self.SnapshotIdentifier} with account {self.account}..."
         )
-        self.client_backup_rds.modify_db_cluster_snapshot_attribute(
+        self.client_cross_account_rds.modify_db_cluster_snapshot_attribute(
             AttributeName="restore",
             DBClusterSnapshotIdentifier=self.SnapshotIdentifier,
             ValuesToAdd=[self.account],
@@ -675,7 +763,7 @@ class SnapshotManagement:
     def copy_snapshot_to_manual_backup(self):
         target = str(self.SnapshotIdentifier.split(":")[1])
         source = f"arn:aws:rds:{self.region}:{self.account}:cluster-snapshot:{target}"
-        self.client_backup_rds.copy_db_cluster_snapshot(
+        self.client_cross_account_rds.copy_db_cluster_snapshot(
             SourceDBClusterSnapshotIdentifier=source,
             TargetDBClusterSnapshotIdentifier=target,
             KmsKeyId=self.KmsKeyId,
@@ -683,7 +771,7 @@ class SnapshotManagement:
         )
         print(f"Copying {source} to {target}...")
 
-        self.wait_snapshot_copy_finish(self.client_backup_rds, target)
+        self.wait_snapshot_copy_finish(self.client_cross_account_rds, target)
 
     @staticmethod
     def wait_snapshot_copy_finish(client, target_snapshot_id):
@@ -735,10 +823,10 @@ class SnapshotManagement:
         )
         self.client_kms = autorefresh_session.client("kms", region_name=self.region)
 
-    def refresh_creds_backup(self):
+    def refresh_creds_cross_account(self):
         "Refresh tokens by calling assume_role again"
         params = {
-            "RoleArn": self.backup_role_to_assume,
+            "RoleArn": self.cross_account_role_to_assume,
             "RoleSessionName": "digideps_restores",
             "DurationSeconds": 900,
         }
@@ -752,10 +840,10 @@ class SnapshotManagement:
         }
         return credentials
 
-    def create_backup_client_session(self):
+    def create_cross_account_client_session(self):
         session_credentials = RefreshableCredentials.create_from_metadata(
-            metadata=self.refresh_creds_backup(),
-            refresh_using=self.refresh_creds_backup,
+            metadata=self.refresh_creds_cross_account(),
+            refresh_using=self.refresh_creds_cross_account,
             method="sts-assume-role",
         )
         session = get_session()
@@ -763,11 +851,15 @@ class SnapshotManagement:
         session.set_config_variable("region", self.region)
         autorefresh_session = boto3.Session(botocore_session=session)
 
-        self.client_backup_rds = autorefresh_session.client(
+        self.client_cross_account_rds = autorefresh_session.client(
             "rds", region_name=self.region
         )
 
-        self.client_backup_kms = autorefresh_session.client(
+        self.client_cross_account_aws_backup = autorefresh_session.client(
+            "backup", region_name=self.region
+        )
+
+        self.client_cross_account_kms = autorefresh_session.client(
             "kms", region_name=self.region
         )
 
