@@ -47,7 +47,7 @@ class DocumentRepositoryTest extends KernelTestCase
     }
 
     /**
-     * @return array{0: Client, 1: Report, 2: Document, 3: Document, 4: ReportSubmission}
+     * @return array{Client, Report, Document, Document, ReportSubmission}
      */
     private function createAndSubmitReportWithSupportingDoc(\DateTime $submittedOn): array
     {
@@ -206,7 +206,7 @@ class DocumentRepositoryTest extends KernelTestCase
     }
 
     /**
-     * @return array{0: ReportSubmission, 1: Document}
+     * @return array{ReportSubmission, Document}
      */
     private function createAndSubmitAdditionalDocuments(Report $report, \DateTime $submittedOn): array
     {
@@ -223,7 +223,7 @@ class DocumentRepositoryTest extends KernelTestCase
     }
 
     /**
-     * @return array{0: Document, 1: Document, 2: ReportSubmission}
+     * @return array{Document, Document, ReportSubmission}
      */
     private function createAndSubmitResubmissionWithSupportingDoc(Report $report, \DateTime $submittedOn): array
     {

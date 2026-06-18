@@ -499,10 +499,8 @@ class Fixtures
      * @param class-string<T> $entity
      * @return EntityRepository<T>
      */
-
     public function getRepo(string $entity): EntityRepository
     {
-        /** @var class-string $entity */
         return $this->em->getRepository($entity);
     }
 
