@@ -43,7 +43,6 @@
         "guzzlehttp/guzzle": "^7.12.0",
         "jms/serializer-bundle": "^5.5.2",
         "jolicode/slack-php-api": "^4.9",
-        "lcobucci/jwt": "^4.3",
         "league/mime-type-detection": "^1.16",
         "monolog/monolog": "^3.10.0",
         "orbitale/imagemagick-php": "^3.3.5",
