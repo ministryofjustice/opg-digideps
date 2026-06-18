@@ -1,6 +1,17 @@
+type UserType = "lay_user" | "pro_user";
+
+interface FixtureUser {
+  email: string;
+}
+
+interface TestUser {
+  email: string;
+  password: string;
+}
+
 const testPassword = "DigidepsPass1234";
 
-export const fixtureUsers = {
+const fixtureUsers: Record<UserType, FixtureUser> = {
   lay_user: {
     email: "lay-opg104-user-5@publicguardian.gov.uk",
   },
@@ -9,9 +20,7 @@ export const fixtureUsers = {
   },
 };
 
-export function createFixture(type: keyof typeof fixtureUsers) {
-  // A call to the fixtures API that would create the fixture and return details
-  // like login email goes here.
+export function createFixture(type: UserType): TestUser {
   const user = fixtureUsers[type];
 
   return {

@@ -1,5 +1,7 @@
 import { Page, expect } from "@playwright/test";
 
+type ExpectedPage = "courtorder" | "org";
+
 export default class LoginPage {
   constructor(private page: Page) {}
 
@@ -7,17 +9,17 @@ export default class LoginPage {
     await this.page.goto("/login");
   }
 
-  async login(email: string, password: string) {
-    await this.page.fill("#login_email", email);
-    await this.page.fill("#login_password", password);
+  async login(user: { email: string; password: string }) {
+    await this.page.fill("#login_email", user.email);
+    await this.page.fill("#login_password", user.password);
 
     await Promise.all([
-      this.page.waitForLoadState('networkidle'),
+      this.page.waitForLoadState("networkidle"),
       this.page.click("#login_login"),
     ]);
   }
 
-  async expectOnPage(expected: string) {
+  async expectOnPage(expected: ExpectedPage) {
     await expect(this.page).toHaveURL(new RegExp(`/${expected}(/|$)`));
   }
 }
