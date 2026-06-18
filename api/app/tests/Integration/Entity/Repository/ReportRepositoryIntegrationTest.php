@@ -188,7 +188,7 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
         self::$entityManager->refresh($existingReport);
         self::$entityManager->refresh($client);
         $firstClientUser = $client->getUsers()[0];
-        assert($firstClientUser instanceof \OPG\Digideps\Backend\Entity\User);
+        /** @var User $firstClientUser */
         self::$entityManager->refresh($firstClientUser);
 
         $roleName = $client->getUsers()[0]->getRoleName();
