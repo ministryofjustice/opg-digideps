@@ -13,7 +13,6 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use OPG\Digideps\Backend\Entity\Traits\IsSoftDeleteableEntity;
 use OPG\Digideps\Backend\Repository\ClientRepository;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Client.

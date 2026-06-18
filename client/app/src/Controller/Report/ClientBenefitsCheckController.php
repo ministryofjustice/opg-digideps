@@ -90,7 +90,7 @@ class ClientBenefitsCheckController extends AbstractController
                 $income = new MoneyReceivedOnClientsBehalf();
                 $clientBenefitsCheck->setTypesOfMoneyReceivedOnClientsBehalf(new ArrayCollection([$income]));
             } else {
-                foreach ($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() as $moneyType) {
+                foreach (($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() ?? []) as $moneyType) {
                     if ($moneyType->getId() === $moneyTypeId) {
                         $clientBenefitsCheck->setTypesOfMoneyReceivedOnClientsBehalf(
                             new ArrayCollection([$moneyType])

@@ -470,7 +470,7 @@ class Client
         return false;
     }
 
-    public function getFullname()
+    public function getFullname(): string
     {
         $this->fullname = $this->firstname . ' ' . $this->lastname;
 

@@ -4,14 +4,13 @@
 {% set submittedBy = report.submittedBy | default(app.user) %}
 {# for PROF users, deputy is always the named deputy #}
 {% set deputy = submittedBy.isDeputyOrg and client.getDeputy ? client.getDeputy : submittedBy %}
-{% set contacts = report.getContacts %}
 
 <div class="report-preview">
     <h1 class="govuk-heading-l">Deputy report for {{ reportTypeHeading }} decisions</h1>
 
     {% include '@App/Report/Rendered/_client_and_deputy_information.html.twig' %}
 
-    {% if report.mentalCapacity is not null %}
+    {% if report.getMentalCapacity is not null and report.hasSection('decisions')  %}
         {% include '@App/Report/Rendered/_decisions.html.twig' with {
             'report': report,
             'transOptions': transOptions,
@@ -19,14 +18,14 @@
         } %}
     {% endif %}
 
-    {% if contacts is not null %}
+    {% if report.getContacts is not null and report.hasSection('contacts') %}
         {% include '@App/Report/Rendered/_contacts.html.twig' with {
             'report': report,
             'transOptions': transOptions,
             'transDomain': 'report-contacts'
         } %}
     {% endif %}
-
+    
     {% if report.hasSection('visitsCare') %}
         {% include '@App/Report/Rendered/_visits_care.html.twig' with {
             'visitsCare': report.visitsCare,
@@ -35,6 +34,21 @@
         } %}
     {% endif %}
 
+    {% if report.getClientBenefitsCheck is not null and report.hasSection('clientBenefitsCheck') %}
+        {% include '@App/Report/Rendered/_client_benefits_check.html.twig' with {
+            'view': review.getClientBenefitsCheckReviewView,
+            'transOptions': transOptions,
+            'transDomain': 'report-client-benefits-check'
+        } %}
+    {% endif %}
+
+    {% if report.hasSection('bankAccounts') and report.bankAccounts | length > 0 %}
+        {% include '@App/Report/Rendered/_bankAccounts.html.twig' with {
+            'report': report,
+            'transDomain': 'report-bank-accounts'
+        } %}
+    {% endif %}
+    
     {% if report.hasSection('deputyExpenses') %}
         {% include '@App/Report/Rendered/_deputy_expenses.html.twig' with {
             'report': report,
