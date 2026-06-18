@@ -340,6 +340,7 @@ class UserRepositoryTest extends KernelTestCase
             ->setLastLoggedIn(new \DateTime('-26 months'));
 
         foreach ($usersToAdd as $user) {
+            assert($user instanceof User);
             self::$entityManager->persist($user);
         }
 

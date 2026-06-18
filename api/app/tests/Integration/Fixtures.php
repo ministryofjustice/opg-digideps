@@ -460,7 +460,7 @@ class Fixtures
         }
 
         foreach ($entities as $e) {
-            $this->em->flush($e);
+            $this->em->flush();
         }
 
         return $this;
@@ -470,6 +470,7 @@ class Fixtures
     {
         $args = func_get_args();
         foreach ($args as $e) {
+            assert(is_object($e));
             $this->em->remove($e);
         }
 
@@ -501,6 +502,7 @@ class Fixtures
 
     public function getRepo(string $entity): EntityRepository
     {
+        /** @var class-string $entity */
         return $this->em->getRepository($entity);
     }
 
@@ -568,6 +570,7 @@ class Fixtures
 
     public function refresh($entity): void
     {
+        assert(is_object($entity));
         $this->em->refresh($entity);
     }
 
@@ -636,7 +639,10 @@ class Fixtures
 
     public function deleteUser(int $id): void
     {
-        $this->em->remove($this->getRepo(User::class)->find($id));
+        $user = $this->getRepo(User::class)->find($id);
+        if ($user !== null) {
+            $this->em->remove($user);
+        }
     }
 
     public function createPreRegistration(string $caseNumber, string $reportType, string $orderType, ?string $deputyUid = null, ?\DateTime $madeDate = null): PreRegistration
