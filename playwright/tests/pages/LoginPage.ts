@@ -1,6 +1,6 @@
 import { Page, expect } from "@playwright/test";
 
-export class LoginPage {
+export default class LoginPage {
   constructor(private page: Page) {}
 
   async goto() {
@@ -12,7 +12,7 @@ export class LoginPage {
     await this.page.fill("#login_password", password);
 
     await Promise.all([
-      this.page.waitForNavigation(),
+      this.page.waitForLoadState('networkidle'),
       this.page.click("#login_login"),
     ]);
   }

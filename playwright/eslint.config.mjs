@@ -6,7 +6,12 @@ export default defineConfig([
   globalIgnores(["**/playwright-report/"]),
   {
     files: ["**/*.ts", "**/*.cts", "**/*.mts"],
-    languageOptions: { globals: globals.browser },
+    languageOptions: {
+      globals: globals.browser,
+      parserOptions: {
+        projectService: true,
+      },
+    },
+    extends: [tseslint.configs.strictTypeChecked],
   },
-  tseslint.configs.strict,
 ]);

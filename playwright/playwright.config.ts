@@ -5,7 +5,7 @@ export default defineConfig({
   retries: 1,
   reporter: [["html", { outputFolder: "playwright-report", open: "never" }]],
   use: {
-    baseURL: process.env.FRONT_URL || "http://frontend-webserver",
+    baseURL: process.env.FRONT_URL,
     ignoreHTTPSErrors: true,
     browserName: "chromium",
   },

@@ -275,3 +275,7 @@ playwright-check-format: ##@playwright Checks formatting of tests.
 playwright-format: ##@playwright Formats the tests.
 	docker compose build playwright-tests
 	docker compose run --rm playwright-tests format
+
+playwright-typecheck: ##@playwright Typechecks the tests.
+	docker compose build playwright-tests
+	docker compose run --rm playwright-tests typecheck

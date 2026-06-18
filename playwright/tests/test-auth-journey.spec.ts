@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { createFixture } from "./fixtures/fixtures";
-import { LoginPage } from "./pages/login-page";
+import LoginPage from './pages/LoginPage';
 
 test("lay user can login", async ({ page }) => {
   const user = createFixture("lay_user");
