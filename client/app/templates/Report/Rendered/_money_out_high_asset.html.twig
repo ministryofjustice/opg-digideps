@@ -22,6 +22,7 @@
                     {{ (report.moneyOutExists) ? report.moneyOutExists | capitalize : 'not entered' }}
                 </td>
             </tr>
+
             {% if report.moneyOutExists == 'No' %}
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header govuk-!-width-one-half">
@@ -32,6 +33,7 @@
                     </td>
                 </tr>
             {% endif %}
+
             </tbody>
         </table>
     </div>
