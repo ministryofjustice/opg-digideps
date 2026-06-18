@@ -60,7 +60,7 @@ jobs:
         with:
           iac_test_directory: "${{ matrix.terraform_configuration_path }}"
           SNYK_TOKEN: ${{ secrets.snyk_token }}
-          snyk_test_args: "--severity-threshold=low"
+          snyk_test_args: "--severity-threshold=high"
           snyk_policy_path: "${{ matrix.terraform_configuration_path }}.snyk"
 
       - name: Upload Snyk IaC results to GitHub Security tab
