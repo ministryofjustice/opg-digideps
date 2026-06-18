@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
 use Doctrine\DBAL\Exception;
-use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
 use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
@@ -51,7 +51,7 @@ final class DeputyshipsCandidatesSelectorTest extends TestCase
     public function testSelectDbException(): void
     {
         // so that the test will run: we check all of this in the successful test
-        $mockQuery = $this->createMock(AbstractQuery::class);
+        $mockQuery = $this->createMock(Query::class);
         $this->mockEntityManager->method('createQuery')->willReturn($mockQuery);
         $this->mockStagingDeputyshipRepository->method('findAll')->willReturn([]);
 
@@ -74,7 +74,7 @@ final class DeputyshipsCandidatesSelectorTest extends TestCase
             ->expects($this->once())
             ->method('beginTransaction');
 
-        $mockQuery = $this->createMock(AbstractQuery::class);
+        $mockQuery = $this->createMock(Query::class);
         $mockQuery->expects($this->once())
             ->method('execute');
 
