@@ -45,7 +45,7 @@
                     <thead>
                         <tr class="govuk-table__row">
                             {% for cell in table.header.cells %}
-                                <th scope="col" class="{{ cell.classNames }}">{{ cell.content }}</th>
+                                <th {% if cell.hasScope %} scope="col" {% endif %} class="{{ cell.classNames }}">{{ cell.content }}</th>
                             {% endfor %}
                         </tr>
                     </thead>
@@ -54,7 +54,7 @@
                     {% for row in table.rows %}
                         <tr class="govuk-table__row">
                             {% for cell in row.cells %}
-                                {% if cell.header %}
+                                {% if cell.hasScope %}
                                     <th scope="row" class="{{ cell.classNames }}">
                                         {{ cell.content }}
                                     </th>
