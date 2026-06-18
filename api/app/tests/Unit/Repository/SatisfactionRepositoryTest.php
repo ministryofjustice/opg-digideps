@@ -9,7 +9,7 @@ use OPG\Digideps\Backend\Repository\SatisfactionRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
-use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ManagerRegistry;
@@ -45,7 +45,7 @@ class SatisfactionRepositoryTest extends TestCase
             ['id' => 2, 'score' => 4, 'comments' => 'Good',  'deputyrole' => 'LAY', 'reporttype' => '103', 'created' => '2026-03-20'],
         ];
 
-        $mockQuery = $this->createMock(AbstractQuery::class);
+        $mockQuery = $this->createMock(Query::class);
         $mockQuery->method('setParameters')->willReturnSelf();
         $mockQuery->method('getResult')->willReturn($expectedRows);
 
