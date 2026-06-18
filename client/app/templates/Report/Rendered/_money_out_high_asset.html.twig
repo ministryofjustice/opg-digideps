@@ -22,6 +22,16 @@
                     {{ (report.moneyOutExists) ? report.moneyOutExists | capitalize : 'not entered' }}
                 </td>
             </tr>
+            {% if report.moneyOutExists == 'No' %}
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                        {{ 'summaryPage.moneyOut.reasonForNoMoneyOut.label' | trans(transOptions, transDomain) }}
+                    </th>
+                    <td class="govuk-table__cell govuk-!-width-one-half">
+                        {{ (report.reasonForNoMoneyOut) ? report.reasonForNoMoneyOut | capitalize : 'not entered' }}
+                    </td>
+                </tr>
+            {% endif %}
             </tbody>
         </table>
     </div>
