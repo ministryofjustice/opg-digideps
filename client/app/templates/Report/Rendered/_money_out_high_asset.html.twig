@@ -1,0 +1,108 @@
+{% set page = 'summaryPage' %}
+<h2 class="govuk-heading-m">Money out</h2>
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+            Question
+        </h3>
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+            Answer
+        </h3>
+    </div>
+
+    <div class="govuk-summary-card__content">
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                    {{ 'summaryPage.moneyOut.hasMoneyOut.label' | trans(transOptions, transDomain) }}
+                </th>
+                <td class="govuk-table__cell govuk-!-width-one-half">
+                    {{ report.moneyOutExists | capitalize }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if report.moneyOutExists == 'Yes' and report.moneyTransactionsOut | length > 0 %}
+    <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+            <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+                Payments
+            </h3>
+        </div>
+        <div class="govuk-summary-card__content">
+            {% for categoryId, transactionGroup in report.groupMoneyTransactionsByGroup(report.moneyTransactionsOut) %}
+                {% set total = 0 %}
+                <h4 class="govuk-heading-s">
+                    {{ ('form.group.entries.' ~ categoryId) | trans(transOptions, transDomain) }}
+                </h4>
+                <table class="govuk-table govuk-!-static-margin-top-1">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
+                            {{ 'summaryPage.moneyOut.list.label.type' | trans(transOptions, transDomain) }}
+                        </th>
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
+                            {{ 'summaryPage.moneyOut.list.label.description' | trans(transOptions, transDomain) }}
+                        </th>
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
+                            {{ 'summaryPage.moneyOut.list.label.bankAccount' | trans(transOptions, transDomain) }}
+                        </th>
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
+                            {{ 'summaryPage.moneyOut.list.label.amount' | trans(transOptions, transDomain) }}
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    {% for transaction in transactionGroup.entries %}
+                        {% set total = total + transaction.amount  %}
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell govuk-!-width-one-quarter">
+                                {{ ('form.category.entries.' ~ transaction.category ~ '.label') | trans(transOptions, transDomain) }}
+                            </td>
+                            <td class="govuk-table__cell govuk-!-width-one-quarter">
+                                {{ transaction.description | nl2br }}
+                            </td>
+                            <td class="govuk-table__cell govuk-!-width-one-quarter">
+                                {{ (transaction.bankAccount) ? transaction.bankAccount.nameOneLine : 'not entered' | trans({}, 'common') }}
+                            </td>
+                            <td class="govuk-table__cell govuk-!-width-one-quarter">
+                                &pound;{{ transaction.amount | money_format }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td class="govuk-summary-card__title govuk-!-width-one-quarter">
+                            Total amount
+                        </td>
+                        <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
+                        <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
+                        <td class="govuk-summary-card__title govuk-!-width-one-quarter">
+                            &pound;{{ total | money_format }}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            {% endfor %}
+
+            <table class="govuk-table govuk-!-static-margin-top-1">
+                <tbody class="govuk-table__body">
+                <tr>
+                    <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
+                    <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
+                    <td class="govuk-summary-card__title govuk-!-width-one-quarter">
+                        Total money out
+                    </td>
+                    <td class="govuk-summary-card__title govuk-!-width-one-quarter">
+                        &pound;{{ report.moneyOutTotal | money_format }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}

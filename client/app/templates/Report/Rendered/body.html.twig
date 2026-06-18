@@ -25,7 +25,7 @@
             'transDomain': 'report-contacts'
         } %}
     {% endif %}
-    
+
     {% if report.hasSection('visitsCare') %}
         {% include '@App/Report/Rendered/_visits_care.html.twig' with {
             'visitsCare': report.visitsCare,
@@ -48,7 +48,7 @@
             'transDomain': 'report-bank-accounts'
         } %}
     {% endif %}
-    
+
     {% if report.hasSection('deputyExpenses') %}
         {% include '@App/Report/Rendered/_deputy_expenses.html.twig' with {
             'report': report,
@@ -70,6 +70,14 @@
             'report': report,
             'transOptions': transOptions,
             'transDomain': 'report-money-transfer'
+        } %}
+    {% endif %}
+
+    {% if report.hasSection('moneyOut')%}
+        {% include '@App/Report/Rendered/_money_out_high_asset.html.twig' with {
+            'report': report,
+            'transOptions': transOptions,
+            'transDomain': 'report-money-transaction'
         } %}
     {% endif %}
 </div>
