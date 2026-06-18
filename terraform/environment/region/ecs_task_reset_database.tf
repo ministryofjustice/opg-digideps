@@ -11,7 +11,7 @@ module "reset_database" {
   task_role_arn         = aws_iam_role.task_runner.arn
   architecture          = "ARM64"
   os                    = "LINUX"
-  security_group_id     = module.db_access_task_security_group.id
+  security_group_id     = module.db_access_task_non_prod_security_group.id
 }
 
 locals {
