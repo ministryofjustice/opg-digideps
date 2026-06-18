@@ -63,3 +63,15 @@ save:
   label: Save
 
 navLink: Debts
+
+review:
+  yes: Yes
+  no: No
+  otherDebt: "%client%'s other debts of"
+  description: Description
+  amount: Amount
+  totalAmount: Total amount
+  question: Question
+  answer: Answer
+  list: List of debts
+  notEntered: Not entered
