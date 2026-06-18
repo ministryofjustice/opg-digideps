@@ -57,7 +57,7 @@ class DeputyRepository extends ServiceEntityRepository
 
     public function save(Deputy $deputy): void
     {
-        $this->_em->persist($deputy);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($deputy);
+        $this->getEntityManager()->flush();
     }
 }

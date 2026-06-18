@@ -16,7 +16,7 @@ class OrganisationRepository extends ServiceEntityRepository
 
     public function getAllArray(): array
     {
-        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter = $this->getEntityManager()->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Organisation::class);
 
         $query = $this
@@ -37,7 +37,7 @@ class OrganisationRepository extends ServiceEntityRepository
 
     public function getOrgIdAndNames(): array
     {
-        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter = $this->getEntityManager()->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Organisation::class);
 
         $query = $this
@@ -97,7 +97,7 @@ class OrganisationRepository extends ServiceEntityRepository
      */
     public function organisationExists(string $email): bool
     {
-        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter = $this->getEntityManager()->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Organisation::class);
 
         $email = strtolower($email);
@@ -122,7 +122,7 @@ class OrganisationRepository extends ServiceEntityRepository
 
     public function findByEmailIdentifier(string $email): ?Organisation
     {
-        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter = $this->getEntityManager()->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Organisation::class);
 
         $email = strtolower($email);
