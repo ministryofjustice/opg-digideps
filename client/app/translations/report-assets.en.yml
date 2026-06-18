@@ -148,3 +148,15 @@ form:
       hint: ""
   save:
     label: Save and continue
+
+review:
+  yes: Yes
+  no: No
+  fully: Fully
+  partly: Partly
+  description: Description
+  amount: Amount
+  totalAmount: Total amount
+  question: Question
+  answer: Answer
+  artworkAntiquesJewellery: "Artwork, antiques and jewellery"
