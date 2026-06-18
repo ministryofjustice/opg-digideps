@@ -8,7 +8,6 @@ use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Service\DataImporter\CsvToArray;
 use OPG\Digideps\Backend\Service\DeputyCaseService;
 use OPG\Digideps\Backend\Service\File\Storage\S3Storage;
-use OPG\Digideps\Backend\Service\LayRegistrationService;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
@@ -72,7 +71,6 @@ class ProcessLayCSVCommand extends Command
         private readonly LoggerInterface $verboseLogger,
         private readonly CSVDeputyshipProcessing $csvProcessing,
         private readonly PreRegistrationRepository $preReg,
-        private readonly LayRegistrationService $layRegistrationService,
         private readonly DeputyCaseService $deputyCaseService,
     ) {
         parent::__construct();
@@ -208,17 +206,6 @@ class ProcessLayCSVCommand extends Command
 
         if ($result['new-clients-found'] == 0) {
             $this->verboseLogger->notice('No new multiclients were found, so none were added');
-        }
-
-        // ensure that all active clients have at least one report associated with them,
-        // to fix issues caused by partially-registered users (see DDLS-911)
-        $this->verboseLogger->notice('Adding missing reports to clients');
-        try {
-            $numReportsAdded = $this->layRegistrationService->addMissingReports();
-            $this->verboseLogger->notice("Added $numReportsAdded missing reports to clients");
-        } catch (\Throwable $e) {
-            $this->verboseLogger->error('Error encountered while adding missing reports: ' . $e->getMessage());
-            $this->verboseLogger->error($e->getTraceAsString());
         }
 
         // additional deputy_case association patching (see DDLS-907)
