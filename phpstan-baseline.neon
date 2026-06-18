@@ -36685,7 +36685,7 @@ parameters:
 			path: client/app/src/Service/DeputyProvider.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\DeputyProvider\:\:loadUserByIdentifier\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
+			message: '#^Method OPG\\Digideps\\Frontend\\Service\\DeputyProvider\:\:loadUserByIdentifierUnsafe\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: client/app/src/Service/DeputyProvider.php
