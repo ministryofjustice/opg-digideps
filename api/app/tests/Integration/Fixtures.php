@@ -466,11 +466,9 @@ class Fixtures
         return $this;
     }
 
-    public function remove(): static
+    public function remove(object ...$entities): static
     {
-        $args = func_get_args();
-        foreach ($args as $e) {
-            assert(is_object($e));
+        foreach ($entities as $e) {
             $this->em->remove($e);
         }
 
@@ -566,9 +564,8 @@ class Fixtures
         self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table ' . implode(',', $tables) . '  RESTART IDENTITY cascade";');
     }
 
-    public function refresh($entity): void
+    public function refresh(object $entity): void
     {
-        assert(is_object($entity));
         $this->em->refresh($entity);
     }
 
