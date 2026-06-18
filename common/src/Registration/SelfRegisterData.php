@@ -135,7 +135,7 @@ class SelfRegisterData
         return $this->caseNumber;
     }
 
-    public function setCaseNumber(string $caseNumber): self
+    public function setCaseNumber(?string $caseNumber): self
     {
         $this->caseNumber = $caseNumber;
         return $this;
