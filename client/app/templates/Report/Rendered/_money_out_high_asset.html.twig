@@ -19,7 +19,7 @@
                     {{ 'summaryPage.moneyOut.hasMoneyOut.label' | trans(transOptions, transDomain) }}
                 </th>
                 <td class="govuk-table__cell govuk-!-width-one-half">
-                    {{ report.moneyOutExists | capitalize }}
+                    {{ (report.moneyOutExists) ? report.moneyOutExists | capitalize : 'not entered' }}
                 </td>
             </tr>
             </tbody>
