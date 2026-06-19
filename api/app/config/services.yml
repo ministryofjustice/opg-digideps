@@ -505,7 +505,7 @@ services:
                       "active",
                   ]
                 - [
-                      '@OPG\Digideps\Backend\Factory\MissingReport\MissingReportDataFactory',
+                      '@OPG\Digideps\Backend\Factory\RequiredReport\RequiredReportDataFactory',
                       "dry-run-only",
                   ]
                 - [
