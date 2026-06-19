@@ -199,7 +199,7 @@ final class UserRegistrationServiceTest extends TestCase
 
         $client = m::mock(Client::class)
             ->shouldReceive('hasDeputies')->andReturn(false)
-            ->shouldReceive('getOrganisation')->andReturn(new Organisation())
+            ->shouldReceive('getOrganisation')->andReturn(new Organisation('', ''))
             ->shouldReceive('getCaseNumber')->andReturn('12341234')
             ->getMock();
 

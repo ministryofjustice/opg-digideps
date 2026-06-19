@@ -390,10 +390,7 @@ class Fixtures
      */
     public function createOrganisation(string $name, string $identifier, bool $isActive, User ...$users): Organisation
     {
-        $org = new Organisation();
-        $org->setName($name);
-        $org->setEmailIdentifier($identifier);
-        $org->setIsActivated($isActive);
+        $org = new Organisation($name, $identifier, $isActive);
 
         foreach ($users as $user) {
             $org->addUser($user);

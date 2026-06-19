@@ -300,13 +300,9 @@ final class FixtureService
 
     private function makeOrganisation(DeputyDescriptor $descriptor, Client $client): Organisation
     {
-        $organisation = new Organisation()
-            ->setId($this->counter->nextInt())
-            ->setIsActivated(true)
-            ->setDeletedAt(null)
-            ->setName($descriptor->organisation);
-        $organisation->setEmailIdentifier("@{$organisation->getId()}.{$descriptor->emailDomain}");
-
+        $id = $this->counter->nextInt();
+        $emailIdentifier = "@{$id}.{$descriptor->emailDomain}";
+        $organisation = new Organisation($descriptor->organisation, $emailIdentifier, true)->setId($id);
         $organisation->getClients()->add($client);
 
         return $this->persist($organisation);
