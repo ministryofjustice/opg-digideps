@@ -1,19 +1,19 @@
-{% set l10n = view.l10n %}
+{% set text = view.text %}
 {% set list = view.list %}
 {% set table1 = view.table1 %}
 {% set table2 = view.table2 %}
 
 <h2 class="govuk-heading-m">
-    {{ l10n.header }}
+    {{ text.header }}
 </h2>
 
 <div class="govuk-summary-card">
     <div class="govuk-summary-card__title-wrapper">
         <h3 class="govuk-summary-card__title govuk-!-width-one-half">
-            {{ l10n.question }}
+            {{ text.question }}
         </h3>
         <h3 class="govuk-summary-card__title govuk-!-width-one-half">
-            {{ l10n.answer }}
+            {{ text.answer }}
         </h3>
     </div>
     <div class="govuk-summary-card__content">
@@ -36,7 +36,7 @@
     <div class="govuk-summary-card">
         <div class="govuk-summary-card__title-wrapper">
             <h3 class="govuk-summary-card__title govuk-!-width-full">
-                {{ l10n.tableHeader }}
+                {{ text.tableHeader }}
             </h3>
         </div>
         <div class="govuk-summary-card__content">

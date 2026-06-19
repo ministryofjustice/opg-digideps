@@ -21,9 +21,9 @@ final class DebtsReviewView
     public ?Table $table2 = null;
 
     /**
-     * @var array<string, string> $l10n
+     * @var array<string, string> $text
      */
-    public array $l10n = [];
+    public array $text = [];
 
     private array $parameters = [];
 
@@ -34,7 +34,7 @@ final class DebtsReviewView
     public function mount(Report $report): void
     {
         $this->parameters = ['%client%' => $report->getClient()->getFirstname()];
-        $this->l10n = $this->makeL10n();
+        $this->text = $this->makeText();
 
         $this->list = $this->makeList($report);
         $this->table1 = $this->makeTable1($report);
@@ -44,7 +44,7 @@ final class DebtsReviewView
     private function makeList(Report $report): ListEntries
     {
         $builder = new ListBuilder();
-        $builder->addEntry($this->l10n['hasDebts'], $this->l10n[$report->getHasDebts() ?? 'notEntered']);
+        $builder->addEntry($this->text['hasDebts'], $this->text[$report->getHasDebts() ?? 'notEntered']);
         return $builder->makeList();
     }
 
@@ -54,7 +54,7 @@ final class DebtsReviewView
             return null;
         }
 
-        $builder = new TableBuilder()->addHeader($this->l10n['description'], $this->l10n['amount']);
+        $builder = new TableBuilder()->addHeader($this->text['description'], $this->text['amount']);
         $total = 0.0;
         foreach (['care-fees', 'credit-cards', 'loans', 'other'] as $type) {
             $debt = $report->getDebtById($type);
@@ -67,7 +67,7 @@ final class DebtsReviewView
                 );
             }
         }
-        $builder->addRow(new Cell($this->l10n['totalAmount'], isHeader: true), new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, true));
+        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, true));
         return $builder->makeTable();
     }
 
@@ -77,14 +77,14 @@ final class DebtsReviewView
             return null;
         }
 
-        $builder = new TableBuilder()->addHeader($this->l10n['question'], $this->l10n['answer']);
+        $builder = new TableBuilder()->addHeader($this->text['question'], $this->text['answer']);
 
         $other = $report->getDebtById('other');
         $otherAmount = (float)$other?->getAmount();
         if ($other !== null && $otherAmount > 0.0) {
-            $builder->addRow("{$this->l10n['otherDebt']} {$this->formatMoney($otherAmount)}", $other->getMoreDetails() ?? $this->l10n['notEntered']);
+            $builder->addRow("{$this->text['otherDebt']} {$this->formatMoney($otherAmount)}", $other->getMoreDetails() ?? $this->text['notEntered']);
         }
-        $builder->addRow($this->l10n['howManaged'], $report->getDebtManagement() ?? $this->l10n['notEntered']);
+        $builder->addRow($this->text['howManaged'], $report->getDebtManagement() ?? $this->text['notEntered']);
 
         return $builder->makeTable();
     }
@@ -92,7 +92,7 @@ final class DebtsReviewView
     /**
      * @return  array<string, string>
      */
-    private function makeL10n(): array
+    private function makeText(): array
     {
         return [
             'header' => $this->translate('startPage.pageTitle'),
