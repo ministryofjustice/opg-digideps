@@ -8,7 +8,7 @@ use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 class UserResearchResponseRepository extends ServiceEntityRepository

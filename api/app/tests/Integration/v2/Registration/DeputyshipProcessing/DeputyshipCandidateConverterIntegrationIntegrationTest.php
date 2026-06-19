@@ -42,7 +42,8 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
             ->innerJoin(CourtOrder::class, 'co', Join::WITH, 'co = cod.courtOrder')
             ->where('cod.deputy = :deputy')
             ->andWhere('co.courtOrderUid = :courtOrderUid')
-            ->setParameters(['deputy' => $deputy, 'courtOrderUid' => $orderUid])
+            ->setParameter('deputy', $deputy)
+            ->setParameter('courtOrderUid', $orderUid)
             ->getQuery()
             ->getSingleScalarResult();
 
