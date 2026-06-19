@@ -1,13 +1,14 @@
 {% set page = 'summaryPage' %}
+{% set review = 'review' %}
 <h2 class="govuk-heading-m">Money out</h2>
 
 <div class="govuk-summary-card">
     <div class="govuk-summary-card__title-wrapper">
         <h3 class="govuk-summary-card__title govuk-!-width-one-half">
-            Question
+            {{ (review ~ '.moneyOut.question') | trans(transOptions, transDomain) }}
         </h3>
         <h3 class="govuk-summary-card__title govuk-!-width-one-half">
-            Answer
+            {{ (review ~ '.moneyOut.answer') | trans(transOptions, transDomain) }}
         </h3>
     </div>
 
@@ -16,7 +17,7 @@
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header govuk-!-width-one-half">
-                    {{ 'summaryPage.moneyOut.hasMoneyOut.label' | trans(transOptions, transDomain) }}
+                    {{ (page ~ '.moneyOut.hasMoneyOut.label') | trans(transOptions, transDomain) }}
                 </th>
                 <td class="govuk-table__cell govuk-!-width-one-half">
                     {{ (report.moneyOutExists) ? report.moneyOutExists | capitalize : 'not entered' }}
@@ -26,7 +27,7 @@
             {% if report.moneyOutExists == 'No' %}
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header govuk-!-width-one-half">
-                        {{ 'summaryPage.moneyOut.reasonForNoMoneyOut.label' | trans(transOptions, transDomain) }}
+                        {{ (page ~ '.moneyOut.reasonForNoMoneyOut.label') | trans(transOptions, transDomain) }}
                     </th>
                     <td class="govuk-table__cell govuk-!-width-one-half">
                         {{ (report.reasonForNoMoneyOut) ? report.reasonForNoMoneyOut | capitalize : 'not entered' }}
@@ -43,7 +44,7 @@
     <div class="govuk-summary-card">
         <div class="govuk-summary-card__title-wrapper">
             <h3 class="govuk-summary-card__title govuk-!-width-one-half">
-                Payments
+                {{ (review ~ '.moneyOut.payments') | trans(transOptions, transDomain) }}
             </h3>
         </div>
         <div class="govuk-summary-card__content">
@@ -56,16 +57,16 @@
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
-                            {{ 'summaryPage.moneyOut.list.label.type' | trans(transOptions, transDomain) }}
+                            {{ (page ~ '.moneyOut.list.label.type') | trans(transOptions, transDomain) }}
                         </th>
                         <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
-                            {{ 'summaryPage.moneyOut.list.label.description' | trans(transOptions, transDomain) }}
+                            {{ (page ~ '.moneyOut.list.label.description') | trans(transOptions, transDomain) }}
                         </th>
                         <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
-                            {{ 'summaryPage.moneyOut.list.label.bankAccount' | trans(transOptions, transDomain) }}
+                            {{ (page ~ '.moneyOut.list.label.bankAccount') | trans(transOptions, transDomain) }}
                         </th>
                         <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
-                            {{ 'summaryPage.moneyOut.list.label.amount' | trans(transOptions, transDomain) }}
+                            {{ (page ~ '.moneyOut.list.label.amount') | trans(transOptions, transDomain) }}
                         </th>
                     </tr>
                     </thead>
@@ -89,7 +90,7 @@
                     {% endfor %}
                     <tr>
                         <td class="govuk-summary-card__title govuk-!-width-one-quarter">
-                            Total amount
+                            {{ (review ~ '.moneyOut.totalAmount') | trans(transOptions, transDomain) }}
                         </td>
                         <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
                         <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
@@ -107,7 +108,7 @@
                     <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
                     <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
                     <td class="govuk-summary-card__title govuk-!-width-one-quarter">
-                        Total money out
+                        {{ (review ~ '.moneyOut.totalMoneyOut') | trans(transOptions, transDomain) }}
                     </td>
                     <td class="govuk-summary-card__title govuk-!-width-one-quarter">
                         &pound;{{ report.moneyOutTotal | money_format }}
