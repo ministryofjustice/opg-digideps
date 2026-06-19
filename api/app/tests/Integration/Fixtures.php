@@ -32,7 +32,7 @@ use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\DBAL\Connection;
 
 /**
@@ -460,16 +460,15 @@ class Fixtures
         }
 
         foreach ($entities as $e) {
-            $this->em->flush($e);
+            $this->em->flush();
         }
 
         return $this;
     }
 
-    public function remove(): static
+    public function remove(object ...$entities): static
     {
-        $args = func_get_args();
-        foreach ($args as $e) {
+        foreach ($entities as $e) {
             $this->em->remove($e);
         }
 
@@ -498,7 +497,6 @@ class Fixtures
      * @param class-string<T> $entity
      * @return EntityRepository<T>
      */
-
     public function getRepo(string $entity): EntityRepository
     {
         return $this->em->getRepository($entity);
@@ -566,7 +564,7 @@ class Fixtures
         self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table ' . implode(',', $tables) . '  RESTART IDENTITY cascade";');
     }
 
-    public function refresh($entity): void
+    public function refresh(object $entity): void
     {
         $this->em->refresh($entity);
     }
@@ -636,7 +634,10 @@ class Fixtures
 
     public function deleteUser(int $id): void
     {
-        $this->em->remove($this->getRepo(User::class)->find($id));
+        $user = $this->getRepo(User::class)->find($id);
+        if ($user !== null) {
+            $this->em->remove($user);
+        }
     }
 
     public function createPreRegistration(string $caseNumber, string $reportType, string $orderType, ?string $deputyUid = null, ?\DateTime $madeDate = null): PreRegistration

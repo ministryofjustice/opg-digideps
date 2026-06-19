@@ -18,7 +18,7 @@ class MoneyTransactionRepository extends ServiceEntityRepository
      */
     public function retrieveSoftDeleted($reportId)
     {
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(MoneyTransaction::class);
+        $this->getEntityManager()->getFilters()->getFilter('softdeleteable')->disableForEntity(MoneyTransaction::class);
 
         $query = $this
             ->getEntityManager()
@@ -27,7 +27,7 @@ class MoneyTransactionRepository extends ServiceEntityRepository
 
         $moneyTransactionObject = $query->getResult();
 
-        $this->_em->getFilters()->enable('softdeleteable');
+        $this->getEntityManager()->getFilters()->enable('softdeleteable');
 
         return $moneyTransactionObject;
     }

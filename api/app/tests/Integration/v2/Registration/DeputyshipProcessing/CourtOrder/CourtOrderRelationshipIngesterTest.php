@@ -6,7 +6,7 @@ namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProce
 
 use Doctrine\ORM\Id\AbstractIdGenerator;
 use Doctrine\ORM\Id\AssignedGenerator;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
@@ -24,7 +24,7 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
 {
     /**
      * @var int $oldGeneratorType
-     * @phpstan-var ClassMetadataInfo::GENERATOR_TYPE_* $oldGeneratorType
+     * @phpstan-var ClassMetadata::GENERATOR_TYPE_* $oldGeneratorType
      */
     private int $oldGeneratorType;
     private AbstractIdGenerator $oldGenerator;
@@ -36,7 +36,7 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
         $this->oldGeneratorType = $metadata->generatorType;
         $this->oldGenerator = $metadata->idGenerator;
 
-        $metadata->setIdGeneratorType(ClassMetadataInfo::GENERATOR_TYPE_NONE);
+        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
         $metadata->setIdGenerator(new AssignedGenerator());
     }
 
