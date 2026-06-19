@@ -17,9 +17,9 @@ class MoneyReceivedOnClientsBehalfRepository extends ServiceEntityRepository
 
     public function delete(string $id): void
     {
-        $entity = $this->_em->find(MoneyReceivedOnClientsBehalf::class, $id);
+        $entity = $this->getEntityManager()->find(MoneyReceivedOnClientsBehalf::class, $id);
 
-        $this->_em->remove($entity);
-        $this->_em->flush();
+        $this->getEntityManager()->remove($entity);
+        $this->getEntityManager()->flush();
     }
 }
