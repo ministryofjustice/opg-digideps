@@ -20,7 +20,7 @@
                     {{ (page ~ '.moneyOut.hasMoneyOut.label') | trans(transOptions, transDomain) }}
                 </th>
                 <td class="govuk-table__cell govuk-!-width-one-half">
-                    {{ (report.moneyOutExists) ? report.moneyOutExists | capitalize : 'not entered' }}
+                    {{ (report.moneyOutExists) ? report.moneyOutExists | capitalize : 'Not entered' }}
                 </td>
             </tr>
 
@@ -30,7 +30,7 @@
                         {{ (page ~ '.moneyOut.reasonForNoMoneyOut.label') | trans(transOptions, transDomain) }}
                     </th>
                     <td class="govuk-table__cell govuk-!-width-one-half">
-                        {{ (report.reasonForNoMoneyOut) ? report.reasonForNoMoneyOut | capitalize : 'not entered' }}
+                        {{ (report.reasonForNoMoneyOut) ? report.reasonForNoMoneyOut | capitalize : 'Not entered' }}
                     </td>
                 </tr>
             {% endif %}
@@ -81,7 +81,7 @@
                                 {{ transaction.description | nl2br }}
                             </td>
                             <td class="govuk-table__cell govuk-!-width-one-quarter">
-                                {{ (transaction.bankAccount) ? transaction.bankAccount.nameOneLine : 'not entered' | trans({}, 'common') }}
+                                {{ (transaction.bankAccount) ? transaction.bankAccount.nameOneLine : 'Not entered' | trans({}, 'common') }}
                             </td>
                             <td class="govuk-table__cell govuk-!-width-one-quarter">
                                 &pound;{{ transaction.amount | money_format }}
