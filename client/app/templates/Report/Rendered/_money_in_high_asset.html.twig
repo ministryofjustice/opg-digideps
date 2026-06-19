@@ -22,6 +22,16 @@
                         {{ report.moneyInExists | capitalize }}
                     </td>
                 </tr>
+            {% if report.moneyInExists == 'No' %}
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                        {{ 'summaryPage.moneyIn.reasonForNoMoneyIn.label' | trans(transOptions, translationDomain) }}
+                    </th>
+                    <td class="govuk-table__cell govuk-!-width-one-half">
+                        {{ report.reasonForNoMoneyIn | nl2br}}
+                    </td>
+                </tr>
+            {% endif %}
             </tbody>
         </table>
     </div>
@@ -46,16 +56,16 @@
             <table class="govuk-table govuk-!-static-margin-top-1">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header govuk-!-width-one-fourth">
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
                             {{ 'summaryPage.moneyIn.list.label.type' | trans(transOptions, transDomain) }}
                         </th>
-                        <th scope="col" class="govuk-table__header govuk-!-width-one-fourth">
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
                             {{ 'summaryPage.moneyIn.list.label.description' | trans(transOptions, transDomain) }}
                         </th>
-                        <th scope="col" class="govuk-table__header govuk-!-width-one-fourth">
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
                             {{ 'summaryPage.moneyIn.list.label.bankAccount' | trans(transOptions, transDomain) }}
                         </th>
-                        <th scope="col" class="govuk-table__header govuk-!-width-one-fourth">
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
                             {{ 'summaryPage.moneyIn.list.label.totalAmount' | trans(transOptions, transDomain) }}
                         </th>
                     </tr>
@@ -64,27 +74,27 @@
                 {% for transaction in transactionGroup.entries %}
                 {% set total = total + transaction.amount  %}
                     <tr class="govuk-table__row">
-                        <td class="govuk-table__cell govuk-!-width-one-fourth">
+                        <td class="govuk-table__cell govuk-!-width-one-quarter">
                             {{ ('form.category.entries.' ~ transaction.category ~ '.label') | trans(transOptions, transDomain) }}
                         </td>
-                        <td class="govuk-table__cell govuk-!-width-one-fourth">
+                        <td class="govuk-table__cell govuk-!-width-one-quarter">
                             {{ transaction.description | nl2br }}
                         </td>
-                        <td class="govuk-table__cell govuk-!-width-one-fourth">
+                        <td class="govuk-table__cell govuk-!-width-one-quarter">
                             {{ (transaction.bankAccount) ? transaction.bankAccount.nameOneLine : 'not entered' | trans({}, 'common') }}
                         </td>
-                        <td class="govuk-table__cell govuk-!-width-one-fourth">
+                        <td class="govuk-table__cell govuk-!-width-one-quarter">
                             &pound;{{ transaction.amount | money_format }}
                         </td>
                     </tr>
                 {% endfor %}
-                <tr>
-                    <td class="govuk-summary-card__title govuk-!-width-one-fourth">
+                <tr class="govuk-table__row">
+                    <td class="govuk-summary-card__title govuk-!-width-one-quarter">
                         Total
                     </td>
-                    <td class="govuk-table__cell govuk-!-width-one-fourth"></td>
-                    <td class="govuk-table__cell govuk-!-width-one-fourth"></td>
-                    <td class="govuk-summary-card__title govuk-!-width-one-fourth">
+                    <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
+                    <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
+                    <td class="govuk-summary-card__title govuk-!-width-one-quarter">
                         &pound;{{ total | money_format }}
                     </td>
                 </tr>
