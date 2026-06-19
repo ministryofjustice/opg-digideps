@@ -337,6 +337,24 @@ parameters:
 			path: src/Controller/NoteController.php
 
 		-
+			message: '#^Parameter \#2 \$category of class OPG\\Digideps\\Backend\\Entity\\Note constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/NoteController.php
+
+		-
+			message: '#^Parameter \#3 \$title of class OPG\\Digideps\\Backend\\Entity\\Note constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/NoteController.php
+
+		-
+			message: '#^Parameter \#4 \$content of class OPG\\Digideps\\Backend\\Entity\\Note constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/NoteController.php
+
+		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\Client\>\:\:findByCaseNumber\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -2407,58 +2425,10 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\ClientContact\:\:\$id is never written, only read\.$#'
-			identifier: property.onlyRead
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\CourtOrder\:\:\$courtOrderDeputyRelationships with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
 			count: 1
 			path: src/Entity/CourtOrder.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Note\:\:__construct\(\) has parameter \$category with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Note.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Note\:\:__construct\(\) has parameter \$content with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Note.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Note\:\:__construct\(\) has parameter \$title with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Note.php
-
-		-
-			message: '#^Parameter \#1 \$category of method OPG\\Digideps\\Backend\\Entity\\Note\:\:setCategory\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/Note.php
-
-		-
-			message: '#^Parameter \#1 \$content of method OPG\\Digideps\\Backend\\Entity\\Note\:\:setContent\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/Note.php
-
-		-
-			message: '#^Parameter \#1 \$title of method OPG\\Digideps\\Backend\\Entity\\Note\:\:setTitle\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/Note.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Note\:\:\$categories has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Note.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Organisation\:\:getClients\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
@@ -22663,7 +22633,25 @@ parameters:
 			path: tests/Integration/Fixtures.php
 
 		-
+			message: '#^Parameter \#2 \$category of class OPG\\Digideps\\Backend\\Entity\\Note constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Integration/Fixtures.php
+
+		-
 			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Integration/Fixtures.php
+
+		-
+			message: '#^Parameter \#3 \$title of class OPG\\Digideps\\Backend\\Entity\\Note constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Integration/Fixtures.php
+
+		-
+			message: '#^Parameter \#4 \$content of class OPG\\Digideps\\Backend\\Entity\\Note constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Integration/Fixtures.php
@@ -25165,6 +25153,12 @@ parameters:
 			path: tests/Unit/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssemblerTest.php
 
 		-
+			message: '#^Binary operation "\." between mixed and '' '' results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: tests/Unit/v2/Registration/Assembler/SiriusToOrgDeputyshipDtoAssemblerTest.php
+
+		-
 			message: '#^Cannot call method format\(\) on DateTime\|false\.$#'
 			identifier: method.nonObject
 			count: 4
@@ -25409,90 +25403,6 @@ parameters:
 			identifier: method.nonObject
 			count: 1
 			path: tests/Unit/v2/Registration/SelfRegistration/Factory/PreRegistrationFactoryTest.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Binary operation "\." between mixed and '' '' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Cannot call method contains\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Cannot call method getClients\(\) on object\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Cannot call method getDeputy\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Cannot call method getOrganisation\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Cannot call method getReports\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Cannot call method getType\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|false\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Cannot call method getType\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$data of function gzcompress expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$email1 of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setEmail1\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$row of method OPG\\Digideps\\Backend\\v2\\Registration\\Assembler\\SiriusToOrgDeputyshipDtoAssembler\:\:assembleSingleDtoFromArray\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$string of function base64_encode expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
 
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManagerInterface\:\:expects\(\)\.$#'

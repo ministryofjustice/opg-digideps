@@ -218,7 +218,7 @@ class OrgDeputyshipDTOTestHelper
          * @var OrganisationRepository $repository
          */
         $repository = $em->getRepository(Organisation::class);
-        $organisation = $repository->findByEmailIdentifier($orgIdentifier) ?? new Organisation();
+        $organisation = $repository->findByEmailIdentifier($orgIdentifier) ?? new Organisation('Your Organisation', $orgIdentifier);
 
         $organisation
             ->setName('Your Organisation')
