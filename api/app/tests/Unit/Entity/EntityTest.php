@@ -6,7 +6,10 @@ namespace Tests\OPG\Digideps\Backend\Unit\Entity;
 
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\ClientContact;
 use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Note;
+use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
@@ -57,6 +60,25 @@ final class EntityTest extends TestCase
         $bankAccount = new BankAccount($this->makeReport());
         $this->testEntity($bankAccount);
     }
+
+    public function testClientContactValidOnConstruction(): void
+    {
+        $clientContact = new ClientContact(new Client(), '', '');
+        $this->testEntity($clientContact);
+    }
+
+    public function testNoteValidOnConstruction(): void
+    {
+        $note = new Note(new Client(), '', '', '');
+        $this->testEntity($note);
+    }
+
+    public function testOrganisationValidOnConstruction(): void
+    {
+        $organisation = new Organisation('', '');
+        $this->testEntity($organisation);
+    }
+
 
     private function testEntity(object $entity): void
     {
