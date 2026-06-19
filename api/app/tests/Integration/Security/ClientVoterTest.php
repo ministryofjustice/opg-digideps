@@ -92,7 +92,7 @@ class ClientVoterTest extends KernelTestCase
 
     private function ensureClientAndUserBelongToDifferentOrganisations(Client $client, Organisation $organisation): ClientVoterTest
     {
-        $usersOrganisation = new Organisation()->setIsActivated(true);
+        $usersOrganisation = new Organisation('', '', true);
         $usersOrganisation->addUser($this->user);
         $client->setOrganisation($organisation);
 
@@ -139,8 +139,7 @@ class ClientVoterTest extends KernelTestCase
     public function testGrantsAccessToNonLayUsersIfClientBelongsToUsersActivatedOrganisation(): void
     {
         $client = new Client();
-        $organisation = new Organisation();
-        $organisation->setIsActivated(true);
+        $organisation = new Organisation('', '', true);
 
         $this
             ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
@@ -152,8 +151,7 @@ class ClientVoterTest extends KernelTestCase
     public function testDeniesAccessToNonLayUsersIfClientBelongsToADifferentActivatedOrganisation()
     {
         $client = new Client();
-        $organisation = new Organisation();
-        $organisation->setIsActivated(true);
+        $organisation = new Organisation('', '', true);
 
         $this
             ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
@@ -165,8 +163,7 @@ class ClientVoterTest extends KernelTestCase
     public function testDeniesAccessToNonLayUsersIfClientBelongsToUsersInactiveOrganisationButDoesNotBelongToUser(): void
     {
         $client = new Client();
-        $organisation = new Organisation();
-        $organisation->setIsActivated(false);
+        $organisation = new Organisation('', '');
 
         $this
             ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
@@ -178,8 +175,7 @@ class ClientVoterTest extends KernelTestCase
     public function testDeniesAccessToNonLayUsersIfClientBelongsActiveOrganisationAndTheUserDespiteUserNotBeingInTheOrganisation(): void
     {
         $client = new Client();
-        $organisation = new Organisation();
-        $organisation->setIsActivated(true);
+        $organisation = new Organisation('', '', true);
 
         $this
             ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
@@ -192,8 +188,7 @@ class ClientVoterTest extends KernelTestCase
     public function testAllowsAccessToNonLayUsersIfClientBelongsToInactiveOrganisationAndTheUserDespiteUserNotBeingInTheOrganisation(): void
     {
         $client = new Client();
-        $organisation = new Organisation();
-        $organisation->setIsActivated(false);
+        $organisation = new Organisation('', '');
 
         $this
             ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
