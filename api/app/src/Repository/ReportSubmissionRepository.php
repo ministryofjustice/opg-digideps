@@ -86,10 +86,10 @@ class ReportSubmissionRepository extends ServiceEntityRepository
             ->orderBy('rs.' . $orderBy, $order)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); // disable softdelete for createdBy, needed from admin area
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); // disable softdelete for createdBy, needed from admin area
+        $this->getEntityManager()->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); // disable softdelete for createdBy, needed from admin area
+        $this->getEntityManager()->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); // disable softdelete for createdBy, needed from admin area
         $records = $qbSelect->getQuery()->getResult(); /* @var $records ReportSubmission[] */
-        $this->_em->getFilters()->enable('softdeleteable');
+        $this->getEntityManager()->getFilters()->enable('softdeleteable');
 
         // run counts on the base query for each status (new/archived)
         $counts = [];
@@ -204,7 +204,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         string $order = 'ASC'
     ): array {
         /** @var SoftDeleteableFilter $filter */
-        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter = $this->getEntityManager()->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Client::class);
 
         $qb = $this->createQueryBuilder('rs');
@@ -225,7 +225,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
             ->setParameter(':toDate', $this->determineCreatedToDate($toDate))
             ->orderBy('rs.' . $orderBy, $order);
 
-        $this->_em->getFilters()->enable('softdeleteable');
+        $this->getEntityManager()->getFilters()->enable('softdeleteable');
 
         return $qbSelect->getQuery()->getResult();
     }
@@ -252,9 +252,9 @@ class ReportSubmissionRepository extends ServiceEntityRepository
 
     public function findOneByIdUnfiltered($id): ?object
     {
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); // disable softdelete for createdBy, needed from admin area
+        $this->getEntityManager()->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); // disable softdelete for createdBy, needed from admin area
         $reportSubmission = $this->find($id);
-        $this->_em->getFilters()->enable('softdeleteable');
+        $this->getEntityManager()->getFilters()->enable('softdeleteable');
 
         return $reportSubmission;
     }
@@ -272,8 +272,8 @@ class ReportSubmissionRepository extends ServiceEntityRepository
 
             if ($allSynced) {
                 $reportSubmission->setArchived(true);
-                $this->_em->persist($reportSubmission);
-                $this->_em->flush();
+                $this->getEntityManager()->persist($reportSubmission);
+                $this->getEntityManager()->flush();
             }
         }
     }
