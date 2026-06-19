@@ -11,7 +11,7 @@ use OPG\Digideps\Backend\Repository\OrganisationRepository;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException as OptimisticLockExceptionAlias;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class OrganisationRestHandler
