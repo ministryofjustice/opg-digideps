@@ -22777,48 +22777,6 @@ parameters:
 			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method getSynchronisationError\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method getSynchronisationStatus\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 17
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method getUuid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method setCreatedOn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method setSynchronisationError\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method setSynchronisationStatus\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 9
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
 			message: '#^Instanceof between OPG\\Digideps\\Backend\\Entity\\Report\\Report and OPG\\Digideps\\Backend\\Entity\\Report\\Report will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
@@ -22861,63 +22819,9 @@ parameters:
 			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:persist\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 11
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:refresh\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 16
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:createAndSubmitAdditionalDocuments\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:createAndSubmitResubmissionWithSupportingDoc\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#2 \$document of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:assertDataMatchesEntity\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Document, mixed given\.$#'
-			identifier: argument.type
-			count: 6
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#2 \$submission of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:syncDocuments\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 5
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#3 \$client of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:assertDataMatchesEntity\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, mixed given\.$#'
-			identifier: argument.type
-			count: 6
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
 			message: '#^Parameter \#3 \$syncStatus of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:generateAndPersistDocument\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#4 \$submission of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:assertDataMatchesEntity\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission, mixed given\.$#'
-			identifier: argument.type
-			count: 6
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#5 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:assertDataMatchesEntity\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 6
 			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
@@ -22995,12 +22899,6 @@ parameters:
 		-
 			message: '#^Cannot call method getRoleName\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:refresh\(\) expects object, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
@@ -23155,12 +23053,6 @@ parameters:
 			path: tests/Integration/Entity/Repository/UserRepositoryTest.php
 
 		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:persist\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Entity/Repository/UserRepositoryTest.php
-
-		-
 			message: '#^Parameter \#1 \$registrationDate of method OPG\\Digideps\\Backend\\Entity\\User\:\:setRegistrationDate\(\) expects DateTime, DateTime\|false given\.$#'
 			identifier: argument.type
 			count: 4
@@ -23189,12 +23081,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: tests/Integration/Entity/UserIntegrationTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Factory\\MissingReport\\MissingReportFinderTest\:\:testFindCourtOrdersWithMissingReports\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Factory/MissingReport/MissingReportFinderTest.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -23305,12 +23191,6 @@ parameters:
 			path: tests/Integration/Fixtures.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:refresh\(\) has parameter \$entity with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Integration/Fixtures.php
-
-		-
 			message: '#^Parameter \#1 \$closingBalance of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setClosingBalance\(\) expects string, float given\.$#'
 			identifier: argument.type
 			count: 1
@@ -23318,24 +23198,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$dql of method Doctrine\\ORM\\EntityManager\:\:createQuery\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Fixtures.php
-
-		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:refresh\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Fixtures.php
-
-		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:remove\(\) expects object, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Fixtures.php
-
-		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:remove\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Integration/Fixtures.php
