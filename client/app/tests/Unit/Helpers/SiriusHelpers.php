@@ -92,7 +92,7 @@ class SiriusHelpers extends KernelTestCase
         \DateTime $reportingPeriodTo,
         int $year,
         string $type
-    ) {
+    ): SiriusDocumentUpload {
         $file = new SiriusDocumentFile()
             ->setName($fileName)
             ->setMimetype('application/pdf')

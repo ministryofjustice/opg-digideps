@@ -16,7 +16,6 @@ use OPG\Digideps\Backend\Service\DeputyService;
 use OPG\Digideps\Backend\Service\UserService;
 use OPG\Digideps\Backend\v2\DTO\InviteeDto;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Exception\ORMException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -208,7 +207,7 @@ final class CourtOrderInviteServiceTest extends TestCase
         $this->mockUserService->expects(self::once())
             ->method('getOrAddUser')
             ->with($inviteeDTO, $invitingUser, $deputyUid, $clientId)
-            ->willThrowException(new ORMException('something bad happened on the way to the database'));
+            ->willThrowException(new \RuntimeException('something bad happened on the way to the database'));
 
         $result = $this->sut->inviteLayDeputy($courtOrderUid, $invitingUser, $inviteeDTO);
 

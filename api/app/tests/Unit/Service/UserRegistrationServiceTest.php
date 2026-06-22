@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Organisation;

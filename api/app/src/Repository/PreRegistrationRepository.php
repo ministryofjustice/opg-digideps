@@ -49,7 +49,7 @@ class PreRegistrationRepository extends ServiceEntityRepository
             ->select('p')
             ->from(PreRegistration::class, 'p')
             ->where('LOWER(p.caseNumber) = LOWER(:caseNumber)')
-            ->setParameters(['caseNumber' => $caseNumber])
+            ->setParameter('caseNumber', $caseNumber)
             ->getQuery()
             ->getResult();
 
