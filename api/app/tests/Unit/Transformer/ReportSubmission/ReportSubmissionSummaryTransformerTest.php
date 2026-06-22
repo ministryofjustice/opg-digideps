@@ -131,8 +131,7 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
     {
         $report = $this->getMockBuilder(Report::class)->disableOriginalConstructor()->getMock();
 
-        return new Document($report)
-            ->setFileName($document['filename'])
+        return new Document($report, $document['filename'])
             ->setIsReportPdf($document['is_report_pdf']);
     }
 

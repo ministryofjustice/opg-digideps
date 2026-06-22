@@ -62,7 +62,6 @@ class ReportService
 
         $this->em->persist($submission);
 
-        /** @var CourtOrder[] $courtOrders */
         $courtOrders = $currentReport->getCourtOrders()->toArray();
         $client = $currentReport->getClient();
         $clientId = $client->getId();

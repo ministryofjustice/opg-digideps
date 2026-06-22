@@ -54,9 +54,7 @@ class ReportControllerTest extends AbstractTestController
 
         self::$report1->setWishToProvideDocumentation(true);
 
-        $document = new Document(self::$report1)
-            ->setFileName('test.pdf')
-            ->setIsReportPdf(false);
+        $document = new Document(self::$report1, 'test.pdf')->setIsReportPdf(false);
         self::fixtures()->persist(self::$report1, $document);
 
         $result = self::$fixtureService->instantiateScenario(Scenario::newSimplePaScenario(reportType: CourtOrderReportType::OPG102));
@@ -301,8 +299,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertNotNull($report);
 
         // add one document
-        $document = new Document($report);
-        $document->setFileName('file2.pdf')->setStorageReference('storageref1');
+        $document = new Document($report, 'file2.pdf')->setStorageReference('storageref1');
         self::fixtures()->persist($document)->flush();
         $this->assertEquals(false, $report->getSubmitted());
 

@@ -57,7 +57,7 @@ final class ReportServiceTest extends TestCase
             ->addAccount(new BankAccount($this->report)->setAccountNumber('1234'))
             ->setSubmittedBy($this->user);
 
-        $this->document1 = new Document($this->report)->setFileName('file1.pdf');
+        $this->document1 = new Document($this->report, 'file1.pdf');
         $this->report->addDocument($this->document1);
 
         $this->em = m::mock(EntityManager::class);
