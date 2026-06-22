@@ -41,8 +41,9 @@ class ReportSubmissionControllerTest extends AbstractTestController
             // create submission
             $submission = new ReportSubmission($report, ($i < 3) ? self::$pa2 : self::$deputy1);
             // add documents, needed for future tests
-            $document = new Document($report);
-            $document->setFileName('file1.pdf')->setStorageReference('storageref1')->setReportSubmission($submission);
+            $document = new Document($report, 'file1.pdf')
+                ->setStorageReference('storageref1')
+                ->setReportSubmission($submission);
 
             if ($i === 2) {
                 $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);

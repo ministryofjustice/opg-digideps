@@ -18,14 +18,14 @@ class SatisfactionCsvGeneratorTest extends TestCase
             new Satisfaction()
             ->setComments('Loved it')
             ->setCreated(new \DateTime('2020-12-25'))
-            ->setDeputyrole('LAY_DEPUTY')
-            ->setReporttype('102')
+            ->setDeputyRole('LAY_DEPUTY')
+            ->setReportType('102')
             ->setScore(5),
             new Satisfaction()
                 ->setComments('Not great...')
                 ->setCreated(new \DateTime('2020-12-26'))
-                ->setDeputyrole('PROF_DEPUTY')
-                ->setReporttype('103')
+                ->setDeputyRole('PROF_DEPUTY')
+                ->setReportType('103')
                 ->setScore(2)
         ];
 

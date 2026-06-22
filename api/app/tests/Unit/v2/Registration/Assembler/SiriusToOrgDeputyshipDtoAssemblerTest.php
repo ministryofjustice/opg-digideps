@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Assembler;
 
+use Faker\Factory;
+use Faker\Provider\en_GB\Address;
 use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Service\ReportUtils;
-use Tests\OPG\Digideps\Backend\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -15,10 +16,47 @@ final class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
 {
     use ProphecyTrait;
 
+    public static function generateValidSiriusOrgDeputyshipArray(): array
+    {
+        $faker = Factory::create();
+        $courtOrderMadeDate = \DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
+        $reportPeriodEndDate = $courtOrderMadeDate->modify('12 months - 1 day');
+
+        return [
+            'Case' => (string) $faker->randomNumber(8),
+            'ClientForename' => $faker->firstName(),
+            'ClientSurname' => $faker->lastName(),
+            'ClientDateOfBirth' => $faker->dateTime()->format('Y-m-d'),
+            'ClientAddress1' => $faker->buildingNumber() . ' ' . $faker->streetName(),
+            'ClientAddress2' => Address::cityPrefix() . ' ' . $faker->city(),
+            'ClientAddress3' => Address::county(),
+            'ClientAddress4' => null,
+            'ClientAddress5' => null,
+            'ClientPostcode' => Address::postcode(),
+            'DeputyUid' => (string) $faker->randomNumber(8),
+            'DeputyType' => $faker->randomElement(['PRO', 'PA']),
+            'DeputyEmail' => sprintf('%s@%s%s.com', $faker->userName(), $faker->randomNumber(8), $faker->domainWord()),
+            'DeputyOrganisation' => $faker->company(),
+            'DeputyForename' => $faker->firstName(),
+            'DeputySurname' => $faker->lastName(),
+            'DeputyAddress1' => $faker->streetName(),
+            'DeputyAddress2' => Address::cityPrefix() . ' ' . $faker->city(),
+            'DeputyAddress3' => $faker->city(),
+            'DeputyAddress4' => Address::county(),
+            'DeputyAddress5' => 'UK',
+            'DeputyPostcode' => Address::postcode(),
+            'MadeDate' => $courtOrderMadeDate->format('Y-m-d'),
+            'LastReportDay' => $reportPeriodEndDate->format('Y-m-d'),
+            'ReportType' => $faker->randomElement(['OPG102', 'OPG103', 'OPG104']),
+            'OrderType' => $faker->randomElement(['pfa', 'hw']),
+            'Hybrid' => 'SINGLE',
+        ];
+    }
+
     #[Test]
     public function assembleFromArrayProfPFAHighAssets(): void
     {
-        $siriusArray = OrgDeputyshipDTOTestHelper::generateValidSiriusOrgDeputyshipArray();
+        $siriusArray = self::generateValidSiriusOrgDeputyshipArray();
         $siriusArray['LastReportDay'] = '2022-03-03';
         $siriusArray['DeputyType'] = 'PRO';
         $siriusArray['ReportType'] = 'OPG102';
@@ -76,7 +114,7 @@ final class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
     #[Test]
     public function assembleFromArrayPALowAssetsHybridHW(): void
     {
-        $siriusArray = OrgDeputyshipDTOTestHelper::generateValidSiriusOrgDeputyshipArray();
+        $siriusArray = self::generateValidSiriusOrgDeputyshipArray();
         $siriusArray['LastReportDay'] = '2022-01-10';
         $siriusArray['DeputyType'] = 'PA';
         $siriusArray['ReportType'] = 'OPG103';
