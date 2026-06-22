@@ -41,14 +41,22 @@ final class AssetsReviewView
         $this->text = $this->makeText();
 
         $this->list = $this->makeList($report);
-        foreach ($this->getAssetsGroupedByTitle($report) as $title => $assets) {
-            if ($title === $this->text['property']) {
-                $this->tables = [...$this->tables, ...$this->makePropertyTables(...$assets)];
-            } else {
-                $this->tables[] = $this->makeTableOther($title, ...$assets);
+        if ($report->getNoAssetToAdd() === false) {
+            foreach ($this->getAssetsGroupedByTitle($report) as $title => $assets) {
+                if ($title === $this->text['property']) {
+                    /**
+                     * @var array<AssetProperty> $assets
+                     */
+                    $this->tables = [...$this->tables, ...$this->makePropertyTables(...$assets)];
+                } else {
+                    /**
+                     * @var array<AssetOther> $assets
+                     */
+                    $this->tables[] = $this->makeTableOther($title, ...$assets);
+                }
             }
+            $this->tables[] = $this->makeTotalTable($report);
         }
-        $this->tables[] = $this->makeTotalTable($report);
     }
 
     private function makeList(Report $report): ListEntries
@@ -85,7 +93,7 @@ final class AssetsReviewView
     {
         $tables = [];
         foreach ($assets as $key => $asset) {
-            $index = $key + 1;
+            $index = (int)$key + 1;
             $builder = new TableBuilder()->addHeader(new Cell("{$this->text['property']} {$index}", size: 2), '');
 
             $builder->addRow($this->text['address1'], $asset->getAddress() ?? 'notEntered');
@@ -122,7 +130,7 @@ final class AssetsReviewView
     private function makeTotalTable(Report $report): Table
     {
         return new TableBuilder(true, true)
-            ->addRow('', $this->text['totalValue'], new Cell($this->formatMoney((float)$report->getAssetsTotalValue()), self::NUMERIC_FORMAT, true))
+            ->addRow(new Cell($this->text['totalValue'], size: 2), new Cell($this->formatMoney((float)$report->getAssetsTotalValue()), self::NUMERIC_FORMAT, true))
             ->makeTable();
     }
 
@@ -134,7 +142,7 @@ final class AssetsReviewView
         $groups = [];
         foreach ($report->getAssets() as $asset) {
             if ($asset instanceof AssetOther) {
-                $title = $asset->getTitle();
+                $title = $asset->getTitle() ?? '';
                 if (in_array($title, ['Artwork', 'Antiques', 'Jewellery'])) {
                     $title = $this->text['artworkAntiquesJewellery'];
                 }
@@ -146,10 +154,8 @@ final class AssetsReviewView
         }
 
         ksort($groups);
-        foreach ($groups as $key => $group) {
-            if ($key !== $this->text['property']) {
-                usort($group, fn (AssetOther $left, AssetOther $right): int => $left->getDescription() <=> $right->getDescription());
-            }
+        foreach ($groups as $group) {
+            usort($group, fn (Asset $left, Asset $right): int => $left->getId() <=> $right->getId());
         }
 
         return $groups;

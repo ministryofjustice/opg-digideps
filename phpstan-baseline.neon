@@ -26785,12 +26785,6 @@ parameters:
 			path: client/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
-			message: '#^Binary operation "\+" between int\<0, max\>\|string and 1 results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/src/Component/Review/AssetsReviewView.php
-
-		-
 			message: '#^Cannot call method format\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -26803,45 +26797,15 @@ parameters:
 			path: client/app/src/Component/Review/AssetsReviewView.php
 
 		-
-			message: '#^Parameter \#1 \.\.\.\$assets of method OPG\\Digideps\\Frontend\\Component\\Review\\AssetsReviewView\:\:makePropertyTables\(\) expects OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty, OPG\\Digideps\\Frontend\\Entity\\Report\\Asset given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Component/Review/AssetsReviewView.php
-
-		-
-			message: '#^Parameter \#2 \$callback of function usort expects callable\(OPG\\Digideps\\Frontend\\Entity\\Report\\Asset, OPG\\Digideps\\Frontend\\Entity\\Report\\Asset\)\: int, Closure\(OPG\\Digideps\\Frontend\\Entity\\Report\\AssetOther, OPG\\Digideps\\Frontend\\Entity\\Report\\AssetOther\)\: int\<\-1, 1\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Component/Review/AssetsReviewView.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$assets of method OPG\\Digideps\\Frontend\\Component\\Review\\AssetsReviewView\:\:makeTableOther\(\) expects OPG\\Digideps\\Frontend\\Entity\\Report\\AssetOther, OPG\\Digideps\\Frontend\\Entity\\Report\\Asset given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Component/Review/AssetsReviewView.php
-
-		-
 			message: '#^Parameter \#2 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Component\\GovUk\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Component\\GovUk\\Table\\Cell\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 4
 			path: client/app/src/Component/Review/AssetsReviewView.php
 
 		-
-			message: '#^Part \$index \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: client/app/src/Component/Review/AssetsReviewView.php
-
-		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 5
-			path: client/app/src/Component/Review/AssetsReviewView.php
-
-		-
-			message: '#^Possibly invalid array key type string\|null\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 2
 			path: client/app/src/Component/Review/AssetsReviewView.php
 
 		-
