@@ -14,10 +14,7 @@ class QueryIntegrationTest extends ApiIntegrationTestCase
     private function addUserWithRegistrationDate(string $date): User
     {
         $id = mt_rand();
-        $user = new User();
-        $user->setFirstname('Firstname');
-        $user->setLastname('Lastname');
-        $user->setEmail("metric-test-$id@publicguardian.gov.uk");
+        $user = new User('Firstname', 'Lastname', "metric-test-$id@publicguardian.gov.uk");
         $user->setRoleName('ROLE_PROF_ADMIN');
         $user->setRegistrationDate(new \DateTime($date));
 
