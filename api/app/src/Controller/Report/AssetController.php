@@ -50,8 +50,7 @@ class AssetController extends RestController
         $this->formatter->validateArray($data, [
             'type' => 'mustExist',
         ]);
-        $asset = Asset::factory($data['type']);
-        $asset->setReport($report);
+        $asset = Asset::factory($data['type'], $report);
         $report->setNoAssetToAdd(false);
 
         $this->updateEntityWithData($asset, $data);

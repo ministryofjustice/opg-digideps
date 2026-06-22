@@ -156,7 +156,6 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param Collection<int, ProfDeputyOtherCost> $profDeputyOtherCosts
-     * @return $this
      */
     public function setProfDeputyOtherCosts(Collection $profDeputyOtherCosts): static
     {

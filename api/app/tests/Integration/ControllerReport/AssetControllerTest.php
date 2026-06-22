@@ -148,11 +148,11 @@ class AssetControllerTest extends AbstractTestController
                 'occupants' => 'me',
                 'owned' => 'partly',
                 'owned_percentage' => '51',
-                'is_subject_to_equity_release' => true,
-                'has_mortgage' => true,
+                'is_subject_to_equity_release' => 'yes',
+                'has_mortgage' => 'yes',
                 'mortgage_outstanding_amount' => 187500,
-                'has_charges' => true,
-                'is_rented_out' => true,
+                'has_charges' => 'yes',
+                'is_rented_out' => 'yes',
                 'rent_agreement_end_date' => '2015-12-31',
                 'rent_income_month' => 1200,
                 'address' => 'london road',
@@ -172,11 +172,11 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEquals('me', $asset->getOccupants());
         $this->assertEquals('partly', $asset->getOwned());
         $this->assertEquals('51.00', $asset->getOwnedPercentage());
-        $this->assertEquals(true, $asset->getIsSubjectToEquityRelease());
-        $this->assertEquals(true, $asset->getHasMortgage());
+        $this->assertEquals('yes', $asset->getIsSubjectToEquityRelease());
+        $this->assertEquals('yes', $asset->getHasMortgage());
         $this->assertEquals(187500, $asset->getMortgageOutstandingAmount());
-        $this->assertEquals(true, $asset->getHasCharges());
-        $this->assertEquals(true, $asset->getIsRentedOut());
+        $this->assertEquals('yes', $asset->getHasCharges());
+        $this->assertEquals('yes', $asset->getIsRentedOut());
         $this->assertEquals('12/31/2015', $asset->getRentAgreementEndDate()?->format('m/d/Y'));
         $this->assertEquals(1200, $asset->getRentIncomeMonth());
         $this->assertEquals('london road', $asset->getAddress());
