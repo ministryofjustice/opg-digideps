@@ -20,6 +20,13 @@ final readonly class ReportReviewViews
         return $section;
     }
 
+    public function getAssetsReviewView(): AssetsReviewView
+    {
+        $section = new AssetsReviewView($this->translator);
+        $section->mount($this->report);
+        return $section;
+    }
+
     public function getDebtsReviewView(): DebtsReviewView
     {
         $section = new DebtsReviewView($this->translator);
