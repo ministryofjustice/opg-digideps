@@ -11,6 +11,7 @@ final readonly class SizedCell
     public function __construct(
         public string $content,
         public bool $isHeader = false,
+        public bool $hasScope = false,
         ?string $format = null,
         ?int $count = null,
     ) {
