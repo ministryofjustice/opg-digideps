@@ -46,6 +46,9 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->thirdJulyPm = clone $this->thirdJulyAm->add(new \DateInterval('PT20H'));
     }
 
+    /**
+     * @return array{Client, Report, Document, Document, ReportSubmission}
+     */
     private function createAndSubmitReportWithSupportingDoc(\DateTime $submittedOn): array
     {
         $client = $this->generateAndPersistClient('abc-123');
@@ -185,6 +188,9 @@ class DocumentRepositoryTest extends KernelTestCase
         self::$entityManager->flush();
     }
 
+    /**
+     * @param Document[] $documents
+     */
     private function syncDocuments(array $documents, ?ReportSubmission $submission, ?string $uuid): void
     {
         if ($submission) {
@@ -200,7 +206,7 @@ class DocumentRepositoryTest extends KernelTestCase
     }
 
     /**
-     * @return Mixed[]
+     * @return array{ReportSubmission, Document}
      */
     private function createAndSubmitAdditionalDocuments(Report $report, \DateTime $submittedOn): array
     {
@@ -216,6 +222,9 @@ class DocumentRepositoryTest extends KernelTestCase
         return [$additionalSubmission, $additionalSupportingDoc];
     }
 
+    /**
+     * @return array{Document, Document, ReportSubmission}
+     */
     private function createAndSubmitResubmissionWithSupportingDoc(Report $report, \DateTime $submittedOn): array
     {
         $resubmissionReportPdfDoc = $this->generateAndPersistDocument($report, true, 'QUEUED', $this->secondJulyAm, true);

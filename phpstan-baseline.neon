@@ -22843,48 +22843,6 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method getSynchronisationError\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method getSynchronisationStatus\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 17
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method getUuid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method setCreatedOn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method setSynchronisationError\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method setSynchronisationStatus\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 9
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
 			message: '#^Instanceof between OPG\\Digideps\\Backend\\Entity\\Report\\Report and OPG\\Digideps\\Backend\\Entity\\Report\\Report will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
@@ -22927,63 +22885,9 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:persist\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 11
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:refresh\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 16
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:createAndSubmitAdditionalDocuments\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:createAndSubmitResubmissionWithSupportingDoc\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#2 \$document of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:assertDataMatchesEntity\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Document, mixed given\.$#'
-			identifier: argument.type
-			count: 6
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#2 \$submission of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:syncDocuments\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 5
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#3 \$client of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:assertDataMatchesEntity\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, mixed given\.$#'
-			identifier: argument.type
-			count: 6
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
 			message: '#^Parameter \#3 \$syncStatus of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:generateAndPersistDocument\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#4 \$submission of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:assertDataMatchesEntity\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission, mixed given\.$#'
-			identifier: argument.type
-			count: 6
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Parameter \#5 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:assertDataMatchesEntity\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 6
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
@@ -23061,12 +22965,6 @@ parameters:
 		-
 			message: '#^Cannot call method getRoleName\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:refresh\(\) expects object, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
@@ -23227,12 +23125,6 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
 
 		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:persist\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
-
-		-
 			message: '#^Parameter \#1 \$registrationDate of method OPG\\Digideps\\Backend\\Entity\\User\:\:setRegistrationDate\(\) expects DateTime, DateTime\|false given\.$#'
 			identifier: argument.type
 			count: 4
@@ -23261,12 +23153,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: api/app/tests/Integration/Entity/UserIntegrationTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Factory\\MissingReport\\MissingReportFinderTest\:\:testFindCourtOrdersWithMissingReports\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/Factory/MissingReport/MissingReportFinderTest.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -23377,12 +23263,6 @@ parameters:
 			path: api/app/tests/Integration/Fixtures.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:refresh\(\) has parameter \$entity with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
 			message: '#^Parameter \#1 \$closingBalance of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setClosingBalance\(\) expects string, float given\.$#'
 			identifier: argument.type
 			count: 1
@@ -23390,24 +23270,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$dql of method Doctrine\\ORM\\EntityManager\:\:createQuery\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:refresh\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:remove\(\) expects object, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:remove\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Fixtures.php
@@ -28159,15 +28021,9 @@ parameters:
 			path: client/app/src/Controller/Report/BankAccountController.php
 
 		-
-			message: '#^Argument of an invalid type Doctrine\\Common\\Collections\\ArrayCollection\|null supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: client/app/src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: client/app/src/Controller/Report/ClientBenefitsCheckController.php
 
 		-
@@ -28957,12 +28813,6 @@ parameters:
 			path: client/app/src/Controller/Report/ProfDeputyCostsEstimateController.php
 
 		-
-			message: '#^Binary operation "\." between mixed and '' \(client\)'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/src/Controller/Report/ReportController.php
-
-		-
 			message: '#^Binary operation "\." between mixed and '' \(deputy\)'' results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -29145,12 +28995,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:getDeletedAt\(\) should return DateTime but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:getFullname\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: client/app/src/Entity/Client.php
 
@@ -33302,12 +33146,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#4 \$changedByEmail of method OPG\\Digideps\\Frontend\\Service\\Audit\\AuditEvents\:\:clientEmailChanged\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/EventSubscriber/ClientUpdatedSubscriber.php
-
-		-
-			message: '#^Parameter \#5 \$subjectFullName of method OPG\\Digideps\\Frontend\\Service\\Audit\\AuditEvents\:\:clientEmailChanged\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/src/EventSubscriber/ClientUpdatedSubscriber.php
@@ -40477,12 +40315,6 @@ parameters:
 			path: client/app/tests/Unit/Form/ReportTypeTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Helpers\\SiriusHelpers\:\:generateSiriusChecklistPdfUpload\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Helpers/SiriusHelpers.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Mapper\\ReportSatisfaction\\ReportSatisfactionSummaryMapperTest\:\:testReturnsReportSatisfactionsByCustomParameters\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -40583,132 +40415,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: client/app/tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Call to an undefined method PHPUnit\\Framework\\TestSuite\:\:getName\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Pact/Listener/PactTestListener.php
-
-		-
-			message: '#^Call to an undefined method PhpPact\\Standalone\\MockService\\MockServerConfigInterface\:\:getConsumer\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Pact/Listener/PactTestListener.php
-
-		-
-			message: '#^Parameter \#1 \$consumer of method PhpPact\\Broker\\Service\\BrokerHttpClient\:\:tag\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Pact/Listener/PactTestListener.php
-
-		-
-			message: '#^Call to an undefined method GuzzleHttp\\Client\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Psr\\Http\\Message\\RequestInterface\:\:shouldBeCalled\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Psr\\Http\\Message\\ResponseInterface\:\:shouldBeCalled\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy\|Psr\\Log\\LoggerInterface\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Pact\\SiriusApiGatewayClientTest\:\:buildRequest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Pact\\SiriusApiGatewayClientTest\:\:testGet\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Parameter \#1 \$httpClient of class OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient constructor expects GuzzleHttp\\Client, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Parameter \#1 \$request of method GuzzleHttp\\Client\:\:send\(\) expects Psr\\Http\\Message\\RequestInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Parameter \#1 \$request of method OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner\:\:signRequest\(\) expects GuzzleHttp\\Psr7\\Request, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Parameter \#2 \$requestSigner of class OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient constructor expects OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Parameter \#3 \$headers of class GuzzleHttp\\Psr7\\Request constructor expects array\<array\<string\>\|string\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Parameter \#5 \$logger of class OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient constructor expects Psr\\Log\\LoggerInterface, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Pact\\SiriusApiGatewayClientTest\:\:\$httpClient \(GuzzleHttp\\Client\|Prophecy\\Prophecy\\ObjectProphecy\) is never assigned GuzzleHttp\\Client so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Pact\\SiriusApiGatewayClientTest\:\:\$httpClient with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Pact\\SiriusApiGatewayClientTest\:\:\$logger with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Pact\\SiriusApiGatewayClientTest\:\:\$requestSigner \(OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner\|Prophecy\\Prophecy\\ObjectProphecy\) is never assigned OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Pact\\SiriusApiGatewayClientTest\:\:\$requestSigner with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: client/app/tests/Unit/Pact/SiriusApiGatewayClientTest.php
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsEstimateSubSectionRouteResolverTest\:\:testReturnsBreakdownRouteIfSectionIsIncompleteAndBreakdownCostsNotEntered\(\) has no return type specified\.$#'
@@ -42053,174 +41759,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Call to an undefined method GuzzleHttp\\Client\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Psr\\Http\\Message\\RequestInterface\:\:shouldBeCalled\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Psr\\Http\\Message\\ResponseInterface\:\:shouldBeCalled\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\Sirius\\SiriusHealthCheckClientTest\:\:buildRequest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\Sirius\\SiriusHealthCheckClientTest\:\:testGet\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Parameter \#1 \$httpClient of class OPG\\Digideps\\Frontend\\Service\\Client\\Sirius\\SiriusHealthCheckClient constructor expects GuzzleHttp\\Client, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Parameter \#1 \$request of method GuzzleHttp\\Client\:\:send\(\) expects Psr\\Http\\Message\\RequestInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Parameter \#1 \$request of method OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner\:\:signRequest\(\) expects GuzzleHttp\\Psr7\\Request, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Parameter \#2 \$requestSigner of class OPG\\Digideps\\Frontend\\Service\\Client\\Sirius\\SiriusHealthCheckClient constructor expects OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Parameter \#3 \$headers of class GuzzleHttp\\Psr7\\Request constructor expects array\<array\<string\>\|string\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\Sirius\\SiriusHealthCheckClientTest\:\:\$httpClient \(GuzzleHttp\\Client\|Prophecy\\Prophecy\\ObjectProphecy\) is never assigned GuzzleHttp\\Client so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\Sirius\\SiriusHealthCheckClientTest\:\:\$httpClient with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\Sirius\\SiriusHealthCheckClientTest\:\:\$requestSigner \(OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner\|Prophecy\\Prophecy\\ObjectProphecy\) is never assigned OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\Sirius\\SiriusHealthCheckClientTest\:\:\$requestSigner with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
-
-		-
-			message: '#^Cannot call method getBody\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:setUpChecklistPdfPostPactBuilder\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:setUpChecklistPdfPutPactBuilder\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:setUpSupportingDocumentPactBuilder\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:testPostChecklistPdf\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:testPutChecklistPdf\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:testSendReportPdfDocument\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:testSendSupportingDocument\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:throwReadableFailureMessage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Parameter \#1 \$upload of method OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient\:\:postChecklistPdf\(\) expects OPG\\Digideps\\Frontend\\Sync\\Model\\Sirius\\SiriusDocumentUpload, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Parameter \#1 \$upload of method OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient\:\:putChecklistPdf\(\) expects OPG\\Digideps\\Frontend\\Sync\\Model\\Sirius\\SiriusDocumentUpload, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Variable \$result might not be defined\.$#'
-			identifier: variable.undefined
-			count: 3
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\TokenStorage\\RedisStorageTest\:\:testGet\(\) has no return type specified\.$#'
@@ -44957,6 +44495,18 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Service/ChecklistSyncServiceTest.php
+
+		-
+			message: '#^Parameter \#3 \$body of class GuzzleHttp\\Psr7\\Response constructor expects Psr\\Http\\Message\\StreamInterface\|resource\|string\|null, string\|false given\.$#'
+			identifier: argument.type
+			count: 4
+			path: client/app/tests/Unit/Sync/Service/Client/Sirius/SiriusApiGatewayClientTest.php
+
+		-
+			message: '#^Parameter \#6 \$body of class Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\Client\\Sirius\\RequestFixture constructor expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 4
+			path: client/app/tests/Unit/Sync/Service/Client/Sirius/SiriusApiGatewayClientTest.php
 
 		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:expects\(\)\.$#'

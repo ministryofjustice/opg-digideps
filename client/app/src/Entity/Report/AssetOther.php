@@ -13,12 +13,12 @@ class AssetOther extends Asset
      *
      * @JMS\Type("string")
      */
-    private string $description;
+    private ?string $description;
 
     /**
      * Set description
      */
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
@@ -28,7 +28,7 @@ class AssetOther extends Asset
     /**
      * Get description
      */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -49,7 +49,7 @@ class AssetOther extends Asset
         return $titleToTemplateMap[$this->getTitle() ?? ''] ?? 'default';
     }
 
-    public function getBehatIdentifier(): string
+    public function getBehatIdentifier(): ?string
     {
         return $this->getDescription();
     }
