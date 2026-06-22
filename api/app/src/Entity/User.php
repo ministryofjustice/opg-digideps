@@ -15,7 +15,6 @@ use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Utility\Query\Hydrator;
-use Random\RandomException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -55,18 +54,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public const string TYPE_PA = 'PA';
     public const string TYPE_PROF = 'PROF';
 
-    public static $adminRoles = [
+    /**
+     * @var array<string> $adminRoles
+     */
+    public static array $adminRoles = [
         self::ROLE_ADMIN,
         self::ROLE_SUPER_ADMIN,
         self::ROLE_ADMIN_MANAGER,
     ];
 
+    /**
+     * @var array<string> $caseManagerRoles
+     */
     public static array $caseManagerRoles = [
         self::ROLE_ADMIN,
         self::ROLE_ADMIN_MANAGER,
     ];
 
-    public static $orgRoles = [
+    /**
+     * @var array<string> $orgRoles
+     */
+    public static array $orgRoles = [
         self::ROLE_PA,
         self::ROLE_PA_NAMED,
         self::ROLE_PA_ADMIN,
@@ -80,37 +88,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         self::ROLE_ORG_TEAM_MEMBER,
     ];
 
-    public static $depTypeIdToRealm = [
-        // PA
-        23 => PreRegistration::REALM_PA,
-        // PROFESSIONAL
-        21 => PreRegistration::REALM_PROF,
-        26 => PreRegistration::REALM_PROF,
-        63 => PreRegistration::REALM_PROF,
-        22 => PreRegistration::REALM_PROF,
-        24 => PreRegistration::REALM_PROF,
-        25 => PreRegistration::REALM_PROF,
-        27 => PreRegistration::REALM_PROF,
-        29 => PreRegistration::REALM_PROF,
-        50 => PreRegistration::REALM_PROF,
-    ];
-
     public const string SELF_REGISTER = 'SELF_REGISTER';
     public const string ADMIN_INVITE = 'ADMIN_INVITE';
     public const string ORG_ADMIN_INVITE = 'ORG_ADMIN_INVITE';
     public const string CO_DEPUTY_INVITE = 'CO_DEPUTY_INVITE';
     public const string UNKNOWN_REGISTRATION_ROUTE = 'UNKNOWN';
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['user', 'report-submitted-by', 'user-id', 'user-list'])]
     #[ORM\Id]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'user_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
     /**
      * @var Collection<int, Client> $clients
@@ -118,7 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[JMS\Groups(['user-clients'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Client>')]
     #[ORM\ManyToMany(targetEntity: Client::class, mappedBy: 'users', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
-    private $clients;
+    private Collection $clients;
 
     /**
      * @var Collection<int, Organisation> $organisations
@@ -127,363 +117,227 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[JMS\Groups(['user-organisations'])]
     #[JMS\Accessor(getter: 'getOrganisations')]
     #[ORM\ManyToMany(targetEntity: Organisation::class, mappedBy: 'users', fetch: 'EXTRA_LAZY')]
-    private $organisations;
+    private Collection $organisations;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['user', 'report-submitted-by', 'user-name', 'user-list'])]
     #[ORM\Column(name: 'firstname', type: 'string', length: 100, nullable: false)]
-    private $firstname;
+    private string $firstname;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['user', 'report-submitted-by', 'user-name', 'user-list'])]
     #[ORM\Column(name: 'lastname', type: 'string', length: 100, nullable: false)]
-    private $lastname;
+    private string $lastname;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['user-login'])]
     #[JMS\Exclude]
     #[ORM\Column(name: 'password', type: 'string', length: 100, nullable: false)]
-    private $password;
+    private ?string $password = '';
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['user', 'report-submitted-by', 'user-email', 'user-list'])]
     #[JMS\Type('string')]
     #[ORM\Column(name: 'email', type: 'string', length: 60, unique: true, nullable: false)]
-    private $email;
+    private string $email;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['user', 'user-list'])]
     #[ORM\Column(name: 'active', type: 'boolean', nullable: true, options: ['default' => false])]
-    private $active = false;
+    private ?bool $active = false;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'salt', type: 'string', length: 100, nullable: true)]
-    private $salt;
+    private ?string $salt = null;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\Groups(['user'])]
     #[ORM\Column(name: 'registration_date', type: 'datetime', nullable: true)]
-    private $registrationDate;
+    private ?\DateTime $registrationDate = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['user'])]
     #[ORM\Column(name: 'registration_token', type: 'string', length: 100, nullable: true)]
-    private ?string $registrationToken;
+    private ?string $registrationToken = null;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\Groups(['user'])]
     #[ORM\Column(name: 'token_date', type: 'datetime', nullable: true)]
-    private $tokenDate;
+    private ?\DateTime $tokenDate = null;
 
     /**
-     * @var string ROLE_: see roles in Role class
+     * @var null|string $roleName ROLE_: see roles in Role class
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['user', 'report-submitted-by', 'user-rolename', 'user-list', 'team-users'])]
     #[ORM\Column(name: 'role_name', type: 'string', length: 50, nullable: true)]
-    private $roleName;
+    private ?string $roleName = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['user', 'report-submitted-by', 'user-list', 'user-phone-main'])]
     #[ORM\Column(name: 'phone_main', type: 'string', length: 20, nullable: true)]
-    private $phoneMain;
+    private ?string $phoneMain = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['user', 'report-submitted-by'])]
     #[ORM\Column(name: 'phone_alternative', type: 'string', length: 20, nullable: true)]
-    private $phoneAlternative;
+    private ?string $phoneAlternative = null;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\Groups(['user'])]
     #[ORM\Column(name: 'last_logged_in', type: 'datetime', nullable: true)]
-    private $lastLoggedIn;
+    private ?\DateTime $lastLoggedIn = null;
 
     #[JMS\Type('integer')]
     #[JMS\Groups(['user'])]
     #[ORM\Column(name: 'deputy_uid', type: 'bigint', nullable: true)]
     private ?int $deputyUid = null;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['user'])]
     #[ORM\Column(name: 'ad_managed', type: 'boolean', nullable: true, options: ['default' => false])]
-    private $adManaged;
+    private ?bool $adManaged = false;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['user', 'user-list'])]
     #[ORM\Column(name: 'job_title', type: 'string', length: 150, nullable: true)]
-    private $jobTitle;
+    private ?string $jobTitle = null;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['user'])]
     #[ORM\Column(name: 'agree_terms_use', type: 'boolean', nullable: true, options: ['default' => false])]
-    private $agreeTermsUse;
+    private ?bool $agreeTermsUse = false;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['user'])]
     #[ORM\Column(name: 'agree_terms_use_date', type: 'datetime', nullable: true)]
-    private $agreeTermsUseDate;
+    private ?\DateTime $agreeTermsUseDate = null;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['user'])]
     #[ORM\Column(name: 'codeputy_client_confirmed', type: 'boolean', nullable: false, options: ['default' => false])]
-    private $coDeputyClientConfirmed;
+    private bool $coDeputyClientConfirmed = false;
 
     /**
-     * @var UserResearchResponse|null
+     * @var Collection<int,UserResearchResponse>
      */
     #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse')]
     #[JMS\Groups(['user', 'satisfaction', 'user-research'])]
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserResearchResponse::class, cascade: ['persist'])]
-    private $userResearchResponse;
+    private Collection $userResearchResponse;
 
-    /**
-     * @var ?User
-     */
     #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['user', 'created-by'])]
     #[JMS\MaxDepth(3)]
     #[ORM\JoinColumn(name: 'created_by_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'user')]
-    private $createdBy;
+    private ?User $createdBy = null;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['user'])]
     #[ORM\Column(name: 'deletion_protection', type: 'boolean', nullable: true, options: ['default' => null])]
-    private $deletionProtection;
+    private ?bool $deletionProtection = null;
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\Deputy')]
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: Deputy::class)]
-    private ?Deputy $deputy;
+    private ?Deputy $deputy = null;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\Groups(['user'])]
     #[ORM\Column(name: 'pre_register_validated', type: 'datetime', nullable: true)]
-    private $preRegisterValidatedDate;
+    private ?\DateTime $preRegisterValidatedDate = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['user'])]
     #[ORM\Column(name: 'registration_route', type: 'string', length: 30, nullable: false, options: ['default' => 'UNKNOWN'])]
-    private $registrationRoute = self::UNKNOWN_REGISTRATION_ROUTE;
+    private string $registrationRoute = self::UNKNOWN_REGISTRATION_ROUTE;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['user'])]
     #[ORM\Column(name: 'is_primary', type: 'boolean', nullable: false, options: ['default' => false])]
-    private $isPrimary = false;
+    private bool $isPrimary = false;
 
-    public function __construct($coDeputyClientConfirmed = false)
+    public function __construct(string $firstname, string $lastname, string $email, bool $coDeputyClientConfirmed = false)
     {
+        $this->firstname = $firstname;
+        $this->lastname = $lastname;
+        $this->email = $email;
         $this->clients = new ArrayCollection();
-        $this->password = '';
         $this->organisations = new ArrayCollection();
+        $this->userResearchResponse = new ArrayCollection();
         $this->setCoDeputyClientConfirmed($coDeputyClientConfirmed);
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * @return User
-     */
-    public function setId(?int $id)
+    public function setId(int $id): static
     {
-        $this->id = $id;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
 
         return $this;
     }
 
-    /**
-     * Set firstname.
-     *
-     * @param string $firstname
-     *
-     * @return User
-     */
-    public function setFirstname($firstname)
+    public function setFirstname(string $firstname): static
     {
         $this->firstname = $firstname;
 
         return $this;
     }
 
-    /**
-     * Get firstname.
-     *
-     * @return string
-     */
-    public function getFirstname()
+    public function getFirstname(): string
     {
         return $this->firstname;
     }
 
-    /**
-     * Set password.
-     *
-     * @param string $password
-     *
-     * @return User
-     */
-    public function setPassword($password)
+    public function setPassword(?string $password): static
     {
         $this->password = $password;
 
         return $this;
     }
 
-    /**
-     * Set email.
-     *
-     * @param string $email
-     *
-     * @return User
-     */
-    public function setEmail($email)
+    public function setEmail(string $email): static
     {
         $this->email = strtolower($email);
 
         return $this;
     }
 
-    /**
-     * Get email.
-     *
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * Set active.
-     *
-     * @param bool $active
-     *
-     * @return User
-     */
-    public function setActive($active)
+    public function setActive(bool $active): static
     {
-        $this->active = (bool) $active;
+        $this->active = $active;
 
         return $this;
     }
 
-    /**
-     * Get active.
-     *
-     * @return bool
-     */
-    public function getActive()
+    public function getActive(): bool
     {
-        return $this->active;
+        return $this->active ?? false;
     }
 
-    /**
-     * Set salt.
-     *
-     * @param string $salt
-     *
-     * @return User
-     */
-    public function setSalt($salt)
-    {
-        $this->salt = $salt;
-
-        return $this;
-    }
-
-    /**
-     * Set registrationDate.
-     *
-     * @param \DateTime $registrationDate
-     *
-     * @return User
-     */
-    public function setRegistrationDate($registrationDate)
+    public function setRegistrationDate(\DateTime $registrationDate): static
     {
         $this->registrationDate = $registrationDate;
 
         return $this;
     }
 
-    /**
-     * Get registrationDate.
-     *
-     * @return \DateTime
-     */
-    public function getRegistrationDate()
+    public function getRegistrationDate(): ?\DateTime
     {
         return $this->registrationDate;
     }
 
-    /**
-     * Set registrationToken.
-     *
-     * @throws RandomException
-     */
     public function recreateRegistrationToken(): static
     {
         $userIdWithLeadingZeros = sprintf('%08d', $this->getId());
@@ -495,9 +349,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * Set registrationToken.
-     */
     public function setRegistrationToken(?string $registrationToken): static
     {
         $this->registrationToken = $registrationToken;
@@ -505,68 +356,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * Get registrationToken.
-     */
     public function getRegistrationToken(): ?string
     {
         return $this->registrationToken;
     }
 
-    /**
-     * Set lastname.
-     *
-     * @param string $lastname
-     *
-     * @return User
-     */
-    public function setLastname($lastname)
+    public function setLastname(string $lastname): static
     {
         $this->lastname = $lastname;
 
         return $this;
     }
 
-    /**
-     * Get lastname.
-     *
-     * @return string
-     */
-    public function getLastname()
+    public function getLastname(): string
     {
         return $this->lastname;
     }
 
-    /**
-     * Set tokenDate.
-     *
-     * @param \DateTime $tokenDate
-     *
-     * @return User
-     */
-    public function setTokenDate($tokenDate)
+    public function setTokenDate(\DateTime $tokenDate): static
     {
         $this->tokenDate = $tokenDate;
 
         return $this;
     }
 
-    /**
-     * Get tokenDate.
-     *
-     * @return ?\DateTime
-     */
-    public function getTokenDate()
+    public function getTokenDate(): ?\DateTime
     {
         return $this->tokenDate;
     }
 
-    /**
-     * Add clients.
-     *
-     * @return User
-     */
-    public function addClient(Client $client)
+    public function addClient(Client $client): static
     {
         $client->addUser($this);
         if (!$this->clients->contains($client)) {
@@ -577,11 +396,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Get clients.
-     *
      * @return Collection<int, Client>
      */
-    public function getClients()
+    public function getClients(): Collection
     {
         return $this->clients;
     }
@@ -589,17 +406,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Organisation>
      */
-    public function getOrganisations()
+    public function getOrganisations(): Collection
     {
         return $this->organisations->filter(function ($organisation): bool {
             return $organisation->isActivated();
         });
     }
 
-    /**
-     * @return User
-     */
-    public function addOrganisation(Organisation $organisation)
+    public function addOrganisation(Organisation $organisation): static
     {
         if (!$this->organisations->contains($organisation)) {
             $this->organisations->add($organisation);
@@ -618,26 +432,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $organisationIds;
     }
 
-    public function getRoleName()
+    public function getRoleName(): string
     {
-        return $this->roleName;
+        return $this->roleName ?? User::ROLE_LAY_DEPUTY;
     }
 
     /**
      * @param string $roleName ROLE_.*
-     *
-     * @return User
      */
-    public function setRoleName($roleName)
+    public function setRoleName(string $roleName): static
     {
         $this->roleName = $roleName;
 
         return $this;
-    }
-
-    public function getSalt(): void
-    {
-        return;
     }
 
     public function getPassword(): ?string
@@ -647,66 +454,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        return [$this->roleName];
+        return [$this->getRoleName()];
     }
 
     public function eraseCredentials()
     {
     }
 
-    /**
-     * @return string
-     */
-    public function getFullName()
+    public function getFullName(): string
     {
         return $this->firstname . ' ' . $this->lastname;
     }
 
-    /**
-     * @return string
-     */
-    public function getPhoneMain()
+    public function getPhoneMain(): ?string
     {
         return $this->phoneMain;
     }
 
-    /**
-     * @return string
-     */
-    public function getPhoneAlternative()
-    {
-        return $this->phoneAlternative;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setPhoneMain($phoneMain)
+    public function setPhoneMain(?string $phoneMain): static
     {
         $this->phoneMain = $phoneMain;
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function setPhoneAlternative($phoneAlternative)
-    {
-        $this->phoneAlternative = $phoneAlternative;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getLastLoggedIn()
+    public function getLastLoggedIn(): ?\DateTime
     {
         return $this->lastLoggedIn;
     }
 
-    public function setLastLoggedIn(?\DateTime $lastLoggedIn = null)
+    public function setLastLoggedIn(?\DateTime $lastLoggedIn): static
     {
         $this->lastLoggedIn = $lastLoggedIn;
 
@@ -715,10 +492,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * convert 7 into 00000007.
-     *
-     * @return string
      */
-    public static function padDeputyNumber($deputyNo)
+    public static function padDeputyNumber($deputyNo): string
     {
         return str_pad($deputyNo, 8, '0', STR_PAD_LEFT);
     }
@@ -728,9 +503,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->deputyUid;
     }
 
-    public function setDeputyUid(?int $deputyUid): User
+    public function setDeputyUid(null|int|string $deputyUid): static
     {
-        $this->deputyUid = $deputyUid;
+        $this->deputyUid = $deputyUid === null ? null : (int)$deputyUid;
 
         return $this;
     }
@@ -742,7 +517,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[JMS\SerializedName('id_of_client_with_details')]
     #[JMS\Groups(['user'])]
     #[JMS\Type('integer')]
-    public function getIdOfClientWithDetails()
+    public function getIdOfClientWithDetails(): ?int
     {
         return $this->getFirstClient() && $this->getFirstClient()->hasDetails()
             ? $this->getFirstClient()->getId()
@@ -753,7 +528,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[JMS\Groups(['user-login'])]
     #[JMS\Type('integer')]
     #[JMS\SerializedName('active_report_id')]
-    public function getActiveReportId()
+    public function getActiveReportId(): ?int
     {
         $firstClient = $this->getFirstClient();
         if ($firstClient === null) {
@@ -772,7 +547,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[JMS\Groups(['user'])]
     #[JMS\Type('integer')]
     #[JMS\SerializedName('number_of_reports')]
-    public function getNumberOfReports()
+    public function getNumberOfReports(): ?int
     {
         return $this->getFirstClient() ? count($this->getFirstClient()->getReports()) : 0;
     }
@@ -781,7 +556,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[JMS\Groups(['user'])]
     #[JMS\Type('integer')]
     #[JMS\SerializedName('number_of_submitted_reports')]
-    public function getNumberOfSubmittedReports()
+    public function getNumberOfSubmittedReports(): ?int
     {
         $firstClient = $this->getFirstClient();
 
@@ -794,53 +569,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         ));
     }
 
-    /**
-     * @return ?Client
-     */
-    public function getFirstClient()
+    public function getFirstClient(): ?Client
     {
         return $this->getClients()->first() ?: null;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAdManaged()
-    {
-        return $this->adManaged;
-    }
-
-    public function setAdManaged(?bool $adManaged): static
-    {
-        $this->adManaged = $adManaged;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getJobTitle()
+    public function getJobTitle(): ?string
     {
         return $this->jobTitle;
     }
 
-    /**
-     * @return User
-     */
-    public function setJobTitle(?string $jobTitle)
+    public function setJobTitle(?string $jobTitle): static
     {
         $this->jobTitle = $jobTitle;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getAgreeTermsUse()
+    public function getAgreeTermsUse(): bool
     {
-        return $this->agreeTermsUse;
+        return $this->agreeTermsUse ?? false;
     }
 
     public function setAgreeTermsUse(?bool $agreeTermsUse): User
@@ -854,26 +602,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return ?\DateTime
-     */
-    public function getAgreeTermsUseDate()
+    public function getAgreeTermsUseDate(): ?\DateTime
     {
         return $this->agreeTermsUseDate;
     }
 
-    /**
-     * @return bool
-     */
-    public function getCoDeputyClientConfirmed()
+    public function getCoDeputyClientConfirmed(): bool
     {
         return $this->coDeputyClientConfirmed;
     }
 
-    /**
-     * @param bool $coDeputyClientConfirmed
-     */
-    public function setCoDeputyClientConfirmed($coDeputyClientConfirmed = false): User
+    public function setCoDeputyClientConfirmed(bool $coDeputyClientConfirmed): User
     {
         $this->coDeputyClientConfirmed = $coDeputyClientConfirmed;
 
@@ -882,14 +621,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Return true if the client has other users.
-     *
-     * @return bool
      */
     #[JMS\VirtualProperty]
     #[JMS\Type('boolean')]
     #[JMS\SerializedName('is_co_deputy')]
     #[JMS\Groups(['user'])]
-    public function isCoDeputy()
+    public function isCoDeputy(): bool
     {
         $isCoDeputy = false;
         if ($this->isLayDeputy()) {
@@ -904,152 +641,116 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Is a PA (any role)?
-     *
-     * @return bool
      */
-    public function isPaDeputy()
+    public function isPaDeputy(): bool
     {
         return $this->isPaNamedDeputy() || $this->isPaAdministrator() || $this->isPaTeamMember() || $this->isPaTopRole();
     }
 
     /**
      * Is a Professional Deputy (any role)?
-     *
-     * @return bool
      */
-    public function isProfDeputy()
+    public function isProfDeputy(): bool
     {
         return $this->isProfNamedDeputy() || $this->isProfAdministrator() || $this->isProfTeamMember() || $this->isProfTopRole();
     }
 
     /**
      * Is Organisation Named deputy?
-     *
-     * @return bool
      */
-    public function isOrgNamedDeputy()
+    public function isOrgNamedDeputy(): bool
     {
         return $this->isPaNamedDeputy() || $this->isProfNamedDeputy();
     }
 
     /**
      * Is PA Named deputy?
-     *
-     * @return bool
      */
-    public function isPaNamedDeputy()
+    public function isPaNamedDeputy(): bool
     {
         return $this->getRoleName() === self::ROLE_PA_NAMED;
     }
 
     /**
      * Is PA Named deputy?
-     *
-     * @return bool
      */
-    public function isProfNamedDeputy()
+    public function isProfNamedDeputy(): bool
     {
         return $this->getRoleName() === self::ROLE_PROF_NAMED;
     }
 
-    /**
-     * @return bool
-     */
-    public function isLayDeputy()
+    public function isLayDeputy(): bool
     {
         return $this->getRoleName() === self::ROLE_LAY_DEPUTY;
     }
 
     /**
      * Is PA Administrator?
-     *
-     * @return bool
      */
-    public function isPaAdministrator()
+    public function isPaAdministrator(): bool
     {
-        return in_array($this->roleName, [self::ROLE_PA_ADMIN]);
+        return $this->roleName === self::ROLE_PA_ADMIN;
     }
 
     /**
      * Is user a Professional Administrator?
-     *
-     * @return bool
      */
-    public function isProfAdministrator()
+    public function isProfAdministrator(): bool
     {
-        return in_array($this->roleName, [self::ROLE_PROF_ADMIN]);
+        return $this->roleName === self::ROLE_PROF_ADMIN;
     }
 
     /**
      * Is Organisation Administrator?
-     *
-     * @return bool
      */
-    public function isOrgAdministrator()
+    public function isOrgAdministrator(): bool
     {
         return $this->isPaAdministrator() || $this->isProfAdministrator();
     }
 
     /**
      * Is PA Team member?
-     *
-     * @return bool
      */
-    public function isPaTeamMember()
+    public function isPaTeamMember(): bool
     {
         return $this->getRoleName() === self::ROLE_PA_TEAM_MEMBER;
     }
 
     /**
      * Is Professional Team member?
-     *
-     * @return bool
      */
-    public function isProfTeamMember()
+    public function isProfTeamMember(): bool
     {
         return $this->getRoleName() === self::ROLE_PROF_TEAM_MEMBER;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPaTopRole()
+    public function isPaTopRole(): bool
     {
         return $this->getRoleName() === self::ROLE_PA;
     }
 
-    /**
-     * @return bool
-     */
-    public function isProfTopRole()
+    public function isProfTopRole(): bool
     {
         return $this->getRoleName() === self::ROLE_PROF;
     }
 
-    /**
-     * @return bool
-     */
-    public function isOrgNamedOrAdmin()
+    public function isOrgNamedOrAdmin(): bool
     {
         return $this->isOrgNamedDeputy() || $this->isOrgAdministrator();
     }
 
     /**
      * Is user an organisation Team Member?
-     *
-     * @return bool
      */
-    public function isOrgTeamMember()
+    public function isOrgTeamMember(): bool
     {
         return $this->isPaTeamMember() || $this->isProfTeamMember();
     }
 
     /**
      * Is user an Organisation deputy? Any role. PA or Org.
-     *
-     * @return bool
      */
-    public function isDeputyOrg()
+    public function isDeputyOrg(): bool
     {
         return $this->isOrgNamedDeputy() || $this->isOrgAdministrator() || $this->isOrgTeamMember();
     }
@@ -1077,7 +778,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set role to team member.
      */
-    public function setDefaultRoleIfEmpty()
+    public function setDefaultRoleIfEmpty(): void
     {
         if (empty($this->getRoleName())) {
             if ($this->isProfDeputy()) {
@@ -1088,7 +789,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
     }
 
-    public function hasReports()
+    public function hasReports(): bool
     {
         $firstClient = $this->getFirstClient();
 
@@ -1096,13 +797,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             return false;
         }
 
-        $reports = $firstClient->getReports();
-
-        if (!empty($reports)) {
-            return true;
-        }
-
-        return false;
+        return !$firstClient->getReports()->isEmpty();
     }
 
     public function isCoDeputyWith(User $coDeputy): bool
@@ -1118,12 +813,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return false;
     }
 
-    public function getUserResearchResponse(): ?UserResearchResponse
+    /**
+     * @return Collection<int,UserResearchResponse>
+     */
+    public function getUserResearchResponse(): Collection
     {
         return $this->userResearchResponse;
     }
 
-    public function setUserResearchResponse(?UserResearchResponse $userResearchResponse): User
+    /**
+     * @param Collection<int,UserResearchResponse> $userResearchResponse
+     */
+    public function setUserResearchResponse(Collection $userResearchResponse): User
     {
         $this->userResearchResponse = $userResearchResponse;
 
@@ -1190,21 +891,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    /**
-     * Set preRegisterValidatedDate.
-     *
-     * @param \DateTime $preRegisterValidatedDate
-     */
-    public function setPreRegisterValidatedDate($preRegisterValidatedDate): User
+    public function setPreRegisterValidatedDate(?\DateTime $preRegisterValidatedDate): User
     {
         $this->preRegisterValidatedDate = $preRegisterValidatedDate;
 
         return $this;
     }
 
-    /**
-     * Get preRegisterValidatedDate.
-     */
     public function getPreRegisterValidatedDate(): ?\DateTime
     {
         return $this->preRegisterValidatedDate;
@@ -1215,31 +908,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->registrationRoute;
     }
 
-    /**
-     * @param string $registrationRoute
-     */
-    public function setRegistrationRoute($registrationRoute): User
+    public function setRegistrationRoute(string $registrationRoute): User
     {
         $this->registrationRoute = $registrationRoute;
 
         return $this;
     }
 
-    /**
-     * Set primary.
-     *
-     * @param bool $primary
-     */
-    public function setIsPrimary($primary): User
+    public function setIsPrimary(bool $primary): User
     {
         $this->isPrimary = $primary;
 
         return $this;
     }
 
-    /**
-     * Get primary.
-     */
     public function getIsPrimary(): bool
     {
         return $this->isPrimary;
@@ -1319,12 +1001,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function deriveDeputyType(): ?DeputyType
     {
-        if (str_contains($this->roleName, 'LAY')) {
-            return DeputyType::LAY;
-        } elseif (str_contains($this->roleName, 'PROF')) {
-            return DeputyType::PRO;
-        } elseif (str_contains($this->roleName, 'PA')) {
-            return DeputyType::PA;
+        if ($this->roleName !== null) {
+            if (str_contains($this->roleName, 'LAY')) {
+                return DeputyType::LAY;
+            } elseif (str_contains($this->roleName, 'PROF')) {
+                return DeputyType::PRO;
+            } elseif (str_contains($this->roleName, 'PA')) {
+                return DeputyType::PA;
+            }
         }
         return null;
     }

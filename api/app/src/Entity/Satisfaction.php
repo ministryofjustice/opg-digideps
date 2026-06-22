@@ -11,55 +11,37 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse;
 use OPG\Digideps\Backend\Repository\SatisfactionRepository;
 
-/**
- * User satisfaction scores
- */
 #[ORM\Table(name: 'satisfaction')]
 #[ORM\Entity(repositoryClass: SatisfactionRepository::class)]
 class Satisfaction
 {
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['satisfaction'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'satisfaction_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['satisfaction'])]
     #[ORM\Column(type: 'integer')]
-    private $score;
+    private int $score;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['satisfaction'])]
     #[ORM\Column(name: 'comments', type: 'string', length: 1200, nullable: true)]
-    private $comments;
+    private ?string $comments;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['satisfaction'])]
     #[ORM\Column(name: 'deputy_role', type: 'string', length: 50, nullable: true)]
-    private $deputyrole;
+    private ?string $deputyRole = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['satisfaction'])]
     #[ORM\Column(name: 'report_type', type: 'string', length: 9, nullable: true)]
-    private $reporttype;
+    private ?string $reportType = null;
 
 
     #[JMS\Type('DateTime')]
@@ -71,21 +53,34 @@ class Satisfaction
     #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     #[ORM\OneToOne(mappedBy: 'satisfaction', targetEntity: UserResearchResponse::class, cascade: ['persist', 'remove'])]
-    private UserResearchResponse $userResearchResponse;
+    private ?UserResearchResponse $userResearchResponse = null;
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     #[ORM\OneToOne(inversedBy: 'satisfaction', targetEntity: Report::class, cascade: ['persist'])]
     private ?Report $report = null;
 
-    public function getId(): int
+    public function __construct(int $score, ?string $comments = null)
     {
-        return $this->id;
+         $this->score = $score;
+         $this->comments = $comments;
+         $this->created = new \DateTime();
     }
 
-    public function setId(int $id): Satisfaction
+    public function getId(): int
     {
-        $this->id = $id;
+        return $this->id ?? 0;
+    }
+
+    public function setId(int $id): static
+    {
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
 
         return $this;
     }
@@ -114,29 +109,26 @@ class Satisfaction
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDeputyrole(): ?string
+    public function getDeputyRole(): ?string
     {
-        return $this->deputyrole;
+        return $this->deputyRole;
     }
 
-    public function setDeputyrole(string $deputyrole): Satisfaction
+    public function setDeputyRole(string $deputyRole): static
     {
-        $this->deputyrole = $deputyrole;
+        $this->deputyRole = $deputyRole;
 
         return $this;
     }
 
-    public function getReporttype(): ?string
+    public function getReportType(): ?string
     {
-        return $this->reporttype;
+        return $this->reportType;
     }
 
-    public function setReporttype(string $reporttype): Satisfaction
+    public function setReportType(string $reportType): static
     {
-        $this->reporttype = $reporttype;
+        $this->reportType = $reportType;
 
         return $this;
     }
@@ -146,19 +138,19 @@ class Satisfaction
         return $this->created;
     }
 
-    public function setCreated(\DateTime $created): Satisfaction
+    public function setCreated(\DateTime $created): static
     {
         $this->created = $created;
 
         return $this;
     }
 
-    public function getUserResearchResponse(): UserResearchResponse
+    public function getUserResearchResponse(): ?UserResearchResponse
     {
         return $this->userResearchResponse;
     }
 
-    public function setUserResearchResponse(UserResearchResponse $userResearchResponse): Satisfaction
+    public function setUserResearchResponse(?UserResearchResponse $userResearchResponse): static
     {
         $this->userResearchResponse = $userResearchResponse;
 
@@ -170,7 +162,7 @@ class Satisfaction
         return $this->report;
     }
 
-    public function setReport(?Report $report): Satisfaction
+    public function setReport(?Report $report): static
     {
         $this->report = $report;
 

@@ -170,12 +170,10 @@ class FixtureHelper
     {
         $submitDate = clone $report->getStartDate();
         $submitDate->modify('+1 year');
-        $satisfaction = new Satisfaction();
-        $satisfaction->setScore($satisfactionScore);
-        $satisfaction->setComments('random comment');
+        $satisfaction = new Satisfaction($satisfactionScore, 'random comment');
         $satisfaction->setReport($report);
-        $satisfaction->setReporttype($report->getType());
-        $satisfaction->setDeputyrole($user->getRoleName());
+        $satisfaction->setReportType($report->getType());
+        $satisfaction->setDeputyRole($user->getRoleName());
         $satisfaction->setCreated($submitDate);
 
         return $satisfaction;

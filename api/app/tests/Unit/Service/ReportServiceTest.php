@@ -42,7 +42,7 @@ final class ReportServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->user = new User();
+        $this->user = new User('', '', '');
         $client = new Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
@@ -311,9 +311,9 @@ final class ReportServiceTest extends TestCase
 
     public static function getReportTypeBasedOnSiriusProvider(): array
     {
-        $lay = new User()->setRoleName(User::ROLE_LAY_DEPUTY);
-        $prof = new User()->setRoleName(User::ROLE_PROF_ADMIN);
-        $pa = new User()->setRoleName(User::ROLE_PA_ADMIN);
+        $lay = new User('', '', '')->setRoleName(User::ROLE_LAY_DEPUTY);
+        $prof = new User('', '', '')->setRoleName(User::ROLE_PROF_ADMIN);
+        $pa = new User('', '', '')->setRoleName(User::ROLE_PA_ADMIN);
 
         $layClient = new Client()
             ->addUser($lay)

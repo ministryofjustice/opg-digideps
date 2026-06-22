@@ -138,13 +138,9 @@ class DocumentRepositoryTest extends KernelTestCase
 
     private function generateAndPersistUser(): User
     {
-        $user = new User()
-            ->setFirstname('Test')
-            ->setLastname('User')
-            ->setPassword('password123');
-
         $datePostFix = (string) new \DateTime()->getTimestamp();
-        $user->setEmail(sprintf('test-user%s%s@test.com', $datePostFix, rand(0, 100000)));
+        $user = new User('Test', 'User', sprintf('test-user%s%s@test.com', $datePostFix, rand(0, 100000)))
+            ->setPassword('password123');
 
         self::$entityManager->persist($user);
 

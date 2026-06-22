@@ -43,7 +43,7 @@ final class FixtureService
     ) {
         $this->persistCounter = new Counter();
         $this->faker = Factory::create('en_GB');
-        $this->password = $passwordHasher->hashPassword(new User(), 'DigidepsPass1234');
+        $this->password = $passwordHasher->hashPassword(new User('', '', ''), 'DigidepsPass1234');
         $this->refreshCounter();
     }
 
@@ -252,18 +252,15 @@ final class FixtureService
         $madeDate = new \DateTime()->sub(new \DateInterval('P6M'))->sub(new \DateInterval("P{$descriptor->submittedReports}Y"));
         $client->setCourtDate($madeDate);
 
-        return $this->persist(new CourtOrder()
-            ->setId($this->counter->nextInt())
-            ->setCourtOrderUid($this->counter->nextString(8, prefix: 'C', postfix: 'C'))
-            ->setClient($client)
-            ->setOrderType($type)
-            ->setOrderKind($descriptor->single ? CourtOrderKind::Single : ($descriptor->siblingDeputySet !== null ? CourtOrderKind::Hybrid : CourtOrderKind::Dual))
-            ->setOrderReportType($descriptor->single || $type !== CourtOrderType::HW ? $descriptor->reportType : CourtOrderReportType::OPG104)
-            ->setSibling(null)
-            ->setOrderMadeDate($madeDate)
-            ->setStatus($descriptor->active ? 'ACTIVE' : 'CLOSED')
-            ->setCreatedAt(null)
-            ->setUpdatedAt(null));
+        return $this->persist(new CourtOrder(
+            $this->counter->nextString(8, prefix: 'C', postfix: 'C'),
+            $type,
+            $descriptor->single || $type !== CourtOrderType::HW ? $descriptor->reportType : CourtOrderReportType::OPG104,
+            $descriptor->single ? CourtOrderKind::Single : ($descriptor->siblingDeputySet !== null ? CourtOrderKind::Hybrid : CourtOrderKind::Dual),
+            $madeDate,
+            $client,
+            $descriptor->active ? 'ACTIVE' : 'CLOSED'
+        )->setId($this->counter->nextInt()));
     }
 
     private function makeDeputy(DeputyDescriptor $descriptor, Client $client, ?Organisation $organisation): Deputy
@@ -310,12 +307,24 @@ final class FixtureService
 
     private function makeUser(DeputyDescriptor $descriptor, ?Deputy $deputy = null, ?Organisation $organisation = null): User
     {
-        $user = new User()
-            ->setId($this->counter->nextInt())
+        $id = $this->counter->nextInt();
+        $firstname = $deputy?->getFirstname() ?? $this->faker->firstName();
+        $lastname = $deputy?->getLastname() ?? $this->faker->lastName();
+
+        if ($organisation !== null) {
+            $email = "{$firstname}.{$lastname}{$organisation->getEmailIdentifier()}";
+        } else {
+            $email = "{$firstname}.{$lastname}@{$id}.{$descriptor->emailDomain}";
+        }
+
+        $user = new User(
+            $firstname,
+            $lastname,
+            $email
+        )
+            ->setId($id)
             ->setDeputy($deputy)
             ->setDeputyUid((int)$deputy?->getDeputyUid() ?: null)
-            ->setFirstname($deputy?->getFirstname() ?? $this->faker->firstName())
-            ->setLastname($deputy?->getLastname() ?? $this->faker->lastName())
             ->setAddress1($deputy?->getAddress1() ?? $this->faker->streetAddress())
             ->setAddress2($deputy?->getAddress2() ?? '')
             ->setAddress3($deputy?->getAddress3() ?? '')
@@ -351,13 +360,7 @@ final class FixtureService
             ->setRegistrationDate(new \DateTime()->sub(new \DateInterval('P1Y')))
         ;
 
-        if ($organisation !== null) {
-            $user->setEmail("{$user->getFirstname()}.{$user->getLastname()}{$organisation->getEmailIdentifier()}");
-            $organisation->addUser($user);
-        } else {
-            $user->setEmail("{$user->getFirstname()}.{$user->getLastname()}@{$user->getId()}.{$descriptor->emailDomain}");
-        }
-
+        $organisation?->addUser($user);
         $deputy?->setEmail1($user->getEmail());
 
         return $this->persist($user);
