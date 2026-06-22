@@ -197,7 +197,7 @@ final class LoginRequestAuthenticatorTest extends TestCase
             json_encode(['email' => 'a@b.com', 'password' => 'password123']),
         );
 
-        $user = new User()
+        $user = new User('', '', 'a@b.com')
             ->setPassword('password123')
             ->setRoleName('ROLE_USER');
 
@@ -363,7 +363,7 @@ final class LoginRequestAuthenticatorTest extends TestCase
 
         $this->incrementalWaitingTimeChecker->isFrozen('emaila@b.com')->willReturn(false);
 
-        $user = new User()
+        $user = new User('', '', 'a@b.com')
             ->setPassword('password123')
             ->setRoleName('ROLE_USER');
         $this->userRepo->findOneBy(['email' => 'a@b.com'])->willReturn($user);
@@ -376,7 +376,7 @@ final class LoginRequestAuthenticatorTest extends TestCase
     #[Test]
     public function onAuthenticationSuccess(): void
     {
-        $token = new UsernamePasswordToken(new User(), 'private-firewall');
+        $token = new UsernamePasswordToken(new User('', '', ''), 'private-firewall');
 
         $this->tokenStorage->setToken($token)->shouldBeCalled();
         $this->attemptsInTimeChecker->resetAttempts('')->shouldBeCalled();

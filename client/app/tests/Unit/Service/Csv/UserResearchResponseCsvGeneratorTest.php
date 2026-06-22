@@ -27,8 +27,8 @@ class UserResearchResponseCsvGeneratorTest extends TestCase
                     'id' => '10012',
                     'score' => 5,
                     'comments' => 'Amazing service',
-                    'deputyrole' => 'ROLE_LAY_DEPUTY',
-                    'reporttype' => '102',
+                    'deputyRole' => 'ROLE_LAY_DEPUTY',
+                    'reportType' => '102',
                     'created' => [
                         'date' => '2020-01-01 14:41:52.000000',
                         'timezone_type' => 3,
@@ -60,8 +60,8 @@ class UserResearchResponseCsvGeneratorTest extends TestCase
                     'id' => '10012',
                     'score' => 2,
                     'comments' => 'Not impressed',
-                    'deputyrole' => 'ROLE_PROF_ADMIN',
-                    'reporttype' => '103',
+                    'deputyRole' => 'ROLE_PROF_ADMIN',
+                    'reportType' => '103',
                     'created' => [
                         'date' => '2020-12-12 14:41:52.000000',
                         'timezone_type' => 3,

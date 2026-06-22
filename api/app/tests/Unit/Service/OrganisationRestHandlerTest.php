@@ -67,7 +67,7 @@ final class OrganisationRestHandlerTest extends TestCase
     {
         $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
         $this->validator->validate(Argument::any())->willReturn(new ConstraintViolationList());
-        $this->orgFactory->createFromEmailIdentifier(Argument::any(), Argument::any(), Argument::any())->willReturn(new Organisation());
+        $this->orgFactory->createFromEmailIdentifier(Argument::any(), Argument::any(), Argument::any())->willReturn(new Organisation('', ''));
 
         $this->em->persist(Argument::type(Organisation::class))->shouldBeCalled();
         $this->em->flush()->shouldBeCalled();
@@ -104,7 +104,7 @@ final class OrganisationRestHandlerTest extends TestCase
     #[Test]
     public function createOrgAlreadyExists(): void
     {
-        $this->orgRepository->findOneBy(Argument::any())->willReturn(new Organisation());
+        $this->orgRepository->findOneBy(Argument::any())->willReturn(new Organisation('ABC', 'gmail.com', true));
 
         self::expectException(OrganisationCreationException::class);
 
@@ -128,7 +128,7 @@ final class OrganisationRestHandlerTest extends TestCase
         $this->validator->validate(Argument::any())->willReturn(new ConstraintViolationList([
             new ConstraintViolation('an error', null, [], null, null, null)
         ]));
-        $this->orgFactory->createFromEmailIdentifier(Argument::any(), Argument::any(), Argument::any())->willReturn(new Organisation());
+        $this->orgFactory->createFromEmailIdentifier(Argument::any(), Argument::any(), Argument::any())->willReturn(new Organisation('', ''));
 
         self::expectException(OrganisationCreationException::class);
 
@@ -138,9 +138,7 @@ final class OrganisationRestHandlerTest extends TestCase
     #[Test]
     public function updateValidOrgDetails(): void
     {
-        $originalOrg = new Organisation();
-        $originalOrg->setEmailIdentifier('cba@.com');
-        $originalOrg->setname('Your Organisation');
+        $originalOrg = new Organisation('Your Organisation', 'cba@.com');
 
         $this->orgRepository->find(Argument::any())->willReturn($originalOrg);
         $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
@@ -178,9 +176,7 @@ final class OrganisationRestHandlerTest extends TestCase
     #[Test]
     public function updateOrgEmailIdentifierInUse(): void
     {
-        $originalOrg = new Organisation();
-        $originalOrg->setEmailIdentifier('cba@.com');
-        $originalOrg->setname('Your Organisation');
+        $originalOrg = new Organisation('Your Organisation', 'cba@.com');
 
         $this->orgRepository->find(Argument::any())->willReturn($originalOrg);
         $this->orgRepository->findOneBy(Argument::any())->willReturn($originalOrg);
@@ -193,9 +189,7 @@ final class OrganisationRestHandlerTest extends TestCase
     #[Test]
     public function updateOrgValidationFails(): void
     {
-        $originalOrg = new Organisation();
-        $originalOrg->setEmailIdentifier('cba@.com');
-        $originalOrg->setname('Your Organisation');
+        $originalOrg = new Organisation('Your Organisation', 'cba@.com');
 
         $this->orgRepository->find(Argument::any())->willReturn($originalOrg);
         $this->orgRepository->findOneBy(Argument::any())->willReturn(null);

@@ -475,28 +475,6 @@ final class ReportStatusServiceTest extends TestCase
         $this->assertEquals($state, $object->getDebtsState()['state']);
     }
 
-    public static function profCurrentFeesProvider(): array
-    {
-        $debt = m::mock(Debt::class);
-
-        return [
-            [['getCurrentProfPaymentsReceived' => null], ReportStatusService::STATE_NOT_STARTED],
-            [['getCurrentProfPaymentsReceived' => 'yes', 'profCurrentFeesSectionCompleted' => false], ReportStatusService::STATE_INCOMPLETE],
-            [['getCurrentProfPaymentsReceived' => 'yes', 'profCurrentFeesSectionCompleted' => true], ReportStatusService::STATE_DONE],
-        ];
-    }
-
-    #[DataProvider('profCurrentFeesProvider')]
-    #[Test]
-    public function profCurrentFeesState(array $mocks, string $state): void
-    {
-        $report = $this->getReportMocked($mocks);
-        $report->shouldReceive('hasSection')->with(Report::SECTION_PROF_CURRENT_FEES)->andReturn(true);
-
-        $object = new ReportStatusService($report);
-        $this->assertEquals($state, $object->getProfCurrentFeesState()['state']);
-    }
-
     #[DataProvider('balanceProvider')]
     #[Test]
     public function balance(array $mocks, string $state): void

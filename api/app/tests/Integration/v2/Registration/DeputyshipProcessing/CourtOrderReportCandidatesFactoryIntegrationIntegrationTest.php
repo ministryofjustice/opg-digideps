@@ -221,14 +221,14 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
 
         // create order and associate with report; this report is a potential candidate,
         // but should be ignored as a candidate because a relationship already exists
-        $courtOrder = new CourtOrder();
-        $courtOrder->setCourtOrderUid($deputyship->orderUid);
-        $courtOrder->setOrderType(CourtOrderType::PFA);
-        $courtOrder->setOrderKind(CourtOrderKind::Single);
-        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
-        $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate($orderMadeDate);
-        $courtOrder->addReport($report);
+        $courtOrder = new CourtOrder(
+            $deputyship->orderUid,
+            CourtOrderType::PFA,
+            CourtOrderReportType::OPG102,
+            CourtOrderKind::Single,
+            $orderMadeDate,
+            $client
+        )->addReport($report);
 
         self::$entityManager->persist($courtOrder);
 
