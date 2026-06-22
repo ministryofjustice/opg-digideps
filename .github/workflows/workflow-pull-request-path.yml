@@ -337,6 +337,23 @@ jobs:
       timeout: "900"
       retry_on_fail: true
 
+  end_to_end_tests:
+    name: end to end playwright tests
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+      - scale_services_up
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
+      task_name: "end_to_end_tests"
+      timeout: "900"
+      retry_on_fail: false
+
   end_to_end_tests_1:
     name: end to end tests frontend 1
     uses: ./.github/workflows/_run-task.yml
