@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Backend\Service;
 
 use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Asset;
 use OPG\Digideps\Backend\Entity\Report\AssetOther;

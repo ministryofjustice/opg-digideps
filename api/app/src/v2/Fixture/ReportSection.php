@@ -68,8 +68,7 @@ class ReportSection
 
     private function completeVisitsCare(Report $report): void
     {
-        $vc = new VisitsCare()
-            ->setReport($report)
+        $vc = new VisitsCare($report)
             ->setDoYouLiveWithClient('yes')
             ->setDoesClientReceivePaidCare('no')
             ->setWhoIsDoingTheCaring('me')

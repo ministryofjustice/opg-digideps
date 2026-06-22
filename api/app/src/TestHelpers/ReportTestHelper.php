@@ -160,7 +160,7 @@ class ReportTestHelper
 
     private static function completeVisitsCare(Report $report): void
     {
-        $vc = new VisitsCare()->setReport($report);
+        $vc = new VisitsCare($report);
 
         $vc->setDoYouLiveWithClient('yes')
             ->setDoesClientReceivePaidCare('no')

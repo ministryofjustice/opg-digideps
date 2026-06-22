@@ -13,16 +13,12 @@ use OPG\Digideps\Backend\Entity\Report\Asset;
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
-use OPG\Digideps\Backend\Entity\Report\Checklist;
 use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Decision;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Expense;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\VisitsCare;
-use OPG\Digideps\Backend\Entity\Satisfaction;
-use OPG\Digideps\Backend\Entity\UserResearch\ResearchType;
-use OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse;
 use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
@@ -40,16 +36,8 @@ use Doctrine\DBAL\Connection;
  */
 class Fixtures
 {
-    public const string PG_DUMP_PATH = '/tmp/dd_phpunit.pgdump';
-
-    /**
-     * @var EntityManager
-     */
-    private $em;
-
-    public function __construct(EntityManager $em)
+    public function __construct(private EntityManager $em)
     {
-        $this->em = $em;
     }
 
     public function getEntityManager(): EntityManager
@@ -57,14 +45,6 @@ class Fixtures
         return $this->em;
     }
 
-    public function getQueryResults($dql)
-    {
-        return $this->em->createQuery($dql)->getResult();
-    }
-
-    /**
-     * @return string
-     */
     private static function getPGExportCommand(): string
     {
         $pgHost = getenv('PGHOST') ?: 'postgres';
@@ -156,9 +136,6 @@ class Fixtures
         return $deputy;
     }
 
-    /**
-     * @return Client
-     */
     public function createClient(?User $user = null, array $settersMap = []): Client
     {
         // add clent, cot, report, needed for assets
@@ -178,8 +155,6 @@ class Fixtures
     }
 
     /**
-     * @return Document
-     *
      * @throws ORMException
      */
     public function createDocument($report, string $filename, bool $isReportPdf = true): Document
@@ -192,17 +167,7 @@ class Fixtures
         return $doc;
     }
 
-    public function createChecklist(Report $report): Checklist
-    {
-        $cl = new Checklist($report);
-        $this->em->persist($cl);
-
-        return $cl;
-    }
-
     /**
-     * @return ReportSubmission
-     *
      * @throws ORMException
      */
     public function createReportSubmission(?Report $report = null, ?User $user = null): ReportSubmission
@@ -301,13 +266,9 @@ class Fixtures
         return $contact;
     }
 
-    /**
-     * @return VisitsCare
-     */
     public function createVisitsCare(Report $report, array $settersMap = []): VisitsCare
     {
-        $sg = new VisitsCare();
-        $sg->setReport($report);
+        $sg = new VisitsCare($report);
         $sg->setDoYouLiveWithClient('yes');
 
         foreach ($settersMap as $k => $v) {
@@ -487,28 +448,14 @@ class Fixtures
         return $this->getRepo(Report::class)->find($id);
     }
 
-    /**
-     * @return array
-     */
     public function getReportFreshSectionStatus(Report $report, string $section): array
     {
         return $this->getReportById($report->getId())->getStatus()->getSectionStateNotCached($section);
     }
 
-    /**
-     * @return User
-     */
     public function findUserByEmail(string $email): User
     {
         return $this->getRepo(User::class)->findOneBy(['email' => $email]);
-    }
-
-    /**
-     * @param string $deputyNo
-     */
-    public function findDeputyByNumber($deputyNo): ?Deputy
-    {
-        return $this->getRepo(Deputy::class)->findOneBy(['deputyNo' => $deputyNo]);
     }
 
     public function getConnection(): Connection
@@ -521,23 +468,6 @@ class Fixtures
         exec(self::getPGExportCommand() . $cmd);
     }
 
-    public static function initDb()
-    {
-    }
-
-    public static function backupDb(): void
-    {
-        self::pgCommand('pg_dump --clean > ' . self::PG_DUMP_PATH);
-    }
-
-    public static function restoreDb(): void
-    {
-        if (!file_exists(self::PG_DUMP_PATH)) {
-            throw new \RuntimeException(self::PG_DUMP_PATH . ' not found');
-        }
-        self::pgCommand('psql < ' . self::PG_DUMP_PATH);
-    }
-
     public static function deleteReportsData($additionalTables = []): void
     {
         $tables = array_merge(['document', 'pre_registration', 'deputy_case', 'report_submission', 'report', 'satisfaction'], $additionalTables);
@@ -547,44 +477,6 @@ class Fixtures
     public function refresh(object $entity): void
     {
         $this->em->refresh($entity);
-    }
-
-    public function createUserResearchResponse(int $howMany): void
-    {
-        $range = range(1, $howMany);
-
-        foreach ($range as $i) {
-            $rs = $this->createReportSubmission();
-
-            $researchType = new ResearchType(['surveys']);
-
-            $userResearchResponse = new UserResearchResponse()
-                ->setCreated(new \DateTime())
-                ->setDeputyshipLength('oneToFive')
-                ->setUser($rs->getCreatedBy())
-                ->setHasAccessToVideoCallDevice(true)
-                ->setResearchType($researchType);
-
-            $satisfaction = new Satisfaction(rand(1, 5), ' Some comments')
-                ->setReport($rs->getReport())
-                ->setDeputyRole(User::ROLE_LAY_DEPUTY)
-                ->setReportType(Report::LAY_COMBINED_LOW_ASSETS_TYPE)
-                ->setUserResearchResponse($userResearchResponse);
-
-            $userResearchResponse->setSatisfaction($satisfaction);
-
-            $this->em->persist($userResearchResponse);
-            $this->em->persist($satisfaction);
-            $this->em->persist($researchType);
-
-            if ($i === 100) {
-                $this->em->flush();
-                $this->em->clear();
-            }
-        }
-
-        $this->em->flush();
-        $this->em->clear();
     }
 
     public function createCourtOrder(string $uid, CourtOrderType $type, CourtOrderKind $kind, string $status, \DateTime $madeDate = new \DateTime(), ?CourtOrderReportType $courtOrderReportType = null, ?Deputy $deputy = null, ?Client $client = null): CourtOrder

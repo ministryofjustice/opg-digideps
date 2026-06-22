@@ -30,6 +30,9 @@ use OPG\Digideps\Backend\Entity\Report\Gift;
 use OPG\Digideps\Backend\Entity\Report\Lifestyle;
 use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
 use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\Report\ReviewChecklist;
+use OPG\Digideps\Backend\Entity\Report\VisitsCare;
 use OPG\Digideps\Backend\Entity\Satisfaction;
 use OPG\Digideps\Backend\Entity\Setting;
 use OPG\Digideps\Backend\Entity\User;
@@ -185,6 +188,24 @@ final class EntityTest extends TestCase
     {
         $mentalCapacity = new MentalCapacity($this->makeReport());
         $this->testEntity($mentalCapacity);
+    }
+
+    public function testReportSubmissionValidOnConstruction(): void
+    {
+        $reportSubmission = new ReportSubmission($this->makeReport(), null);
+        $this->testEntity($reportSubmission);
+    }
+
+    public function testReviewChecklistValidOnConstruction(): void
+    {
+        $reviewChecklist = new ReviewChecklist($this->makeReport());
+        $this->testEntity($reviewChecklist);
+    }
+
+    public function testVisitsCareValidOnConstruction(): void
+    {
+        $visitsCare = new VisitsCare($this->makeReport());
+        $this->testEntity($visitsCare);
     }
 
     private function testEntity(object $entity): void
