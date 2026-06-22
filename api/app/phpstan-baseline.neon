@@ -451,6 +451,12 @@ parameters:
 			path: src/Controller/Report/AccountController.php
 
 		-
+			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\Controller\\Report\\ActionController\:\:updateEntity\(\) expects array\<string, string\|null\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/ActionController.php
+
+		-
 			message: '#^Parameter \#1 \$sectionIds of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:updateSectionsStatusCache\(\) expects array\<string\>\|null, array given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1141,7 +1147,7 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setAmount\(\) expects string, null given\.$#'
+			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setAmountAndDetails\(\) expects float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -1220,12 +1226,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$moneyTransactionsShortOutExist of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setMoneyTransactionsShortOutExist\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Parameter \#1 \$moreDetails of method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setMoreDetails\(\) expects string, null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -1375,9 +1375,21 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
+			message: '#^Parameter \#2 \$details of method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setAmountAndDetails\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
 			message: '#^Parameter \#2 \$endDate of method OPG\\Digideps\\Backend\\Service\\ReportService\:\:adjustReportStatus\(\) expects DateTime, mixed given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
+			message: '#^Parameter \#2 \$information of class OPG\\Digideps\\Backend\\Entity\\Report\\ChecklistInformation constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 2
 			path: src/Controller/Report/ReportController.php
 
 		-
@@ -2593,126 +2605,6 @@ parameters:
 			path: src/Entity/PreRegistration.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:cleanUpUnusedData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:getDoYouExpectFinancialDecisions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:getDoYouExpectFinancialDecisionsDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:getDoYouHaveConcerns\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:getDoYouHaveConcernsDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:setDoYouExpectFinancialDecisions\(\) has parameter \$doYouExpectFinancialDecisions with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:setDoYouExpectFinancialDecisionsDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:setDoYouExpectFinancialDecisionsDetails\(\) has parameter \$doYouExpectFinancialDecisionsDetails with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:setDoYouHaveConcerns\(\) has parameter \$doYouHaveConcerns with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:setDoYouHaveConcernsDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:setDoYouHaveConcernsDetails\(\) has parameter \$doYouHaveConcernsDetails with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:setReport\(\) should return OPG\\Digideps\\Backend\\Entity\\Report\\Contact but returns \$this\(OPG\\Digideps\\Backend\\Entity\\Report\\Action\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:\$doYouExpectFinancialDecisions \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:\$doYouExpectFinancialDecisionsDetails \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:\$doYouExpectFinancialDecisionsDetails \(string\) does not accept null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:\$doYouHaveConcerns \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:\$doYouHaveConcernsDetails \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:\$doYouHaveConcernsDetails \(string\) does not accept null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:\$id is never written, only read\.$#'
-			identifier: property.onlyRead
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Action\:\:\$report \(OPG\\Digideps\\Backend\\Entity\\Report\\Report\) does not accept OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:setType\(\) has parameter \$type with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -2809,66 +2701,6 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Checklist\:\:setChecklistInformation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Checklist\:\:setChecklistInformation\(\) has parameter \$checklistInformation with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Checklist\:\:setDeputyChargeAllowedByCourt\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Checklist\:\:setFurtherInformationReceived\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Checklist\:\:setSatisfiedWithPaExpenses\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Checklist\:\:\$clientBenefitsChecked \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ChecklistInformation\:\:__construct\(\) has parameter \$information with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/ChecklistInformation.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ChecklistInformation\:\:setChecklist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ChecklistInformation.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ChecklistInformation\:\:setInformation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ChecklistInformation.php
-
-		-
-			message: '#^Parameter \#1 \$string of function trim expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/Report/ChecklistInformation.php
-
-		-
 			message: '#^Cannot call method add\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -2927,66 +2759,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setAmount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Debt.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setAmountAndDetails\(\) has parameter \$amount with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Debt.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setAmountAndDetails\(\) has parameter \$details with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Debt.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setDebtTypeId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Debt.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setHasMoreDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Debt.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Debt.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setMoreDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Debt.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Debt.php
-
-		-
-			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setAmount\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/Report/Debt.php
-
-		-
-			message: '#^Parameter \#1 \$moreDetails of method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setMoreDetails\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/Report/Debt.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Decision\:\:setClientInvolvedBoolean\(\) has no return type specified\.$#'
