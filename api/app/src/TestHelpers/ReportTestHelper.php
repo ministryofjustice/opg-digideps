@@ -90,8 +90,7 @@ class ReportTestHelper
             $submitDate->modify('+365 day');
         }
 
-        $reportPdf = new Document($report);
-        $reportPdf->setFileName('DigiRep-2020-2021-12-34_12345678.pdf');
+        $reportPdf = new Document($report, 'DigiRep-2020-2021-12-34_12345678.pdf');
         $reportPdf->setStorageReference('dd_doc_1234_9876543219876');
         $reportPdf->setIsReportPdf(true);
         $reportPdf->setCreatedOn(new \DateTime());
@@ -103,8 +102,7 @@ class ReportTestHelper
             ->setCreatedOn($submitDate)
             ->addDocument($reportPdf);
 
-        $supportingDocument = new Document($report);
-        $supportingDocument->setFileName('fake-file.pdf');
+        $supportingDocument = new Document($report, 'fake-file.pdf');
         $supportingDocument->setStorageReference('dd_doc_1234_123456789123456');
         $supportingDocument->setIsReportPdf(false);
         $supportingDocument->setCreatedOn(new \DateTime());
@@ -187,7 +185,7 @@ class ReportTestHelper
 
     private static function completeLifestyle(Report $report): void
     {
-        $ls = new Lifestyle()->setReport($report);
+        $ls = new Lifestyle($report);
         $ls->setCareAppointments('no');
         $ls->setDoesClientUndertakeSocialActivities('no');
 

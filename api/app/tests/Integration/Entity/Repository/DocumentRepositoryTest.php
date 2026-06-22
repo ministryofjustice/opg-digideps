@@ -94,8 +94,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $fileName .= $isResubmission ? '-resubmission.pdf' : '.pdf';
         $storageRef .= $isResubmission ? '-resubmission.pdf' : '.pdf';
 
-        $doc = new Document($report)
-            ->setFileName($fileName)
+        $doc = new Document($report, $fileName)
             ->setStorageReference($storageRef)
             ->setIsReportPdf($isReportPdf)
             ->setSynchronisationStatus($syncStatus)

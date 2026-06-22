@@ -22,6 +22,13 @@ use OPG\Digideps\Backend\Entity\Report\Checklist;
 use OPG\Digideps\Backend\Entity\Report\ChecklistInformation;
 use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Debt;
+use OPG\Digideps\Backend\Entity\Report\Decision;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Expense;
+use OPG\Digideps\Backend\Entity\Report\Fee;
+use OPG\Digideps\Backend\Entity\Report\Gift;
+use OPG\Digideps\Backend\Entity\Report\Lifestyle;
+use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Satisfaction;
 use OPG\Digideps\Backend\Entity\Setting;
@@ -136,6 +143,48 @@ final class EntityTest extends TestCase
     {
         $debt = new Debt($this->makeReport(), '', false);
         $this->testEntity($debt);
+    }
+
+    public function testDecisionValidOnConstruction(): void
+    {
+        $decision = new Decision($this->makeReport());
+        $this->testEntity($decision);
+    }
+
+    public function testDocumentsValidOnConstruction(): void
+    {
+        $document = new Document($this->makeReport(), '');
+        $this->testEntity($document);
+    }
+
+    public function testExpenseValidOnConstruction(): void
+    {
+        $expense = new Expense($this->makeReport(), '');
+        $this->testEntity($expense);
+    }
+
+    public function testFeeValidOnConstruction(): void
+    {
+        $fee = new Fee($this->makeReport(), '');
+        $this->testEntity($fee);
+    }
+
+    public function testGiftValidOnConstruction(): void
+    {
+        $gift = new Gift($this->makeReport(), '');
+        $this->testEntity($gift);
+    }
+
+    public function testLifestyleValidOnConstruction(): void
+    {
+        $lifestyle = new Lifestyle($this->makeReport());
+        $this->testEntity($lifestyle);
+    }
+
+    public function testMentalCapacityValidOnConstruction(): void
+    {
+        $mentalCapacity = new MentalCapacity($this->makeReport());
+        $this->testEntity($mentalCapacity);
     }
 
     private function testEntity(object $entity): void

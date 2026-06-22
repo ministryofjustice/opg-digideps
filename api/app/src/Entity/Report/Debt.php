@@ -36,7 +36,7 @@ class Debt
     private Report $report;
 
     /**
-     * @see self:$debtTypeIds
+     * @see self::$debtTypeIds
      */
     #[JMS\Groups(['debt'])]
     #[ORM\Column(name: 'debt_type_id', type: 'string', nullable: false)]

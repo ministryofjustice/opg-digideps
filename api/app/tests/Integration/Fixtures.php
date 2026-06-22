@@ -184,8 +184,7 @@ class Fixtures
      */
     public function createDocument($report, string $filename, bool $isReportPdf = true): Document
     {
-        $doc = new Document($report);
-        $doc->setFileName($filename);
+        $doc = new Document($report, $filename);
         $doc->setIsReportPdf($isReportPdf);
 
         $this->em->persist($doc);
@@ -331,12 +330,9 @@ class Fixtures
         return $asset;
     }
 
-    /**
-     * @return Expense
-     */
     public function createReportExpense($type, Report $report, array $settersMap = []): Expense
     {
-        $record = new Expense($report);
+        $record = new Expense($report, '');
         foreach ($settersMap as $k => $v) {
             $record->$k($v);
         }
@@ -345,15 +341,9 @@ class Fixtures
         return $record;
     }
 
-    /**
-     * @return Decision
-     */
     public function createDecision(Report $report, array $settersMap = []): Decision
     {
-        $decision = new Decision();
-        $decision->setReport($report);
-        $decision->setClientInvolvedBoolean(true);
-        $decision->setDescription('description' . time());
+        $decision = new Decision($report, true, 'description' . time());
 
         foreach ($settersMap as $k => $v) {
             $decision->$k($v);
