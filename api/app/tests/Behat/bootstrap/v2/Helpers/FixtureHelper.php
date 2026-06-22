@@ -1211,9 +1211,8 @@ class FixtureHelper
     {
         $report = $this->em->getRepository(Report::class)->find($reportId);
 
-        $expense = new Expense($report);
+        $expense = new Expense($report, $explanation);
         $expense->setAmount($amount);
-        $expense->setExplanation($explanation);
 
         $report->addExpense($expense);
         $report->setPaidForAnything('yes');

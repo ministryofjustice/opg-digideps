@@ -94,8 +94,7 @@ class ReportSection
 
     private function completeLifestyle(Report $report): void
     {
-        $ls = new Lifestyle()
-            ->setReport($report);
+        $ls = new Lifestyle($report);
         $ls->setCareAppointments('no');
         $ls->setDoesClientUndertakeSocialActivities('no');
         $report->setLifestyle($ls);

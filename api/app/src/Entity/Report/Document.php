@@ -14,9 +14,6 @@ use OPG\Digideps\Backend\Repository\DocumentRepository;
 use OPG\Digideps\Backend\Entity\SynchronisableInterface;
 use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
 
-/**
- * Documents
- */
 #[ORM\Table(name: 'document')]
 #[ORM\Index(columns: ['report_id'], name: 'ix_document_report_id')]
 #[ORM\Index(columns: ['created_by'], name: 'ix_document_created_by')]
@@ -28,173 +25,116 @@ class Document implements SynchronisableInterface
     use CreationAudit;
     use SynchronisableTrait;
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['documents', 'document-id'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'user_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['documents'])]
     #[ORM\Column(name: 'filename', type: 'string', length: 255, nullable: false)]
-    private $fileName;
+    private string $fileName;
 
     /**
      * Set to null when documents belong to a reportSubmission and documentsAvailable is set to false.
-     *
-     * @var string
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['document-storage-reference', 'documents'])]
     #[ORM\Column(name: 'storage_reference', type: 'string', length: 512, nullable: true)]
-    private $storageReference;
+    private ?string $storageReference = null;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['documents'])]
     #[ORM\Column(name: 'is_report_pdf', type: 'boolean', nullable: false, options: ['default' => false])]
-    private $isReportPdf;
+    private bool $isReportPdf;
 
-    /**
-     * @var Report
-     */
     #[JMS\Groups(['document-report'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'documents')]
-    private $report;
+    private Report $report;
 
-    /**
-     * @var ReportSubmission
-     */
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\ReportSubmission')]
     #[JMS\Groups(['document-report-submission'])]
     #[ORM\JoinColumn(name: 'report_submission_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: ReportSubmission::class, cascade: ['persist'], inversedBy: 'documents')]
-    private $reportSubmission;
+    private ?ReportSubmission $reportSubmission = null;
 
-    /**
-     * @var int|null
-     *
-     *
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['synchronisation'])]
     #[ORM\Column(name: 'sync_attempts', type: 'integer', nullable: false, options: ['default' => 0])]
-    protected $syncAttempts = 0;
+    protected int $syncAttempts = 0;
 
-    /**
-     * Document constructor.
-     *
-     * Report is initially required, but will be set to null at submission time,
-     * and associated to a specific ReportSubmission instead
-     */
-    public function __construct(Report $report)
+    public function __construct(Report $report, string $fileName)
     {
         $this->report = $report;
+        $this->fileName = $fileName;
         $this->isReportPdf = true;
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
-        $this->id = $id;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFileName()
+    public function getFileName(): string
     {
         return $this->fileName;
     }
 
-    /**
-     * @param string $fileName
-     *
-     * @return $this
-     */
-    public function setFileName($fileName)
+    public function setFileName(string $fileName): static
     {
         $this->fileName = $fileName;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getStorageReference()
+    public function getStorageReference(): ?string
     {
         return $this->storageReference;
     }
 
-    /**
-     * @param string $storageReference
-     *
-     * @return $this
-     */
-    public function setStorageReference($storageReference)
+    public function setStorageReference(?string $storageReference): static
     {
         $this->storageReference = $storageReference;
 
         return $this;
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    /**
-     * @return $this
-     */
-    public function setReport(Report $report)
+    public function setReport(Report $report): static
     {
         $this->report = $report;
 
         return $this;
     }
 
-    /**
-     * @return ReportSubmission|null
-     */
-    public function getReportSubmission()
+    public function getReportSubmission(): ?ReportSubmission
     {
         return $this->reportSubmission;
     }
 
-    /**
-     * @return Document
-     */
-    public function setReportSubmission(ReportSubmission $reportSubmission)
+    public function setReportSubmission(ReportSubmission $reportSubmission): static
     {
         $this->reportSubmission = $reportSubmission;
         $reportSubmission->addDocument($this);
@@ -202,20 +142,12 @@ class Document implements SynchronisableInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isReportPdf()
+    public function isReportPdf(): bool
     {
         return $this->isReportPdf;
     }
 
-    /**
-     * @param bool $isReportPdf
-     *
-     * @return Document
-     */
-    public function setIsReportPdf($isReportPdf)
+    public function setIsReportPdf(bool $isReportPdf): static
     {
         $this->isReportPdf = $isReportPdf;
 
@@ -224,25 +156,21 @@ class Document implements SynchronisableInterface
 
     /**
      * Is document for OPG admin eyes only.
-     *
-     * @return bool
      */
-    public function isAdminDocument()
+    public function isAdminDocument(): bool
     {
         return $this->isReportPdf() || $this->isTransactionDocument();
     }
 
     /**
      * Is document a list of transaction document (admin only).
-     *
-     * @return bool|int
      */
-    private function isTransactionDocument()
+    private function isTransactionDocument(): bool
     {
-        return strpos($this->getFileName(), 'DigiRepTransactions') !== false;
+        return str_contains($this->getFileName(), 'DigiRepTransactions');
     }
 
-    public function getSyncAttempts(): ?int
+    public function getSyncAttempts(): int
     {
         return $this->syncAttempts;
     }
