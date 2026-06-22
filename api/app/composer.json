@@ -81,7 +81,7 @@
         "doctrine/doctrine-fixtures-bundle": "^3.7.3",
         "fakerphp/faker": "^1.24.1",
         "friends-of-behat/symfony-extension": "^2.6.2",
-        "guzzlehttp/guzzle": "^7.10.5",
+        "guzzlehttp/guzzle": "^7.12.1",
         "jangregor/phpstan-prophecy": "^2.3",
         "liuggio/fastest": "^1.14.2",
         "ministryofjustice/mink-extension": "^2.7.3",
