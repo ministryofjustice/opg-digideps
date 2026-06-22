@@ -106,9 +106,8 @@ class DocumentControllerTest extends AbstractTestController
             ],
         ])['data'];
 
-        /** @var Document $document */
         $document = self::fixtures()->getRepo(Document::class)->find($data['id']);
-
+        $this->assertNotNull($document);
         $this->assertEquals($data['id'], $document->getId());
         $this->assertEquals(self::$user1->getId(), $document->getCreatedBy()->getId());
         $this->assertInstanceof(\DateTime::class, $document->getCreatedOn());

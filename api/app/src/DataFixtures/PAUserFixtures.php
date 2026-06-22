@@ -233,10 +233,11 @@ class PAUserFixtures extends AbstractDataFixture
 
     private function createUser(array $userData, int $iteration): User
     {
-        return new User()
-            ->setFirstname($userData['id'] . '-' . $iteration)
-            ->setLastname('User')
-            ->setEmail($userData['id'] . '-' . $iteration . $userData['email'])
+        return new User(
+            $userData['id'] . '-' . $iteration,
+            'User',
+            $userData['id'] . '-' . $iteration . $userData['email']
+        )
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setPhoneMain('07911111111111')

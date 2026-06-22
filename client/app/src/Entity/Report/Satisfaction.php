@@ -19,10 +19,10 @@ class Satisfaction
     private string $comments;
 
     #[JMS\Type('string')]
-    private string $deputyrole;
+    private string $deputyRole;
 
     #[JMS\Type('string')]
-    private string $reporttype;
+    private string $reportType;
 
     #[JMS\Type('DateTime')]
     private \DateTime $created;
@@ -69,26 +69,26 @@ class Satisfaction
         return $this;
     }
 
-    public function getDeputyrole(): string
+    public function getDeputyRole(): string
     {
-        return $this->deputyrole;
+        return $this->deputyRole;
     }
 
-    public function setDeputyrole(string $deputyrole): Satisfaction
+    public function setDeputyRole(string $deputyRole): Satisfaction
     {
-        $this->deputyrole = $deputyrole;
+        $this->deputyRole = $deputyRole;
 
         return $this;
     }
 
-    public function getReporttype(): string
+    public function getReportType(): string
     {
-        return $this->reporttype;
+        return $this->reportType;
     }
 
-    public function setReporttype(string $reporttype): Satisfaction
+    public function setReportType(string $reportType): Satisfaction
     {
-        $this->reporttype = $reporttype;
+        $this->reportType = $reportType;
 
         return $this;
     }
