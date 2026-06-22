@@ -795,7 +795,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getBondOrderMatchSirius());
         $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
-        $this->assertEquals('yes', $checklist->getCaseWorkerSatisfied());
+        $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
     }
 
     public function testAddChecklistWithFurtherInformation(): void
@@ -822,8 +822,8 @@ class ReportControllerTest extends AbstractTestController
             'data' => [
                 'button_clicked' => 'save', // Save further information
                 'reporting_period_accurate' => 'yes',
-                'contact_details_upto_date' => 1,
-                'deputy_full_name_accurate_in_sirius' => 1,
+                'contact_details_upto_date' => 'yes',
+                'deputy_full_name_accurate_in_sirius' => 'yes',
                 'decisions_satisfactory' => 'yes',
                 'consultations_satisfactory' => 'yes',
                 'care_arrangements' => 'yes',
@@ -853,8 +853,8 @@ class ReportControllerTest extends AbstractTestController
                 'save_further_information' => '', // Save further information
                 'further_information_received' => 'Some more info',
                 'reporting_period_accurate' => 'yes',
-                'contact_details_upto_date' => 1,
-                'deputy_full_name_accuratein_casrec' => 1,
+                'contact_details_upto_date' => 'yes',
+                'deputy_full_name_accuratein_casrec' => 'yes',
                 'decisions_satisfactory' => 'yes',
                 'consultations_satisfactory' => 'yes',
                 'care_arrangements' => 'yes',
@@ -878,8 +878,8 @@ class ReportControllerTest extends AbstractTestController
         $this->assertNotNull($checklist);
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
-        $this->assertEquals('1', $checklist->getContactDetailsUptoDate());
-        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateInSirius());
+        $this->assertEquals('yes', $checklist->getContactDetailsUptoDate());
+        $this->assertEquals('yes', $checklist->getDeputyFullNameAccurateInSirius());
         $this->assertEquals('yes', $checklist->getDecisionsSatisfactory());
         $this->assertEquals('yes', $checklist->getConsultationsSatisfactory());
         $this->assertEquals('yes', $checklist->getCareArrangements());
@@ -892,7 +892,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getBondOrderMatchSirius());
         $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
-        $this->assertEquals('yes', $checklist->getCaseWorkerSatisfied());
+        $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
 
         // assert checklist information created
         $checklistInfo = $checklist->getChecklistInformation();
@@ -931,8 +931,8 @@ class ReportControllerTest extends AbstractTestController
             'data' => [
                 'button_clicked' => 'save', // Save further information
                 'reporting_period_accurate' => 'yes',
-                'contact_details_upto_date' => 1,
-                'deputy_full_name_accurate_in_sirius' => 1,
+                'contact_details_upto_date' => 'yes',
+                'deputy_full_name_accurate_in_sirius' => 'yes',
                 'further_information_received' => 'Some more info',
                 'decisions_satisfactory' => 'yes',
                 'consultations_satisfactory' => 'yes',
@@ -988,8 +988,8 @@ class ReportControllerTest extends AbstractTestController
 
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
-        $this->assertEquals('1', $checklist->getContactDetailsUptoDate());
-        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateInSirius());
+        $this->assertEquals('yes', $checklist->getContactDetailsUptoDate());
+        $this->assertEquals('yes', $checklist->getDeputyFullNameAccurateInSirius());
         $this->assertEquals('yes', $checklist->getDecisionsSatisfactory());
         $this->assertEquals('yes', $checklist->getConsultationsSatisfactory());
         $this->assertEquals('yes', $checklist->getCareArrangements());
@@ -1002,7 +1002,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getBondOrderMatchSirius());
         $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
-        $this->assertEquals('yes', $checklist->getCaseWorkerSatisfied());
+        $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
         $this->assertEquals('All complete', $checklist->getLodgingSummary());
         $this->assertEquals('for-review', $checklist->getFinalDecision());
 

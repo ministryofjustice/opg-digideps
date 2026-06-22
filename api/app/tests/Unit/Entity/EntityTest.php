@@ -14,10 +14,14 @@ use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Note;
 use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Report\Action;
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\Checklist;
+use OPG\Digideps\Backend\Entity\Report\ChecklistInformation;
 use OPG\Digideps\Backend\Entity\Report\Contact;
+use OPG\Digideps\Backend\Entity\Report\Debt;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Satisfaction;
 use OPG\Digideps\Backend\Entity\Setting;
@@ -108,6 +112,30 @@ final class EntityTest extends TestCase
     {
         $user = new User('', '', '');
         $this->testEntity($user);
+    }
+
+    public function testActionValidOnConstruction(): void
+    {
+        $action = new Action($this->makeReport());
+        $this->testEntity($action);
+    }
+
+    public function testChecklistValidOnConstruction(): void
+    {
+        $checklist = new Checklist($this->makeReport());
+        $this->testEntity($checklist);
+    }
+
+    public function testChecklistInformationValidOnConstruction(): void
+    {
+        $checklistInformation = new ChecklistInformation(new Checklist($this->makeReport()), '');
+        $this->testEntity($checklistInformation);
+    }
+
+    public function testDebtValidOnConstruction(): void
+    {
+        $debt = new Debt($this->makeReport(), '', false);
+        $this->testEntity($debt);
     }
 
     private function testEntity(object $entity): void

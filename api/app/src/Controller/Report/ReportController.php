@@ -782,6 +782,13 @@ class ReportController extends RestController
 
     private function populateChecklistEntity(Checklist $checklist, array $checklistData): Checklist
     {
+        if (($checklistData['contact_details_upto_date'] ?? null) !== null) {
+            $checklistData['contact_details_upto_date'] = $checklistData['contact_details_upto_date'] ? 'yes' : 'no';
+        }
+        if (($checklistData['deputy_full_name_accurate_in_sirius'] ?? null) !== null) {
+            $checklistData['deputy_full_name_accurate_in_sirius'] = $checklistData['deputy_full_name_accurate_in_sirius'] ? 'yes' : 'no';
+        }
+
         $this->hydrateEntityWithArrayData($checklist, $checklistData, [
             'accounts_balance' => 'setAccountsBalance',
             'assets_declared_and_managed' => 'setAssetsDeclaredAndManaged',
