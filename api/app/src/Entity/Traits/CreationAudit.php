@@ -11,20 +11,12 @@ use JMS\Serializer\Annotation as JMS;
 
 trait CreationAudit
 {
-    /**
-     * User who created the entity
-     *
-     * @var ?User
-     */
     #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['notes', 'documents', 'report-submission', 'checklist-information'])]
     #[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], fetch: 'EAGER')]
     protected ?User $createdBy = null;
 
-    /**
-     * The datetime when the entity was created
-     */
     #[JMS\Type('DateTime')]
     #[JMS\Groups(['notes', 'documents', 'checklist-information'])]
     #[ORM\Column(name: 'created_on', type: 'datetime', nullable: true)]

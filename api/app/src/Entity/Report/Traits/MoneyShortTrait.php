@@ -131,7 +131,11 @@ trait MoneyShortTrait
     #[JMS\Groups(['moneyTransactionsShortIn'])]
     public function getMoneyTransactionsShortIn(): Collection
     {
-        return $this->moneyTransactionsShort->filter(fn (MoneyTransactionShort $t): bool => $t instanceof MoneyTransactionShortIn && !$t->isDeleted());
+        /**
+         * @var Collection<int, MoneyTransactionShortIn> $filtered
+         */
+        $filtered =  $this->moneyTransactionsShort->filter(fn (MoneyTransactionShort $t): bool => $t instanceof MoneyTransactionShortIn && !$t->isDeleted());
+        return $filtered;
     }
 
     /**
@@ -142,7 +146,11 @@ trait MoneyShortTrait
     #[JMS\Groups(['moneyTransactionsShortOut'])]
     public function getMoneyTransactionsShortOut(): Collection
     {
-        return $this->moneyTransactionsShort->filter(fn (MoneyTransactionShort $t): bool => $t instanceof MoneyTransactionShortOut && !$t->isDeleted());
+        /**
+         * @var Collection<int, MoneyTransactionShortOut> $filtered
+         */
+        $filtered = $this->moneyTransactionsShort->filter(fn (MoneyTransactionShort $t): bool => $t instanceof MoneyTransactionShortOut && !$t->isDeleted());
+        return $filtered;
     }
 
     public function getMoneyTransactionsShortInExist(): ?string

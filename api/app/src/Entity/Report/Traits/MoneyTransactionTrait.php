@@ -88,7 +88,7 @@ trait MoneyTransactionTrait
     }
 
     /**
-     * @param string $type in|out
+     * in|out
      */
     private function getMoneyTransactionsTotal(string $type): float
     {
@@ -106,7 +106,7 @@ trait MoneyTransactionTrait
 
         foreach ($transactions as $t) {
             if ($t instanceof MoneyTransactionInterface && $t->getType() === $type) {
-                $ret += $t->getAmount();
+                $ret += (float)$t->getAmount();
             }
         }
 

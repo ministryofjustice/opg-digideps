@@ -50,8 +50,7 @@ class SatisfactionQueryIntegrationTest extends ApiIntegrationTestCase
         ?string $reportType = null,
         ?string $deputyType = null
     ): void {
-        $satisfaction = new Satisfaction()
-            ->setScore($score);
+        $satisfaction = new Satisfaction($score);
 
         if (isset($reportType)) {
             $client = new Client();
