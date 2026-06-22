@@ -11,93 +11,76 @@ use JMS\Serializer\Annotation as JMS;
 #[ORM\Entity]
 class ProfDeputyInterimCost
 {
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['prof-deputy-costs-interim'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'prof_deputy_interim_cost_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'profDeputyInterimCosts')]
-    private $report;
+    private Report $report;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['prof-deputy-costs-interim'])]
     #[ORM\Column(name: 'date', type: 'datetime', nullable: true)]
-    private $date;
+    private ?\DateTime $date;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-costs-interim'])]
     #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
-    private $amount;
+    private ?string $amount;
 
-    public function __construct(Report $report, \DateTime $date, string $amount)
+    public function __construct(Report $report, \DateTime $date, ?string $amount)
     {
         $this->report = $report;
         $this->date = $date;
         $this->amount = $amount;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport()
+    public function setId(int $id): static
+    {
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
+    }
+
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDate()
+    public function getDate(): ?\DateTime
     {
         return $this->date;
     }
 
-    /**
-     * @param \DateTime $date
-     */
-    public function setDate($date)
+    public function setDate(?\DateTime $date): void
     {
         $this->date = $date;
     }
 
-    /**
-     * @return string
-     */
-    public function getAmount()
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    /**
-     * @param string $amount
-     */
-    public function setAmount($amount): static
+    public function setAmount(null|string|int|float $amount): static
     {
-        $this->amount = $amount;
+        $this->amount = $amount === null ? null : (string)$amount;
 
         return $this;
     }

@@ -37,7 +37,6 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
 
         $reportSubmission = $this->buildReportSubmissionWith([
             'id' => 2,
-            'report_type' => Report::class,
             'created_on' => new \DateTime('2012-01-02'),
             'report' => [
                 'client' => ['case_number' => '133'],
@@ -72,7 +71,6 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
 
         $reportSubmission = $this->buildReportSubmissionWith([
             'id' => 3,
-            'report_type' => Report::class,
             'created_on' => new \DateTime('2012-01-01'),
             'report' => [
                 'client' => ['case_number' => '132'],
@@ -98,10 +96,13 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
         $this->assertRowsContain($expectedRows);
     }
 
+    /**
+     * @param array{'report': array, 'documents': array, 'id': int, 'created_on': ?\DateTime} $data
+     */
     private function buildReportSubmissionWith(array $data): ReportSubmission
     {
-        $report = $this->buildReportOfType($data['report_type'], $data['report']);
-        $reportSubmission = new ReportSubmission($report, new User());
+        $report = $this->buildReportOfType($data['report']);
+        $reportSubmission = new ReportSubmission($report, new User('', '', ''));
 
         foreach ($data['documents'] as $document) {
             $reportSubmission->addDocument($this->buildDocumentWith($document));
@@ -113,10 +114,10 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
         return $reportSubmission;
     }
 
-    private function buildReportOfType(string $type, array $data): MockObject
+    private function buildReportOfType(array $data): MockObject&Report
     {
         $report = $this
-            ->getMockBuilder($type)
+            ->getMockBuilder(Report::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -130,8 +131,7 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
     {
         $report = $this->getMockBuilder(Report::class)->disableOriginalConstructor()->getMock();
 
-        return new Document($report)
-            ->setFileName($document['filename'])
+        return new Document($report, $document['filename'])
             ->setIsReportPdf($document['is_report_pdf']);
     }
 

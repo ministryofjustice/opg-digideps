@@ -24,9 +24,9 @@ class ReportStatusService
     public const bool ENABLE_STATUS_CACHE = true;
 
     /**
-     * @var bool set to true to use the report status cached
+     * Set to true to use the report status cached
      */
-    private $useStatusCache = false;
+    private bool $useStatusCache = false;
 
     public function __construct(
         #[JMS\Exclude]
@@ -332,26 +332,6 @@ class ReportStatusService
 
     #[JMS\VirtualProperty]
     #[JMS\Type('array')]
-    #[JMS\Groups(['status', 'fee-state'])]
-    public function getProfCurrentFeesState(): array
-    {
-        if (!$this->report->hasSection(Report::SECTION_PROF_CURRENT_FEES)) {
-            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
-        }
-
-        if (empty($this->report->getCurrentProfPaymentsReceived())) {
-            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-        }
-
-        if ($this->report->profCurrentFeesSectionCompleted()) {
-            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
-        }
-
-        return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
-    }
-
-    #[JMS\VirtualProperty]
-    #[JMS\Type('array')]
     #[JMS\Groups(['status', 'prof-deputy-costs-state'])]
     public function getProfDeputyCostsState(): array
     {
@@ -512,63 +492,33 @@ class ReportStatusService
      * @return array [ state=>STATE_NOT_STARTED/DONE/INCOMPLETE, nOfRecords=> ]
      */
     #[JMS\Exclude]
-    public function getSectionStateNotCached($section): array
+    public function getSectionStateNotCached(string $section): array
     {
-        switch ($section) {
-            case Report::SECTION_DECISIONS:
-                return $this->getDecisionsState();
-            case Report::SECTION_CONTACTS:
-                return $this->getContactsState();
-            case Report::SECTION_VISITS_CARE:
-                return $this->getVisitsCareState();
-            case Report::SECTION_LIFESTYLE:
-                return $this->getLifestyleState();
-                // money
-            case Report::SECTION_CLIENT_BENEFITS_CHECK:
-                return $this->getClientBenefitsCheckState();
-            case Report::SECTION_BALANCE:
-                return $this->getBalanceState();
-            case Report::SECTION_BANK_ACCOUNTS:
-                return $this->getBankAccountsState();
-            case Report::SECTION_MONEY_TRANSFERS:
-                return $this->getMoneyTransferState();
-            case Report::SECTION_MONEY_IN:
-                return $this->getMoneyInState();
-            case Report::SECTION_MONEY_OUT:
-                return $this->getMoneyOutState();
-            case Report::SECTION_MONEY_IN_SHORT:
-                return $this->getMoneyInShortState();
-            case Report::SECTION_MONEY_OUT_SHORT:
-                return $this->getMoneyOutShortState();
-            case Report::SECTION_ASSETS:
-                return $this->getAssetsState();
-            case Report::SECTION_DEBTS:
-                return $this->getDebtsState();
-            case Report::SECTION_GIFTS:
-                return $this->getGiftsState();
-                // end money
-            case Report::SECTION_ACTIONS:
-                return $this->getActionsState();
-            case Report::SECTION_OTHER_INFO:
-                return $this->getOtherInfoState();
-            case Report::SECTION_DEPUTY_EXPENSES:
-                return $this->getExpensesState();
-                // pa
-            case Report::SECTION_PA_DEPUTY_EXPENSES:
-                return $this->getPaFeesExpensesState();
-                // prof
-            case Report::SECTION_PROF_CURRENT_FEES:
-                return $this->getProfCurrentFeesState();
-            case Report::SECTION_PROF_DEPUTY_COSTS:
-                return $this->getProfDeputyCostsState();
-            case Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE:
-                return $this->getProfDeputyCostsEstimateState();
-                // documents
-            case Report::SECTION_DOCUMENTS:
-                return $this->getDocumentsState();
-            default:
-                throw new \InvalidArgumentException(__METHOD__ . " $section section not defined");
-        }
+        return match ($section) {
+            Report::SECTION_DECISIONS => $this->getDecisionsState(),
+            Report::SECTION_CONTACTS => $this->getContactsState(),
+            Report::SECTION_VISITS_CARE => $this->getVisitsCareState(),
+            Report::SECTION_LIFESTYLE => $this->getLifestyleState(),
+            Report::SECTION_CLIENT_BENEFITS_CHECK => $this->getClientBenefitsCheckState(),
+            Report::SECTION_BALANCE => $this->getBalanceState(),
+            Report::SECTION_BANK_ACCOUNTS => $this->getBankAccountsState(),
+            Report::SECTION_MONEY_TRANSFERS => $this->getMoneyTransferState(),
+            Report::SECTION_MONEY_IN => $this->getMoneyInState(),
+            Report::SECTION_MONEY_OUT => $this->getMoneyOutState(),
+            Report::SECTION_MONEY_IN_SHORT => $this->getMoneyInShortState(),
+            Report::SECTION_MONEY_OUT_SHORT => $this->getMoneyOutShortState(),
+            Report::SECTION_ASSETS => $this->getAssetsState(),
+            Report::SECTION_DEBTS => $this->getDebtsState(),
+            Report::SECTION_GIFTS => $this->getGiftsState(),
+            Report::SECTION_ACTIONS => $this->getActionsState(),
+            Report::SECTION_OTHER_INFO => $this->getOtherInfoState(),
+            Report::SECTION_DEPUTY_EXPENSES => $this->getExpensesState(),
+            Report::SECTION_PA_DEPUTY_EXPENSES => $this->getPaFeesExpensesState(),
+            Report::SECTION_PROF_DEPUTY_COSTS => $this->getProfDeputyCostsState(),
+            Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => $this->getProfDeputyCostsEstimateState(),
+            Report::SECTION_DOCUMENTS => $this->getDocumentsState(),
+            default => throw new \InvalidArgumentException(__METHOD__ . " $section section not defined"),
+        };
     }
 
     /**
@@ -696,7 +646,7 @@ class ReportStatusService
 
     /**
      * Used to fill report.reportStatusCached
-     * Ignored the due date. Returns readyTosubmit if sections are completed, even if not due.
+     * Ignored the due date. Returns readyToSubmit if sections are completed, even if not due.
      *
      * @return string notStarted|readyToSubmit|notFinished
      */

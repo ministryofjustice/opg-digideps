@@ -451,8 +451,8 @@ class ReportController extends RestController
             foreach ($data['money_short_categories_in'] as $row) {
                 $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
                 if ($e instanceof MoneyShortCategory) {
-                    $e
-                        ->setPresent($row['present']);
+                    $row['present'] = ($row['present'] ?? null) === null ? null : !empty($row['present']);
+                    $e->setPresent($row['present']);
                     $this->em->flush($e);
                 }
             }
@@ -467,8 +467,8 @@ class ReportController extends RestController
             foreach ($data['money_short_categories_out'] as $row) {
                 $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
                 if ($e instanceof MoneyShortCategory) {
-                    $e
-                        ->setPresent($row['present']);
+                    $row['present'] = ($row['present'] ?? null) === null ? null : !empty($row['present']);
+                    $e->setPresent($row['present']);
                     $this->em->flush($e);
                 }
             }
@@ -529,21 +529,6 @@ class ReportController extends RestController
             } else {
                 $report->setProfFeesEstimateSccoReason($data['prof_fees_estimate_scco_reason']);
             }
-            $this->em->flush();
-            $report->updateSectionsStatusCache([
-                Report::SECTION_PROF_CURRENT_FEES,
-            ]);
-        }
-
-        if (array_key_exists('current_prof_payments_received', $data)) {
-            if ($data['current_prof_payments_received'] == 'no') { // reset whole section
-                foreach ($report->getCurrentProfServiceFees() as $f) {
-                    $this->em->remove($f);
-                }
-                $report->setPreviousProfFeesEstimateGiven(null);
-                $report->setProfFeesEstimateSccoReason(null);
-            }
-            $report->setCurrentProfPaymentsReceived($data['current_prof_payments_received']);
             $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_PROF_CURRENT_FEES,
@@ -782,6 +767,13 @@ class ReportController extends RestController
 
     private function populateChecklistEntity(Checklist $checklist, array $checklistData): Checklist
     {
+        if (($checklistData['contact_details_upto_date'] ?? null) !== null) {
+            $checklistData['contact_details_upto_date'] = $checklistData['contact_details_upto_date'] ? 'yes' : 'no';
+        }
+        if (($checklistData['deputy_full_name_accurate_in_sirius'] ?? null) !== null) {
+            $checklistData['deputy_full_name_accurate_in_sirius'] = $checklistData['deputy_full_name_accurate_in_sirius'] ? 'yes' : 'no';
+        }
+
         $this->hydrateEntityWithArrayData($checklist, $checklistData, [
             'accounts_balance' => 'setAccountsBalance',
             'assets_declared_and_managed' => 'setAssetsDeclaredAndManaged',
