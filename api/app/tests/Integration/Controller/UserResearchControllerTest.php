@@ -119,9 +119,7 @@ class UserResearchControllerTest extends AbstractTestController
 
         $report->setClient($client);
 
-        $satisfaction = new Satisfaction()
-            ->setReport($report)
-            ->setScore(2);
+        $satisfaction = new Satisfaction(2)->setReport($report);
 
         $em->persist($client);
         $em->persist($report);

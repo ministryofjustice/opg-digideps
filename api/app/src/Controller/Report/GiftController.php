@@ -50,7 +50,7 @@ class GiftController extends RestController
             'explanation' => 'mustExist',
             'amount' => 'mustExist',
         ]);
-        $gift = new Gift($report);
+        $gift = new Gift($report, $data['explanation']);
 
         $this->updateEntityWithData($report, $gift, $data);
         $report->setGiftsExist('yes');

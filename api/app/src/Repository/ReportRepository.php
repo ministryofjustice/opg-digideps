@@ -13,8 +13,8 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
-use OPG\Digideps\Backend\Entity\Report\Debt as ReportDebt;
-use OPG\Digideps\Backend\Entity\Report\Fee as ReportFee;
+use OPG\Digideps\Backend\Entity\Report\Debt;
+use OPG\Digideps\Backend\Entity\Report\Fee;
 use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\SynchronisableInterface;
@@ -47,8 +47,8 @@ class ReportRepository extends ServiceEntityRepository
             return $ret;
         }
 
-        foreach (ReportDebt::$debtTypeIds as $row) {
-            new ReportDebt($report, $row[0], $row[1], null);
+        foreach (Debt::$debtTypeIds as $row) {
+            new Debt($report, $row[0], $row[1], null);
             ++$ret;
         }
 
@@ -68,8 +68,8 @@ class ReportRepository extends ServiceEntityRepository
             return $ret;
         }
 
-        foreach (ReportFee::$feeTypeIds as $id => $row) {
-            new ReportFee($report, $id, null);
+        foreach (Fee::$feeTypeIds as $id => $row) {
+            new Fee($report, $id, null);
             ++$ret;
         }
 
