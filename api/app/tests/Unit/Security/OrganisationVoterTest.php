@@ -27,7 +27,7 @@ final class OrganisationVoterTest extends KernelTestCase
 
     public function setUp(): void
     {
-        $this->user = new User();
+        $this->user = new User('', '', '');
         $this->subject = new Organisation('', '');
 
         $this->security = self::prophesize(Security::class);

@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Entity;
 
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\ClientContact;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Note;
 use OPG\Digideps\Backend\Entity\Organisation;
@@ -15,6 +19,9 @@ use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Satisfaction;
+use OPG\Digideps\Backend\Entity\Setting;
+use OPG\Digideps\Backend\Entity\User;
 use PHPUnit\Framework\TestCase;
 
 final class EntityTest extends TestCase
@@ -79,10 +86,45 @@ final class EntityTest extends TestCase
         $this->testEntity($organisation);
     }
 
+    public function testCourtOrderValidOnConstruction(): void
+    {
+        $courtOrder = $this->makeCourtOrder();
+        $this->testEntity($courtOrder);
+    }
+
+    public function testSatisfactionValidOnConstruction(): void
+    {
+        $satisfaction = new Satisfaction(0);
+        $this->testEntity($satisfaction);
+    }
+
+    public function testSettingValidOnConstruction(): void
+    {
+        $setting = new Setting('', '', true);
+        $this->testEntity($setting);
+    }
+
+    public function testUserValidOnConstruction(): void
+    {
+        $user = new User('', '', '');
+        $this->testEntity($user);
+    }
 
     private function testEntity(object $entity): void
     {
         $this->assertSame([], $this->testEntityWithReflection($entity, new \ReflectionClass($entity)));
+    }
+
+    private function makeCourtOrder(): CourtOrder
+    {
+        return new CourtOrder(
+            '',
+            CourtOrderType::PFA,
+            CourtOrderReportType::OPG102,
+            CourtOrderKind::Single,
+            new \DateTime(),
+            new Client()
+        );
     }
 
     private function makeReport(): Report

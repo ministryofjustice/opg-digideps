@@ -8,6 +8,7 @@ use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
@@ -56,16 +57,17 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
     public function testCourtOrderStatusChange(): void
     {
-        $courtOrder = new CourtOrder();
-        $courtOrderUid = '700000001101';
+        $client = new Client();
+        $courtOrder = new CourtOrder(
+            '700000001101',
+            CourtOrderType::PFA,
+            CourtOrderReportType::OPG102,
+            CourtOrderKind::Single,
+            new \DateTime('2018-01-21'),
+            $client
+        );
 
-        $courtOrder->setCourtOrderUid($courtOrderUid);
-        $courtOrder->setOrderType(CourtOrderType::PFA);
-        $courtOrder->setStatus('OPEN');
-        $courtOrder->setOrderMadeDate(new \DateTime('2018-01-21'));
-        $courtOrder->setOrderKind(CourtOrderKind::Single);
-        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
-
+        self::$entityManager->persist($client);
         self::$entityManager->persist($courtOrder);
         self::$entityManager->flush();
 
@@ -77,16 +79,17 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
     public function testDeputyStatusChangeOnCourtOrder(): void
     {
-        $courtOrder = new CourtOrder();
-        $courtOrderUid = '700000001102';
-        $courtOrder->setCourtOrderUid($courtOrderUid);
-        $courtOrder->setOrderType(CourtOrderType::HW);
-        $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate(new \DateTime('2019-01-21'));
-        $courtOrder->setOrderKind(CourtOrderKind::Single);
-        $courtOrder->setOrderReportType(CourtOrderReportType::OPG104);
+        $client = new Client();
+        $courtOrder = new CourtOrder(
+            '700000001102',
+            CourtOrderType::HW,
+            CourtOrderReportType::OPG104,
+            CourtOrderKind::Single,
+            new \DateTime('2019-01-21'),
+            $client
+        );
 
-
+        self::$entityManager->persist($client);
         self::$entityManager->persist($courtOrder);
 
         $deputy = new Deputy(
@@ -114,16 +117,17 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
     public function testNewDeputyAddedToCourtOrder(): void
     {
-        $courtOrder = new CourtOrder();
-        $courtOrderUid = '700000001103';
+        $client = new Client();
+        $courtOrder = new CourtOrder(
+            '700000001103',
+            CourtOrderType::HW,
+            CourtOrderReportType::OPG104,
+            CourtOrderKind::Single,
+            new \DateTime('2019-01-21'),
+            $client
+        );
 
-        $courtOrder->setCourtOrderUid($courtOrderUid);
-        $courtOrder->setOrderType(CourtOrderType::HW);
-        $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate(new \DateTime('2019-01-21'));
-        $courtOrder->setOrderKind(CourtOrderKind::Single);
-        $courtOrder->setOrderReportType(CourtOrderReportType::OPG104);
-
+        self::$entityManager->persist($client);
         self::$entityManager->persist($courtOrder);
 
         $deputy = new Deputy(

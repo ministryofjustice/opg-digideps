@@ -129,7 +129,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
 
         $this->userRepo->findOneBy(['registrationToken' => 'a-token'])
             ->shouldBeCalled()
-            ->willReturn(new User()->setId(1));
+            ->willReturn(new User('', '', '')->setId(1));
 
         self::assertEquals(true, $this->sut->supports($request));
     }
@@ -139,7 +139,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
     public function supportsFirstPasswordRouteFailures(Request $request): void
     {
         $this->userRepo->findOneBy(['registrationToken' => 'a-token'])
-            ->willReturn(new User()->setId(1));
+            ->willReturn(new User('', '', '')->setId(1));
 
         self::assertEquals(false, $this->sut->supports($request));
     }
@@ -222,9 +222,8 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $expectedUser = new User()
+        $expectedUser = new User('', '', 'user@example.org')
             ->setId(1)
-            ->setEmail('user@example.org')
             ->setRoleName('FAKE_ROLE');
 
         $this->userRepo->findOneBy(['registrationToken' => '_abc'])
@@ -361,9 +360,8 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $this->authService->isSecretValid($request)
             ->willReturn(true);
 
-        $expectedUser = new User()
+        $expectedUser = new User('', '', 'user@example.org')
             ->setId(1)
-            ->setEmail('user@example.org')
             ->setRoleName('FAKE_ROLE');
 
         $this->userRepo->findOneBy(['registrationToken' => '_abc'])
