@@ -1,7 +1,7 @@
 ## Define all volumes in docker-compose.override.yml so this file can be used in CI
 services:
   resources:
-    image: opg-digideps-resources
+    container_name: opg-digideps-resources
     build:
       context: .
       dockerfile: ./client/docker/resources/Dockerfile

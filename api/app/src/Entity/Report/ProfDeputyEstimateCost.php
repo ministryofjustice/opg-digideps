@@ -6,166 +6,124 @@ namespace OPG\Digideps\Backend\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\Report\Traits\ReportProfDeputyCostsEstimateTrait;
 
 #[ORM\Table(name: 'prof_deputy_estimate_cost')]
 #[ORM\Entity]
 class ProfDeputyEstimateCost
 {
-    /**
-     * @var int
-     */
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'prof_estimate_cost_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'profDeputyEstimateCosts')]
-    private $report;
+    private Report $report;
 
     /**
-     * @var string a value in self:$profDeputyEstimateCostTypeIds
+     * @see ReportProfDeputyCostsEstimateTrait::$profDeputyEstimateCostTypeIds
      */
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     #[ORM\Column(name: 'prof_deputy_estimate_cost_type_id', type: 'string', nullable: false)]
-    private $profDeputyEstimateCostTypeId;
+    private string $profDeputyEstimateCostTypeId;
 
-    /**
-     * @var float
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
-    private $amount;
+    private ?string $amount = null;
 
-    /**
-     * @var bool
-     */
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     #[JMS\Type('boolean')]
     #[ORM\Column(name: 'has_more_details', type: 'boolean', nullable: false)]
-    private $hasMoreDetails;
+    private bool $hasMoreDetails;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     #[ORM\Column(name: 'more_details', type: 'text', nullable: true)]
-    private $moreDetails;
+    private ?string $moreDetails = null;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function __construct(Report $report, string $profDeputyEstimateCostTypeId, bool $hasMoreDetails = false)
     {
-        return $this->id;
+        $this->report = $report;
+        $this->profDeputyEstimateCostTypeId = $profDeputyEstimateCostTypeId;
+        $this->hasMoreDetails = $hasMoreDetails;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+
+    public function getId(): int
     {
-        $this->id = $id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport()
+    public function setId(int $id): static
+    {
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
+    }
+
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    /**
-     * @param Report $report
-     *
-     * @return ProfDeputyEstimateCost
-     */
-    public function setReport($report)
+    public function setReport(Report $report): static
     {
         $this->report = $report;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getProfDeputyEstimateCostTypeId()
+    public function getProfDeputyEstimateCostTypeId(): string
     {
         return $this->profDeputyEstimateCostTypeId;
     }
 
-    /**
-     * @return $this
-     */
-    public function setProfDeputyEstimateCostTypeId($profDeputyEstimateCostTypeId)
+    public function setProfDeputyEstimateCostTypeId(string $profDeputyEstimateCostTypeId): static
     {
         $this->profDeputyEstimateCostTypeId = $profDeputyEstimateCostTypeId;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAmount()
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    /**
-     * @param string $amount
-     *
-     * @return ProfDeputyEstimateCost
-     */
-    public function setAmount($amount)
+    public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMoreDetails()
+    public function getMoreDetails(): ?string
     {
         return $this->moreDetails;
     }
 
-    /**
-     * @param string $moreDetails
-     *
-     * @return ProfDeputyEstimateCost
-     */
-    public function setMoreDetails($moreDetails)
+    public function setMoreDetails(?string $moreDetails): static
     {
         $this->moreDetails = $moreDetails;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getHasMoreDetails()
+    public function getHasMoreDetails(): bool
     {
         return $this->hasMoreDetails;
     }
 
-    /**
-     * @param bool $hasMoreDetails
-     *
-     * @return ProfDeputyEstimateCost
-     */
-    public function setHasMoreDetails($hasMoreDetails)
+    public function setHasMoreDetails(bool $hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
 

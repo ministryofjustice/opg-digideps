@@ -151,11 +151,12 @@ class LayUserFixtures extends AbstractDataFixture
         $deputyUid = substr_replace($data['deputyUid'], $iteration, -$offset);
 
         // Create user
-        $user = new User()
-            ->setFirstname($data['id'])
-            ->setLastname('User ' . $iteration)
+        $user = new User(
+            $data['id'],
+            'User ' . $iteration,
+            strtolower($data['id']) . '-user-' . $iteration . '@publicguardian.gov.uk'
+        )
             ->setDeputyUid(intval($deputyUid))
-            ->setEmail(strtolower($data['id']) . '-user-' . $iteration . '@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setCoDeputyClientConfirmed($data['coDeputy'])
@@ -324,16 +325,15 @@ class LayUserFixtures extends AbstractDataFixture
         Client $client,
         ?Report $report,
     ): CourtOrder {
-        $courtOrder = new CourtOrder();
         $courtOrderUid = substr_replace($data['courtOrderUid'], (string) $iteration, -$offset);
-
-        $courtOrder->setCourtOrderUid($courtOrderUid);
-        $courtOrder->setOrderType(CourtOrderType::from($data['orderType']));
-        $courtOrder->setOrderKind(CourtOrderKind::Single);
-        $courtOrder->setOrderReportType(CourtOrderReportType::from($data['reportType']));
-        $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
-        $courtOrder->setClient($client);
+        $courtOrder = new CourtOrder(
+            $courtOrderUid,
+            CourtOrderType::from($data['orderType']),
+            CourtOrderReportType::from($data['reportType']),
+            CourtOrderKind::Single,
+            new \DateTime('2020-06-14'),
+            $client
+        );
         $courtOrder->setCreatedAt(new \DateTime());
         $courtOrder->setUpdatedAt(new \DateTime());
 
@@ -364,30 +364,29 @@ class LayUserFixtures extends AbstractDataFixture
         ?Report $multiClientSecondReport,
     ): void {
         if (str_ends_with($data['id'], '-4') || str_ends_with($data['id'], '-4-Co')) {
-            // Populate court order table and link tables
-            $courtOrderPfa = new CourtOrder();
-            $courtOrderHW = new CourtOrder();
-
             $courtOrderUidPfa = substr_replace($data['courtOrderUid'], $iteration . 103, -$offset);
             $courtOrderUidHW = substr_replace($data['courtOrderUid'], $iteration . 102, -$offset);
 
-            $courtOrderPfa->setCourtOrderUid($courtOrderUidPfa);
-            $courtOrderPfa->setOrderType(CourtOrderType::PFA);
-            $courtOrderPfa->setOrderKind(CourtOrderKind::Hybrid);
-            $courtOrderPfa->setOrderReportType(CourtOrderReportType::from($data['reportType']));
-            $courtOrderPfa->setStatus('ACTIVE');
-            $courtOrderPfa->setOrderMadeDate(new \DateTime('2020-06-14'));
-            $courtOrderPfa->setClient($client);
+            // Populate court order table and link tables
+            $courtOrderPfa = new CourtOrder(
+                $courtOrderUidPfa,
+                CourtOrderType::PFA,
+                CourtOrderReportType::from($data['reportType']),
+                CourtOrderKind::Hybrid,
+                new \DateTime('2020-06-14'),
+                $client
+            );
             $courtOrderPfa->setCreatedAt(new \DateTime());
             $courtOrderPfa->setUpdatedAt(new \DateTime());
 
-            $courtOrderHW->setCourtOrderUid($courtOrderUidHW);
-            $courtOrderHW->setOrderType(CourtOrderType::HW);
-            $courtOrderHW->setOrderKind(CourtOrderKind::Hybrid);
-            $courtOrderHW->setOrderReportType(CourtOrderReportType::from($data['reportType']));
-            $courtOrderHW->setStatus('ACTIVE');
-            $courtOrderHW->setOrderMadeDate(new \DateTime('2020-06-14'));
-            $courtOrderHW->setClient($client);
+            $courtOrderHW = new CourtOrder(
+                $courtOrderUidHW,
+                CourtOrderType::HW,
+                CourtOrderReportType::from($data['reportType']),
+                CourtOrderKind::Hybrid,
+                new \DateTime('2020-06-14'),
+                $client
+            );
             $courtOrderHW->setCreatedAt(new \DateTime());
             $courtOrderHW->setUpdatedAt(new \DateTime());
 
@@ -435,18 +434,15 @@ class LayUserFixtures extends AbstractDataFixture
             $manager->persist($coDeputy);
         } elseif ($data['multi-client'] && !is_null($multiClientSecondReport)) {
             // add court order for additional client
-            $additionalCourtOrder = new CourtOrder();
             $courtOrderUid = substr_replace($data['courtOrderUid'], $iteration . 2, -2);
-
-            $additionalCourtOrder->setCourtOrderUid($courtOrderUid);
-            $additionalCourtOrder->setOrderType(CourtOrderType::from($data['orderType']));
-            $additionalCourtOrder->setOrderKind(CourtOrderKind::Single);
-            $additionalCourtOrder->setOrderReportType(CourtOrderReportType::from($data['reportType']));
-            $additionalCourtOrder->setStatus('ACTIVE');
-            $additionalCourtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
-            $additionalCourtOrder->setClient($client2);
-            $additionalCourtOrder->setCreatedAt(new \DateTime());
-            $additionalCourtOrder->setUpdatedAt(new \DateTime());
+            $additionalCourtOrder = new CourtOrder(
+                $courtOrderUid,
+                CourtOrderType::from($data['orderType']),
+                CourtOrderReportType::from($data['reportType']),
+                CourtOrderKind::Single,
+                new \DateTime('2020-06-14'),
+                $client2
+            );
 
             // Associate deputy with court order
             $this->deputy->associateWithCourtOrder($additionalCourtOrder);
