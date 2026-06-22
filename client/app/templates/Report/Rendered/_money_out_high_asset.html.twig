@@ -105,11 +105,11 @@
             <table class="govuk-table govuk-!-static-margin-top-1">
                 <tbody class="govuk-table__body">
                 <tr>
-                    <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
-                    <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
                     <td class="govuk-summary-card__title govuk-!-width-one-quarter">
                         {{ (review ~ '.moneyOut.totalMoneyOut') | trans(transOptions, transDomain) }}
                     </td>
+                    <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
+                    <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
                     <td class="govuk-summary-card__title govuk-!-width-one-quarter">
                         &pound;{{ report.moneyOutTotal | money_format }}
                     </td>
