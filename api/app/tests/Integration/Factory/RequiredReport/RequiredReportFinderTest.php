@@ -47,16 +47,15 @@ class RequiredReportFinderTest extends ApiIntegrationTestCase
 
     private function persistCourtOrder(int $id, Client $client, Report ...$reports): void
     {
-        $courtOrder = new CourtOrder();
-        $courtOrder->setId($id);
-        $courtOrder->setClient($client);
-        $courtOrder->setCourtOrderUid("UID-{$id}");
-        $courtOrder->setOrderKind(CourtOrderKind::Single);
-        $courtOrder->setOrderType(CourtOrderType::PFA);
-        $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate(new \DateTime());
-        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
-        $courtOrder->setSibling(null);
+        $courtOrder = new CourtOrder(
+            "UID-{$id}",
+            CourtOrderType::PFA,
+            CourtOrderReportType::OPG102,
+            CourtOrderKind::Single,
+            new \DateTime(),
+            $client
+        )->setId($id);
+
         foreach ($reports as $report) {
             $courtOrder->addReport($report);
         }
