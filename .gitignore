@@ -31,6 +31,7 @@ vendor/
 !ecs-helper/vendor/
 
 # Terraform
+**/playwright-report
 **.tfstate
 **.tfstate.*
 **/.terraform/

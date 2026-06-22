@@ -75,6 +75,7 @@ data "aws_iam_policy_document" "execution_role" {
       data.aws_ecr_repository.images["mock-sirius"].arn,
       data.aws_ecr_repository.images["dr-backup"].arn,
       data.aws_ecr_repository.images["file-scanner"].arn,
+      data.aws_ecr_repository.images["test"].arn,
     ]
     actions = [
       "ecr:BatchCheckLayerAvailability",
