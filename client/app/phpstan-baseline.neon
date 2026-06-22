@@ -9841,7 +9841,7 @@ parameters:
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
 
 		-
-			message: '#^Cannot access offset ''deputyrole'' on mixed\.$#'
+			message: '#^Cannot access offset ''deputyRole'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
@@ -9871,7 +9871,7 @@ parameters:
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
 
 		-
-			message: '#^Cannot access offset ''reporttype'' on mixed\.$#'
+			message: '#^Cannot access offset ''reportType'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
@@ -9909,12 +9909,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Csv\\UserResearchResponseCsvGenerator\:\:transformDeputyshipLength\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(\[\]UserResearchResponse \$userResearchResponses\)\: Unexpected token "\[", expected type at offset 18 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
 
@@ -11449,7 +11443,7 @@ parameters:
 			path: src/TestHelpers/ReportHelpers.php
 
 		-
-			message: '#^Parameter \#1 \$deputyrole of method OPG\\Digideps\\Frontend\\Entity\\Report\\Satisfaction\:\:setDeputyrole\(\) expects string, int\|string\|null given\.$#'
+			message: '#^Parameter \#1 \$deputyRole of method OPG\\Digideps\\Frontend\\Entity\\Report\\Satisfaction\:\:setDeputyRole\(\) expects string, int\|string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/TestHelpers/SatisfactionHelpers.php

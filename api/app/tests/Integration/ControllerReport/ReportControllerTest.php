@@ -755,12 +755,12 @@ class ReportControllerTest extends AbstractTestController
             'data' => [
                 'button_clicked' => 'save', // Save further information
                 'reporting_period_accurate' => 'yes',
-                'contact_details_upto_date' => 1,
-                'deputy_full_name_accurate_in_sirius' => 1,
+                'contact_details_upto_date' => 'yes',
+                'deputy_full_name_accurate_in_sirius' => 'yes',
                 'decisions_satisfactory' => 'yes',
                 'consultations_satisfactory' => 'yes',
                 'care_arrangements' => 'yes',
-                'assets_declared_and_managed' => 'na',
+                'assets_declared_and_managed' => null,
                 'debts_managed' => 'yes',
                 'open_closing_balances_match' => 'yes',
                 'accounts_balance' => 'yes',
@@ -781,12 +781,12 @@ class ReportControllerTest extends AbstractTestController
 
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
-        $this->assertEquals('1', $checklist->getContactDetailsUptoDate());
-        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateInSirius());
+        $this->assertEquals('yes', $checklist->getContactDetailsUptoDate());
+        $this->assertEquals('yes', $checklist->getDeputyFullNameAccurateInSirius());
         $this->assertEquals('yes', $checklist->getDecisionsSatisfactory());
         $this->assertEquals('yes', $checklist->getConsultationsSatisfactory());
         $this->assertEquals('yes', $checklist->getCareArrangements());
-        $this->assertEquals('na', $checklist->getAssetsDeclaredAndManaged());
+        $this->assertEquals(null, $checklist->getAssetsDeclaredAndManaged());
         $this->assertEquals('yes', $checklist->getDebtsManaged());
         $this->assertEquals('yes', $checklist->getOpenClosingBalancesMatch());
         $this->assertEquals('yes', $checklist->getAccountsBalance());

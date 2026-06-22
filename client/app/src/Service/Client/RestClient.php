@@ -105,7 +105,6 @@ class RestClient implements RestClientInterface
             }
         }
 
-        /** @var User $user */
         $user = $this->arrayToEntity(User::class, $this->extractDataArray($response));
         $authToken = $response->getHeader(RestClient::HEADER_AUTH_TOKEN)[0];
 

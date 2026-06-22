@@ -11,99 +11,54 @@ use JMS\Serializer\Annotation as JMS;
 #[ORM\Entity]
 class Setting
 {
-    /**
-     * @var string
-     */
-    #[JMS\Type('string')]
-    #[JMS\Groups(['setting'])]
-    #[ORM\Column(name: 'id', type: 'string', length: 64, nullable: false)]
-    #[ORM\Id]
-    private $id;
-
-    /**
-     * @var string
-     */
-    #[JMS\Type('string')]
-    #[JMS\Groups(['setting'])]
-    #[ORM\Column(name: 'content', type: 'text', nullable: false)]
-    private $content;
-
-    /**
-     * @var bool
-     */
-    #[JMS\Type('boolean')]
-    #[JMS\Groups(['setting'])]
-    #[ORM\Column(name: 'enabled', type: 'boolean', nullable: false)]
-    private $enabled;
-
-    /**
-     * Setting constructor.
-     *
-     * @param string $id
-     * @param string $content
-     * @param bool   $enabled
-     */
-    public function __construct($id, $content, $enabled)
-    {
-        $this->id = $id;
-        $this->content = $content;
-        $this->enabled = $enabled;
+    public function __construct(
+        #[JMS\Type('string')]
+        #[JMS\Groups(['setting'])]
+        #[ORM\Column(name: 'id', type: 'string', length: 64, nullable: false)]
+        #[ORM\Id]
+        private string $id,
+        #[JMS\Type('string')]
+        #[JMS\Groups(['setting'])]
+        #[ORM\Column(name: 'content', type: 'text', nullable: false)]
+        private string $content,
+        #[JMS\Type('boolean')]
+        #[JMS\Groups(['setting'])]
+        #[ORM\Column(name: 'enabled', type: 'boolean', nullable: false)]
+        private bool $enabled
+    ) {
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
 
-    /**
-     * @return bool
-     */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
 
-    /**
-     * @param string $id
-     *
-     * @return Setting
-     */
-    public function setId($id)
+    public function setId(string $id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @param string $content
-     *
-     * @return Setting
-     */
-    public function setContent($content)
+    public function setContent(string $content): static
     {
         $this->content = $content;
 
         return $this;
     }
 
-    /**
-     * @param bool $enabled
-     *
-     * @return Setting
-     */
-    public function setEnabled($enabled)
+
+    public function setEnabled(bool $enabled): static
     {
         $this->enabled = $enabled;
 

@@ -82,11 +82,12 @@ class Fixtures
         ?int $deputyUid = null,
         ?bool $isPrimary = null,
     ): User {
-        $user = new User();
-        $user->setEmail('temp' . microtime(true) . rand(100, 99999) . '@temp.com');
-        $user->setPassword('temp@temp.com');
-        $user->setFirstname('name' . time());
-        $user->setLastname('surname' . time());
+        $user = new User(
+            'name' . time(),
+            'surname' . time(),
+            'temp' . microtime(true) . rand(100, 99999) . '@temp.com'
+        )
+            ->setPassword('temp@temp.com');
 
         if ($email) {
             $user->setEmail($email);
@@ -574,13 +575,10 @@ class Fixtures
                 ->setHasAccessToVideoCallDevice(true)
                 ->setResearchType($researchType);
 
-            $satisfaction = new Satisfaction()
+            $satisfaction = new Satisfaction(rand(1, 5), ' Some comments')
                 ->setReport($rs->getReport())
-                ->setDeputyrole(User::ROLE_LAY_DEPUTY)
-                ->setCreated(new \DateTime())
-                ->setComments(' Some comments')
-                ->setScore(rand(1, 5))
-                ->setReporttype(Report::LAY_COMBINED_LOW_ASSETS_TYPE)
+                ->setDeputyRole(User::ROLE_LAY_DEPUTY)
+                ->setReportType(Report::LAY_COMBINED_LOW_ASSETS_TYPE)
                 ->setUserResearchResponse($userResearchResponse);
 
             $userResearchResponse->setSatisfaction($satisfaction);
@@ -601,23 +599,23 @@ class Fixtures
 
     public function createCourtOrder(string $uid, CourtOrderType $type, CourtOrderKind $kind, string $status, \DateTime $madeDate = new \DateTime(), ?CourtOrderReportType $courtOrderReportType = null, ?Deputy $deputy = null, ?Client $client = null): CourtOrder
     {
-        $courtOrder = new CourtOrder();
-        $courtOrder->setCourtOrderUid($uid);
-        $courtOrder->setOrderType($type);
-        $courtOrder->setOrderKind($kind);
-        $courtOrder->setOrderReportType($courtOrderReportType ?? ($kind === CourtOrderKind::Hybrid || $type == CourtOrderType::PFA ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104));
-        $courtOrder->setStatus($status);
-        $courtOrder->setOrderMadeDate($madeDate);
+        $courtOrder = new CourtOrder(
+            $uid,
+            $type,
+            $courtOrderReportType ?? ($kind === CourtOrderKind::Hybrid || $type == CourtOrderType::PFA ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104),
+            $kind,
+            $madeDate,
+            $client ?? new Client(),
+            $status
+        );
 
         if ($deputy !== null) {
             $relationship = new CourtOrderDeputy()->setDeputy($deputy)->setCourtOrder($courtOrder)->setIsActive(true);
             $this->em->persist($relationship);
         }
-        if ($client !== null) {
-            $courtOrder->setClient($client);
-        }
 
         $this->em->persist($courtOrder);
+        $this->em->persist($courtOrder->getClient());
         return $courtOrder;
     }
 

@@ -1633,13 +1633,7 @@ parameters:
 			path: src/Controller/SatisfactionController.php
 
 		-
-			message: '#^Parameter \#1 \$deputyrole of method OPG\\Digideps\\Backend\\Entity\\Satisfaction\:\:setDeputyrole\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/SatisfactionController.php
-
-		-
-			message: '#^Parameter \#1 \$reporttype of method OPG\\Digideps\\Backend\\Entity\\Satisfaction\:\:setReporttype\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$reportType of method OPG\\Digideps\\Backend\\Entity\\Satisfaction\:\:setReportType\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/SatisfactionController.php
@@ -1807,21 +1801,21 @@ parameters:
 			path: src/Controller/StatsController.php
 
 		-
-			message: '#^Binary operation "\." between mixed and '' user role not…'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 3
-			path: src/Controller/UserController.php
-
-		-
 			message: '#^Parameter \#1 \$email of method OPG\\Digideps\\Backend\\Entity\\User\:\:setEmail\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/UserController.php
 
 		-
-			message: '#^Parameter \#1 \$roleName of method OPG\\Digideps\\Backend\\Service\\Auth\\AuthService\:\:isSecretValidForRole\(\) expects string\|null, mixed given\.$#'
+			message: '#^Parameter \#1 \$firstname of class OPG\\Digideps\\Backend\\Entity\\User constructor expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 1
+			path: src/Controller/UserController.php
+
+		-
+			message: '#^Parameter \#2 \$lastname of class OPG\\Digideps\\Backend\\Entity\\User constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
 			path: src/Controller/UserController.php
 
 		-
@@ -1837,13 +1831,7 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			message: '#^Parameter \#3 \$email of class OPG\\Digideps\\Backend\\Entity\\User constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/UserController.php
@@ -1915,25 +1903,25 @@ parameters:
 			path: src/DataFixtures/AdminUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$email of method OPG\\Digideps\\Backend\\Entity\\User\:\:setEmail\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/DataFixtures/AdminUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\User\:\:setFirstname\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/DataFixtures/AdminUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$lastname of method OPG\\Digideps\\Backend\\Entity\\User\:\:setLastname\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$firstname of class OPG\\Digideps\\Backend\\Entity\\User constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/AdminUserFixtures.php
 
 		-
 			message: '#^Parameter \#1 \$roleName of method OPG\\Digideps\\Backend\\Entity\\User\:\:setRoleName\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DataFixtures/AdminUserFixtures.php
+
+		-
+			message: '#^Parameter \#2 \$lastname of class OPG\\Digideps\\Backend\\Entity\\User constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DataFixtures/AdminUserFixtures.php
+
+		-
+			message: '#^Parameter \#3 \$email of class OPG\\Digideps\\Backend\\Entity\\User constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/AdminUserFixtures.php
@@ -1981,13 +1969,13 @@ parameters:
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string\|null, mixed given\.$#'
+			message: '#^Parameter \#1 \$firstname of class OPG\\Digideps\\Backend\\Entity\\User constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\User\:\:setFirstname\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/LayUserFixtures.php
@@ -2299,13 +2287,7 @@ parameters:
 			path: src/DataFixtures/TestUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$deputyUid of method OPG\\Digideps\\Backend\\Entity\\User\:\:setDeputyUid\(\) expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/DataFixtures/TestUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$lastname of method OPG\\Digideps\\Backend\\Entity\\User\:\:setLastname\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$deputyUid of method OPG\\Digideps\\Backend\\Entity\\User\:\:setDeputyUid\(\) expects int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/TestUserFixtures.php
@@ -2318,6 +2300,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$roleName of method OPG\\Digideps\\Backend\\Entity\\User\:\:setRoleName\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DataFixtures/TestUserFixtures.php
+
+		-
+			message: '#^Parameter \#2 \$lastname of class OPG\\Digideps\\Backend\\Entity\\User constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/TestUserFixtures.php
@@ -3655,79 +3643,7 @@ parameters:
 			path: src/Entity/Report/VisitsCare.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Satisfaction\:\:\$comments \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Satisfaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:__construct\(\) has parameter \$coDeputyClientConfirmed with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:getActiveReportId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:getIdOfClientWithDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:getNumberOfReports\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:getNumberOfSubmittedReports\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:getRoleName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:hasReports\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:padDeputyNumber\(\) has parameter \$deputyNo with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:setDefaultRoleIfEmpty\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:setLastLoggedIn\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:setPhoneAlternative\(\) has parameter \$phoneAlternative with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:setPhoneMain\(\) has parameter \$phoneMain with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Entity/User.php
@@ -3739,19 +3655,13 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: '#^Parameter \#1 \$coDeputyClientConfirmed of method OPG\\Digideps\\Backend\\Entity\\User\:\:setCoDeputyClientConfirmed\(\) expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 4
 			path: src/Entity/User.php
 
 		-
-			message: '#^Parameter \#1 \$deputyUid of method OPG\\Digideps\\Backend\\Entity\\User\:\:setDeputyUid\(\) expects int\|null, mixed given\.$#'
+			message: '#^Parameter \#1 \$deputyUid of method OPG\\Digideps\\Backend\\Entity\\User\:\:setDeputyUid\(\) expects int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Entity/User.php
@@ -3781,68 +3691,50 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$adManaged \(bool\) does not accept bool\|null\.$#'
-			identifier: assign.propertyType
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$active \(bool\|null\) is never assigned null so it can be removed from the property type\.$#'
+			identifier: property.unusedType
 			count: 1
 			path: src/Entity/User.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$adminRoles has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$adManaged \(bool\|null\) is never assigned null so it can be removed from the property type\.$#'
+			identifier: property.unusedType
 			count: 1
 			path: src/Entity/User.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$agreeTermsUse \(bool\) does not accept bool\|null\.$#'
-			identifier: assign.propertyType
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$adManaged is never read, only written\.$#'
+			identifier: property.onlyWritten
 			count: 1
 			path: src/Entity/User.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$deletionProtection is unused\.$#'
-			identifier: property.unused
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$deletionProtection \(bool\|null\) is never assigned bool so it can be removed from the property type\.$#'
+			identifier: property.unusedType
 			count: 1
 			path: src/Entity/User.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$depTypeIdToRealm has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$deletionProtection is never read, only written\.$#'
+			identifier: property.onlyWritten
 			count: 1
 			path: src/Entity/User.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$id \(int\) does not accept int\|null\.$#'
-			identifier: assign.propertyType
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$phoneAlternative \(string\|null\) is never assigned string so it can be removed from the property type\.$#'
+			identifier: property.unusedType
 			count: 1
 			path: src/Entity/User.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$jobTitle \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$phoneAlternative is never read, only written\.$#'
+			identifier: property.onlyWritten
 			count: 1
 			path: src/Entity/User.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$lastLoggedIn \(DateTime\) does not accept DateTime\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$orgRoles has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$phoneAlternative \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$phoneMain \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$salt \(string\|null\) is never assigned string so it can be removed from the property type\.$#'
+			identifier: property.unusedType
 			count: 1
 			path: src/Entity/User.php
 
@@ -4171,54 +4063,6 @@ parameters:
 			path: src/FixtureFactory/ClientFactory.php
 
 		-
-			message: '#^Binary operation "\." between mixed and int\<1, 100000\> results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/FixtureFactory/LoadTestFactory.php
-
-		-
-			message: '#^Cannot call method addClient\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/FixtureFactory/LoadTestFactory.php
-
-		-
-			message: '#^Cannot call method getEmail\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/FixtureFactory/LoadTestFactory.php
-
-		-
-			message: '#^Cannot call method getFirstClient\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/FixtureFactory/LoadTestFactory.php
-
-		-
-			message: '#^Cannot call method setEmail\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/FixtureFactory/LoadTestFactory.php
-
-		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/FixtureFactory/LoadTestFactory.php
-
-		-
-			message: '#^Parameter \#2 \$client of method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects OPG\\Digideps\\Backend\\Entity\\Client\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/FixtureFactory/LoadTestFactory.php
-
-		-
-			message: '#^Parameter \#2 \$user of method OPG\\Digideps\\Backend\\TestHelpers\\ClientTestHelper\:\:generateClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/FixtureFactory/LoadTestFactory.php
-
-		-
 			message: '#^Parameter \#1 \$caseNumber of method OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto\:\:setCaseNumber\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -4387,61 +4231,7 @@ parameters:
 			path: src/FixtureFactory/ReportFactory.php
 
 		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 3
-			path: src/FixtureFactory/UserFactory.php
-
-		-
 			message: '#^Parameter \#1 \$active of method OPG\\Digideps\\Backend\\Entity\\User\:\:setActive\(\) expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/FixtureFactory/UserFactory.php
-
-		-
-			message: '#^Parameter \#1 \$addressPostcode of method OPG\\Digideps\\Backend\\Entity\\User\:\:setAddressPostcode\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/FixtureFactory/UserFactory.php
-
-		-
-			message: '#^Parameter \#1 \$deputyUid of method OPG\\Digideps\\Backend\\Entity\\User\:\:setDeputyUid\(\) expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/FixtureFactory/UserFactory.php
-
-		-
-			message: '#^Parameter \#1 \$deputyUid of method OPG\\Digideps\\Backend\\Entity\\User\:\:setDeputyUid\(\) expects int\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/FixtureFactory/UserFactory.php
-
-		-
-			message: '#^Parameter \#1 \$email of method OPG\\Digideps\\Backend\\Entity\\User\:\:setEmail\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/FixtureFactory/UserFactory.php
-
-		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\User\:\:setFirstname\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/FixtureFactory/UserFactory.php
-
-		-
-			message: '#^Parameter \#1 \$lastname of method OPG\\Digideps\\Backend\\Entity\\User\:\:setLastname\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/FixtureFactory/UserFactory.php
-
-		-
-			message: '#^Parameter \#1 \$roleName of method OPG\\Digideps\\Backend\\Entity\\User\:\:setRoleName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/FixtureFactory/UserFactory.php
-
-		-
-			message: '#^Parameter \#1 \$roleName of method OPG\\Digideps\\Backend\\FixtureFactory\\UserFactory\:\:convertRoleName\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/FixtureFactory/UserFactory.php
@@ -4449,13 +4239,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$string of function strtolower expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 2
-			path: src/FixtureFactory/UserFactory.php
-
-		-
-			message: '#^Parameter \#1 \$string of function ucfirst expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/FixtureFactory/UserFactory.php
 
 		-
@@ -5143,12 +4927,6 @@ parameters:
 			path: src/Security/LoginRequestAuthenticator.php
 
 		-
-			message: '#^Binary operation "\." between mixed and '' user role not…'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Security/LoginRequestAuthenticator.php
-
-		-
 			message: '#^Cannot access offset ''email'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 4
@@ -5173,19 +4951,7 @@ parameters:
 			path: src/Security/LoginRequestAuthenticator.php
 
 		-
-			message: '#^Parameter \#1 \$roleName of method OPG\\Digideps\\Backend\\Service\\Auth\\AuthService\:\:isSecretValidForRole\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Security/LoginRequestAuthenticator.php
-
-		-
 			message: '#^Parameter \#1 \$string of function strtolower expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Security/LoginRequestAuthenticator.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Security/LoginRequestAuthenticator.php
@@ -5227,12 +4993,6 @@ parameters:
 			path: src/Security/RegistrationTokenAuthenticator.php
 
 		-
-			message: '#^Binary operation "\." between mixed and '' user role not…'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Security/RegistrationTokenAuthenticator.php
-
-		-
 			message: '#^Call to an undefined method object\:\:getId\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -5248,12 +5008,6 @@ parameters:
 			message: '#^Cannot access offset ''token'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
-			path: src/Security/RegistrationTokenAuthenticator.php
-
-		-
-			message: '#^Parameter \#1 \$roleName of method OPG\\Digideps\\Backend\\Service\\Auth\\AuthService\:\:isSecretValidForRole\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Security/RegistrationTokenAuthenticator.php
 
 		-
@@ -6133,12 +5887,6 @@ parameters:
 			path: src/Service/JWT/JWTService.php
 
 		-
-			message: '#^Parameter \#1 \$role of static method OPG\\Digideps\\Backend\\Service\\JWT\\JWTService\:\:generateRole\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/JWT/JWTService.php
-
-		-
 			message: '#^Parameter \#1 \$string of function base64_decode expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 3
@@ -6829,12 +6577,6 @@ parameters:
 			path: src/Service/UserService.php
 
 		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Service/UserService.php
-
-		-
 			message: '#^Part \$email \(mixed\) of encapsed string cannot be cast to string\.$#'
 			identifier: encapsedStringPart.nonString
 			count: 1
@@ -6887,60 +6629,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: '#^Cannot call method addClient\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: '#^Cannot call method setActive\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: '#^Cannot call method setAddress1\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: '#^Cannot call method setAddressCountry\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: '#^Cannot call method setAddressPostcode\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: '#^Cannot call method setAgreeTermsUse\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: '#^Cannot call method setDeputyUid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: '#^Cannot call method setIsPrimary\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\TestHelpers\\UserTestHelper\:\:createUser\(\) should return OPG\\Digideps\\Backend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
 
 		-
 			message: '#^Parameter \#1 \$roleName of method OPG\\Digideps\\Backend\\Entity\\User\:\:setRoleName\(\) expects string, string\|null given\.$#'
@@ -7076,12 +6764,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$object_or_class of function method_exists expects object\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/v2/Assembler/UserAssembler.php
-
-		-
-			message: '#^Parameter \#1 \$roleName of method OPG\\Digideps\\Backend\\v2\\DTO\\UserDto\:\:setRoleName\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/v2/Assembler/UserAssembler.php
@@ -7274,6 +6956,18 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$courtOrder of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:associateWithCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\CourtOrder, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/v2/Fixture/Controller/FixtureController.php
+
+		-
+			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\FixtureFactory\\UserFactory\:\:create\(\) expects array\<string, string\>, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/v2/Fixture/Controller/FixtureController.php
+
+		-
+			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\FixtureFactory\\UserFactory\:\:createAdmin\(\) expects array\<string, string\>, array\<string, mixed\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -10087,12 +9781,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
 
 		-
-			message: '#^Parameter \#2 \$userToBeUpdatedRole of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\ACL\\ACLFeatureContext\:\:emailShouldBeUpdated\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
-
-		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -10258,12 +9946,6 @@ parameters:
 			message: '#^Parameter \#1 \$string of function strtolower expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 3
-			path: tests/Behat/bootstrap/v2/AdminManagement/AdminManagementFeatureContext.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Behat/bootstrap/v2/AdminManagement/AdminManagementFeatureContext.php
 
 		-
@@ -10682,12 +10364,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$needle of function substr_count expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/ClientManagement/ClientManagementFeatureContext.php
-
-		-
-			message: '#^Parameter \#2 \$userToBeUpdatedRole of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\ClientManagement\\ClientManagementFeatureContext\:\:emailShouldBeUpdated\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/ClientManagement/ClientManagementFeatureContext.php
@@ -11875,12 +11551,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
-			message: '#^Parameter \#2 \$array of function implode expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
-
-		-
 			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array given\.$#'
 			identifier: argument.type
 			count: 2
@@ -11913,7 +11583,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 7
+			count: 6
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
@@ -13591,12 +13261,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/DeputyManagement/DeputyManagementFeatureContext.php
 
 		-
-			message: '#^Parameter \#2 \$userToBeUpdatedRole of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\DeputyManagement\\DeputyManagementFeatureContext\:\:emailShouldBeUpdated\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/DeputyManagement/DeputyManagementFeatureContext.php
-
-		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 3
@@ -13862,12 +13526,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Parameter \#1 \$deputyrole of method OPG\\Digideps\\Backend\\Entity\\Satisfaction\:\:setDeputyrole\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
@@ -15349,12 +15007,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
 			message: '#^Parameter \#2 \$lastname of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Registration\\RegistrationFeatureContext\:\:fillInSelfRegistrationFieldsAndSubmit\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -16712,12 +16364,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$fieldName of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:editFieldAnswerInSection\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/Reporting/Admin/ReportingAdminFeatureContext.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/Reporting/Admin/ReportingAdminFeatureContext.php
@@ -18289,21 +17935,9 @@ parameters:
 			path: tests/Behat/bootstrap/v2/UserManagement/UserManagementFeatureContext.php
 
 		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/UserManagement/UserManagementFeatureContext.php
-
-		-
 			message: '#^Parameter \#2 \$searchField of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\UserManagement\\UserManagementFeatureContext\:\:searchUserWithFilter\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 3
-			path: tests/Behat/bootstrap/v2/UserManagement/UserManagementFeatureContext.php
-
-		-
-			message: '#^Parameter \#2 \$userToBeUpdatedRole of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\UserManagement\\UserManagementFeatureContext\:\:emailShouldBeUpdated\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Behat/bootstrap/v2/UserManagement/UserManagementFeatureContext.php
 
 		-
@@ -21979,19 +21613,7 @@ parameters:
 			path: tests/Integration/Entity/DeputyIntegrationTest.php
 
 		-
-			message: '#^Parameter \#1 \$courtOrderUid of method OPG\\Digideps\\Backend\\Entity\\CourtOrder\:\:setCourtOrderUid\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Entity/DeputyIntegrationTest.php
-
-		-
 			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Entity/DeputyIntegrationTest.php
-
-		-
-			message: '#^Parameter \$deputyUid of method OPG\\Digideps\\Backend\\TestHelpers\\DeputyTestHelper\:\:generateDeputy\(\) expects string\|null, int given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Integration/Entity/DeputyIntegrationTest.php
@@ -22297,12 +21919,6 @@ parameters:
 			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
-			message: '#^Parameter \#2 \$role of method OPG\\Digideps\\Backend\\Repository\\ReportRepository\:\:findAllActiveReportsByCaseNumbersAndRole\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -22384,12 +22000,6 @@ parameters:
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: tests/Integration/Entity/Repository/UserRepositoryTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 5
 			path: tests/Integration/Entity/Repository/UserRepositoryTest.php
 
 		-
@@ -24331,12 +23941,6 @@ parameters:
 			path: tests/Unit/Entity/Report/ReportTest.php
 
 		-
-			message: '#^Parameter \#1 \$deletedAdminUser of class OPG\\Digideps\\Backend\\Event\\UserRetentionPolicyCommandEvent constructor expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Event/UserRetentionPolicyCommandEventTest.php
-
-		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\EventSubscriber\\UserRetentionPolicyCommandSubscriberTest\:\:\$logger with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
@@ -24997,12 +24601,6 @@ parameters:
 			path: tests/Unit/Stats/StatsQueryParametersTest.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
-
-		-
 			message: '#^Cannot access offset ''case_number'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -25051,18 +24649,6 @@ parameters:
 			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
 
 		-
-			message: '#^Parameter \#1 \$className of method PHPUnit\\Framework\\TestCase\:\:getMockBuilder\(\) expects class\-string\<mixed\>, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
-
-		-
-			message: '#^Parameter \#1 \$createdOn of method OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission\:\:setCreatedOn\(\) expects DateTime\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
-
-		-
 			message: '#^Parameter \#1 \$document of method Tests\\OPG\\Digideps\\Backend\\Unit\\Transformer\\ReportSubmission\\ReportSubmissionSummaryTransformerTest\:\:buildDocumentWith\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -25081,31 +24667,7 @@ parameters:
 			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
 
 		-
-			message: '#^Parameter \#1 \$id of method OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission\:\:setId\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
-
-		-
 			message: '#^Parameter \#1 \$isReportPdf of method OPG\\Digideps\\Backend\\Entity\\Report\\Document\:\:setIsReportPdf\(\) expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, PHPUnit\\Framework\\MockObject\\MockObject given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
-
-		-
-			message: '#^Parameter \#1 \$type of method Tests\\OPG\\Digideps\\Backend\\Unit\\Transformer\\ReportSubmission\\ReportSubmissionSummaryTransformerTest\:\:buildReportOfType\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
-
-		-
-			message: '#^Parameter \#2 \$data of method Tests\\OPG\\Digideps\\Backend\\Unit\\Transformer\\ReportSubmission\\ReportSubmissionSummaryTransformerTest\:\:buildReportOfType\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
@@ -25113,12 +24675,6 @@ parameters:
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Transformer\\ReportSubmission\\ReportSubmissionSummaryTransformerTest\:\:\$reportSubmission is unused\.$#'
 			identifier: property.unused
-			count: 1
-			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
-
-		-
-			message: '#^Unable to resolve the template type T in call to method PHPUnit\\Framework\\TestCase\:\:getMockBuilder\(\)$#'
-			identifier: argument.templateType
 			count: 1
 			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
 

@@ -29,7 +29,7 @@ class ClientVoterTest extends KernelTestCase
 
     public function setUp(): void
     {
-        $this->user = new User();
+        $this->user = new User('', '', '');
         $this->token = $this->createMock(TokenInterface::class);
         $this->security = $this->getMockBuilder(Security::class)->disableOriginalConstructor()->getMock();
         $this->voter = new ClientVoter($this->security);
