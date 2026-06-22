@@ -6,182 +6,150 @@ namespace OPG\Digideps\Backend\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use OPG\Digideps\Backend\Entity\Traits\DebtTrait;
 
 #[ORM\Table(name: 'debt')]
 #[ORM\Entity]
 class Debt
 {
-    use DebtTrait;
-
     /**
      * Hold debts type
      * 1st value = id, 2nd value = hasMoreInformation.
      *
      * @var array<array{string, bool}>
      */
-    public static $debtTypeIds = [
+    public static array $debtTypeIds = [
         ['care-fees', false],
         ['credit-cards', false],
         ['loans', false],
         ['other', true],
     ];
 
-    /**
-     * @var int
-     */
     #[JMS\Groups(['debt'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'debt_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'debts')]
-    private $report;
+    private Report $report;
 
     /**
-     * @var string a value in self:$debtTypeIds
+     * @see self::$debtTypeIds
      */
     #[JMS\Groups(['debt'])]
     #[ORM\Column(name: 'debt_type_id', type: 'string', nullable: false)]
-    private $debtTypeId;
+    private string $debtTypeId;
 
-    /**
-     * @var ?string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['debt'])]
     #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
-    private $amount;
+    private ?string $amount;
 
-    /**
-     * @var bool
-     */
     #[JMS\Groups(['debt'])]
     #[JMS\Type('boolean')]
     #[ORM\Column(name: 'has_more_details', type: 'boolean', nullable: false)]
-    private $hasMoreDetails;
+    private bool $hasMoreDetails;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['debt'])]
     #[ORM\Column(name: 'more_details', type: 'text', nullable: true)]
-    private $moreDetails;
+    private ?string $moreDetails = null;
 
-    /**
-     * @param string      $debtTypeId
-     * @param bool        $hasMoreDetails
-     * @param string|null $amount
-     */
-    public function __construct(Report $report, $debtTypeId, $hasMoreDetails, $amount = null)
+    public function __construct(Report $report, string $debtTypeId, bool $hasMoreDetails, null|string|int|float $amount = null)
     {
         $this->report = $report;
         $report->addDebt($this);
 
         $this->debtTypeId = $debtTypeId;
         $this->hasMoreDetails = $hasMoreDetails;
-        $this->amount = $amount;
+        $this->setAmount($amount);
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
-        $this->id = $id;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    /**
-     * @param Report $report
-     */
-    public function setReport($report)
+    public function setReport(Report $report): static
     {
         $this->report = $report;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDebtTypeId()
+    public function getDebtTypeId(): string
     {
         return $this->debtTypeId;
     }
 
-    /**
-     * @param string $debtTypeId
-     */
-    public function setDebtTypeId($debtTypeId)
+    public function setDebtTypeId(string $debtTypeId): static
     {
         $this->debtTypeId = $debtTypeId;
+        return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getAmount()
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    /**
-     * @param string $amount
-     */
-    public function setAmount($amount)
+    public function setAmount(null|string|int|float $amount): static
     {
-        $this->amount = $amount;
+        $this->amount = $amount === null ? null : (string)$amount;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMoreDetails()
+    public function getMoreDetails(): ?string
     {
         return $this->moreDetails;
     }
 
-    /**
-     * @param string $moreDetails
-     */
-    public function setMoreDetails($moreDetails)
+    public function setMoreDetails(?string $moreDetails): static
     {
         $this->moreDetails = $moreDetails;
+        return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getHasMoreDetails()
+    public function getHasMoreDetails(): bool
     {
         return $this->hasMoreDetails;
     }
 
-    /**
-     * @param bool $hasMoreDetails
-     */
-    public function setHasMoreDetails($hasMoreDetails)
+    public function setHasMoreDetails(bool $hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
+        return $this;
+    }
+
+    public function setAmountAndDetails(null|string|int|float $amount, ?string $details): static
+    {
+        $this->setAmount($amount);
+
+        // reset details if amount is not given, or if more details are not expected
+        if (empty($this->getAmount()) || !$this->getHasMoreDetails()) {
+            $details = null;
+        }
+
+        $this->setMoreDetails($details);
+
+        return $this;
     }
 }
