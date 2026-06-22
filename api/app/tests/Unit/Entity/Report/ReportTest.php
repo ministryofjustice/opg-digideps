@@ -98,10 +98,10 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals(0, $this->report->getMoneyInTotal());
         $this->assertEquals(0, $this->report->getMoneyOutTotal());
         $this->report->setMoneyTransactions(new ArrayCollection([
-            new MoneyTransaction($this->report)->setCategory('account-interest')->setAmount(1),
-            new MoneyTransaction($this->report)->setCategory('dividends')->setAmount(2),
-            new MoneyTransaction($this->report)->setCategory('broadband')->setAmount(3),
-            new MoneyTransaction($this->report)->setCategory('food')->setAmount(4),
+            new MoneyTransaction($this->report, 'account-interest')->setAmount(1),
+            new MoneyTransaction($this->report, 'dividends')->setAmount(2),
+            new MoneyTransaction($this->report, 'broadband')->setAmount(3),
+            new MoneyTransaction($this->report, 'food')->setAmount(4),
         ]));
         $this->assertEquals(1 + 2, $this->report->getMoneyInTotal());
         $this->assertEquals(3 + 4, $this->report->getMoneyOutTotal());
@@ -123,9 +123,9 @@ final class ReportTest extends KernelTestCase
     {
         $this->assertEquals(0, $this->report->getAccountsOpeningBalanceTotal());
 
-        $this->report->addAccount(new BankAccount()->setBank('bank1')->setOpeningBalance(1));
-        $this->report->addAccount(new BankAccount()->setBank('bank2')->setOpeningBalance(3));
-        $this->report->addAccount(new BankAccount()->setBank('bank3')->setOpeningBalance(0));
+        $this->report->addAccount(new BankAccount($this->report)->setBank('bank1')->setOpeningBalance(1));
+        $this->report->addAccount(new BankAccount($this->report)->setBank('bank2')->setOpeningBalance(3));
+        $this->report->addAccount(new BankAccount($this->report)->setBank('bank3')->setOpeningBalance(0));
 
         $this->assertEquals(4, $this->report->getAccountsOpeningBalanceTotal());
     }
@@ -134,12 +134,12 @@ final class ReportTest extends KernelTestCase
     {
         $this->assertEquals(0, $this->report->getAccountsClosingBalanceTotal());
 
-        $this->report->addAccount(new BankAccount()->setBank('bank1')->setClosingBalance(1));
+        $this->report->addAccount(new BankAccount($this->report)->setBank('bank1')->setClosingBalance(1));
 
         $this->assertEquals(1, $this->report->getAccountsClosingBalanceTotal());
 
-        $this->report->addAccount(new BankAccount()->setBank('bank2')->setClosingBalance(3));
-        $this->report->addAccount(new BankAccount()->setBank('bank3')->setClosingBalance(0));
+        $this->report->addAccount(new BankAccount($this->report)->setBank('bank2')->setClosingBalance(3));
+        $this->report->addAccount(new BankAccount($this->report)->setBank('bank3')->setClosingBalance(0));
 
         $this->assertEquals(4, $this->report->getAccountsClosingBalanceTotal());
     }
@@ -153,14 +153,14 @@ final class ReportTest extends KernelTestCase
 
         $this->assertEquals(0, $this->report->getCalculatedBalance());
 
-        $this->report->addAccount(new BankAccount()->setBank('bank1')->setOpeningBalance(1));
+        $this->report->addAccount(new BankAccount($this->report)->setBank('bank1')->setOpeningBalance(1));
 
         $this->assertEquals(1, $this->report->getCalculatedBalance());
 
-        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('account-interest')->setAmount(20)); // in
-        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('account-interest')->setAmount(20)); // in
-        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(15)); // out
-        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(15)); // out
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report, 'account-interest')->setAmount(20)); // in
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report, 'account-interest')->setAmount(20)); // in
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report, 'rent')->setAmount(15)); // out
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report, 'rent')->setAmount(15)); // out
         $this->report->setGifts(new ArrayCollection([$this->gift1, $this->gift2]));
         $this->report->setExpenses(new ArrayCollection([$this->expense1, $this->expense2]));
 
@@ -187,8 +187,8 @@ final class ReportTest extends KernelTestCase
         $this->report->setProfDeputyCostsHasInterim('no');
         $this->report->setProfDeputyFixedCost(3);
         $this->report->setProfDeputyOtherCosts(new ArrayCollection([
-            new ProfDeputyOtherCost($this->report, 'id1', false, 10),
-            new ProfDeputyOtherCost($this->report, 'id2', false, 10),
+            new ProfDeputyOtherCost($this->report, 'id1', false, '10'),
+            new ProfDeputyOtherCost($this->report, 'id2', false, '10'),
         ]));
 
         $this->assertEquals(-1 - 1 - 3 - 10 - 10, $this->report->getCalculatedBalance());
@@ -214,9 +214,9 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals(true, $this->report->getTotalsMatch());
 
         // account opened with 1000, closed with 2000. 1500 money in, 400 out. balance is 100
-        $this->report->addAccount(new BankAccount()->setBank('bank1')->setOpeningBalance(1000)->setClosingBalance(2000));
-        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('account-interest')->setAmount(1500)); // in
-        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(400)); // out
+        $this->report->addAccount(new BankAccount($this->report)->setBank('bank1')->setOpeningBalance(1000)->setClosingBalance(2000));
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report, 'account-interest')->setAmount(1500)); // in
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report, 'rent')->setAmount(400)); // out
         $this->report->setGifts(new ArrayCollection([$this->gift1, $this->gift2]));
         $this->report->setExpenses(new ArrayCollection([$this->expense1, $this->expense2]));
 
@@ -225,7 +225,7 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals(false, $this->report->getTotalsMatch());
 
         // add missing transaction that fix the balance
-        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(67)); // in
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report, 'rent')->setAmount(67)); // in
 
         $this->assertEquals(0, $this->report->getTotalsOffset());
         $this->assertEquals(true, $this->report->getTotalsMatch());
@@ -306,7 +306,7 @@ final class ReportTest extends KernelTestCase
         $reportCurrent->shouldReceive('getId')->andReturn(10);
         $reportCurrent->shouldReceive('getClient')->andReturn($mockClient);
 
-        $bankAccount0 = new BankAccount();
+        $bankAccount0 = new BankAccount($this->createStub(Report::class));
         $bankAccount0->setId(1);
         $bankAccount0->setBank('bank0');
         $bankAccount0->setAccountNumber('1111');
@@ -314,7 +314,7 @@ final class ReportTest extends KernelTestCase
         $bankAccount0->setOpeningBalance('600');
         $bankAccount0->setClosingBalance('600');
 
-        $bankAccount1 = new BankAccount();
+        $bankAccount1 = new BankAccount($this->createStub(Report::class));
         $bankAccount1->setId(2);
         $bankAccount1->setBank('bank1');
         $bankAccount1->setAccountNumber('2222');
@@ -322,7 +322,7 @@ final class ReportTest extends KernelTestCase
         $bankAccount1->setOpeningBalance('200');
         $bankAccount1->setClosingBalance('300');
 
-        $bankAccount2 = new BankAccount();
+        $bankAccount2 = new BankAccount($this->createStub(Report::class));
         $bankAccount2->setId(3);
         $bankAccount2->setBank('bank2');
         $bankAccount2->setAccountNumber('3333');

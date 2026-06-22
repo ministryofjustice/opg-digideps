@@ -68,8 +68,7 @@ class ReportSection
 
     private function completeVisitsCare(Report $report): void
     {
-        $vc = new VisitsCare()
-            ->setReport($report)
+        $vc = new VisitsCare($report)
             ->setDoYouLiveWithClient('yes')
             ->setDoesClientReceivePaidCare('no')
             ->setWhoIsDoingTheCaring('me')
@@ -94,8 +93,7 @@ class ReportSection
 
     private function completeLifestyle(Report $report): void
     {
-        $ls = new Lifestyle()
-            ->setReport($report);
+        $ls = new Lifestyle($report);
         $ls->setCareAppointments('no');
         $ls->setDoesClientUndertakeSocialActivities('no');
         $report->setLifestyle($ls);
@@ -113,7 +111,7 @@ class ReportSection
 
     private function completeBankAccounts(Report $report): void
     {
-        $ba = new BankAccount()->setReport($report)->setClosingBalance(1000);
+        $ba = new BankAccount($report)->setClosingBalance(1000);
         $report->addAccount($ba);
         $report->setBalanceMismatchExplanation('no reason');
     }
@@ -127,7 +125,7 @@ class ReportSection
         ) {
             $report->setMoneyInExists('Yes');
         }
-        $mt = new MoneyTransaction($report)->setCategory('salary-or-wages')->setAmount(200);
+        $mt = new MoneyTransaction($report, 'salary-or-wages')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
@@ -140,7 +138,7 @@ class ReportSection
         ) {
             $report->setMoneyOutExists('Yes');
         }
-        $mt = new MoneyTransaction($report)->setCategory('care-fees')->setAmount(200);
+        $mt = new MoneyTransaction($report, 'care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
@@ -194,7 +192,7 @@ class ReportSection
                 ->setProfDeputyCostsHasPrevious('no')
                 ->setProfDeputyFixedCost(1000)
                 ->setProfDeputyOtherCosts(new ArrayCollection())
-                ->addProfDeputyOtherCost(new ProfDeputyOtherCost($report, 1, false, 500));
+                ->addProfDeputyOtherCost(new ProfDeputyOtherCost($report, '1', false, '500'));
 
             $report->setProfDeputyCostsEstimateHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED);
         }
