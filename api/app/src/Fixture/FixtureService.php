@@ -56,7 +56,7 @@ final class FixtureService
         if (!is_string($plain)) {
             throw new \DomainException("Fixtures password must be configured and be a string");
         }
-        $this->password = $passwordHasher->hashPassword(new User(), $plain);
+        $this->password = $passwordHasher->hashPassword(new User('', '', ''), $plain);
         $this->refreshCounter();
     }
 
@@ -296,18 +296,15 @@ final class FixtureService
 
         $client->setCourtDate($madeDate);
 
-        return $this->persist(new CourtOrder()
-            ->setId($this->counter->nextInt())
-            ->setCourtOrderUid($this->counter->nextString(8))
-            ->setClient($client)
-            ->setOrderType($type)
-            ->setOrderKind($descriptor->single ? CourtOrderKind::Single : ($descriptor->siblingDeputySet === null ? CourtOrderKind::Hybrid : CourtOrderKind::Dual))
-            ->setOrderReportType($descriptor->single || $type !== CourtOrderType::HW ? $descriptor->reportType : CourtOrderReportType::OPG104)
-            ->setSibling(null)
-            ->setOrderMadeDate($madeDate)
-            ->setStatus($descriptor->active ? 'ACTIVE' : 'CLOSED')
-            ->setCreatedAt(null)
-            ->setUpdatedAt(null));
+        return $this->persist(new CourtOrder(
+            $this->counter->nextString(8),
+            $type,
+            $descriptor->single || $type !== CourtOrderType::HW ? $descriptor->reportType : CourtOrderReportType::OPG104,
+            $descriptor->single ? CourtOrderKind::Single : ($descriptor->siblingDeputySet === null ? CourtOrderKind::Hybrid : CourtOrderKind::Dual),
+            $madeDate,
+            $client,
+            $descriptor->active ? 'ACTIVE' : 'CLOSED'
+        )->setId($this->counter->nextInt()));
     }
 
     private function makeDeputy(DeputyDescriptor $descriptor, ?Organisation $organisation): Deputy
@@ -343,25 +340,34 @@ final class FixtureService
 
     private function makeOrganisation(DeputyDescriptor $descriptor): Organisation
     {
-        $organisation = new Organisation()
-            ->setId($this->counter->nextInt())
-            ->setIsActivated(true)
-            ->setDeletedAt()
-            ->setName($descriptor->organisation);
-        $organisation->setEmailIdentifier("@{$organisation->getId()}.$descriptor->emailDomain");
+        $id = $this->counter->nextInt();
+        $emailIdentifier = "@{$id}.{$descriptor->emailDomain}";
+        $organisation = new Organisation($descriptor->organisation, $emailIdentifier, true)->setId($id);
 
         return $this->persist($organisation);
     }
 
     private function makeUser(DeputyDescriptor $descriptor, ?Deputy $deputy = null, ?Organisation $organisation = null): User
     {
+        $id = $this->counter->nextInt();
+        $firstname = $deputy?->getFirstname() ?? $this->faker->firstName();
+        $lastname = $deputy?->getLastname() ?? $this->faker->lastName();
         $address = explode("\n", $this->faker->streetAddress());
-        $user = new User()
-            ->setId($this->counter->nextInt())
+
+        if ($organisation !== null) {
+            $email = "{$firstname}.{$lastname}{$organisation->getEmailIdentifier()}";
+        } else {
+            $email = "{$firstname}.{$lastname}@{$id}.{$descriptor->emailDomain}";
+        }
+
+        $user = new User(
+            $firstname,
+            $lastname,
+            $email
+        )
+            ->setId($id)
             ->setDeputy($deputy)
             ->setDeputyUid((int)$deputy?->getDeputyUid() ?: null)
-            ->setFirstname($deputy?->getFirstname() ?? $this->faker->firstName())
-            ->setLastname($deputy?->getLastname() ?? $this->faker->lastName())
             ->setAddress1($deputy?->getAddress1() ?? $address[0])
             ->setAddress2($deputy?->getAddress2() ?? $address[1] ?? '')
             ->setAddress3($deputy?->getAddress3() ?? $address[2] ?? '')
@@ -399,13 +405,7 @@ final class FixtureService
             ->setRegistrationRoute(User::SELF_REGISTER)
         ;
 
-        if ($organisation !== null) {
-            $user->setEmail("{$user->getFirstname()}.{$user->getLastname()}{$organisation->getEmailIdentifier()}");
-            $organisation->addUser($user);
-        } else {
-            $user->setEmail("{$user->getFirstname()}.{$user->getLastname()}@{$user->getId()}.{$descriptor->emailDomain}");
-        }
-
+        $organisation?->addUser($user);
         $deputy?->setEmail1($user->getEmail());
 
         return $this->persist($user);
@@ -438,11 +438,10 @@ final class FixtureService
         $report->setSubmitDate((clone $report->getEndDate())->add(new \DateInterval('P15D')));
         $report->setSubmittedBy($submitter);
 
-        $document = new Document($report);
+        $document = new Document($report, "DigiRep-{$this->counter->nextString(8)}.pdf");
         $document->setIsReportPdf(true);
         $document->setCreatedBy($submitter);
         $document->setStorageReference("dd_doc_{$report->getId()}_" . time());
-        $document->setFileName("DigiRep-{$this->counter->nextString(8)}.pdf");
         $this->persist($document);
 
         $reportSubmission = new ReportSubmission($report, $submitter);
@@ -468,8 +467,7 @@ final class FixtureService
         $report->setReasonForNoContacts('No contacts necessary');
 
         // visits and care
-        $visitsCare = new VisitsCare()
-            ->setReport($report)
+        $visitsCare = new VisitsCare($report)
             ->setDoYouLiveWithClient('yes')
             ->setDoesClientReceivePaidCare('no')
             ->setWhoIsDoingTheCaring('family')
@@ -482,8 +480,7 @@ final class FixtureService
             ->setDoOthersReceiveMoneyOnClientsBehalf('no');
 
         // accounts
-        $account = new BankAccount()
-            ->setReport($report)
+        $account = new BankAccount($report)
             ->setBank('Test Account')
             ->setAccountType('current')
             ->setAccountNumber('0011')
@@ -562,11 +559,10 @@ final class FixtureService
         $report->setWishToProvideDocumentation('yes');
         $this->persist($report);
 
-        $document = new Document($report);
+        $document = new Document($report, $filename);
         $document->setIsReportPdf(false);
         $document->setCreatedBy($report->getSubmittedBy());
         $document->setStorageReference("dd_doc_{$report->getId()}_" . time());
-        $document->setFileName($filename);
         $this->persist($document);
         $this->flush();
     }

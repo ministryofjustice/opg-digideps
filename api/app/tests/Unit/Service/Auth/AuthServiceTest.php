@@ -105,7 +105,6 @@ final class AuthServiceTest extends TestCase
     public function testGetUserByEmailAndPasswordMismatchPassword(): void
     {
         $user = $this->createMock(User::class);
-        $user->method('getSalt');
         $user->method('getPassword')->willReturn('encodedPassword');
 
         $this->userRepo->method('findOneBy')->with(['email' => 'email@example.org'])->willReturn($user);
@@ -118,7 +117,6 @@ final class AuthServiceTest extends TestCase
     public function testGetUserByEmailAndPasswordCorrect(): void
     {
         $user = $this->createMock(User::class);
-        $user->method('getSalt');
         $user->method('getPassword')->willReturn('encodedPassword');
 
         $this->userRepo->method('findOneBy')->with(['email' => 'email@example.org'])->willReturn($user);
