@@ -62,9 +62,9 @@ class Satisfaction
 
     public function __construct(int $score, ?string $comments = null)
     {
-         $this->score = $score;
-         $this->comments = $comments;
-         $this->created = new \DateTime();
+        $this->score = $score;
+        $this->comments = $comments;
+        $this->created = new \DateTime();
     }
 
     public function getId(): int
