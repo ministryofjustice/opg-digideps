@@ -58,7 +58,7 @@ final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->report
             ->setProfDeputyCostsEstimateHasMoreInfo('yes')
             ->setProfDeputyCostsEstimateMoreInfoDetails('more info')
-            ->setProfDeputyEstimateCosts(new ArrayCollection([new ProfDeputyEstimateCost()]))
+            ->setProfDeputyEstimateCosts(new ArrayCollection([new ProfDeputyEstimateCost($this->report, '')]))
             ->setProfDeputyCostsEstimateManagementCostAmount(100.00);
 
         $this->ensureSectionStatusCacheWillBeUpdated();
@@ -77,7 +77,7 @@ final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->report
             ->setProfDeputyCostsEstimateHasMoreInfo('yes')
             ->setProfDeputyCostsEstimateMoreInfoDetails('more info')
-            ->setProfDeputyEstimateCosts(new ArrayCollection([new ProfDeputyEstimateCost()]))
+            ->setProfDeputyEstimateCosts(new ArrayCollection([new ProfDeputyEstimateCost($this->report, '')]))
             ->setProfDeputyCostsEstimateManagementCostAmount(100.00);
 
         $this->ensureSectionStatusCacheWillBeUpdated();
@@ -108,12 +108,12 @@ final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
 
     public function testUpdatesExistingOrCreatesNewProfDeputyEstimateCost(): void
     {
-        $existing = new ProfDeputyEstimateCost();
-        $existing
-            ->setReport($this->report)
-            ->setProfDeputyEstimateCostTypeId('forms-documents')
-            ->setAmount('22.99')
-            ->setHasMoreDetails(true);
+        $existing = new ProfDeputyEstimateCost(
+            $this->report,
+            'forms-documents',
+            true
+        )
+            ->setAmount('22.99');
 
         $this->report->addProfDeputyEstimateCost($existing);
 
