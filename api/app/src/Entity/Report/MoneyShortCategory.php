@@ -37,7 +37,7 @@ class MoneyShortCategory
         ]];
 
     /**
-     * @param ?string $type "in" or "out" or null for both
+     * "in" or "out" or null for both
      *
      * @return array<string, array<never>> [typeId=>[]]
      */
@@ -50,46 +50,28 @@ class MoneyShortCategory
         };
     }
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'money_short_category_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'moneyShortCategories')]
-    private $report;
+    private Report $report;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
     #[ORM\Column(name: 'type_id', type: 'string', nullable: false)]
-    private $typeId;
+    private string $typeId;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
     #[ORM\Column(name: 'present', type: 'boolean', nullable: true)]
-    private $present;
+    private ?bool $present;
 
-    /**
-     * MoneyShortCategory constructor.
-     *
-     * @param string $typeId
-     * @param bool   $present
-     */
-    public function __construct(Report $report, $typeId, $present)
+    public function __construct(Report $report, string $typeId, bool $present)
     {
         $this->report = $report;
         $this->typeId = $typeId;
@@ -97,11 +79,9 @@ class MoneyShortCategory
     }
 
     /**
-     * Find the type (in/out) based on the.
-     *
-     * @return string in|out
+     * null|in|out
      */
-    public function getType()
+    public function getType(): ?string
     {
         foreach (['in', 'out'] as $type) {
             foreach (self::getCategories($type) as $typeId => $options) {
@@ -114,68 +94,52 @@ class MoneyShortCategory
         return null;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
-        $this->id = $id;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    /**
-     * @param Report $report
-     */
-    public function setReport($report)
+    public function setReport(Report $report): void
     {
         $this->report = $report;
     }
 
-    /**
-     * @return string
-     */
-    public function getTypeId()
+    public function getTypeId(): string
     {
         return $this->typeId;
     }
 
-    /**
-     * @param string $typeId
-     */
-    public function setTypeId($typeId)
+    public function setTypeId(string $typeId): static
     {
         $this->typeId = $typeId;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPresent()
+    public function getPresent(): ?bool
     {
         return $this->present;
     }
 
-    /**
-     * @param string $present
-     */
-    public function setPresent($present)
+    public function setPresent(?bool $present): static
     {
         $this->present = $present;
 

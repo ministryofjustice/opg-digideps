@@ -107,10 +107,7 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
         $endDate = $startDate->add(new \DateInterval('P1D'));
         $report = new Report($client, Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS, $startDate, $endDate);
 
-        $user = new User()
-            ->setFirstname('firstname')
-            ->setLastname('lastname')
-            ->setEmail(sprintf('email%s@test.com', rand(1, 100000)))
+        $user = new User('firstname', 'lastname', sprintf('email%s@test.com', rand(1, 100000)))
             ->setPassword('password')
             ->setRoleName('ROLE_LAY');
 

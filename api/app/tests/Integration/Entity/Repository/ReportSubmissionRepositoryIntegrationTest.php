@@ -54,9 +54,8 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
         self::$entityManager->persist($submission);
 
         foreach ($docStatuses as $docStatus) {
-            $doc = new Document($report);
+            $doc = new Document($report, 'a file.pdf');
             $doc->setSynchronisationStatus($docStatus);
-            $doc->setFileName('a file.pdf');
             self::$entityManager->persist($doc);
 
             $submission->addDocument($doc);
@@ -83,8 +82,7 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
             self::$entityManager->persist($report);
             self::$entityManager->persist($report->getClient());
 
-            $doc = new Document($report);
-            $doc->setFileName('a file.pdf');
+            $doc = new Document($report, 'a file.pdf');
             self::$entityManager->persist($doc);
 
             $submission->addDocument($doc);

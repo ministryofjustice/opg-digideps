@@ -112,7 +112,7 @@ final class UserRegistrationServiceTest extends TestCase
 
         $client = self::createMock(Client::class);
         $client->expects(self::once())->method('hasDeputies')->willReturn(false);
-        $client->expects(self::once())->method('getOrganisation')->willReturn(new Organisation());
+        $client->expects(self::once())->method('getOrganisation')->willReturn(new Organisation('', ''));
         $client->expects(self::once())->method('getCaseNumber')->willReturn('12341234');
 
         $preRegVerificationService = self::createMock(PreRegistrationVerificationService::class);

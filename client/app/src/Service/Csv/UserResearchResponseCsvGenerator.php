@@ -15,12 +15,7 @@ class UserResearchResponseCsvGenerator
         $this->csvBuilder = $csvBuilder;
     }
 
-    /**
-     * @param []UserResearchResponse $userResearchResponses
-     *
-     * @return string
-     */
-    public function generateUserResearchResponsesCsv(array $userResearchResponses)
+    public function generateUserResearchResponsesCsv(array $userResearchResponses): string
     {
         $headers = [
             'Satisfaction Score',
@@ -49,8 +44,8 @@ class UserResearchResponseCsvGenerator
             $rows[] = [
                 $satisfaction['score'],
                 $satisfaction['comments'],
-                $satisfaction['deputyrole'],
-                $satisfaction['reporttype'],
+                $satisfaction['deputyRole'],
+                $satisfaction['reportType'],
                 $dateProvided,
                 $this->transformDeputyshipLength($response['deputyshipLength']),
                 $this->getCommaSeparatedTypesAgreedFromArrayData($response['researchType']),
