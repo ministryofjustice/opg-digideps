@@ -3,6 +3,7 @@
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\Client;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Utils;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
@@ -145,7 +146,7 @@ class RestClientTest extends TestCase
 
         $this->endpointResponse->shouldReceive('getHeader')->with('AuthToken')->andReturn([$this->sessionToken]);
         $this->endpointResponse->shouldReceive('hasHeader')->with('JWT')->andReturn(false);
-        $this->endpointResponse->shouldReceive('getBody')->andReturn($userJson);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn(Utils::streamFor($userJson));
 
         $this->client
             ->shouldReceive('request')->with('post', '/auth/login', [
@@ -169,7 +170,7 @@ class RestClientTest extends TestCase
         $responseJson = json_encode($responseArray);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
-        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn(Utils::streamFor($responseJson));
 
         $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
         $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
@@ -199,7 +200,7 @@ class RestClientTest extends TestCase
         $this->serialiser->shouldReceive('deserialize')->with($userJson, User::class, 'json')->andReturn($loggedUser);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
-        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn(Utils::streamFor($responseJson));
 
         $this->client->shouldReceive('request')->with('get', "user/get-by-token/{$token}", [
             'headers' => ['ClientSecret' => $this->clientSecret],
@@ -227,7 +228,7 @@ class RestClientTest extends TestCase
         $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_CREATED);
-        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn(Utils::streamFor($responseJson));
 
         $this->client->shouldReceive('request')->with('post', 'selfregister', [
             'headers' => ['ClientSecret' => $this->clientSecret],
@@ -251,7 +252,7 @@ class RestClientTest extends TestCase
         $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
-        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn(Utils::streamFor($responseJson));
 
         $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
         $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
@@ -278,7 +279,7 @@ class RestClientTest extends TestCase
         $this->serialiser->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_CREATED);
-        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn(Utils::streamFor($responseJson));
 
         $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
         $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
@@ -308,7 +309,7 @@ class RestClientTest extends TestCase
         $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
-        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn(Utils::streamFor($responseJson));
 
         $this->client->shouldReceive('request')->with('get', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
@@ -335,7 +336,7 @@ class RestClientTest extends TestCase
         $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
-        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn(Utils::streamFor($responseJson));
 
         $this->client->shouldReceive('request')->with('get', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
@@ -369,7 +370,7 @@ class RestClientTest extends TestCase
         $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
-        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn(Utils::streamFor($responseJson));
 
         $this->client->shouldReceive('request')->with('get', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
@@ -398,7 +399,7 @@ class RestClientTest extends TestCase
         $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
-        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn(Utils::streamFor($responseJson));
 
         $this->client->shouldReceive('request')->with('get', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
@@ -428,7 +429,7 @@ class RestClientTest extends TestCase
         $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
-        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn(Utils::streamFor($responseJson));
 
         $this->client->shouldReceive('request')->with('get', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
@@ -476,7 +477,7 @@ class RestClientTest extends TestCase
         $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
-        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn(Utils::streamFor($responseJson));
 
         $this->client->shouldReceive('request')->with('delete', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
@@ -532,7 +533,7 @@ class RestClientTest extends TestCase
         $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
         $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
-        $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
+        $this->endpointResponse->shouldReceive('getBody')->andReturn(Utils::streamFor($responseJson));
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
 
         $this->client->shouldReceive('request')->with('delete', $endpointUrl, [
