@@ -104,6 +104,7 @@ class ComponentsExtension extends AbstractExtension
 
                     case 'needs-attention':
                     case 'unsubmitted':
+                    case 'accountNotBalanced':
                         return 'govuk-tag--red';
 
                     case 'not-matching':
@@ -114,11 +115,19 @@ class ComponentsExtension extends AbstractExtension
                     case 'low-assets-done':
                     case 'submitted':
                     case 'readyToSubmit':
+                    case 'accountBalanced':
                         return 'govuk-tag--green';
 
                     default:
                         return '';
                 }
+            }),
+            'account_balance_status_to_tag_css' => new TwigFilter('account_balance_status_to_tag_css', function ($status) {
+                return match ($status) {
+                    'notMatched' => 'govuk-tag--red',
+                    'matched' => 'govuk-tag--green',
+                    default => '',
+                };
             }),
         ];
     }
