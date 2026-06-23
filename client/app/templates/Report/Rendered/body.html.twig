@@ -71,6 +71,13 @@
         } %}
     {% endif %}
 
+    {% if report.hasSection('balance') %}
+        {% include '@App/Report/Rendered/_balance.html.twig' with {
+            'report': report,
+            'transDomain': 'report-balance'
+        } %}
+    {% endif %}
+
     {% if report.hasSection('assets') %}
         {% include '@App/Report/Rendered/_assets.html.twig' with {
             'view': review.getAssetsReviewView,

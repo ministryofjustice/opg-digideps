@@ -90,3 +90,10 @@ cantFind:
 form:
   explanation:
     label: Explanation
+
+review:
+  title: Accounts balance check
+  balanceCardTitle: Balance after incoming and outgoing payments
+  differenceCardTitle: Closing balances
+  matched: Accounts balanced
+  notMatched: Accounts not balanced
