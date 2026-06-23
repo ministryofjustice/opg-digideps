@@ -97,16 +97,14 @@
                 </td>
             </tr>
 
-            {% if showBalanceCalculations %}
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">
-                        {{ 'balanceTable.footer' | trans({},transDomain) }}
-                    </th>
-                    <td class="govuk-table__cell govuk-!-width-one-half">
-                        <strong>£{{ report.calculatedBalance | money_format }}</strong>
-                    </td>
-                </tr>
-            {% endif %}
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                    {{ 'balanceTable.footer' | trans({},transDomain) }}
+                </th>
+                <td class="govuk-table__cell govuk-!-width-one-half">
+                    <strong>{{ not showBalanceCalculations ? '-' : '£' ~ report.calculatedBalance | money_format }}</strong>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
