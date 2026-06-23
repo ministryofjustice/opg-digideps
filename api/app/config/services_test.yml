@@ -13,7 +13,7 @@ services:
         arguments: ["@predis"]
         calls:
             - [setRedisPrefix, ["test_ac_ret_code"]]
-            # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
+            # after 5 attempts in the last 10 minutes, return a different return code
             - [addTrigger, [5, 600]]
     OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker:
         public: true

@@ -71,6 +71,12 @@
         } %}
     {% endif %}
 
+    {% if report.hasSection('assets') %}
+        {% include '@App/Report/Rendered/_assets.html.twig' with {
+            'view': review.getAssetsReviewView,
+        } %}
+    {% endif %}
+
     {% if report.hasSection('debts') %}
         {% include '@App/Report/Rendered/_debts.html.twig' with {
             'view': review.getDebtsReviewView
