@@ -29,7 +29,7 @@ class ClientRepository extends ServiceEntityRepository
     public function searchClients(string $query = '', string $orderBy = 'lastname', string $sortOrder = 'ASC', int $limit = 100, int $offset = 0): array
     {
         /** @var SoftDeleteableFilter $filter */
-        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter = $this->getEntityManager()->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Client::class);
 
         $alias = 'c';
@@ -44,7 +44,7 @@ class ClientRepository extends ServiceEntityRepository
         $qb->setFirstResult((int) $offset);
         $qb->orderBy($alias . '.' . $orderBy, $sortOrder);
 
-        $this->_em->getFilters()->enable('softdeleteable');
+        $this->getEntityManager()->getFilters()->enable('softdeleteable');
 
         return $qb->getQuery()->getResult();
     }
@@ -68,7 +68,7 @@ class ClientRepository extends ServiceEntityRepository
     public function getArrayById($id)
     {
         /** @var SoftDeleteableFilter $filter */
-        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter = $this->getEntityManager()->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Client::class);
 
         $table = Client::class;
@@ -88,7 +88,7 @@ class ClientRepository extends ServiceEntityRepository
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();
-        $this->_em->getFilters()->enable('softdeleteable');
+        $this->getEntityManager()->getFilters()->enable('softdeleteable');
 
         return count($result) === 0 ? null : $result[0];
     }
@@ -143,7 +143,7 @@ class ClientRepository extends ServiceEntityRepository
 
     public function findByCaseNumberIncludingDischarged(string $caseNumber): mixed
     {
-        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter = $this->getEntityManager()->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Client::class);
 
         $table = Client::class;
@@ -153,7 +153,7 @@ class ClientRepository extends ServiceEntityRepository
             ->setParameter('caseNumber', $caseNumber)
             ->getResult();
 
-        $this->_em->getFilters()->enable('softdeleteable');
+        $this->getEntityManager()->getFilters()->enable('softdeleteable');
 
         return $clients;
     }
@@ -161,12 +161,12 @@ class ClientRepository extends ServiceEntityRepository
     public function findByIdIncludingDischarged(int $id): ?Client
     {
         /** @var SoftDeleteableFilter $filter */
-        $filter = $this->_em->getFilters()->getFilter('softdeleteable');
+        $filter = $this->getEntityManager()->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Client::class);
 
         $client = $this->find($id);
 
-        $this->_em->getFilters()->enable('softdeleteable');
+        $this->getEntityManager()->getFilters()->enable('softdeleteable');
 
         return $client;
     }
@@ -201,9 +201,9 @@ class ClientRepository extends ServiceEntityRepository
             ->addOrderBy('c.firstname', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults($limit);
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); // disable softdelete for createdBy, needed from admin area
+        $this->getEntityManager()->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); // disable softdelete for createdBy, needed from admin area
         $records = $qbSelect->getQuery()->getResult(); /* @var $records User[] */
-        $this->_em->getFilters()->enable('softdeleteable');
+        $this->getEntityManager()->getFilters()->enable('softdeleteable');
 
         // run counts on the base query for each status (new/archived)
         $qbCount = clone $qb;
@@ -294,7 +294,7 @@ class ClientRepository extends ServiceEntityRepository
     public function findClientsWithoutAReport(): array
     {
         /** @var Client[] $clientsWithoutAReport */
-        $clientsWithoutAReport = $this->_em->createQueryBuilder()
+        $clientsWithoutAReport = $this->getEntityManager()->createQueryBuilder()
             ->select('c')
             ->from(Client::class, 'c')
             ->where('c.archivedAt IS NULL')

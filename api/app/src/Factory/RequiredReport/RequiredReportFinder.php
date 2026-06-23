@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Backend\Factory\MissingReport;
+namespace OPG\Digideps\Backend\Factory\RequiredReport;
 
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use Doctrine\ORM\EntityManagerInterface;
 
-final readonly class MissingReportFinder
+final readonly class RequiredReportFinder
 {
     public function __construct(private EntityManagerInterface $entityManager)
     {
@@ -16,7 +16,7 @@ final readonly class MissingReportFinder
     /**
      * @return \Generator<CourtOrder>
      */
-    public function findCourtOrdersWithMissingReports(): \Generator
+    public function findCourtOrdersWithoutRequiredReports(): \Generator
     {
         $repository = $this->entityManager->getRepository(CourtOrder::class);
         foreach (

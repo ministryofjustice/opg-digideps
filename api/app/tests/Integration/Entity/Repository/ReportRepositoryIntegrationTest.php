@@ -187,7 +187,9 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
         self::$entityManager->flush();
         self::$entityManager->refresh($existingReport);
         self::$entityManager->refresh($client);
-        self::$entityManager->refresh($client->getUsers()[0]);
+        $firstClientUser = $client->getUsers()[0];
+        /** @var User $firstClientUser */
+        self::$entityManager->refresh($firstClientUser);
 
         $roleName = $client->getUsers()[0]->getRoleName();
         $this->assertNotNull($roleName);

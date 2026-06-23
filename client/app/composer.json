@@ -9,8 +9,7 @@
             "php": "8.4.21"
         },
         "allow-plugins": {
-            "php-http/discovery": true,
-            "pact-foundation/composer-downloads-plugin": false
+            "php-http/discovery": true
         }
     },
     "scripts": {
@@ -114,13 +113,13 @@
     "require-dev": {
         "dg/bypass-finals": "^1.10.2",
         "jangregor/phpstan-prophecy": "^2.3.0",
+        "league/openapi-psr7-validator": "^0.24.0",
         "mockery/mockery": "^1.6.12",
-        "pact-foundation/pact-php": "^8.1",
         "phpspec/prophecy-phpunit": "^2.5",
         "phpstan/phpstan": "^2.2.2",
         "phpstan/phpstan-mockery": "^2.0.0",
         "phpstan/phpstan-phpunit": "^2.0.16",
-        "phpunit/phpcov": "8.2.1",
+        "phpunit/phpcov": "^8.2.1",
         "phpunit/phpunit": "^9.6.34",
         "symfony/maker-bundle": "^1.67.0",
         "symfony/phpunit-bridge": "^6.4.35",

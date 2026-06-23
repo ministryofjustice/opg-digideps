@@ -25,7 +25,7 @@
             'transDomain': 'report-contacts'
         } %}
     {% endif %}
-    
+
     {% if report.hasSection('visitsCare') %}
         {% include '@App/Report/Rendered/_visits_care.html.twig' with {
             'visitsCare': report.visitsCare,
@@ -36,9 +36,7 @@
 
     {% if report.getClientBenefitsCheck is not null and report.hasSection('clientBenefitsCheck') %}
         {% include '@App/Report/Rendered/_client_benefits_check.html.twig' with {
-            'view': review.getClientBenefitsCheckReviewView,
-            'transOptions': transOptions,
-            'transDomain': 'report-client-benefits-check'
+            'view': review.getClientBenefitsCheckReviewView
         } %}
     {% endif %}
 
@@ -48,7 +46,7 @@
             'transDomain': 'report-bank-accounts'
         } %}
     {% endif %}
-    
+
     {% if report.hasSection('deputyExpenses') %}
         {% include '@App/Report/Rendered/_deputy_expenses.html.twig' with {
             'report': report,
@@ -70,6 +68,18 @@
             'report': report,
             'transOptions': transOptions,
             'transDomain': 'report-money-transfer'
+        } %}
+    {% endif %}
+
+    {% if report.hasSection('assets') %}
+        {% include '@App/Report/Rendered/_assets.html.twig' with {
+            'view': review.getAssetsReviewView,
+        } %}
+    {% endif %}
+
+    {% if report.hasSection('debts') %}
+        {% include '@App/Report/Rendered/_debts.html.twig' with {
+            'view': review.getDebtsReviewView
         } %}
     {% endif %}
 </div>
