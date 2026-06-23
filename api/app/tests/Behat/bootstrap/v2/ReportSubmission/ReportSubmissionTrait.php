@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\ReportSubmission;
 
-use Behat\Gherkin\Node\TableNode;
-use Behat\Mink\Element\NodeElement;
 use Behat\Step\Given;
 use Behat\Step\Then;
 use Behat\Step\When;
 use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Service\ParameterStoreService;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait ReportSubmissionTrait
 {
-    /** @var array<string>  */
     private array $documentFileNames = [];
 
     private string $reportSubmissionStandardAndNdr_CaseNumber;
 
-    #[Then('I should see the case number of the user I\'m interacting with')]
+    /**
+     * @Then I should see the case number of the user I'm interacting with
+     */
     public function iShouldSeeInteractingWithCaseNumber(): void
     {
         $this->assertInteractingWithUserIsSet();
@@ -40,6 +40,12 @@ trait ReportSubmissionTrait
     {
         $this->iAmOnUploadDocumentPage();
         $this->attachDocument($imageName);
+    }
+
+    private function attachDocument(string $imageName): void
+    {
+        $this->attachFileToField('report_document_upload_files', $imageName);
+        $this->pressButton('Upload');
     }
 
     #[When('I view the pending submissions')]
@@ -96,7 +102,7 @@ trait ReportSubmissionTrait
     }
 
     #[Given('/^I send the documents to complete the upload process on the "([^"]*)" report$/')]
-    public function iSendTheDocumentsToCompleteTheUploadProcess(string $reportStatus): void
+    public function iSendTheDocumentsToCompleteTheUploadProcess($reportStatus): void
     {
         if ($reportStatus != 'submitted') {
             $this->clickLink('Continue to send documents');
@@ -111,11 +117,7 @@ trait ReportSubmissionTrait
         string $whichNamesAreSame,
     ): void {
         $userDetails = $whichNamesAreSame === 'first' ? $this->sameFirstNameUserDetails[0] : $this->sameLastNameUserDetails[0];
-        $nameToSearchOn = $whichNameSearched === 'first' ? $userDetails?->getClientFirstName() : $userDetails?->getClientLastName();
-
-        if ($nameToSearchOn === null) {
-            $nameToSearchOn = '';
-        }
+        $nameToSearchOn = $whichNameSearched === 'first' ? $userDetails->getClientFirstName() : $userDetails->getClientLastName();
 
         $this->fillInField('q', $nameToSearchOn);
         $this->pressButton('Search');
@@ -128,8 +130,8 @@ trait ReportSubmissionTrait
         $usersToSearchOn = $whichName === 'first' ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
         $locator = sprintf(
             '//td[normalize-space()="%s"]|//td[normalize-space()="%s"]',
-            $usersToSearchOn[0]?->getClientCaseNumber() ?? '',
-            $usersToSearchOn[1]?->getClientCaseNumber() ?? '',
+            $usersToSearchOn[0]->getClientCaseNumber(),
+            $usersToSearchOn[1]->getClientCaseNumber(),
         );
 
         $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
@@ -145,11 +147,10 @@ trait ReportSubmissionTrait
     public function iShouldNotSeeTheOtherTwoClientsWithDifferentNames(string $whichName): void
     {
         $usersToSearchOn = $whichName === 'first' ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
-
         $locator = sprintf(
             '//td[normalize-space()="%s"]|//td[normalize-space()="%s"]',
-            $usersToSearchOn[0]?->getClientCaseNumber() ?? '',
-            $usersToSearchOn[1]?->getClientCaseNumber() ?? '',
+            $usersToSearchOn[0]->getClientCaseNumber(),
+            $usersToSearchOn[1]->getClientCaseNumber(),
         );
 
         $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
@@ -165,7 +166,7 @@ trait ReportSubmissionTrait
     public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientWithNumberReports(string $numberReports): void
     {
         $userToSearchOn = $numberReports === 'one' ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
-        $this->fillInField('q', $userToSearchOn?->getClientCaseNumber() ?? '');
+        $this->fillInField('q', $userToSearchOn->getClientCaseNumber());
         $this->pressButton('Search');
         $this->clickLink('Pending');
     }
@@ -176,7 +177,7 @@ trait ReportSubmissionTrait
         $userToSearchOn = $numberReports === 'one' ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
         $locator = sprintf(
             '//td[normalize-space()="%s"]',
-            $userToSearchOn?->getClientCaseNumber() ?? ''
+            $userToSearchOn->getClientCaseNumber()
         );
 
         $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
@@ -196,7 +197,7 @@ trait ReportSubmissionTrait
 
         $locator = sprintf(
             '//td[normalize-space()="%s"]',
-            $userToSearchOn?->getClientCaseNumber() ?? ''
+            $userToSearchOn->getClientCaseNumber()
         );
 
         $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
@@ -213,15 +214,10 @@ trait ReportSubmissionTrait
     {
         $locator = sprintf(
             '//td[normalize-space()="%s"]/..//input',
-            $this->oneReportsUserDetails?->getClientCaseNumber() ?? ''
+            $this->oneReportsUserDetails->getClientCaseNumber()
         );
 
         $clientRowCheckBox = $this->getSession()->getPage()->find('xpath', $locator);
-
-        if (!($clientRowCheckBox instanceof NodeElement)) {
-            throw new BehatException('Could not find client to check');
-        }
-
         $clientRowCheckBox->check();
         $this->pressButton($action === 'archive' ? 'Archive' : 'Synchronise');
     }
@@ -236,17 +232,8 @@ trait ReportSubmissionTrait
     #[Given('there was an error during synchronisation')]
     public function thereWasAnErrorDuringSync(): void
     {
-        $submittedReportId = $this->oneReportsUserDetails?->getPreviousReportId();
-
-        if ($submittedReportId === null) {
-            throw new BehatException('Could not get preivous report ID from user');
-        }
-
+        $submittedReportId = $this->oneReportsUserDetails->getPreviousReportId();
         $submission = $this->em->getRepository(ReportSubmission::class)->findOneBy(['report' => $submittedReportId]);
-
-        if (!($submission instanceof ReportSubmission)) {
-            throw new BehatException('Could not find document submission with ID ' . $submittedReportId);
-        }
 
         foreach ($submission->getDocuments() as $document) {
             $document->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
@@ -262,14 +249,10 @@ trait ReportSubmissionTrait
     {
         $locator = sprintf(
             '//td[normalize-space()="%s"]/../..',
-            $this->oneReportsUserDetails?->getClientCaseNumber() ?? ''
+            $this->oneReportsUserDetails->getClientCaseNumber()
         );
 
         $submissionRowTableBody = $this->getSession()->getPage()->find('xpath', $locator);
-
-        if (!($submissionRowTableBody instanceof NodeElement)) {
-            throw new BehatException('No submission row table body found');
-        }
 
         foreach ($this->documentFileNames as $documentFileName) {
             $locator = sprintf(
@@ -279,11 +262,11 @@ trait ReportSubmissionTrait
 
             $documentRow = $submissionRowTableBody->find('xpath', $locator);
 
-            if (!($documentRow instanceof NodeElement)) {
+            if (is_null($documentRow)) {
                 $errorMessage = sprintf(
                     'Could not find a row that contained the status "%s" for submission with court order number "%s". Table HTML: %s',
                     $status,
-                    $this->oneReportsUserDetails?->getClientCaseNumber() ?? '',
+                    $this->oneReportsUserDetails->getClientCaseNumber(),
                     $submissionRowTableBody->getHtml()
                 );
 
@@ -299,13 +282,13 @@ trait ReportSubmissionTrait
     }
 
     #[Given('/^the document sync enabled flag is set to \'([^\']*)\'$/')]
-    public function theDocumentSyncEnabledFlagIsSetTo(string $documentFeatureFlagValue): void
+    public function theDocumentSyncEnabledFlagIsSetTo($documentFeatureFlagValue): void
     {
         $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, $documentFeatureFlagValue);
     }
 
     #[Then('/^the \'([^\']*)\' tab \'([^\']*)\' visible$/')]
-    public function tabVisibilityCheck(string $tabName, string $visibility): void
+    public function tabVisibilityCheck($tabName, $visibility): void
     {
         $shouldBeVisible = $visibility === 'is';
         $newSubmissionTab = $this->getSession()->getPage()->find('css', "a:contains('$tabName')");
@@ -324,7 +307,7 @@ trait ReportSubmissionTrait
     #[When('I search for submissions using the court order number of the client I am interacting with and check the :status column')]
     public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientIAmInteractingWithForTheStatusColumn(string $status): void
     {
-        $this->fillInField('q', $this->interactingWithUserDetails?->getClientCaseNumber() ?? '');
+        $this->fillInField('q', $this->interactingWithUserDetails->getClientCaseNumber());
         $this->pressButton('Search');
         $this->clickLink($status);
     }
@@ -333,7 +316,7 @@ trait ReportSubmissionTrait
     #[Then('I should see the submission under the :status tab with the court order number of the user I am interacting with')]
     public function submissionBehaviourBasedOnStatus(string $status): void
     {
-        $caseNumber = $this->interactingWithUserDetails?->getClientCaseNumber() ?? '';
+        $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
         $reportPdfRow = $this->getSession()->getPage()->find('css', "table tr:contains('$caseNumber')");
 
         if ($status === 'New') {
@@ -342,7 +325,7 @@ trait ReportSubmissionTrait
             }
         } elseif ($status === 'Pending') {
             if (is_null($reportPdfRow)) {
-                    throw new BehatException("The submission ($caseNumber) does not appear in the pending column when it should appear");
+                throw new BehatException("The submission ($caseNumber) does not appear in the pending column when it should appear");
             }
         }
     }
@@ -363,6 +346,57 @@ trait ReportSubmissionTrait
         }
     }
 
+    #[Then('I should see Lay High Assets report for the next reporting period')]
+    public function iShouldSeeLayHighAssetsReportForTheNextReportingPeriod(): void
+    {
+        $this->clickLink('Continue');
+        $this->assertStringContainsString(
+            'Money transfers',
+            $this->getSession()->getPage()->getContent(),
+            'Comparing expected section against sections visible'
+        );
+    }
+
+    #[Given('/^the user uploaded a document with a file type that can be converted before the document conversion feature was released$/')]
+    public function theUserUploadedADocumentWithAFileTypeThatCanBeConvertedBeforeTheDocumentConversionFeatureWasReleased(): void
+    {
+        $this->iViewDocumentsSection();
+        $this->iHaveDocumentsToUpload();
+        $this->iAttachedASupportingDocumentToTheCompletedReport('good-heic.heic');
+
+        // Have to hack in uploading a heic doc as the app now automatically converts type on adding documents
+        $report = $this->em->getRepository(Report::class)->find($this->loggedInUserDetails->getCurrentReportId());
+        $this->em->refresh($report);
+        $document = $report->getDeputyDocuments()->first();
+
+        $document->setFileName('good-heic.heic');
+
+        $this->em->persist($document);
+        $this->em->flush();
+
+        $this->iSubmitCurrentOrPreviousTheReport('current');
+    }
+
+    #[When('/^I search for submissions using the case number of the deputy who has submitted one standard report and one NDR report for the same client$/')]
+    public function iSearchForSubmissionsUsingTheCaseNumber(): void
+    {
+        $this->fillInField('q', $this->reportSubmissionStandardAndNdr_CaseNumber);
+        $this->pressButton('Search');
+        $this->clickLink('Pending');
+    }
+
+    #[Then('/^I should only see a row for the standard report in the Pending tab$/')]
+    public function iShouldOnlySeeARowForTheStandardReportInThePendingTab(): void
+    {
+        $rows = $this->getSession()->getPage()->findAll('css', 'tr.behat-region-report-submission');
+
+        $this->assertIntEqualsInt(
+            1,
+            count($rows),
+            sprintf('Expected to see single standard report row, but found %s rows', count($rows))
+        );
+    }
+
     #[Then('there should be :numReports report on the org dashboard page')]
     #[Then('there should be :numReports reports on the org dashboard page')]
     public function thereShouldBeNReports(int $numReports): void
@@ -371,11 +405,5 @@ trait ReportSubmissionTrait
 
         $actualNumReports = count($rows);
         $this->assertIntEqualsInt($numReports, $actualNumReports, "expected $numReports reports, got $actualNumReports");
-    }
-
-    private function attachDocument(string $imageName): void
-    {
-        $this->attachFileToField('report_document_upload_files', $imageName);
-        $this->pressButton('Upload');
     }
 }
