@@ -7,6 +7,7 @@ namespace OPG\Digideps\Backend\Security;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Exception\UnauthorisedException;
 use OPG\Digideps\Backend\Exception\UserWrongCredentialsException;
+use OPG\Digideps\Backend\Exception\UserWrongCredentialsManyAttempts;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
@@ -128,10 +129,10 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
         ]);
 
         if ($this->attemptsInTimechecker->maxAttemptsReached($this->bruteForceKey)) {
-            throw $exception;
+            throw new UserWrongCredentialsManyAttempts();
         }
 
-        throw new UserWrongCredentialsException($exception->getMessage(), $exception->getCode());
+        throw new UserWrongCredentialsException($exception->getMessage(), 498);
     }
 
     private function hasRequiredLoginDetails(Request $request): bool

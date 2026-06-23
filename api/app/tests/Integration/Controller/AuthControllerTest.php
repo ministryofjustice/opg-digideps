@@ -31,8 +31,8 @@ class AuthControllerTest extends AbstractTestController
                 'password' => 'password-WRONG',
             ],
             'ClientSecret' => self::$deputySecret,
-            'assertCode' => 500,
-            'assertResponseCode' => 500,
+            'assertCode' => 498,
+            'assertResponseCode' => 498,
         ]);
         $this->assertStringContainsString('Bad credentials', $return['message']);
 
@@ -184,7 +184,7 @@ class AuthControllerTest extends AbstractTestController
         // assert the application returns 498 (invalid credentials) for the 1st 4 attempts
         // and after 4 attempts it will return 499 (invalid credentials + too many attempts detected),
         // still allowing the user to try
-        foreach ([500, 500, 500, 500, 500] as $expectedReturnCode) {
+        foreach ([498, 498, 498, 498, 499] as $expectedReturnCode) {
             $this->assertJsonRequest('POST', '/auth/login', [
                 'mustFail' => true,
                 'data' => [
@@ -216,8 +216,8 @@ class AuthControllerTest extends AbstractTestController
             'AuthToken' => $authToken,
         ]);
 
-        // 10  attempts
-        foreach ([500, 500, 500, 500, 500, 500, 500, 500, 500] as $expectedReturnCode) {
+        // 9 attempts
+        foreach ([498, 498, 498, 498, 499, 499, 499, 499, 499] as $expectedReturnCode) {
             $this->assertJsonRequest('POST', '/auth/login', [
                 'mustFail' => true,
                 'data' => [
