@@ -3,13 +3,13 @@
 namespace OPG\Digideps\Backend\Security;
 
 use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Exception\UserWrongCredentialsException;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use Predis\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
@@ -83,9 +83,9 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         $this->verboseLogger->notice('Failed login', [
-            'reason' => $exception->getMessage(),
+            'reason'    => $exception->getMessage(),
         ]);
 
-        throw new AuthenticationCredentialsNotFoundException($exception->getMessage(), 419);
+        throw new UserWrongCredentialsException($exception->getMessage(), 419);
     }
 }

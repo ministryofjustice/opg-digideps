@@ -15,12 +15,8 @@ use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelperBuilder;
 
 trait FixturesTrait
 {
-    /** @var array<?UserDetails> */
     public array $sameFirstNameUserDetails = [];
-
-    /** @var array<?UserDetails> */
     public array $sameLastNameUserDetails = [];
-
     public ?UserDetails $twoReportsUserDetails = null;
     public ?UserDetails $oneReportsUserDetails = null;
 
