@@ -391,7 +391,6 @@ class Report
     #[ORM\Column(name: 'significant_decisions_made', type: 'text', nullable: true)]
     private ?string $significantDecisionsMade = null;
 
-
     #[JMS\Groups(['report'])]
     #[JMS\Type('string')]
     #[ORM\Column(name: 'unsubmitted_sections_list', type: 'text', nullable: true)]

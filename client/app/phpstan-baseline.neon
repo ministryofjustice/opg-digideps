@@ -277,6 +277,30 @@ parameters:
 			path: src/Command/ProcessOrgCSVCommand.php
 
 		-
+			message: '#^Cannot call method format\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Component/Review/AssetsReviewView.php
+
+		-
+			message: '#^Cannot cast mixed to float\.$#'
+			identifier: cast.double
+			count: 3
+			path: src/Component/Review/AssetsReviewView.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Component\\GovUk\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Component\\GovUk\\Table\\Cell\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 4
+			path: src/Component/Review/AssetsReviewView.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 5
+			path: src/Component/Review/AssetsReviewView.php
+
+		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
