@@ -157,8 +157,8 @@
                 <td class="govuk-table__cell govuk-!-width-one-third govuk-!-text-align-right">
                     {% set accountBalanceState = report.isTotalsMatch ? 'matched' : 'notMatched' %}
                     <span class="opg-overview-section__status govuk-!-padding-1 {{ accountBalanceState | account_balance_status_to_tag_css }}">
-                            {{ ('review.' ~ accountBalanceState) | trans({},transDomain) }}
-                        </span>
+                        {{ ('review.' ~ accountBalanceState) | trans({},transDomain) }}
+                    </span>
                 </td>
             </tr>
 
