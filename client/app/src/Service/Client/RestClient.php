@@ -2,11 +2,6 @@
 
 namespace OPG\Digideps\Frontend\Service\Client;
 
-use OPG\Digideps\Frontend\Entity\User;
-use OPG\Digideps\Frontend\Exception\RestClientException;
-use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
-use OPG\Digideps\Frontend\Service\JWT\JWTService;
-use OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
@@ -14,6 +9,12 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Lcobucci\JWT\Validation\ConstraintViolation;
 use OPG\Digideps\Common\Registration\SelfRegisterData;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Exception as AppException;
+use OPG\Digideps\Frontend\Exception\RestClientException;
+use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
+use OPG\Digideps\Frontend\Service\JWT\JWTService;
+use OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -98,14 +99,13 @@ class RestClient implements RestClientInterface
         try {
             $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
         } catch (RestClientException $e) {
-            if ($e->getCode() == 423) {
+            if ($e->getCode() === 423) {
                 throw new TooManyLoginAttemptsAuthenticationException($e->getData()['data']);
             } else {
                 throw new BadCredentialsException('Invalid credentials.', 498);
             }
         }
 
-        /** @var User $user */
         $user = $this->arrayToEntity(User::class, $this->extractDataArray($response));
         $authToken = $response->getHeader(RestClient::HEADER_AUTH_TOKEN)[0];
 

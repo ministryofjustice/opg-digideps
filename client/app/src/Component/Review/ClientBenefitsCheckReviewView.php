@@ -20,9 +20,9 @@ final class ClientBenefitsCheckReviewView
     public ?ListEntries $list = null;
     public ?Table $table = null;
     /**
-     * @var array<string, string> $l10n
+     * @var array<string, string> $text
      */
-    public array $l10n = [];
+    public array $text = [];
 
     private array $parameters = [];
 
@@ -36,7 +36,7 @@ final class ClientBenefitsCheckReviewView
 
         if ($clientBenefitsCheck !== null) {
             $this->parameters = ['%client%' => $report->getClient()->getFirstname()];
-            $this->l10n = $this->makeL10n();
+            $this->text = $this->makeText();
 
             $this->list = $this->makeList($clientBenefitsCheck);
             $this->table = $this->makeTable($clientBenefitsCheck);
@@ -47,16 +47,16 @@ final class ClientBenefitsCheckReviewView
     {
         $builder = new ListBuilder();
 
-        $builder->addEntry($this->l10n['benefitsCheck'], $this->translate("form.whenLastChecked.choices.{$clientBenefitsCheck->getWhenLastCheckedEntitlement()}"));
+        $builder->addEntry($this->text['benefitsCheck'], $this->translate("form.whenLastChecked.choices.{$clientBenefitsCheck->getWhenLastCheckedEntitlement()}"));
         if ($clientBenefitsCheck->getWhenLastCheckedEntitlement() === 'haveChecked') {
-            $builder->addEntry($this->l10n['dateChecked'], $clientBenefitsCheck->getDateLastCheckedEntitlement()?->format("m Y") ?? '');
+            $builder->addEntry($this->text['dateChecked'], $clientBenefitsCheck->getDateLastCheckedEntitlement()?->format("m Y") ?? '');
         }
         if ($clientBenefitsCheck->getWhenLastCheckedEntitlement() === 'neverChecked') {
-            $builder->addEntry($this->l10n['neverCheckedExplanation'], $clientBenefitsCheck->getNeverCheckedExplanation() ?? '');
+            $builder->addEntry($this->text['neverCheckedExplanation'], $clientBenefitsCheck->getNeverCheckedExplanation() ?? '');
         }
-        $builder->addEntry($this->l10n['doOthersReceiveMoney'], $this->translate("form.moneyOnClientsBehalf.choices.{$clientBenefitsCheck->getDoOthersReceiveMoneyOnClientsBehalf()}"));
+        $builder->addEntry($this->text['doOthersReceiveMoney'], $this->translate("form.moneyOnClientsBehalf.choices.{$clientBenefitsCheck->getDoOthersReceiveMoneyOnClientsBehalf()}"));
         if ($clientBenefitsCheck->getDoOthersReceiveMoneyOnClientsBehalf() === 'dontKnow') {
-            $builder->addEntry($this->l10n['dontKnowExplanation'], $clientBenefitsCheck->getDontKnowMoneyExplanation() ?? '');
+            $builder->addEntry($this->text['dontKnowExplanation'], $clientBenefitsCheck->getDontKnowMoneyExplanation() ?? '');
         }
 
         return $builder->makeList();
@@ -70,19 +70,19 @@ final class ClientBenefitsCheckReviewView
         $total = 0.0;
 
         $builder = new TableBuilder()->addHeader(
-            $this->l10n['paymentType'],
-            $this->l10n['paymentRecipient'],
-            $this->l10n['paymentAmount'],
+            $this->text['paymentType'],
+            $this->text['paymentRecipient'],
+            $this->text['paymentAmount'],
         );
         foreach (($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() ?? []) as $entry) {
             $builder->addRow(
                 $entry->getMoneyType() ?? '',
                 $entry->getWhoReceivedMoney() ?? '',
-                new Cell(($entry->getAmountDontKnow() ?? false) ? $this->l10n['dontKnowAmount'] : $this->formatMoney((float)($entry->getAmount() ?? 0)), self::NUMERIC_FORMAT)
+                new Cell(($entry->getAmountDontKnow() ?? false) ? $this->text['dontKnowAmount'] : $this->formatMoney((float)($entry->getAmount() ?? 0)), self::NUMERIC_FORMAT)
             );
             $total += $entry->getAmount() ?? 0.0;
         }
-        $builder->addRow(new Cell($this->l10n['paymentTotal'], isHeader: true), '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, true));
+        $builder->addRow(new Cell($this->text['paymentTotal'], isHeader: true), '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, true));
 
         return $builder->makeTable();
     }
@@ -100,7 +100,7 @@ final class ClientBenefitsCheckReviewView
     /**
      * @return  array<string, string>
      */
-    private function makeL10n(): array
+    private function makeText(): array
     {
         return [
             'header' => $this->translate('common.pageTitle'),
@@ -126,7 +126,7 @@ final class ClientBenefitsCheckReviewView
         try {
             return $this->translator->trans($id, $this->parameters, 'report-client-benefits-check');
         } catch (\Throwable $t) {
-            return "$t";
+            return "{$t}";
         }
     }
 }
