@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Security;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Exception\UnauthorisedException;
-use OPG\Digideps\Backend\Exception\UserWrongCredentialsException;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Security\LoginRequestAuthenticator;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
 use OPG\Digideps\Backend\Service\DateTimeProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -22,7 +21,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
@@ -209,6 +210,8 @@ final class LoginRequestAuthenticatorTest extends TestCase
             new UserBadge('a@b.com'),
             new PasswordCredentials('password123')
         );
+
+        $this->attemptsInTimeChecker->registerAttempt('emaila@b.com')->willReturn($this->attemptsInTimeChecker);
 
         self::assertEquals($expectedPassport, $this->sut->authenticate($request));
     }
@@ -397,10 +400,10 @@ final class LoginRequestAuthenticatorTest extends TestCase
     #[Test]
     public function onAuthenticationFailure(): void
     {
-        self::expectExceptionObject(new UserWrongCredentialsException('It broke', 444));
+        $authException = new AuthenticationCredentialsNotFoundException('Credentials not found', 498);
+        self::expectExceptionObject($authException);
 
-        $authException = new AuthenticationException('It broke', 444);
-        $this->attemptsInTimeChecker->maxAttemptsReached('')->willReturn(false);
+        $this->attemptsInTimeChecker->maxAttemptsReached('')->willReturn(['tooMany' => false, 'intervalMins' => 0]);
 
         $request = Request::create(
             '/auth/login',
@@ -420,9 +423,10 @@ final class LoginRequestAuthenticatorTest extends TestCase
     {
         $authException = new AuthenticationException('It broke', 444);
 
-        self::expectExceptionObject($authException);
+        $tooManyAttemptsException = new TooManyLoginAttemptsAuthenticationException();
+        self::expectExceptionObject($tooManyAttemptsException);
 
-        $this->attemptsInTimeChecker->maxAttemptsReached('')->willReturn(true);
+        $this->attemptsInTimeChecker->maxAttemptsReached('')->willReturn(['tooMany' => true, 'intervalMins' => 30]);
 
         $request = Request::create(
             '/auth/login',
