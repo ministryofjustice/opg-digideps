@@ -1163,9 +1163,9 @@ class Report
             return $this->getClientBenefitsCheck() instanceof ClientBenefitsCheck;
         } else {
             // Provides a positive or negative string showing days between feature flag and due date
-            $diffInDays = $this->getBenefitsSectionReleaseDate()->diff($this->getDueDate())->format('%R%a');
+            $diffInDays = (int)$this->getBenefitsSectionReleaseDate()?->diff($this->getDueDate())?->format('%R%a');
 
-            return intval($diffInDays) > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
+            return $diffInDays > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
         }
     }
 
@@ -1193,6 +1193,9 @@ class Report
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public static function allRolesAllReportTypes(): array
     {
         return [
@@ -1202,6 +1205,9 @@ class Report
         ];
     }
 
+    /**
+     * @return array<string>
+     */
     public static function allRolesHwAndCombinedReportTypes(): array
     {
         return [
@@ -1211,6 +1217,9 @@ class Report
         ];
     }
 
+    /**
+     * @return array<string>
+     */
     public static function allRolesPfaAndCombinedReportTypes(): array
     {
         return [
@@ -1220,6 +1229,9 @@ class Report
         ];
     }
 
+    /**
+     * @return array<string>
+     */
     public static function allProfReportTypes(): array
     {
         return [
@@ -1227,6 +1239,9 @@ class Report
         ];
     }
 
+    /**
+     * @return array<string>
+     */
     public static function allRolesPfaAndCombinedHighAssetsReportTypes(): array
     {
         return [
@@ -1236,6 +1251,9 @@ class Report
         ];
     }
 
+    /**
+     * @return array<string>
+     */
     public static function allRolesPfaAndCombinedLowAssetsReportTypes(): array
     {
         return [
@@ -1245,6 +1263,9 @@ class Report
         ];
     }
 
+    /**
+     * @return array<string>
+     */
     public static function layPfaAndCombinedReportTypes(): array
     {
         return [
@@ -1252,13 +1273,18 @@ class Report
         ];
     }
 
+    /**
+     * @return array<string>
+     */
     public static function paPfaAndCombinedReportTypes(): array
     {
         return [
             self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
         ];
     }
-
+    /**
+     * @return array<string>
+     */
     public static function profPfaAndCombinedReportTypes(): array
     {
         return [

@@ -20,6 +20,7 @@ use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\Checklist;
 use OPG\Digideps\Backend\Entity\Report\ChecklistInformation;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
 use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Debt;
 use OPG\Digideps\Backend\Entity\Report\Decision;
@@ -269,6 +270,12 @@ final class EntityTest extends TestCase
     {
         $moneyTransfer = new MoneyTransfer($this->makeReport());
         $this->testEntity($moneyTransfer);
+    }
+
+    public function testClientBenefitsCheckValidOnConstruction(): void
+    {
+        $clientBenefitsCheck = new ClientBenefitsCheck();
+        $this->testEntity($clientBenefitsCheck);
     }
 
     private function testEntity(object $entity): void

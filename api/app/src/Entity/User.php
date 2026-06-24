@@ -190,11 +190,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'deputy_uid', type: 'bigint', nullable: true)]
     private ?int $deputyUid = null;
 
-    #[JMS\Type('boolean')]
-    #[JMS\Groups(['user'])]
-    #[ORM\Column(name: 'ad_managed', type: 'boolean', nullable: true, options: ['default' => false])]
-    private ?bool $adManaged = false;
-
     #[JMS\Type('string')]
     #[JMS\Groups(['user', 'user-list'])]
     #[ORM\Column(name: 'job_title', type: 'string', length: 150, nullable: true)]
@@ -500,9 +495,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * convert 7 into 00000007.
      */
-    public static function padDeputyNumber($deputyNo): string
+    public static function padDeputyNumber(string|int $deputyNo): string
     {
-        return str_pad($deputyNo, 8, '0', STR_PAD_LEFT);
+        return str_pad((string)$deputyNo, 8, '0', STR_PAD_LEFT);
     }
 
     public function getDeputyUid(): ?int
