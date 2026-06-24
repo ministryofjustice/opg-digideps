@@ -835,19 +835,13 @@ parameters:
 			path: api/app/src/Controller/Report/MoneyTransactionController.php
 
 		-
-			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:setAmount\(\) expects float, mixed given\.$#'
+			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:setAmount\(\) expects float\|int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: api/app/src/Controller/Report/MoneyTransactionController.php
 
 		-
-			message: '#^Parameter \#1 \$category of method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:setCategory\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: '#^Parameter \#1 \$description of method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:setDescription\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$description of method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:setDescription\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: api/app/src/Controller/Report/MoneyTransactionController.php
@@ -856,6 +850,12 @@ parameters:
 			message: '#^Parameter \#1 \$sectionIds of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:updateSectionsStatusCache\(\) expects array\<string\>\|null, array given\.$#'
 			identifier: argument.type
 			count: 3
+			path: api/app/src/Controller/Report/MoneyTransactionController.php
+
+		-
+			message: '#^Parameter \#2 \$category of class OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
 			path: api/app/src/Controller/Report/MoneyTransactionController.php
 
 		-
@@ -877,7 +877,7 @@ parameters:
 			path: api/app/src/Controller/Report/MoneyTransactionShortController.php
 
 		-
-			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransactionShort\:\:setAmount\(\) expects float, mixed given\.$#'
+			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransactionShort\:\:setAmount\(\) expects float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Controller/Report/MoneyTransactionShortController.php
@@ -907,7 +907,7 @@ parameters:
 			path: api/app/src/Controller/Report/MoneyTransactionShortController.php
 
 		-
-			message: '#^Parameter \#1 \$description of method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransfer\:\:setDescription\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$description of method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransfer\:\:setDescription\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: api/app/src/Controller/Report/MoneyTransferController.php
@@ -947,60 +947,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
-			message: '#^Parameter \#1 \$amountCharged of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setAmountCharged\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: '#^Parameter \#1 \$amountReceived of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setAmountReceived\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: '#^Parameter \#1 \$amountReceived of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setAmountReceived\(\) expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: '#^Parameter \#1 \$assessedOrFixed of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setAssessedOrFixed\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: '#^Parameter \#1 \$feeTypeId of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setFeeTypeId\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: '#^Parameter \#1 \$paymentReceived of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setPaymentReceived\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: '#^Parameter \#1 \$sectionIds of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:updateSectionsStatusCache\(\) expects array\<string\>\|null, array given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: '#^Parameter \#1 \$serviceTypeId of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setServiceTypeId\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ProfServiceFeeController.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -1101,7 +1047,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''present'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 4
 			path: api/app/src/Controller/Report/ReportController.php
 
 		-
@@ -1207,12 +1153,6 @@ parameters:
 			path: api/app/src/Controller/Report/ReportController.php
 
 		-
-			message: '#^Parameter \#1 \$currentProfPaymentsReceived of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setCurrentProfPaymentsReceived\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 8
@@ -1270,12 +1210,6 @@ parameters:
 			message: '#^Parameter \#1 \$paidForAnything of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setPaidForAnything\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Parameter \#1 \$present of method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyShortCategory\:\:setPresent\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: api/app/src/Controller/Report/ReportController.php
 
 		-
@@ -2755,232 +2689,16 @@ parameters:
 			path: api/app/src/Entity/Report/ClientBenefitsCheck.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyShortCategory\:\:getPresent\(\) should return string but returns bool\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyShortCategory\:\:getType\(\) should return string but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyShortCategory\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyShortCategory\:\:setPresent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyShortCategory\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyShortCategory\:\:setTypeId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\MoneyShortCategory\:\:\$present \(bool\) does not accept string\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 2
-			path: api/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Cannot use array destructuring on mixed\.$#'
-			identifier: offsetAccess.nonArray
-			count: 2
-			path: api/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:getGroup\(\) should return string but returns mixed\.$#'
-			identifier: return.type
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:\$meta \(string\|null\) is never assigned string so it can be removed from the property type\.$#'
+			identifier: property.unusedType
 			count: 1
 			path: api/app/src/Entity/Report/MoneyTransaction.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:getGroup\(\) should return string but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:getType\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:getType\(\) should return string but returns null\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:setCategory\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:setDescription\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:\$categories has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:\$meta is unused\.$#'
-			identifier: property.unused
-			count: 1
-			path: api/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransactionShort\:\:setType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/MoneyTransactionShort.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransfer\:\:getReportId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/MoneyTransfer.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransfer\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/MoneyTransfer.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransfer\:\:\$id is never written, only read\.$#'
-			identifier: property.onlyRead
-			count: 1
-			path: api/app/src/Entity/Report/MoneyTransfer.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:getAmountCharged\(\) should return string but returns float\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setAmountCharged\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setAmountReceived\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setAssessedOrFixed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setFeeTypeId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setOtherFeeDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setPaymentReceived\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setPaymentReceivedDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:setServiceTypeId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:\$amountCharged \(float\) does not accept string\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:\$feeTypeId is never read, only written\.$#'
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:\$meta is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:\$otherFeeDetails has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:\$paymentReceivedDate \(DateTime\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/ProfServiceFee.php
+			path: api/app/src/Entity/Report/MoneyTransaction.php
 
 		-
 			message: '#^Cannot call method diff\(\) on DateTime\|null\.$#'
@@ -3087,12 +2805,6 @@ parameters:
 		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$deletionProtection is never read, only written\.$#'
 			identifier: property.onlyWritten
-			count: 1
-			path: api/app/src/Entity/User.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$phoneAlternative \(string\|null\) is never assigned string so it can be removed from the property type\.$#'
-			identifier: property.unusedType
 			count: 1
 			path: api/app/src/Entity/User.php
 
@@ -6001,24 +5713,6 @@ parameters:
 			path: api/app/src/TestHelpers/DeputyTestHelper.php
 
 		-
-			message: '#^Cannot call method setAmount\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$t of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:addMoneyTransaction\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: '#^Parameter \#4 \$amount of class OPG\\Digideps\\Backend\\Entity\\Report\\Debt constructor expects string\|null, float given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/TestHelpers/ReportTestHelper.php
-
-		-
 			message: '#^Parameter \#1 \$roleName of method OPG\\Digideps\\Backend\\Entity\\User\:\:setRoleName\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -6419,18 +6113,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: api/app/src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Cannot call method setAmount\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/src/v2/Fixture/ReportSection.php
-
-		-
-			message: '#^Parameter \#1 \$t of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:addMoneyTransaction\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/src/v2/Fixture/ReportSection.php
 
 		-
 			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\v2\\Registration\\Assembler\\LayDeputyshipDtoAssemblerInterface\:\:assembleFromArray\(\) expects array, mixed given\.$#'
@@ -9325,6 +9007,12 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/AdminManagement/AdminManagementFeatureContext.php
 
 		-
+			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 5
+			path: api/app/tests/Behat/bootstrap/v2/AppNotification/AppNotificationFeatureContext.php
+
+		-
 			message: '#^Cannot access constant ADMIN_ROLES on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: classConstant.nonObject
 			count: 1
@@ -9813,7 +9501,7 @@ parameters:
 		-
 			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 6
+			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
@@ -12892,12 +12580,6 @@ parameters:
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Parameter \#1 \$registrationDate of method OPG\\Digideps\\Backend\\Entity\\User\:\:setRegistrationDate\(\) expects DateTime, DateTime\|null given\.$#'
-			identifier: argument.type
-			count: 2
 			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
 
 		-
@@ -20059,18 +19741,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
 
 		-
-			message: '#^Cannot call method setAmount\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Cannot call method setDescription\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 3
@@ -20167,12 +19837,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
 
 		-
-			message: '#^Using nullsafe method call on non\-nullable type DateTime\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 2
-			path: api/app/tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''accountFrom'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -20218,24 +19882,6 @@ parameters:
 			message: '#^Cannot call method getMoneyTransfers\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 3
-			path: api/app/tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Cannot call method setAmount\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Cannot call method setFrom\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Cannot call method setTo\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
 			path: api/app/tests/Integration/ControllerReport/MoneyTransferControllerTest.php
 
 		-
@@ -21496,12 +21142,6 @@ parameters:
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\UserRepositoryTest\:\:testInactiveAdminUsersAreDeleted\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
-			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$registrationDate of method OPG\\Digideps\\Backend\\Entity\\User\:\:setRegistrationDate\(\) expects DateTime, DateTime\|false given\.$#'
-			identifier: argument.type
-			count: 4
 			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
 
 		-
@@ -23353,12 +22993,6 @@ parameters:
 			path: api/app/tests/Unit/Entity/Report/ReportTest.php
 
 		-
-			message: '#^Cannot call method setAmount\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 11
-			path: api/app/tests/Unit/Entity/Report/ReportTest.php
-
-		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -23383,12 +23017,6 @@ parameters:
 			path: api/app/tests/Unit/Entity/Report/ReportTest.php
 
 		-
-			message: '#^Parameter \#1 \$moneyTransactions of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setMoneyTransactions\(\) expects Doctrine\\Common\\Collections\\Collection\<int, OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\>, Doctrine\\Common\\Collections\\ArrayCollection\<int, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Unit/Entity/Report/ReportTest.php
-
-		-
 			message: '#^Parameter \#1 \$section of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:hasSection\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -23398,12 +23026,6 @@ parameters:
 			message: '#^Parameter \#1 \$submitted of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setSubmitted\(\) expects bool\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: api/app/tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Parameter \#1 \$t of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:addMoneyTransaction\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction, mixed given\.$#'
-			identifier: argument.type
-			count: 7
 			path: api/app/tests/Unit/Entity/Report/ReportTest.php
 
 		-
@@ -23931,7 +23553,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:shouldReceive\(\)\.$#'
 			identifier: method.notFound
-			count: 6
+			count: 5
 			path: api/app/tests/Unit/Service/ReportStatusServiceTest.php
 
 		-
@@ -23943,7 +23565,7 @@ parameters:
 		-
 			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 6
+			count: 5
 			path: api/app/tests/Unit/Service/ReportStatusServiceTest.php
 
 		-
@@ -23955,7 +23577,7 @@ parameters:
 		-
 			message: '#^Cannot call method with\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 6
+			count: 5
 			path: api/app/tests/Unit/Service/ReportStatusServiceTest.php
 
 		-

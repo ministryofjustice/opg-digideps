@@ -451,8 +451,8 @@ class ReportController extends RestController
             foreach ($data['money_short_categories_in'] as $row) {
                 $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
                 if ($e instanceof MoneyShortCategory) {
-                    $e
-                        ->setPresent($row['present']);
+                    $row['present'] = ($row['present'] ?? null) === null ? null : !empty($row['present']);
+                    $e->setPresent($row['present']);
                     $this->em->flush($e);
                 }
             }
@@ -467,8 +467,8 @@ class ReportController extends RestController
             foreach ($data['money_short_categories_out'] as $row) {
                 $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
                 if ($e instanceof MoneyShortCategory) {
-                    $e
-                        ->setPresent($row['present']);
+                    $row['present'] = ($row['present'] ?? null) === null ? null : !empty($row['present']);
+                    $e->setPresent($row['present']);
                     $this->em->flush($e);
                 }
             }

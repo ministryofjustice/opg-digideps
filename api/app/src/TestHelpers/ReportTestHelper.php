@@ -222,7 +222,7 @@ class ReportTestHelper
             $report->setMoneyInExists('Yes');
         }
 
-        $mt = new MoneyTransaction($report)->setCategory('salary-or-wages')->setAmount(200);
+        $mt = new MoneyTransaction($report, 'salary-or-wages')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
@@ -236,9 +236,9 @@ class ReportTestHelper
             $report->setMoneyOutExists('Yes');
         }
 
-        $mt = new MoneyTransaction($report)->setCategory('care-fees')->setAmount(200);
+        $mt = new MoneyTransaction($report, 'care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
-        $mt2 = new MoneyTransaction($report)->setCategory('electricity')->setAmount(100);
+        $mt2 = new MoneyTransaction($report, 'electricity')->setAmount(100);
         $report->addMoneyTransaction($mt2);
     }
 

@@ -19,58 +19,32 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
 {
     use IsSoftDeleteableEntity;
 
-    /**
-     * @var int
-     */
     #[JMS\Groups(['moneyTransactionsShortIn', 'moneyTransactionsShortOut'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'money_transaction_short_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'moneyTransactionsShort')]
-    private $report;
+    private Report $report;
 
-    /**
-     * @var float
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['moneyTransactionsShortIn', 'moneyTransactionsShortOut'])]
     #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: false)]
-    private $amount;
+    private ?string $amount = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['moneyTransactionsShortIn', 'moneyTransactionsShortOut'])]
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]
-    private $description;
+    private ?string $description = null;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['moneyTransactionsShortIn', 'moneyTransactionsShortOut'])]
     #[ORM\Column(name: 'date', type: 'date', nullable: true, options: ['default' => null])]
-    private $date;
+    private ?\DateTime $date = null;
 
-    /**
-     * Discriminator field.
-     *
-     * @var string
-     */
-    #[JMS\Exclude]
-    private $type;
-
-    /**
-     * @return MoneyTransactionShort
-     */
-    public static function factory(string $type, Report $report)
+    public static function factory(string $type, Report $report): MoneyTransactionShortOut|MoneyTransactionShortIn
     {
         switch ($type) {
             case 'in':
@@ -81,127 +55,74 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
         throw new \InvalidArgumentException(__METHOD__ . ': type not recognised');
     }
 
-    /**
-     * MoneyTransactionShort constructor.
-     */
     public function __construct(Report $report)
     {
         $this->report = $report;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return MoneyTransactionShort
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
-        $this->id = $id;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
 
         return $this;
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    /**
-     * @param Report $report
-     *
-     * @return MoneyTransactionShort
-     */
-    public function setReport($report)
+    public function setReport(Report $report): static
     {
         $this->report = $report;
 
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getAmount()
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    /**
-     * @param float $amount
-     *
-     * @return MoneyTransactionShort
-     */
-    public function setAmount($amount)
+    public function setAmount(null|string|float|int $amount): static
     {
-        $this->amount = $amount;
+        $this->amount = $amount === null ? null : (string)$amount;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     *
-     * @return MoneyTransactionShort
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): static
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDate()
+    public function getDate(): ?\DateTime
     {
         return $this->date;
     }
 
-    /**
-     * @param \DateTime $date
-     *
-     * @return MoneyTransactionShort
-     */
-    public function setDate($date)
+    public function setDate(\DateTime $date): static
     {
         $this->date = $date;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param string $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
     }
 }

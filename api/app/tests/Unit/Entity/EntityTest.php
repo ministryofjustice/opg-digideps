@@ -29,6 +29,11 @@ use OPG\Digideps\Backend\Entity\Report\Fee;
 use OPG\Digideps\Backend\Entity\Report\Gift;
 use OPG\Digideps\Backend\Entity\Report\Lifestyle;
 use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
+use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortIn;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortOut;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransfer;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
@@ -234,6 +239,36 @@ final class EntityTest extends TestCase
     {
         $profDeputyPreviousCost = new ProfDeputyPreviousCost($this->makeReport(), null);
         $this->testEntity($profDeputyPreviousCost);
+    }
+
+    public function testValidOnConstruction(): void
+    {
+        $moneyShortCategory = new MoneyShortCategory($this->makeReport(), '', false);
+        $this->testEntity($moneyShortCategory);
+    }
+
+    public function testMoneyTransactionValidOnConstruction(): void
+    {
+        $moneyTransaction = new MoneyTransaction($this->makeReport(), '');
+        $this->testEntity($moneyTransaction);
+    }
+
+    public function testMoneyTransactionShortInValidOnConstruction(): void
+    {
+        $moneyTransactionShortIn = new MoneyTransactionShortIn($this->makeReport());
+        $this->testEntity($moneyTransactionShortIn);
+    }
+
+    public function testMoneyTransactionShortOutValidOnConstruction(): void
+    {
+        $moneyTransactionShortOut = new MoneyTransactionShortOut($this->makeReport());
+        $this->testEntity($moneyTransactionShortOut);
+    }
+
+    public function testMoneyTransferValidOnConstruction(): void
+    {
+        $moneyTransfer = new MoneyTransfer($this->makeReport());
+        $this->testEntity($moneyTransfer);
     }
 
     private function testEntity(object $entity): void

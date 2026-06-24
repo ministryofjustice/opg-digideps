@@ -125,7 +125,7 @@ class ReportSection
         ) {
             $report->setMoneyInExists('Yes');
         }
-        $mt = new MoneyTransaction($report)->setCategory('salary-or-wages')->setAmount(200);
+        $mt = new MoneyTransaction($report, 'salary-or-wages')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
@@ -138,7 +138,7 @@ class ReportSection
         ) {
             $report->setMoneyOutExists('Yes');
         }
-        $mt = new MoneyTransaction($report)->setCategory('care-fees')->setAmount(200);
+        $mt = new MoneyTransaction($report, 'care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 

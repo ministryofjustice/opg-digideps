@@ -106,7 +106,7 @@ trait MoneyTransactionTrait
 
         foreach ($transactions as $t) {
             if ($t instanceof MoneyTransactionInterface && $t->getType() === $type) {
-                $ret += $t->getAmount();
+                $ret += (float)$t->getAmount();
             }
         }
 
