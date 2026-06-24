@@ -29,6 +29,11 @@ use OPG\Digideps\Backend\Entity\Report\Fee;
 use OPG\Digideps\Backend\Entity\Report\Gift;
 use OPG\Digideps\Backend\Entity\Report\Lifestyle;
 use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyPreviousCost;
+use OPG\Digideps\Backend\Entity\Report\ProfServiceFee;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\Report\ReviewChecklist;
@@ -206,6 +211,30 @@ final class EntityTest extends TestCase
     {
         $visitsCare = new VisitsCare($this->makeReport());
         $this->testEntity($visitsCare);
+    }
+
+    public function testProfDeputyEstimateCostValidOnConstruction(): void
+    {
+        $profDeputyEstimateCost = new ProfDeputyEstimateCost($this->makeReport(), '');
+        $this->testEntity($profDeputyEstimateCost);
+    }
+
+    public function testProfDeputyInterimCostValidOnConstruction(): void
+    {
+        $profDeputyInterimCost = new ProfDeputyInterimCost($this->makeReport(), new \DateTime(), null);
+        $this->testEntity($profDeputyInterimCost);
+    }
+
+    public function testProfDeputyOtherCostValidOnConstruction(): void
+    {
+        $profDeputyOtherCost = new ProfDeputyOtherCost($this->makeReport(), '', false, null);
+        $this->testEntity($profDeputyOtherCost);
+    }
+
+    public function testProfDeputyPreviousCostValidOnConstruction(): void
+    {
+        $profDeputyPreviousCost = new ProfDeputyPreviousCost($this->makeReport(), null);
+        $this->testEntity($profDeputyPreviousCost);
     }
 
     private function testEntity(object $entity): void

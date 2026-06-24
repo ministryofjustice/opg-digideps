@@ -187,8 +187,8 @@ final class ReportTest extends KernelTestCase
         $this->report->setProfDeputyCostsHasInterim('no');
         $this->report->setProfDeputyFixedCost(3);
         $this->report->setProfDeputyOtherCosts(new ArrayCollection([
-            new ProfDeputyOtherCost($this->report, 'id1', false, 10),
-            new ProfDeputyOtherCost($this->report, 'id2', false, 10),
+            new ProfDeputyOtherCost($this->report, 'id1', false, '10'),
+            new ProfDeputyOtherCost($this->report, 'id2', false, '10'),
         ]));
 
         $this->assertEquals(-1 - 1 - 3 - 10 - 10, $this->report->getCalculatedBalance());

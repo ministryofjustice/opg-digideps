@@ -925,7 +925,7 @@ parameters:
 			path: src/Controller/Report/MoneyTransferController.php
 
 		-
-			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyPreviousCost\:\:setAmount\(\) expects float, mixed given\.$#'
+			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyPreviousCost\:\:setAmount\(\) expects float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
@@ -943,7 +943,7 @@ parameters:
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
 
 		-
-			message: '#^Parameter \#2 \$amount of class OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyPreviousCost constructor expects float, mixed given\.$#'
+			message: '#^Parameter \#2 \$amount of class OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyPreviousCost constructor expects float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
@@ -1189,7 +1189,7 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost\:\:setAmount\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost\:\:setAmount\(\) expects float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -1261,7 +1261,7 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: '#^Parameter \#1 \$moreDetails of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost\:\:setMoreDetails\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$moreDetails of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost\:\:setMoreDetails\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -1435,7 +1435,7 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: '#^Parameter \#4 \$amount of class OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost constructor expects float, mixed given\.$#'
+			message: '#^Parameter \#4 \$amount of class OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost constructor expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -2909,108 +2909,6 @@ parameters:
 			identifier: property.onlyRead
 			count: 1
 			path: src/Entity/Report/MoneyTransfer.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyEstimateCost\:\:getAmount\(\) should return string but returns float\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/ProfDeputyEstimateCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyEstimateCost\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyEstimateCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyEstimateCost\:\:setProfDeputyEstimateCostTypeId\(\) has parameter \$profDeputyEstimateCostTypeId with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/ProfDeputyEstimateCost.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyEstimateCost\:\:\$amount \(float\) does not accept string\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/ProfDeputyEstimateCost.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyEstimateCost\:\:\$profDeputyEstimateCostTypeId \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/ProfDeputyEstimateCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyInterimCost\:\:setDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyInterimCost.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyInterimCost\:\:\$id is never written, only read\.$#'
-			identifier: property.onlyRead
-			count: 1
-			path: src/Entity/Report/ProfDeputyInterimCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost\:\:getAmount\(\) should return string but returns float\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost\:\:setAmount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost\:\:setHasMoreDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost\:\:setMoreDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost\:\:setProfDeputyOtherCostTypeId\(\) has parameter \$profDeputyOtherCostTypeId with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost\:\:\$amount \(float\) does not accept string\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost\:\:\$profDeputyOtherCostTypeId \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyPreviousCost\:\:\$id is never written, only read\.$#'
-			identifier: property.onlyRead
-			count: 1
-			path: src/Entity/Report/ProfDeputyPreviousCost.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ProfServiceFee\:\:getAmountCharged\(\) should return string but returns float\.$#'
@@ -5779,7 +5677,7 @@ parameters:
 			path: src/Service/RestHandler/Report/DeputyCostsEstimateReportUpdateHandler.php
 
 		-
-			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyEstimateCost\:\:setAmount\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyEstimateCost\:\:setAmount\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Service/RestHandler/Report/DeputyCostsEstimateReportUpdateHandler.php
@@ -5791,13 +5689,7 @@ parameters:
 			path: src/Service/RestHandler/Report/DeputyCostsEstimateReportUpdateHandler.php
 
 		-
-			message: '#^Parameter \#1 \$hasMoreDetails of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyEstimateCost\:\:setHasMoreDetails\(\) expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/RestHandler/Report/DeputyCostsEstimateReportUpdateHandler.php
-
-		-
-			message: '#^Parameter \#1 \$moreDetails of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyEstimateCost\:\:setMoreDetails\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$moreDetails of method OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyEstimateCost\:\:setMoreDetails\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Service/RestHandler/Report/DeputyCostsEstimateReportUpdateHandler.php
@@ -5833,6 +5725,18 @@ parameters:
 			path: src/Service/RestHandler/Report/DeputyCostsEstimateReportUpdateHandler.php
 
 		-
+			message: '#^Parameter \#2 \$profDeputyEstimateCostTypeId of class OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyEstimateCost constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/RestHandler/Report/DeputyCostsEstimateReportUpdateHandler.php
+
+		-
+			message: '#^Parameter \#3 \$hasMoreDetails of class OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyEstimateCost constructor expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/RestHandler/Report/DeputyCostsEstimateReportUpdateHandler.php
+
+		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -5863,7 +5767,7 @@ parameters:
 			path: src/Service/RestHandler/Report/DeputyCostsReportUpdateHandler.php
 
 		-
-			message: '#^Parameter \#3 \$amount of class OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyInterimCost constructor expects string, mixed given\.$#'
+			message: '#^Parameter \#3 \$amount of class OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyInterimCost constructor expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Service/RestHandler/Report/DeputyCostsReportUpdateHandler.php
@@ -6532,12 +6436,6 @@ parameters:
 			message: '#^Parameter \#1 \$t of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:addMoneyTransaction\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/v2/Fixture/ReportSection.php
-
-		-
-			message: '#^Parameter \#2 \$profDeputyOtherCostTypeId of class OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost constructor expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/v2/Fixture/ReportSection.php
 
 		-
