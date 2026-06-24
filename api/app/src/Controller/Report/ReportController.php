@@ -535,21 +535,6 @@ class ReportController extends RestController
             ]);
         }
 
-        if (array_key_exists('current_prof_payments_received', $data)) {
-            if ($data['current_prof_payments_received'] == 'no') { // reset whole section
-                foreach ($report->getCurrentProfServiceFees() as $f) {
-                    $this->em->remove($f);
-                }
-                $report->setPreviousProfFeesEstimateGiven(null);
-                $report->setProfFeesEstimateSccoReason(null);
-            }
-            $report->setCurrentProfPaymentsReceived($data['current_prof_payments_received']);
-            $this->em->flush();
-            $report->updateSectionsStatusCache([
-                Report::SECTION_PROF_CURRENT_FEES,
-            ]);
-        }
-
         if (array_key_exists('submitted', $data)) {
             $report->setSubmitted($data['submitted']);
         }

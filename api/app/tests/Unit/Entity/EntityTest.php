@@ -33,7 +33,6 @@ use OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyPreviousCost;
-use OPG\Digideps\Backend\Entity\Report\ProfServiceFee;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\Report\ReviewChecklist;

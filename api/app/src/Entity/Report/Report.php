@@ -19,7 +19,6 @@ use OPG\Digideps\Backend\Entity\Report\Traits\MoneyShortTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\MoneyTransactionTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\MoneyTransferTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\MoreInfoTrait;
-use OPG\Digideps\Backend\Entity\Report\Traits\ProfServiceFeesTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\ReportProfDeputyCostsEstimateTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\ReportProfDeputyCostsTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\StatusTrait;
@@ -56,7 +55,6 @@ class Report
     use MoneyTransferTrait;
     use MoreInfoTrait;
     use DebtTrait;
-    use ProfServiceFeesTrait;
     use ReportProfDeputyCostsTrait;
     use ReportProfDeputyCostsEstimateTrait;
     use StatusTrait;
@@ -502,7 +500,6 @@ class Report
         $this->reportSubmissions = new ArrayCollection();
         $this->wishToProvideDocumentation = null;
         $this->currentProfPaymentsReceived = null;
-        $this->profServiceFees = new ArrayCollection();
         $this->checklist = null;
         $this->profDeputyPreviousCosts = new ArrayCollection();
         $this->profDeputyInterimCosts = new ArrayCollection();
