@@ -39,7 +39,7 @@
         "egulias/email-validator": "^4.0.4",
         "fakerphp/faker": "^1.24.1",
         "gbprod/uuid-normalizer": "^7.0.2",
-        "guzzlehttp/guzzle": "^7.12.0",
+        "guzzlehttp/guzzle": "^7.12.1",
         "jms/serializer-bundle": "^5.5.2",
         "jolicode/slack-php-api": "^4.9",
         "league/mime-type-detection": "^1.16",

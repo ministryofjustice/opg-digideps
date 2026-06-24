@@ -95,7 +95,7 @@ class RestClient implements RestClientInterface
         try {
             $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
         } catch (RestClientException $e) {
-            if ($e->getCode() == 423) {
+            if ($e->getCode() === 423) {
                 throw new TooManyLoginAttemptsAuthenticationException($e->getData()['data']);
             } else {
                 throw new BadCredentialsException('Invalid credentials.', 498);
@@ -187,7 +187,7 @@ class RestClient implements RestClientInterface
         // guzzle 6 does not append query groups and params in the string.
         // TODO add $queryParams as a method param (Replace last if not used) and avoid using endpoint with query string
 
-        /** @var array */
+        /** @var array $url */
         $url = parse_url($endpoint);
 
         if (!empty($url['query'])) {
