@@ -17,21 +17,21 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Uid\Uuid;
 
 class LoginFormAuthenticator extends AbstractAuthenticator
 {
     public function __construct(
-        private readonly RestClient $restClient,
-        private readonly Redirector $redirector,
-        private readonly RedisStorage $tokenStorage,
-        private readonly RouterInterface $router
+        private RestClient $restClient,
+        private Redirector $redirector,
+        private RedisStorage $tokenStorage,
+        private RouterInterface $router
     ) {
     }
 
@@ -40,9 +40,6 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         return $request->getPathInfo() === '/login' && $request->isMethod('POST');
     }
 
-    /**
-     * @throws AuthenticationException
-     */
     public function authenticate(Request $request): Passport
     {
         $data = $request->request->all('login');
@@ -57,18 +54,24 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
         return new Passport(
             new UserBadge($email, function ($userEmail) use ($password) {
-                [$user, $authToken] = $this->restClient->login(['email' => $userEmail, 'password' => $password]);
+                try {
+                    [$user, $authToken] = $this->restClient->login(['email' => $userEmail, 'password' => $password]);
 
-                if (!$user) {
-                    throw new UserNotFoundException('User not found');
+                    if (!$user) {
+                        throw new UserNotFoundException('User not found');
+                    }
+
+                    $this->tokenStorage->set((string) $user->getId(), $authToken);
+
+                    return $user;
+                } catch (AuthenticationException $e) {
+                    throw $e;
                 }
-
-                $this->tokenStorage->set((string) $user->getId(), $authToken);
-
-                return $user;
             }),
-            // We check credentials in API: as long as that returns then we can assume they are valid
-            new CustomCredentials(fn () => true, $password),
+            new CustomCredentials(function ($password) {
+                // We check credentials in API so as long as that returns then we can assume they are valid
+                return true;
+            }, $password),
             [
                 new CsrfTokenBadge('ddloginform', $csrfToken),
             ]
@@ -110,7 +113,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
+        $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
 
         return new RedirectResponse(
             $this->router->generate('login')

@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Security;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Exception\InvalidRegistrationTokenException;
 use OPG\Digideps\Backend\Exception\UnauthorisedException;
+use OPG\Digideps\Backend\Exception\UserWrongCredentialsManyAttempts;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Security\RegistrationTokenAuthenticator;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -21,9 +22,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\NullToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
@@ -250,8 +249,6 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
             new UserBadge('user@example.org'),
         );
 
-        $this->attemptsInTimeChecker->registerAttempt('token_abc')->willReturn($this->attemptsInTimeChecker);
-
         $actualPassport = $this->sut->authenticate($request);
 
         self::assertEquals($expectedPassport, $actualPassport);
@@ -301,7 +298,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $expectedBruteForceKey = 'token_abc';
 
         $this->attemptsInTimeChecker->registerAttempt($expectedBruteForceKey)
-            ->willReturn($this->attemptsInTimeChecker);
+            ->willReturn(null);
         $this->incrementalWaitingTimeChecker->registerAttempt($expectedBruteForceKey)
             ->willReturn(null);
         $this->incrementalWaitingTimeChecker->isFrozen($expectedBruteForceKey)
@@ -337,7 +334,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $expectedBruteForceKey = 'token_abc';
 
         $this->attemptsInTimeChecker->registerAttempt($expectedBruteForceKey)
-            ->willReturn($this->attemptsInTimeChecker);
+            ->willReturn(null);
         $this->incrementalWaitingTimeChecker->registerAttempt($expectedBruteForceKey)
             ->willReturn(null);
         $this->incrementalWaitingTimeChecker->isFrozen($expectedBruteForceKey)
@@ -408,14 +405,14 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
     public function onAuthenticationFailure(): void
     {
         self::expectExceptionObject(
-            new InvalidRegistrationTokenException('Failure message', 123)
+            new InvalidRegistrationTokenException()
         );
 
         $this->sut->setBruteForceKey('_abc');
 
         $this->attemptsInTimeChecker->maxAttemptsReached('_abc')
             ->shouldBeCalled()
-            ->willReturn(['tooMany' => false, 'intervalMins' => 0]);
+            ->willReturn(false);
 
         $authException = new AuthenticationException('Failure message', 123);
         $this->sut->onAuthenticationFailure(new Request(), $authException);
@@ -425,14 +422,14 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
     public function onAuthenticationFailureMaxLoginAttemptsReached(): void
     {
         self::expectExceptionObject(
-            new TooManyLoginAttemptsAuthenticationException()
+            new UserWrongCredentialsManyAttempts()
         );
 
         $this->sut->setBruteForceKey('_abc');
 
         $this->attemptsInTimeChecker->maxAttemptsReached('_abc')
             ->shouldBeCalled()
-            ->willReturn(['tooMany' => true, 'intervalMins' => 10]);
+            ->willReturn(true);
 
         $authException = new AuthenticationException('Failure message', 123);
         $this->sut->onAuthenticationFailure(new Request(), $authException);
