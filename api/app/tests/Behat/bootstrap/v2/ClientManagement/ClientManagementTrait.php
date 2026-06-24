@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\ClientManagement;
 
+use Behat\Mink\Element\NodeElement;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Organisation;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
@@ -171,7 +172,7 @@ MESSAGE;
             throw new BehatException($missingDivMessage);
         }
 
-        return $searchResultsDiv->getHtml();
+        return $this->safeGetHtml($searchResultsDiv);
     }
 
     /**
@@ -181,8 +182,8 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
-        $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
+        $pageContent = $this->safeGetHtml($this->getSession()->getPage()->find('css', 'main#main-content'));
+        $caseNumber = $this->interactingWithUserDetails?->getClientCaseNumber() ?? '';
         $caseNumberPresent = str_contains($pageContent, $caseNumber);
 
         if (!$caseNumberPresent) {
@@ -197,7 +198,7 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
+        $pageContent = $this->safeGetHtml($this->getSession()->getPage()->find('css', 'main#main-content'));
 
         $detailsToAssertOn[] = $this->interactingWithUserDetails->getUserFullname();
         $detailsToAssertOn[] = $this->interactingWithUserDetails->getUserPhone();
@@ -230,7 +231,7 @@ MESSAGE;
      */
     public function iShouldSeePrimaryLayDeputyDetails(): void
     {
-        $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
+        $pageContent = $this->safeGetHtml($this->getSession()->getPage()->find('css', 'main#main-content'));
 
         $detailsToAssertOn[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserFullname();
         $detailsToAssertOn[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserPhone();
@@ -265,9 +266,9 @@ MESSAGE;
     {
         $this->assertInteractingWithUserIsSet();
 
-        $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
+        $pageContent = $this->safeGetHtml($this->getSession()->getPage()->find('css', 'main#main-content'));
 
-        $currentReportDateString = $this->interactingWithUserDetails->getCurrentReportDueDate()->format('j F Y');
+        $currentReportDateString = $this->interactingWithUserDetails->getCurrentReportDueDate()?->format('j F Y') ?? '';
         $currentReportDueDateVisible = str_contains($pageContent, $currentReportDateString);
 
         if (!$currentReportDueDateVisible) {
@@ -293,12 +294,18 @@ MESSAGE;
 
         $xpathSelector = sprintf("//a[text() = '%s']", $this->interactingWithUserDetails->getOrganisationName());
 
-        $linkHtml = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
+        $linkHtml = $this->safeGetHtml($this->getSession()->getPage()->find('xpath', $xpathSelector));
 
         $orgNameLinkVisible = str_contains($linkHtml, $this->interactingWithUserDetails->getOrganisationName());
 
         if (!$orgNameLinkVisible) {
-            throw new BehatException(sprintf('Expected to find a link with the text "%s" visible but it does not appear on the page. Got (full HTML): %s', $this->interactingWithUserDetails->getCurrentReportDueDate(), $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml()));
+            throw new BehatException(
+                sprintf(
+                    'Expected to find a link with the text "%s" visible but it does not appear on the page. Got (full HTML): %s',
+                    $this->interactingWithUserDetails->getCurrentReportDueDate()?->format('Y-m-d') ?? '',
+                    $this->safeGetHtml($this->getSession()->getPage()->find('css', 'main#main-content'))
+                )
+            );
         }
     }
 
@@ -313,17 +320,25 @@ MESSAGE;
         $deputyEmail = $this->interactingWithUserDetails->getDeputyEmail();
 
         $nameXpathSelector = "//dt[normalize-space() = 'Named deputy']/..";
-        $namedDeputyNameDivHtml = $this->getSession()->getPage()->find('xpath', $nameXpathSelector)->getHtml();
+        $namedDeputyNameDivHtml = $this->safeGetHtml($this->getSession()->getPage()->find('xpath', $nameXpathSelector));
 
         $namedDeputyNameVisible = str_contains($namedDeputyNameDivHtml, $deputyName);
 
         $emailXpathSelector = "//h3[normalize-space() = 'Named deputy contact details']/..";
-        $namedDeputyNameDivHtml = $this->getSession()->getPage()->find('xpath', $emailXpathSelector)->getHtml();
+        $namedDeputyNameDivHtml = $this->safeGetHtml($this->getSession()->getPage()->find('xpath', $emailXpathSelector));
 
         $namedDeputyEmailVisible = str_contains($namedDeputyNameDivHtml, $deputyEmail);
 
         if (!$namedDeputyNameVisible || !$namedDeputyEmailVisible) {
-            throw new BehatException(sprintf('Expected to find the named deputy details (Name: "%s", Email: "%s") but they do not appear on the page. Got (full HTML): %s', $deputyName, $deputyEmail, $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml()));
+            throw new BehatException(
+                sprintf(
+                    'Expected to find the named deputy details (Name: "%s", Email: "%s") but they do not appear on ' .
+                        'the page. Got (full HTML): %s',
+                    $deputyName,
+                    $deputyEmail,
+                    $this->safeGetHtml($this->getSession()->getPage()->find('css', 'main#main-content'))
+                )
+            );
         }
     }
 
@@ -363,14 +378,20 @@ MESSAGE;
             throw new BehatException('Could not find a dt element on the page with text "Discharged on".');
         }
 
-        $clientDtHtml = $clientDt->getHtml();
+        $clientDtHtml = $this->safeGetHtml($clientDt);
         $todayString = new \DateTime()->format('j M Y');
 
         $clientIsDischarged = str_contains($clientDtHtml, $todayString);
         ++$this->dischargedClient;
 
         if (!$clientIsDischarged) {
-            throw new BehatException(sprintf('The client does not appear to be discharged. Expected: %s, got (HTML of discharged dt): %s', $todayString, $clientDtHtml));
+            throw new BehatException(
+                sprintf(
+                    'The client does not appear to be discharged. Expected: %s, got (HTML of discharged dt): %s',
+                    $todayString,
+                    $clientDtHtml
+                )
+            );
         }
     }
 
@@ -387,7 +408,7 @@ MESSAGE;
         $dischargedOnVisible = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector);
 
         if (!is_null($dischargedOnVisible)) {
-            $clientDtHtml = $this->getSession()->getPage()->find('xpath', $dischargedOnSelector)->getHtml();
+            $clientDtHtml = $this->safeGetHtml($this->getSession()->getPage()->find('xpath', $dischargedOnSelector));
 
             throw new BehatException(sprintf('The client appears to be discharged. Expected "Discharged on" not to appear, got (HTML of discharged dt): %s', $clientDtHtml));
         }
@@ -560,5 +581,14 @@ MESSAGE;
         $this->assertStringEqualsString(sprintf('clients %s', count($activeClients)), $rows[2], 'Asserting active and archived client count found on page');
 
         $this->assertStringEqualsString("discharged clients $this->dischargedClient", $rows[3], 'Asserting discharged client count found on page');
+    }
+
+    private function safeGetHtml(mixed $possibleElement): string
+    {
+        if (!($possibleElement instanceof NodeElement)) {
+            return '';
+        }
+
+        return $possibleElement->getHtml();
     }
 }

@@ -14,6 +14,7 @@ locals {
     file-scanner     = "${data.aws_ecr_repository.images["file-scanner"].repository_url}:${var.docker_tag}"
     custom-sql       = "${data.aws_ecr_repository.images["custom-sql-lambda"].repository_url}:${var.docker_tag}"
     mock-sirius      = "${data.aws_ecr_repository.images["mock-sirius"].repository_url}:${var.docker_tag}"
+    end_to_end       = "${data.aws_ecr_repository.images["test"].repository_url}:${var.docker_tag}"
   }
 
   repositories = [
@@ -28,7 +29,8 @@ locals {
     "htmltopdf",
     "file-scanner",
     "custom-sql-lambda",
-    "mock-sirius"
+    "mock-sirius",
+    "test"
   ]
 }
 

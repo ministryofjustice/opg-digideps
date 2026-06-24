@@ -17,7 +17,7 @@ class ClientBenefitsCheckRepository extends ServiceEntityRepository
 
     public function persistAndFlush(ClientBenefitsCheck $clientBenefitsCheck): void
     {
-        $this->_em->persist($clientBenefitsCheck);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($clientBenefitsCheck);
+        $this->getEntityManager()->flush();
     }
 }

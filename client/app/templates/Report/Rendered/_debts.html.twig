@@ -1,0 +1,102 @@
+{% set text = view.text %}
+{% set list = view.list %}
+{% set table1 = view.table1 %}
+{% set table2 = view.table2 %}
+
+<h2 class="govuk-heading-m">
+    {{ text.header }}
+</h2>
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+            {{ text.question }}
+        </h3>
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+            {{ text.answer }}
+        </h3>
+    </div>
+    <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+            {% for entry in list.entries %}
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                        {{ entry.key }}
+                    </dt>
+                    <dd class="govuk-summary-list__value govuk-!-width-one-half">
+                        {{ entry.value }}
+                    </dd>
+                </div>
+            {% endfor %}
+        </dl>
+    </div>
+</div>
+
+{% if table1 is not null %}
+    <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+            <h3 class="govuk-summary-card__title govuk-!-width-full">
+                {{ text.tableHeader }}
+            </h3>
+        </div>
+        <div class="govuk-summary-card__content">
+            <table class="govuk-table">
+                {% if table1.header is not null %}
+                    <thead>
+                        <tr class="govuk-table__row">
+                            {% for cell in table1.header.cells %}
+                                <th {% if cell.hasScope %} scope="col" {% endif %} class="{{ cell.classNames }}">{{ cell.content }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                {% endif %}
+                <tbody class="govuk-table__body">
+                    {% for row in table1.rows %}
+                        <tr class="govuk-table__row">
+                            {% for cell in row.cells %}
+                                {% if cell.hasScope %}
+                                    <th scope="row" class="{{ cell.classNames }}">
+                                        {{ cell.content }}
+                                    </th>
+                                {% else %}
+                                    <td class="{{ cell.classNames }}">
+                                        {{ cell.content }}
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <table class="govuk-table">
+                {% if table2.header is not null %}
+                    <thead>
+                    <tr class="govuk-table__row">
+                        {% for cell in table2.header.cells %}
+                            <th {% if cell.hasScope %} scope="col" {% endif %} class="{{ cell.classNames }}">{{ cell.content }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                {% endif %}
+                <tbody class="govuk-table__body">
+                {% for row in table2.rows %}
+                    <tr class="govuk-table__row">
+                        {% for cell in row.cells %}
+                            {% if cell.hasScope %}
+                                <th scope="row" class="{{ cell.classNames }}">
+                                    {{ cell.content }}
+                                </th>
+                            {% else %}
+                                <td class="{{ cell.classNames }}">
+                                    {{ cell.content }}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}

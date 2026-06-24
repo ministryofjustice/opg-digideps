@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\OPG\Digideps\Backend\Integration\Factory\MissingReport;
+namespace Tests\OPG\Digideps\Backend\Integration\Factory\RequiredReport;
 
 use Doctrine\ORM\Id\AbstractIdGenerator;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
@@ -11,16 +11,16 @@ use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Factory\MissingReport\MissingReportFinder;
+use OPG\Digideps\Backend\Factory\RequiredReport\RequiredReportFinder;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use Doctrine\ORM\Id\AssignedGenerator;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
-class MissingReportFinderTest extends ApiIntegrationTestCase
+class RequiredReportFinderTest extends ApiIntegrationTestCase
 {
     /**
      * @var int $oldGeneratorType
-     * @phpstan-var ClassMetadataInfo::GENERATOR_TYPE_* $oldGeneratorType
+     * @phpstan-var ClassMetadata::GENERATOR_TYPE_* $oldGeneratorType
      */
     private int $oldGeneratorType;
     private AbstractIdGenerator $oldGenerator;
@@ -33,7 +33,7 @@ class MissingReportFinderTest extends ApiIntegrationTestCase
         $this->oldGeneratorType = $metadata->generatorType;
         $this->oldGenerator = $metadata->idGenerator;
 
-        $metadata->setIdGeneratorType(ClassMetadataInfo::GENERATOR_TYPE_NONE);
+        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
         $metadata->setIdGenerator(new AssignedGenerator());
     }
 
@@ -82,7 +82,7 @@ class MissingReportFinderTest extends ApiIntegrationTestCase
         $this->persistCourtOrder($id, $client, ...$reports);
     }
 
-    public function testFindCourtOrdersWithMissingReports()
+    public function testFindCourtOrdersWithoutRequiredReports(): void
     {
         $this->persistTest(1);
         $this->persistTest(2, null);
@@ -100,8 +100,8 @@ class MissingReportFinderTest extends ApiIntegrationTestCase
         $this->persistTest(14, null, true, false);
         self::$entityManager->flush();
 
-        $finder = new MissingReportFinder(self::$entityManager);
-        $orders = [...$finder->findCourtOrdersWithMissingReports()];
+        $finder = new RequiredReportFinder(self::$entityManager);
+        $orders = [...$finder->findCourtOrdersWithoutRequiredReports()];
         $this->assertCount(3, $orders);
         $this->assertEqualsCanonicalizing([1, 4, 13], array_map(fn (CourtOrder $order) => $order->getId(), $orders));
     }

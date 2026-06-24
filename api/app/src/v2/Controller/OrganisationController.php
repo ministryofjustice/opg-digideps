@@ -12,7 +12,7 @@ use OPG\Digideps\Backend\Service\RestHandler\OrganisationRestHandler;
 use OPG\Digideps\Backend\v2\Assembler\OrganisationAssembler;
 use OPG\Digideps\Backend\v2\Transformer\OrganisationTransformer;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
