@@ -21,7 +21,7 @@
                     {% endif %}
                 </th>
                 <td class="govuk-table__cell govuk-!-width-one-half">
-                    {{ not started ? '-' : '£' ~ report.accountsOpeningBalanceTotal | money_format }}
+                    {{ not started ? 'Not entered' : '£' ~ report.accountsOpeningBalanceTotal | money_format }}
                 </td>
             </tr>
 
@@ -33,7 +33,7 @@
                         {{ 'balanceTable.deputyExpenses' | trans({},transDomain) }}
                     </th>
                     <td class="govuk-table__cell govuk-!-width-one-half">
-                        {{ not started ? '-' : '£' ~ min(-report.expensesTotal,0) | money_format }}
+                        {{ not started ? 'Not entered' : '£' ~ min(-report.expensesTotal,0) | money_format }}
                     </td>
                 </tr>
             {% endif %}
@@ -47,7 +47,7 @@
                         {{ 'balanceTable.paDeputyExpenses' | trans({},transDomain) }}
                     </th>
                     <td class="govuk-table__cell govuk-!-width-one-half">
-                        {{ not started ? '-' : '£' ~ min(-feesAndExpensesTotal,0) | money_format }}
+                        {{ not started ? 'Not entered' : '£' ~ min(-feesAndExpensesTotal,0) | money_format }}
                     </td>
                 </tr>
             {% endif %}
@@ -59,7 +59,7 @@
                     {{ 'balanceTable.gifts' | trans({},transDomain) }}
                 </th>
                 <td class="govuk-table__cell govuk-!-width-one-half">
-                    {{ not started ? '-' : '£' ~ min(-report.giftsTotalValue,0) | money_format }}
+                    {{ not started ? 'Not entered' : '£' ~ min(-report.giftsTotalValue,0) | money_format }}
                 </td>
             </tr>
 
@@ -70,7 +70,7 @@
                         {{ 'balanceTable.profDeputyCosts' | trans({},transDomain) }}
                     </th>
                     <td class="govuk-table__cell govuk-!-width-one-half">
-                        {{ not started ? '-' : '£' ~ min(-report.profDeputyTotalCosts,0) | money_format }}
+                        {{ not started ? 'Not entered' : '£' ~ min(-report.profDeputyTotalCosts,0) | money_format }}
                     </td>
                 </tr>
             {% endif %}
@@ -82,7 +82,7 @@
                     {{ 'balanceTable.moneyIn' | trans({},transDomain) }}
                 </th>
                 <td class="govuk-table__cell govuk-!-width-one-half">
-                    {{ not started ? '-' : '£' ~ report.moneyInTotal | money_format }}
+                    {{ not started ? 'Not entered' : '£' ~ report.moneyInTotal | money_format }}
                 </td>
             </tr>
 
@@ -93,7 +93,7 @@
                     {{ 'balanceTable.moneyOut' | trans({},transDomain) }}
                 </th>
                 <td class="govuk-table__cell govuk-!-width-one-half">
-                    {{ not started ? '-' : '£' ~ min(-report.moneyOutTotal,0) | money_format }}
+                    {{ not started ? 'Not entered' : '£' ~ min(-report.moneyOutTotal,0) | money_format }}
                 </td>
             </tr>
 
@@ -102,7 +102,7 @@
                     {{ 'balanceTable.footer' | trans({},transDomain) }}
                 </th>
                 <td class="govuk-table__cell govuk-!-width-one-half">
-                    <strong>{{ not showBalanceCalculations ? '-' : '£' ~ report.calculatedBalance | money_format }}</strong>
+                    <strong>{{ not showBalanceCalculations ? 'Not entered' : '£' ~ report.calculatedBalance | money_format }}</strong>
                 </td>
             </tr>
             </tbody>
@@ -130,7 +130,7 @@
                     {% endif %}
                 </th>
                 <td class="govuk-table__cell govuk-!-width-one-third govuk-!-text-align-right govuk-!-padding-right-9">
-                    {{ not started ? '-' : '£' ~ report.accountsClosingBalanceTotal | money_format }}
+                    {{ not started ? 'Not entered' : '£' ~ report.accountsClosingBalanceTotal | money_format }}
                 </td>
                 <td class="govuk-table__cell govuk-!-width-one-third"></td>
             </tr>
@@ -140,7 +140,7 @@
                     {{ 'differenceTable.reportClosingBalance' | trans({},transDomain) }}
                 </th>
                 <td class="govuk-table__cell govuk-!-width-one-third govuk-!-text-align-right govuk-!-padding-right-9">
-                    {{ not started ? '-' : '£' ~ report.calculatedBalance | money_format }}
+                    {{ not started ? 'Not entered' : '£' ~ report.calculatedBalance | money_format }}
                 </td>
                 <td class="govuk-table__cell govuk-!-width-one-third"></td>
             </tr>
