@@ -76,6 +76,9 @@
             'report': report,
             'transOptions': transOptions,
             'transDomain': 'report-money-transaction'
+        } %}
+    {% endif %}
+
     {% if report.hasSection('assets') %}
         {% include '@App/Report/Rendered/_assets.html.twig' with {
             'view': review.getAssetsReviewView,
