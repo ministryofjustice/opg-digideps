@@ -7,22 +7,22 @@ namespace OPG\Digideps\Backend\Security;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Exception\InvalidRegistrationTokenException;
 use OPG\Digideps\Backend\Exception\UnauthorisedException;
+use OPG\Digideps\Backend\Exception\UserWrongCredentialsManyAttempts;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
-use Psr\Log\LoggerInterface;
 
 class RegistrationTokenAuthenticator extends AbstractAuthenticator
 {
@@ -102,13 +102,11 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
             'reason'    => $exception->getMessage(),
         ]);
 
-        ['tooMany' => $tooMany, 'intervalMins' => $interval] =
-            $this->attemptsInTimeChecker->maxAttemptsReached($this->bruteForceKey);
-        if ($tooMany) {
-            throw new TooManyLoginAttemptsAuthenticationException($interval);
+        if ($this->attemptsInTimeChecker->maxAttemptsReached($this->bruteForceKey)) {
+            throw new UserWrongCredentialsManyAttempts();
         }
 
-        throw new InvalidRegistrationTokenException($exception->getMessage(), $exception->getCode());
+        throw new InvalidRegistrationTokenException();
     }
 
     private function isLoginRouteWithRequiredData(Request $request): bool

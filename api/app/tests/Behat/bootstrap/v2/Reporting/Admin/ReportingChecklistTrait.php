@@ -79,8 +79,7 @@ trait ReportingChecklistTrait
      */
     public function iNavigateToTheClientsReportChecklistPage(): void
     {
-        $this->clickLink('Checklist');
-        $this->iAmOnAdminReportChecklistPage();
+        $this->iNavigateToTheReportChecklistPage();
     }
 
     /**

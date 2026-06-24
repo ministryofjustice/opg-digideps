@@ -6,25 +6,28 @@ use Predis\Client as PredisClient;
 
 class AttemptsInTimeChecker
 {
-    /** @var array<array<int, int>> */
-    private array $triggers;
+    /**
+     * @var array
+     */
+    private $triggers;
 
-    public function __construct(
-        private readonly PredisClient $redis,
-        private readonly string $workspace,
-        private ?string $redisPrefix = ''
-    ) {
+    /**
+     * @param string $workspace
+     * @param ?string $redisPrefix
+     */
+    public function __construct(private readonly PredisClient $redis, private $workspace, private $redisPrefix = null)
+    {
         $this->triggers = [];
     }
 
-    public function setRedisPrefix(?string $redisPrefix = ''): static
+    public function setRedisPrefix($redisPrefix)
     {
         $this->redisPrefix = $this->workspace . '_' . $redisPrefix;
 
         return $this;
     }
 
-    public function addTrigger(int $maxAttempts, int $interval): static
+    public function addTrigger($maxAttempts, $interval)
     {
         if (!$maxAttempts || !$interval) {
             throw new \InvalidArgumentException('Invalid trigger value');
@@ -34,12 +37,7 @@ class AttemptsInTimeChecker
         return $this;
     }
 
-    /**
-     * @return array{tooMany: bool, intervalMins: int}
-     * intervalMins is always 0 if tooMany is false: the time interval is irrelevant as the login was within
-     * all of the acceptable limits
-     */
-    public function maxAttemptsReached(string $key, ?int $timestamp = null): array
+    public function maxAttemptsReached($key, $timestamp = null)
     {
         $currentTimestamp = ($timestamp === null) ? time() : $timestamp;
 
@@ -52,16 +50,15 @@ class AttemptsInTimeChecker
             $attemptsInInterval = count(array_filter($history, function ($attemptTimeStamp) use ($currentTimestamp, $timeInterval): bool {
                 return $attemptTimeStamp >= $currentTimestamp - $timeInterval;
             }));
-
             if ($attemptsInInterval >= $maxAttempts) {
-                return ['tooMany' => true, 'intervalMins' => $timeInterval];
+                return true;
             }
         }
 
-        return ['tooMany' => false, 'intervalMins' => 0];
+        return false;
     }
 
-    public function registerAttempt(string $key, ?int $timestamp = null): static
+    public function registerAttempt($key, $timestamp = null)
     {
         $id = $this->keyToRedisId($key);
         $history = $this->redis->get($id) ? json_decode($this->redis->get($id), true) : [];
@@ -74,14 +71,14 @@ class AttemptsInTimeChecker
         return $this;
     }
 
-    public function resetAttempts(string $key): void
+    public function resetAttempts($key)
     {
         $id = $this->keyToRedisId($key);
 
         $this->redis->set($id, null);
     }
 
-    private function keyToRedisId(string $key): string
+    private function keyToRedisId($key)
     {
         return $this->redisPrefix . $key;
     }

@@ -297,7 +297,7 @@ services:
         arguments: ["@predis"]
         calls:
             - [setRedisPrefix, ["ac_ret_code"]]
-            # after 5 attempts in the last 10 minutes, return a different return code
+            # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
             - [addTrigger, [5, 600]]
 
     OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker:

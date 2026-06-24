@@ -364,9 +364,8 @@ class SnapshotManagement:
         if self.EngineMode != "serverless":
             self.create_db_instances()
 
-        # PUT BACK AFTER
-        # if self.same_target:
-        #     self.overwrite_existing_cluster()
+        if self.same_target:
+            self.overwrite_existing_cluster()
 
     def copy_recovery_point_to_target(self):
         print(f"Copying recovery point {self.recovery_point_arn} to target account...")
@@ -398,7 +397,7 @@ class SnapshotManagement:
             print(f"Copy job status: {status}")
 
             if status == "COMPLETED":
-                print("Copy completed ✅")
+                print("Copy completed")
                 return
             elif status in ["FAILED", "EXPIRED"]:
                 raise Exception(f"Copy job failed: {response}")
