@@ -9,104 +9,102 @@
     </div>
 
     <div class="govuk-summary-card__content">
-        <table class="govuk-table">
-            <tbody class="govuk-table__body">
-            {# BANK ACCOUNTS #}
-            {% set started = report.status.bankAccountsState['state'] != 'not-started' %}
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__cell govuk-!-width-one-half">
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                {# BANK ACCOUNTS #}
+                {% set started = report.status.bankAccountsState['state'] != 'not-started' %}
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'balanceTable.accountsOpeningBalance' | trans({},transDomain) }}
                     {% if started %}
                         ({{ report.startDate | date("j F Y") }})
                     {% endif %}
-                </th>
-                <td class="govuk-table__cell govuk-!-width-one-half">
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
                     {{ not started ? 'Not entered' : '£' ~ report.accountsOpeningBalanceTotal | money_format }}
-                </td>
-            </tr>
+                </dd>
+            </div>
 
             {% if report.hasSection('deputyExpenses') %}
-                {# DEPUTY EXPENSES (LAY) #}
-                {% set started = report.status.expensesState['state'] != 'not-started'%}
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__cell govuk-!-width-one-half">
+                <div class="govuk-summary-list__row">
+                    {# DEPUTY EXPENSES (LAY) #}
+                    {% set started = report.status.expensesState['state'] != 'not-started'%}
+                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
                         {{ 'balanceTable.deputyExpenses' | trans({},transDomain) }}
-                    </th>
-                    <td class="govuk-table__cell govuk-!-width-one-half">
+                    </dt>
+                    <dd class="govuk-summary-list__value govuk-!-width-one-half">
                         {{ not started ? 'Not entered' : '£' ~ min(-report.expensesTotal,0) | money_format }}
-                    </td>
-                </tr>
+                    </dd>
+                </div>
             {% endif %}
 
             {% if report.hasSection('paDeputyExpenses') %}
-                {# FEES/EXPENSES (PA) #}
-                {% set started = report.status.paFeesExpensesState['state'] != 'not-started' %}
-                {% set feesAndExpensesTotal = report.feesTotal + report.expensesTotal %}
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__cell govuk-!-width-one-half">
+                <div class="govuk-summary-list__row">
+                    {# FEES/EXPENSES (PA) #}
+                    {% set started = report.status.paFeesExpensesState['state'] != 'not-started' %}
+                    {% set feesAndExpensesTotal = report.feesTotal + report.expensesTotal %}
+                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
                         {{ 'balanceTable.paDeputyExpenses' | trans({},transDomain) }}
-                    </th>
-                    <td class="govuk-table__cell govuk-!-width-one-half">
+                    </dt>
+                    <dd class="govuk-summary-list__value govuk-!-width-one-half">
                         {{ not started ? 'Not entered' : '£' ~ min(-feesAndExpensesTotal,0) | money_format }}
-                    </td>
-                </tr>
+                    </dd>
+                </div>
             {% endif %}
 
-            {# GIFTS #}
-            {% set started = report.status.giftsState['state'] != 'not-started' %}
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__cell govuk-!-width-one-half">
+            <div class="govuk-summary-list__row">
+                {# GIFTS #}
+                {% set started = report.status.giftsState['state'] != 'not-started' %}
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'balanceTable.gifts' | trans({},transDomain) }}
-                </th>
-                <td class="govuk-table__cell govuk-!-width-one-half">
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
                     {{ not started ? 'Not entered' : '£' ~ min(-report.giftsTotalValue,0) | money_format }}
-                </td>
-            </tr>
+                </dd>
+            </div>
 
             {% if report.hasSection('profDeputyCosts') %}
-                {% set started = report.status.profDeputyCostsState['state'] != 'not-started' %}
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__cell govuk-!-width-one-half">
+                <div class="govuk-summary-list__row">
+                    {% set started = report.status.profDeputyCostsState['state'] != 'not-started' %}
+                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
                         {{ 'balanceTable.profDeputyCosts' | trans({},transDomain) }}
-                    </th>
-                    <td class="govuk-table__cell govuk-!-width-one-half">
+                    </dt>
+                    <dd class="govuk-summary-list__value govuk-!-width-one-half">
                         {{ not started ? 'Not entered' : '£' ~ min(-report.profDeputyTotalCosts,0) | money_format }}
-                    </td>
-                </tr>
+                    </dd>
+                </div>
             {% endif %}
 
-            {# MONEY IN #}
-            {% set started = report.status.moneyInState['state'] != 'not-started' %}
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__cell govuk-!-width-one-half">
+            <div class="govuk-summary-list__row">
+                {# MONEY IN #}
+                {% set started = report.status.moneyInState['state'] != 'not-started' %}
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'balanceTable.moneyIn' | trans({},transDomain) }}
-                </th>
-                <td class="govuk-table__cell govuk-!-width-one-half">
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
                     {{ not started ? 'Not entered' : '£' ~ report.moneyInTotal | money_format }}
-                </td>
-            </tr>
+                </dd>
+            </div>
 
-            {# MONEY OUT #}
-            {% set started = report.status.moneyOutState['state'] != 'not-started' %}
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__cell govuk-!-width-one-half">
+            <div class="govuk-summary-list__row">
+                {# MONEY OUT #}
+                {% set started = report.status.moneyOutState['state'] != 'not-started' %}
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'balanceTable.moneyOut' | trans({},transDomain) }}
-                </th>
-                <td class="govuk-table__cell govuk-!-width-one-half">
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
                     {{ not started ? 'Not entered' : '£' ~ min(-report.moneyOutTotal,0) | money_format }}
-                </td>
-            </tr>
+                </dd>
+            </div>
 
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'balanceTable.footer' | trans({},transDomain) }}
-                </th>
-                <td class="govuk-table__cell govuk-!-width-one-half">
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
                     <strong>{{ not showBalanceCalculations ? 'Not entered' : '£' ~ report.calculatedBalance | money_format }}</strong>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                </dd>
+            </div>
+        </dl>
     </div>
 </div>
 
@@ -118,60 +116,55 @@
     </div>
 
     <div class="govuk-summary-card__content">
-        <table class="govuk-table">
-            <tbody class="govuk-table__body">
-            {# BANK ACCOUNTS #}
-            {% set started = report.status.bankAccountsState['state'] != 'not-started' %}
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__cell govuk-!-width-one-third">
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                {# BANK ACCOUNTS #}
+                {% set started = report.status.bankAccountsState['state'] != 'not-started' %}
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'differenceTable.accountsClosingBalance' | trans({},transDomain) }}
                     {% if started %}
                         ({{ report.endDate | date("j F Y") }})
                     {% endif %}
-                </th>
-                <td class="govuk-table__cell govuk-!-width-one-third govuk-!-text-align-right govuk-!-padding-right-9">
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
                     {{ not started ? 'Not entered' : '£' ~ report.accountsClosingBalanceTotal | money_format }}
-                </td>
-                <td class="govuk-table__cell govuk-!-width-one-third"></td>
-            </tr>
-
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__cell govuk-!-width-one-third">
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'differenceTable.reportClosingBalance' | trans({},transDomain) }}
-                </th>
-                <td class="govuk-table__cell govuk-!-width-one-third govuk-!-text-align-right govuk-!-padding-right-9">
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
                     {{ not started ? 'Not entered' : '£' ~ report.calculatedBalance | money_format }}
-                </td>
-                <td class="govuk-table__cell govuk-!-width-one-third"></td>
-            </tr>
-
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'differenceTable.footer' | trans({},transDomain) }}
-                </th>
-                <td class="govuk-table__cell govuk-!-width-one-third govuk-!-text-align-right govuk-!-padding-right-9">
-                    <strong>£{{ report.totalsOffset | abs | money_format }}</strong>
-                </td>
-                <td class="govuk-table__cell govuk-!-width-one-third govuk-!-text-align-right">
-                    {% set accountBalanceState = report.isTotalsMatch ? 'matched' : 'notMatched' %}
-                    <span class="opg-overview-section__status govuk-!-padding-1 {{ accountBalanceState | account_balance_status_to_tag_css }}">
-                        {{ ('review.' ~ accountBalanceState) | trans({},transDomain) }}
-                    </span>
-                </td>
-            </tr>
+                </dt>
+                <div class="govuk-summary-list__value govuk-!-width-one-half govuk-!-padding-right-0">
+                    <dd class="govuk-summary-list__value">
+                        <strong>£{{ report.totalsOffset | abs | money_format }}</strong>
+                    </dd>
+                    <dd class="govuk-summary-list__actions govuk-!-padding-right-0">
+                        {% set accountBalanceState = report.isTotalsMatch ? 'matched' : 'notMatched' %}
+                        <span class="opg-overview-section__status govuk-!-padding-1 {{ accountBalanceState | account_balance_status_to_tag_css }}">
+                            {{ ('review.' ~ accountBalanceState) | trans({},transDomain) }}
+                        </span>
+                    </dd>
+                </div>
+            </div>
 
             {% if not report.isTotalsMatch and report.balanceMismatchExplanation is not null%}
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
                         {{ 'cantFind.reasonNotBalancing' | trans({},transDomain) }}
-                    </th>
-                    <td class="govuk-table__cell govuk-!-width-one-third govuk-!-text-align-right govuk-!-padding-right-9">
+                    </dt>
+                    <dd class="govuk-summary-list__value govuk-!-width-one-half">
                         {{ report.balanceMismatchExplanation | nl2br | capitalize}}
-                    </td>
-                    <td class="govuk-table__cell govuk-!-width-one-third"></td>
-                </tr>
+                    </dd>
+                </div>
             {% endif %}
-            </tbody>
-        </table>
+        </dl>
     </div>
 </div>
