@@ -11,7 +11,7 @@ doctrine:
                 password: "%database_password%"
                 sslmode: "%database_ssl_mode%"
                 sslrootcert: "%kernel.project_dir%/certs/eu-west-1-bundle.pem"
-                server_version: 14.18
+                server_version: 16.14
                 wrapper_class: OPG\Digideps\Backend\DBAL\ConnectionWrapper
                 charset: UTF8
             ingestwriter:
@@ -23,7 +23,7 @@ doctrine:
                 password: "%database_password%"
                 sslmode: "%database_ssl_mode%"
                 sslrootcert: "%kernel.project_dir%/certs/eu-west-1-bundle.pem"
-                server_version: 14.18
+                server_version: 16.14
                 wrapper_class: OPG\Digideps\Backend\DBAL\ConnectionWrapper
                 charset: UTF8
         types:
