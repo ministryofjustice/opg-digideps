@@ -32,7 +32,7 @@ class SnapshotManagement:
         restore_from_remote: bool,
         aws_backup: bool,
     ):
-        self.sts_client = boto3.client("sts")
+        # Environment variables
         self.account = (
             None
             if environment not in environments.keys()
@@ -50,16 +50,21 @@ class SnapshotManagement:
         self.cross_account_role_to_assume = str(
             f"arn:aws:iam::{self.backup_account}:role/{self.cross_account_role}"
         )
+        self.backup_vault_name = f"backup-vault-{self.environment}"
+        self.remote_vault_name = f"digideps-eu-west-1-{self.environment}-backup"
         self.region = "eu-west-1"
+
+        # Client sdk session connections
+        self.sts_client = boto3.client("sts")
         self.client = None
         self.client_kms = None
         self.client_aws_backup = None
         self.client_cross_account_rds = None
         self.client_cross_account_kms = None
         self.client_cross_account_aws_backup = None
+
+        # Process variables
         self.restore_from_remote = restore_from_remote
-        self.backup_vault_name = f"backup-vault-{self.environment}"
-        self.remote_vault_name = f"digideps-eu-west-1-{self.environment}-backup"
         self.example_var = None
         self.instances = []
         self.db_cluster_identifier_source = cluster_from
@@ -72,6 +77,9 @@ class SnapshotManagement:
             else False
         )
         self.recovery_point_arn = ""
+        self.AWSBackup = aws_backup
+
+        # DB Cluster and Instance Variables
         self.SnapshotIdentifier = snapshot_id
         self.multi_az_override = multi_az_override
         self.MultiAZ = False
@@ -107,7 +115,6 @@ class SnapshotManagement:
             },
         ]
         self.AutoMinorVersionUpgrade = True
-        self.AWSBackup = aws_backup
 
     def get_latest_recovery_point_same_account(self):
         cluster_name = self.db_cluster_identifier_source
@@ -126,15 +133,38 @@ class SnapshotManagement:
                 creation_date = rp.get("CreationDate")
                 arn = rp.get("RecoveryPointArn")
 
-                if creation_date and (
-                    latest_time is None or creation_date > latest_time
-                ):
-                    if "continuous" in arn:
-                        latest_time = creation_date
-                        latest_arn = arn
+                if not creation_date:
+                    continue
+
+                # Decide which recovery points to consider
+                if self.restore_from_remote:
+                    # Prefer recovery points originating from backup account
+                    print(rp)
+
+                    recovery_point_arn = rp.get("RecoveryPointArn")
+
+                    # Restores from backup account have this string
+                    if "copyjob-" not in recovery_point_arn:
+                        continue
+                else:
+                    # Default behaviour (same account): use continuous backups
+                    if "continuous" not in arn:
+                        continue
+
+                # Pick latest
+                if latest_time is None or creation_date > latest_time:
+                    latest_time = creation_date
+                    latest_arn = arn
 
         if not latest_arn:
-            raise Exception("No recovery point found in same account")
+            raise Exception(
+                "No matching recovery point found "
+                + (
+                    "(remote mode)"
+                    if self.restore_from_remote
+                    else "(same-account mode)"
+                )
+            )
 
         self.recovery_point_arn = latest_arn
 
@@ -190,6 +220,7 @@ class SnapshotManagement:
                     self.create_cross_account_client_session()
                     self.get_latest_recovery_point_cross_account()
                     self.copy_recovery_point_to_target()
+                    self.get_latest_recovery_point_same_account()
                 else:
                     self.get_latest_recovery_point_same_account()
 
@@ -212,21 +243,21 @@ class SnapshotManagement:
         if self.AWSBackup:
             self.restore_from_recovery_point()
 
-        # else:
-        #     if self.do_point_in_time_restore:
-        #         if self.SnapshotIdentifier is not None:
-        #             if self.restore_from_remote:
-        #                 self.create_cross_account_client_session()
-        #                 self.KmsKeyId = self.get_kms_key(key_alias_remote)
-        #                 self.share_snapshot_with_digideps()
-        #                 self.copy_snapshot_to_manual_digideps()
-        #             self.restore_from_snapshot()
-        #         else:
-        #             print(
-        #                 "No snapshot specified. Either specify snapshot or do point in time recovery"
-        #             )
-        #     else:
-        #         self.restore_to_point_in_time()
+        else:
+            if self.do_point_in_time_restore:
+                if self.SnapshotIdentifier is not None:
+                    if self.restore_from_remote:
+                        self.create_cross_account_client_session()
+                        self.KmsKeyId = self.get_kms_key(key_alias_remote)
+                        self.share_snapshot_with_digideps()
+                        self.copy_snapshot_to_manual_digideps()
+                    self.restore_from_snapshot()
+                else:
+                    print(
+                        "No snapshot specified. Either specify snapshot or do point in time recovery"
+                    )
+            else:
+                self.restore_to_point_in_time()
 
         print("Process has finished. Please go and check your databases")
 
@@ -353,9 +384,6 @@ class SnapshotManagement:
         print(f"Started copy job: {copy_job_id}")
 
         self.wait_for_copy_job(copy_job_id)
-
-        # After copy, recovery point ARN changes — fetch new one
-        self.get_latest_recovery_point_same_account()
 
     def wait_for_copy_job(self, copy_job_id):
         print("Waiting for copy job to complete...")
