@@ -408,6 +408,7 @@ form:
 
 review:
   moneyOut:
+    title: Money out
     question: Question
     answer: Answer
     payments: Payments
