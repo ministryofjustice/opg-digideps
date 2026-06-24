@@ -122,6 +122,9 @@ class Organisation
         return $this;
     }
 
+    /**
+     * @return Collection<int, User>
+     */
     public function getUsers(): Collection
     {
         return $this->users;
@@ -143,6 +146,9 @@ class Organisation
         return $this;
     }
 
+    /**
+     * @return Collection<int, Client>
+     */
     public function getClients(): Collection
     {
         return $this->clients;

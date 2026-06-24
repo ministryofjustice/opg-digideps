@@ -144,7 +144,7 @@ class AssetProperty extends Asset
         return $this;
     }
 
-    public function getOccupants(): ?string
+    public function getOccupants(): string
     {
         return $this->occupants;
     }
@@ -164,7 +164,7 @@ class AssetProperty extends Asset
         return $this->isSubjectToEquityRelease;
     }
 
-    public function getHasMortgage(): ?string
+    public function getHasMortgage(): string
     {
         return $this->hasMortgage;
     }
@@ -174,12 +174,12 @@ class AssetProperty extends Asset
         return (float)$this->mortgageOutstandingAmount;
     }
 
-    public function getHasCharges(): ?string
+    public function getHasCharges(): string
     {
         return $this->hasCharges;
     }
 
-    public function getIsRentedOut(): ?string
+    public function getIsRentedOut(): string
     {
         return $this->isRentedOut;
     }
@@ -194,14 +194,14 @@ class AssetProperty extends Asset
         return (float)$this->rentIncomeMonth;
     }
 
-    public function setOccupants($occupants): static
+    public function setOccupants(string $occupants): static
     {
         $this->occupants = $occupants;
 
         return $this;
     }
 
-    public function setOwned($owned): static
+    public function setOwned(string $owned): static
     {
         if (!in_array($owned, [self::OWNED_FULLY, self::OWNED_PARTLY])) {
             throw new \InvalidArgumentException(__METHOD__ . "Invalid owned type [$owned]");
@@ -226,7 +226,7 @@ class AssetProperty extends Asset
         return $this;
     }
 
-    public function setHasMortgage($hasMortgage): static
+    public function setHasMortgage(string $hasMortgage): static
     {
         $this->hasMortgage = $hasMortgage;
 
@@ -240,14 +240,14 @@ class AssetProperty extends Asset
         return $this;
     }
 
-    public function setHasCharges($hasCharges): static
+    public function setHasCharges(string $hasCharges): static
     {
         $this->hasCharges = $hasCharges;
 
         return $this;
     }
 
-    public function setIsRentedOut($isRentedOut): static
+    public function setIsRentedOut(string $isRentedOut): static
     {
         $this->isRentedOut = $isRentedOut;
 

@@ -301,6 +301,12 @@ parameters:
 			path: api/app/src/Controller/CoDeputyController.php
 
 		-
+			message: '#^Parameter \#1 \$deputyNo of static method OPG\\Digideps\\Backend\\Entity\\User\:\:padDeputyNumber\(\) expects int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Controller/CoDeputyController.php
+
+		-
 			message: '#^Parameter \#1 \$email of method OPG\\Digideps\\Backend\\Entity\\User\:\:setEmail\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -2347,42 +2353,6 @@ parameters:
 			path: api/app/src/Domain/Deputyship/DeputyshipProcessingRawDbAccess.php
 
 		-
-			message: '#^Binary operation "\-" between mixed and 1 results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: api/app/src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:getExpectedReportEndDate\(\) has parameter \$year with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:getExpectedReportStartDate\(\) has parameter \$year with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Client.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\CourtOrder\:\:\$courtOrderDeputyRelationships with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: api/app/src/Entity/CourtOrder.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Organisation\:\:getClients\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: api/app/src/Entity/Organisation.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Organisation\:\:getUsers\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: api/app/src/Entity/Organisation.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getCaseNumber\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -2545,72 +2515,6 @@ parameters:
 			path: api/app/src/Entity/PreRegistration.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setHasCharges\(\) has parameter \$hasCharges with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setHasMortgage\(\) has parameter \$hasMortgage with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setIsRentedOut\(\) has parameter \$isRentedOut with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setOccupants\(\) has parameter \$occupants with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setOwned\(\) has parameter \$owned with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Part \$owned \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:\$hasCharges \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:\$hasMortgage \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:\$isRentedOut \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:\$occupants \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:\$owned \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:\$isClosed \(bool\|null\) is never assigned null so it can be removed from the property type\.$#'
 			identifier: property.unusedType
 			count: 1
@@ -2629,62 +2533,8 @@ parameters:
 			path: api/app/src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Cannot call method add\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Cannot call method contains\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Cannot call method setClientBenefitsCheck\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MoneyReceivedOnClientsBehalf\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ClientBenefitsCheck\:\:getTypesOfMoneyReceivedOnClientsBehalf\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: api/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\ClientBenefitsCheck\:\:getTypesOfMoneyReceivedOnClientsBehalf\(\) should return Doctrine\\Common\\Collections\\Collection but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ClientBenefitsCheck\:\:\$dateLastCheckedEntitlement \(DateTime\) does not accept DateTime\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ClientBenefitsCheck\:\:\$doOthersReceiveMoneyOnClientsBehalf \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ClientBenefitsCheck\:\:\$neverCheckedExplanation \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ClientBenefitsCheck\:\:\$typesOfMoneyReceivedOnClientsBehalf has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ClientBenefitsCheck\:\:\$whenLastCheckedEntitlement \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\ClientBenefitsCheck\:\:\$created \(DateTime\|null\) is never assigned null so it can be removed from the property type\.$#'
+			identifier: property.unusedType
 			count: 1
 			path: api/app/src/Entity/Report/ClientBenefitsCheck.php
 
@@ -2701,40 +2551,10 @@ parameters:
 			path: api/app/src/Entity/Report/MoneyTransaction.php
 
 		-
-			message: '#^Cannot call method diff\(\) on DateTime\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getMoneyTransactionsShortIn\(\) should return Doctrine\\Common\\Collections\\Collection\<int, OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransactionShortIn\> but returns Doctrine\\Common\\Collections\\Collection\<int, OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransactionShort\>\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getMoneyTransactionsShortOut\(\) should return Doctrine\\Common\\Collections\\Collection\<int, OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransactionShortOut\> but returns Doctrine\\Common\\Collections\\Collection\<int, OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransactionShort\>\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getSectionStatusesCached\(\) should return array but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: api/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getSectionsSettings\(\) should return array\<string, array\<string\>\> but returns array\<string, array\>\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:padDeputyNumber\(\) has parameter \$deputyNo with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/User.php
 
 		-
 			message: '#^Parameter \#1 \$active of method OPG\\Digideps\\Backend\\Entity\\User\:\:setActive\(\) expects bool, mixed given\.$#'
@@ -2773,26 +2593,8 @@ parameters:
 			path: api/app/src/Entity/User.php
 
 		-
-			message: '#^Parameter \#1 \$string of function str_pad expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Entity/User.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$active \(bool\|null\) is never assigned null so it can be removed from the property type\.$#'
 			identifier: property.unusedType
-			count: 1
-			path: api/app/src/Entity/User.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$adManaged \(bool\|null\) is never assigned null so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: api/app/src/Entity/User.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$adManaged is never read, only written\.$#'
-			identifier: property.onlyWritten
 			count: 1
 			path: api/app/src/Entity/User.php
 
@@ -3055,7 +2857,7 @@ parameters:
 			path: api/app/src/Factory/ClientBenefitsCheckFactory.php
 
 		-
-			message: '#^Parameter \#1 \$moneyReceivedOnClientsBehalf of method OPG\\Digideps\\Backend\\Entity\\Report\\ClientBenefitsCheck\:\:addTypeOfMoneyReceivedOnClientsBehalf\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\MoneyReceivedOnClientsBehalf\|null, mixed given\.$#'
+			message: '#^Parameter \#1 \$moneyReceivedOnClientsBehalf of method OPG\\Digideps\\Backend\\Entity\\Report\\ClientBenefitsCheck\:\:addTypeOfMoneyReceivedOnClientsBehalf\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\MoneyReceivedOnClientsBehalf, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Factory/ClientBenefitsCheckFactory.php
@@ -9007,12 +8809,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/AdminManagement/AdminManagementFeatureContext.php
 
 		-
-			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 5
-			path: api/app/tests/Behat/bootstrap/v2/AppNotification/AppNotificationFeatureContext.php
-
-		-
 			message: '#^Cannot access constant ADMIN_ROLES on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: classConstant.nonObject
 			count: 1
@@ -9501,7 +9297,7 @@ parameters:
 		-
 			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 1
+			count: 6
 			path: api/app/tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
@@ -12643,79 +12439,13 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method format\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getArchivedAt\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getBankAccounts\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getCaseNumber\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
 			message: '#^Cannot call method getClients\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|false\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
 
 		-
-			message: '#^Cannot call method getCourtDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getCurrentReport\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getDeputy\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getDueDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getEmail\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getEmail1\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getEmail2\(\) on mixed\.$#'
+			message: '#^Cannot call method getDeputy\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
@@ -12727,31 +12457,7 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
 
 		-
-			message: '#^Cannot call method getEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getFirstname\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 7
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getLastName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getLastname\(\) on mixed\.$#'
+			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
@@ -12759,60 +12465,6 @@ parameters:
 		-
 			message: '#^Cannot call method getName\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|false\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getPhoneAlternative\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getPhoneMain\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getReports\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getStartDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Cannot call method getType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Parameter \#1 \$client of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelperBuilder\:\:buildClientAddressArray\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Parameter \#1 \$deputy of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelperBuilder\:\:buildDeputyAddressArray\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
 
@@ -17521,7 +17173,7 @@ parameters:
 			path: api/app/tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
+			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MoneyReceivedOnClientsBehalf\|false\.$#'
 			identifier: method.nonObject
 			count: 2
 			path: api/app/tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
@@ -18241,7 +17893,7 @@ parameters:
 			path: api/app/tests/Integration/Controller/MoneyReceivedOnOthersBehalfControllerTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
+			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MoneyReceivedOnClientsBehalf\|false\.$#'
 			identifier: method.nonObject
 			count: 2
 			path: api/app/tests/Integration/Controller/MoneyReceivedOnOthersBehalfControllerTest.php
@@ -18262,12 +17914,6 @@ parameters:
 			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects Doctrine\\ORM\\EntityManagerInterface, object given\.$#'
 			identifier: argument.type
 			count: 1
-			path: api/app/tests/Integration/Controller/MoneyReceivedOnOthersBehalfControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: api/app/tests/Integration/Controller/MoneyReceivedOnOthersBehalfControllerTest.php
 
 		-
@@ -23061,7 +22707,7 @@ parameters:
 		-
 			message: '#^Cannot call method format\(\) on DateTime\|null\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: api/app/tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
 
 		-

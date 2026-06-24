@@ -107,7 +107,7 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
@@ -119,7 +119,7 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
         return $this->date;
     }
 
-    public function setDate(\DateTime $date): static
+    public function setDate(?\DateTime $date): static
     {
         $this->date = $date;
 
