@@ -32,6 +32,9 @@ trait INavigateToAdminTrait
         $mainElement->clickLink('Your details');
     }
 
+    /**
+     * @When I navigate to the add a new user page
+     */
     public function iNavigateToAddNewUser(): void
     {
         $this->iAmOnAdminUsersSearchPage();
@@ -45,6 +48,14 @@ trait INavigateToAdminTrait
     {
         $this->clickLink('Analytics');
         $this->iAmOnAdminAnalyticsPage();
+    }
+
+    /**
+     * @When I navigate to the upload users page
+     */
+    public function iNavigateToAdminUploadUsersPage(): void
+    {
+        $this->clickLink('Upload users');
     }
 
     /**
@@ -63,6 +74,15 @@ trait INavigateToAdminTrait
     {
         $this->pressButton('Add a new organisation');
         $this->iAmOnAdminAddOrganisationPage();
+    }
+
+    /**
+     * @When I navigate to the report checklist page
+     */
+    public function iNavigateToTheReportChecklistPage(): void
+    {
+        $this->clickLink('Checklist');
+        $this->iAmOnAdminReportChecklistPage();
     }
 
     /**
