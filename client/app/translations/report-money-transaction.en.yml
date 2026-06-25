@@ -405,3 +405,12 @@ form:
         moreInformation: Give us more information
       telephone-and-broadband:
         label: Combined telephone and broadband
+
+review:
+  moneyOut:
+    title: Money out
+    question: Question
+    answer: Answer
+    payments: Payments
+    totalAmount: Total amount
+    totalMoneyOut: Total money out
