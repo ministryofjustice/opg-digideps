@@ -53,3 +53,12 @@ jobs:
       - name: phpstan common
         id: phpstan-common
         run: make common-phpstan
+
+      - name: lint playwright
+        run: make playwright-lint
+
+      - name: check formatting playwright
+        run: make playwright-check-format
+
+      - name: check types playwright
+        run: make playwright-typecheck

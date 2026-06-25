@@ -405,7 +405,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
     public function onAuthenticationFailure(): void
     {
         self::expectExceptionObject(
-            new InvalidRegistrationTokenException('Failure message', 123)
+            new InvalidRegistrationTokenException()
         );
 
         $this->sut->setBruteForceKey('_abc');

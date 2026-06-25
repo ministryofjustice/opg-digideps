@@ -6,6 +6,10 @@ WHITE  := $(shell tput -Txterm setaf 7)
 YELLOW := $(shell tput -Txterm setaf 3)
 RESET  := $(shell tput -Txterm sgr0)
 
+
+.PHONY: playwright-test playwright-report playwright-lint \
+        playwright-ui playwright-check-format playwright-format
+
 # Add the following 'help' target to your Makefile
 # And add help text after each target name starting with '\#\#'
 # A category can be added with @category
@@ -91,8 +95,8 @@ api-integration-tests: reset-database-integration-tests ##@integration-tests Run
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh ${INTEGRATION_SELECTION}
 
 api-integration-tests-solo: reset-database-integration-tests ##@integration-tests Run individual api integration test
-#Example command: make api-integration-test-solo suite=Controller/AuthControllerTest.php test_case=testLoginFailWrongPassword (test case argument is optional)
-	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh selection-solo $(suite) $(test_case)
+#Example command: make api-integration-test-solo suite=Controller/AuthControllerTest.php test_case=testBruteForceSameEmail (test case argument is optional)
+	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh selection-solo Controller/AuthControllerTest.php testBruteForceSameEmail
 
 reset-database-integration-tests: ##@database Resets the DB schema and runs migrations
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm api-integration-tests sh scripts/reset_db_structure.sh local
@@ -237,13 +241,41 @@ common-phpunit: ##@unit-tests Run the common unit tests.
 common-phpstan: ##@static-analysis Runs PHPStan against common.
 	docker compose run composer-common-phpstan
 
-phpstan-regenerate:
+phpstan-regenerate: ##@static-analysis Regenerate PHPStan.
 	(cd ./common && composer run lint:phpstan)
 	(cd ./api/app && composer run lint:phpstan:baseline)
 	(cd ./client/app && composer run lint:phpstan:baseline)
 	composer run lint:phpstan:baseline
 
-phpstan-regenerate-force:
+phpstan-regenerate-force: ##@static-analysis Regenerate by force PHPStan.
 	(cd ./api/app && composer run lint:phpstan:baseline:force)
 	(cd ./client/app && composer run lint:phpstan:baseline:force)
 	composer run lint:phpstan:baseline:force
+
+playwright-test: ##@playwright Runs playwright tests suite.
+	docker compose build playwright-tests
+	docker compose run --rm playwright-tests test
+
+playwright-report: ##@playwright Shows report of last run in the browser.
+	docker compose build playwright-tests
+	docker compose run --rm -p 9323:9323 playwright-tests show-report
+
+playwright-lint: ##@playwright Runs eslint on all tests.
+	docker compose build playwright-tests
+	docker compose run --rm playwright-tests lint
+
+playwright-ui: ##@playwright Runs tests in UI interface for debugging.
+	docker compose build playwright-tests
+	docker compose run --rm -p 9525:9525 playwright-tests ui
+
+playwright-check-format: ##@playwright Checks formatting of tests.
+	docker compose build playwright-tests
+	docker compose run --rm playwright-tests check-format
+
+playwright-format: ##@playwright Formats the tests.
+	docker compose build playwright-tests
+	docker compose run --rm playwright-tests format
+
+playwright-typecheck: ##@playwright Typechecks the tests.
+	docker compose build playwright-tests
+	docker compose run --rm playwright-tests typecheck

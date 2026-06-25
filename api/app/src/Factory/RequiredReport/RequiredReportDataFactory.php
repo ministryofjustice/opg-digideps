@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Backend\Factory\MissingReport;
+namespace OPG\Digideps\Backend\Factory\RequiredReport;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Entity\CourtOrder;
@@ -13,11 +13,11 @@ use OPG\Digideps\Backend\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
-final readonly class MissingReportDataFactory implements DataFactoryInterface
+final readonly class RequiredReportDataFactory implements DataFactoryInterface
 {
     public function __construct(
         private EntityManagerInterface $em,
-        private MissingReportFinder $finder,
+        private RequiredReportFinder $finder,
         private ReportService $reportService,
         private LoggerInterface $verboseLogger,
     ) {
@@ -25,7 +25,7 @@ final readonly class MissingReportDataFactory implements DataFactoryInterface
 
     public function getName(): string
     {
-        return 'MissingReport';
+        return 'RequiredReport';
     }
 
     public function run(bool $dryRun): DataFactoryResult
@@ -34,22 +34,22 @@ final readonly class MissingReportDataFactory implements DataFactoryInterface
         $created = 0;
         $linked = 0;
 
-        foreach ($this->finder->findCourtOrdersWithMissingReports() as $courtOrder) {
+        foreach ($this->finder->findCourtOrdersWithoutRequiredReports() as $courtOrder) {
             try {
                 if ($this->linkHybridReportIfItExists($courtOrder, $dryRun)) {
                     $linked++;
                 } else {
-                    $this->createMissingReport($courtOrder, $dryRun);
+                    $this->createRequiredReport($courtOrder, $dryRun);
                     $created++;
                 }
             } catch (\Throwable $throwable) {
                 $class = $throwable::class;
-                $errors[] = "Could not generate missing report for court order: {$courtOrder->getCourtOrderUid()}: {$class} {$throwable->getMessage()} in {$throwable->getFile()}({$throwable->getLine()})";
+                $errors[] = "Could not generate required report for court order: {$courtOrder->getCourtOrderUid()}: {$class} {$throwable->getMessage()} in {$throwable->getFile()}({$throwable->getLine()})";
             }
         }
 
         $dry = $dryRun ? '[Dry run] ' : '';
-        return new DataFactoryResult(['success' => ["{$dry}Created {$created} missing reports", "{$dry}Linked {$linked} unlinked reports"]], ['errors' => $errors]);
+        return new DataFactoryResult(['success' => ["{$dry}Created {$created} required reports", "{$dry}Linked {$linked} unlinked reports"]], ['errors' => $errors]);
     }
 
     private function log(string $message, bool $dryRun): void
@@ -58,7 +58,7 @@ final readonly class MissingReportDataFactory implements DataFactoryInterface
         $this->verboseLogger->notice("{$this->getName()}: {$dry}{$message}");
     }
 
-    private function createMissingReport(CourtOrder $courtOrder, bool $dryRun): void
+    private function createRequiredReport(CourtOrder $courtOrder, bool $dryRun): void
     {
         $latest = $this->getLatestReport($courtOrder);
         $this->log('Creating report ' . ($latest === null ? '' : "from report {$latest->getType()} ") . "for court order {$courtOrder->getId()}.", $dryRun);
