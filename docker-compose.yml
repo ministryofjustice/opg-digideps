@@ -394,3 +394,12 @@ services:
     build:
       context: ./common
     command: lint:phpstan
+
+  playwright-tests:
+    build:
+      context: ./playwright
+    environment:
+      FRONT_URL: http://frontend-webserver
+    image: playwright-check
+    container_name: playwright-report
+    restart: "no"

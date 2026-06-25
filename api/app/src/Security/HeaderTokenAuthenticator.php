@@ -83,7 +83,7 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         $this->verboseLogger->notice('Failed login', [
-            'reason'    => $exception->getMessage(),
+            'reason' => $exception->getMessage(),
         ]);
 
         throw new UserWrongCredentialsException($exception->getMessage(), 419);

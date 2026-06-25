@@ -18,7 +18,7 @@
                     {{ ('existPage.form.paidForAnything.label') | trans(transOptions,transDomain) }}
                 </th>
                 <td class="govuk-table__cell govuk-!-width-one-half">
-                    {{ (report.paidForAnything) ? report.paidForAnything | capitalize : 'not entered' }}
+                    {{ (report.paidForAnything) ? report.paidForAnything | capitalize : 'Not entered' }}
                 </td>
             </tr>
             </tbody>
@@ -62,7 +62,7 @@
                             </td>
                         {% if report.canLinkToBankAccounts %}
                             <td class="govuk-table__cell govuk-!-width-{{ width }}">
-                                {{ (expense.bankAccount) ? expense.bankAccount.nameOneLine : 'not entered' | trans({}, 'common') }}
+                                {{ (expense.bankAccount) ? expense.bankAccount.nameOneLine : 'Not entered' | trans({}, 'common') }}
                             </td>
                         {% endif %}
                             <td class="govuk-table__cell govuk-!-width-one-third">

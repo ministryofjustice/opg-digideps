@@ -1,7 +1,6 @@
 {% set text = view.text %}
 {% set list = view.list %}
-{% set table = view.table %}
-{% set hasTable = view.hasTable %}
+{% set tables = view.tables %}
 
 <h2 class="govuk-heading-m">
     {{ text.header }}
@@ -32,7 +31,7 @@
     </div>
 </div>
 
-{% if hasTable %}
+{% if tables|length > 0 %}
     <div class="govuk-summary-card">
         <div class="govuk-summary-card__title-wrapper">
             <h3 class="govuk-summary-card__title govuk-!-width-full">
@@ -40,17 +39,18 @@
             </h3>
         </div>
         <div class="govuk-summary-card__content">
-            <table class="govuk-table">
-                {% if table.header is not null %}
-                    <thead>
+            {% for table in tables %}
+                <table class="govuk-table">
+                    {% if table.header is not null %}
+                        <thead>
                         <tr class="govuk-table__row">
                             {% for cell in table.header.cells %}
                                 <th {% if cell.hasScope %} scope="col" {% endif %} class="{{ cell.classNames }}">{{ cell.content }}</th>
                             {% endfor %}
                         </tr>
-                    </thead>
-                {% endif %}
-                <tbody class="govuk-table__body">
+                        </thead>
+                    {% endif %}
+                    <tbody class="govuk-table__body">
                     {% for row in table.rows %}
                         <tr class="govuk-table__row">
                             {% for cell in row.cells %}
@@ -66,8 +66,9 @@
                             {% endfor %}
                         </tr>
                     {% endfor %}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            {% endfor %}
         </div>
     </div>
 {% endif %}

@@ -8,15 +8,28 @@ final readonly class Row
 {
     public array $cells;
 
-    public function __construct(bool $sized, bool $firstColumnIsHeader, Cell ...$cells)
-    {
+    public function __construct(
+        bool $sized,
+        bool $firstColumnIsHeader,
+        bool $isTableHeader,
+        Cell ...$cells
+    ) {
         $sizedCells = [];
-        foreach ($cells as $index => $cell) {
+        $isFirstColumn = true;
+        $count = $sized ? array_sum(array_map(fn(Cell $cell): int => $cell->size, $cells)) : null;
+        foreach ($cells as $cell) {
+            $isHeader = $cell->isHeader ?? ($isFirstColumn && $firstColumnIsHeader);
+            $hasScope = $isTableHeader || ($isFirstColumn && $isHeader);
+            if ($cell->content !== '') {
+                $isFirstColumn = false;
+            }
             $sizedCells[] = new SizedCell(
                 $cell->content,
-                $cell->isHeader ?? ($index === 0 && $firstColumnIsHeader),
+                $isHeader,
+                $hasScope,
                 $cell->format,
-                $sized ? count($cells) : null
+                $count,
+                $cell->size
             );
         }
         $this->cells = $sizedCells;

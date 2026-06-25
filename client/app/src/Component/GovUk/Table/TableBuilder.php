@@ -24,14 +24,14 @@ final class TableBuilder
     public function addHeader(string|Cell ...$cells): TableBuilder
     {
         $cells = array_map(fn (string|Cell $cell): Cell => is_string($cell) ? new Cell($cell) : $cell, $cells);
-        $this->header = new Row($this->sized, false, ...$cells);
+        $this->header = new Row($this->sized, false, true, ...$cells);
         return $this;
     }
 
     public function addRow(string|Cell ...$cells): TableBuilder
     {
         $cells = array_map(fn (string|Cell $cell): Cell => is_string($cell) ? new Cell($cell) : $cell, $cells);
-        $this->rows[] = new Row($this->header === null && $this->sized, $this->firstColumnIsHeader, ...$cells);
+        $this->rows[] = new Row($this->header === null && $this->sized, $this->firstColumnIsHeader, false, ...$cells);
         return $this;
     }
 
