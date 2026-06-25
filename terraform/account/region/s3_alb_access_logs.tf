@@ -8,6 +8,10 @@ locals {
   s3_access_log_account_name = var.account.name == "development" ? "dev" : var.account.name
 }
 
+data "aws_s3_bucket" "access_logging" {
+  bucket = "s3-access-logs-opg-digideps-${local.s3_access_log_account_name}-${data.aws_region.current.name}"
+}
+
 resource "aws_s3_bucket" "alb_access" {
   bucket        = "alb-logs.${data.aws_region.current.name}.${local.s3_alb_log_account_name}.digideps.opg.service.justice.gov.uk"
   force_destroy = var.account.name == "production" ? false : true
@@ -55,14 +59,10 @@ resource "aws_s3_bucket_public_access_block" "alb_access" {
   restrict_public_buckets = true
 }
 
-resource "aws_s3_bucket_policy" "bucket" {
+resource "aws_s3_bucket_policy" "alb_access" {
   depends_on = [aws_s3_bucket_public_access_block.alb_access]
   bucket     = aws_s3_bucket.alb_access.id
   policy     = data.aws_iam_policy_document.alb_access.json
-}
-
-data "aws_s3_bucket" "access_logging" {
-  bucket = "s3-access-logs-opg-digideps-${local.s3_access_log_account_name}-${data.aws_region.current.name}"
 }
 
 resource "aws_s3_bucket_logging" "alb_access" {

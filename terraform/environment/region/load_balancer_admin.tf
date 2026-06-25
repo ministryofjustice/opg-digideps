@@ -6,6 +6,12 @@ resource "aws_lb" "admin" {
   idle_timeout               = 300
   drop_invalid_header_fields = true
 
+  access_logs {
+    bucket  = data.aws_s3_bucket.alb_access.bucket
+    prefix  = "admin-${var.account.name}"
+    enabled = true
+  }
+
   security_groups = [module.admin_elb_security_group.id, module.admin_elb_security_group_route53_hc.id]
 
   tags = merge(var.default_tags, { "Name" = "admin-${local.environment}" }, )
