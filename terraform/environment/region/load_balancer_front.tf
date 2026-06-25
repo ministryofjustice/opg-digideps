@@ -1,7 +1,3 @@
-locals {
-  maintenance_mode = local.environment == "production02" ? "*" : "/dd-maintenance"
-}
-
 resource "aws_lb" "front" {
   name                       = "front-${local.environment}"
   internal                   = false #tfsec:ignore:aws-elb-alb-not-public - This is a public LB
@@ -65,7 +61,7 @@ resource "aws_lb_listener_rule" "front_maintenance" {
 
   condition {
     path_pattern {
-      values = [local.maintenance_mode]
+      values = "/dd-maintenance"
     }
   }
 }
