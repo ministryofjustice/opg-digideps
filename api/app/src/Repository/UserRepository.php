@@ -378,9 +378,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->addOrderBy('u.firstname', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults($limit);
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); // disable softdelete for createdBy, needed from admin area
+        $this->getEntityManager()->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); // disable softdelete for createdBy, needed from admin area
         $records = $qbSelect->getQuery()->getResult(); /* @var $records User[] */
-        $this->_em->getFilters()->enable('softdeleteable');
+        $this->getEntityManager()->getFilters()->enable('softdeleteable');
 
         // run counts on the base query for each status (new/archived)
         $qbCount = clone $this->qb;
@@ -477,7 +477,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function save(User $user): void
     {
-        $this->_em->persist($user);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
     }
 }

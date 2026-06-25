@@ -1,9 +1,9 @@
-name: "[Scheduled] Run test restores on Integration"
+name: "[Scheduled] Run test restores on Preproduction"
 
 on:
   schedule:
-    # 2pm every Saturday
-    - cron: "0 14 * * 6"
+    # First Saturday of the Month
+    - cron: "0 14 * * 6#1"
 
 permissions:
   id-token: write
@@ -19,7 +19,7 @@ permissions:
   statuses: none
 
 jobs:
-  restore_to_point_in_time:
+  restore_from_local_restore_point:
     runs-on: ubuntu-latest
     name: restore to a point in time
     steps:
@@ -44,11 +44,10 @@ jobs:
       - name: restore from cross account backup
         id: restore
         run: |
-          TEN_MINS_AGO="$(TZ=UTC date -d '-5 minutes' +'%Y-%m-%d %H:%M:%S')"
           python3 database_restore.py \
-            --environment preproduction \
-            --cluster_from digideps-integration \
-            --pitr "${TEN_MINS_AGO}"
+          --environment preproduction \
+          --cluster_from digideps-preproduction \
+          --aws_backup True \
         working-directory: disaster-recovery/restore
 
       - name: Unset AWS variables
@@ -60,7 +59,7 @@ jobs:
             echo "AWS_SESSION_TOKEN="
           } >> "$GITHUB_ENV"
 
-  restore_from_remote_backup:
+  restore_from_remote_restore_point:
     runs-on: ubuntu-latest
     name: restore from cross account backup
     needs:
@@ -84,23 +83,14 @@ jobs:
           role-duration-seconds: 7200
           aws-region: eu-west-1
 
-      - name: get latest integration snapshot id
-        id: snapshot
-        run: |
-          SNAPSHOT_ID="$(python get_cross_acct_snapshot.py)"
-          echo "snapshot_id=${SNAPSHOT_ID}" >> "$GITHUB_OUTPUT"
-        working-directory: disaster-recovery/restore
-
       - name: restore from remote backup
         id: restore
-        env:
-          SNAPSHOT_ID: ${{ steps.snapshot.outputs.snapshot_id }}
         run: |
-          python database_restore.py \
-            --environment preproduction \
-            --cluster_from digideps-integration \
-            --restore_from_remote True \
-            --snapshot_id "${SNAPSHOT_ID}"
+          python3 database_restore.py \
+          --environment preproduction \
+          --cluster_from digideps-preproduction \
+          --aws_backup True \
+          --restore_from_remote True
         working-directory: disaster-recovery/restore
 
       - name: Unset AWS variables

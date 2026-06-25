@@ -1,4 +1,18 @@
 locals {
+  sg_rules_disabled_by_env = {
+    preproduction = ["integration_test"]
+    production    = ["integration_test", "db_access_tasks_non_prod"]
+  }
+
+  api_rds_sg_rules_filtered = {
+    for k, v in local.api_rds_sg_rules :
+    k => v
+    if !contains(
+      lookup(local.sg_rules_disabled_by_env, local.environment, []),
+      k
+    )
+  }
+
   api_rds_sg_rules = {
     api_service = {
       port        = 5432
@@ -21,6 +35,13 @@ locals {
       target_type = "security_group_id"
       target      = module.db_access_task_security_group.id
     }
+    db_access_tasks_non_prod = {
+      port        = 5432
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.db_access_task_non_prod_security_group.id
+    }
     integration_test = {
       port        = 5432
       type        = "ingress"
@@ -41,7 +62,7 @@ locals {
 module "api_rds_security_group" {
   source      = "./modules/security_group"
   description = "RDS Database"
-  rules       = local.api_rds_sg_rules
+  rules       = local.api_rds_sg_rules_filtered
   name        = "api-rds"
   tags        = var.default_tags
   vpc_id      = data.aws_vpc.main.id

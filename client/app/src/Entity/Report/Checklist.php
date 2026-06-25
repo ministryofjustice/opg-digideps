@@ -1,257 +1,181 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use OPG\Digideps\Frontend\Entity\SynchronisableInterface;
 use OPG\Digideps\Frontend\Entity\SynchronisableTrait;
 use OPG\Digideps\Frontend\Entity\Traits\ModifyAudit;
 use OPG\Digideps\Frontend\Entity\User;
-use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Checklist.
- */
 class Checklist implements SynchronisableInterface
 {
     use HasReportTrait;
     use ModifyAudit;
     use SynchronisableTrait;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("integer")
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('integer')]
     private ?int $id = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.reportingPeriodAccurate.notBlank", groups={"submit-common-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.reportingPeriodAccurate.notBlank', groups: ['submit-common-checklist'])]
     private ?string $reportingPeriodAccurate = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("boolean")
-     * @Assert\NotBlank(message="checklist.contactDetailsUptoDate.notBlank", groups={"submit-common-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('boolean')]
+    #[Assert\NotBlank(message: 'checklist.contactDetailsUptoDate.notBlank', groups: ['submit-common-checklist'])]
     private ?bool $contactDetailsUptoDate = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("boolean")
-     * @Assert\NotBlank(message="checklist.deputyFullNameAccurateInSirius.notBlank", groups={"submit-deputy-fullname-accurate-sirius-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('boolean')]
+    #[Assert\NotBlank(message: 'checklist.deputyFullNameAccurateInSirius.notBlank', groups: ['submit-deputy-fullname-accurate-sirius-checklist'])]
     private ?bool $deputyFullNameAccurateInSirius = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.decisionsSatisfactory.notBlank", groups={"submit-decisions-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.decisionsSatisfactory.notBlank', groups: ['submit-decisions-checklist'])]
     private ?string $decisionsSatisfactory = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.consultationsSatisfactory.notBlank", groups={"submit-common-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.consultationsSatisfactory.notBlank', groups: ['submit-common-checklist'])]
     private ?string $consultationsSatisfactory = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.careArrangements.notBlank", groups={"submit-visitsCare-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.careArrangements.notBlank', groups: ['submit-visitsCare-checklist'])]
     private ?string $careArrangements = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.assetsDeclaredAndManaged.notBlank", groups={"submit-assets-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.assetsDeclaredAndManaged.notBlank', groups: ['submit-assets-checklist'])]
     private ?string $assetsDeclaredAndManaged = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.debtsManaged.notBlank", groups={"submit-debts-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.debtsManaged.notBlank', groups: ['submit-debts-checklist'])]
     private ?string $debtsManaged = null;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-checklist"})
-     * @Assert\NotBlank(message="checklist.yesNoNa", groups={"submit-clientBenefitsCheck-checklist"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-checklist'])]
+    #[Assert\NotBlank(message: 'checklist.yesNoNa', groups: ['submit-clientBenefitsCheck-checklist'])]
     private ?string $clientBenefitsChecked = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.openClosingBalancesMatch.notBlank", groups={"submit-bankAccounts-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.openClosingBalancesMatch.notBlank', groups: ['submit-balance-checklist'])]
     private ?string $openClosingBalancesMatch = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.accountsBalance.notBlank", groups={"submit-balance-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.accountsBalance.notBlank', groups: ['submit-balance-checklist'])]
     private ?string $accountsBalance = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.moneyMovementsAcceptable.notBlank", groups={"submit-bankAccounts-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.moneyMovementsAcceptable.notBlank', groups: ['submit-bankAccounts-checklist'])]
     private ?string $moneyMovementsAcceptable = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.deputyChargeAllowedByCourt.notBlank", groups={"submit-paDeputyExpenses-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.deputyChargeAllowedByCourt.notBlank', groups: ['submit-paDeputyExpenses-checklist'])]
     protected ?string $deputyChargeAllowedByCourt = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.satisfiedWithPaExpenses.notBlank", groups={"submit-paDeputyExpenses-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.satisfiedWithPaExpenses.notBlank', groups: ['submit-paDeputyExpenses-checklist'])]
     protected ?string $satisfiedWithPaExpenses = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.lifestyle.notBlank", groups={"submit-lifestyle-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.lifestyle.notBlank', groups: ['submit-lifestyle-checklist'])]
     private ?string $satisfiedWithHealthAndLifestyle = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.bondOrderMatchSirius.notBlank", groups={"submit-bonds-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.bondOrderMatchSirius.notBlank', groups: ['submit-bonds-checklist'])]
     private ?string $bondAdequate = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.bondOrderMatchSirius.notBlank", groups={"submit-bonds-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.bondOrderMatchSirius.notBlank', groups: ['submit-bonds-checklist'])]
     private ?string $bondOrderMatchSirius = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.futureSignificantDecisions.notBlank", groups={"submit-common-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.futureSignificantDecisions.notBlank', groups: ['submit-common-checklist'])]
     private ?string $futureSignificantDecisions = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.hasDeputyRaisedConcerns.notBlank", groups={"submit-common-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.hasDeputyRaisedConcerns.notBlank', groups: ['submit-common-checklist'])]
     private ?string $hasDeputyRaisedConcerns = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.caseWorkerSatisified.notBlank", groups={"submit-common-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.caseWorkerSatisified.notBlank', groups: ['submit-common-checklist'])]
     private ?string $caseWorkerSatisified = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.paymentsMatchCostCertificate.notBlank", groups={"submit-profDeputyCosts-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.paymentsMatchCostCertificate.notBlank', groups: ['submit-profDeputyCosts-checklist'])]
     private ?string $paymentsMatchCostCertificate = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.profCostsReasonableAndProportionate.notBlank", groups={"submit-profDeputyCosts-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.profCostsReasonableAndProportionate.notBlank', groups: ['submit-profDeputyCosts-checklist'])]
     private ?string $profCostsReasonableAndProportionate = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.hasDeputyOverchargedFromPreviousEstimates.notBlank", groups={"submit-profDeputyCosts-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.hasDeputyOverchargedFromPreviousEstimates.notBlank', groups: ['submit-profDeputyCosts-checklist'])]
     private ?string $hasDeputyOverchargedFromPreviousEstimates = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.nextBillingEstimatesSatisfactory.notBlank", groups={"submit-profDeputyCostsEstimate-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.nextBillingEstimatesSatisfactory.notBlank', groups: ['submit-profDeputyCostsEstimate-checklist'])]
     private ?string $nextBillingEstimatesSatisfactory = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.lodgingSummary.notBlank", groups={"submit-common-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.lodgingSummary.notBlank', groups: ['submit-common-checklist'])]
     private ?string $lodgingSummary = null;
 
-    /**
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.finalDecision.notBlank", groups={"submit-common-checklist"})
-     */
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.finalDecision.notBlank', groups: ['submit-common-checklist'])]
     private ?string $finalDecision = null;
 
-    /**
-     * @var ChecklistInformation[]
-     *
-     * @JMS\Groups({"checklist-information"})
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ChecklistInformation>")
-     */
+    /** @var array<ChecklistInformation> */
+    #[JMS\Groups(['checklist-information'])]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ChecklistInformation>')]
     private array $checklistInformation = [];
 
-    /**
-     * @JMS\Groups({"checklist-information"})
-     * @JMS\Type("string")
-     */
+    #[JMS\Groups(['checklist-information'])]
+    #[JMS\Type('string')]
     private ?string $furtherInformationReceived = null;
 
-    /**
-     * Submitted by.
-     *
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
-     * @JMS\Groups({"checklist-information"})
-     */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
+    #[JMS\Groups(['checklist-information'])]
     protected ?User $submittedBy = null;
 
-    /**
-     * Submitted on.
-     *
-     * @JMS\Type("DateTime")
-     */
+    #[JMS\Type('DateTime')]
     protected ?\DateTime $submittedOn = null;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-checklist"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-checklist'])]
     protected ?string $buttonClicked = null;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-checklist-uuid"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-checklist-uuid'])]
     private ?string $uuid = null;
 
-    /**
-     * Checklist constructor.
-     */
     public function __construct(Report $report)
     {
         $this->setReport($report);
@@ -603,9 +527,11 @@ class Checklist implements SynchronisableInterface
         return $this->furtherInformationReceived;
     }
 
-    public function setFurtherInformationReceived(?string $furtherInformationReceived): void
+    public function setFurtherInformationReceived(?string $furtherInformationReceived): static
     {
         $this->furtherInformationReceived = $furtherInformationReceived;
+
+        return $this;
     }
 
     public function getSubmittedBy(): ?User

@@ -34,7 +34,7 @@ class AuthControllerTest extends AbstractTestController
             'assertCode' => 498,
             'assertResponseCode' => 498,
         ]);
-        $this->assertStringContainsString('Bad credentials', $return['message']);
+        $this->assertStringContainsString('Cannot find user with the given credentials', $return['message']);
 
         // assert I'm still not logged
         $this->assertJsonRequest('GET', '/auth/get-logged-user', [
@@ -184,7 +184,7 @@ class AuthControllerTest extends AbstractTestController
         // assert the application returns 498 (invalid credentials) for the 1st 4 attempts
         // and after 4 attempts it will return 499 (invalid credentials + too many attempts detected),
         // still allowing the user to try
-        foreach ([498, 498, 498, 498, 500] as $expectedReturnCode) {
+        foreach ([498, 498, 498, 498, 499] as $expectedReturnCode) {
             $this->assertJsonRequest('POST', '/auth/login', [
                 'mustFail' => true,
                 'data' => [
@@ -216,8 +216,8 @@ class AuthControllerTest extends AbstractTestController
             'AuthToken' => $authToken,
         ]);
 
-        // 10  attempts
-        foreach ([498, 498, 498, 498, 500, 500, 500, 500, 500] as $expectedReturnCode) {
+        // 9 attempts
+        foreach ([498, 498, 498, 498, 499, 499, 499, 499, 499] as $expectedReturnCode) {
             $this->assertJsonRequest('POST', '/auth/login', [
                 'mustFail' => true,
                 'data' => [
