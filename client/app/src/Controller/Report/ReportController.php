@@ -11,7 +11,6 @@ use OPG\Digideps\Frontend\Entity\DeputyInterface;
 use OPG\Digideps\Frontend\Entity\Report\Document;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
-use OPG\Digideps\Frontend\Event\RegistrationSucceededEvent;
 use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
 use OPG\Digideps\Frontend\Exception\DisplayableException;
 use OPG\Digideps\Frontend\Exception\ReportNotSubmittableException;
@@ -140,57 +139,6 @@ class ReportController extends AbstractController
             'report' => $report,
             'form' => $editReportDatesForm->createView(),
             'returnLink' => $returnLink,
-        ];
-    }
-
-    /**
-     * Create report
-     * default action "create" will create only one report (used during registration steps to avoid duplicates when going back from the browser)
-     * action "add" will instead add another report.
-     */
-    #[Route(path: '/report/{action}/{clientId}', name: 'report_create', requirements: ['action' => '(create|add)'], defaults: ['action' => 'create'])]
-    #[Template('@App/Report/Report/create.html.twig')]
-    public function createAction(Request $request, string $clientId): RedirectResponse|array
-    {
-        /** @var Client $client */
-        $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-id', 'client-reports', 'report-id']);
-
-        $existingReports = $this->reportApi->getReportsIndexedById($client);
-
-        if (count($existingReports)) {
-            throw $this->createAccessDeniedException('Client already has a report');
-        }
-
-        $report = new Report();
-        $report->setClient($client);
-
-        $form = $this->formFactory->createNamed(
-            'report',
-            ReportType::class,
-            $report,
-            [
-                'translation_domain' => 'registration',
-                'action' => $this->generateUrl('report_create', ['clientId' => $clientId]), // TODO useless ?
-            ]
-        );
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var array $data */
-            $data = $form->getData();
-
-            $this->restClient->post('report', $data);
-
-            $user = $this->userApi->getUserWithData();
-            $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::DEPUTY);
-
-            return $this->redirect($this->generateUrl('homepage'));
-        }
-
-        return [
-            'form' => $form->createView(),
-            'clientId' => $clientId,
         ];
     }
 

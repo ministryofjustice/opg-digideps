@@ -118,48 +118,6 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testAddAuth(): void
-    {
-        $url = '/report';
-        $this->assertEndpointNeedsAuth('POST', $url);
-
-        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
-    }
-
-    public function testAddAcl(): void
-    {
-        $url = '/report';
-        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy, [
-            'client' => ['id' => self::$client2->getId()],
-        ]);
-    }
-
-    public function testAdd(): void
-    {
-        $url = '/report';
-
-        // add new report
-        $reportId = $this->assertJsonRequest('POST', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-            'data' => [
-                'client' => ['id' => self::$client3->getId()],
-            ],
-        ])['data']['report'];
-
-        self::fixtures()->clear();
-
-        // assert creation
-        $report = self::fixtures()->getReportById($reportId);
-
-        $this->assertEquals(self::$client3->getId(), $report->getClient()->getId());
-
-        $this->assertEquals(self::$order3->getOrderMadeDate()->format('Y-m-d'), $report->getStartDate()->format('Y-m-d'));
-        $this->assertEquals(self::$order3->getOrderMadeDate()->add(new \DateInterval('P1Y'))->sub(new \DateInterval('P1D'))->format('Y-m-d'), $report->getEndDate()->format('Y-m-d'));
-
-        self::fixtures()->flush();
-    }
-
     public function testGetByIdAuth(): void
     {
         $url = '/report/' . self::$report1->getId();
