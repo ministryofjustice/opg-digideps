@@ -439,4 +439,32 @@ trait CourtOrderTrait
         $this->em->persist($this->courtOrder);
         $this->em->flush();
     }
+
+    /**
+     * @Given the client with court order :courtOrderUid is associated with a :orderType report
+     */
+    public function clientAssociatedWithCourtOrderHasReport(string $courtOrderUid, string $orderType): void
+    {
+        $courtOrder = $this->em->getRepository(CourtOrder::class)->findOneBy(['courtOrderUid' => $courtOrderUid]);
+
+        if (!$courtOrder instanceof CourtOrder) {
+            throw new BehatException("Unable to find any CourtOrder with courtOrderUid {$courtOrderUid}");
+        }
+        $client = $courtOrder->getClient();
+
+        // create a new report
+        $type = Report::TYPE_HEALTH_WELFARE;
+        if ($orderType === CourtOrderType::PFA) {
+            $type = Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS;
+        }
+
+        $now = new \DateTime();
+        $report = new Report($client, $type, $now, $now, false);
+        $report->setClient($client);
+
+        $courtOrder->addReport($report);
+
+        $this->em->persist($report);
+        $this->em->flush();
+    }
 }
