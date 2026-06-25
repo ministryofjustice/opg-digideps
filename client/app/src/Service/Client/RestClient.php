@@ -2,18 +2,17 @@
 
 namespace OPG\Digideps\Frontend\Service\Client;
 
-use OPG\Digideps\Frontend\Entity\User;
-use OPG\Digideps\Frontend\Exception\RestClientException;
-use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
-use OPG\Digideps\Frontend\Service\JWT\JWTService;
-use OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
-use Lcobucci\JWT\Validation\ConstraintViolation;
 use OPG\Digideps\Common\Registration\SelfRegisterData;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Exception\RestClientException;
+use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
+use OPG\Digideps\Frontend\Service\JWT\JWTService;
+use OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,7 +21,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Connects to RESTful Server (API)
@@ -74,8 +72,7 @@ class RestClient implements RestClientInterface
         protected LoggerInterface $logger,
         protected string $clientSecret,
         protected ParameterBagInterface $params,
-        protected HttpClientInterface $openInternetClient,
-        protected JWTService $JWTService
+        protected JWTService $jwtService
     ) {
         $saveHistory = $params->get('kernel.debug');
         if ($saveHistory !== true) {
@@ -98,37 +95,33 @@ class RestClient implements RestClientInterface
         try {
             $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
         } catch (RestClientException $e) {
-            if ($e->getCode() == 423) {
+            if ($e->getCode() === 423) {
                 throw new TooManyLoginAttemptsAuthenticationException($e->getData()['data']);
             } else {
                 throw new BadCredentialsException('Invalid credentials.', 498);
             }
         }
 
-        /** @var User $user */
         $user = $this->arrayToEntity(User::class, $this->extractDataArray($response));
         $authToken = $response->getHeader(RestClient::HEADER_AUTH_TOKEN)[0];
 
         // Temporarily scoping this to super admins until we're happy with the flow
         if ($response->hasHeader(self::HEADER_JWT) && $user->getRoleName() === User::ROLE_SUPER_ADMIN) {
             try {
-                $jwt = $response->getHeader(self::HEADER_JWT)[0];
-                $jwtHeaders = $this->JWTService->getJWTHeaders($jwt);
+                /** @var ?string $jwt */
+                $jwt = $response->getHeader(self::HEADER_JWT)[0] ?? null;
 
-                // Get public key from API
-                $jwkResponse = $this->openInternetClient->request('GET', $jwtHeaders['jku']);
-                $jwks = json_decode($jwkResponse->getContent(), true);
+                if ($jwt === null) {
+                    throw new \HttpHeaderException(
+                        sprintf('Expected JWT header "%s" not found in API response', self::HEADER_JWT)
+                    );
+                }
 
-                $decoded = $this->JWTService->decodeAndVerifyWithJWK($jwt, $jwks);
-                $subjectUrn = $decoded->claims()->get('sub');
+                $subjectUrn = $this->jwtService->getUrn($jwt);
 
                 // Move to secure cookie in next iteration
                 $this->redisStorage->set(sprintf('%s-jwt', $subjectUrn), $jwt);
-            } catch (ConstraintViolation $e) {
-                // Swallow expired token errors for now and just log - implement once we're rolling JWT to all users
-                $this->logger->warning(sprintf('JWT expired: %s', $e->getMessage()));
             } catch (\Throwable $e) {
-                // Add steps for refreshing JWT if expired here
                 $jwtDecodeFailureReason = sprintf('Failed to decode JWT - %s', $e->getMessage());
                 $this->logger->warning($jwtDecodeFailureReason);
 
@@ -194,7 +187,7 @@ class RestClient implements RestClientInterface
         // guzzle 6 does not append query groups and params in the string.
         // TODO add $queryParams as a method param (Replace last if not used) and avoid using endpoint with query string
 
-        /** @var array */
+        /** @var array $url */
         $url = parse_url($endpoint);
 
         if (!empty($url['query'])) {
@@ -458,7 +451,7 @@ class RestClient implements RestClientInterface
      */
     private function arrayToEntity(string $class, array $data)
     {
-        /** @var string */
+        /** @var string $data */
         $data = json_encode($data);
 
         try {
