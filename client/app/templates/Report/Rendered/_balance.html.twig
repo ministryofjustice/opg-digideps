@@ -13,7 +13,7 @@
             <div class="govuk-summary-list__row">
                 {# BANK ACCOUNTS #}
                 {% set started = report.status.bankAccountsState['state'] != 'not-started' %}
-                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half govuk-!-font-weight-regular">
                     {{ 'balanceTable.accountsOpeningBalance' | trans({},transDomain) }}
                     {% if started %}
                         ({{ report.startDate | date("j F Y") }})
@@ -28,7 +28,7 @@
                 <div class="govuk-summary-list__row">
                     {# DEPUTY EXPENSES (LAY) #}
                     {% set started = report.status.expensesState['state'] != 'not-started'%}
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    <dt class="govuk-summary-list__key govuk-!-width-one-half govuk-!-font-weight-regular">
                         {{ 'balanceTable.deputyExpenses' | trans({},transDomain) }}
                     </dt>
                     <dd class="govuk-summary-list__value govuk-!-width-one-half">
@@ -42,7 +42,7 @@
                     {# FEES/EXPENSES (PA) #}
                     {% set started = report.status.paFeesExpensesState['state'] != 'not-started' %}
                     {% set feesAndExpensesTotal = report.feesTotal + report.expensesTotal %}
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    <dt class="govuk-summary-list__key govuk-!-width-one-half govuk-!-font-weight-regular">
                         {{ 'balanceTable.paDeputyExpenses' | trans({},transDomain) }}
                     </dt>
                     <dd class="govuk-summary-list__value govuk-!-width-one-half">
@@ -54,7 +54,7 @@
             <div class="govuk-summary-list__row">
                 {# GIFTS #}
                 {% set started = report.status.giftsState['state'] != 'not-started' %}
-                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half govuk-!-font-weight-regular">
                     {{ 'balanceTable.gifts' | trans({},transDomain) }}
                 </dt>
                 <dd class="govuk-summary-list__value govuk-!-width-one-half">
@@ -65,7 +65,7 @@
             {% if report.hasSection('profDeputyCosts') %}
                 <div class="govuk-summary-list__row">
                     {% set started = report.status.profDeputyCostsState['state'] != 'not-started' %}
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    <dt class="govuk-summary-list__key govuk-!-width-one-half govuk-!-font-weight-regular">
                         {{ 'balanceTable.profDeputyCosts' | trans({},transDomain) }}
                     </dt>
                     <dd class="govuk-summary-list__value govuk-!-width-one-half">
@@ -77,7 +77,7 @@
             <div class="govuk-summary-list__row">
                 {# MONEY IN #}
                 {% set started = report.status.moneyInState['state'] != 'not-started' %}
-                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half govuk-!-font-weight-regular">
                     {{ 'balanceTable.moneyIn' | trans({},transDomain) }}
                 </dt>
                 <dd class="govuk-summary-list__value govuk-!-width-one-half">
@@ -88,7 +88,7 @@
             <div class="govuk-summary-list__row">
                 {# MONEY OUT #}
                 {% set started = report.status.moneyOutState['state'] != 'not-started' %}
-                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half govuk-!-font-weight-regular">
                     {{ 'balanceTable.moneyOut' | trans({},transDomain) }}
                 </dt>
                 <dd class="govuk-summary-list__value govuk-!-width-one-half">
@@ -120,7 +120,7 @@
             <div class="govuk-summary-list__row">
                 {# BANK ACCOUNTS #}
                 {% set started = report.status.bankAccountsState['state'] != 'not-started' %}
-                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half govuk-!-font-weight-regular">
                     {{ 'differenceTable.accountsClosingBalance' | trans({},transDomain) }}
                     {% if started %}
                         ({{ report.endDate | date("j F Y") }})
@@ -131,7 +131,7 @@
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half govuk-!-font-weight-regular">
                     {{ 'differenceTable.reportClosingBalance' | trans({},transDomain) }}
                 </dt>
                 <dd class="govuk-summary-list__value govuk-!-width-one-half">
@@ -157,7 +157,7 @@
 
             {% if not report.isTotalsMatch and report.balanceMismatchExplanation is not null%}
                 <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    <dt class="govuk-summary-list__key govuk-!-width-one-half govuk-!-font-weight-regular">
                         {{ 'cantFind.reasonNotBalancing' | trans({},transDomain) }}
                     </dt>
                     <dd class="govuk-summary-list__value govuk-!-width-one-half">
