@@ -12,7 +12,7 @@ resource "aws_lb" "front" {
 
   access_logs {
     bucket  = data.aws_s3_bucket.alb_access.bucket
-    prefix  = "front-${var.account.name}"
+    prefix  = "front-${local.environment}"
     enabled = true
   }
 

@@ -8,7 +8,7 @@ resource "aws_lb" "admin" {
 
   access_logs {
     bucket  = data.aws_s3_bucket.alb_access.bucket
-    prefix  = "admin-${var.account.name}"
+    prefix  = "admin-${local.environment}"
     enabled = true
   }
 
