@@ -1065,7 +1065,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: api/app/src/Controller/Report/ReportController.php
 
 		-
@@ -1401,7 +1401,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$criteriaOrId of method OPG\\Digideps\\Backend\\Controller\\RestController\:\:findEntityBy\(\) expects array\|int, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: api/app/src/Controller/Report/ReportController.php
 
 		-
@@ -21859,12 +21859,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Cannot access offset ''report'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''start_date'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
@@ -21955,12 +21949,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Cannot call method getClient\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
 			message: '#^Cannot call method getCreatedBy\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\ChecklistInformation\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -21970,12 +21958,6 @@ parameters:
 			message: '#^Cannot call method getCreatedOn\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\ChecklistInformation\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method getEndDate\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
@@ -22015,12 +21997,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Cannot call method getStartDate\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
 			message: '#^Cannot call method setDueDate\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -22036,12 +22012,6 @@ parameters:
 			message: '#^Parameter \#1 \$array of function array_shift expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
