@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Service\JWT;
 
-use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\Service\SecretManagerService;
-use OPG\Digideps\Backend\Service\Time\DateTimeProvider;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Validation\Constraint\IssuedBy;
 use Lcobucci\JWT\Validation\Constraint\PermittedFor;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\SecretManagerService;
+use OPG\Digideps\Backend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 
 class JWTService
@@ -43,13 +43,11 @@ class JWTService
             ->issuedBy(self::generateIss());
 
         if ($user) {
-            $token
-                    ->relatedTo(self::generateSub((string) $user->getId()))
-                    ->withClaim('role', self::generateRole($user->getRoleName()));
+            $token->relatedTo(self::generateSub((string) $user->getId()))
+                ->withClaim('role', self::generateRole($user->getRoleName()));
         }
 
-        return $token
-            ->getToken($config->signer(), $config->signingKey())
+        return $token->getToken($config->signer(), $config->signingKey())
             ->toString();
     }
 
