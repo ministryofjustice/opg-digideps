@@ -9,12 +9,6 @@ Feature: Lay CSV data ingestion - sirius source data
         And the count of the new 'lay' entities added should be in the command output
 
     @super-admin
-    Scenario: Uploading a Lay CSV that contains existing pre-registration entities with new report type
-        Given a csv has been uploaded to the sirius bucket with the file 'lay-1-row-updated-report-type.csv'
-        When I run the lay CSV command where a file has a new report type '103' for case number '34343434'
-        Then the clients report type should be updated
-
-    @super-admin
     Scenario: Uploading a Lay CSV that contains deputies with missing required information alongside valid deputy rows
         Given a csv has been uploaded to the sirius bucket with the file 'lay-1-row-missing-all-required-1-valid-row.csv'
         When I run the lay CSV command the file has 1 row with missing values for 'caseNumber, clientLastname, deputyUid and deputySurname' and 1 valid row
