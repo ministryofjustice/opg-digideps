@@ -155,12 +155,6 @@ class ClientController extends AbstractController
 
                 $client->setId($response['id']);
 
-                if (empty($client->getCurrentReport())) {
-                    $report = new Report();
-                    $report->setClient($client);
-                    $this->restClient->post('report', $report);
-                }
-
                 $currentUser = $this->userApi->getUserWithData();
 
                 $deputyResponse = $this->deputyApi->createDeputyFromUser($currentUser);
