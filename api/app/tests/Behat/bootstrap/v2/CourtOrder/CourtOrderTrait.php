@@ -453,10 +453,9 @@ trait CourtOrderTrait
         $client = $courtOrder->getClient();
 
         // create a new report
-        $type = Report::TYPE_HEALTH_WELFARE;
-        if ($orderType === CourtOrderType::PFA) {
-            $type = Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS;
-        }
+        $type = ($orderType === CourtOrderType::PFA->value) ?
+            Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS :
+            Report::TYPE_HEALTH_WELFARE;
 
         $now = new \DateTime();
         $report = new Report($client, $type, $now, $now, false);

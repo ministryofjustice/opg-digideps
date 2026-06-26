@@ -11,7 +11,6 @@ use OPG\Digideps\Frontend\Entity\DeputyInterface;
 use OPG\Digideps\Frontend\Entity\Report\Document;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
-use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
 use OPG\Digideps\Frontend\Exception\DisplayableException;
 use OPG\Digideps\Frontend\Exception\ReportNotSubmittableException;
 use OPG\Digideps\Frontend\Form\FeedbackReportType;
@@ -102,7 +101,6 @@ class ReportController extends AbstractController
         private readonly SatisfactionApi $satisfactionApi,
         private readonly FormFactoryInterface $formFactory,
         private readonly TranslatorInterface $translator,
-        private readonly ObservableEventDispatcher $eventDispatcher,
         private readonly S3Storage $s3Storage,
     ) {
     }
