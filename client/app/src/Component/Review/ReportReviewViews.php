@@ -33,4 +33,11 @@ final readonly class ReportReviewViews
         $section->mount($this->report);
         return $section;
     }
+
+    public function getActionsReviewView(): ActionsReviewView
+    {
+        $section = new ActionsReviewView($this->translator);
+        $section->mount($this->report);
+        return $section;
+    }
 }

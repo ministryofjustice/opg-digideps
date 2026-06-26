@@ -90,4 +90,10 @@
             'view': review.getDebtsReviewView
         } %}
     {% endif %}
+
+    {% if report.hasSection('actions') %}
+        {% include '@App/Report/Rendered/_actions.html.twig' with {
+            'view': review.getActionsReviewView
+        } %}
+    {% endif %}
 </div>
