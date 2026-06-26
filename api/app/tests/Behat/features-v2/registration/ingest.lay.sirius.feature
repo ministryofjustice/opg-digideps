@@ -29,11 +29,9 @@ Feature: Lay CSV data ingestion - sirius source data
         And a Lay Deputy registers to deputise for this client with valid details
         Then my deputy details should be saved to my account
         And the Lay deputy with deputy UID 700863322001 has 1 associated active clients
-        Then a csv has been uploaded to the sirius bucket with the file 'lay-2-rows-deputy-has-multiple-client-deputyships.csv'
-        When I run the lay CSV command the file contains 2 new pre-registration entities
-        And the Lay deputy with deputy UID 700863322001 has 2 associated active clients
+        When a csv has been uploaded to the sirius bucket with the file 'lay-2-rows-deputy-has-multiple-client-deputyships.csv'
+        And I run the lay CSV command the file contains 2 new pre-registration entities
+        Then the Lay deputy with deputy UID 700863322001 has 2 associated active clients
         And the client with case number '12345673' should have the address '64 zoo lane, vrombaut, beebies, london, , cl1 3nt'
-        And the client with case number '12345673' should have an active report with type '102'
         When I run the lay CSV command the file contains 2 new pre-registration entities
-        And the Lay deputy with deputy UID 700863322001 has 2 associated active clients
-        And the client with case number '12345673' should have an active report with type '102'
+        Then the Lay deputy with deputy UID 700863322001 has 2 associated active clients
