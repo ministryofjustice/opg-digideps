@@ -40,4 +40,18 @@ final readonly class ReportReviewViews
         $section->mount($this->report);
         return $section;
     }
+
+    public function getOtherInfoReviewView(): OtherInfoReviewView
+    {
+        $section = new OtherInfoReviewView($this->translator);
+        $section->mount($this->report);
+        return $section;
+    }
+
+    public function getDocumentsReviewView(): DocumentsReviewView
+    {
+        $section = new DocumentsReviewView($this->translator);
+        $section->mount($this->report);
+        return $section;
+    }
 }
