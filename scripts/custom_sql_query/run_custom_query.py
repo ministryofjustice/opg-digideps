@@ -256,7 +256,7 @@ def get_db_endpoint(environment):
     session = assume_custom_sql_role(environment)
     rds = session.client("rds", region_name="eu-west-1")
 
-    cluster_id = f"api-{environment}"
+    cluster_id = f"digideps-{environment}"
 
     try:
         # Get cluster info
