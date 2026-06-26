@@ -7,6 +7,7 @@ Feature: Lay CSV data ingestion - sirius source data for multiclient deputies
         And I run the lay CSV command for "lay-multiclient-codeputies-1.csv"
         And the lay deputy "Guuts Brineg" @ "ingest.lay.multiclient.codeputies.sirius.json" registers as a deputy
         And the client with case number 61513119 is associated with pfa court order 495823874
+        And the client with court order 495823874 is associated with a pfa report
         When "guuts.brineg@nowhere.1111.com" logs in
         Then I should see "Virta Plool"
 
