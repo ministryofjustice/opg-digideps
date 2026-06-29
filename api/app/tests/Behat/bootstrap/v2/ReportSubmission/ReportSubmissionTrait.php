@@ -327,10 +327,10 @@ trait ReportSubmissionTrait
         }
     }
 
-    #[When('I search for submissions using the court order number of the client I am interacting with and check the :status column')]
-    public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientIAmInteractingWithForTheStatusColumn(string $status): void
+    #[When('I search for submissions using the case number of the deputy I am interacting with and check the :status column')]
+    public function iSearchForSubmissionsUsingTheCaseNumberOfTheDeputyIAmInteractingWithForTheStatusColumn(string $status): void
     {
-        $caseNumber = $this->getCaseNumberFromUserDetails($this->oneReportsUserDetails);
+        $caseNumber = $this->getCaseNumberFromUserDetails($this->interactingWithUserDetails);
         $this->fillInField('q', $caseNumber);
         $this->pressButton('Search');
         $this->clickLink($status);
