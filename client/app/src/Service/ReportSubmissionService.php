@@ -2,6 +2,7 @@
 
 namespace OPG\Digideps\Frontend\Service;
 
+use OPG\Digideps\Frontend\Component\Review\ReportReviewViews;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Frontend\Exception\ReportSubmissionDocumentsNotDownloadableException;
@@ -9,6 +10,7 @@ use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Service\Csv\TransactionsCsvGenerator;
 use OPG\Digideps\Frontend\Service\File\S3FileUploader;
 use Psr\Log\LoggerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\Error\Error;
 
@@ -28,7 +30,8 @@ class ReportSubmissionService
         private readonly S3FileUploader $fileUploader,
         private readonly RestClient $restClient,
         private readonly LoggerInterface $logger,
-        private readonly HtmlToPdfGenerator $htmltopdf
+        private readonly HtmlToPdfGenerator $htmltopdf,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -85,6 +88,7 @@ class ReportSubmissionService
     {
         $html = $this->templating->render($devPreview ? '@App/Report/Rendered/standalone.html.twig' : '@App/Report/Formatted/formatted_standalone.html.twig', [
             'report' => $report,
+            'review' => new ReportReviewViews($report, $this->translator),
             'showSummary' => $showSummary,
         ]);
 
