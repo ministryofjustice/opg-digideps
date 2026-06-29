@@ -66,7 +66,7 @@ resource "aws_lb_listener_rule" "admin_maintenance" {
 
   condition {
     path_pattern {
-      values = [local.maintenance_mode]
+      values = ["/dd-maintenance"]
     }
   }
 }
