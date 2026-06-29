@@ -28,7 +28,7 @@ final class ActionsReviewView
     public function mount(Report $report): void
     {
         $this->parameters = ['%client%' => $report->getClient()->getFirstname()];
-        $this->text = $this->makeText($report->getType() === 'hw');
+        $this->text = $this->makeText($report->get104TransSuffix());
         $this->list = $this->makeList($report->getAction());
     }
 
@@ -50,9 +50,8 @@ final class ActionsReviewView
     /**
      * @return  array<string, string>
      */
-    private function makeText(bool $hw): array
+    private function makeText(string $suffix): array
     {
-        $hwLabel = $hw ? '-104' : '';
         return [
             'header' => $this->translate('startPage.pageTitle'),
             'question' => $this->translate('review.question'),
@@ -62,8 +61,8 @@ final class ActionsReviewView
             'notEntered' => $this->translate('review.notEntered'),
             'concerns' => $this->translate('form.doYouHaveConcerns.label'),
             'concernsDetails' => $this->translate('form.doYouHaveConcernsDetails.label'),
-            'financialDecisions' => $this->translate("form.doYouExpectFinancialDecisions.label{$hwLabel}"),
-            'financialDecisionsDetails' => $this->translate("form.doYouExpectFinancialDecisionsDetails.label{$hwLabel}")
+            'financialDecisions' => $this->translate("form.doYouExpectFinancialDecisions.label{$suffix}"),
+            'financialDecisionsDetails' => $this->translate("form.doYouExpectFinancialDecisionsDetails.label{$suffix}")
         ];
     }
 
