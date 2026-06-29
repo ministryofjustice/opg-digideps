@@ -1705,12 +1705,6 @@ parameters:
 			path: src/Controller/SatisfactionController.php
 
 		-
-			message: '#^Binary operation "\." between ''Invalid…'' and Symfony\\Component\\Validator\\ConstraintViolationListInterface results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: src/Controller/SelfRegisterController.php
-
-		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\Client\>\:\:findExistingDeputyCases\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -1759,12 +1753,6 @@ parameters:
 			path: src/Controller/SelfRegisterController.php
 
 		-
-			message: '#^Parameter \#1 \$message of class RuntimeException constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Controller/SelfRegisterController.php
-
-		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1774,6 +1762,12 @@ parameters:
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
+			path: src/Controller/SelfRegisterController.php
+
+		-
+			message: '#^Part \$errors \(Symfony\\Component\\Validator\\ConstraintViolationListInterface\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 2
 			path: src/Controller/SelfRegisterController.php
 
 		-
@@ -8743,12 +8737,6 @@ parameters:
 			path: tests/Behat/bootstrap/Common/BaseFeatureContext.php
 
 		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: tests/Behat/bootstrap/Common/BaseFeatureContext.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\Common\\BaseFeatureContext\:\:debug\(\) has parameter \$name with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -9057,7 +9045,7 @@ parameters:
 		-
 			message: '#^Binary operation "\." between mixed and ''@behat\-test\.com'' results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 5
+			count: 3
 			path: tests/Behat/bootstrap/FeatureContext.php
 
 		-
@@ -9261,7 +9249,7 @@ parameters:
 		-
 			message: '#^Cannot access offset mixed on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
+			count: 5
 			path: tests/Behat/bootstrap/FeatureContext.php
 
 		-
@@ -9541,24 +9529,6 @@ parameters:
 			path: tests/Behat/bootstrap/FeatureContext.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\FeatureContext\:\:iAmViewingTheToReport\(\) has parameter \$client with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 2
-			path: tests/Behat/bootstrap/FeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\FeatureContext\:\:iAmViewingTheToReport\(\) has parameter \$endDate with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 2
-			path: tests/Behat/bootstrap/FeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\FeatureContext\:\:iAmViewingTheToReport\(\) has parameter \$startDate with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 2
-			path: tests/Behat/bootstrap/FeatureContext.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\FeatureContext\:\:iChangeTheUserToken\(\) has parameter \$token with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -9613,30 +9583,6 @@ parameters:
 			path: tests/Behat/bootstrap/FeatureContext.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\FeatureContext\:\:iHaveTheReportBetweenDeputyAndClient\(\) has parameter \$client with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 2
-			path: tests/Behat/bootstrap/FeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\FeatureContext\:\:iHaveTheReportBetweenDeputyAndClient\(\) has parameter \$deputy with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 2
-			path: tests/Behat/bootstrap/FeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\FeatureContext\:\:iHaveTheReportBetweenDeputyAndClient\(\) has parameter \$endDate with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 2
-			path: tests/Behat/bootstrap/FeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\FeatureContext\:\:iHaveTheReportBetweenDeputyAndClient\(\) has parameter \$startDate with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 2
-			path: tests/Behat/bootstrap/FeatureContext.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\FeatureContext\:\:iLoadtheApplicationStatusFrom\(\) has parameter \$status with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -9664,12 +9610,6 @@ parameters:
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\FeatureContext\:\:iSaveTheCurrentUrlAs\(\) has parameter \$urlId with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
-			path: tests/Behat/bootstrap/FeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\FeatureContext\:\:iSaveTheReportAs\(\) has parameter \$reportId with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 2
 			path: tests/Behat/bootstrap/FeatureContext.php
 
 		-
@@ -9940,18 +9880,6 @@ parameters:
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\FeatureContext\:\:visitAdminPath\(\) has parameter \$path with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
-			path: tests/Behat/bootstrap/FeatureContext.php
-
-		-
-			message: '#^Offset 1 might not exist on array\{\}\|array\{non\-falsy\-string, numeric\-string\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 6
-			path: tests/Behat/bootstrap/FeatureContext.php
-
-		-
-			message: '#^Offset 2 does not exist on array\{\}\|array\{non\-falsy\-string, numeric\-string\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 6
 			path: tests/Behat/bootstrap/FeatureContext.php
 
 		-
@@ -10877,12 +10805,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/AdminManagement/AdminManagementFeatureContext.php
-
-		-
-			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 5
-			path: tests/Behat/bootstrap/v2/AppNotification/AppNotificationFeatureContext.php
 
 		-
 			message: '#^Cannot access constant ADMIN_ROLES on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
@@ -12981,12 +12903,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\Client\>\:\:findByCaseNumber\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
-
-		-
-			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
