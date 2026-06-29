@@ -56,7 +56,7 @@ locals {
       },
       {
         name  = "DB_ID"
-        value = "${var.db.name}-${var.environment}"
+        value = "digideps-${var.environment}"
       },
       {
         name  = "CLUSTER"
