@@ -301,6 +301,12 @@ parameters:
 			path: src/Component/Review/AssetsReviewView.php
 
 		-
+			message: '#^Using nullsafe method call on non\-nullable type DateTime\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Component/Review/DocumentsReviewView.php
+
+		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -4723,12 +4729,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Call to function method_exists\(\) with OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyShortCategory and ''isPresent'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 2
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Cannot access offset ''hasMoreDetails'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -4911,12 +4911,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getTotalValue\(\) should return int but returns float\|int\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getWishToProvideDocumentation\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -5299,14 +5293,8 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$actionMoreInfo has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$actionMoreInfoDetails has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$actionMoreInfoDetails \(string\|null\) does not accept mixed\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -5457,12 +5445,6 @@ parameters:
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$submittedBy \(OPG\\Digideps\\Frontend\\Entity\\User\) does not accept OPG\\Digideps\\Frontend\\Entity\\User\|null\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$wishToProvideDocumentation has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -8857,12 +8839,6 @@ parameters:
 			path: src/Service/Client/RestClient.php
 
 		-
-			message: '#^Call to an undefined method Lcobucci\\JWT\\Token\:\:claims\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Service/Client/RestClient.php
-
-		-
 			message: '#^Cannot access offset ''AuthToken'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -8929,12 +8905,6 @@ parameters:
 			path: src/Service/Client/RestClient.php
 
 		-
-			message: '#^Cannot access offset ''jku'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Service/Client/RestClient.php
-
-		-
 			message: '#^Cannot access offset ''message'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -8961,12 +8931,6 @@ parameters:
 		-
 			message: '#^Cannot access offset mixed on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Service/Client/RestClient.php
-
-		-
-			message: '#^Cannot call method get\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: src/Service/Client/RestClient.php
 
@@ -9121,18 +9085,6 @@ parameters:
 			path: src/Service/Client/RestClient.php
 
 		-
-			message: '#^Parameter \#1 \$jwt of method OPG\\Digideps\\Frontend\\Service\\JWT\\JWTService\:\:decodeAndVerifyWithJWK\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/Client/RestClient.php
-
-		-
-			message: '#^Parameter \#1 \$jwt of method OPG\\Digideps\\Frontend\\Service\\JWT\\JWTService\:\:getJWTHeaders\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/Client/RestClient.php
-
-		-
 			message: '#^Parameter \#1 \$method of method GuzzleHttp\\ClientInterface\:\:request\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -9169,12 +9121,6 @@ parameters:
 			path: src/Service/Client/RestClient.php
 
 		-
-			message: '#^Parameter \#2 \$jwks of method OPG\\Digideps\\Frontend\\Service\\JWT\\JWTService\:\:decodeAndVerifyWithJWK\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/Client/RestClient.php
-
-		-
 			message: '#^Parameter \#2 \$method of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:logRequest\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -9187,15 +9133,9 @@ parameters:
 			path: src/Service/Client/RestClient.php
 
 		-
-			message: '#^Parameter \#2 \$url of method Symfony\\Contracts\\HttpClient\\HttpClientInterface\:\:request\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/Client/RestClient.php
-
-		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Service/Client/RestClient.php
 
 		-
@@ -10685,72 +10625,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Service/HtmlToPdfGenerator.php
-
-		-
-			message: '#^Call to an undefined method Lcobucci\\JWT\\Token\:\:claims\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Call to an undefined method Lcobucci\\JWT\\Token\:\:signature\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Cannot access offset ''kid'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Cannot call method all\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Cannot call method hash\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\JWT\\JWTService\:\:base64EncodeJWT\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\JWT\\JWTService\:\:getJWTSignature\(\) should return string\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\JWT\\JWTService\:\:getPublicKeyByJWK\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Parameter \#1 \$contents of static method Lcobucci\\JWT\\Signer\\Key\\InMemory\:\:plainText\(\) expects non\-empty\-string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Parameter \#1 \$index of method Jose\\Component\\Core\\JWKSet\:\:get\(\) expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Parameter \#1 \$string of function base64_encode expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Service/JWT/JWTService.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Logger\:\:debug\(\) has no return type specified\.$#'
@@ -15091,18 +14965,6 @@ parameters:
 			path: tests/Unit/Service/Client/RestClientTest.php
 
 		-
-			message: '#^Cannot use array destructuring on mixed\.$#'
-			identifier: offsetAccess.nonArray
-			count: 1
-			path: tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:generateValidJwtJwkArrays\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Service/Client/RestClientTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testDelete\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -15193,26 +15055,8 @@ parameters:
 			path: tests/Unit/Service/Client/RestClientTest.php
 
 		-
-			message: '#^Parameter \#1 \$data of class Lcobucci\\JWT\\Token\\DataSet constructor expects array\<string, mixed\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Parameter \#1 \$headers of static method OPG\\Digideps\\Frontend\\Service\\JWT\\JWTService\:\:base64EncodeJWT\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/RestClientTest.php
-
-		-
 			message: '#^Parameter \#1 \(mixed\) of echo cannot be converted to string\.$#'
 			identifier: echo.nonString
-			count: 1
-			path: tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Parameter \#2 \$claims of static method OPG\\Digideps\\Frontend\\Service\\JWT\\JWTService\:\:base64EncodeJWT\(\) expects array, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/Unit/Service/Client/RestClientTest.php
 
@@ -15223,26 +15067,8 @@ parameters:
 			path: tests/Unit/Service/Client/RestClientTest.php
 
 		-
-			message: '#^Parameter \#2 \$headers of class GuzzleHttp\\Psr7\\Response constructor expects array\<array\<string\>\|string\>, array\<string, list\|string\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/RestClientTest.php
-
-		-
 			message: '#^Parameter \#3 \$body of class GuzzleHttp\\Psr7\\Response constructor expects Psr\\Http\\Message\\StreamInterface\|resource\|string\|null, string\|false given\.$#'
 			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Parameter \#9 \$JWTService of class OPG\\Digideps\\Frontend\\Service\\Client\\RestClient constructor expects OPG\\Digideps\\Frontend\\Service\\JWT\\JWTService, Mockery\\MockInterface&Symfony\\Contracts\\HttpClient\\HttpClientInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:\$jwtService \(Mockery\\MockInterface&Symfony\\Contracts\\HttpClient\\HttpClientInterface\) does not accept Mockery\\MockInterface&OPG\\Digideps\\Frontend\\Service\\JWT\\JWTService\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: tests/Unit/Service/Client/RestClientTest.php
 
@@ -16589,66 +16415,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: tests/Unit/Service/File/Verifier/ScannerVerifierTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\JWT\\JWTServiceTest\:\:base64EncodeJWTMissingSignature\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Service/JWT/JWTServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\JWT\\JWTServiceTest\:\:base64EncodeJWTWithSignature\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Service/JWT/JWTServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\JWT\\JWTServiceTest\:\:getJWTClaims\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Service/JWT/JWTServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\JWT\\JWTServiceTest\:\:getJWTHeaders\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Service/JWT/JWTServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\JWT\\JWTServiceTest\:\:getJWTSignature\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Service/JWT/JWTServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\JWT\\JWTServiceTest\:\:getPublicKeyByJWK\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Service/JWT/JWTServiceTest.php
-
-		-
-			message: '#^Parameter \#2 \$datetime of static method DateTimeImmutable\:\:createFromFormat\(\) expects string, DateTimeImmutable\|list\<string\>\|string\|false given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/Service/JWT/JWTServiceTest.php
-
-		-
-			message: '#^Parameter \#2 \$datetime of static method DateTimeImmutable\:\:createFromFormat\(\) expects string, list\<string\>\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/JWT/JWTServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\JWT\\JWTServiceTest\:\:\$jwtClaims \(array\<string\>\) does not accept array\<bool\|DateTimeImmutable\|string\>\.$#'
-			identifier: assign.propertyType
-			count: 3
-			path: tests/Unit/Service/JWT/JWTServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\JWT\\JWTServiceTest\:\:\$jwtClaims \(array\<string\>\) does not accept array\<list\<string\>\|string\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: tests/Unit/Service/JWT/JWTServiceTest.php
 
 		-
 			message: '#^Cannot access offset ''email'' on mixed\.$#'

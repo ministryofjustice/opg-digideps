@@ -108,3 +108,10 @@ form:
       %client%'s property, family members' involvement with %client%'s funds.
   doYouHaveConcernsDetails:
     label: Please give us details about your concerns
+
+review:
+  question: Question
+  answer: Answer
+  yes: Yes
+  no: No
+  notEntered: Not entered
