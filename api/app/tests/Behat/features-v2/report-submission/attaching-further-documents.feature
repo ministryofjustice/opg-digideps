@@ -11,7 +11,7 @@ Feature: Attaching Further Documents
         And a flash message should be displayed to the user confirming the document upload
         Given a super admin user accesses the admin app
         When I navigate to the admin report submissions page
-        And I search for submissions using the court order number of the client I am interacting with and check the "Pending" column
+        And I search for submissions using the case number of the deputy I am interacting with and check the "Pending" column
         Then I should see the submission under the "Pending" tab with the court order number of the user I am interacting with
 
     @lay-pfa-high-submitted @super-admin
