@@ -15,6 +15,7 @@ use OPG\Digideps\Frontend\Service\File\S3FileUploader;
 use OPG\Digideps\Frontend\Service\HtmlToPdfGenerator;
 use OPG\Digideps\Frontend\Service\Mailer\MailFactory;
 use OPG\Digideps\Frontend\Service\Mailer\MailSender;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tests\OPG\Digideps\Frontend\Unit\MockeryStub as m;
 use OPG\Digideps\Frontend\Service\ReportSubmissionService;
 use PHPUnit\Framework\TestCase;
@@ -114,6 +115,7 @@ class ReportSubmissionServiceTest extends TestCase
             $this->restClient->reveal(),
             $this->logger->reveal(),
             $this->pdfGenerator->reveal(),
+            $this->createStub(TranslatorInterface::class)
         );
     }
 
@@ -200,7 +202,8 @@ class ReportSubmissionServiceTest extends TestCase
             $this->mockFileUploader,
             $this->mockRestClient,
             $this->mockLogger,
-            $this->mockPdfGenerator
+            $this->mockPdfGenerator,
+            $this->createStub(TranslatorInterface::class)
         );
     }
 
