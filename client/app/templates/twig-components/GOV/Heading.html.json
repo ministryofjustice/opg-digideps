@@ -1,0 +1,14 @@
+{
+    "link": "https://design-system.service.gov.uk/styles/headings/",
+    "props": [
+        { "name": "size", "type": "'s' | 'm' | 'l' | 'xl'", "default": "'m'" },
+        {
+            "name": "h",
+            "type": "1 | 2 | 3 | 4 | 5 | 6",
+            "default": "1",
+            "info": "Which header tag to use"
+        },
+        { "name": "caption", "type": "string", "default": "null" }
+    ],
+    "examples": ["heading"]
+}
