@@ -90,4 +90,22 @@
             'view': review.getDebtsReviewView
         } %}
     {% endif %}
+
+    {% if report.hasSection('actions') %}
+        {% include '@App/Report/Rendered/_actions.html.twig' with {
+            'view': review.getActionsReviewView
+        } %}
+    {% endif %}
+
+    {% if report.hasSection('otherInfo') %}
+        {% include '@App/Report/Rendered/_other_info.html.twig' with {
+            'view': review.getOtherInfoReviewView
+        } %}
+    {% endif %}
+
+    {% if report.hasSection('documents') %}
+        {% include '@App/Report/Rendered/_documents.html.twig' with {
+            'view': review.getDocumentsReviewView
+        } %}
+    {% endif %}
 </div>

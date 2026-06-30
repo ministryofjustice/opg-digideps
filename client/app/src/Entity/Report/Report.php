@@ -390,6 +390,8 @@ class Report implements StartEndDateComparableInterface
      * @JMS\Groups({"report", "wish-to-provide-documentation", "report-documents"})
      *
      * @Assert\NotBlank(message="document.wishToProvideDocumentation.notBlank", groups={"wish-to-provide-documentation"})
+     *
+     * @var ?string
      */
     private $wishToProvideDocumentation;
 
@@ -1134,6 +1136,9 @@ class Report implements StartEndDateComparableInterface
         $this->status = $status;
     }
 
+    /**
+     * @return ?string
+     */
     public function getWishToProvideDocumentation()
     {
         return $this->wishToProvideDocumentation;
