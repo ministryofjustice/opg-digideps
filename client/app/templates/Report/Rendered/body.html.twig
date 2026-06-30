@@ -35,9 +35,7 @@
     {% endif %}
 
     {% if report.getClientBenefitsCheck is not null and report.hasSection('clientBenefitsCheck') %}
-        {% include '@App/Report/Rendered/_client_benefits_check.html.twig' with {
-            'view': review.getClientBenefitsCheckReviewView
-        } %}
+        <twig:Review:ClientBenefitsCheck report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('bankAccounts') and report.bankAccounts | length > 0 %}
@@ -95,32 +93,22 @@
     {% endif %}
 
     {% if report.hasSection('assets') %}
-        {% include '@App/Report/Rendered/_assets.html.twig' with {
-            'view': review.getAssetsReviewView,
-        } %}
+        <twig:Review:Assets report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('debts') %}
-        {% include '@App/Report/Rendered/_debts.html.twig' with {
-            'view': review.getDebtsReviewView
-        } %}
+        <twig:Review:Debts report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('actions') %}
-        {% include '@App/Report/Rendered/_actions.html.twig' with {
-            'view': review.getActionsReviewView
-        } %}
+        <twig:Review:Actions report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('otherInfo') %}
-        {% include '@App/Report/Rendered/_other_info.html.twig' with {
-            'view': review.getOtherInfoReviewView
-        } %}
+        <twig:Review:OtherInfo report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('documents') %}
-        {% include '@App/Report/Rendered/_documents.html.twig' with {
-            'view': review.getDocumentsReviewView
-        } %}
+        <twig:Review:Documents report="{{ report }}"/>
     {% endif %}
 </div>

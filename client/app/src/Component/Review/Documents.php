@@ -10,8 +10,11 @@ use OPG\Digideps\Frontend\Component\GovUk\Table\Table;
 use OPG\Digideps\Frontend\Component\GovUk\Table\TableBuilder;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-final class DocumentsReviewView
+#[AsTwigComponent]
+
+final class Documents
 {
     public ?DefinitionList $list = null;
     public ?Table $table = null;
@@ -39,7 +42,7 @@ final class DocumentsReviewView
     private function makeList(Report $report): DefinitionList
     {
         $builder = new ListBuilder();
-        $builder->addEntry($this->text['documentsProvided'], $this->text[$report->getWishToProvideDocumentation() ?? 'notEntered']);
+        $builder->addItem($this->text['documentsProvided'], $this->text[$report->getWishToProvideDocumentation() ?? 'notEntered']);
         return $builder->makeList();
     }
 

@@ -9,8 +9,10 @@ use OPG\Digideps\Frontend\Component\GovUk\List\ListBuilder;
 use OPG\Digideps\Frontend\Entity\Report\Action;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-final class ActionsReviewView
+#[AsTwigComponent]
+final class Actions
 {
     public ?DefinitionList $list = null;
 
@@ -36,13 +38,13 @@ final class ActionsReviewView
     private function makeList(Action $action): DefinitionList
     {
         $builder = new ListBuilder();
-        $builder->addEntry($this->text['concerns'], $this->text[$action->getDoYouHaveConcerns() ?? 'notEntered']);
+        $builder->addItem($this->text['concerns'], $this->text[$action->getDoYouHaveConcerns() ?? 'notEntered']);
         if ($action->getDoYouHaveConcerns() === 'yes') {
-            $builder->addEntry($this->text['concernsDetails'], $action->getDoYouHaveConcernsDetails() ?? $this->text['notEntered']);
+            $builder->addItem($this->text['concernsDetails'], $action->getDoYouHaveConcernsDetails() ?? $this->text['notEntered']);
         }
-        $builder->addEntry($this->text['financialDecisions'], $this->text[$action->getDoYouExpectFinancialDecisions() ?? 'notEntered']);
+        $builder->addItem($this->text['financialDecisions'], $this->text[$action->getDoYouExpectFinancialDecisions() ?? 'notEntered']);
         if ($action->getDoYouExpectFinancialDecisions() === 'yes') {
-            $builder->addEntry($this->text['financialDecisionsDetails'], $action->getDoYouExpectFinancialDecisionsDetails() ?? $this->text['notEntered']);
+            $builder->addItem($this->text['financialDecisionsDetails'], $action->getDoYouExpectFinancialDecisionsDetails() ?? $this->text['notEntered']);
         }
         return $builder->makeList();
     }

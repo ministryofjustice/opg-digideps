@@ -1,0 +1,13 @@
+<twig:Heading size="m" h="2">
+    {{ text.header }}
+</twig:Heading>
+
+<twig:Summary:QaCard h="3">
+    <twig:Summary:List list="{{ list }}"/>
+</twig:Summary:QaCard>
+
+{% if table is not null %}
+    <twig:Summary:Card h="3" header="{{ text.tableHeader }}">
+        <twig:Table table="{{ table }}"/>
+    </twig:Summary:Card>
+{% endif %}

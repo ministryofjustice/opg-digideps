@@ -1,0 +1,16 @@
+{% props row %}{# OPG\Digideps\Frontend\Component\GovUk\Table\Row #}
+{% props scope %}{# col / row #}
+
+<tr class="govuk-table__row">
+    {% for cell in row.cells %}
+        {% if cell.isHeader %}
+            <th scope="{{ scope }}" class="{{ cell.className }}" {% if cell.colspan > 1 %}colspan="{{ cell.colspan }}"{% endif %}{% if cell.rowspan > 1 %}rowspan="{{ cell.rowspan }}"{% endif %}>
+                {{ cell.content }}
+            </th>
+        {% else %}
+            <td class="{{ cell.className }}" {% if cell.colspan > 1 %}colspan="{{ cell.colspan }}"{% endif %}{% if cell.rowspan > 1 %}rowspan="{{ cell.rowspan }}"{% endif %}>
+                {{ cell.content }}
+            </td>
+        {% endif %}
+    {% endfor %}
+</tr>

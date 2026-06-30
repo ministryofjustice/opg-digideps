@@ -1,0 +1,4 @@
+twig_component:
+  anonymous_template_directory: "gov-uk/"
+  defaults:
+    OPG\Digideps\Frontend\Component\: "twig-components/"

@@ -1,0 +1,7 @@
+{% props size = "m" %}{# s / m / l / xl #}
+{% props h = "1" %}{# 1 / 2 / 3 / 4 / 5 / 6 #}
+{% set h_tag = "h" ~ h %}
+
+<{{ h_tag }} {{ attributes.defaults({class: "govuk-heading-" ~ size}) }}>
+    {% block content %}{% endblock %}
+</{{ h_tag }}>
