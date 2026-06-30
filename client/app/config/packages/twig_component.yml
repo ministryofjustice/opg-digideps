@@ -1,0 +1,5 @@
+twig_component:
+  anonymous_template_directory: "twig-components/"
+  defaults:
+    OPG\Digideps\Frontend\Component\: "twig-components/"
+    OPG\Digideps\Frontend\Component\OPG\: "twig-components/OPG/"

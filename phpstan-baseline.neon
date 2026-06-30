@@ -1,6 +1,18 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: api/app/config/bootstrap.php
+
+		-
+			message: '#^Parameter \#1 \$envKey of class Symfony\\Component\\Dotenv\\Dotenv constructor expects string, false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: api/app/config/bootstrap.php
+
+		-
 			message: '#^Binary operation "\." between ''\<comment\>Comparison…'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -189,12 +201,6 @@ parameters:
 		-
 			message: '#^Parameter \#4 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: api/app/src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\ProcessOrgCSVCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: api/app/src/Command/ProcessOrgCSVCommand.php
 
@@ -18985,7 +18991,7 @@ parameters:
 			path: api/app/tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
@@ -19015,7 +19021,7 @@ parameters:
 			path: api/app/tests/Integration/Command/SatisfactionPerformanceStatsCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Command/SatisfactionPerformanceStatsCommandTest.php
@@ -26365,6 +26371,18 @@ parameters:
 			path: api/app/tests/Unit/v2/Transformer/OrganisationTransformerTest.php
 
 		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: client/app/config/bootstrap.php
+
+		-
+			message: '#^Parameter \#1 \$envKey of class Symfony\\Component\\Dotenv\\Dotenv constructor expects string, false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: client/app/config/bootstrap.php
+
+		-
 			message: '#^Cannot access offset ''events'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -26413,12 +26431,6 @@ parameters:
 			path: client/app/src/Command/CheckCSVUploadedCommand.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\DocumentRecoverCommand\:\:execute\(\) should return int but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: client/app/src/Command/DocumentRecoverCommand.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_filter expects array, list\<string\>\|false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -26433,6 +26445,12 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$shortcut of method Symfony\\Component\\Console\\Command\\Command\:\:addOption\(\) expects array\|string\|null, int given\.$#'
 			identifier: argument.type
+			count: 1
+			path: client/app/src/Command/DocumentRecoverCommand.php
+
+		-
+			message: '#^Return type \(void\) of method OPG\\Digideps\\Frontend\\Command\\DocumentRecoverCommand\:\:execute\(\) should be compatible with return type \(int\) of method Symfony\\Component\\Console\\Command\\Command\:\:execute\(\)$#'
+			identifier: method.childReturnType
 			count: 1
 			path: client/app/src/Command/DocumentRecoverCommand.php
 
@@ -26629,6 +26647,12 @@ parameters:
 			path: client/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Command\\ProcessOrgCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: client/app/src/Command/ProcessOrgCSVCommand.php
+
+		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Command\\ProcessOrgCSVCommand\:\:\$redis is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
@@ -26641,28 +26665,34 @@ parameters:
 			path: client/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
+			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
+			path: client/app/src/Component/GOV/Summary/SummaryListBuilder.php
+
+		-
 			message: '#^Cannot call method format\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
-			path: client/app/src/Component/Review/AssetsReviewView.php
+			path: client/app/src/Component/OPG/Review/Assets.php
 
 		-
 			message: '#^Cannot cast mixed to float\.$#'
 			identifier: cast.double
 			count: 3
-			path: client/app/src/Component/Review/AssetsReviewView.php
+			path: client/app/src/Component/OPG/Review/Assets.php
 
 		-
-			message: '#^Parameter \#2 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Component\\GovUk\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Component\\GovUk\\Table\\Cell\|string, mixed given\.$#'
+			message: '#^Parameter \#2 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Component\\GOV\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Component\\GOV\\Table\\Cell\|OPG\\Digideps\\Frontend\\Component\\RenderableInterface\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 4
-			path: client/app/src/Component/Review/AssetsReviewView.php
+			path: client/app/src/Component/OPG/Review/Assets.php
 
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 5
-			path: client/app/src/Component/Review/AssetsReviewView.php
+			path: client/app/src/Component/OPG/Review/Assets.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
@@ -38473,7 +38503,7 @@ parameters:
 			path: client/app/tests/Unit/Command/CheckCSVUploadedCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Command/CheckCSVUploadedCommandTest.php
@@ -43609,6 +43639,12 @@ parameters:
 			path: client/app/tests/Unit/Service/StringUtilsTest.php
 
 		-
+			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\ChecklistSyncCommand\:\:getDefaultName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
+
+		-
 			message: '#^Cannot call method expects\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -43645,7 +43681,7 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
@@ -43693,6 +43729,12 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
+			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\DocumentSyncCommand\:\:getDefaultName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
+
+		-
 			message: '#^Cannot call method method\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 4
@@ -43717,7 +43759,7 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
