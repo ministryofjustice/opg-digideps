@@ -1,0 +1,16 @@
+{
+    "warning": "Non-standard: Avoid where possible",
+    "info": "A single list can be passed via prop. For multiple elements pass them via the body instead.",
+    "props": [
+        {
+            "name": "h",
+            "type": "1 | 2 | 3 | 4 | 5 | 6",
+            "default": "1",
+            "info": "Which header tag to use"
+        },
+        { "name": "list", "type": "SummaryList", "default": "null" },
+        { "name": "questionLabel", "type": "string", "default": "'Question'" },
+        { "name": "answerLabel", "type": "string", "default": "'Answer'" }
+    ],
+    "examples": ["qa-card"]
+}
