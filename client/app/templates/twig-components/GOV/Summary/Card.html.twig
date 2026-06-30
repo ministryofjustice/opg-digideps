@@ -1,0 +1,23 @@
+{% props
+    header,
+    h = "1",
+    list=null,
+%}
+{% set class = "govuk-heading-" ~ size %}
+{% set h_tag = "h" ~ h %}
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <twig:GOV:Summary:Header h="{{ h }}">
+            {{ header }}
+        </twig:GOV:Summary:Header>
+    </div>
+    <div class="govuk-summary-card__content">
+        {% if list is not null %}
+            <twig:GOV:Summary:List list="{{ list }}"/>
+        {% endif %}
+        {% with outerScope %}
+            <twig:block name="content"></twig:block>
+        {% endwith %}
+    </div>
+</div>
