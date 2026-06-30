@@ -11,8 +11,15 @@ final readonly class Table
      */
     public array $rows;
 
-    public function __construct(public ?Row $header, Row ...$rows)
-    {
+    public function __construct(
+        public ?string $caption,
+        /**
+         * @var array<Column>|null
+         */
+        public ?array $columns,
+        public ?Row $header,
+        Row ...$rows
+    ) {
         $this->rows = $rows;
     }
 }

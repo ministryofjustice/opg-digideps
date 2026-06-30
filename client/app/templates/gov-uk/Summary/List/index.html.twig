@@ -1,0 +1,19 @@
+{% props list %}
+
+<dl class="govuk-summary-list">
+    {% for item in list.items %}
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key{% if list.widths.key %} govuk-!-width-{{ list.widths.key }}{% endif %}">
+                {{ item.key }}
+            </dt>
+            <dd class="govuk-summary-list__value{% if list.widths.value %} govuk-!-width-{{ list.widths.value }}{% endif %}{% if item.action is null %} govuk-!-padding-right-4{% endif %}">
+                {{ item.value }}
+            </dd>
+            {% if item.action is not null %}
+                <dd class="govuk-summary-list__action{% if list.widths.action %} govuk-!-width-{{ list.widths.action }}{% endif %}">
+                    <twig:List:Action action="{{ item.action }}"/>
+                </dd>
+            {% endif %}
+        </div>
+    {% endfor %}
+</dl>

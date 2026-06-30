@@ -9,11 +9,13 @@ use OPG\Digideps\Frontend\Component\GovUk\List\DefinitionList;
 use OPG\Digideps\Frontend\Component\GovUk\Table\Cell;
 use OPG\Digideps\Frontend\Component\GovUk\Table\Table;
 use OPG\Digideps\Frontend\Component\GovUk\Table\TableBuilder;
-use OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck as ReportClientBenefitsCheck;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-final class ClientBenefitsCheckReviewView
+#[AsTwigComponent]
+final class ClientBenefitsCheck
 {
     private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
 
@@ -43,33 +45,33 @@ final class ClientBenefitsCheckReviewView
         }
     }
 
-    private function makeList(ClientBenefitsCheck $clientBenefitsCheck): DefinitionList
+    private function makeList(ReportClientBenefitsCheck $clientBenefitsCheck): DefinitionList
     {
         $builder = new ListBuilder();
 
-        $builder->addEntry($this->text['benefitsCheck'], $this->translate("form.whenLastChecked.choices.{$clientBenefitsCheck->getWhenLastCheckedEntitlement()}"));
+        $builder->addItem($this->text['benefitsCheck'], $this->translate("form.whenLastChecked.choices.{$clientBenefitsCheck->getWhenLastCheckedEntitlement()}"));
         if ($clientBenefitsCheck->getWhenLastCheckedEntitlement() === 'haveChecked') {
-            $builder->addEntry($this->text['dateChecked'], $clientBenefitsCheck->getDateLastCheckedEntitlement()?->format("m Y") ?? '');
+            $builder->addItem($this->text['dateChecked'], $clientBenefitsCheck->getDateLastCheckedEntitlement()?->format("m Y") ?? '');
         }
         if ($clientBenefitsCheck->getWhenLastCheckedEntitlement() === 'neverChecked') {
-            $builder->addEntry($this->text['neverCheckedExplanation'], $clientBenefitsCheck->getNeverCheckedExplanation() ?? '');
+            $builder->addItem($this->text['neverCheckedExplanation'], $clientBenefitsCheck->getNeverCheckedExplanation() ?? '');
         }
-        $builder->addEntry($this->text['doOthersReceiveMoney'], $this->translate("form.moneyOnClientsBehalf.choices.{$clientBenefitsCheck->getDoOthersReceiveMoneyOnClientsBehalf()}"));
+        $builder->addItem($this->text['doOthersReceiveMoney'], $this->translate("form.moneyOnClientsBehalf.choices.{$clientBenefitsCheck->getDoOthersReceiveMoneyOnClientsBehalf()}"));
         if ($clientBenefitsCheck->getDoOthersReceiveMoneyOnClientsBehalf() === 'dontKnow') {
-            $builder->addEntry($this->text['dontKnowExplanation'], $clientBenefitsCheck->getDontKnowMoneyExplanation() ?? '');
+            $builder->addItem($this->text['dontKnowExplanation'], $clientBenefitsCheck->getDontKnowMoneyExplanation() ?? '');
         }
 
         return $builder->makeList();
     }
 
-    private function makeTable(ClientBenefitsCheck $clientBenefitsCheck): ?Table
+    private function makeTable(ReportClientBenefitsCheck $clientBenefitsCheck): ?Table
     {
         if ($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()?->isEmpty() ?? true) {
             return null;
         }
         $total = 0.0;
 
-        $builder = new TableBuilder()->addHeader(
+        $builder = new TableBuilder()->addColumns(1, 1, 1)->addHeader(
             $this->text['paymentType'],
             $this->text['paymentRecipient'],
             $this->text['paymentAmount'],
@@ -82,7 +84,7 @@ final class ClientBenefitsCheckReviewView
             );
             $total += $entry->getAmount() ?? 0.0;
         }
-        $builder->addRow(new Cell($this->text['paymentTotal'], isHeader: true), '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, true));
+        $builder->addRow(new Cell($this->text['paymentTotal'], isHeader: true), '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, isBold: true));
 
         return $builder->makeTable();
     }
@@ -90,11 +92,6 @@ final class ClientBenefitsCheckReviewView
     private function formatMoney(float $value): string
     {
         return '£ ' . number_format($value, 2);
-    }
-
-    public function hasTable(): bool
-    {
-        return $this->table !== null;
     }
 
     /**

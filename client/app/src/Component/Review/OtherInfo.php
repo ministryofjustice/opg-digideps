@@ -8,8 +8,10 @@ use OPG\Digideps\Frontend\Component\GovUk\List\DefinitionList;
 use OPG\Digideps\Frontend\Component\GovUk\List\ListBuilder;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-final class OtherInfoReviewView
+#[AsTwigComponent]
+final class OtherInfo
 {
     public ?DefinitionList $list = null;
 
@@ -35,9 +37,9 @@ final class OtherInfoReviewView
     private function makeList(Report $report): DefinitionList
     {
         $builder = new ListBuilder();
-        $builder->addEntry($this->text['anythingElse'], $this->text[$report->getActionMoreInfo() ?? 'notEntered']);
+        $builder->addItem($this->text['anythingElse'], $this->text[$report->getActionMoreInfo() ?? 'notEntered']);
         if ($report->getActionMoreInfo() === 'yes') {
-            $builder->addEntry($this->text['anythingElseDetails'], $report->getActionMoreInfoDetails() ?? $this->text['notEntered']);
+            $builder->addItem($this->text['anythingElseDetails'], $report->getActionMoreInfoDetails() ?? $this->text['notEntered']);
         }
         return $builder->makeList();
     }

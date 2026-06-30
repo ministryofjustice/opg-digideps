@@ -1,0 +1,80 @@
+<twig:Layout:Row>
+    <twig:Layout:Column width="two-thirds">
+        <twig:Heading h="1" size="xl">Design System</twig:Heading>
+    </twig:Layout:Column>
+    <twig:Layout:Column width="one-thirds">
+        <code class="govuk-body-s">{% verbatim %}
+            &lt;twig:Heading h="1" size="xl"><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Design System<br>
+            &lt;/twig:Heading>
+        {% endverbatim %}</code>
+    </twig:Layout:Column>
+    <twig:Layout:Column width="two-thirds">
+
+        <twig:Heading h="2" size="l">{{ hello }}</twig:Heading>
+
+        <twig:Heading h="3">{{ foxOver }}</twig:Heading>
+    </twig:Layout:Column>
+    <twig:Layout:Column width="two-thirds">
+        <twig:Summary:Card header="{{ hello }}" h="{{ 4 }}">
+            <twig:Summary:List list="{{ list }}"/>
+        </twig:Summary:Card>
+    </twig:Layout:Column>
+    <twig:Layout:Column width="one-third">
+        <code class="govuk-body-s">{% verbatim %}
+            &lt;twig:Summary:Card header="{{ hello }}" h="{{ 4 }}"><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;twig:Summary:List list="{{ list }}"/><br>
+            &lt;/twig:Summary:Card>
+        {% endverbatim %}</code>
+    </twig:Layout:Column>
+    <twig:Layout:Column width="two-thirds">
+        <twig:Summary:QaCard h="{{ 4 }}">
+            <twig:Summary:List list="{{ list }}"/>
+        </twig:Summary:QaCard>
+    </twig:Layout:Column>
+    <twig:Layout:Column width="one-third">
+        <code class="govuk-body-s">{% verbatim %}
+            &lt;twig:Summary:QaCard h="{{ 4 }}"><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;twig:Summary:List list="{{ list }}"/><br>
+            &lt;/twig:Summary:QaCard>
+        {% endverbatim %}</code>
+    </twig:Layout:Column>
+    <twig:Layout:Column width="two-thirds">
+        <twig:Summary:Card header="{{ fox }}" h="{{ 4 }}">
+            <twig:Table table="{{ table1 }}"/>
+        </twig:Summary:Card>
+    </twig:Layout:Column>
+    <twig:Layout:Column width="one-third">
+        <code class="govuk-body-s">{% verbatim %}
+            &lt;twig:Summary:Card header="{{ fox }}" h="{{ 4 }}"><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;twig:Table table="{{ table1 }}"/><br>
+            &lt;/twig:Summary:Card>
+        {% endverbatim %}</code>
+    </twig:Layout:Column>
+    <twig:Layout:Column width="two-thirds">
+        <twig:Summary:Card header="{{ over }}" h="{{ 4 }}">
+            <twig:Table table="{{ table2 }}"/>
+            <twig:Summary:List list="{{ list }}"/>
+            <twig:Table table="{{ tableWithCaption }}"/>
+            <twig:Table table="{{ table3 }}"/>
+        </twig:Summary:Card>
+    </twig:Layout:Column>
+    <twig:Layout:Column width="one-third">
+        <code class="govuk-body-s">{% verbatim %}
+            &lt;twig:Summary:Card header="{{ over }}" h="{{ 4 }}"><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;twig:Table table="{{ table2 }}"/><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;twig:Summary:List list="{{ list }}"/><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;twig:Table table="{{ tableWithCaption }}"/><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;twig:Table table="{{ table3 }}"/><br>
+            &lt;/twig:Summary:Card>
+        {% endverbatim %}</code>
+    </twig:Layout:Column>
+    <twig:Layout:Column width="two-thirds">
+        <twig:Table table="{{ tableWithCaption }}"/>
+    </twig:Layout:Column>
+    <twig:Layout:Column width="one-third">
+        <code class="govuk-body-s">{% verbatim %}
+            &lt;twig:Table table="{{ tableWithCaption }}"/>
+        {% endverbatim %}</code>
+    </twig:Layout:Column>
+</twig:Layout:Row>

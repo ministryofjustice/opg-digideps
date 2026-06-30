@@ -14,8 +14,10 @@ use OPG\Digideps\Frontend\Entity\Report\AssetOther;
 use OPG\Digideps\Frontend\Entity\Report\AssetProperty;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-final class AssetsReviewView
+#[AsTwigComponent]
+final class Assets
 {
     private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
 
@@ -62,7 +64,7 @@ final class AssetsReviewView
     private function makeList(Report $report): DefinitionList
     {
         $builder = new ListBuilder();
-        $builder->addEntry($this->text['hasAssets'], $this->text[match ($report->getNoAssetToAdd()) {
+        $builder->addItem($this->text['hasAssets'], $this->text[match ($report->getNoAssetToAdd()) {
             true => 'no',
             false => 'yes',
             default => 'notEntered'
@@ -72,7 +74,7 @@ final class AssetsReviewView
 
     private function makeTableOther(string $title, AssetOther ...$assets): Table
     {
-        $builder = new TableBuilder()->addHeader($title, $this->text['valuationDate'], $this->text['value']);
+        $builder = new TableBuilder()->addColumns(1, 1, 1)->addHeader($title, $this->text['valuationDate'], $this->text['value']);
         $total = 0.0;
         foreach ($assets as $asset) {
             $builder->addRow(
@@ -94,7 +96,7 @@ final class AssetsReviewView
         $tables = [];
         foreach ($assets as $key => $asset) {
             $index = (int)$key + 1;
-            $builder = new TableBuilder()->addHeader(new Cell("{$this->text['property']} {$index}", size: 2), '');
+            $builder = new TableBuilder()->addColumns(1, 1)->addHeader(new Cell("{$this->text['property']} {$index}", colspan: 2));
 
             $builder->addRow($this->text['address1'], $asset->getAddress() ?? 'notEntered');
             if (!empty($asset->getAddress2())) {
@@ -129,8 +131,9 @@ final class AssetsReviewView
 
     private function makeTotalTable(Report $report): Table
     {
-        return new TableBuilder(true, true)
-            ->addRow(new Cell($this->text['totalValue'], size: 2), new Cell($this->formatMoney((float)$report->getAssetsTotalValue()), self::NUMERIC_FORMAT, true))
+        return new TableBuilder(true)
+            ->addColumns(1, 1, 1)
+            ->addRow(new Cell($this->text['totalValue'], colspan: 2), new Cell($this->formatMoney((float)$report->getAssetsTotalValue()), self::NUMERIC_FORMAT, isBold: true))
             ->makeTable();
     }
 
