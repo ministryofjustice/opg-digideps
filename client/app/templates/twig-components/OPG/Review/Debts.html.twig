@@ -1,0 +1,12 @@
+<twig:GOV:Heading size="m" h="2">
+    {{ text.header }}
+</twig:GOV:Heading>
+
+<twig:GOV:Summary:QaCard h="3" list="{{ list1 }}"/>
+
+{% if hasDebts %}
+    <twig:GOV:Summary:Card h="3" header="{{ text.tableHeader }}">
+        <twig:GOV:Table table="{{ table1 }}"/>
+        <twig:GOV:Table table="{{ table2 }}"/>
+    </twig:GOV:Summary:Card>
+{% endif %}
