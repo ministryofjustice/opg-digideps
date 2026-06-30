@@ -118,8 +118,9 @@ resource "aws_wafv2_web_acl" "main" {
 
       statement {
         rate_based_statement {
-          limit              = 200
-          aggregate_key_type = "IP"
+          limit                 = 500
+          aggregate_key_type    = "IP"
+          evaluation_window_sec = 60
         }
       }
 
@@ -215,6 +216,10 @@ resource "aws_wafv2_regex_pattern_set" "allow_uris" {
 
   regular_expression {
     regex_string = "^/public/favicon.ico$"
+  }
+
+  regular_expression {
+    regex_string = "^/favicon.ico$"
   }
 
   regular_expression {
