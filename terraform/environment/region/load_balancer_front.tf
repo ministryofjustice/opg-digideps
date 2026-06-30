@@ -1,7 +1,3 @@
-locals {
-  maintenance_mode = local.environment == "production02" ? "*" : "/dd-maintenance"
-}
-
 resource "aws_lb" "front" {
   name                       = "front-${local.environment}"
   internal                   = false #tfsec:ignore:aws-elb-alb-not-public - This is a public LB
@@ -9,6 +5,12 @@ resource "aws_lb" "front" {
   subnets                    = data.aws_subnet.load_balancer[*].id
   idle_timeout               = 300
   drop_invalid_header_fields = true
+
+  access_logs {
+    bucket  = data.aws_s3_bucket.alb_access.bucket
+    prefix  = "front-${local.environment}"
+    enabled = true
+  }
 
   security_groups = [module.front_elb_security_group.id, module.front_elb_security_group_route53_hc.id]
 
@@ -59,7 +61,7 @@ resource "aws_lb_listener_rule" "front_maintenance" {
 
   condition {
     path_pattern {
-      values = [local.maintenance_mode]
+      values = ["/dd-maintenance"]
     }
   }
 }

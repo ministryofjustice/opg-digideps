@@ -2,8 +2,8 @@ name: "[Scheduled] Run test restores on Preproduction"
 
 on:
   schedule:
-    # First Saturday of the Month
-    - cron: "0 14 * * 6#1"
+    # 2pm every Saturday
+    - cron: "0 14 * * 6"
 
 permissions:
   id-token: write
@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     name: restore from cross account backup
     needs:
-      - restore_to_point_in_time
+      - restore_from_local_restore_point
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -106,7 +106,7 @@ jobs:
     name: notify of result
     uses: ./.github/workflows/_slack-notification.yml
     needs:
-      - restore_from_remote_backup
+      - restore_from_remote_restore_point
     with:
       success: yes
       branch: integration
@@ -117,7 +117,7 @@ jobs:
     uses: ./.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
-      - restore_from_remote_backup
+      - restore_from_remote_restore_point
     with:
       success: no
       branch: integration

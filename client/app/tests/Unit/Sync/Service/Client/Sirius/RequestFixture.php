@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Sync\Service\Client\Sirius;
 
-use League\OpenAPIValidation\PSR7\OperationAddress;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 final readonly class RequestFixture

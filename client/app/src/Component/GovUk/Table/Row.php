@@ -16,7 +16,7 @@ final readonly class Row
     ) {
         $sizedCells = [];
         $isFirstColumn = true;
-        $count = $sized ? array_sum(array_map(fn(Cell $cell): int => $cell->size, $cells)) : null;
+        $count = $sized ? array_sum(array_map(fn (Cell $cell): int => $cell->size, $cells)) : null;
         foreach ($cells as $cell) {
             $isHeader = $cell->isHeader ?? ($isFirstColumn && $firstColumnIsHeader);
             $hasScope = $isTableHeader || ($isFirstColumn && $isHeader);

@@ -38,11 +38,6 @@ variable "account_id" {
   type        = string
 }
 
-variable "db" {
-  description = "The database configuration."
-  type        = map(any)
-}
-
 variable "common_sg_rules" {
   description = "Common security group rules."
   type = map(object({

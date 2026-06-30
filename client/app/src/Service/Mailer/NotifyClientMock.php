@@ -27,8 +27,15 @@ class NotifyClientMock extends Client
         }
     }
 
-    public function sendEmail($emailAddress, $templateId, array $personalisation = [], $reference = '', $emailReplyToId = null, $oneClickUnsubscribeURL = null): array
-    {
+    public function sendEmail(
+        $emailAddress,
+        $templateId,
+        array $personalisation = [],
+        $reference = '',
+        $emailReplyToId = null,
+        $oneClickUnsubscribeURL = null,
+        ?array $sanitiseContentFor = null
+    ): array {
         if ($emailAddress === 'break@publicguardian.gov.uk') {
             throw new NotifyException('Intentional mock exception');
         } else {
