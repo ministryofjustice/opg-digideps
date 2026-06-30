@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Component\Review;
 
 use OPG\Digideps\Frontend\Component\GovUk\List\ListBuilder;
-use OPG\Digideps\Frontend\Component\GovUk\List\ListEntries;
+use OPG\Digideps\Frontend\Component\GovUk\List\DefinitionList;
 use OPG\Digideps\Frontend\Component\GovUk\Table\Cell;
 use OPG\Digideps\Frontend\Component\GovUk\Table\Table;
 use OPG\Digideps\Frontend\Component\GovUk\Table\TableBuilder;
@@ -16,7 +16,7 @@ final class DebtsReviewView
 {
     private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
 
-    public ?ListEntries $list = null;
+    public ?DefinitionList $list = null;
     public ?Table $table1 = null;
     public ?Table $table2 = null;
 
@@ -41,7 +41,7 @@ final class DebtsReviewView
         $this->table2 = $this->makeTable2($report);
     }
 
-    private function makeList(Report $report): ListEntries
+    private function makeList(Report $report): DefinitionList
     {
         $builder = new ListBuilder();
         $builder->addEntry($this->text['hasDebts'], $this->text[$report->getHasDebts() ?? 'notEntered']);
