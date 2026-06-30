@@ -1,0 +1,10 @@
+{
+    "link": "https://design-system.service.gov.uk/styles/links/",
+    "props": [
+        { "name": "href", "type": "string" },
+        { "name": "noVisitedState", "type": "bool", "default": "false" },
+        { "name": "inverse", "type": "bool", "default": "false" },
+        { "name": "inNewTab", "type": "bool", "default": "false" }
+    ],
+    "examples": ["link"]
+}

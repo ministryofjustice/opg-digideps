@@ -1,6 +1,18 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: config/bootstrap.php
+
+		-
+			message: '#^Parameter \#1 \$envKey of class Symfony\\Component\\Dotenv\\Dotenv constructor expects string, false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: config/bootstrap.php
+
+		-
 			message: '#^Cannot access offset ''events'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -49,12 +61,6 @@ parameters:
 			path: src/Command/CheckCSVUploadedCommand.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\DocumentRecoverCommand\:\:execute\(\) should return int but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Command/DocumentRecoverCommand.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_filter expects array, list\<string\>\|false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -69,6 +75,12 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$shortcut of method Symfony\\Component\\Console\\Command\\Command\:\:addOption\(\) expects array\|string\|null, int given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Command/DocumentRecoverCommand.php
+
+		-
+			message: '#^Return type \(void\) of method OPG\\Digideps\\Frontend\\Command\\DocumentRecoverCommand\:\:execute\(\) should be compatible with return type \(int\) of method Symfony\\Component\\Console\\Command\\Command\:\:execute\(\)$#'
+			identifier: method.childReturnType
 			count: 1
 			path: src/Command/DocumentRecoverCommand.php
 
@@ -277,34 +289,34 @@ parameters:
 			path: src/Command/ProcessOrgCSVCommand.php
 
 		-
+			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
+			path: src/Component/GOV/Summary/SummaryListBuilder.php
+
+		-
 			message: '#^Cannot call method format\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
-			path: src/Component/Review/AssetsReviewView.php
+			path: src/Component/OPG/Review/Assets.php
 
 		-
 			message: '#^Cannot cast mixed to float\.$#'
 			identifier: cast.double
 			count: 3
-			path: src/Component/Review/AssetsReviewView.php
+			path: src/Component/OPG/Review/Assets.php
 
 		-
-			message: '#^Parameter \#2 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Component\\GovUk\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Component\\GovUk\\Table\\Cell\|string, mixed given\.$#'
+			message: '#^Parameter \#2 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Component\\GOV\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Component\\GOV\\Table\\Cell\|OPG\\Digideps\\Frontend\\Component\\RenderableInterface\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 4
-			path: src/Component/Review/AssetsReviewView.php
+			path: src/Component/OPG/Review/Assets.php
 
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 5
-			path: src/Component/Review/AssetsReviewView.php
-
-		-
-			message: '#^Using nullsafe method call on non\-nullable type DateTime\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: src/Component/Review/DocumentsReviewView.php
+			path: src/Component/OPG/Review/Assets.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
