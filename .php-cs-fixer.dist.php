@@ -7,8 +7,6 @@ use PhpCsFixer\Finder;
 $finder = new Finder()
     ->in(__DIR__)
     ->exclude(['api/app/vendor', 'client/app/vendor', 'api/app/cache', 'client/app/cache', 'api/app/var', 'client/app/var', 'common/vendor', 'vendor'])
-    ->notName("bundles.php")
-    ->notName("bootstrap.php")
 ;
 
 return new Config()
