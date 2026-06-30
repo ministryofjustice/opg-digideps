@@ -1,0 +1,9 @@
+{% props size = "m", h = "1", caption=null %}
+{% set h_tag = "h" ~ h %}
+
+<{{ h_tag }} {{ attributes.defaults({class: "govuk-heading-" ~ size}) }}>
+    {% if caption is not null %}
+        <span class="{{ "govuk-caption-" ~ size }}">{{ caption }}</span>
+    {% endif %}
+    {% block content %}{% endblock %}
+</{{ h_tag }}>
