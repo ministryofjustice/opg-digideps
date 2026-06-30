@@ -49,3 +49,10 @@ form:
   actionMoreInfoDetails:
     label: Please give us details of any further information, concerns or questions you may have about your deputyship
     hint: ""
+
+review:
+  question: Question
+  answer: Answer
+  yes: Yes
+  no: No
+  notEntered: Not entered
