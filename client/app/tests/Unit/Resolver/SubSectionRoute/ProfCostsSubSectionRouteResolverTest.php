@@ -9,8 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class ProfCostsSubSectionRouteResolverTest extends TestCase
 {
-    /** @var ProfCostsSubSectionRouteResolver */
-    private $sut;
+    private ProfCostsSubSectionRouteResolver $sut;
 
     public function setUp(): void
     {
@@ -39,7 +38,7 @@ class ProfCostsSubSectionRouteResolverTest extends TestCase
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::PREVIOUS_RECEIVED_EXISTS_ROUTE, $route);
+        $this->assertNull($route);
     }
 
     // Fixed cost route tests

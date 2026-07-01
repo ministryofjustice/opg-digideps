@@ -17,12 +17,12 @@ class ProfCostsSubSectionRouteResolver
 
     public function resolve(Report $report, $state): ?string
     {
-        if ($this->sectionNotStarted($state) || $this->previousRecievedExistsSubsectionIsIncomplete($report)) {
-            return null;
-        }
-
         if ($this->sectionIsComplete($state)) {
             return self::SUMMARY_ROUTE;
+        }
+
+        if ($this->sectionNotStarted($state) || $this->previousRecievedExistsSubsectionIsIncomplete($report)) {
+            return null;
         }
 
         if ($this->routeIsFixedCosts($report)) {
@@ -35,18 +35,12 @@ class ProfCostsSubSectionRouteResolver
         return self::SUMMARY_ROUTE;
     }
 
-    /**
-     * @return bool
-     */
-    private function sectionNotStarted($state)
+    private function sectionNotStarted($state): bool
     {
         return $state === Status::STATE_NOT_STARTED || ($state !== Status::STATE_INCOMPLETE && $state !== Status::STATE_DONE);
     }
 
-    /**
-     * @return bool
-     */
-    private function sectionIsComplete($state)
+    private function sectionIsComplete($state): bool
     {
         return $state === Status::STATE_DONE;
     }
