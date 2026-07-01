@@ -397,6 +397,7 @@ class ProfDeputyCostsController extends AbstractController
 
         if (empty($report->getProfDeputyOtherCosts())) {
             // if none set generate other costs manually
+            /** @var  ProfDeputyOtherCost[] $otherCosts */
             $otherCosts = $this->generateDefaultOtherCosts($report);
 
             $report->setProfDeputyOtherCosts($otherCosts);

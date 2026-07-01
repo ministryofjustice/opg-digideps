@@ -47,8 +47,8 @@ class ProfCostsSubSectionRouteResolverTest extends TestCase
     {
         $report = new Report();
         $report->setProfDeputyCostsHasPrevious('true');
-
         $report->setProfDeputyCostsHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED);
+        $report->setProfDeputyFixedCost(0);
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
