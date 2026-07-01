@@ -14,7 +14,7 @@ class ProfCostsSubSectionRouteResolver
     public const string INTERIM_ROUTE = 'prof_deputy_costs_inline_interim_19b';
     public const string BREAKDOWN_ROUTE = 'prof_deputy_costs_breakdown';
 
-    public function resolve(Report $report, $state): ?string
+    public function resolve(Report $report, string $state): ?string
     {
         if ($this->sectionIsComplete($state)) {
             return self::SUMMARY_ROUTE;
@@ -26,21 +26,17 @@ class ProfCostsSubSectionRouteResolver
 
         if ($this->routeIsFixedCosts($report)) {
             return $this->determineCurrentFixedCostSection($report);
-        }
-
-        if (!$this->routeIsFixedCosts($report)) {
+        } else {
             return $this->determineCurrentNonFixedCostSection($report);
         }
-
-        return self::SUMMARY_ROUTE;
     }
 
-    private function sectionNotStarted($state): bool
+    private function sectionNotStarted(string $state): bool
     {
         return $state === Status::STATE_NOT_STARTED || ($state !== Status::STATE_INCOMPLETE && $state !== Status::STATE_DONE);
     }
 
-    private function sectionIsComplete($state): bool
+    private function sectionIsComplete(string $state): bool
     {
         return $state === Status::STATE_DONE;
     }

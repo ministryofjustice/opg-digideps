@@ -56,6 +56,7 @@ class ProfDeputyCostsController extends AbstractController
     public function startAction(int $reportId, ProfCostsSubSectionRouteResolver $routeResolver): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        /** @var string $state */
         $state = $report->getStatus()->getProfDeputyCostsState()['state'];
 
         if (null !== ($forwardRoute = $routeResolver->resolve($report, $state))) {
