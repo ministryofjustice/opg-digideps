@@ -8,6 +8,7 @@ use OPG\Digideps\Frontend\Entity\Report\Status;
 class ProfCostsSubSectionRouteResolver
 {
     public const string SUMMARY_ROUTE = 'prof_deputy_costs_summary';
+    public const string START_ROUTE = 'prof_deputy_costs';
     public const string PREVIOUS_RECEIVED_EXISTS_ROUTE = 'prof_deputy_costs_previous_received_exists';
     public const string COSTS_RECEIVED_ROUTE = 'prof_deputy_costs_received';
     public const string SCCO_AMOUNT_ROUTE = 'prof_deputy_costs_amount_scco';
@@ -15,21 +16,14 @@ class ProfCostsSubSectionRouteResolver
     public const string INTERIM_ROUTE = 'prof_deputy_costs_inline_interim_19b';
     public const string BREAKDOWN_ROUTE = 'prof_deputy_costs_breakdown';
 
-    /**
-     * @return string
-     */
-    public function resolve(Report $report, $state)
+    public function resolve(Report $report, $state): ?string
     {
-        if ($this->sectionNotStarted($state)) {
-            return;
+        if ($this->sectionNotStarted($state) || $this->previousRecievedExistsSubsectionIsIncomplete($report)) {
+            return null;
         }
 
         if ($this->sectionIsComplete($state)) {
             return self::SUMMARY_ROUTE;
-        }
-
-        if ($this->previousRecievedExistsSubsectionIsIncomplete($report)) {
-            return self::PREVIOUS_RECEIVED_EXISTS_ROUTE;
         }
 
         if ($this->routeIsFixedCosts($report)) {
