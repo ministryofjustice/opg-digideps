@@ -8,7 +8,6 @@ use OPG\Digideps\Frontend\Entity\Report\Status;
 class ProfCostsSubSectionRouteResolver
 {
     public const string SUMMARY_ROUTE = 'prof_deputy_costs_summary';
-    public const string PREVIOUS_RECEIVED_EXISTS_ROUTE = 'prof_deputy_costs_previous_received_exists';
     public const string COSTS_RECEIVED_ROUTE = 'prof_deputy_costs_received';
     public const string SCCO_AMOUNT_ROUTE = 'prof_deputy_costs_amount_scco';
     public const string INTERIM_EXISTS_ROUTE = 'prof_deputy_costs_inline_interim_19b_exists';
@@ -28,6 +27,7 @@ class ProfCostsSubSectionRouteResolver
         if ($this->routeIsFixedCosts($report)) {
             return $this->determineCurrentFixedCostSection($report);
         }
+
         if (!$this->routeIsFixedCosts($report)) {
             return $this->determineCurrentNonFixedCostSection($report);
         }
@@ -45,26 +45,17 @@ class ProfCostsSubSectionRouteResolver
         return $state === Status::STATE_DONE;
     }
 
-    /**
-     * @return bool
-     */
-    private function previousRecievedExistsSubsectionIsIncomplete(Report $report)
+    private function previousRecievedExistsSubsectionIsIncomplete(Report $report): bool
     {
         return !$report->getProfDeputyCostsHasPrevious();
     }
 
-    /**
-     * @return bool
-     */
-    private function routeIsFixedCosts(Report $report)
+    private function routeIsFixedCosts(Report $report): bool
     {
         return $report->hasProfDeputyCostsHowChargedFixedOnly();
     }
 
-    /**
-     * @return string
-     */
-    private function determineCurrentFixedCostSection(Report $report)
+    private function determineCurrentFixedCostSection(Report $report): ?string
     {
         if ($this->fixedCostsSubsectionIsIncomplete($report)) {
             return self::COSTS_RECEIVED_ROUTE;
@@ -73,12 +64,11 @@ class ProfCostsSubSectionRouteResolver
         if ($this->breakdownCostsIsIncomplete($report)) {
             return self::BREAKDOWN_ROUTE;
         }
+
+        return null;
     }
 
-    /**
-     * @return string
-     */
-    private function determineCurrentNonFixedCostSection(Report $report)
+    private function determineCurrentNonFixedCostSection(Report $report): ?string
     {
         if ($this->interimExistsSubsectionIsIncomplete($report)) {
             return self::INTERIM_EXISTS_ROUTE;
@@ -99,54 +89,38 @@ class ProfCostsSubSectionRouteResolver
         if ($this->breakdownCostsIsIncomplete($report)) {
             return self::BREAKDOWN_ROUTE;
         }
+
+        return null;
     }
 
-    /**
-     * @return bool
-     */
-    private function fixedCostsSubsectionIsIncomplete(Report $report)
+    private function fixedCostsSubsectionIsIncomplete(Report $report): bool
     {
         return !$report->getProfDeputyFixedCost();
     }
 
-    /**
-     * @return bool
-     */
-    private function amountSccoSubsectionIsIncomplete(Report $report)
+    private function amountSccoSubsectionIsIncomplete(Report $report): bool
     {
         return !$report->getProfDeputyCostsAmountToScco();
     }
 
-    /**
-     * @return bool
-     */
-    private function interimExistsSubsectionIsIncomplete(Report $report)
+    private function interimExistsSubsectionIsIncomplete(Report $report): bool
     {
         return !$report->getProfDeputyCostsHasInterim();
     }
 
-    /**
-     * @return bool
-     */
-    private function interimExists(Report $report)
+    private function interimExists(Report $report): bool
     {
         $getProfDeputyCostsHasInterimLower = is_null($report->getProfDeputyCostsHasInterim()) ? '' : strtolower($report->getProfDeputyCostsHasInterim());
 
         return $getProfDeputyCostsHasInterimLower == 'yes';
     }
 
-    /**
-     * @return bool
-     */
-    private function interimSubsectionIsIncomplete(Report $report)
+    private function interimSubsectionIsIncomplete(Report $report): bool
     {
         return empty($report->getProfDeputyInterimCosts());
     }
 
-    /**
-     * @return bool
-     */
-    private function breakdownCostsIsIncomplete(Report $report)
+    private function breakdownCostsIsIncomplete(Report $report): bool
     {
         return !$report->hasProfDeputyOtherCosts();
     }
