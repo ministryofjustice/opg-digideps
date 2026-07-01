@@ -9,6 +9,14 @@ resource "aws_instance" "ssm_ec2" {
   user_data_replace_on_change = true
   associate_public_ip_address = false
 
+  metadata_options {
+    http_tokens = "required"
+  }
+
+  root_block_device {
+    encrypted = true
+  }
+
   tags = merge(var.tags, {
     Name        = "ssm-${var.name}-instance",
     AllowedRole = var.name

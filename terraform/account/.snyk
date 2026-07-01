@@ -1,0 +1,30 @@
+ignore:
+  SNYK-CC-TF-127:
+    - '*':
+        reason: "MFA delete intentionally disabled to avoid breaking service accounts"
+
+  SNYK-CC-TF-45:
+    - '*':
+        reason: "S3 access logging intentionally disabled because this bucket is development-only and only contains dev data"
+
+  SNYK-CC-TF-55:
+    - '*':
+        reason: "SNS encryption intentionally not enabled because Can't do cross region SNS encryption"
+  SNYK-CC-TF-214:
+    - '*':
+        reason: "ElastiCache in-transit encryption intentionally disabled due to known performance impact: see DDPB-3661"
+  SNYK-CC-AWS-428:
+    - '*':
+        reason: "VPC endpoint policy intentionally omitted. Access is restricted by security groups and IAM. Adding policy could break the VPC without constantly updating it."
+  SNYK-CC-TF-125:
+    - '*':
+        reason: "Point-in-time recovery intentionally disabled as table only contains transient data"
+  SNYK-CC-AWS-422:
+    - '*':
+        reason: "Customer managed KMS key intentionally not used."
+  SNYK-CC-TF-72:
+      - '*':
+          reason: "Open HTTPS egress intentionally required for package installation and outbound dependency access from SSM EC2 instance"
+  SNYK-CC-TF-56:
+    - '*':
+        reason: "Security group descriptions intentionally omitted because adding descriptions would force replacement of existing security groups"
