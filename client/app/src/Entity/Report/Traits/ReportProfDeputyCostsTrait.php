@@ -13,21 +13,21 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 trait ReportProfDeputyCostsTrait
 {
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank(message="profDeputyCostsHowCharged.notBlank", groups={"prof-deputy-costs-how-charged"} )
      * @JMS\Type("string")
      * @JMS\Groups({"deputyCostsHowCharged"})
      */
-    private $profDeputyCostsHowCharged;
+    private ?string $profDeputyCostsHowCharged;
 
     /**
-     * @var string yes/no
+     * @var string|null yes/no
      *
      * @JMS\Type("string")
      * @JMS\Groups({"profDeputyCostsHasPrevious"})
      */
-    private $profDeputyCostsHasPrevious;
+    private ?string $profDeputyCostsHasPrevious;
 
     /**
      * @var ProfDeputyOtherCost[]
@@ -60,12 +60,12 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyFixedCost;
 
     /**
-     * @var string yes/no
+     * @var string|null yes/no
      *
      * @JMS\Type("string")
      * @JMS\Groups({"profDeputyCostsHasInterim"})
      */
-    private $profDeputyCostsHasInterim;
+    private ?string $profDeputyCostsHasInterim;
 
     /**
      * @var ProfDeputyInterimCost[]
@@ -143,20 +143,16 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getProfDeputyCostsHowCharged()
+    public function getProfDeputyCostsHowCharged(): ?string
     {
         return $this->profDeputyCostsHowCharged;
     }
 
-    /**
-     * @param string $profDeputyCostsHowCharged
-     */
-    public function setProfDeputyCostsHowCharged($profDeputyCostsHowCharged)
+    public function setProfDeputyCostsHowCharged(?string $profDeputyCostsHowCharged): static
     {
         $this->profDeputyCostsHowCharged = $profDeputyCostsHowCharged;
-
         return $this;
     }
 
@@ -186,19 +182,19 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getProfDeputyCostsHasPrevious()
+    public function getProfDeputyCostsHasPrevious(): ?string
     {
         return $this->profDeputyCostsHasPrevious;
     }
 
     /**
-     * @param string $profDeputyCostsHasPrevious
+     * @param string|null $profDeputyCostsHasPrevious
      *
      * @return $this
      */
-    public function setProfDeputyCostsHasPrevious($profDeputyCostsHasPrevious)
+    public function setProfDeputyCostsHasPrevious(?string $profDeputyCostsHasPrevious): static
     {
         $this->profDeputyCostsHasPrevious = $profDeputyCostsHasPrevious;
 
@@ -225,20 +221,16 @@ trait ReportProfDeputyCostsTrait
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getProfDeputyCostsHasInterim()
+    public function getProfDeputyCostsHasInterim(): ?string
     {
         return $this->profDeputyCostsHasInterim;
     }
 
     /**
-     * @param string $profDeputyCostsHasInterim
-     *
+     * @param string|null $profDeputyCostsHasInterim
      * @return $this
      */
-    public function setProfDeputyCostsHasInterim($profDeputyCostsHasInterim)
+    public function setProfDeputyCostsHasInterim(?string $profDeputyCostsHasInterim): static
     {
         $this->profDeputyCostsHasInterim = $profDeputyCostsHasInterim;
 
@@ -303,7 +295,7 @@ trait ReportProfDeputyCostsTrait
      *
      * @return $this
      */
-    public function setProfDeputyCostsAmountToScco($profDeputyCostsAmountToScco)
+    public function setProfDeputyCostsAmountToScco(float $profDeputyCostsAmountToScco): static
     {
         $this->profDeputyCostsAmountToScco = $profDeputyCostsAmountToScco;
 
