@@ -66,8 +66,7 @@ final class HeaderTokenAuthenticatorTest extends TestCase
         $supportedRequest = new Request();
         $supportedRequest->headers->set('AuthToken', 'AuthTokenValue');
 
-        $user = new User()
-            ->setEmail('a@b.com');
+        $user = new User('', '', 'a@b.com');
         $postAuthToken = new PostAuthenticationToken($user, 'a_firewall', ['ROLE_LAY_DEPUTY']);
         $this->userRepository->findOneBy(['email' => 'a@b.com'])->willReturn($user);
 
@@ -105,8 +104,7 @@ final class HeaderTokenAuthenticatorTest extends TestCase
         $supportedRequest = new Request();
         $supportedRequest->headers->set('AuthToken', 'AuthTokenValue');
 
-        $user = new User()
-            ->setEmail('a@b.com');
+        $user = new User('', '', 'a@b.com');
         $postAuthToken = new PostAuthenticationToken($user, 'a_firewall', ['ROLE_LAY_DEPUTY']);
 
         $this->redisClient->get('AuthTokenValue')->shouldBeCalled()->willReturn(serialize($postAuthToken));

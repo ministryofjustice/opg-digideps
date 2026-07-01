@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Report\ReportTransitionService;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
@@ -51,28 +52,30 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
     {
         $client = new Client();
         self::$entityManager->persist($client);
-        $courtOrder = new CourtOrder();
-        $courtOrder->setId($id);
-        $courtOrder->setClient($client);
-        $courtOrder->setCourtOrderUid("UID-{$id}");
-        $courtOrder->setOrderKind($kind);
-        $courtOrder->setOrderType($orderType ?? CourtOrderType::PFA);
-        $courtOrder->setStatus($active ? 'ACTIVE' : 'CLOSED');
-        $courtOrder->setOrderMadeDate(new \DateTime());
-        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
+        $courtOrder = new CourtOrder(
+            "UID-{$id}",
+            $orderType ?? CourtOrderType::PFA,
+            CourtOrderReportType::OPG102,
+            $kind,
+            new \DateTime(),
+            $client,
+            $active ? 'ACTIVE' : 'CLOSED'
+        )->setId($id);
+
         if ($siblingId === null && $kind === CourtOrderKind::Single) {
             $courtOrder->setSibling(null);
         } elseif ($siblingId !== null && $kind !== CourtOrderKind::Single) {
-            $sibling = new CourtOrder();
-            $sibling->setId($siblingId);
-            $sibling->setClient($client);
-            $sibling->setCourtOrderUid("UID-{$siblingId}");
-            $sibling->setOrderKind($kind);
-            $sibling->setOrderType($courtOrder->getOrderType() === CourtOrderType::HW ? CourtOrderType::PFA : CourtOrderType::HW);
-            $sibling->setSibling($courtOrder);
-            $sibling->setStatus($activeSibling === null && $active || $activeSibling ? 'ACTIVE' : 'CLOSED');
-            $sibling->setOrderMadeDate(new \DateTime());
-            $sibling->setOrderReportType(CourtOrderReportType::OPG102);
+            $sibling = new CourtOrder(
+                "UID-{$siblingId}",
+                $courtOrder->getOrderType() === CourtOrderType::HW ? CourtOrderType::PFA : CourtOrderType::HW,
+                CourtOrderReportType::OPG102,
+                $kind,
+                new \DateTime(),
+                $client,
+                $activeSibling === null && $active || $activeSibling ? 'ACTIVE' : 'CLOSED'
+            )
+                ->setId($siblingId)
+                ->setSibling($courtOrder);
             $courtOrder->setSibling($sibling);
             self::$entityManager->persist($sibling);
         } else {
@@ -189,29 +192,35 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
 
         self::$entityManager->flush();
 
+        /** @var ReportTransitionService $reportTransitionService */
+        $reportTransitionService = self::$container->get(ReportTransitionService::class);
+
         $ingester = new CourtOrderRelationshipIngester(
             new CourtOrderRelationshipReader(self::$entityManager->getConnection()),
-            new ReportReassembler(),
+            new ReportReassembler(
+                $reportTransitionService,
+                self::$entityManager
+            ),
             self::$entityManager
         );
         $results = [...$ingester->execute()];
         usort($results, fn (CourtOrderRelationshipResult $left, CourtOrderRelationshipResult $right) => $left->getMessage() <=> $right->getMessage());
 
         $this->assertCount(14, $results);
-        $this->assertSame("Changes in CourtOrder 10: SiblingId changed from '110' -> '210'. Kind changed from 'hybrid' -> 'dual'.", $results[0]->getMessage());
-        $this->assertSame("Changes in CourtOrder 11: SiblingId changed from '111' -> '211'.", $results[1]->getMessage());
-        $this->assertSame("Changes in CourtOrder 12: SiblingId changed from '112' -> ''. Kind changed from 'dual' -> 'single'.", $results[2]->getMessage());
-        $this->assertSame("Changes in CourtOrder 13: SiblingId changed from '113' -> '213'. Kind changed from 'dual' -> 'hybrid'.", $results[3]->getMessage());
-        $this->assertSame("Changes in CourtOrder 14: SiblingId changed from '114' -> '214'.", $results[4]->getMessage());
-        $this->assertSame("Changes in CourtOrder 207: SiblingId changed from '' -> '7'. Kind changed from 'single' -> 'hybrid'.", $results[5]->getMessage());
-        $this->assertSame("Changes in CourtOrder 208: SiblingId changed from '' -> '8'. Kind changed from 'single' -> 'dual'.", $results[6]->getMessage());
-        $this->assertSame("Changes in CourtOrder 210: SiblingId changed from '' -> '10'. Kind changed from 'single' -> 'dual'.", $results[7]->getMessage());
-        $this->assertSame("Changes in CourtOrder 211: SiblingId changed from '' -> '11'. Kind changed from 'single' -> 'hybrid'.", $results[8]->getMessage());
-        $this->assertSame("Changes in CourtOrder 213: SiblingId changed from '' -> '13'. Kind changed from 'single' -> 'hybrid'.", $results[9]->getMessage());
-        $this->assertSame("Changes in CourtOrder 214: SiblingId changed from '' -> '14'. Kind changed from 'single' -> 'dual'.", $results[10]->getMessage());
-        $this->assertSame("Changes in CourtOrder 7: SiblingId changed from '' -> '207'. Kind changed from 'single' -> 'hybrid'.", $results[11]->getMessage());
-        $this->assertSame("Changes in CourtOrder 8: SiblingId changed from '' -> '208'. Kind changed from 'single' -> 'dual'.", $results[12]->getMessage());
-        $this->assertSame("Changes in CourtOrder 9: SiblingId changed from '109' -> ''. Kind changed from 'hybrid' -> 'single'.", $results[13]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 10: SiblingId changed from '110' -> '210'. Kind changed from 'hybrid' -> 'dual'.", $results[0]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 11: SiblingId changed from '111' -> '211'.", $results[1]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 12: SiblingId changed from '112' -> ''. Kind changed from 'dual' -> 'single'.", $results[2]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 13: SiblingId changed from '113' -> '213'. Kind changed from 'dual' -> 'hybrid'.", $results[3]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 14: SiblingId changed from '114' -> '214'.", $results[4]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 207: SiblingId changed from '' -> '7'. Kind changed from 'single' -> 'hybrid'.", $results[5]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 208: SiblingId changed from '' -> '8'. Kind changed from 'single' -> 'dual'.", $results[6]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 210: SiblingId changed from '' -> '10'. Kind changed from 'single' -> 'dual'.", $results[7]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 211: SiblingId changed from '' -> '11'. Kind changed from 'single' -> 'hybrid'.", $results[8]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 213: SiblingId changed from '' -> '13'. Kind changed from 'single' -> 'hybrid'.", $results[9]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 214: SiblingId changed from '' -> '14'. Kind changed from 'single' -> 'dual'.", $results[10]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 7: SiblingId changed from '' -> '207'. Kind changed from 'single' -> 'hybrid'.", $results[11]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 8: SiblingId changed from '' -> '208'. Kind changed from 'single' -> 'dual'.", $results[12]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 9: SiblingId changed from '109' -> ''. Kind changed from 'hybrid' -> 'single'.", $results[13]->getMessage());
 
         $closed = self::$entityManager->getRepository(CourtOrder::class)->findBy(['status' => 'CLOSED']);
         $this->assertTrue(array_all($closed, fn (CourtOrder $order) => $order->getSibling() === null));

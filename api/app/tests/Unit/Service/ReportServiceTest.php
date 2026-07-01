@@ -32,8 +32,6 @@ final class ReportServiceTest extends TestCase
     use ProphecyTrait;
 
     private User $user;
-    private BankAccount $bank1;
-    private AssetProperty $asset1;
     private Report $report;
     private Document $document1;
     private MockInterface&EntityManager $em;
@@ -44,24 +42,22 @@ final class ReportServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->user = new User();
+        $this->user = new User('', '', '');
         $client = new Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
         $client->setCourtDate(new \DateTime('2014-06-06'));
 
-        $this->bank1 = new BankAccount()->setAccountNumber('1234');
-        $this->asset1 = new AssetProperty()
-            ->setAddress('SW1')
-            ->setOwned(AssetProperty::OWNED_FULLY);
         $this->report = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
         $this->report
             ->setNoAssetToAdd(false)
-            ->addAsset($this->asset1)
-            ->addAccount($this->bank1)
+            ->addAsset(new AssetProperty($this->report)
+                ->setAddress('SW1')
+                ->setOwned(AssetProperty::OWNED_FULLY))
+            ->addAccount(new BankAccount($this->report)->setAccountNumber('1234'))
             ->setSubmittedBy($this->user);
 
-        $this->document1 = new Document($this->report)->setFileName('file1.pdf');
+        $this->document1 = new Document($this->report, 'file1.pdf');
         $this->report->addDocument($this->document1);
 
         $this->em = m::mock(EntityManager::class);
@@ -315,9 +311,9 @@ final class ReportServiceTest extends TestCase
 
     public static function getReportTypeBasedOnSiriusProvider(): array
     {
-        $lay = new User()->setRoleName(User::ROLE_LAY_DEPUTY);
-        $prof = new User()->setRoleName(User::ROLE_PROF_ADMIN);
-        $pa = new User()->setRoleName(User::ROLE_PA_ADMIN);
+        $lay = new User('', '', '')->setRoleName(User::ROLE_LAY_DEPUTY);
+        $prof = new User('', '', '')->setRoleName(User::ROLE_PROF_ADMIN);
+        $pa = new User('', '', '')->setRoleName(User::ROLE_PA_ADMIN);
 
         $layClient = new Client()
             ->addUser($lay)

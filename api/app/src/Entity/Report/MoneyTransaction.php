@@ -26,9 +26,10 @@ class MoneyTransaction implements MoneyTransactionInterface
      *
      * 'category' identifies the group and type
      * getGroup() and getType() use this array
+     * @var array<array{string, bool, string, string}>
      */
     #[JMS\Exclude]
-    public static $categories = [
+    public static array $categories = [
         // category | hasMoreDetails | order | group | type (in/out)
 
         // Money In
@@ -119,134 +120,106 @@ class MoneyTransaction implements MoneyTransactionInterface
         ['anything-else-paid-out', true, 'moneyout-other', 'out'],
     ];
 
-    /**
-     * @var int
-     */
     #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'transaction_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'moneyTransactions')]
-    private $report;
+    private Report $report;
 
     /**
      * Category (e.g. "dividends")
      * Once the category is known, group (income and dividends) and type (in) are known as well, see self::$categories.
-     *
-     * @var string
      */
     #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
     #[ORM\Column(name: 'category', type: 'string', length: 255, nullable: false)]
-    private $category;
+    private string $category;
 
     #[JMS\Type('float')]
     #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
     #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: false)]
-    private float $amount = 0.0;
+    private string $amount = '0.0';
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]
-    private $description;
+    private ?string $description = null;
 
     /**
      * Used to serve migrations and recover data in case of errors
      * Remove when DDPB-1852 is fully released.
-     *
-     * @var string
      */
     #[ORM\Column(name: 'meta', type: 'text', nullable: true)]
-    private $meta;
+    private ?string $meta = null;
 
-    /**
-     * MoneyTransaction constructor.
-     */
-    public function __construct(Report $report)
+    public function __construct(Report $report, string $category)
     {
         $this->report = $report;
+        $this->category = $category;
         $report->addMoneyTransaction($this);
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    /**
-     * @param Report $report
-     */
-    public function setReport($report)
+    public function setReport(Report $report): void
     {
         $this->report = $report;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
-        $this->id = $id;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCategory()
+    public function getCategory(): string
     {
         return $this->category;
     }
 
-    /**
-     * @param string $category
-     */
-    public function setCategory($category)
+    public function setCategory(string $category): static
     {
         $this->category = $category;
 
         return $this;
     }
 
-    public function getAmount(): float
+    public function getAmount(): string
     {
         return $this->amount;
     }
 
-    public function setAmount(float $amount): static
+    public function setAmount(string|int|float $amount): static
     {
-        $this->amount = $amount;
+        $this->amount = (string)$amount;
 
         return $this;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
@@ -256,16 +229,16 @@ class MoneyTransaction implements MoneyTransactionInterface
     /**
      * Get the group based on the category.
      *
-     * @return string in/out
+     * @return ?string null/in/out
      */
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('group')]
     #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
-    public function getGroup()
+    public function getGroup(): ?string
     {
         foreach (self::$categories as $cat) {
-            list($categoryId, $hasDetails, $groupId, $type) = $cat;
-            if ($this->getCategory() == $categoryId) {
+            [$categoryId, $_, $groupId, $_] = $cat;
+            if ($this->getCategory() === $categoryId) {
                 return $groupId;
             }
         }
@@ -281,15 +254,15 @@ class MoneyTransaction implements MoneyTransactionInterface
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('type')]
     #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
-    public function getType()
+    public function getType(): string
     {
         foreach (self::$categories as $cat) {
-            list($categoryId, $hasDetails, $groupId, $type) = $cat;
-            if ($this->getCategory() == $categoryId) {
+            [$categoryId, $_, $_, $type] = $cat;
+            if ($this->getCategory() === $categoryId) {
                 return $type;
             }
         }
 
-        return null;
+        throw new \DomainException("Invalid money transaction category: {$this->getCategory()}");
     }
 }

@@ -50,7 +50,11 @@ class UserController extends RestController
             'lastname' => 'mustExist',
         ]);
 
-        $newUser = new User();
+        $newUser = new User(
+            $data['firstname'],
+            $data['lastname'],
+            $data['email']
+        );
         $newUser->populate($data);
 
         /** @var User $loggedInUser */

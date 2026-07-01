@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\Entity\Report;
 
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use PHPUnit\Framework\TestCase;
 
 final class BankAccountTest extends TestCase
 {
     public function testSetterGetters(): void
     {
-        $account = new BankAccount();
+        $account = new BankAccount($this->createStub(Report::class));
         $this->assertEquals('123456', $account->setAccountNumber('123456')->getAccountNumber());
         $this->assertEquals('123456', $account->setBank('123456')->getBank());
         $this->assertEquals('123456', $account->setClosingBalance('123456')->getClosingBalance());

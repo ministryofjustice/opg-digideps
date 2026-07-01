@@ -62,7 +62,6 @@ class ReportService
 
         $this->em->persist($submission);
 
-        /** @var CourtOrder[] $courtOrders */
         $courtOrders = $currentReport->getCourtOrders()->toArray();
         $client = $currentReport->getClient();
         $clientId = $client->getId();
@@ -121,9 +120,7 @@ class ReportService
             $assetExists = $this->checkAssetExists($toReport, $asset);
 
             if (!$assetExists) {
-                $newAsset = $this->cloneAsset($asset);
-                $newAsset->setReport($toReport);
-
+                $newAsset = $this->cloneAsset($asset, $toReport);
                 $toReport->addAsset($newAsset);
                 $this->em->detach($newAsset);
                 $this->em->persist($newAsset);
@@ -136,7 +133,7 @@ class ReportService
             $accountExists = $this->checkBankAccountExists($toReport, $account);
 
             if (!$accountExists) {
-                $newAccount = $this->cloneBankAccount($account);
+                $newAccount = $this->cloneBankAccount($account, $toReport);
                 $newAccount->setReport($toReport);
                 $toReport->addAccount($newAccount);
                 $this->em->persist($newAccount);
@@ -149,10 +146,8 @@ class ReportService
         $toAssets = $toReport->getAssets();
 
         foreach ($toAssets as $toAsset) {
-            if ($toAsset->getType() === $asset->getType()) {
-                if ($asset->isEqual($toAsset)) {
-                    return true;
-                }
+            if ($asset->isEqual($toAsset)) {
+                return true;
             }
         }
 
@@ -162,10 +157,10 @@ class ReportService
     /**
      * Convert asset into Report Asset.
      */
-    private function cloneAsset(Asset $asset): Asset
+    private function cloneAsset(Asset $asset, Report $toReport): Asset
     {
         if ($asset instanceof AssetProperty) {
-            $newAsset = new AssetProperty();
+            $newAsset = new AssetProperty($toReport);
 
             $newAsset->setAddress($asset->getAddress());
             $newAsset->setAddress2($asset->getAddress2());
@@ -182,7 +177,7 @@ class ReportService
             $newAsset->setRentAgreementEndDate($asset->getRentAgreementEndDate());
             $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
         } elseif ($asset instanceof AssetOther) {
-            $newAsset = new AssetOther();
+            $newAsset = new AssetOther($toReport);
             $newAsset->setTitle($asset->getTitle());
             $newAsset->setDescription($asset->getDescription());
             $newAsset->setValuationDate($asset->getValuationDate());
@@ -195,9 +190,6 @@ class ReportService
         return $newAsset;
     }
 
-    /**
-     * @return bool
-     */
     private function checkBankAccountExists(Report $toReport, BankAccount $account): bool
     {
         foreach ($toReport->getBankAccounts() as $toAccount) {
@@ -218,9 +210,9 @@ class ReportService
     /**
      * Clones instance of Report and returns new Report Bank Account.
      */
-    private function cloneBankAccount(BankAccount $account): BankAccount
+    private function cloneBankAccount(BankAccount $account, Report $toReport): BankAccount
     {
-        $newAccount = new BankAccount();
+        $newAccount = new BankAccount($toReport);
 
         $newAccount->setBank($account->getBank());
         $newAccount->setAccountType($account->getAccountType());
@@ -350,11 +342,9 @@ class ReportService
 
     /**
      * If the report is ready to submit, but is not yet due, return notFinished instead
-     * In all the the cases, return original $status.
+     * In all the cases, return original $status.
      *
      * @param string $status
-     *
-     * @return string
      */
     public function adjustReportStatus($status, \DateTime $endDate): string
     {
@@ -432,5 +422,20 @@ class ReportService
         }
 
         return $required;
+    }
+
+    public function createReportFromOrder(CourtOrder $courtOrder): Report
+    {
+        $newReport = new Report(
+            client: $courtOrder->getClient(),
+            type: "{$courtOrder->getDesiredReportType()}",
+            startDate: $courtOrder->getOrderMadeDate(),
+            endDate: (clone $courtOrder->getOrderMadeDate())->modify('+12 months -1 day'),
+            dateChecks: false,
+        );
+
+        $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
+
+        return $newReport;
     }
 }
