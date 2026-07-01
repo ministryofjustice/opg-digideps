@@ -8,7 +8,6 @@ use OPG\Digideps\Frontend\Entity\Report\Status;
 class ProfCostsSubSectionRouteResolver
 {
     public const string SUMMARY_ROUTE = 'prof_deputy_costs_summary';
-    public const string START_ROUTE = 'prof_deputy_costs';
     public const string PREVIOUS_RECEIVED_EXISTS_ROUTE = 'prof_deputy_costs_previous_received_exists';
     public const string COSTS_RECEIVED_ROUTE = 'prof_deputy_costs_received';
     public const string SCCO_AMOUNT_ROUTE = 'prof_deputy_costs_amount_scco';
