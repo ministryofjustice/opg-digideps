@@ -118,8 +118,19 @@ resource "aws_wafv2_web_acl" "main" {
 
       statement {
         rate_based_statement {
-          limit              = 200
-          aggregate_key_type = "IP"
+          limit                 = 60
+          aggregate_key_type    = "IP"
+          evaluation_window_sec = 60
+
+          scope_down_statement {
+            not_statement {
+              statement {
+                ip_set_reference_statement {
+                  arn = aws_wafv2_ip_set.rate_limit_exclusions.arn
+                }
+              }
+            }
+          }
         }
       }
 
@@ -215,6 +226,10 @@ resource "aws_wafv2_regex_pattern_set" "allow_uris" {
 
   regular_expression {
     regex_string = "^/public/favicon.ico$"
+  }
+
+  regular_expression {
+    regex_string = "^/favicon.ico$"
   }
 
   regular_expression {
@@ -348,4 +363,14 @@ resource "aws_wafv2_ip_set" "blocked_ips" {
       description
     ]
   }
+}
+
+
+resource "aws_wafv2_ip_set" "rate_limit_exclusions" {
+  name               = "rate-limit-exclusions"
+  description        = "IPs excluded from rate limiting"
+  scope              = "REGIONAL"
+  ip_address_version = "IPV4"
+
+  addresses = local.default_allow_list
 }
