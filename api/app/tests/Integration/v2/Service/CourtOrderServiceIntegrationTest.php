@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\v2\Service;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderService;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\CourtOrderDeputy;
 use OPG\Digideps\Backend\Repository\CourtOrderDeputyRepository;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
