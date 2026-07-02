@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\OPG\Digideps\Backend\Fixture;
+namespace OPG\Digideps\Backend\Fixture;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
