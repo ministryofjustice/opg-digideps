@@ -1,3 +1,9 @@
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+
 on:
   workflow_call:
     secrets:
