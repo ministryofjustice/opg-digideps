@@ -2,6 +2,7 @@
 
 namespace Tests\OPG\Digideps\Backend\Behat;
 
+use Behat\MinkExtension\Context\MinkContext;
 use Tests\OPG\Digideps\Backend\Behat\Common\AuthenticationTrait;
 use Tests\OPG\Digideps\Backend\Behat\Common\CourtOrderTrait;
 use Tests\OPG\Digideps\Backend\Behat\Common\DebugTrait;
@@ -11,7 +12,6 @@ use Tests\OPG\Digideps\Backend\Behat\Common\RegionTrait;
 use Tests\OPG\Digideps\Backend\Behat\Common\ReportTrait;
 use Tests\OPG\Digideps\Backend\Behat\Common\SiteNavigationTrait;
 use Tests\OPG\Digideps\Backend\Behat\OrganisationManagement\OrganisationManagementTrait;
-use Behat\MinkExtension\Context\MinkContext;
 
 /**
  * Behat context class
