@@ -2,6 +2,4 @@
 
 namespace OPG\Digideps\Frontend\Service\File\Storage;
 
-class FileUploadFailedException extends \RuntimeException
-{
-}
+class FileUploadFailedException extends \RuntimeException {}

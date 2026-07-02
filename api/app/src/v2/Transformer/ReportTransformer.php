@@ -7,9 +7,7 @@ use OPG\Digideps\Backend\v2\DTO\StatusDto;
 
 class ReportTransformer
 {
-    public function __construct(private readonly StatusTransformer $statusTransformer)
-    {
-    }
+    public function __construct(private readonly StatusTransformer $statusTransformer) {}
 
     /**
      * @return array

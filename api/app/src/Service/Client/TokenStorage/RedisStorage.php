@@ -18,8 +18,7 @@ class RedisStorage extends TokenStorage
     public function __construct(
         private readonly PredisClientInterface $redis,
         private readonly string $sessionPrefix
-    ) {
-    }
+    ) {}
 
     public function get($id): ?string
     {

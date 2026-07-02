@@ -9,9 +9,7 @@ use OPG\Digideps\Backend\Entity\CourtOrder;
 
 final readonly class CourtOrderRelationshipChange
 {
-    public function __construct(public CourtOrder $courtOrder, public ?CourtOrderKind $oldKind, public ?int $oldSiblingId)
-    {
-    }
+    public function __construct(public CourtOrder $courtOrder, public ?CourtOrderKind $oldKind, public ?int $oldSiblingId) {}
 
     public function hasSiblingIdChange(): bool
     {

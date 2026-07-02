@@ -15,6 +15,5 @@ final readonly class RequestFixture
         public string $uri,
         public array $headers,
         public string $body,
-    ) {
-    }
+    ) {}
 }

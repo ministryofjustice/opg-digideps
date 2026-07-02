@@ -27,8 +27,7 @@ class NoteController extends AbstractController
     public function __construct(
         private readonly ClientApi $clientApi,
         private readonly RestClient $restClient
-    ) {
-    }
+    ) {}
 
     /**
      * @throws \Exception

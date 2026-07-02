@@ -23,8 +23,7 @@ class JWTService
         private readonly LoggerInterface $logger,
         private readonly string $frontendHost,
         private readonly DateTimeProvider $dateTimeProvider
-    ) {
-    }
+    ) {}
 
     public function createNewJWT(?User $user = null): string
     {

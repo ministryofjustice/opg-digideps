@@ -12,9 +12,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RegistrationFailedSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private LoggerInterface $logger, private DateTimeProvider $dateTimeProvider)
-    {
-    }
+    public function __construct(private LoggerInterface $logger, private DateTimeProvider $dateTimeProvider) {}
 
     public static function getSubscribedEvents()
     {

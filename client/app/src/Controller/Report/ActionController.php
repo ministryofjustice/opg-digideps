@@ -28,8 +28,7 @@ class ActionController extends AbstractController
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
         private readonly StepRedirector $stepRedirector,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/actions', name: 'actions')]
     #[Template('@App/Report/Action/start.html.twig')]

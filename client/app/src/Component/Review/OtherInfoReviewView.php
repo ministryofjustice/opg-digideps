@@ -20,9 +20,7 @@ final class OtherInfoReviewView
 
     private array $parameters = [];
 
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
-    }
+    public function __construct(private readonly TranslatorInterface $translator) {}
 
     public function mount(Report $report): void
     {

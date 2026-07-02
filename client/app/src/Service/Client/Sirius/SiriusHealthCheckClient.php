@@ -20,8 +20,7 @@ class SiriusHealthCheckClient
         private readonly Client $httpClient,
         private readonly RequestSigner $requestSigner,
         private readonly string $baseUrl,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws GuzzleException

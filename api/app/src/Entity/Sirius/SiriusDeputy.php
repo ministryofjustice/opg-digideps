@@ -40,6 +40,5 @@ class SiriusDeputy
         public readonly string $deputyPostCode,
         #[Column(name: 'local_id', type: 'integer', nullable: true)]
         public ?int $localId,
-    ) {
-    }
+    ) {}
 }

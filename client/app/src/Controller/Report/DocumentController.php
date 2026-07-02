@@ -51,8 +51,7 @@ class DocumentController extends AbstractController
         private readonly DocumentService $documentService,
         private readonly LoggerInterface $logger,
         private readonly S3Storage $s3Storage,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/documents', name: 'documents')]
     #[Template('@App/Report/Document/start.html.twig')]

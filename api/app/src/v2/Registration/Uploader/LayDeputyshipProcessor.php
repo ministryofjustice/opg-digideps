@@ -26,8 +26,7 @@ class LayDeputyshipProcessor
         private readonly LayClientMatcher $clientMatcher,
         private readonly ReportFactory $reportFactory,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * @return array

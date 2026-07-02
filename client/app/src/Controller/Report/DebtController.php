@@ -27,8 +27,7 @@ class DebtController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/debts', name: 'debts')]
     #[Template('@App/Report/Debt/start.html.twig')]

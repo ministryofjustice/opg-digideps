@@ -18,8 +18,7 @@ class DeputyApi
         private readonly RestClientInterface $restClient,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function createDeputyFromUser(User $currentUser)
     {

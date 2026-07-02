@@ -19,8 +19,7 @@ class AdminUserLifeCycleSubscriber implements EventSubscriberInterface
         private Mailer $mailer,
         private LoggerInterface $logger,
         private DateTimeProvider $dateTimeProvider
-    ) {
-    }
+    ) {}
 
     public static function getSubscribedEvents(): array
     {

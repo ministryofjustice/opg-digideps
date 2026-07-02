@@ -20,8 +20,7 @@ class LoginSubscriber implements EventSubscriberInterface
         private readonly UserApi $userApi,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly TokenStorageInterface $tokenStorage,
-    ) {
-    }
+    ) {}
 
     public static function getSubscribedEvents()
     {

@@ -11,9 +11,7 @@ class UserRetentionPolicyCommandEvent extends Event
 {
     public const string NAME = 'user.deleted';
 
-    public function __construct(private User $deletedAdminUser, private string $trigger)
-    {
-    }
+    public function __construct(private User $deletedAdminUser, private string $trigger) {}
 
     public function getTrigger(): string
     {

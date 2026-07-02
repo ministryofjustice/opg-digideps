@@ -14,9 +14,7 @@ abstract class Query
 
     abstract protected function getSubquery(): string;
 
-    public function __construct(private readonly EntityManagerInterface $em)
-    {
-    }
+    public function __construct(private readonly EntityManagerInterface $em) {}
 
     /**
      * @throws \Exception

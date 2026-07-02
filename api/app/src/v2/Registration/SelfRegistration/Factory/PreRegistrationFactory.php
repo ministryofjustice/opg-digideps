@@ -10,9 +10,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PreRegistrationFactory
 {
-    public function __construct(private readonly ValidatorInterface $validator)
-    {
-    }
+    public function __construct(private readonly ValidatorInterface $validator) {}
 
     public function createFromDto(LayDeputyshipDto $dto): PreRegistration
     {

@@ -15,8 +15,7 @@ class OrganisationAssembler
     public function __construct(
         private readonly UserAssembler $userDtoAssembler,
         private readonly ClientAssembler $clientDtoAssembler
-    ) {
-    }
+    ) {}
 
     /**
      * @return OrganisationDto

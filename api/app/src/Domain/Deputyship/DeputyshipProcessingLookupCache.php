@@ -36,8 +36,7 @@ class DeputyshipProcessingLookupCache
         private readonly CourtOrderRepository $courtOrderRepository,
         private readonly DeputyRepository $deputyRepository,
         private readonly ClientRepository $clientRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * Initialise caches from database.

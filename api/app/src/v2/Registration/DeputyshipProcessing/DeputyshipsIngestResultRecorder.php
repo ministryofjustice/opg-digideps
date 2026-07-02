@@ -32,8 +32,7 @@ class DeputyshipsIngestResultRecorder
 
     public function __construct(
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     private function formatDate(\DateTimeInterface $dateTime): string
     {

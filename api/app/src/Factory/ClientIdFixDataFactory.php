@@ -11,8 +11,7 @@ class ClientIdFixDataFactory implements DataFactoryInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {
-    }
+    ) {}
 
     public function getName(): string
     {

@@ -11,8 +11,7 @@ class RedisStorage extends TokenStorage
         private PredisClientInterface $redis,
         private string $sessionPrefix,
         private string $workspace
-    ) {
-    }
+    ) {}
 
     public function get($id)
     {

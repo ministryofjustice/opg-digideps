@@ -10,9 +10,7 @@ use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistratio
 
 readonly class PreRegistrationFactory
 {
-    public function __construct(private PreRegistrationDTOFactory $preRegistrationFactory)
-    {
-    }
+    public function __construct(private PreRegistrationDTOFactory $preRegistrationFactory) {}
 
     /** @param Mixed[] $data */
     public function create(array $data): PreRegistration

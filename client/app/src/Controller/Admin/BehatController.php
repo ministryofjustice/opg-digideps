@@ -19,8 +19,7 @@ class BehatController extends AbstractController
     public function __construct(
         private readonly KernelInterface $kernel,
         private readonly bool $fixturesEnabled,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws \Exception

@@ -34,8 +34,7 @@ class MoneyTransferController extends AbstractController
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
         private readonly StepRedirector $stepRedirector,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/money-transfers', name: 'money_transfers')]
     #[Template('@App/Report/MoneyTransfer/start.html.twig')]

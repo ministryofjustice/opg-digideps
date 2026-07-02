@@ -22,8 +22,7 @@ class HealthController extends AbstractController
         private readonly string $environment,
         private readonly LoggerInterface $logger,
         private readonly string $hostedEnv,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '', name: 'health_check', methods: ['GET'])]
     #[Template('@App/Health/health-check.html.twig')]

@@ -16,6 +16,5 @@ class DeputyshipProcessingRawDbAccessResult
         // or int court order ID)
         public int|Result|null $data = null,
         public ?string $error = null,
-    ) {
-    }
+    ) {}
 }

@@ -19,9 +19,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 abstract class AbstractDataFixture implements FixtureInterface
 {
-    public function __construct(private readonly KernelInterface $kernel)
-    {
-    }
+    public function __construct(private readonly KernelInterface $kernel) {}
 
     public function load(ObjectManager $manager): void
     {

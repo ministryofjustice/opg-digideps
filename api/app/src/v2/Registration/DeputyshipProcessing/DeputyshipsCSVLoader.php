@@ -17,8 +17,7 @@ class DeputyshipsCSVLoader
         private readonly EntityManagerInterface $em,
         private readonly CSVChunkerFactory $chunkerFactory,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function load(string $fileLocation): DeputyshipsCSVLoaderResult
     {

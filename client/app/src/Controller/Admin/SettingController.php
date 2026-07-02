@@ -16,9 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route(path: '/admin/settings')]
 class SettingController extends AbstractController
 {
-    public function __construct(private readonly RestClient $restClient)
-    {
-    }
+    public function __construct(private readonly RestClient $restClient) {}
 
     #[Route(path: '/service-notification', name: 'admin_setting_service_notifications')]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]

@@ -2,6 +2,4 @@
 
 namespace OPG\Digideps\Frontend\Service\Client\Exception;
 
-class NoSuccess extends \RuntimeException
-{
-}
+class NoSuccess extends \RuntimeException {}

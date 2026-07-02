@@ -32,8 +32,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         private Redirector $redirector,
         private RedisStorage $tokenStorage,
         private RouterInterface $router
-    ) {
-    }
+    ) {}
 
     public function supports(Request $request): ?bool
     {

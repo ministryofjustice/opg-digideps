@@ -27,8 +27,7 @@ class LifestyleController extends AbstractController
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
         private readonly StepRedirector $stepRedirector,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/lifestyle', name: 'lifestyle')]
     #[Template('@App/Report/Lifestyle/start.html.twig')]

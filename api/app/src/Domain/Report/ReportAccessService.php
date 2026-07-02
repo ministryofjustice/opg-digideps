@@ -14,9 +14,7 @@ final class ReportAccessService
      */
     private array $cache = [true => [], false => []];
 
-    public function __construct(private readonly EntityManagerInterface $entityManager)
-    {
-    }
+    public function __construct(private readonly EntityManagerInterface $entityManager) {}
 
     /**
      * @return array<int>

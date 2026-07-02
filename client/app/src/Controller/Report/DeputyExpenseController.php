@@ -34,8 +34,7 @@ class DeputyExpenseController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/deputy-expenses', name: 'deputy_expenses')]
     #[Template('@App/Report/DeputyExpense/start.html.twig')]

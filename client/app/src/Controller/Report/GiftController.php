@@ -33,8 +33,7 @@ class GiftController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/gifts', name: 'gifts')]
     #[Template('@App/Report/Gift/start.html.twig')]

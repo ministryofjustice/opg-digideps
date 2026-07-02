@@ -14,8 +14,7 @@ class MissingDeputyDataFactory implements DataFactoryInterface
 {
     public function __construct(
         private readonly UserDeputyService $userDeputyService
-    ) {
-    }
+    ) {}
 
     public function getName(): string
     {

@@ -97,8 +97,7 @@ class ReportController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
-    ) {
-    }
+    ) {}
 
     #[Route(path: 'checklist', name: 'admin_report_checklist')]
     #[IsGranted(attribute: 'ROLE_ADMIN')]

@@ -13,6 +13,5 @@ final readonly class CourtOrderRelationship
         public int $courtOrderId,
         public ?int $siblingId,
         public CourtOrderKind $kind
-    ) {
-    }
+    ) {}
 }

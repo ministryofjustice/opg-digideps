@@ -17,8 +17,7 @@ class DeputyshipCandidatesConverter
 {
     public function __construct(
         private readonly DeputyshipProcessingRawDbAccess $dbAccess,
-    ) {
-    }
+    ) {}
 
     public function convert(DeputyshipCandidatesGroup $candidatesGroup, bool $dryRun): DeputyshipBuilderResult
     {

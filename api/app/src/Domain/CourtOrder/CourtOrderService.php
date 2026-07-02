@@ -26,8 +26,7 @@ class CourtOrderService
         private readonly DeputyRepository $deputyRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
 
     private function transformReportDates(array $reportArray): array

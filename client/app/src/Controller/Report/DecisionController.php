@@ -35,8 +35,7 @@ class DecisionController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/decisions', name: 'decisions')]
     #[Template('@App/Report/Decision/start.html.twig')]

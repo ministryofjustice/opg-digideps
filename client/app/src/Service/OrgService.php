@@ -49,8 +49,7 @@ class OrgService
         private RequestStack $requestStack,
         private ObservableEventDispatcher $eventDispatcher,
         private TokenStorageInterface $tokenStorage
-    ) {
-    }
+    ) {}
 
     /**
      * @return $this

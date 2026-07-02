@@ -22,8 +22,7 @@ class AjaxController extends AbstractController
         private readonly PreRegistrationApi $preRegistrationApi,
         private readonly LayDeputyshipApi $layDeputyshipApi,
         private readonly LoggerInterface $verboseLogger
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/pre-registration-delete', name: 'pre_registration_delete_ajax')]
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]

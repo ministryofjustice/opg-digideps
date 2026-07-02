@@ -10,9 +10,7 @@ use OPG\Digideps\Common\Validating\ValidatingArray;
 
 final readonly class CourtOrderRelationshipReader
 {
-    public function __construct(private Connection $connection)
-    {
-    }
+    public function __construct(private Connection $connection) {}
 
     /**
      * @return \Generator<int,CourtOrderRelationship,void,void>

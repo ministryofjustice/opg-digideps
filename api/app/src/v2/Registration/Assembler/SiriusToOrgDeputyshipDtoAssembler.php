@@ -9,9 +9,7 @@ use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
 
 class SiriusToOrgDeputyshipDtoAssembler
 {
-    public function __construct(private readonly ReportUtils $reportUtils)
-    {
-    }
+    public function __construct(private readonly ReportUtils $reportUtils) {}
 
     /**
      * @return OrgDeputyshipDto[]

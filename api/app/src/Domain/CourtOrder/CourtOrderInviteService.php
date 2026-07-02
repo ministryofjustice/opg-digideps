@@ -47,8 +47,7 @@ class CourtOrderInviteService
         private readonly UserService $userService,
         private readonly DeputyService $deputyService,
         private readonly EntityManagerInterface $entityManager,
-    ) {
-    }
+    ) {}
 
     /**
      * Invite the Lay deputy represented by $invitedDeputyData to court order with UID $courtOrderUid, acting as the

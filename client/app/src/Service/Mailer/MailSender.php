@@ -16,8 +16,7 @@ class MailSender implements MailSenderInterface
         private NotifyClient $notifyClient,
         private DateTimeProvider $dateTimeProvider,
         private TokenStorageInterface $tokenStorage
-    ) {
-    }
+    ) {}
 
     public function send(Email $email): bool
     {

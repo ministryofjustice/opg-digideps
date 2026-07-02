@@ -33,8 +33,7 @@ class ClientApi
         private readonly TokenStorageInterface $tokenStorage,
         private readonly ObservableEventDispatcher $eventDispatcher,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Generates client profile link. We cannot guarantee the passed client has access to current report

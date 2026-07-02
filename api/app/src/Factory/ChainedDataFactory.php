@@ -13,8 +13,7 @@ final readonly class ChainedDataFactory implements DataFactoryInterface
         private string $name = 'Chained',
         /** @var array<array{DataFactoryInterface, string}> $dataFactories */
         private array $dataFactories = [],
-    ) {
-    }
+    ) {}
 
     public function getName(): string
     {

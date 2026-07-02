@@ -20,8 +20,7 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
         public EntityManagerInterface $entityManager,
         public ReportRepository $reportRepository,
         public LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function getName(): string
     {

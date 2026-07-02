@@ -14,8 +14,7 @@ class DeputyshipBuilder
 {
     public function __construct(
         private readonly DeputyshipCandidatesConverter $converter,
-    ) {
-    }
+    ) {}
 
     private function processCandidates(?string $orderUid, array $candidatesList, bool $dryRun): DeputyshipBuilderResult
     {

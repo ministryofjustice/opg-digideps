@@ -8,9 +8,7 @@ use OPG\Digideps\Frontend\Service\Client\RestClient;
 
 class PreRegistrationApi
 {
-    public function __construct(private RestClient $restClient)
-    {
-    }
+    public function __construct(private RestClient $restClient) {}
 
     public function deleteAll(): void
     {

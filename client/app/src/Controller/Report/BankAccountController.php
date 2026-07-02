@@ -34,8 +34,7 @@ class BankAccountController extends AbstractController
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
         private readonly StepRedirector $stepRedirector,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/bank-accounts', name: 'bank_accounts')]
     #[Template('@App/Report/BankAccount/start.html.twig')]

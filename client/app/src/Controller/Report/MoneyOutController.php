@@ -42,8 +42,7 @@ class MoneyOutController extends AbstractController
         private readonly ReportApi $reportApi,
         private readonly StepRedirector $stepRedirector,
         private readonly TranslatorInterface $translator,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/money-out', name: 'money_out')]
     #[Template('@App/Report/MoneyOut/start.html.twig')]

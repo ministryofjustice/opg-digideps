@@ -9,9 +9,7 @@ use Symfony\Component\Form\DataTransformerInterface;
  */
 class ArrayToStringTransformer implements DataTransformerInterface
 {
-    public function __construct(private array $keys = [])
-    {
-    }
+    public function __construct(private array $keys = []) {}
 
     public function transform(mixed $value): array
     {

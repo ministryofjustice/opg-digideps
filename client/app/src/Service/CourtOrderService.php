@@ -19,8 +19,7 @@ class CourtOrderService
         private readonly RestClient $restClient,
         private readonly ObservableEventDispatcher $eventDispatcher,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function getByUid(string $uid): CourtOrder
     {

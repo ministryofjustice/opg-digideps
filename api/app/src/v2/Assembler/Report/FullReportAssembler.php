@@ -14,8 +14,7 @@ class FullReportAssembler implements ReportAssemblerInterface
         private readonly ReportSummaryAssembler $reportSummaryAssembler,
         private readonly StatusAssembler $statusDtoAssembler,
         private readonly ReportRepository $reportRepository
-    ) {
-    }
+    ) {}
 
     public function assembleFromArray(array $data): ReportDto
     {

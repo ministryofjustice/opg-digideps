@@ -17,9 +17,7 @@ use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
 
 class SessionAuthenticator extends AbstractAuthenticator
 {
-    public function __construct(private TokenStorageInterface $tokenStorage)
-    {
-    }
+    public function __construct(private TokenStorageInterface $tokenStorage) {}
 
     public function supports(Request $request): ?bool
     {

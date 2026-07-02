@@ -20,8 +20,7 @@ class CourtOrderAndDeputyCandidatesFactory
         private readonly CourtOrderDeputyRepository $courtOrderDeputyRepository,
         private readonly DeputyshipProcessingLookupCache $deputyshipLookupCache,
         private readonly StagingSelectedCandidateFactory $candidateFactory,
-    ) {
-    }
+    ) {}
 
     public function cacheLookupTables(): void
     {

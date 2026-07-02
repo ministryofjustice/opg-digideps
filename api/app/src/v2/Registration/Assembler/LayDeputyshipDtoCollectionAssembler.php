@@ -6,9 +6,7 @@ use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDtoCollection;
 
 class LayDeputyshipDtoCollectionAssembler
 {
-    public function __construct(private readonly LayDeputyshipDtoAssemblerInterface $layDeputyshipDtoAssembler)
-    {
-    }
+    public function __construct(private readonly LayDeputyshipDtoAssemblerInterface $layDeputyshipDtoAssembler) {}
 
     public function assembleFromArray(array $data): array
     {

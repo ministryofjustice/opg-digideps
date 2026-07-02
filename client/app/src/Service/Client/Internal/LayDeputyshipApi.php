@@ -10,9 +10,7 @@ class LayDeputyshipApi
 {
     public const string UPLOAD_LAY_DEPUTYSHIP_ENDPOINT = 'v2/lay-deputyship/upload';
 
-    public function __construct(private RestClient $restClient)
-    {
-    }
+    public function __construct(private RestClient $restClient) {}
 
     public function uploadLayDeputyShip(mixed $compressedData, string $chunkId)
     {

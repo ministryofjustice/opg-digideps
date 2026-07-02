@@ -10,6 +10,5 @@ class DeputyshipsCSVLoaderResult
         public string $fileLocation,
         public bool $loadedOk = false,
         public int $numRecords = 0,
-    ) {
-    }
+    ) {}
 }

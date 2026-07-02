@@ -9,9 +9,7 @@ use OPG\Digideps\Backend\v2\Fixture\ReportSection;
 
 class ReportFactory
 {
-    public function __construct(private readonly ReportSection $reportSection)
-    {
-    }
+    public function __construct(private readonly ReportSection $reportSection) {}
 
     /**
      * @throws \Exception

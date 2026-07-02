@@ -21,8 +21,7 @@ class ClientController extends AbstractController
     public function __construct(
         private readonly ClientApi $clientApi,
         private readonly UserApi $userApi,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/{id}/details', name: 'admin_client_details', requirements: ['id' => '\d+'])] // //TODO define Security group (AD to remove?)
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]

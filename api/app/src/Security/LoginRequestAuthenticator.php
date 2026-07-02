@@ -37,8 +37,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
         private readonly TokenStorageInterface $tokenStorage,
         private readonly LoggerInterface $verboseLogger,
         private readonly DateTimeProvider $dateTimeProvider
-    ) {
-    }
+    ) {}
 
     public function supports(Request $request): ?bool
     {

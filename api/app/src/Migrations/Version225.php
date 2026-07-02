@@ -24,7 +24,5 @@ final class Version225 extends AbstractMigration
         $this->addSql('UPDATE organisation SET name = \'Your Organisation\' WHERE name NOT LIKE \'%@%\'');
     }
 
-    public function down(Schema $schema): void
-    {
-    }
+    public function down(Schema $schema): void {}
 }

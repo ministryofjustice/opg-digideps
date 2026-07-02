@@ -209,8 +209,7 @@ class ComponentsExtensionTest extends TestCase
         $this->assertEquals(null, $f(0));
         $this->assertEquals(null, $f([]));
         $this->assertEquals(null, $f(''));
-        $this->assertEquals('Closure', $f(function () {
-        }));
+        $this->assertEquals('Closure', $f(function () {}));
         $this->assertEquals('DateTime', $f(new \DateTime()));
     }
 

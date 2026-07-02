@@ -8,9 +8,7 @@ use OPG\Digideps\Backend\Entity\Organisation;
 
 class OrganisationFactory
 {
-    public function __construct(private readonly array $sharedDomains)
-    {
-    }
+    public function __construct(private readonly array $sharedDomains) {}
 
     public function createFromFullEmail(string $name, string $email, bool $isActivated = false): Organisation
     {

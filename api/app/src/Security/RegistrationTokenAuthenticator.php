@@ -35,8 +35,7 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
         private readonly AttemptsInTimeChecker $attemptsInTimeChecker,
         private readonly AttemptsIncrementalWaitingChecker $incrementalWaitingTimeChecker,
         private readonly LoggerInterface $verboseLogger
-    ) {
-    }
+    ) {}
 
     public function supports(Request $request): ?bool
     {

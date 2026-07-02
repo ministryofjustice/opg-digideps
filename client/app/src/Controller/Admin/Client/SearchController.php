@@ -19,8 +19,7 @@ class SearchController extends AbstractController
 {
     public function __construct(
         private readonly RestClient $restClient
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/search', name: 'admin_client_search')]
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]

@@ -13,7 +13,7 @@ jobs:
 
       - name: Install PHP-CS-Fixer
         run: |
-          curl -OL https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/releases/download/v3.66.0/php-cs-fixer.phar
+          curl -OL https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/releases/download/v3.95.11/php-cs-fixer.phar
           php php-cs-fixer.phar --version
 
       - name: Detect changed PHP files

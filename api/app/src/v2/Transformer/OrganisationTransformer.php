@@ -11,8 +11,7 @@ class OrganisationTransformer
     public function __construct(
         private readonly UserTransformer $userTransformer,
         private readonly ClientTransformer $clientTransformer
-    ) {
-    }
+    ) {}
 
     public function transform(OrganisationDto $dto, array $exclude = []): array
     {

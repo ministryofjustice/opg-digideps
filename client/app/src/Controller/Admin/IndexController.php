@@ -59,8 +59,7 @@ class IndexController extends AbstractController
         private readonly EventDispatcherInterface $dispatcher,
         private readonly S3Client $s3,
         private readonly string $workspace,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/', name: 'admin_homepage')]
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]

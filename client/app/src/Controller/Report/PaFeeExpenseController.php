@@ -36,8 +36,7 @@ class PaFeeExpenseController extends AbstractController
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
         private readonly TranslatorInterface $translator,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '', name: 'pa_fee_expense')]
     #[Template('@App/Report/PaFeeExpense/start.html.twig')]

@@ -28,8 +28,7 @@ class VisitsCareController extends AbstractController
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
         private readonly StepRedirector $stepRedirector,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/visits-care', name: 'visits_care')]
     #[Template('@App/Report/VisitsCare/start.html.twig')]

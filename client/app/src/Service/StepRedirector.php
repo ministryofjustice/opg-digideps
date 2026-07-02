@@ -15,9 +15,7 @@ class StepRedirector
     private int $totalSteps;
     private array $stepUrlAdditionalParams = [];
 
-    public function __construct(private readonly RouterInterface $router)
-    {
-    }
+    public function __construct(private readonly RouterInterface $router) {}
 
     public function setRoutes(string $step1BackLink, string $routeStep, string $routeSummary): static
     {

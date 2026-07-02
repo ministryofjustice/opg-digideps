@@ -14,8 +14,7 @@ class PreRegistrationVerificationService
         private readonly SerializerInterface $serializer,
         private readonly PreRegistrationRepository $preRegistrationRepository,
         private readonly UserRepository $userRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * Throw error 400 if preregistration has no record matching case number,

@@ -15,8 +15,7 @@ class OrgCreatedSubscriber implements EventSubscriberInterface
     public function __construct(
         private LoggerInterface $logger,
         private DateTimeProvider $dateTimeProvider
-    ) {
-    }
+    ) {}
 
     public static function getSubscribedEvents(): array
     {

@@ -23,8 +23,7 @@ class OrganisationRestHandler
         private readonly UserRepository $userRepository,
         private readonly OrganisationFactory $organisationFactory,
         private readonly array $sharedEmailDomains
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ORMException

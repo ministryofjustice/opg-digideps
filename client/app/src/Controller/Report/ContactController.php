@@ -31,8 +31,7 @@ class ContactController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/contacts', name: 'contacts')]
     #[Template('@App/Report/Contact/start.html.twig')]

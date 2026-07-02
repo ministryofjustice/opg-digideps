@@ -36,8 +36,7 @@ class MoneyOutShortController extends AbstractController
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
         private readonly TranslatorInterface $translator,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/money-out-short', name: 'money_out_short')]
     #[Template('@App/Report/MoneyOutShort/start.html.twig')]

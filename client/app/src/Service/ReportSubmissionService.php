@@ -29,8 +29,7 @@ class ReportSubmissionService
         private readonly RestClient $restClient,
         private readonly LoggerInterface $logger,
         private readonly HtmlToPdfGenerator $htmltopdf
-    ) {
-    }
+    ) {}
 
     /**
      * Wrapper method for all documents generated for a report submission.

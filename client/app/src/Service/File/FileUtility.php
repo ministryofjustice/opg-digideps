@@ -189,9 +189,7 @@ abstract class FileUtility
         'text/x-scriptzsh' => 'zsh',
     ];
 
-    public function __construct(protected FinfoMimeTypeDetector $mimeTypeDetector)
-    {
-    }
+    public function __construct(protected FinfoMimeTypeDetector $mimeTypeDetector) {}
 
     /**
      * Courtesy of this gem of a comment - https://gist.github.com/alexcorvi/df8faecb59e86bee93411f6a7967df2c#gistcomment-2722664.

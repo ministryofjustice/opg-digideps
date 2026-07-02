@@ -20,8 +20,7 @@ class Counter
         public readonly int $id = 0,
         #[Column(name: 'counter', type: 'integer', nullable: false)]
         private int $counter = 0,
-    ) {
-    }
+    ) {}
 
     public function reset(int $counter = 0): void
     {

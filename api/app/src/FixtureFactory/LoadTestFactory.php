@@ -11,9 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class LoadTestFactory
 {
-    public function __construct(private readonly EntityManagerInterface $em)
-    {
-    }
+    public function __construct(private readonly EntityManagerInterface $em) {}
 
     /**
      * Use to persist entities to simulate a prod like databases in size (run in a test for a hacky way to fill the DB).

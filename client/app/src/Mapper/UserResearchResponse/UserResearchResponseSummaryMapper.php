@@ -12,8 +12,7 @@ readonly class UserResearchResponseSummaryMapper
 {
     public function __construct(
         private UserResearchApi $userResearchApi
-    ) {
-    }
+    ) {}
 
     public function getBy(DateRangeQuery $query): StreamInterface
     {

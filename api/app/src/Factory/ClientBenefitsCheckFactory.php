@@ -17,8 +17,7 @@ class ClientBenefitsCheckFactory
     public function __construct(
         private readonly ReportRepository $reportRepository,
         private readonly EntityManagerInterface $em
-    ) {
-    }
+    ) {}
 
     /**
      * @throws \Exception

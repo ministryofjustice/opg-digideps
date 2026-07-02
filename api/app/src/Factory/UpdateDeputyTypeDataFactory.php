@@ -8,9 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class UpdateDeputyTypeDataFactory implements DataFactoryInterface
 {
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
-    }
+    public function __construct(private EntityManagerInterface $entityManager) {}
 
     public function getName(): string
     {

@@ -18,8 +18,7 @@ class JsonHttpTestClient
     public function __construct(
         private readonly KernelBrowser $client,
         private readonly ?JWTService $jwtService,
-    ) {
-    }
+    ) {}
 
     /**
      * @param array $options with keys method, uri, data, mustSucceed, mustFail, assertId

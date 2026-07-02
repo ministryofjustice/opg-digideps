@@ -35,8 +35,7 @@ class S3Storage implements StorageInterface
         private readonly S3ClientInterface $s3Client,
         private readonly string $bucketName,
         private readonly LoggerInterface $logger
-    ) {
-    }
+    ) {}
 
     public function retrieve(string $key): string
     {

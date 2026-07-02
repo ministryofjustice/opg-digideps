@@ -35,8 +35,7 @@ class OrgDeputyshipUploader
         private readonly ClientAssembler $clientAssembler,
         private readonly DeputyAssembler $deputyAssembler,
         private readonly LoggerInterface $logger
-    ) {
-    }
+    ) {}
 
     /**
      * @param OrgDeputyshipDto[] $deputyshipDtos

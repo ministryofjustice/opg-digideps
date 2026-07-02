@@ -27,8 +27,7 @@ class Redirector
         protected string $env,
         private readonly ClientApi $clientApi,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     private function getLoggedUser(): ?User
     {

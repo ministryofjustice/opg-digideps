@@ -9,8 +9,7 @@ class CSVChunker
     public function __construct(
         private readonly \Iterator $csvFile,
         private readonly int $chunkSize,
-    ) {
-    }
+    ) {}
 
     /**
      * Return an array of CSV rows cast to $entityClass.

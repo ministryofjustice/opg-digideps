@@ -11,8 +11,7 @@ class CsvToArray
     public function __construct(
         private readonly array $expectedColumns = [],
         private readonly array $optionalColumns = [],
-    ) {
-    }
+    ) {}
 
     private function keepExpectedAndOptionalColumns(array $record): array
     {

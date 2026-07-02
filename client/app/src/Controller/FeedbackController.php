@@ -21,8 +21,7 @@ class FeedbackController extends AbstractController
         private readonly RouterInterface $router,
         private readonly TranslatorInterface $translator,
         private readonly FormFactoryInterface $form
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/feedback', name: 'feedback')]
     #[Template('@App/Feedback/index.html.twig')]

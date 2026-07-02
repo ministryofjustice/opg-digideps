@@ -20,8 +20,7 @@ class CSVDeputyshipProcessing
         private readonly LayDeputyshipUploader $layUploader,
         private readonly OrgDeputyshipUploader $orgUploader,
         private readonly LoggerInterface $verboseLogger,
-    ) {
-    }
+    ) {}
 
     /**
      * @return mixed[]

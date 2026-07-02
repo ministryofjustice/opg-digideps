@@ -29,8 +29,7 @@ class SiriusApiGatewayClient
         private readonly string $baseUrl,
         private readonly Serializer $serializer,
         private readonly LoggerInterface $logger
-    ) {
-    }
+    ) {}
 
     /**
      * @throws GuzzleException

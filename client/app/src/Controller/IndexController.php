@@ -30,8 +30,7 @@ class IndexController extends AbstractController
         private readonly RouterInterface $router,
         private readonly string $environment,
         private readonly ParameterBagInterface $params,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/', name: 'homepage')]
     public function indexAction(Redirector $redirector): RedirectResponse|Response|null
@@ -111,9 +110,7 @@ class IndexController extends AbstractController
     }
 
     #[Route(path: '/login_check', name: 'login_check')]
-    public function loginCheckAction(): void
-    {
-    }
+    public function loginCheckAction(): void {}
 
     #[Route(path: '/error-503', name: 'error-503')]
     public function error503(Request $request): ?Response

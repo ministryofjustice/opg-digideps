@@ -24,8 +24,7 @@ class CourtOrderController extends AbstractController
         private readonly CourtOrderService $courtOrderService,
         private readonly ClientApi $clientApi,
         private readonly DeputyApi $deputyApi,
-    ) {
-    }
+    ) {}
 
     /**
      * Show the waiting message.

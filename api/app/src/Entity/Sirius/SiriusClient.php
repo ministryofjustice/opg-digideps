@@ -35,6 +35,5 @@ class SiriusClient
         public readonly string $clientPostCode,
         #[Column(name: 'local_id', type: 'integer', nullable: true)]
         public ?int $localId,
-    ) {
-    }
+    ) {}
 }

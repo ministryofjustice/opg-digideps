@@ -7,9 +7,7 @@ use OPG\Digideps\Backend\v2\DTO\UserDto;
 
 class UserTransformer
 {
-    public function __construct(private readonly ClientTransformer $clientTransformer)
-    {
-    }
+    public function __construct(private readonly ClientTransformer $clientTransformer) {}
 
     /**
      * @return array

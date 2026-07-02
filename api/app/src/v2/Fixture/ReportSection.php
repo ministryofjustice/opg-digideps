@@ -16,9 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class ReportSection
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function completeReport(Report $report): void
     {

@@ -46,8 +46,7 @@ class UserController extends AbstractController
         private readonly LoggerInterface $logger,
         private readonly ObservableEventDispatcher $eventDispatcher,
         private readonly ValidatorInterface $validator,
-    ) {
-    }
+    ) {}
 
     /**
      * Landing page to let the user access the app and selecting a password.

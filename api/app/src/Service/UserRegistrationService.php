@@ -14,8 +14,7 @@ class UserRegistrationService
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly PreRegistrationVerificationService $preRegistrationVerificationService,
-    ) {
-    }
+    ) {}
 
     /**
      * - throw error 403 if user is a co-deputy attempting to self-register

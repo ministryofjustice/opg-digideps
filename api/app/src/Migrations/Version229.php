@@ -25,7 +25,5 @@ final class Version229 extends AbstractMigration
         $this->addSql('UPDATE dd_user SET role_name = \'ROLE_ADMIN\' WHERE role_name = \'ROLE_CASE_MANAGER\'');
     }
 
-    public function down(Schema $schema): void
-    {
-    }
+    public function down(Schema $schema): void {}
 }

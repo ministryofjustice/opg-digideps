@@ -10,9 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RestFormatter
 {
-    public function __construct(private readonly RestInputOutputFormatter $formatter, private readonly RestArrayValidator $validator)
-    {
-    }
+    public function __construct(private readonly RestInputOutputFormatter $formatter, private readonly RestArrayValidator $validator) {}
 
     /**
      * @throws \InvalidArgumentException

@@ -31,8 +31,7 @@ class ReportStatusService
     public function __construct(
         #[JMS\Exclude]
         private readonly Report $report
-    ) {
-    }
+    ) {}
 
     public function setUseStatusCache($useStatusCache): static
     {

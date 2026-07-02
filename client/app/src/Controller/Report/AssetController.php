@@ -32,8 +32,7 @@ class AssetController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/assets', name: 'assets')]
     #[Template('@App/Report/Asset/start.html.twig')]

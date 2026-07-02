@@ -105,8 +105,7 @@ class ReportController extends AbstractController
         private readonly TranslatorInterface $translator,
         private readonly ObservableEventDispatcher $eventDispatcher,
         private readonly S3Storage $s3Storage,
-    ) {
-    }
+    ) {}
 
     /**
      * Edit single report.

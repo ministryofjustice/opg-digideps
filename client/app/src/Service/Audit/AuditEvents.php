@@ -54,8 +54,7 @@ final class AuditEvents
 
     public function __construct(
         private readonly DateTimeProvider $dateTimeProvider
-    ) {
-    }
+    ) {}
 
     /**
      * @throws \Exception

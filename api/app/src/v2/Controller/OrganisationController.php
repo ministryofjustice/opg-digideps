@@ -33,8 +33,7 @@ class OrganisationController extends AbstractController
         private readonly OrganisationAssembler $assembler,
         private readonly OrganisationTransformer $transformer,
         private readonly RestFormatter $formatter
-    ) {
-    }
+    ) {}
 
     private static array $jmsGroups = [
         'client-id',

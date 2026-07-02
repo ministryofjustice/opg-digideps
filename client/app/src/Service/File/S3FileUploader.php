@@ -21,8 +21,7 @@ class S3FileUploader
         private DateTimeProvider $dateTimeProvider,
         private MimeTypeAndExtensionChecker $mimeTypeAndExtensionChecker,
         private ImageConvertor $imageConvertor,
-    ) {
-    }
+    ) {}
 
     /**
      * @param UploadedFile[] $uploadedFiles

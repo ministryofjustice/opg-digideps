@@ -10,9 +10,7 @@ final readonly class ValidatingArray
     use TypeOrDefaultTrait;
     use TypeOrThrowTrait;
 
-    public function __construct(private array $data)
-    {
-    }
+    public function __construct(private array $data) {}
 
     protected function getUnvalidated(int|string|null $key): mixed
     {

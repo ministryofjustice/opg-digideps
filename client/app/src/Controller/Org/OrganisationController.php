@@ -32,8 +32,7 @@ class OrganisationController extends AbstractController
         private readonly RestClient $restClient,
         private readonly OrganisationApi $organisationApi,
         private readonly TranslatorInterface $translator
-    ) {
-    }
+    ) {}
 
     #[Route(path: '', name: 'org_organisation_list')]
     #[Template('@App/Org/Organisation/list.html.twig')]

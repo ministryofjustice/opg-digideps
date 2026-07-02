@@ -10,9 +10,7 @@ class UserAssembler
 {
     use DtoPropertySetterTrait;
 
-    public function __construct(private readonly ClientAssembler $clientDtoAssembler)
-    {
-    }
+    public function __construct(private readonly ClientAssembler $clientDtoAssembler) {}
 
     /**
      * @return UserDto

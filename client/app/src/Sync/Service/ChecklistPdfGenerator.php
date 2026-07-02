@@ -16,8 +16,7 @@ class ChecklistPdfGenerator
     public function __construct(
         private readonly Environment $templating,
         private readonly HtmlToPdfGenerator $htmltopdf
-    ) {
-    }
+    ) {}
 
     public function generate(Report $report): string
     {

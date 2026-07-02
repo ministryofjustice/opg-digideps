@@ -11,9 +11,7 @@ class ObservableEventDispatcher
 {
     private array $dispatchedEvents = [];
 
-    public function __construct(private readonly EventDispatcherInterface $dispatcher)
-    {
-    }
+    public function __construct(private readonly EventDispatcherInterface $dispatcher) {}
 
     public function dispatch(Event $event, string $eventName): void
     {

@@ -11,8 +11,7 @@ class DeputyshipCandidatesSelectorResult
         public readonly \Traversable $candidates,
         public readonly int $numCandidates,
         public readonly ?\Exception $exception = null,
-    ) {
-    }
+    ) {}
 
     public function success(): bool
     {

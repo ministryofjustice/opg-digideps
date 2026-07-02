@@ -48,8 +48,7 @@ class ProfDeputyCostsController extends AbstractController
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
         private readonly TranslatorInterface $translator,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '', name: 'prof_deputy_costs')]
     #[Template('@App/Report/ProfDeputyCosts/start.html.twig')]

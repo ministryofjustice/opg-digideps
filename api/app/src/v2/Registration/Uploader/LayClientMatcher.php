@@ -18,8 +18,7 @@ class LayClientMatcher
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-    ) {
-    }
+    ) {}
 
     public function matchDto(LayDeputyshipDto $dto): ClientMatch
     {

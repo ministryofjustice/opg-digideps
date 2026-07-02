@@ -15,8 +15,7 @@ class UserRetentionPolicyCommandSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly DateTimeProvider $dateTimeProvider
-    ) {
-    }
+    ) {}
 
     /**
      *  @return array<string, string>

@@ -30,8 +30,7 @@ class IndexController extends AbstractController
         private readonly RestClient $restClient,
         private readonly FormFactoryInterface $form,
         private readonly ClientApi $clientApi
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/', name: 'org_dashboard')]
     #[Template('@App/Org/Index/dashboard.html.twig')]

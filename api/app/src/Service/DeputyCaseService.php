@@ -43,8 +43,7 @@ class DeputyCaseService
         private readonly EntityManagerInterface $entityManager,
         private readonly ClientRepository $clientRepository,
         private readonly UserRepository $userRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws DBALException

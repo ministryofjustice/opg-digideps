@@ -36,8 +36,7 @@ class ClientBenefitsCheckController extends AbstractController
         private readonly ClientBenefitsCheckApi $benefitCheckApi,
         private readonly StepRedirector $stepRedirector,
         private readonly MoneyReceivedOnClientsBehalfApi $moneyTypeApi,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/client-benefits-check', name: 'client_benefits_check')]
     #[Template('@App/Report/ClientBenefitsCheck/start.html.twig')]

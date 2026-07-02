@@ -22,8 +22,7 @@ class UserDeputyService
         private readonly UserRepository $userRepository,
         private readonly DeputyRepository $deputyRepository,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Create deputy records for lay and named deputy dd_users where they don't exist.

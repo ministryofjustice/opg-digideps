@@ -9,9 +9,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class SiriusApiErrorTranslator
 {
-    public function __construct(private SerializerInterface $serializer)
-    {
-    }
+    public function __construct(private SerializerInterface $serializer) {}
 
     public function translateApiError(string $errorString): string
     {

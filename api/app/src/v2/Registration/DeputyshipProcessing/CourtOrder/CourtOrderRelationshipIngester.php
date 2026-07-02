@@ -11,9 +11,7 @@ use Doctrine\ORM\EntityRepository;
 
 final readonly class CourtOrderRelationshipIngester
 {
-    public function __construct(private CourtOrderRelationshipReader $relationshipReader, private ReportReassembler $reportReassembler, private EntityManagerInterface $entityManager)
-    {
-    }
+    public function __construct(private CourtOrderRelationshipReader $relationshipReader, private ReportReassembler $reportReassembler, private EntityManagerInterface $entityManager) {}
 
     /**
      * @return \Generator<int,CourtOrderRelationshipResult,void,void>

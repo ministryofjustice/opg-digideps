@@ -39,8 +39,7 @@ class OrganisationController extends AbstractController
         private readonly OrganisationApi $organisationApi,
         private readonly ObservableEventDispatcher $eventDispatcher,
         private readonly TokenStorageInterface $tokenStorage,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/', name: 'admin_organisation_homepage')]
     #[IsGranted(attribute: 'ROLE_ADMIN')]

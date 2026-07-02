@@ -21,8 +21,7 @@ class ClientAssembler
     public function __construct(
         private readonly ReportAssemblerInterface $reportDtoAssembler,
         private readonly DeputyAssembler $deputyAssembler
-    ) {
-    }
+    ) {}
 
     public function assembleFromArray(array $data, Organisation|OrganisationDto|array|null $orgDto = null): ClientDto
     {

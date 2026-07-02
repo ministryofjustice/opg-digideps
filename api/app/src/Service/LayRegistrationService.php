@@ -13,8 +13,7 @@ class LayRegistrationService
         private readonly EntityManagerInterface $entityManager,
         private readonly ClientRepository $clientRepository,
         private readonly ReportService $reportService,
-    ) {
-    }
+    ) {}
 
     /**
      * Find all clients with an entry in the pre_registration table but without a report.

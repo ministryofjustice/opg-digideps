@@ -26,8 +26,7 @@ class ReportApi
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ObservableEventDispatcher $eventDispatcher,
-    ) {
-    }
+    ) {}
 
     /**
      * @param string[] $groups

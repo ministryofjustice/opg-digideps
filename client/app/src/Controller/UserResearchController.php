@@ -22,8 +22,7 @@ class UserResearchController extends AbstractController
         private readonly ReportApi $reportApi,
         private readonly TranslatorInterface $translator,
         private readonly FormFactoryInterface $formFactory,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/post_submission_user_research', name: 'report_post_submission_user_research')]
     #[Template('@App/UserResearch/postSubmissionUserResearch.html.twig')]

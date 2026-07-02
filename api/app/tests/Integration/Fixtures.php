@@ -541,9 +541,7 @@ class Fixtures
         exec(self::getPGExportCommand() . $cmd);
     }
 
-    public static function initDb()
-    {
-    }
+    public static function initDb() {}
 
     public static function backupDb(): void
     {

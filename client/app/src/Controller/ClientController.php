@@ -34,8 +34,7 @@ class ClientController extends AbstractController
         private readonly RestClient $restClient,
         private readonly PreRegistrationApi $preRegistrationApi,
         private readonly ObservableEventDispatcher $eventDispatcher,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/deputyship-details/client/{clientId}', name: 'client_show')]
     #[Template('@App/Client/show.html.twig')]

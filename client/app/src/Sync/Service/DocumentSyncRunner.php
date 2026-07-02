@@ -20,8 +20,7 @@ class DocumentSyncRunner
         private readonly DocumentSyncService $documentSyncService,
         private readonly RestClient $restClient,
         private readonly SerializerInterface $serializer,
-    ) {
-    }
+    ) {}
 
     public function run(OutputInterface $output, int $syncRowLimit): void
     {

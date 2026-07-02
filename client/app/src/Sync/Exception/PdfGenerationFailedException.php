@@ -2,6 +2,4 @@
 
 namespace OPG\Digideps\Frontend\Sync\Exception;
 
-class PdfGenerationFailedException extends \RuntimeException
-{
-}
+class PdfGenerationFailedException extends \RuntimeException {}

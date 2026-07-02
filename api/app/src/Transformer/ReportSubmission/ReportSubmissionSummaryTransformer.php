@@ -8,9 +8,7 @@ use OPG\Digideps\Backend\Service\DateTimeProvider;
 
 class ReportSubmissionSummaryTransformer
 {
-    public function __construct(private readonly DateTimeProvider $dateTimeProvider)
-    {
-    }
+    public function __construct(private readonly DateTimeProvider $dateTimeProvider) {}
 
     public function transform(array $reportSubmissions): array
     {

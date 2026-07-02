@@ -29,8 +29,7 @@ class ChecklistSyncService
         private readonly SiriusApiGatewayClient $siriusApiGatewayClient,
         private readonly SiriusApiErrorTranslator $errorTranslator,
         private readonly ChecklistPdfGenerator $pdfGenerator,
-    ) {
-    }
+    ) {}
 
     public function sync(QueuedChecklistData $checklistData): string
     {

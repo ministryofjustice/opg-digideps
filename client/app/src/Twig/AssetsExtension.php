@@ -15,8 +15,7 @@ class AssetsExtension extends AbstractExtension
 
     public function __construct(
         private readonly string $projectDir
-    ) {
-    }
+    ) {}
 
     /**
      * Add the version tag to an asset path

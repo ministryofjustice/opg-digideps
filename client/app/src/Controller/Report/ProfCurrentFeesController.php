@@ -32,8 +32,7 @@ class ProfCurrentFeesController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '', name: 'prof_current_fees')]
     #[Template('@App/Report/ProfCurrentFees/start.html.twig')]

@@ -14,9 +14,7 @@ class ReportImbalanceCsvGenerator
         'Total Submitted',
     ];
 
-    public function __construct(private CsvBuilder $csvBuilder)
-    {
-    }
+    public function __construct(private CsvBuilder $csvBuilder) {}
 
     public function generateReportImbalanceCsv(array $data): string
     {

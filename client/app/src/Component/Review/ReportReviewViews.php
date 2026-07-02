@@ -9,9 +9,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final readonly class ReportReviewViews
 {
-    public function __construct(private Report $report, private TranslatorInterface $translator)
-    {
-    }
+    public function __construct(private Report $report, private TranslatorInterface $translator) {}
 
     public function getClientBenefitsCheckReviewView(): ClientBenefitsCheckReviewView
     {

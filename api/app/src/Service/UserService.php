@@ -16,8 +16,7 @@ class UserService
         private readonly EntityManagerInterface $em,
         private readonly ClientRepository $clientRepository,
         private readonly UserRepository $userRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * Adds a new user to the database.

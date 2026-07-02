@@ -19,8 +19,7 @@ class DeputyshipProcessingRawDbAccess
 {
     public function __construct(
         private readonly EntityManagerInterface $ingestWriterEm,
-    ) {
-    }
+    ) {}
 
     public function beginTransaction(): void
     {

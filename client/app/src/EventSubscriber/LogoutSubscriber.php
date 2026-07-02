@@ -14,8 +14,7 @@ class LogoutSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
         private readonly RestClientInterface $restClient,
-    ) {
-    }
+    ) {}
 
     public static function getSubscribedEvents(): array
     {

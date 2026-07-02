@@ -16,8 +16,7 @@ final readonly class ReportType implements \Stringable
         public CourtOrderType $courtOrderType,
         public CourtOrderKind $courtOrderKind,
         public DeputyType $deputyType,
-    ) {
-    }
+    ) {}
 
     public function __toString(): string
     {

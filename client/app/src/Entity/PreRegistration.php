@@ -81,9 +81,7 @@ class PreRegistration
      */
     private $orderDate;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function getCaseNumber(): string
     {

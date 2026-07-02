@@ -22,9 +22,7 @@ class ClientBenefitsCheckType extends AbstractType
 {
     private int $step = 1;
 
-    public function __construct(private TranslatorInterface $translator)
-    {
-    }
+    public function __construct(private TranslatorInterface $translator) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

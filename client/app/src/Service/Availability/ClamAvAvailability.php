@@ -12,8 +12,7 @@ class ClamAvAvailability extends ServiceAvailabilityAbstract
 {
     public function __construct(
         private readonly ClientInterface $fileScannerClient,
-    ) {
-    }
+    ) {}
 
     public function ping()
     {

@@ -24,8 +24,7 @@ class DeputyController extends AbstractController
         private readonly UserRepository $repository,
         private readonly UserAssembler $assembler,
         private readonly UserTransformer $transformer,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/{id}', requirements:['id' => '\d+'], methods: ['GET'])]
     public function getById(int $id): JsonResponse

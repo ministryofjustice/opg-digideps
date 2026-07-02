@@ -2,6 +2,4 @@
 
 namespace OPG\Digideps\Frontend\Service\Client\Exception;
 
-class JsonDecodeException extends \RuntimeException
-{
-}
+class JsonDecodeException extends \RuntimeException {}

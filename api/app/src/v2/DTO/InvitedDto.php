@@ -13,8 +13,7 @@ class InvitedDto implements \JSONSerializable
         public bool $success = false,
         public ?string $message = null,
         public ?string $registrationToken = null,
-    ) {
-    }
+    ) {}
 
     public function setMessage(string $message): static
     {

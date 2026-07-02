@@ -69,6 +69,5 @@ class StagingPaProIngest
         public readonly CourtOrderType $orderType,
         #[Id, GeneratedValue, Column(type: 'integer')]
         public int $id = 0,
-    ) {
-    }
+    ) {}
 }

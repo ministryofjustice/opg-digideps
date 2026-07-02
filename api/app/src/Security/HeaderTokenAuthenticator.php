@@ -30,8 +30,7 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
         private readonly Client $redis,
         private readonly UserRepository $userRepository,
         private readonly LoggerInterface $verboseLogger
-    ) {
-    }
+    ) {}
 
     public function supports(Request $request): ?bool
     {

@@ -34,8 +34,7 @@ class ReportSubmissionController extends AbstractController
         private readonly S3Storage $s3Storage,
         private readonly TranslatorInterface $translator,
         private readonly RestClient $restClient,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/documents/list', name: 'admin_documents', methods: ['GET', 'POST'])]
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]

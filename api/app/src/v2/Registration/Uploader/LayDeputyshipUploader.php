@@ -29,8 +29,7 @@ class LayDeputyshipUploader
         private readonly SiriusToLayDeputyshipDtoAssembler $layDeputyAssembler,
         private readonly LayDeputyshipProcessor $layDeputyProcessor,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function upload(LayDeputyshipDtoCollection $collection): array
     {

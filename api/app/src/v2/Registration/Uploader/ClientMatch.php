@@ -20,6 +20,5 @@ final readonly class ClientMatch
         public ?Report $report,
         public ?string $reportTypeShouldChangeTo,
         public bool $activeClientExistsForCase,
-    ) {
-    }
+    ) {}
 }

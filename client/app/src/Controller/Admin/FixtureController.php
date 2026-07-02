@@ -33,8 +33,7 @@ class FixtureController extends AbstractController
         private readonly ReportApi $reportApi,
         private readonly UserApi $userApi,
         private readonly bool $fixturesEnabled
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/', name: 'admin_fixtures')]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]

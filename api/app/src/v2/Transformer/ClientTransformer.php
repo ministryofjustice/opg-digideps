@@ -12,8 +12,7 @@ class ClientTransformer
     public function __construct(
         private readonly ReportTransformer $reportTransformer,
         private readonly DeputyTransformer $deputyTransformer
-    ) {
-    }
+    ) {}
 
     public function transform(ClientDto $dto, array $exclude = [], ?array $org = null): array
     {

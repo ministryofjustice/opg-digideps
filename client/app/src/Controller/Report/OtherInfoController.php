@@ -26,8 +26,7 @@ class OtherInfoController extends AbstractController
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
         private readonly StepRedirector $stepRedirector,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/report/{reportId}/any-other-info', name: 'other_info')]
     #[Template('@App/Report/OtherInfo/start.html.twig')]

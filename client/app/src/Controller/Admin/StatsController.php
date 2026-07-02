@@ -49,8 +49,7 @@ class StatsController extends AbstractController
         private readonly ClientBenefitMetricsCsvGenerator $clientBenefitMetricsCsvGenerator,
         private readonly InactiveAdminUsersCsvGenerator $inactiveAdminUserCsvGenerator,
         private readonly ReportImbalanceCsvGenerator $reportImbalanceCsvGenerator
-    ) {
-    }
+    ) {}
 
     #[Route(path: '', name: 'admin_stats')]
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
@@ -210,9 +209,7 @@ class StatsController extends AbstractController
     #[Route(path: '/reports', name: 'admin_reports')]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     #[Template('@App/Admin/Stats/reports.html.twig')]
-    public function reports(): void
-    {
-    }
+    public function reports(): void {}
 
     #[Route(path: '/reports/user_accounts', name: 'admin_user_account_reports')]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]

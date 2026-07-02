@@ -20,8 +20,7 @@ final readonly class RequiredReportDataFactory implements DataFactoryInterface
         private RequiredReportFinder $finder,
         private ReportService $reportService,
         private LoggerInterface $verboseLogger,
-    ) {
-    }
+    ) {}
 
     public function getName(): string
     {

@@ -33,8 +33,7 @@ class CourtOrderController extends AbstractController
         private readonly SerializerInterface $serializer,
         private readonly RestFormatter $formatter,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * Get a court order by UID, but only if the logged-in deputy is associated with it.

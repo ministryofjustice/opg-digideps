@@ -19,8 +19,7 @@ class QueryPager
         // ORDER BY clause to ensure that results are returned in a consistent order, as we are going to be paging
         // with this query
         private readonly QueryBuilder $pageQueryBuilder,
-    ) {
-    }
+    ) {}
 
     /**
      * By default, returns rows from the $pagedQuery as an array of arrays; each element is a row in format

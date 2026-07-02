@@ -18,9 +18,7 @@ class ClientVoter extends Voter
     public const string EDIT = 'edit';
     public const string DELETE = 'delete';
 
-    public function __construct(private readonly Security $security)
-    {
-    }
+    public function __construct(private readonly Security $security) {}
 
     protected function supports(string $attribute, mixed $subject): bool
     {

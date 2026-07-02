@@ -11,8 +11,7 @@ class DataFactoryResult
         private array $messages = [],
         /** @var array<string, array<int, string>> $errorMessages */
         private array $errorMessages = [],
-    ) {
-    }
+    ) {}
 
     public function addMessages(string $source, array $messages): void
     {

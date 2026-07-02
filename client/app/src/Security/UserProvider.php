@@ -17,9 +17,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    public function __construct(private UserApi $userApi)
-    {
-    }
+    public function __construct(private UserApi $userApi) {}
 
     public function refreshUser(UserInterface $user)
     {

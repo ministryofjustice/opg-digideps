@@ -10,6 +10,5 @@ class DeputyshipsCSVIngestResult
         public readonly bool $success = false,
         public readonly string $message = '',
         public readonly \DateTimeInterface $dateTimeCompleted = new \DateTimeImmutable(),
-    ) {
-    }
+    ) {}
 }

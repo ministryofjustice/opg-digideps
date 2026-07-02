@@ -2,6 +2,4 @@
 
 namespace OPG\Digideps\Frontend\Exception;
 
-class MimeTypeAndFileExtensionDoNotMatchException extends \RuntimeException
-{
-}
+class MimeTypeAndFileExtensionDoNotMatchException extends \RuntimeException {}

@@ -11,8 +11,7 @@ class HtmlToPdfGenerator
     public function __construct(
         private readonly string $url,
         private readonly int $timeoutSeconds
-    ) {
-    }
+    ) {}
 
     /**
      * @return bool true if working

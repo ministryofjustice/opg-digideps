@@ -12,8 +12,7 @@ class RequestSigner
     public function __construct(
         private readonly DefaultCredentialProvider $credentialProvider,
         private readonly SignatureV4Signer $signer
-    ) {
-    }
+    ) {}
 
     public function signRequest(Request $request, string $service): RequestInterface|Request
     {

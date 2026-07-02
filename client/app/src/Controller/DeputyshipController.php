@@ -17,8 +17,7 @@ class DeputyshipController extends AbstractController
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
         private readonly ClientApi $clientApi,
-    ) {
-    }
+    ) {}
 
     /**
      * Show clients associated with the deputyship of the logged in user,

@@ -52,8 +52,7 @@ class FixtureController extends AbstractController
         private readonly PreRegistrationFactory $preRegistrationFactory,
         private readonly DeputyRepository $deputyRepository,
         private readonly bool $fixturesEnabled,
-    ) {
-    }
+    ) {}
 
     /** * @throws \Exception */
     #[Route(path: '/court-order', methods: ['POST'])]

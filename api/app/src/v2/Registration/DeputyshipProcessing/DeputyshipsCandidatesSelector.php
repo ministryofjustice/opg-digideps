@@ -21,8 +21,7 @@ class DeputyshipsCandidatesSelector
         private readonly CourtOrderReportCandidatesFactory $courtOrderReportsCandidateFactory,
         private readonly StagingSelectedCandidateRepository $stagingSelectedCandidateRepository,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     /**
      * @param StagingSelectedCandidate[] $candidates

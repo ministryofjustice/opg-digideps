@@ -11,6 +11,5 @@ final readonly class Cell
         public ?string $format = null,
         public ?bool $isHeader = null,
         public int $size = 1,
-    ) {
-    }
+    ) {}
 }

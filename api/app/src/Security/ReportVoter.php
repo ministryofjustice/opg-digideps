@@ -23,8 +23,7 @@ class ReportVoter extends Voter
         private readonly ReportAccessService $reportAccessService,
         private readonly AuthorizationCheckerInterface $authorizationChecker,
         private readonly LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     protected function supports(string $attribute, mixed $subject): bool
     {

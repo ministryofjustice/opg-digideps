@@ -7,9 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class QueryFactory
 {
-    public function __construct(private readonly EntityManagerInterface $em)
-    {
-    }
+    public function __construct(private readonly EntityManagerInterface $em) {}
 
     public function create(StatsQueryParameters $sq): Query
     {

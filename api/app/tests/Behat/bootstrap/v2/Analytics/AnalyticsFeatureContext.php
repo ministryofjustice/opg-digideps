@@ -6,6 +6,4 @@ namespace Tests\OPG\Digideps\Backend\Behat\v2\Analytics;
 
 use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
 
-class AnalyticsFeatureContext extends BaseFeatureContext
-{
-}
+class AnalyticsFeatureContext extends BaseFeatureContext {}

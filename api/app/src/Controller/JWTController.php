@@ -17,8 +17,7 @@ class JWTController extends AbstractController
         private readonly JWTService $JWTService,
         private readonly LoggerInterface $logger,
         private readonly AuthService $authService
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/v3/jwk-public-key', methods: ['GET'])]
     public function getPublicJwkKey(): JsonResponse

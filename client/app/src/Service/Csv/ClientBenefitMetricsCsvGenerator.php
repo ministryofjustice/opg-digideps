@@ -6,9 +6,7 @@ namespace OPG\Digideps\Frontend\Service\Csv;
 
 class ClientBenefitMetricsCsvGenerator
 {
-    public function __construct(private CsvBuilder $csvBuilder)
-    {
-    }
+    public function __construct(private CsvBuilder $csvBuilder) {}
 
     /**
      * @throws \Exception

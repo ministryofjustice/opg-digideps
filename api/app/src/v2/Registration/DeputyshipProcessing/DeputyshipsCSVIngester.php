@@ -21,8 +21,7 @@ final readonly class DeputyshipsCSVIngester
         private DataFactoryInterface $postCSVDataFactory,
         private DeputyshipsIngestResultRecorder $deputyshipsIngestResultRecorder,
         private CourtOrderRelationshipIngester $courtOrderRelationshipIngester,
-    ) {
-    }
+    ) {}
 
     public function setLogger(ConsoleLogger $logger): void
     {

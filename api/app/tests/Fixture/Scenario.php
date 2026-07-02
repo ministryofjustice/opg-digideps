@@ -12,8 +12,7 @@ final readonly class Scenario
     public function __construct(
         public CourtOrderDescriptor $courtOrderDescriptor,
         public ?Scenario $previous = null,
-    ) {
-    }
+    ) {}
 
     public static function newSimpleLayScenario(string $deputyReference = 'lay1', CourtOrderReportType $reportType = CourtOrderReportType::OPG103): Scenario
     {

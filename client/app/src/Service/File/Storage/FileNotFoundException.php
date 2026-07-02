@@ -2,6 +2,4 @@
 
 namespace OPG\Digideps\Frontend\Service\File\Storage;
 
-class FileNotFoundException extends \RuntimeException
-{
-}
+class FileNotFoundException extends \RuntimeException {}

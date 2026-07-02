@@ -16,8 +16,7 @@ class LayDeputyshipUploadController
         private readonly DataCompression $dataCompression,
         private readonly CSVDeputyshipProcessing $csvProcessing,
         private readonly LoggerInterface $logger
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/upload', methods: ['POST'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]

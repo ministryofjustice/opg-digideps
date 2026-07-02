@@ -15,8 +15,7 @@ class UserResearchApi
 
     public function __construct(
         private readonly RestClient $restClient
-    ) {
-    }
+    ) {}
 
     public function createPostSubmissionUserResearch(array $userResearchFormData): void
     {

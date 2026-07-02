@@ -18,8 +18,7 @@ class DeputyService
         private readonly DeputyRepository $deputyRepository,
         private readonly CourtOrderRepository $courtOrderRepository,
         private readonly EntityManagerInterface $em,
-    ) {
-    }
+    ) {}
 
     /**
      * Adds a new deputy to the database if it doesn't already exist, or retrieve any existing one.

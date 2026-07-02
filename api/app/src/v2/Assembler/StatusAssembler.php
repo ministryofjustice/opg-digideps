@@ -8,9 +8,7 @@ use OPG\Digideps\Backend\v2\DTO\StatusDto;
 
 class StatusAssembler
 {
-    public function __construct(private readonly ReportStatusServiceFactory $statusServiceFactory)
-    {
-    }
+    public function __construct(private readonly ReportStatusServiceFactory $statusServiceFactory) {}
 
     /**
      * @return StatusDto

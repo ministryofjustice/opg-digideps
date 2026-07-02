@@ -19,8 +19,7 @@ class DeputyProvider implements UserProviderInterface
     public function __construct(
         private readonly RestClient $restClient,
         private readonly LoggerInterface $logger
-    ) {
-    }
+    ) {}
 
     /**
      * Login passing params to RestClient::login().

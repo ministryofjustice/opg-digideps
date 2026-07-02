@@ -11,9 +11,7 @@ class DeputyInvitedEvent extends Event
 {
     public const string NAME = 'deputy.invited';
 
-    public function __construct(private readonly User $invitedDeputy)
-    {
-    }
+    public function __construct(private readonly User $invitedDeputy) {}
 
     public function getInvitedDeputy(): User
     {

@@ -68,8 +68,7 @@ class CourtOrderReportCandidatesFactory
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly StagingSelectedCandidateFactory $candidateFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * Find reports compatible with each ingested deputyship. These become "INSERT COURT ORDER REPORT" candidates.

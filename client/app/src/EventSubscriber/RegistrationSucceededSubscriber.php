@@ -13,8 +13,7 @@ class RegistrationSucceededSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private UserApi $userApi,
-    ) {
-    }
+    ) {}
 
     public static function getSubscribedEvents(): array
     {

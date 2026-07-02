@@ -13,9 +13,7 @@ final readonly class ValidatingForm
     use TypeOrDefaultTrait;
     use TypeOrThrowTrait;
 
-    public function __construct(private FormInterface $data)
-    {
-    }
+    public function __construct(private FormInterface $data) {}
 
     protected function getUnvalidated(int|string|null $key): mixed
     {

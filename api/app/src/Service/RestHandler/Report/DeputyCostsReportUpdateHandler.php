@@ -8,9 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class DeputyCostsReportUpdateHandler implements ReportUpdateHandlerInterface
 {
-    public function __construct(private readonly EntityManagerInterface $em)
-    {
-    }
+    public function __construct(private readonly EntityManagerInterface $em) {}
 
     public function handle(Report $report, array $data): void
     {

@@ -24,8 +24,7 @@ class SettingsController extends AbstractController
         private readonly TranslatorInterface $translator,
         private readonly UserApi $userApi,
         private readonly RestClient $restClient,
-    ) {
-    }
+    ) {}
 
     #[Route(path: '/deputyship-details', name: 'account_settings')]
     #[Route(path: '/org/settings', name: 'org_settings')]

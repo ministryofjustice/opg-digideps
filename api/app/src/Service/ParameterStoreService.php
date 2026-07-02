@@ -14,8 +14,7 @@ class ParameterStoreService
         private readonly SsmClient $ssmClient,
         private readonly string $parameterPrefix,
         private readonly string $flagPrefix
-    ) {
-    }
+    ) {}
 
     public function getParameter(string $parameterKey)
     {
