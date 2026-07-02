@@ -10,7 +10,7 @@ resource "aws_glue_catalog_table" "alb_logs" {
     "projection.day.range"         = "2024/01/01,NOW"
     "projection.day.type"          = "date"
     "projection.enabled"           = "true"
-    "storage.location.template"    = "s3://alb-logs.${data.aws_region.current.name}.${var.account.environment.name}.digideps.opg.justice.gov.uk/${local.environment}/AWSLogs/${var.account.environment.account_id}/elasticloadbalancing/${data.aws_region.current.name}/$${day}"
+    "storage.location.template"    = "s3://alb-logs.${data.aws_region.current.name}.${local.s3_alb_log_account_name}.digideps.opg.justice.gov.uk/${local.environment}/AWSLogs/${var.account.environment.account_id}/elasticloadbalancing/${data.aws_region.current.name}/$${day}"
   }
 
   table_type = "EXTERNAL_TABLE"
@@ -27,7 +27,7 @@ resource "aws_glue_catalog_table" "alb_logs" {
     bucket_columns            = []
     compressed                = false
     input_format              = "org.apache.hadoop.mapred.TextInputFormat"
-    location                  = "s3://alb-logs.${data.aws_region.current.name}.${var.account.environment.name}.digideps.opg.justice.gov.uk/${local.environment}/AWSLogs/${var.account.environment.account_id}/elasticloadbalancing/${data.aws_region.current.name}"
+    location                  = "s3://alb-logs.${data.aws_region.current.name}.${s3_alb_log_account_name}.digideps.opg.justice.gov.uk/${local.environment}/AWSLogs/${var.account.environment.account_id}/elasticloadbalancing/${data.aws_region.current.name}"
     number_of_buckets         = -1
     output_format             = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
     parameters                = {}
