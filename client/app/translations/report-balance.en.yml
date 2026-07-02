@@ -97,3 +97,4 @@ review:
   differenceCardTitle: Closing balances
   matched: Accounts balanced
   notMatched: Accounts not balanced
+  reasonNotBalancing: Explanation for accounts not balancing
