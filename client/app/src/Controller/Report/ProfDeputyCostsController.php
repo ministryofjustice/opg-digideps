@@ -24,6 +24,7 @@ use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Common\Validating\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -78,7 +79,10 @@ class ProfDeputyCostsController extends AbstractController
         $form = $this->createForm(ProfDeputyCostHowType::class, $report);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
+        /** @var SubmitButton $submitBtn */
+        $submitBtn = $form->get('save');
+        if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
+            /** @var array $data */
             $data = $form->getData();
 
             $this->restClient->put('report/' . $reportId, $data, ['deputyCostsHowCharged']);
@@ -120,24 +124,29 @@ class ProfDeputyCostsController extends AbstractController
             /* @var Report $data */
             $data = $form->getData();
 
-            switch ($data->getProfDeputyCostsHasPrevious()) {
-                case 'yes':
-                    // no need to save. "Yes" will be set when one entry is added to keep db data consistent
-                    return $this->redirectToRoute('prof_deputy_costs_previous_received', ['reportId' => $reportId, 'from' => $from]);
-                case 'no':
-                    // store and go to next route
-                    $this->restClient->put('report/' . $reportId, $data, ['profDeputyCostsHasPrevious']);
+            if ($data instanceof Report) {
+                switch ($data->getProfDeputyCostsHasPrevious()) {
+                    case 'yes':
+                        // no need to save. "Yes" will be set when one entry is added to keep db data consistent
+                        return $this->redirectToRoute(
+                            'prof_deputy_costs_previous_received',
+                            ['reportId' => $reportId, 'from' => $from]
+                        );
+                    case 'no':
+                        // store and go to next route
+                        $this->restClient->put('report/' . $reportId, $data, ['profDeputyCostsHasPrevious']);
 
-                    if ($from == 'summary') {
-                        $this->addFlash('notice', 'Answer edited');
-                        $nextRoute = 'prof_deputy_costs_summary';
-                    } elseif ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
-                        $nextRoute = 'prof_deputy_costs_received';
-                    } else {
-                        $nextRoute = 'prof_deputy_costs_inline_interim_19b_exists';
-                    }
+                        if ($from == 'summary') {
+                            $this->addFlash('notice', 'Answer edited');
+                            $nextRoute = 'prof_deputy_costs_summary';
+                        } elseif ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
+                            $nextRoute = 'prof_deputy_costs_received';
+                        } else {
+                            $nextRoute = 'prof_deputy_costs_inline_interim_19b_exists';
+                        }
 
-                    return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
+                        return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
+                }
             }
         }
 
@@ -226,6 +235,7 @@ class ProfDeputyCostsController extends AbstractController
             return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
         }
 
+        /** @var ProfDeputyPreviousCost $cost */
         $cost = $this->restClient->get('/prof-deputy-previous-cost/' . $previousReceivedId, 'Report\ProfDeputyPreviousCost');
 
         return [
@@ -261,24 +271,29 @@ class ProfDeputyCostsController extends AbstractController
             /* @var Report $data */
             $data = $form->getData();
 
-            // store yes or no
-            $this->restClient->put("report/$reportId", $data, ['profDeputyCostsHasInterim']);
+            if ($data instanceof Report) {
+                // store yes or no
+                $this->restClient->put("report/$reportId", $data, ['profDeputyCostsHasInterim']);
 
-            // next route calculation
-            switch ($data->getProfDeputyCostsHasInterim()) {
-                case 'yes':
-                    // go to interim page, and pass by the "from"
-                    return $this->redirectToRoute('prof_deputy_costs_inline_interim_19b', ['reportId' => $reportId, 'from' => $from]);
-                case 'no':
-                    if ($from === 'summary') {
-                        $this->addFlash('notice', 'Answer edited');
-                        $nextRoute = 'prof_deputy_costs_summary';
-                        // TODO consider going to fixed costs adding from=summmary if not set
-                    } else {
-                        $nextRoute = 'prof_deputy_costs_received';
-                    }
+                // next route calculation
+                switch ($data->getProfDeputyCostsHasInterim()) {
+                    case 'yes':
+                        // go to interim page, and pass by the "from"
+                        return $this->redirectToRoute(
+                            'prof_deputy_costs_inline_interim_19b',
+                            ['reportId' => $reportId, 'from' => $from]
+                        );
+                    case 'no':
+                        if ($from === 'summary') {
+                            $this->addFlash('notice', 'Answer edited');
+                            $nextRoute = 'prof_deputy_costs_summary';
+                            // TODO consider going to fixed costs adding from=summmary if not set
+                        } else {
+                            $nextRoute = 'prof_deputy_costs_received';
+                        }
 
-                    return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
+                        return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
+                }
             }
         }
 
@@ -443,13 +458,14 @@ class ProfDeputyCostsController extends AbstractController
     {
         $otherCosts = [];
 
+        /** @var array<array{'typeId': string, 'hasMoreDetails': string}> $defaultOtherCostTypeIds */
         $defaultOtherCostTypeIds = $report->getProfDeputyOtherCostTypeIds();
         foreach ($defaultOtherCostTypeIds as $defaultOtherCostType) {
             $otherCosts[] = new ProfDeputyOtherCost(
                 $defaultOtherCostType['typeId'],
-                null,
+                '',
                 $defaultOtherCostType['hasMoreDetails'],
-                null
+                ''
             );
         }
 
