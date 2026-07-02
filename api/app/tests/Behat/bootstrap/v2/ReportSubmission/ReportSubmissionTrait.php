@@ -9,7 +9,6 @@ use Behat\Step\Given;
 use Behat\Step\Then;
 use Behat\Step\When;
 use OPG\Digideps\Backend\Entity\Report\Document;
-use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Service\ParameterStoreService;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
@@ -103,13 +102,9 @@ trait ReportSubmissionTrait
         $this->attachDocument($imageName);
     }
 
-    #[Given('/^I send the documents to complete the upload process on the "([^"]*)" report$/')]
-    public function iSendTheDocumentsToCompleteTheUploadProcess(string $reportStatus): void
+    #[Given('/^I send the documents to complete the upload process on the submitted report$/')]
+    public function iSendTheDocumentsToCompleteTheUploadProcess(): void
     {
-        if ($reportStatus != 'submitted') {
-            $this->clickLink('Continue to send documents');
-        }
-
         $this->clickLink('Send documents');
     }
 
