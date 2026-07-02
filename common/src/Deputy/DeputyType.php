@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Backend\Domain\Deputy;
+namespace OPG\Digideps\Common\Deputy;
 
 enum DeputyType: string
 {
