@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Domain\Report;
 
-use OPG\Digideps\Backend\Domain\Report\ReportType;
+use OPG\Digideps\Common\Report\ReportType;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
