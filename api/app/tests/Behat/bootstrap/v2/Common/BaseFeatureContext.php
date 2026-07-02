@@ -4,13 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
-use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\Service\File\Storage\S3Storage;
-use OPG\Digideps\Backend\Service\ParameterStoreService;
-use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
-use Tests\OPG\Digideps\Backend\Behat\v2\Analytics\AnalyticsTrait;
-use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelper;
 use Aws\S3\S3Client;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Driver\BrowserKitDriver;
@@ -18,9 +11,16 @@ use Behat\MinkExtension\Context\MinkContext;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 use Faker\Generator;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\File\Storage\S3Storage;
+use OPG\Digideps\Backend\Service\ParameterStoreService;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Tests\OPG\Digideps\Backend\Behat\v2\Analytics\AnalyticsTrait;
+use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelper;
 
 class BaseFeatureContext extends MinkContext
 {

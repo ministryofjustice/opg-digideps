@@ -70,7 +70,7 @@ trait DebugTrait
     {
         $result = $scope->getTestResult();
 
-        if ($result instanceof ExecutedStepResult && $result->hasException()) {
+        if (!$result->isPassed()) {
             $feature = basename($scope->getFeature()->getFile());
             $this->debug($feature);
         }
