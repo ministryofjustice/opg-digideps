@@ -30,7 +30,7 @@ resource "aws_cloudwatch_log_group" "audit" {
   name              = "audit-${local.environment}"
   kms_key_id        = data.aws_kms_alias.cloudwatch_application_logs_encryption.arn
   tags              = var.default_tags
-  retention_in_days = 395
+  retention_in_days = 400
 }
 
 ##### Shared Application KMS key for logs #####
