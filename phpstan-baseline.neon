@@ -61,6 +61,12 @@ parameters:
 			path: api/app/src/Command/ApiComparison.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\IngestDeputyshipsCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: api/app/src/Command/IngestDeputyshipsCSVCommand.php
+
+		-
 			message: '#^Cannot call method warning\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -193,6 +199,12 @@ parameters:
 			path: api/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\ProcessOrgCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: api/app/src/Command/ProcessOrgCSVCommand.php
+
+		-
 			message: '#^Part \$limit \(mixed\) of encapsed string cannot be cast to string\.$#'
 			identifier: encapsedStringPart.nonString
 			count: 1
@@ -205,8 +217,20 @@ parameters:
 			path: api/app/src/Command/ReportStatusUpdaterCommand.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\ResyncResubmittableErrorChecklists\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: api/app/src/Command/ResyncResubmittableErrorChecklists.php
+
+		-
 			message: '#^Method OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:deleteInactivateUsers\(\) should return int but returns mixed\.$#'
 			identifier: return.type
+			count: 1
+			path: api/app/src/Command/UserCleanupCommand.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
 			count: 1
 			path: api/app/src/Command/UserCleanupCommand.php
 
@@ -219,6 +243,12 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$user of method OPG\\Digideps\\Backend\\Command\\UserRetentionPolicyCommand\:\:storeUserIdForDeletion\(\) expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: api/app/src/Command/UserRetentionPolicyCommand.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\UserRetentionPolicyCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
 			count: 1
 			path: api/app/src/Command/UserRetentionPolicyCommand.php
 
@@ -2041,13 +2071,13 @@ parameters:
 			path: api/app/src/DataFixtures/LayUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderReportType\:\:from\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderReportType\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 4
 			path: api/app/src/DataFixtures/LayUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: api/app/src/DataFixtures/LayUserFixtures.php
@@ -4131,18 +4161,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getSectionStatusesCached\(\) should return array but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getSectionsSettings\(\) should return array\<string, array\<string\>\> but returns array\<string, array\>\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Ternary operator condition is always false\.$#'
-			identifier: ternary.alwaysFalse
 			count: 1
 			path: api/app/src/Entity/Report/Report.php
 
@@ -7981,12 +7999,6 @@ parameters:
 			path: api/app/src/v2/Registration/Assembler/LayDeputyshipDtoCollectionAssembler.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\Assembler\\SiriusToLayDeputyshipDtoAssembler\:\:determineReportTypeIsSupported\(\) never returns null so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: api/app/src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
-
-		-
 			message: '#^Parameter \#1 \$caseNumber of method OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto\:\:setCaseNumber\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -10603,7 +10615,7 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
@@ -13525,7 +13537,7 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
@@ -15847,7 +15859,7 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
@@ -16375,7 +16387,7 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
@@ -16741,7 +16753,7 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
@@ -18979,7 +18991,7 @@ parameters:
 			path: api/app/tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
@@ -24751,7 +24763,7 @@ parameters:
 			path: api/app/tests/Unit/Command/ProcessOrgCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/ProcessOrgCSVCommandTest.php
@@ -26620,6 +26632,12 @@ parameters:
 			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, array\|bool\|float\|int\|string\|UnitEnum\|null given\.$#'
 			identifier: argument.type
 			count: 2
+			path: client/app/src/Command/ProcessOrgCSVCommand.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Command\\ProcessOrgCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
 			path: client/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
@@ -38467,7 +38485,7 @@ parameters:
 			path: client/app/tests/Unit/Command/CheckCSVUploadedCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Command/CheckCSVUploadedCommandTest.php
@@ -43603,6 +43621,12 @@ parameters:
 			path: client/app/tests/Unit/Service/StringUtilsTest.php
 
 		-
+			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\ChecklistSyncCommand\:\:getDefaultName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
+
+		-
 			message: '#^Cannot call method expects\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -43639,7 +43663,7 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
@@ -43687,6 +43711,12 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
+			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\DocumentSyncCommand\:\:getDefaultName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
+
+		-
 			message: '#^Cannot call method method\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 4
@@ -43711,7 +43741,7 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
