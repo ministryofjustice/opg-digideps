@@ -5,17 +5,20 @@
   "license": "MIT",
   "minimum-stability": "stable",
   "scripts": {
-    "reformat": "./vendor/bin/phpcbf -p .",
-    "reformat:check": "./vendor/bin/phpcs -p .",
+    "reformat": "php-cs-fixer fix -v",
+    "reformat:check": "php-cs-fixer check -v",
     "lint:phpstan": "phpstan",
     "lint:phpstan:baseline": "phpstan && phpstan --generate-baseline",
     "lint:phpstan:baseline:force": "phpstan --generate-baseline"
   },
+  "require": {
+    "php": "^8.4"
+  },
   "require-dev": {
     "phpstan/phpstan": "^2.1.5",
-    "squizlabs/php_codesniffer": "^4.0.1",
     "phpstan/phpstan-mockery": "^2.0",
     "phpstan/phpstan-phpunit": "^2.0.5",
-    "jangregor/phpstan-prophecy": "^2.3"
+    "jangregor/phpstan-prophecy": "^2.3",
+    "friendsofphp/php-cs-fixer": "^3.95"
   }
 }
