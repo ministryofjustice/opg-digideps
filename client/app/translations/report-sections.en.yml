@@ -1,0 +1,75 @@
+common:
+  overviewLink: Report overview
+  beforeStart: Before you start
+  continue: Continue
+
+title:
+  decisions: Decisions
+  contacts: Contacts
+  visitsCare: Visits and care
+  lifestyle: Health and lifestyle
+  clientBenefitsCheck: Benefits check and money others received
+  bankAccounts: Accounts
+  gifts: Gifts
+  moneyTransfers: Money transfers
+  moneyIn: Money in
+  moneyOut: Money out
+  balance: Balance
+  moneyInShort: Money in
+  moneyOutShort: Money out
+  assets: Assets
+  debts: Debts
+  deputyExpenses: Deputy expenses
+  paDeputyExpenses: Deputy fees and expenses
+  profDeputyCosts: Deputy costs
+  profDeputyCostsEstimate: Deputy costs estimate
+  actions: Actions you plan to take
+  otherInfo: Any other information
+  documents: Supporting documents
+
+intro:
+  description:
+    decisions: Use this section to tell us about %client%'s mental capacity to make decisions and the significant decisions you've made on %client%'s behalf.
+    contacts: Contacts
+    visitsCare: Visits and care
+    lifestyle: Health and lifestyle
+    clientBenefitsCheck: Benefits check and money others received
+    bankAccounts: Accounts
+    gifts: Gifts
+    moneyTransfers: Money transfers
+    moneyIn: Money in
+    moneyOut: Money out
+    balance: Balance
+    moneyInShort: Money in
+    moneyOutShort: Money out
+    assets: Assets
+    debts: Debts
+    deputyExpenses: Deputy expenses
+    paDeputyExpenses: Deputy fees and expenses
+    profDeputyCosts: Deputy costs
+    profDeputyCostsEstimate: Deputy costs estimate
+    actions: Actions you plan to take
+    otherInfo: Any other information
+    documents: Supporting documents
+
+  note:
+    decisions: |-
+      To complete this section, have ready any:
+      - documents you have related to %client%'s latest mental capacity assessment
+      - notes or records you made about your decision-making
+    moneyOut: |-
+      # Helpful documents
+      You will need statements for all of %client%'s accounts.
+      You may find it helpful to have any documents, such as receipts and invoices, relating to the costs listed below. These may not all apply:
+      - care or medical bills
+      - household bills and expenses
+      - accommodation costs
+      - %client%'s personal expenses
+      - OPG and other professional fees
+      - major purchases, such as property or investments
+      - tax or charges
+      # Link payments to %client%'s accounts
+      When you add a payment type, you can choose which of %client%'s accounts it was paid out from. If you haven't already, you need to add [%client%'s accounts](bankAccounts) before starting this section.
+
+  info:
+    moneyOut: There are different sections for you to tell us about [money transfers](moneyTransfers) between %client%'s accounts, any claimed [%expensesSectionTitle%](%expensesSection%), and [gifts](gifts). Do not use this section to report any of these.
