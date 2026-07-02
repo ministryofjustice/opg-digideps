@@ -48,7 +48,6 @@ class ProfCostsSubSectionRouteResolverTest extends TestCase
         $report = new Report();
         $report->setProfDeputyCostsHasPrevious('true');
         $report->setProfDeputyCostsHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED);
-        $report->setProfDeputyFixedCost(0);
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
@@ -97,8 +96,7 @@ class ProfCostsSubSectionRouteResolverTest extends TestCase
         $report = new Report();
         $report->setProfDeputyCostsHasPrevious('true');
         $report->setProfDeputyCostsHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_BOTH)
-            ->setProfDeputyCostsHasInterim('no')
-            ->setProfDeputyFixedCost(0);
+            ->setProfDeputyCostsHasInterim('no');
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
@@ -112,8 +110,7 @@ class ProfCostsSubSectionRouteResolverTest extends TestCase
         $report->setProfDeputyCostsHasPrevious('true');
         $report->setProfDeputyCostsHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_BOTH)
             ->setProfDeputyCostsHasInterim('no')
-            ->setProfDeputyFixedCost(123.00)
-            ->setProfDeputyCostsAmountToScco(0);
+            ->setProfDeputyFixedCost(123.00);
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
