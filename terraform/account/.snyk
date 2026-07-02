@@ -28,3 +28,6 @@ ignore:
   SNYK-CC-TF-56:
     - '*':
         reason: "Security group descriptions intentionally omitted because adding descriptions would force replacement of existing security groups"
+  SNYK-CC-TF-124:
+    - '*':
+        reason: "S3 Bucket versioning intentionally disabled because this risks increasing costs and is not required for this service."

@@ -8,6 +8,7 @@ resource "aws_instance" "ssm_ec2" {
   user_data_base64            = base64encode(file("${path.module}/boot.sh"))
   user_data_replace_on_change = true
   associate_public_ip_address = false
+  disable_api_termination     = true
 
   metadata_options {
     http_tokens = "required"
