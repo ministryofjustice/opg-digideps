@@ -6,7 +6,7 @@ Feature: Attaching Further Documents
         Given a Lay Deputy has submitted a report
         And all the reports for the first client are associated with a 'pfa' court order
         When I attach a supporting document "test-image.png" to the submitted report
-        And I send the documents to complete the upload process on the "submitted" report
+        And I send the documents to complete the upload process on the submitted report
         Then I should be on the court order page
         And a flash message should be displayed to the user confirming the document upload
         Given a super admin user accesses the admin app
@@ -19,13 +19,13 @@ Feature: Attaching Further Documents
         Given a Lay Deputy has submitted a report
         And all the reports for the first client are associated with a 'pfa' court order
         When I attach a supporting document "test-image.png" to the submitted report
-        And I send the documents to complete the upload process on the "submitted" report
+        And I send the documents to complete the upload process on the submitted report
         Then I should be on the court order page
         And a flash message should be displayed to the user confirming the document upload
         When I visit the documents step 2 page
         Then I should see "test_image.png" listed as a previously submitted document
         When I attach a "second" supporting document "good.pdf" to the submitted report
-        And I send the documents to complete the upload process on the "submitted" report
+        And I send the documents to complete the upload process on the submitted report
         Then I should be on the court order page
         When I visit the documents step 2 page
         Then I should see "test_image.png" and "good.pdf" as previously submitted documents
