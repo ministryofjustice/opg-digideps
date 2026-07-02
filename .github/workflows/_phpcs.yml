@@ -3,6 +3,12 @@ name: "[Style] PHP CS"
 on:
   workflow_call:
 
+permissions:
+  id-token: none
+  contents: read
+  security-events: none
+  pull-requests: none
+
 jobs:
   phpcs:
     runs-on: ubuntu-latest

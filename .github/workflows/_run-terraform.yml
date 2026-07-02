@@ -32,6 +32,12 @@ on:
         type: string
         description: "Account to get credentials for"
 
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+
 jobs:
   terraform_workflow:
     runs-on: ubuntu-latest

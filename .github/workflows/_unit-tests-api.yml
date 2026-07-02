@@ -11,6 +11,13 @@ on:
         description: "Name of the branch doing the build"
         required: true
         type: string
+
+permissions:
+  id-token: none
+  contents: read
+  security-events: none
+  pull-requests: none
+
 jobs:
   api-unit-tests:
     runs-on: ubuntu-latest
