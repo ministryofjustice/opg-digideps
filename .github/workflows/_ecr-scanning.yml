@@ -4,6 +4,12 @@ defaults:
   run:
     shell: bash
 
+permissions:
+  id-token: write
+  contents: read
+  security-events: write
+  pull-requests: none
+
 on:
   workflow_call:
     inputs:
