@@ -11,15 +11,19 @@ interface TestUser {
   password: string;
 }
 
-interface Scenario {
-  clientId: number
+interface UserDetails {
+  email: string
+}
+
+export interface Scenario {
+  users: { [reference: string]: UserDetails }
 }
 
 interface ScenarioFunction {
-  (authToken: string): Promise<Scenario | null>;
+  (authToken: string): Promise<Scenario>
 }
 
-const testPassword = "DigidepsPass1234";
+export const testPassword = "DigidepsPass1234";
 
 const fixtureUsers: Record<UserType, FixtureUser> = {
   lay_user: {
@@ -57,22 +61,28 @@ async function getAuthToken(user: TestUser): Promise<string | null> {
   return res.headers.get("authtoken")
 }
 
-export async function createSimpleLay(authToken: string): Promise<Scenario | null> {
-  return await fetch(new Request(apiUrl + "/fixtures/scenarios/simplelay", {
-    method: "POST",
-    headers: {
-      "AuthToken": authToken,
+// returns a closure which creates a scenario
+export function createSimpleLay(deputyReference: string): ScenarioFunction {
+  return async (authToken: string): Promise<Scenario> => {
+    const res = await fetch(new Request(apiUrl + "/fixtures/scenarios/simplelay", {
+      method: "POST",
+      headers: {
+        "AuthToken": authToken
+      },
+      body: JSON.stringify({
+        "deputyReference": deputyReference,
+        "reportType": "OPG102"
+      })
+    }))
+
+    if (res.status !== 200) {
+      res.text().then(console.error)
+      throw new Error(res.statusText)
     }
-  }))
-    .then(res => res.text())
-    .then(text => {
-      let scenario: Scenario = JSON.parse(text)["data"]
-      return scenario
-    })
-    .catch(err => {
-      console.error(err)
-      return null
-    })
+
+    const text = await res.text();
+    return JSON.parse(text)["data"];
+  }
 }
 
 export async function setupScenario(scenarioFn: ScenarioFunction): Promise<Scenario | null> {
