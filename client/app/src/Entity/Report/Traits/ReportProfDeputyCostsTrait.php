@@ -20,6 +20,8 @@ trait ReportProfDeputyCostsTrait
     private ?string $profDeputyCostsHowCharged;
 
     /**
+     * null/'yes'/'no'
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"profDeputyCostsHasPrevious"})
      */
@@ -51,6 +53,7 @@ trait ReportProfDeputyCostsTrait
     private ?float $profDeputyFixedCost = null;
 
     /**
+     *  null/'yes'/'no'
      * @JMS\Type("string")
      * @JMS\Groups({"profDeputyCostsHasInterim"})
      */
