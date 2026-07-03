@@ -1,9 +1,9 @@
-import { Page, expect } from "@playwright/test"
+import { Page } from "@playwright/test"
 
 export default class AttachDocumentsPage {
   constructor(private page: Page) {}
 
   async goto(reportId: number) {
-    await this.page.goto("/report/" + reportId + "/step/2")
+    await this.page.goto("/report/" + String(reportId) + "/documents/step/2")
   }
 }
