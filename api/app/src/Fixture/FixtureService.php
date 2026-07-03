@@ -279,7 +279,7 @@ final class FixtureService
             ->setAddress3('')
             ->setAddress4('')
             ->setAddress5('')
-            ->setAddressCountry(null)
+            ->setAddressCountry('GB')
             ->setAddressPostcode($this->faker->postcode())
             ->setPhoneMain($this->faker->phoneNumber())
             ->setPhoneAlternative($this->faker->phoneNumber());
