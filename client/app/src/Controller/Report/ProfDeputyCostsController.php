@@ -458,14 +458,14 @@ class ProfDeputyCostsController extends AbstractController
     {
         $otherCosts = [];
 
-        /** @var array<array{'typeId': string, 'hasMoreDetails': string}> $defaultOtherCostTypeIds */
+        /** @var array<array{'typeId': string, 'hasMoreDetails': bool}> $defaultOtherCostTypeIds */
         $defaultOtherCostTypeIds = $report->getProfDeputyOtherCostTypeIds();
         foreach ($defaultOtherCostTypeIds as $defaultOtherCostType) {
             $otherCosts[] = new ProfDeputyOtherCost(
                 $defaultOtherCostType['typeId'],
-                '',
+                null,
                 $defaultOtherCostType['hasMoreDetails'],
-                ''
+                null
             );
         }
 
