@@ -131,7 +131,7 @@ jobs:
 
   php_style:
     name: PHP Style check
-    uses: ./.github/workflows/_phpcs.yml
+    uses: ./.github/workflows/_check-formatting.yml
 
   iac_scan:
     name: Scan Infrastructure as Code
