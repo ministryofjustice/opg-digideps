@@ -19,16 +19,30 @@ test("a user sends further documents", async ({ page }) => {
 
       // go to the attach documents page
       const attachDocumentsPage = new AttachDocumentsPage(page)
-      await attachDocumentsPage.goto(submittedReportId)
 
-      // attach a file and send it
-      const fileToUpload = path.join(__dirname, "/testFiles/test-image.jpg")
-      await attachDocumentsPage.attachFile(fileToUpload)
-      await attachDocumentsPage.sendDocuments()
+      // attach two files
+      let uploadedFiles = []
+      for (const fileToUpload of ["testimage1.png", "testimage2.png"]) {
+        await attachDocumentsPage.goto(submittedReportId)
 
-      await expect(page).toHaveURL(`/courtorder/${courtOrderUid}`)
-      await expect(page.locator("div.moj-banner--success"))
-        .toContainText("Your uploaded files are now attached to this report")
+        let fileToUploadFullPath = path.join(__dirname, `/testFiles/${fileToUpload}`)
+        await attachDocumentsPage.attachFile(fileToUploadFullPath)
+        await attachDocumentsPage.sendDocuments()
+
+        // check we're redirected to the court order page with success message
+        await expect(page).toHaveURL(`/courtorder/${courtOrderUid}`)
+        await expect(page.locator("div.moj-banner--success"))
+          .toContainText("Your uploaded files are now attached to this report")
+
+        // check correct files are listed as attachments
+        uploadedFiles.push(fileToUpload)
+
+        await attachDocumentsPage.goto(submittedReportId)
+        for (const uploadedFile of uploadedFiles) {
+          let selector = `dt[data-role="attached-document-name"]:has-text("${uploadedFile}")`
+          await expect(page.locator(selector)).toHaveCount(1)
+        }
+      }
     }
 
     await setupScenario(createSimpleLay(deputyReference))
