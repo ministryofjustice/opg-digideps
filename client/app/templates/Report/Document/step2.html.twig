@@ -50,12 +50,6 @@
         <div class="js-hidden">
             {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}
         </div>
-
-        <div class="custom-submit">
-            <button type="submit" class="govuk-button behat-link-attach-file js-uploading" data-role="file-chooser-form-submit">
-                {{ 'form.submitButton' | trans }}
-            </button>
-        </div>
     {% else %}
         {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom', 'data-role': 'file-chooser-form'}}) }}
         {{ form_input(form.files, 'form.files', {
@@ -66,12 +60,6 @@
 
         <div class="js-hidden">
             {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}
-        </div>
-
-        <div class="custom-submit">
-            <button type="submit" class="govuk-button behat-link-attach-file js-uploading" data-role="file-chooser-form-submit">
-                {{ 'form.submitButton' | trans }}
-            </button>
         </div>
     {% endif %}
 
