@@ -324,11 +324,11 @@ final class FixtureService
             ->setAddress3($deputy?->getAddress3() ?? '')
             ->setAddress4($deputy?->getAddress4() ?? '')
             ->setAddress5($deputy?->getAddress5() ?? '')
-            ->setAddressCountry(null)
+            ->setAddressCountry('GB')
             ->setAddressPostcode($deputy?->getAddressPostcode() ?? $this->faker->postcode())
             ->setPhoneMain($deputy?->getPhoneMain() ?? $this->faker->phoneNumber())
             ->setRoleName(match ($descriptor->userType) {
-                UserType::Deputy =>  match ($descriptor->type) {
+                UserType::Deputy => match ($descriptor->type) {
                     DeputyType::LAY => User::ROLE_LAY_DEPUTY,
                     DeputyType::PRO => User::ROLE_PROF_NAMED,
                     DeputyType::PA => User::ROLE_PA_NAMED,
@@ -352,6 +352,7 @@ final class FixtureService
             ->setAgreeTermsUse(true)
             ->setPassword($this->password)
             ->setRegistrationDate(new \DateTime()->sub(new \DateInterval('P1Y')))
+            ->setRegistrationRoute(User::SELF_REGISTER)
         ;
 
         if ($organisation !== null) {
