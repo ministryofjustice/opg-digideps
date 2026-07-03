@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\Controller;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
 use OPG\Digideps\Backend\Fixture\DeputyDescriptor;
 use OPG\Digideps\Backend\Fixture\DeputySet;
