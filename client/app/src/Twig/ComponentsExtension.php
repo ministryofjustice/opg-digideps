@@ -120,6 +120,13 @@ class ComponentsExtension extends AbstractExtension
                         return '';
                 }
             }),
+            'account_balance_status_to_tag_css' => new TwigFilter('account_balance_status_to_tag_css', function ($status) {
+                return match ($status) {
+                    'notMatched' => 'govuk-tag--red',
+                    'matched' => 'govuk-tag--green',
+                    default => '',
+                };
+            }),
         ];
     }
 
