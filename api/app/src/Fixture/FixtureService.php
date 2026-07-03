@@ -246,7 +246,6 @@ final class FixtureService
             ->setCreatedAt(null);
     }
 
-
     private function makeCourtOrder(CourtOrderDescriptor $descriptor, Client $client, CourtOrderType $type): CourtOrder
     {
         $madeDate = new \DateTime()->sub(new \DateInterval('P6M'))->sub(new \DateInterval("P{$descriptor->submittedReports}Y"));
@@ -254,7 +253,7 @@ final class FixtureService
 
         return $this->persist(new CourtOrder()
             ->setId($this->counter->nextInt())
-            ->setCourtOrderUid($this->counter->nextString(8, prefix: 'C', postfix: 'C'))
+            ->setCourtOrderUid($this->counter->nextString(8))
             ->setClient($client)
             ->setOrderType($type)
             ->setOrderKind($descriptor->single ? CourtOrderKind::Single : ($descriptor->siblingDeputySet !== null ? CourtOrderKind::Hybrid : CourtOrderKind::Dual))
@@ -303,9 +302,9 @@ final class FixtureService
         $organisation = new Organisation()
             ->setId($this->counter->nextInt())
             ->setIsActivated(true)
-            ->setDeletedAt(null)
+            ->setDeletedAt()
             ->setName($descriptor->organisation);
-        $organisation->setEmailIdentifier("@{$organisation->getId()}.{$descriptor->emailDomain}");
+        $organisation->setEmailIdentifier("@{$organisation->getId()}.$descriptor->emailDomain");
 
         $organisation->getClients()->add($client);
 

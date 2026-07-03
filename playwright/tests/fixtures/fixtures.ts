@@ -15,8 +15,22 @@ interface UserDetails {
   email: string
 }
 
+interface ReportDetails {
+  id: number
+}
+
+interface OrderDetails {
+  courtOrderUid: string
+  reports: [ReportDetails]
+}
+
+export enum OrderTypes {
+  PFA = 'pfa', HW = 'hw'
+}
+
 export interface Scenario {
-  users: { [reference: string]: UserDetails }
+  users: { [userReference: string]: UserDetails }
+  orders: [OrderDetails]
 }
 
 interface ScenarioFunction {
@@ -71,12 +85,11 @@ export function createSimpleLay(deputyReference: string): ScenarioFunction {
       },
       body: JSON.stringify({
         "deputyReference": deputyReference,
-        "reportType": "OPG102"
       })
     }))
 
     if (res.status !== 200) {
-      res.text().then(console.error)
+      await res.text().then(console.error)
       throw new Error(res.statusText)
     }
 
