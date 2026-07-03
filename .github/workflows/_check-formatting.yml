@@ -27,4 +27,4 @@ jobs:
       - name: Run php-cs-fixer
         if: env.CHANGED_PHP_FILES != ''
         run: |
-          php php-cs-fixer.phar check -v --show-progress=none $CHANGED_PHP_FILES
+          php php-cs-fixer.phar check --config=.php-cs-fixer.dist.php -v --show-progress=none $CHANGED_PHP_FILES
