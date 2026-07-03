@@ -7,7 +7,9 @@ export default class AttachDocumentsPage {
     await this.page.goto("/report/" + String(reportId) + "/documents/step/2")
   }
 
-  async attachFile(filePath: string, elementLocator: string) {
+  async attachFile(filePath: string) {
+    const elementLocator = "#report_document_upload_files"
+
     // set up wait for the redirect after the file is uploaded
     const navigationPromise = this.page.waitForURL(/.+\?successUploaded=true/)
 
@@ -20,5 +22,9 @@ export default class AttachDocumentsPage {
     )
 
     await navigationPromise
+  }
+
+  async sendDocuments() {
+    await this.page.locator('a[data-role="send-documents-link"]').click()
   }
 }

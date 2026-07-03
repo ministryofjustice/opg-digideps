@@ -4,7 +4,7 @@ import { createSimpleLay, Scenario, setupScenario, testPassword } from "./fixtur
 import AttachDocumentsPage from "./pages/AttachDocumentsPage";
 import LoginPage from "./pages/LoginPage";
 
-test("a user attempts to send further documents", async ({ page }) => {
+test("a user sends further documents", async ({ page }) => {
     const deputyReference = "attaching-further-documents-user"
 
     const runTest = async (scenario: Scenario) => {
@@ -20,12 +20,10 @@ test("a user attempts to send further documents", async ({ page }) => {
       const attachDocumentsPage = new AttachDocumentsPage(page)
       await attachDocumentsPage.goto(submittedReportId)
 
-      // attach a file
+      // attach a file and send it
       const fileToUpload = path.join(__dirname, "/testFiles/test-image.jpg")
-      await attachDocumentsPage.attachFile(fileToUpload, "#report_document_upload_files")
-
-      // complete sending the documents
-      await page.locator('a[data-role="send-documents-link"]').click()
+      await attachDocumentsPage.attachFile(fileToUpload)
+      await attachDocumentsPage.sendDocuments()
     }
 
     await setupScenario(createSimpleLay(deputyReference))
