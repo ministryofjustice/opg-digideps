@@ -50,7 +50,7 @@
 
     <h2 class="govuk-heading-m">{{ (page ~ '.documentListPrevious') | trans }}</h2>
 
-    <dl class="govuk-summary-list behat-region-previous-submitted-document-list behat-region-document-list">
+    <dl class="govuk-summary-list" data-role="attached-documents-list">
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
                 {{ (page ~ '.filename') | trans }}
@@ -61,7 +61,7 @@
         </div>
         {% for document in report.submittedDocuments %}
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__value">
+                <dt class="govuk-summary-list__value" data-role="attached-document-name">
                     {{ document.fileName }}
                 </dt>
                 <dd class="govuk-summary-list__value">
