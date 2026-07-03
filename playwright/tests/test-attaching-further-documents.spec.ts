@@ -20,8 +20,12 @@ test("a user attempts to send further documents", async ({ page }) => {
       const attachDocumentsPage = new AttachDocumentsPage(page)
       await attachDocumentsPage.goto(submittedReportId)
 
+      // attach a file
       const fileToUpload = path.join(__dirname, "/testFiles/test-image.jpg")
       await attachDocumentsPage.attachFile(fileToUpload, "#report_document_upload_files")
+
+      // complete sending the documents
+      await page.locator('a[data-role="send-documents-link"]').click()
     }
 
     await setupScenario(createSimpleLay(deputyReference))
