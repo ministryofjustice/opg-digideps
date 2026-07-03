@@ -22,8 +22,8 @@ final class ListBuilder
         return $this;
     }
 
-    public function makeList(): ListEntries
+    public function makeList(): DefinitionList
     {
-        return new ListEntries(...$this->entries);
+        return new DefinitionList(...$this->entries);
     }
 }

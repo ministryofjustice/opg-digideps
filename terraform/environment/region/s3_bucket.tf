@@ -36,3 +36,16 @@ module "pa_uploads" {
 data "aws_kms_key" "s3" {
   key_id = "alias/digideps_s3_encryption_key"
 }
+
+locals {
+  s3_alb_log_account_names = {
+    "development" : "dev",
+    "preproduction" : "pre",
+    "production" : "prod",
+  }
+  s3_alb_log_account_name = local.s3_alb_log_account_names[var.account.environment.name]
+}
+
+data "aws_s3_bucket" "alb_access" {
+  bucket = "alb-logs.${data.aws_region.current.name}.${local.s3_alb_log_account_name}.digideps.opg.service.justice.gov.uk"
+}
