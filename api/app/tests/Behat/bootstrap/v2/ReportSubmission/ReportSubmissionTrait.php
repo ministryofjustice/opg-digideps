@@ -9,7 +9,6 @@ use Behat\Step\Given;
 use Behat\Step\Then;
 use Behat\Step\When;
 use OPG\Digideps\Backend\Entity\Report\Document;
-use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Service\ParameterStoreService;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
