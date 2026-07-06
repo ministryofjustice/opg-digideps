@@ -17,6 +17,13 @@ on:
         description: "Account to use"
         required: true
         type: string
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+
 jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
