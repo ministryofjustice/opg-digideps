@@ -128,7 +128,7 @@ class ProfDeputyOtherCost
             return;
         }
 
-        if (null !== $this->getMoreDetails()) {
+        if ($this->getMoreDetails() !== null) {
             $hasMoreDetails = (bool)trim($this->getMoreDetails(), " \n");
         }
 
