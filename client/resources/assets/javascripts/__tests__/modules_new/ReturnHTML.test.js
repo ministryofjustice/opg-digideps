@@ -11,7 +11,7 @@ describe('Return HTML inline', () => {
 
     document.querySelector('a').click()
 
-    expect(spy).toBeCalled()
+    expect(spy).toHaveBeenCalled()
   })
 
   it('should fetch and replace owning element', async () => {
