@@ -21,6 +21,12 @@ on:
         description: "The latest version image tag"
         value: ${{ jobs.export_image_tag.outputs.image_tag }}
 
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+
 jobs:
   export_image_tag:
     runs-on: ubuntu-latest

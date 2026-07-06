@@ -15,6 +15,12 @@ on:
         required: true
         type: string
 
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+
 jobs:
   lint-terraform:
     runs-on: ubuntu-latest

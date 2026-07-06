@@ -30,6 +30,12 @@ on:
         default: "3600"
         type: string
 
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+
 jobs:
   wait-for-ecs-services:
     name: wait for ecs services to stabilise

@@ -47,6 +47,12 @@ on:
         default: false
         type: boolean
 
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+
 env:
   HELPER_VERSION: "0.10.4"
 
