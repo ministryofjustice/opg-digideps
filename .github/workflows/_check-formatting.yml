@@ -1,4 +1,4 @@
-name: "[Style] PHP CS"
+name: "[Style] PHP-CS-Fixer"
 
 on:
   workflow_call:
@@ -10,17 +10,17 @@ permissions:
   pull-requests: none
 
 jobs:
-  phpcs:
-    runs-on: ubuntu-latest
+  php-cs-fixer:
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
-      - name: Install PHP_CodeSniffer
+      - name: Install PHP-CS-Fixer
         run: |
-          curl -OL https://github.com/PHPCSStandards/PHP_CodeSniffer/releases/download/4.0.1/phpcs.phar
-          php phpcs.phar --version
+          curl -OL https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/releases/download/v3.95.11/php-cs-fixer.phar
+          php php-cs-fixer.phar --version
 
       - name: Detect changed PHP files
         run: |
@@ -30,8 +30,7 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_ENV"
 
-      - name: Run phpcs
+      - name: Run php-cs-fixer
         if: env.CHANGED_PHP_FILES != ''
         run: |
-          echo "::add-matcher::.github/phpcs-problem-matcher.json"
-          php phpcs.phar --standard=./phpcs.xml --report-xml --report-full $CHANGED_PHP_FILES
+          php php-cs-fixer.phar check --config=.php-cs-fixer.dist.php -v --show-progress=none $CHANGED_PHP_FILES
