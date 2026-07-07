@@ -54,7 +54,7 @@ final class MoneyInShortReviewView
             }
             $builder->addEntry(
                 $this->text['categoriesIn'],
-                implode(", ", $moneyShortPresentCategories) ?? $this->text['notEntered']
+                implode(", ", $moneyShortPresentCategories)
             );
             $builder->addEntry(
                 $this->text['moneyTransactionsShortInExist'],
@@ -87,7 +87,7 @@ final class MoneyInShortReviewView
         foreach (($report->getMoneyTransactionsShortIn() ?? []) as $entry) {
             $builder->addRow(
                 $entry->getDescription() ?? '',
-                $entry->getDate()?->format("j F Y") ?? '',
+                $entry->getDate()->format("j F Y") ?? '',
                 new Cell($this->formatMoney((float)($entry->getAmount() ?? 0)), self::NUMERIC_FORMAT)
             );
             $total += $entry->getAmount() ?? 0.0;
