@@ -1,0 +1,36 @@
+name: "[Style] PHP-CS-Fixer"
+
+on:
+  workflow_call:
+
+permissions:
+  id-token: none
+  contents: read
+  security-events: none
+  pull-requests: none
+
+jobs:
+  php-cs-fixer:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Install PHP-CS-Fixer
+        run: |
+          curl -OL https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/releases/download/v3.95.11/php-cs-fixer.phar
+          php php-cs-fixer.phar --version
+
+      - name: Detect changed PHP files
+        run: |
+          {
+            echo "CHANGED_PHP_FILES<<EOF"
+            git diff --diff-filter=d --name-only origin/main... -- '**/*.php'
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Run php-cs-fixer
+        if: env.CHANGED_PHP_FILES != ''
+        run: |
+          php php-cs-fixer.phar check --config=.php-cs-fixer.dist.php -v --show-progress=none $CHANGED_PHP_FILES

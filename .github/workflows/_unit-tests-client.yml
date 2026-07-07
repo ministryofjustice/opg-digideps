@@ -7,6 +7,12 @@ defaults:
 on:
   workflow_call:
 
+permissions:
+  id-token: none
+  contents: read
+  security-events: none
+  pull-requests: none
+
 jobs:
   client-unit-tests:
     runs-on: ubuntu-latest

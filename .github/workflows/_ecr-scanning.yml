@@ -12,6 +12,12 @@ on:
         required: true
         type: string
 
+permissions:
+  id-token: write
+  contents: read
+  security-events: write
+  pull-requests: none
+
 jobs:
   ecr-scan-results:
     runs-on: ubuntu-latest

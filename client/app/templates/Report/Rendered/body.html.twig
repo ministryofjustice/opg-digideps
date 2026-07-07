@@ -70,12 +70,27 @@
             'transDomain': 'report-money-transfer'
         } %}
     {% endif %}
+    
+    {% if report.hasSection('moneyIn') %}
+        {% include '@App/Report/Rendered/_money_out_high_asset.html.twig' with {
+            'report': report,
+            'transOptions': transOptions,
+            'transDomain': 'report-money-transaction'
+        } %}
+    {% endif %}
 
     {% if report.hasSection('moneyOut')%}
         {% include '@App/Report/Rendered/_money_out_high_asset.html.twig' with {
             'report': report,
             'transOptions': transOptions,
             'transDomain': 'report-money-transaction'
+        } %}
+    {% endif %}
+    
+    {% if report.hasSection('balance') %}
+        {% include '@App/Report/Rendered/_balance.html.twig' with {
+            'report': report,
+            'transDomain': 'report-balance'
         } %}
     {% endif %}
 

@@ -1,0 +1,114 @@
+{% set page = 'summaryPage' %}
+<h2 class="govuk-heading-m">Money in</h2>
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+            Question
+        </h3>
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+            Answer
+        </h3>
+    </div>
+
+    <div class="govuk-summary-card__content">
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                        {{ 'summaryPage.moneyIn.hasMoneyIn.label' | trans(transOptions, transDomain) }}
+                    </th>
+                    <td class="govuk-table__cell govuk-!-width-one-half">
+                        {{ report.moneyInExists | capitalize }}
+                    </td>
+                </tr>
+            {% if report.moneyInExists == 'No' %}
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                        {{ 'summaryPage.moneyIn.reasonForNoMoneyIn.label' | trans(transOptions, transDomain) }}
+                    </th>
+                    <td class="govuk-table__cell govuk-!-width-one-half">
+                        {{ report.reasonForNoMoneyIn | nl2br}}
+                    </td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if report.moneyInExists == 'Yes' and report.moneyTransactionsIn | length > 0 %}
+    <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+            <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+                Income
+            </h3>
+            <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+                Answer
+            </h3>
+        </div>
+        <div class="govuk-summary-card__content">
+        {% for categoryId, transactionGroup in report.groupMoneyTransactionsByGroup(report.moneyTransactionsIn) %}
+        {% set total = 0 %}
+            <h4 class="govuk-heading-s">
+                {{ ('form.group.entries.' ~ categoryId) | trans(transOptions, transDomain) }}
+            </h4>
+            <table class="govuk-table govuk-!-static-margin-top-1">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
+                            {{ 'summaryPage.moneyIn.list.label.type' | trans(transOptions, transDomain) }}
+                        </th>
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
+                            {{ 'summaryPage.moneyIn.list.label.description' | trans(transOptions, transDomain) }}
+                        </th>
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
+                            {{ 'summaryPage.moneyIn.list.label.bankAccount' | trans(transOptions, transDomain) }}
+                        </th>
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
+                            {{ 'summaryPage.moneyIn.list.label.totalAmount' | trans(transOptions, transDomain) }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                {% for transaction in transactionGroup.entries %}
+                {% set total = total + transaction.amount  %}
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-width-one-quarter">
+                            {{ ('form.category.entries.' ~ transaction.category ~ '.label') | trans(transOptions, transDomain) }}
+                        </td>
+                        <td class="govuk-table__cell govuk-!-width-one-quarter">
+                            {{ transaction.description | nl2br }}
+                        </td>
+                        <td class="govuk-table__cell govuk-!-width-one-quarter">
+                            {{ (transaction.bankAccount) ? transaction.bankAccount.nameOneLine : 'not entered' | trans({}, 'common') }}
+                        </td>
+                        <td class="govuk-table__cell govuk-!-width-one-quarter">
+                            &pound;{{ transaction.amount | money_format }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr class="govuk-table__row">
+                    <td class="govuk-summary-card__title govuk-!-width-one-quarter">
+                        Total
+                    </td>
+                    <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
+                    <td class="govuk-table__cell govuk-!-width-one-quarter"></td>
+                    <td class="govuk-summary-card__title govuk-!-width-one-quarter">
+                        &pound;{{ total | money_format }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        {% endfor %}
+            <div class="govuk-grid-row govuk-heading-s">
+                <div class="govuk-grid-column-three-quarters govuk-!-padding-right-0">
+                    Total money in
+                </div>
+                <div class="govuk-grid-column-one-quarter">
+                    &pound;{{ report.getMoneyInTotal | money_format }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
