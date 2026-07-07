@@ -37,7 +37,7 @@ RUN composer install --prefer-dist --no-interaction --no-scripts \
 ##############################
 # Stage 2: Base PHP + Shared Files
 ##############################
-FROM php:8.4.21-fpm-alpine3.23@sha256:2e8d5b74437b02cbc3c632903d20a10fdcc956ba56d25bff951cc2b610767c9a AS base
+FROM php:8.4.23-fpm-alpine3.24@sha256:913ddd6934a805429618a16aa36da47cd8a8aec8b2f111c294936ba4003fded6 AS base
 
 ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 
