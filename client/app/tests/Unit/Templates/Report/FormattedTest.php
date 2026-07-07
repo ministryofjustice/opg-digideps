@@ -423,7 +423,7 @@ class FormattedTest extends WebTestCase
             ->setProfDeputyCostsHowCharged('fixed');
     }
 
-    private function ensureDeputyCostsWithNonFixedAndInterimEqualTo($interim)
+    private function ensureDeputyCostsWithNonFixedAndInterimEqualTo(?string $interim): void
     {
         $this
             ->report
