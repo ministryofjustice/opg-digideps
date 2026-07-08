@@ -1,8 +1,9 @@
-import path = require("path");
-import { expect, test } from "@playwright/test";
-import { createSimpleLay, Scenario, setupScenario, testPassword } from "./fixtures/fixtures";
-import AttachDocumentsPage from "./pages/AttachDocumentsPage";
-import LoginPage from "./pages/LoginPage";
+import path = require("path")
+import { expect, test } from "@playwright/test"
+import { createSimpleLay, getUserFixture, Scenario, setupScenario, testPassword } from "./fixtures/fixtures";
+import AdminLoginPage from "./pages/AdminLoginPage";
+import AttachDocumentsPage from "./pages/AttachDocumentsPage"
+import LoginPage from "./pages/LoginPage"
 
 test("a user sends further documents", async ({ page }) => {
     const deputyReference = "attaching-further-documents-user"
@@ -10,6 +11,7 @@ test("a user sends further documents", async ({ page }) => {
     const runTest = async (scenario: Scenario) => {
       const email = scenario.users[deputyReference].email
       const courtOrderUid = scenario.orders[0].courtOrderUid
+      const clientCaseNumber = scenario.orders[0].caseNumber
       const submittedReportId = scenario.orders[0].reports[0].id
 
       // login as deputy
@@ -22,7 +24,8 @@ test("a user sends further documents", async ({ page }) => {
 
       // attach two files
       let uploadedFiles = []
-      for (const fileToUpload of ["testimage1.png", "testimage2.png"]) {
+      const filesToUpload = ["testimage1.png", "testimage2.png"]
+      for (const fileToUpload of filesToUpload) {
         await attachDocumentsPage.goto(submittedReportId)
 
         let fileToUploadFullPath = path.join(__dirname, `/testFiles/${fileToUpload}`)
@@ -43,6 +46,24 @@ test("a user sends further documents", async ({ page }) => {
           await expect(page.locator(selector)).toHaveCount(1)
         }
       }
+
+      // check that reports are shown in admin dashboard
+      const adminPage = new AdminLoginPage(page)
+      await adminPage.loginAdmin(getUserFixture("admin_user"))
+
+      // go to submissions tag, search for case, click on pending tab,
+      // ensure there are two separate file submissions listed, one for each file
+      await page.click(".behat-link-admin-documents")
+      await page.fill("#search", clientCaseNumber)
+      await page.click("#search_submit")
+      await page.click(".behat-link-tab-pending")
+
+      const rows = page.locator(".behat-region-report-submission")
+      await expect(rows).toHaveCount(2)
+      await expect(page.locator(".behat-region-report-submission-documents-1"))
+        .toContainText(filesToUpload[0])
+      await expect(page.locator(".behat-region-report-submission-documents-2"))
+        .toContainText(filesToUpload[1])
     }
 
     await setupScenario(createSimpleLay(deputyReference))

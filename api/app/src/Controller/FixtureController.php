@@ -19,6 +19,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+/**
+ * @phpstan-type FixtureReport array{id: int}
+ * @phpstan-type FixtureOrder array{courtOrderUid: string, caseNumber: string, reports: array<FixtureReport>}
+ * @phpstan-type FixtureUser array{email: string}
+ * @phpstan-type Order array{order: CourtOrder, reports: array<Report>}
+ * @phpstan-type OrderPair array<'pfa'|'hw', Order>
+ */
 class FixtureController extends AbstractController
 {
     public function __construct(
@@ -29,9 +36,6 @@ class FixtureController extends AbstractController
     /**
      * Creates a lay deputy with user account and a single submitted report
      *
-     * @phpstan-type FixtureReport array{id: int}
-     * @phpstan-type FixtureOrder array{courtOrderUid: string, reports: array<FixtureReport>}
-     * @phpstan-type FixtureUser array{email: string}
      * @return array{users: array<string, FixtureUser>, orders: array<'pfa'|'hw', FixtureOrder>}
      * @throws ValidationException
      */
@@ -61,10 +65,6 @@ class FixtureController extends AbstractController
         return $this->jsonifyScenario($details);
     }
 
-    /**
-     * @phpstan-type Order array{order: CourtOrder, reports: array<Report>}
-     * @phpstan-type OrderPair array<'pfa'|'hw', Order>
-     */
     private function jsonifyScenario(array $details): ?array
     {
         [
@@ -89,7 +89,8 @@ class FixtureController extends AbstractController
                 if ($order !== null) {
                     $fixtureOrders[] = [
                         'courtOrderUid' => $order['order']->getCourtOrderUid(),
-                        'reports' => array_map(fn($report) => ['id' => $report->getId()], $order['reports']),
+                        'caseNumber' => $client->getCaseNumber(),
+                        'reports' => array_map(fn ($report) => ['id' => $report->getId()], $order['reports']),
                     ];
                 }
             }

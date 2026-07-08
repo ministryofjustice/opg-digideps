@@ -21,6 +21,7 @@ interface ReportDetails {
 
 interface OrderDetails {
   courtOrderUid: string
+  caseNumber: string
   reports: [ReportDetails]
 }
 
