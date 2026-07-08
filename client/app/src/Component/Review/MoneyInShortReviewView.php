@@ -52,9 +52,9 @@ final class MoneyInShortReviewView
                     'form.categoriesEntries.' . $category->getTypeId() . '.label'
                 );
             }
-            $builder->addEntry(
+            $builder->addBulletPointEntry(
                 $this->text['categoriesIn'],
-                implode(", ", $moneyShortPresentCategories)
+                $moneyShortPresentCategories
             );
             $builder->addEntry(
                 $this->text['moneyTransactionsShortInExist'],
@@ -85,9 +85,15 @@ final class MoneyInShortReviewView
         );
 
         foreach (($report->getMoneyTransactionsShortIn() ?? []) as $entry) {
+            if ($entry->getDate() !== null) {
+                $date = $entry->getDate()->format("j F Y");
+            } else {
+                $date = '';
+            }
+
             $builder->addRow(
                 $entry->getDescription() ?? '',
-                $entry->getDate()->format("j F Y") ?? '',
+                $date,
                 new Cell($this->formatMoney((float)($entry->getAmount() ?? 0)), self::NUMERIC_FORMAT)
             );
             $total += $entry->getAmount() ?? 0.0;

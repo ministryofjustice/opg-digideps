@@ -24,7 +24,17 @@
                         {{ entry.key }}
                     </dt>
                     <dd class="govuk-summary-list__value govuk-!-width-one-half">
-                        {{ entry.value }}
+                        {% if entry.key == text['categoriesIn'] %}
+                            <ul class="govuk-list govuk-list--bullet">
+                                {% for v in entry.value %}
+                                    <li>
+                                        {{ v }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            {{ entry.value }}
+                        {% endif %}
                     </dd>
                 </div>
             {% endfor %}

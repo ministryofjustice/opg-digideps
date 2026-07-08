@@ -7,7 +7,7 @@ namespace OPG\Digideps\Frontend\Component\GovUk\List;
 final class ListBuilder
 {
     /**
-     * @var array<Entry> $entries
+     * @var array<Entry | BulletPointEntry> $entries
      */
     private array $entries;
 
@@ -25,5 +25,11 @@ final class ListBuilder
     public function makeList(): DefinitionList
     {
         return new DefinitionList(...$this->entries);
+    }
+
+    public function addBulletPointEntry(string $key, array $value): ListBuilder
+    {
+        $this->entries[] = new BulletPointEntry($key, $value);
+        return $this;
     }
 }
