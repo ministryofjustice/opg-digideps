@@ -4237,30 +4237,6 @@ parameters:
 			path: src/Entity/Report/MoneyReceivedOnClientsBehalf.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyShortCategory\:\:__construct\(\) has parameter \$typeId with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyShortCategory\:\:setPresent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyShortCategory\:\:setTypeId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyShortCategory\:\:\$typeId has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/MoneyShortCategory.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getCategoriesGrouped\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
