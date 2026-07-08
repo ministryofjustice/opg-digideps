@@ -1,4 +1,4 @@
-@v2 @v2_reporting_1 @report-submissions
+@v2 @v2_reporting_1 @report-submissions @submitting-a-report
 Feature: Submitting a report
 
     @lay-pfa-high-completed
