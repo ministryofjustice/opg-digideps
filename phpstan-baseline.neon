@@ -26521,6 +26521,12 @@ parameters:
 			path: client/app/src/Command/ProcessLayCSVCommand.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Command\\ProcessLayCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: client/app/src/Command/ProcessLayCSVCommand.php
+
+		-
 			message: '#^Result of method OPG\\Digideps\\Frontend\\Command\\ProcessLayCSVCommand\:\:process\(\) \(void\) is used\.$#'
 			identifier: method.void
 			count: 1
@@ -43609,6 +43615,12 @@ parameters:
 			path: client/app/tests/Unit/Service/StringUtilsTest.php
 
 		-
+			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\ChecklistSyncCommand\:\:getDefaultName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
+
+		-
 			message: '#^Cannot call method expects\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -43645,7 +43657,7 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
