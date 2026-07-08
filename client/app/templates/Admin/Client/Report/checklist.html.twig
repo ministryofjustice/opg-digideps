@@ -81,11 +81,6 @@
                 {% include '@App/Admin/Client/Report/partials/_health-and-lifestyle.html.twig' %}
             {% endif %}
 
-            {# Assets and debts #}
-            {% if form.assetsDeclaredAndManaged is defined %}
-                {% include '@App/Admin/Client/Report/partials/_assets-and-debts.html.twig' %}
-            {% endif %}
-
             {# Client benefits check #}
             {% if form.clientBenefitsChecked is defined %}
                 {% include '@App/Admin/Client/Report/partials/_client-benefits-check.html.twig' %}
@@ -94,6 +89,11 @@
             {# Money transfers, Money in and money out #}
             {% if form.openClosingBalancesMatch is defined %}
                 {% include '@App/Admin/Client/Report/partials/_money-in-and-out.html.twig' %}
+            {% endif %}
+
+            {# Assets and debts #}
+            {% if form.assetsDeclaredAndManaged is defined %}
+                {% include '@App/Admin/Client/Report/partials/_assets-and-debts.html.twig' %}
             {% endif %}
 
             {# PA fees and expenses #}
@@ -182,11 +182,19 @@
                 {% include '@App/Admin/Client/Report/sidebar/_backToTopLinks.html.twig' with {checklistDomain: 'lodging'} %}
             </div>
         {% endif %}
-
     </div>
 
     {% if checklist.submittedOn and checklist.finalDecision == 'for-review' %}
-        {% include '@App/Admin/Client/Report/fullReviewChecklist.html.twig' with {form: reviewForm, checklist: reviewChecklist} %}
-    {% endif %}
+        <div class="govuk-grid-row behat-region-lodging-checklist">
+            <div class="govuk-grid-column-two-thirds">
+                {% include '@App/Admin/Client/Report/fullReviewChecklist.html.twig' with {form: reviewForm, checklist: reviewChecklist} %}
+            </div>
 
+            <div class="govuk-grid-column-one-third opg-sticky-menu">
+                {% include '@App/Admin/Client/Report/sidebar/_statuses.html.twig' with {checklistDomain: 'fullReview'} %}
+                {% include '@App/Admin/Client/Report/sidebar/_lodging.html.twig' %}
+                {% include '@App/Admin/Client/Report/sidebar/_backToTopLinks.html.twig' with {checklistDomain: 'fullReview'} %}
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

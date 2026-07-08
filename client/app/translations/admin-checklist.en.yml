@@ -5,19 +5,19 @@ checklistPage:
     lodging:
       title: Lodging checklist
       info: L1. Deputy and client information
-      decisions: L2. Decisions made over the reporting period
-      contacts: L3. People consulted
-      visitsAndCare: L4. Contact with client, care arrangements and care plan
+      decisions: L2. Decisions
+      contacts: L3. Contacts
+      visitsAndCare: L4. Visits and care
       healthAndLifestyle: L5. Health and lifestyle
-      assetsAndDebts: L6. Assets and debts
-      clientBenefitsCheck: L7. Benefits check and money others received
-      money: L8. Money in and money out
+      clientBenefitsCheck: L6. Benefits check and money others received
+      money: L7. Money in and Money out
+      assetsAndDebts: L8. Assets and Debts
       bonds: L9. Bonds
       profDeputyCosts: L10. Deputy costs
-      profDeputyCostsEstimate: L11. Estimated costs for next reporting period
+      profDeputyCostsEstimate: L11. Deputy costs estimate
       paFeeExpenses: L12. Deputy fees and expenses
-      nextPeriod: L13. Next reporting period
-      declaration: L14. Declaration
+      nextPeriod: L13. Other information
+      declaration: L14. Deputy's declaration
       summary: Lodging summary
       furtherInfo: Further information
     fullReview:
@@ -100,37 +100,37 @@ checklistPage:
     satisfiedWithHealthAndLifestyle:
       label: Have satisfactory responses been provided by the deputy?
       qid: L5.1
-    assetsDeclaredAndManaged:
-      label: |
-        Are you satisfied that the deputy has accurately declared all the client's assets and that
-        the assets are being appropriately managed?
-      qid: L6.1
-    debtsManaged:
-      label: |
-        If the client has any debt, are you satisfied that the debt is appropriate and/or is it
-        being managed by the deputy in an appropriate manner?
-      qid: L6.2
     clientBenefitsChecked:
       label: Have satisfactory responses been provided by the deputy?
-      qid: L7.1
+      qid: L6.1
     openClosingBalancesMatch:
       label: Does the opening balances(s) match last year's closing balance?
-      qid: L8.1
+      qid: L7.1
     accountsBalance:
       label: |
         Do the accounts balance and match bank statements, where provided? Allow up to £250
         leeway for lay deputies.
-      qid: L8.2
+      qid: L7.2
     accountsBalanceNonLay:
       label: |
         Do the accounts balance and match bank statements, where provided?
-      qid: L8.2
+      qid: L7.2
     moneyMovementsAcceptable:
       label: |
         Are you satisfied that the money in and money out entries (including transfers), along
         with any comments, are acceptable, appear reasonable, and are inline with the terms of
         the court order?
-      qid: L8.3
+      qid: L7.3
+    assetsDeclaredAndManaged:
+      label: |
+        Are you satisfied that the deputy has accurately declared all the client's assets and that
+        the assets are being appropriately managed?
+      qid: L8.1
+    debtsManaged:
+      label: |
+        If the client has any debt, are you satisfied that the debt is appropriate and/or is it
+        being managed by the deputy in an appropriate manner?
+      qid: L8.2
     bondAdequate:
       label: |
         Is the bond adequate protection for the client's assets?
