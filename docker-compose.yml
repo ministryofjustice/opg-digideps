@@ -400,6 +400,7 @@ services:
       context: ./playwright
     environment:
       FRONT_URL: http://frontend-webserver
+      ADMIN_URL: http://admin-webserver
     image: playwright-check
     container_name: playwright-report
     restart: "no"
