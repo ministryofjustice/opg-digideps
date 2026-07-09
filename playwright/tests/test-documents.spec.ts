@@ -12,6 +12,7 @@ import DocumentsUploadPage from "./pages/DocumentsUploadPage"
 import DocumentsSummaryPage from "./pages/DocumentsSummaryPage"
 import PageBanner from "./pageComponents/PageBanner"
 import PageErrorMessage from "./pageComponents/PageErrorMessage"
+import PageOpgErrorMessage from "./pageComponents/PageOpgErrorMessage"
 
 const deputyReference = "documents-user"
 
@@ -24,11 +25,11 @@ const startDocumentsSection = async (
   await loginPage.login({ email: email, password: testPassword })
 
   // start documents section
-  const documentsSection = new DocumentsIntroPage(page, reportId)
-  await documentsSection.start()
-  await documentsSection.answerDocumentsToAddQuestion(documentsToAdd)
+  const documentsIntroPage = new DocumentsIntroPage(page, reportId)
+  await documentsIntroPage.start()
+  await documentsIntroPage.answerDocumentsToAddQuestion(documentsToAdd)
 
-  return documentsSection
+  return documentsIntroPage
 }
 
 const setupScenarioAndRunTest = (runTest: (scenario: Scenario) => Promise<void>) => {
@@ -185,6 +186,29 @@ test("a user deletes documents", async ({ page }) => {
 
     await banner.expectSuccessMessage("File named testimage2.png has been removed")
     await documentsSummaryPage.expectFileNames("testimage3.png")
+  }
+
+  await setupScenarioAndRunTest(runTest)
+})
+
+test("a user who uploads a file should see an error if they then select 'no' for supporting documents", async ({ page }) => {
+  const runTest = async (scenario: Scenario): Promise<void> => {
+    const reportId = scenario.orders[0].reports[1].id
+    const email = scenario.users[deputyReference].email
+
+    const documentsIntroPage = await startDocumentsSection(page, email, reportId, "yes")
+
+    const documentsUploadPage = new DocumentsUploadPage(page, reportId)
+    await documentsUploadPage.attachFiles(path.join(__dirname, "/testFiles/testimage1.png"))
+
+    const documentsSummaryPage = new DocumentsSummaryPage(page, reportId)
+    await documentsSummaryPage.goto()
+    await documentsSummaryPage.editSupportingDocumentsAnswer()
+
+    await documentsIntroPage.answerDocumentsToAddQuestion("no")
+
+    const errors = new PageOpgErrorMessage(page)
+    await errors.expectErrorMessage("Your answer could not be updated to 'No' because you have attached documents")
   }
 
   await setupScenarioAndRunTest(runTest)

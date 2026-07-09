@@ -125,35 +125,6 @@ trait DocumentsSectionTrait
     }
 
     /**
-     * @When I have no further documents to upload
-     */
-    public function iHaveNoFurtherDocumentsToUpload(): void
-    {
-        try {
-            $this->clickLink('Continue');
-        } catch (\Throwable) {
-            $this->clickLink('Continue to send documents');
-        }
-    }
-
-    /**
-     * @Then I should see an 'answer could not be updated' error
-     */
-    public function iShouldSeeAnswerCouldNotBeUpdatedError(): void
-    {
-        $this->assertOnErrorMessage($this->answerNotUpdatedErrorMessage);
-    }
-
-    /**
-     * @When I change my mind and confirm I have no documents to upload
-     */
-    public function changeMindNoDocumentsToUpload(): void
-    {
-        $this->clickLink('Edit');
-        $this->iHaveNoDocumentsToUpload();
-    }
-
-    /**
      * @Given I have no documents to upload
      */
     public function iHaveNoDocumentsToUpload(): void
