@@ -101,6 +101,24 @@ test("a user uploads a file with an invalid file type", async ({ page }) => {
 
   await setupScenarioAndRunTest(runTest)
 })
+
+test("a user uploads a file whose suffix does not match its type", async ({ page }) => {
+  const runTest = async (scenario: Scenario): Promise<void> => {
+    const reportId = scenario.orders[0].reports[1].id
+    const email = scenario.users[deputyReference].email
+
+    await startDocumentsSection(page, email, reportId, "yes")
+
+    const documentsUploadPage = new DocumentsUploadPage(page, reportId)
+    await documentsUploadPage.attachFiles(path.join(__dirname, "/testFiles/pngfile.jpeg"))
+
+    const errors = new PageErrorMessage(page)
+    await errors.expectErrorMessage("Your file type and file extension do not match")
+  }
+
+  await setupScenarioAndRunTest(runTest)
+})
+
 test("a user uploads a file which is too large", async ({ page }) => {
   const runTest = async (scenario: Scenario): Promise<void> => {
     const reportId = scenario.orders[0].reports[1].id
