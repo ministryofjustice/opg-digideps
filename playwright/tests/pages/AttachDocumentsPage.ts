@@ -1,19 +1,19 @@
 import { Page } from "@playwright/test"
 
 export default class AttachDocumentsPage {
-  constructor(private page: Page) {}
+  constructor(private page: Page, private reportId: number) {}
 
-  async goto(reportId: number) {
-    await this.page.goto("/report/" + String(reportId) + "/documents/step/2")
+  async goto() {
+    await this.page.goto("/report/" + String(this.reportId) + "/documents/step/2")
   }
 
-  async attachFile(filePath: string) {
+  async attachFiles(...filePaths: Array<string>) {
     const elementLocator = "#report_document_upload_files"
 
     // set up wait for the redirect after the file is uploaded
     const navigationPromise = this.page.waitForURL(/.+\?successUploaded=true/)
 
-    await this.page.locator(elementLocator).setInputFiles(filePath)
+    await this.page.locator(elementLocator).setInputFiles(filePaths)
 
     // synthesise a change event on the file input (this doesn't appear
     // to be triggered by setInputFiles())
@@ -24,7 +24,13 @@ export default class AttachDocumentsPage {
     await navigationPromise
   }
 
+  // press "Send documents"
   async sendDocuments() {
     await this.page.locator('a[data-role="send-documents-link"]').click()
+  }
+
+  // press "Continue"
+  async continue() {
+    await this.page.locator("a.behat-link-continue").click()
   }
 }
