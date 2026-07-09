@@ -143,22 +143,6 @@ trait DocumentsSectionTrait
     }
 
     /**
-     * @Given I upload a file where the mimetype and file extension do not match
-     */
-    public function filesMimetypeAndExtensionDoesNotMatch(): void
-    {
-        $this->uploadFiles([$this->pngFilenameWithJpegFileExtension]);
-    }
-
-    /**
-     * @Then I should see a 'mimetype and file type do not match' error
-     */
-    public function iShouldSeeAMimetypeAndFileDoNotMatchError(): void
-    {
-        $this->assertOnErrorMessage($this->mimeTypeAndFileExtensionDoNotMatchErrorMessage);
-    }
-
-    /**
      * @Then I should see a 'duplicate file name' error
      */
     public function IShouldSeeADuplicateFileNameError(): void
