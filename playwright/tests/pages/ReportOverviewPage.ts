@@ -1,32 +1,27 @@
 import { expect, Page } from "@playwright/test";
 
 export default class ReportOverviewPage {
-  private sectionStatuses: Record<string, string> = {}
-
-  constructor(private page: Page) {
+  constructor(private page: Page, private reportId: number) {
   }
 
   private async getSectionStatuses() {
-    if (Object.keys(this.sectionStatuses).length === 0) {
-      const sections = await this.page.locator('[data-role="report-overview-subsection"]').all()
+    const sections = await this.page.locator('[data-role="report-overview-subsection"]').all()
 
-      console.log(sections)
+    let sectionStatuses: Record<string, string> = {}
+    for (const section of sections) {
+      let sectionName = await section.locator('[data-role="report-overview-subsection-name"]').textContent()
+      let sectionStatus = await section.locator('[data-role="report-overview-subsection-status"]').textContent()
 
-      for (const section of sections) {
-        let sectionName = await section.locator('[data-role="report-overview-subsection-name"]').textContent()
-        let sectionStatus = await section.locator('[data-role="report-overview-subsection-status"]').textContent()
-
-        if (sectionName !== null && sectionStatus !== null) {
-          this.sectionStatuses[sectionName.trim()] = sectionStatus.trim()
-        }
+      if (sectionName !== null && sectionStatus !== null) {
+        sectionStatuses[sectionName.trim()] = sectionStatus.trim()
       }
     }
 
-    return this.sectionStatuses
+    return sectionStatuses
   }
 
-  async goto(reportId: number) {
-    await this.page.goto("/report/" + String(reportId) + "/overview")
+  async goto() {
+    await this.page.goto("/report/" + String(this.reportId) + "/overview")
   }
 
   async expectSectionStatus(section: string, status: string) {
