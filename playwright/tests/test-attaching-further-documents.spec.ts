@@ -20,16 +20,16 @@ test("a user sends further documents", async ({ page }) => {
       await loginPage.login({ email: email, password: testPassword })
 
       // go to the attach documents page
-      const attachDocumentsPage = new AttachDocumentsPage(page)
+      const attachDocumentsPage = new AttachDocumentsPage(page, submittedReportId)
 
       // attach two files
       let uploadedFiles = []
       const filesToUpload = ["testimage1.png", "testimage2.png"]
       for (const fileToUpload of filesToUpload) {
-        await attachDocumentsPage.goto(submittedReportId)
+        await attachDocumentsPage.goto()
 
         let fileToUploadFullPath = path.join(__dirname, `/testFiles/${fileToUpload}`)
-        await attachDocumentsPage.attachFile(fileToUploadFullPath)
+        await attachDocumentsPage.attachFiles(fileToUploadFullPath)
         await attachDocumentsPage.sendDocuments()
 
         // check we're redirected to the court order page with success message
@@ -40,7 +40,7 @@ test("a user sends further documents", async ({ page }) => {
         // check correct files are listed as attachments
         uploadedFiles.push(fileToUpload)
 
-        await attachDocumentsPage.goto(submittedReportId)
+        await attachDocumentsPage.goto()
         for (const uploadedFile of uploadedFiles) {
           let selector = `dt[data-role="attached-document-name"]:has-text("${uploadedFile}")`
           await expect(page.locator(selector)).toHaveCount(1)
