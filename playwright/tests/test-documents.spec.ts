@@ -44,15 +44,15 @@ test("a user has no supporting documents to add", async ({ page }) => {
     await startDocumentsSection(page, email, reportId, "no")
 
     // check "No documents" is shown for documents section in report overview
-    const reportOverviewPage = new ReportOverviewPage(page)
-    await reportOverviewPage.goto(reportId)
+    const reportOverviewPage = new ReportOverviewPage(page, reportId)
+    await reportOverviewPage.goto()
     await reportOverviewPage.expectSectionStatus("Supporting documents", "No documents")
   }
 
   await setupAndRunTest(runTest)
 })
 
-test("a user uploads one supporting document with a valid file type", async ({ page }) => {
+test("a user uploads multiple supporting documents with valid file types", async ({ page }) => {
   const runTest = async (scenario: Scenario): Promise<void> => {
     // use reports[1], as we don't want the submitted report, we want the current one
     const reportId = scenario.orders[0].reports[1].id
@@ -62,9 +62,14 @@ test("a user uploads one supporting document with a valid file type", async ({ p
     await documentsSection.attachFiles(path.join(__dirname, "/testFiles/testimage1.png"))
 
     // check "1 document" is shown for documents section in report overview
-    const reportOverviewPage = new ReportOverviewPage(page)
-    await reportOverviewPage.goto(reportId)
+    const reportOverviewPage = new ReportOverviewPage(page, reportId)
+    await reportOverviewPage.goto()
     await reportOverviewPage.expectSectionStatus("Supporting documents", "1 document")
+
+    // attach another document, check section status again
+    await documentsSection.attachFiles(path.join(__dirname, "/testFiles/testimage2.png"))
+    await reportOverviewPage.goto()
+    await reportOverviewPage.expectSectionStatus("Supporting documents", "2 documents")
   }
 
   await setupAndRunTest(runTest)

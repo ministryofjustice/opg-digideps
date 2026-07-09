@@ -2,42 +2,6 @@
 Feature: Documents - All User Roles
 
     @lay-pfa-high-not-started
-    Scenario: A user has no supporting documents to add
-        Given a Lay Deputy has not started a report
-        When I view and start the documents report section
-        And I have no documents to upload
-        Then I should be on the documents summary page
-        And the documents summary page should not contain any documents
-        When I follow link back to report overview page
-        Then I should see "documents" as "no documents"
-
-    @lay-pfa-high-not-started @documents-upload-one-document
-    Scenario: A user uploads one supporting document that has a valid file type
-        Given a Lay Deputy has not started a report
-        When I view and start the documents report section
-        And I have documents to upload
-        And I upload one valid document with the filename "good-image.jpg"
-        Then the document uploads page should contain a document with the filename "good_image.jpg"
-        When I have no further documents to upload
-        Then I should be on the documents summary page
-        When I follow link back to report overview page
-        Then I should see "documents" as "1 document"
-
-    @lay-pfa-high-not-started
-    Scenario: A user uploads multiple supporting documents that have valid file types and do not require conversion
-        Given a Lay Deputy has not started a report
-        When I view and start the documents report section
-        And I have documents to upload
-        And I upload multiple valid documents that do not require conversion
-        When I have no further documents to upload
-        Then I should be on the documents summary page
-        And the document uploads page should contain a document with the filename "good_image.jpg"
-        And the document uploads page should contain a document with the filename "good.png"
-        And the document uploads page should contain a document with the filename "good.pdf"
-        When I follow link back to report overview page
-        Then I should see "documents" as "3 documents"
-
-    @lay-pfa-high-not-started
     Scenario: A user uploads multiple supporting documents that have valid file types and require conversion
         Given a Lay Deputy has not started a report
         When I view and start the documents report section
