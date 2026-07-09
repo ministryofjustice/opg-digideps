@@ -10,7 +10,7 @@
 
     {% include '@App/Report/Rendered/_client_and_deputy_information.html.twig' %}
 
-    {% if report.getMentalCapacity is not null and report.hasSection('decisions')  %}
+    {% if report.hasSection('decisions')  %}
         {% include '@App/Report/Rendered/_decisions.html.twig' with {
             'report': report,
             'transOptions': transOptions,
@@ -34,13 +34,13 @@
         } %}
     {% endif %}
 
-    {% if report.getClientBenefitsCheck is not null and report.hasSection('clientBenefitsCheck') %}
+    {% if report.hasSection('clientBenefitsCheck') %}
         {% include '@App/Report/Rendered/_client_benefits_check.html.twig' with {
             'view': review.getClientBenefitsCheckReviewView
         } %}
     {% endif %}
 
-    {% if report.hasSection('bankAccounts') and report.bankAccounts | length > 0 %}
+    {% if report.hasSection('bankAccounts')%}
         {% include '@App/Report/Rendered/_bankAccounts.html.twig' with {
             'report': report,
             'transDomain': 'report-bank-accounts'
@@ -70,7 +70,7 @@
             'transDomain': 'report-money-transfer'
         } %}
     {% endif %}
-    
+
     {% if report.hasSection('moneyIn') %}
         {% include '@App/Report/Rendered/_money_out_high_asset.html.twig' with {
             'report': report,
@@ -86,7 +86,7 @@
             'transDomain': 'report-money-transaction'
         } %}
     {% endif %}
-    
+
     {% if report.hasSection('balance') %}
         {% include '@App/Report/Rendered/_balance.html.twig' with {
             'report': report,
