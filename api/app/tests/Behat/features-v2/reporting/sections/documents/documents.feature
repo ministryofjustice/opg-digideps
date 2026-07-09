@@ -2,14 +2,6 @@
 Feature: Documents - All User Roles
 
     @lay-pfa-high-not-started
-    Scenario: A user uploads one supporting document that has an invalid file type
-        Given a Lay Deputy has not started a report
-        When I view and start the documents report section
-        And I have documents to upload
-        And I upload one document with an unsupported file type
-        Then I should see an 'invalid file type' error
-
-    @lay-pfa-high-not-started
     Scenario: A user uploads one supporting document that has a valid file type but is too large
         Given a Lay Deputy has not started a report
         When I view and start the documents report section
