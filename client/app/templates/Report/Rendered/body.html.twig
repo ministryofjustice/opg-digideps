@@ -72,7 +72,7 @@
     {% endif %}
 
     {% if report.hasSection('moneyIn') %}
-        {% include '@App/Report/Rendered/_money_out_high_asset.html.twig' with {
+        {% include '@App/Report/Rendered/_money_in_high_asset.html.twig' with {
             'report': report,
             'transOptions': transOptions,
             'transDomain': 'report-money-transaction'
