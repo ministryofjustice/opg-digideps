@@ -22,7 +22,7 @@ interface ReportDetails {
 interface OrderDetails {
   courtOrderUid: string
   caseNumber: string
-  reports: [ReportDetails]
+  reports: ReportDetails[]
 }
 
 export enum OrderTypes {
@@ -31,7 +31,7 @@ export enum OrderTypes {
 
 export interface Scenario {
   users: { [userReference: string]: UserDetails }
-  orders: [OrderDetails]
+  orders: OrderDetails[]
 }
 
 interface ScenarioFunction {
