@@ -119,6 +119,24 @@ test("a user uploads a file whose suffix does not match its type", async ({ page
   await setupScenarioAndRunTest(runTest)
 })
 
+test("a user uploads a file whose name duplicates an existing upload", async ({ page }) => {
+  const runTest = async (scenario: Scenario): Promise<void> => {
+    const reportId = scenario.orders[0].reports[1].id
+    const email = scenario.users[deputyReference].email
+
+    await startDocumentsSection(page, email, reportId, "yes")
+
+    const documentsUploadPage = new DocumentsUploadPage(page, reportId)
+    await documentsUploadPage.attachFiles(path.join(__dirname, "/testFiles/testimage1.png"))
+    await documentsUploadPage.attachFiles(path.join(__dirname, "/testFiles/testimage1.png"))
+
+    const errors = new PageErrorMessage(page)
+    await errors.expectErrorMessage("You have already uploaded a file with this name")
+  }
+
+  await setupScenarioAndRunTest(runTest)
+})
+
 test("a user uploads a file which is too large", async ({ page }) => {
   const runTest = async (scenario: Scenario): Promise<void> => {
     const reportId = scenario.orders[0].reports[1].id
@@ -209,7 +227,7 @@ test("a user deletes documents", async ({ page }) => {
   await setupScenarioAndRunTest(runTest)
 })
 
-test("a user who uploads a file should see an error if they then select 'no' for supporting documents", async ({ page }) => {
+test("a user uploads a file and then selects 'no' for supporting documents", async ({ page }) => {
   const runTest = async (scenario: Scenario): Promise<void> => {
     const reportId = scenario.orders[0].reports[1].id
     const email = scenario.users[deputyReference].email
