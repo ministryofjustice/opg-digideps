@@ -6,7 +6,8 @@ import LoginPage from "./pages/LoginPage"
 import ReportOverviewPage from "./pages/ReportOverviewPage"
 import DocumentsUploadPage from "./pages/DocumentsUploadPage";
 import DocumentsSummaryPage from "./pages/DocumentsSummaryPage";
-import Banner from "./pageComponents/Banner";
+import PageBanner from "./pageComponents/PageBanner";
+import PageErrorMessage from "./pageComponents/PageErrorMessage";
 
 const deputyReference = "documents-user"
 
@@ -79,6 +80,23 @@ test("a user uploads multiple supporting documents with valid file types", async
   await setupScenarioAndRunTest(runTest)
 })
 
+test("a user uploads a file with an invalid file type", async ({ page }) => {
+  const runTest = async (scenario: Scenario): Promise<void> => {
+    const reportId = scenario.orders[0].reports[1].id
+    const email = scenario.users[deputyReference].email
+
+    await startDocumentsSection(page, email, reportId, "yes")
+
+    const documentsUploadPage = new DocumentsUploadPage(page, reportId)
+    await documentsUploadPage.attachFiles(path.join(__dirname, "/testFiles/badfiletype.txt"))
+
+    const errors = new PageErrorMessage(page)
+    await errors.expectErrorMessage("Please upload a valid file type")
+  }
+
+  await setupScenarioAndRunTest(runTest)
+})
+
 test("a user uploads multiple supporting documents with valid file types which require conversion", async ({ page }) => {
   const runTest = async (scenario: Scenario): Promise<void> => {
     const reportId = scenario.orders[0].reports[1].id
@@ -111,7 +129,7 @@ test("a user deletes documents", async ({ page }) => {
 
     await startDocumentsSection(page, email, reportId, "yes")
 
-    const banner = new Banner(page)
+    const banner = new PageBanner(page)
     const documentsUploadPage = new DocumentsUploadPage(page, reportId)
     await documentsUploadPage.attachFiles(
       path.join(__dirname, "/testFiles/testimage1.png"),

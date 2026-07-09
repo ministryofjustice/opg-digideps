@@ -125,14 +125,6 @@ trait DocumentsSectionTrait
     }
 
     /**
-     * @When I upload one document with an unsupported file type
-     */
-    public function iUploadOneDocumentWithUnsupportedFileType(): void
-    {
-        $this->uploadFiles([$this->txtFilename]);
-    }
-
-    /**
      * @When I upload one document that is too large
      */
     public function iUploadOneDocumentThatIsTooLarge(): void
@@ -152,14 +144,6 @@ trait DocumentsSectionTrait
         } catch (\Throwable) {
             $this->clickLink('Continue to send documents');
         }
-    }
-
-    /**
-     * @Then I should see an 'invalid file type' error
-     */
-    public function iShouldSeeInvalidFileTypeError(): void
-    {
-        $this->assertOnErrorMessage($this->invalidFileTypeErrorMessage);
     }
 
     /**
