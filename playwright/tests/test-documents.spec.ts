@@ -1,9 +1,10 @@
 import path = require("path")
-import { Page, test } from "@playwright/test"
+import { Page, test } from "@playwright/test";
 import { createSimpleLay, Scenario, setupScenario, testPassword } from "./fixtures/fixtures"
 import DocumentsSection from "./pages/DocumentsSection"
 import LoginPage from "./pages/LoginPage"
 import ReportOverviewPage from "./pages/ReportOverviewPage"
+import AttachDocumentsPage from "./pages/AttachDocumentsPage";
 
 const deputyReference = "documents-user"
 
@@ -23,7 +24,7 @@ const startDocumentsSection = async (
   return documentsSection
 }
 
-const setupAndRunTest = (runTest: (scenario: Scenario) => Promise<void>) => {
+const setupScenarioAndRunTest = (runTest: (scenario: Scenario) => Promise<void>) => {
   return setupScenario(createSimpleLay(deputyReference))
     .then(scenario => {
       if (scenario === null) {
@@ -37,7 +38,6 @@ const setupAndRunTest = (runTest: (scenario: Scenario) => Promise<void>) => {
 
 test("a user has no supporting documents to add", async ({ page }) => {
   const runTest = async (scenario: Scenario): Promise<void> => {
-    // use reports[1], as we don't want the submitted report, we want the current one
     const reportId = scenario.orders[0].reports[1].id
     const email = scenario.users[deputyReference].email
 
@@ -49,17 +49,18 @@ test("a user has no supporting documents to add", async ({ page }) => {
     await reportOverviewPage.expectSectionStatus("Supporting documents", "No documents")
   }
 
-  await setupAndRunTest(runTest)
+  await setupScenarioAndRunTest(runTest)
 })
 
 test("a user uploads multiple supporting documents with valid file types", async ({ page }) => {
   const runTest = async (scenario: Scenario): Promise<void> => {
-    // use reports[1], as we don't want the submitted report, we want the current one
     const reportId = scenario.orders[0].reports[1].id
     const email = scenario.users[deputyReference].email
 
-    const documentsSection = await startDocumentsSection(page, email, reportId, "yes")
-    await documentsSection.attachFiles(path.join(__dirname, "/testFiles/testimage1.png"))
+    await startDocumentsSection(page, email, reportId, "yes")
+
+    const attachDocumentsPage = new AttachDocumentsPage(page, reportId)
+    await attachDocumentsPage.attachFiles(path.join(__dirname, "/testFiles/testimage1.png"))
 
     // check "1 document" is shown for documents section in report overview
     const reportOverviewPage = new ReportOverviewPage(page, reportId)
@@ -67,10 +68,35 @@ test("a user uploads multiple supporting documents with valid file types", async
     await reportOverviewPage.expectSectionStatus("Supporting documents", "1 document")
 
     // attach another document, check section status again
-    await documentsSection.attachFiles(path.join(__dirname, "/testFiles/testimage2.png"))
+    await attachDocumentsPage.attachFiles(path.join(__dirname, "/testFiles/testimage2.png"))
     await reportOverviewPage.goto()
     await reportOverviewPage.expectSectionStatus("Supporting documents", "2 documents")
   }
 
-  await setupAndRunTest(runTest)
+  await setupScenarioAndRunTest(runTest)
+})
+
+test("a user uploads multiple supporting documents with valid file types which require conversion", async ({ page }) => {
+  const runTest = async (scenario: Scenario): Promise<void> => {
+    const reportId = scenario.orders[0].reports[1].id
+    const email = scenario.users[deputyReference].email
+
+    await startDocumentsSection(page, email, reportId, "yes")
+
+    const attachDocumentsPage = new AttachDocumentsPage(page, reportId)
+    await attachDocumentsPage.attachFiles(
+      path.join(__dirname, "/testFiles/goodheic.heic"),
+      path.join(__dirname, "/testFiles/goodjfif.jfif")
+    )
+
+    // check file suffices in the document summary page have been converted
+    await attachDocumentsPage.expectFileNames(["goodjfif.jpeg", "goodheic.jpeg"])
+
+    // check "2 documents" is shown for documents section in report overview
+    const reportOverviewPage = new ReportOverviewPage(page, reportId)
+    await reportOverviewPage.goto()
+    await reportOverviewPage.expectSectionStatus("Supporting documents", "2 documents")
+  }
+
+  await setupScenarioAndRunTest(runTest)
 })

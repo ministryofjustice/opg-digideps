@@ -2,19 +2,6 @@
 Feature: Documents - All User Roles
 
     @lay-pfa-high-not-started
-    Scenario: A user uploads multiple supporting documents that have valid file types and require conversion
-        Given a Lay Deputy has not started a report
-        When I view and start the documents report section
-        And I have documents to upload
-        And I upload multiple valid documents that require conversion
-        Then the documents uploads page should contain the documents I uploaded with converted filenames
-        When I have no further documents to upload
-        Then I should be on the documents summary page
-        And the documents summary page should contain the documents I uploaded with converted filenames
-        When I follow link back to report overview page
-        Then I should see "documents" as "2 documents"
-
-    @lay-pfa-high-not-started
     Scenario: A user deletes one supporting document they uploaded from the uploads page
         Given a Lay Deputy has not started a report
         When I view and start the documents report section
