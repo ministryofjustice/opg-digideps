@@ -1,6 +1,6 @@
 const apiUrl = "http://api-webserver"
 
-type UserType = "lay_user" | "pro_user" | "admin_user";
+type UserType = "lay_user" | "pro_user" | "admin_user"
 
 interface FixtureUser {
   email: string;
@@ -23,10 +23,6 @@ interface OrderDetails {
   courtOrderUid: string
   caseNumber: string
   reports: ReportDetails[]
-}
-
-export enum OrderTypes {
-  PFA = 'pfa', HW = 'hw'
 }
 
 export interface Scenario {
@@ -58,7 +54,7 @@ export function getUserFixture(type: UserType): TestUser {
   return {
     email: user.email,
     password: testPassword,
-  };
+  }
 }
 
 // login to the API and return the auth token from the response headers
