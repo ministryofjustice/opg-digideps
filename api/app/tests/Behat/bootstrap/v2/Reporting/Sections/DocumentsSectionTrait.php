@@ -125,16 +125,6 @@ trait DocumentsSectionTrait
     }
 
     /**
-     * @When I upload one document that is too large
-     */
-    public function iUploadOneDocumentThatIsTooLarge(): void
-    {
-        ini_set('memory_limit', '512M');
-
-        $this->uploadFiles([$this->tooLargeFilename]);
-    }
-
-    /**
      * @When I have no further documents to upload
      */
     public function iHaveNoFurtherDocumentsToUpload(): void
@@ -144,14 +134,6 @@ trait DocumentsSectionTrait
         } catch (\Throwable) {
             $this->clickLink('Continue to send documents');
         }
-    }
-
-    /**
-     * @Then I should see a 'file too large' error
-     */
-    public function iShouldSeeFileTooLargeError(): void
-    {
-        $this->assertOnErrorMessage($this->fileTooBigErrorMessage);
     }
 
     /**

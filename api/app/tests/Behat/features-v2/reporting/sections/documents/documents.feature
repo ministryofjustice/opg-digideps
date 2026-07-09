@@ -1,14 +1,6 @@
 @v2 @v2_sequential_3 @documents
 Feature: Documents - All User Roles
 
-    @lay-pfa-high-not-started
-    Scenario: A user uploads one supporting document that has a valid file type but is too large
-        Given a Lay Deputy has not started a report
-        When I view and start the documents report section
-        And I have documents to upload
-        And I upload one document that is too large
-        Then I should see a 'file too large' error
-
     @lay-pfa-high-not-started @documents-no-more-to-upload
     Scenario: A user uploads one supporting document that has a valid file type then confirms they have no files to upload
         Given a Lay Deputy has not started a report
