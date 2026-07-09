@@ -4,7 +4,7 @@ permissions:
   id-token: write
   contents: read
   security-events: none
-  pull-requests: write
+  pull-requests: none
   actions: none
   checks: none
   deployments: none

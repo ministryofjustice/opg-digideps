@@ -10,6 +10,12 @@ on:
         required: true
         type: string
 
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+
 jobs:
   tag_releasable_image:
     strategy:
