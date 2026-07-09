@@ -1,8 +1,6 @@
-import { expect, Page } from "@playwright/test";
+import DocumentsFileListPage from "./DocumentsFileListPage";
 
-export default class AttachDocumentsPage {
-  constructor(private page: Page, private reportId: number) {}
-
+export default class DocumentsUploadPage extends DocumentsFileListPage {
   async goto() {
     await this.page.goto("/report/" + String(this.reportId) + "/documents/step/2")
   }
@@ -32,20 +30,5 @@ export default class AttachDocumentsPage {
   // press "Continue"
   async continue() {
     await this.page.locator("a.behat-link-continue").click()
-  }
-
-  async expectFileNames(expectedFileNames: string[]) {
-    const selector = "dl.behat-region-document-list > div.govuk-summary-list__row > dt.govuk-summary-list__value"
-    const fileNameElements = await this.page.locator(selector).all()
-
-    let fileNames: string[] = []
-    for (const fileNameElement of fileNameElements) {
-      let text = await fileNameElement.textContent()
-      if (text !== null) {
-        fileNames.push(text.trim())
-      }
-    }
-
-    expect(fileNames).toEqual(expect.arrayContaining(expectedFileNames))
   }
 }

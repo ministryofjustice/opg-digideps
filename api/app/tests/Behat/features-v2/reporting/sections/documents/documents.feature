@@ -2,39 +2,6 @@
 Feature: Documents - All User Roles
 
     @lay-pfa-high-not-started
-    Scenario: A user deletes one supporting document they uploaded from the uploads page
-        Given a Lay Deputy has not started a report
-        When I view and start the documents report section
-        And I have documents to upload
-        And I upload multiple valid documents that do not require conversion
-        And I remove the document with the filename "good.pdf"
-        When I have no further documents to upload
-        Then I should be on the documents summary page
-        And the document uploads page should contain a document with the filename "good_image.jpg"
-        And the document uploads page should contain a document with the filename "good.png"
-        When I follow link back to report overview page
-        Then I should see "documents" as "2 documents"
-
-    @lay-pfa-high-not-started @documents-delete-one-document
-    Scenario: A user deletes one supporting document they uploaded from the summary page
-        Given a Lay Deputy has not started a report
-        When I view and start the documents report section
-        And I have documents to upload
-        And I upload multiple valid documents that do not require conversion
-
-        When I have no further documents to upload
-        Then I should be on the documents summary page
-        And the document uploads page should contain a document with the filename "good_image.jpg"
-        And the document uploads page should contain a document with the filename "good.png"
-        And the document uploads page should contain a document with the filename "good.pdf"
-
-        When I remove the document with the filename "good_image.jpg"
-        Then I should be on the documents summary page
-        Then the document uploads page should contain a document with the filename "good.png"
-        And the document uploads page should contain a document with the filename "good.pdf"
-        And the document uploads page should not contain a document with the filename "good_image.jpg"
-
-    @lay-pfa-high-not-started
     Scenario: A user uploads one supporting document that has an invalid file type
         Given a Lay Deputy has not started a report
         When I view and start the documents report section
