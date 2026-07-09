@@ -1,13 +1,17 @@
+import fs = require("fs")
+import os = require("os")
 import path = require("path")
-import { Page, test } from "@playwright/test";
+import { fail } from "assert"
+import { mkdtemp } from "fs/promises"
+import { Page, test } from "@playwright/test"
 import { createSimpleLay, Scenario, setupScenario, testPassword } from "./fixtures/fixtures"
 import DocumentsIntroPage from "./pages/DocumentsIntroPage"
 import LoginPage from "./pages/LoginPage"
 import ReportOverviewPage from "./pages/ReportOverviewPage"
-import DocumentsUploadPage from "./pages/DocumentsUploadPage";
-import DocumentsSummaryPage from "./pages/DocumentsSummaryPage";
-import PageBanner from "./pageComponents/PageBanner";
-import PageErrorMessage from "./pageComponents/PageErrorMessage";
+import DocumentsUploadPage from "./pages/DocumentsUploadPage"
+import DocumentsSummaryPage from "./pages/DocumentsSummaryPage"
+import PageBanner from "./pageComponents/PageBanner"
+import PageErrorMessage from "./pageComponents/PageErrorMessage"
 
 const deputyReference = "documents-user"
 
@@ -92,6 +96,37 @@ test("a user uploads a file with an invalid file type", async ({ page }) => {
 
     const errors = new PageErrorMessage(page)
     await errors.expectErrorMessage("Please upload a valid file type")
+  }
+
+  await setupScenarioAndRunTest(runTest)
+})
+test("a user uploads a file which is too large", async ({ page }) => {
+  const runTest = async (scenario: Scenario): Promise<void> => {
+    const reportId = scenario.orders[0].reports[1].id
+    const email = scenario.users[deputyReference].email
+
+    await startDocumentsSection(page, email, reportId, "yes")
+
+    const documentsUploadPage = new DocumentsUploadPage(page, reportId)
+
+    // create a big file in the /tmp directory
+    try {
+      const tmpDir = await mkdtemp(path.join(os.tmpdir(), "playwright-tests"))
+      const tooBigFilePath = path.join(tmpDir, "toobig.png")
+
+      const buffer = Buffer.alloc(16 * 1024 * 1024) // 16MiB
+      fs.writeFileSync(tooBigFilePath, buffer)
+
+      await documentsUploadPage.attachFiles(tooBigFilePath)
+
+      fs.rmSync(tooBigFilePath)
+    } catch (err) {
+      console.error(err);
+      fail("Unable to generate file for upload test")
+    }
+
+    const errors = new PageErrorMessage(page)
+    await errors.expectErrorMessage("The file you selected to upload is too big")
   }
 
   await setupScenarioAndRunTest(runTest)
