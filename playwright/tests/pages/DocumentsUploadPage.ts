@@ -9,7 +9,7 @@ export default class DocumentsUploadPage extends DocumentsFileListPage {
     const elementLocator = "#report_document_upload_files"
 
     // set up wait for the redirect after the file is uploaded
-    const navigationPromise = this.page.waitForURL(/.+\?successUploaded=true/)
+    const navigationPromise = this.page.waitForURL(/.+\/report\/\d+\/documents\/step\/2.*$/)
 
     await this.page.locator(elementLocator).setInputFiles(filePaths)
 
