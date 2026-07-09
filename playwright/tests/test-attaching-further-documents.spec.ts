@@ -2,7 +2,7 @@ import path = require("path")
 import { expect, test } from "@playwright/test"
 import { createSimpleLay, getUserFixture, Scenario, setupScenario, testPassword } from "./fixtures/fixtures";
 import AdminLoginPage from "./pages/AdminLoginPage";
-import AttachDocumentsPage from "./pages/AttachDocumentsPage"
+import DocumentsUploadPage from "./pages/DocumentsUploadPage"
 import LoginPage from "./pages/LoginPage"
 
 test("a user sends further documents", async ({ page }) => {
@@ -20,17 +20,17 @@ test("a user sends further documents", async ({ page }) => {
       await loginPage.login({ email: email, password: testPassword })
 
       // go to the attach documents page
-      const attachDocumentsPage = new AttachDocumentsPage(page, submittedReportId)
+      const documentsUploadPage = new DocumentsUploadPage(page, submittedReportId)
 
       // attach two files
       let uploadedFiles = []
       const filesToUpload = ["testimage1.png", "testimage2.png"]
       for (const fileToUpload of filesToUpload) {
-        await attachDocumentsPage.goto()
+        await documentsUploadPage.goto()
 
         let fileToUploadFullPath = path.join(__dirname, `/testFiles/${fileToUpload}`)
-        await attachDocumentsPage.attachFiles(fileToUploadFullPath)
-        await attachDocumentsPage.sendDocuments()
+        await documentsUploadPage.attachFiles(fileToUploadFullPath)
+        await documentsUploadPage.sendDocuments()
 
         // check we're redirected to the court order page with success message
         await expect(page).toHaveURL(`/courtorder/${courtOrderUid}`)
@@ -40,7 +40,7 @@ test("a user sends further documents", async ({ page }) => {
         // check correct files are listed as attachments
         uploadedFiles.push(fileToUpload)
 
-        await attachDocumentsPage.goto()
+        await documentsUploadPage.goto()
         for (const uploadedFile of uploadedFiles) {
           let selector = `dt[data-role="attached-document-name"]:has-text("${uploadedFile}")`
           await expect(page.locator(selector)).toHaveCount(1)
