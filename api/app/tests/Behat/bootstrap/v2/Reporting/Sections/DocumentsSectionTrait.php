@@ -9,37 +9,10 @@ use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait DocumentsSectionTrait
 {
-    // Valid files
-    private string $validJpegFilename = 'good-image.jpg';
-    private string $validPngFilename = 'good.png';
-    private string $validPdfFilename = 'good.pdf';
-    private string $validHeicFilename = 'good-heic.heic';
-    private string $validJfifFilename = 'good-jfif.jfif';
-
-    // Invalid files
-    private string $tooLargeFilename = 'too-big.jpg';
-    private string $txtFilename = 'eicar.txt';
-    private string $pngFilenameWithJpegFileExtension = 'png-file.jpeg';
-
     // Expected validation errors
-    private string $invalidFileTypeErrorMessage = 'Please upload a valid file type';
-    private string $fileTooBigErrorMessage = 'The file you selected to upload is too big';
-    private string $answerNotUpdatedErrorMessage = 'Your answer could not be updated to \'No\' because you have attached documents';
-    private string $mimeTypeAndFileExtensionDoNotMatchErrorMessage = 'Your file type and file extension do not match';
     private string $orgCostCertificateMessage = 'Send your final cost certificate for the previous reporting period';
-    private string $fileDuplicationMessage = 'You have already uploaded a file with this name. Please rename your file before uploading again.';
 
     private array $uploadedDocumentFilenames = [];
-
-    /**
-     * @Given I view and start the documents report section
-     */
-    public function iViewAndStartDocumentsSection(): void
-    {
-        $this->iViewDocumentsSection();
-
-        $this->clickLink('Start');
-    }
 
     /**
      * @Given I view the documents report section
@@ -98,56 +71,11 @@ trait DocumentsSectionTrait
     }
 
     /**
-     * @Given I upload one valid document with the filename :filename
-     */
-    public function iUploadOneValidDocumentWithTheFilename(string $filename): void
-    {
-        $this->uploadFiles([$filename]);
-    }
-
-    /**
-     * @Given the document uploads page should contain a document with the filename :filename
-     */
-    public function theDocumentUploadsPageShouldContainADocumentWithFilename(string $filename): void
-    {
-        $descriptionLists = $this->findAllCssElements('dl');
-        $this->findFileNamesInDls($descriptionLists, [$filename]);
-    }
-
-    private function uploadFiles(array $filenames): void
-    {
-        $this->uploadedDocumentFilenames = $filenames;
-
-        foreach ($filenames as $filename) {
-            $this->attachFileToField('report_document_upload_files', $filename);
-            $this->pressButton('Upload');
-        }
-    }
-
-    /**
-     * @Given I have no documents to upload
-     */
-    public function iHaveNoDocumentsToUpload(): void
-    {
-        $this->fillField('document_wishToProvideDocumentation_1', 'no');
-
-        $this->pressButton('Save and continue');
-    }
-
-    /**
      * @Then I should see guidance on providing the final cost certificate for the previous reporting period
      */
     public function iShouldSeeFeeGuidance(): void
     {
         $this->assertOnAlertMessage($this->orgCostCertificateMessage);
-    }
-
-    /**
-     * @Then I should see a 'duplicate file name' error
-     */
-    public function IShouldSeeADuplicateFileNameError(): void
-    {
-        $this->assertOnErrorMessage($this->fileDuplicationMessage);
     }
 
     /**
