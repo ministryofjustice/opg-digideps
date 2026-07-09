@@ -6,7 +6,6 @@ namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
 use OPG\Digideps\Backend\Entity\Report\Document;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
-use Behat\Mink\Exception\ElementNotFoundException;
 
 trait DocumentsSectionTrait
 {
@@ -66,49 +65,6 @@ trait DocumentsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @Then the documents summary page should not contain any documents
-     * @Then the document upload page should not contain any documents
-     */
-    public function theDocumentsSummaryPageShouldNotContainDocuments(): void
-    {
-        $descriptionLists = $this->getSession()->getPage()->findAll('css', 'dl');
-
-        if (count($descriptionLists) > 1) {
-            throw new BehatException('Multiple dl elements found on the page - this suggests documents have been uploaded');
-        }
-    }
-
-    /**
-     * @Then the documents summary page should contain the documents I uploaded
-     * @Then the documents uploads page should contain the documents I uploaded
-     */
-    public function theDocumentsSummaryPageShouldContainDocumentsIUploaded(): void
-    {
-        if (empty($this->uploadedDocumentFilenames)) {
-            throw new BehatException('$this->uploadedDocumentFilenames is empty. This suggests no documents were uploaded.');
-        }
-
-        $descriptionLists = $this->findAllCssElements('dl');
-
-        $this->findFileNamesInDls($descriptionLists);
-    }
-
-    /**
-     * @Then the documents summary page should contain the documents I uploaded with converted filenames
-     * @Then the documents uploads page should contain the documents I uploaded with converted filenames
-     */
-    public function theDocumentsSummaryPageShouldContainDocumentsIUploadedConvertedFilenames(): void
-    {
-        if (empty($this->uploadedDocumentFilenames)) {
-            throw new BehatException('$this->uploadedDocumentFilenames is empty. This suggests no documents were uploaded.');
-        }
-
-        $descriptionLists = $this->findAllCssElements('dl');
-
-        $this->findFileNamesInDls($descriptionLists, ['good_heic.jpeg', 'good_jfif.jpeg']);
-    }
-
     private function findFileNamesInDls(array $descriptionLists, array $convertedFileNames = []): void
     {
         $missingFilenames = [];
@@ -142,15 +98,6 @@ trait DocumentsSectionTrait
     }
 
     /**
-     * @When I upload one valid document
-     * @When I attempt to upload one valid document
-     */
-    public function iUploadOneValidDocument(): void
-    {
-        $this->uploadFiles([$this->validJpegFilename]);
-    }
-
-    /**
      * @Given I upload one valid document with the filename :filename
      */
     public function iUploadOneValidDocumentWithTheFilename(string $filename): void
@@ -167,37 +114,6 @@ trait DocumentsSectionTrait
         $this->findFileNamesInDls($descriptionLists, [$filename]);
     }
 
-    /**
-     * @Given the document uploads page should not contain a document with the filename :filename
-     */
-    public function theDocumentUploadsPageShouldNotContainADocumentWithFilename(string $filename): void
-    {
-        // Find all <dt class="govuk-summary-list__value"> elements
-        $elements = $this->getSession()->getPage()->findAll('css', 'dt.govuk-summary-list__value');
-
-        foreach ($elements as $element) {
-            if (str_contains($element->getText(), $filename)) {
-                throw new \Exception("Filename '{$filename}' was found in a summary list value.");
-            }
-        }
-    }
-
-    /**
-     * @Given I remove the document with the filename :filename
-     * @throws ElementNotFoundException|BehatException
-     */
-    public function iRemoveOneDocumentWithTheFilename(string $filename): void
-    {
-        $parentOfDtWithTextSelector = "//dt[contains(text(), \"$filename\")]/..";
-        $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
-
-        if (is_null($documentRowDiv)) {
-            throw new BehatException("Row for the file $filename was not found");
-        }
-
-        $documentRowDiv->clickLink('Remove');
-    }
-
     private function uploadFiles(array $filenames): void
     {
         $this->uploadedDocumentFilenames = $filenames;
@@ -206,22 +122,6 @@ trait DocumentsSectionTrait
             $this->attachFileToField('report_document_upload_files', $filename);
             $this->pressButton('Upload');
         }
-    }
-
-    /**
-     * @When I upload multiple valid documents that do not require conversion
-     */
-    public function iUploadMultipleValidDocumentsNoConvesion(): void
-    {
-        $this->uploadFiles([$this->validJpegFilename, $this->validPdfFilename, $this->validPngFilename]);
-    }
-
-    /**
-     * @When I upload multiple valid documents that require conversion
-     */
-    public function iUploadMultipleValidDocumentsRequireConversion(): void
-    {
-        $this->uploadFiles([$this->validHeicFilename, $this->validJfifFilename]);
     }
 
     /**
@@ -251,42 +151,6 @@ trait DocumentsSectionTrait
             $this->clickLink('Continue');
         } catch (\Throwable) {
             $this->clickLink('Continue to send documents');
-        }
-    }
-
-    /**
-     * @When I remove one document I uploaded
-     *
-     * @Given /^I remove the "([^"]*)" document I uploaded$/
-     */
-    public function iRemoveOneDocumentIUploaded(?string $fileName = null): void
-    {
-        if ($fileName) {
-            $documentToPop = $fileName;
-        } else {
-            $filenames = $this->uploadedDocumentFilenames;
-            $documentToPop = $filenames[0];
-            unset($filenames[0]);
-        }
-
-        $parentOfDtWithTextSelector = sprintf('//dt[contains(text(), "%s")]/..', $documentToPop);
-        $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
-
-        if (is_null($documentRowDiv)) {
-            throw new BehatException(sprintf('An element containing a dt with the text %s was not found', $documentToPop));
-        }
-
-        $removeLinkSelector = '//a[contains(text(), "Remove")]';
-        $removeLink = $documentRowDiv->find('xpath', $removeLinkSelector);
-
-        if (is_null($removeLink)) {
-            throw new BehatException('A link with the text remove was not found in the document row');
-        }
-
-        $removeLink->click();
-
-        if (!$fileName) {
-            $this->uploadedDocumentFilenames = $filenames;
         }
     }
 
@@ -438,74 +302,5 @@ trait DocumentsSectionTrait
         $this->findFileNamesInDls($descriptionLists, [$formattedDocName]);
 
         $this->clickLink('Save and continue');
-    }
-
-    /**
-     * @Given /^a flash message should be displayed to the user confirming the document upload$/
-     */
-    public function aFlashMessageShouldBeDisplayedToTheUserConfirmingTheUpload(): void
-    {
-        $alertMessage = 'Your uploaded files are now attached to this report.';
-
-        $xpath = '//div[contains(@class, "moj-banner moj-banner--success")]';
-        $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
-
-        if (is_null($alertText)) {
-            throw new BehatException('Could not find a div with class "moj-banner moj-banner--success"');
-        }
-
-        $alertMessageFound = str_contains($alertText, $alertMessage);
-
-        if (!$alertMessageFound) {
-            throw new BehatException(sprintf('The alert element did not contain the expected message. Expected: "%s", got (full HTML): %s', $alertMessage, $alertText));
-        }
-    }
-
-    /**
-     * @Then I should see :imageName listed as a previously submitted document
-     */
-    public function iShouldSeeListedAsAPreviouslySubmittedDocument(string $submittedDoc): void
-    {
-        $xpathSelector = sprintf("//dt[normalize-space() = '%s']", $submittedDoc);
-        $fileNameItems = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
-
-        $this->assertPageContainsText('Previously submitted documents');
-
-        $this->assertStringEqualsString($submittedDoc, $fileNameItems, 'File found');
-    }
-
-    /**
-     * @Then /^I should see "([^"]*)" and "([^"]*)" as previously submitted documents$/
-     */
-    public function iShouldSeeAndAsPreviouslySubmittedDocuments(string $fileOne, string $fileTwo): void
-    {
-        $fileNames = [$fileOne, $fileTwo];
-
-        foreach ($fileNames as $fileName) {
-            $xpathSelector = sprintf("//dt[normalize-space() = '%s']", $fileName);
-            $fileNameItem = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
-
-            $this->assertStringEqualsString($fileName, $fileNameItem, 'File found');
-        }
-    }
-
-    /**
-     * @Then /^a flash message should be displayed to the user confirming the removal of "([^"]*)"$/
-     */
-    public function aFlashMessageShouldBeDisplayedToTheUserConfirmingTheDocumentHasBeenRemoved(string $fileName): void
-    {
-        $alertMessage = sprintf('File named %s has been removed', $fileName);
-        $xpath = '//div[contains(@class, "moj-banner moj-banner--success")]';
-        $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
-
-        if (is_null($alertText)) {
-            throw new BehatException('Could not find a div with class "moj-banner moj-banner--success"');
-        }
-
-        $alertMessageFound = str_contains($alertText, $alertMessage);
-
-        if (!$alertMessageFound) {
-            throw new BehatException(sprintf('The alert element did not contain the expected message. Expected: "%s", got (full HTML): %s', $alertMessage, $alertText));
-        }
     }
 }
