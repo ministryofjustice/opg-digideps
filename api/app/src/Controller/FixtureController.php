@@ -34,14 +34,19 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * Creates a lay deputy with user account and a single submitted report
+     * Creates a lay deputy with user account, a single submitted report, and an incomplete
+     * current report
+     *
+     *  Expects body to contain:
+     *  - deputyReference (string used in email etc.)
+     *  - reportType ("OPG102", "OPG103", "OPG104"; defaults to "OPG103")
      *
      * @return array{users: array<string, FixtureUser>, orders: array<'pfa'|'hw', FixtureOrder>}
      * @throws ValidationException
      */
-    #[Route('/fixtures/scenarios/simplelay', name: 'fixtures_scenarios_simplelay', methods: ['POST'])]
+    #[Route('/fixtures/scenarios/laysimple', name: 'fixtures_scenarios_laysimple', methods: ['POST'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
-    public function scenarioSimpleLay(Request $request): array
+    public function scenarioLaySimple(Request $request): array
     {
         $payload = new ValidatingArray($request->getPayload()->all());
 
@@ -49,7 +54,6 @@ class FixtureController extends AbstractController
         $reportTypeStr = $payload->getStringOrNull('reportType') ?? '';
         $reportType = CourtOrderReportType::tryFrom($reportTypeStr) ?? CourtOrderReportType::OPG103;
 
-        // create a user and deputy for the court order
         $details = $this->fixtureService->instantiateScenario(
             new Scenario(
                 new CourtOrderDescriptor(
@@ -58,6 +62,40 @@ class FixtureController extends AbstractController
                     ),
                     $reportType,
                     submittedReports: 1
+                )
+            )
+        );
+
+        return $this->jsonifyScenario($details);
+    }
+
+    /**
+     * Creates a lay deputy with user account and a complete but unsubmitted report
+     *
+     * @return array{users: array<string, FixtureUser>, orders: array<'pfa'|'hw', FixtureOrder>}
+     * @throws ValidationException
+     */
+    #[Route('/fixtures/scenarios/layreadytosubmit', name: 'fixtures_scenarios_layreadytosubmit', methods: ['POST'])]
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function scenarioLayReadyToSubmit(Request $request): array
+    {
+        $payload = new ValidatingArray($request->getPayload()->all());
+
+        $deputyReference = $payload->getStringOrThrow('deputyReference');
+        $reportTypeStr = $payload->getStringOrNull('reportType') ?? '';
+        $reportType = CourtOrderReportType::tryFrom($reportTypeStr) ?? CourtOrderReportType::OPG102;
+
+        // we set the madeDate to one year ago, so that submission of the report is permitted
+        // (otherwise the report submission is blocked because it's not close enough to the due date)
+        $details = $this->fixtureService->instantiateScenario(
+            new Scenario(
+                new CourtOrderDescriptor(
+                    new DeputySet(
+                        new DeputyDescriptor($deputyReference)
+                    ),
+                    $reportType,
+                    latestReportReadyToSubmit: true,
+                    madeDate: new \DateTime()->sub(new \DateInterval('P1Y'))
                 )
             )
         );

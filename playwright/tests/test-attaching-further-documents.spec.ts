@@ -1,6 +1,6 @@
 import path = require("path")
 import { expect, test } from "@playwright/test"
-import { createSimpleLay, getUserFixture, Scenario, setupScenario, testPassword } from "./fixtures/fixtures";
+import { createScenarioViaApi, getUserFixture, Scenario, setupScenario, testPassword } from "./fixtures/fixtures";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import DocumentsUploadPage from "./pages/DocumentsUploadPage"
 import LoginPage from "./pages/LoginPage"
@@ -66,7 +66,7 @@ test("a user sends further documents", async ({ page }) => {
         .toContainText(filesToUpload[1])
     }
 
-    await setupScenario(createSimpleLay(deputyReference))
+    await setupScenario(createScenarioViaApi("/fixtures/scenarios/laysimple", {deputyReference: deputyReference}))
       .then(scenario => {
         if (scenario === null) {
           throw new Error("Unable to create scenario for attaching further documents")

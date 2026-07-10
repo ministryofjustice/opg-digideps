@@ -4,7 +4,7 @@ import path = require("path")
 import { fail } from "assert"
 import { mkdtemp } from "fs/promises"
 import { Page, test } from "@playwright/test"
-import { createSimpleLay, Scenario, setupScenario, testPassword } from "./fixtures/fixtures"
+import { createScenarioViaApi, Scenario, setupScenario, testPassword } from "./fixtures/fixtures"
 import DocumentsFrontPage from "./pages/DocumentsFrontPage"
 import LoginPage from "./pages/LoginPage"
 import ReportOverviewPage from "./pages/ReportOverviewPage"
@@ -33,7 +33,7 @@ const startDocumentsSection = async (
 }
 
 const setupScenarioAndRunTest = (runTest: (scenario: Scenario) => Promise<void>) => {
-  return setupScenario(createSimpleLay(deputyReference)).then(runTest)
+  return setupScenario(createScenarioViaApi("/fixtures/scenarios/laysimple", {deputyReference: deputyReference})).then(runTest)
 }
 
 test("a user has no supporting documents to add", async ({ page }) => {
