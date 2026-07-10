@@ -95,7 +95,7 @@ export function createSimpleLay(deputyReference: string): ScenarioFunction {
   }
 }
 
-export async function setupScenario(scenarioFn: ScenarioFunction): Promise<Scenario | null> {
+export async function setupScenario(scenarioFn: ScenarioFunction): Promise<Scenario> {
   const user = getUserFixture("admin_user")
 
   // set up scenario
@@ -107,8 +107,15 @@ export async function setupScenario(scenarioFn: ScenarioFunction): Promise<Scena
 
       return scenarioFn(authToken)
     })
+    .then(scenario => {
+      if (scenario === null) {
+        throw new Error("Unable to create scenario")
+      }
+
+      return scenario
+    })
     .catch(err => {
       console.error(err)
-      return null
+      throw err
     })
 }

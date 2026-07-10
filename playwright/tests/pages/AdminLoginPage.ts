@@ -2,6 +2,9 @@ import process = require("process")
 
 import { Page } from "@playwright/test";
 
+/**
+ * <ADMIN_URL>/login
+ */
 export default class AdminLoginPage {
   constructor(private page: Page, private adminURL: string|undefined = process.env.ADMIN_URL) {
     if (this.adminURL === undefined) {
