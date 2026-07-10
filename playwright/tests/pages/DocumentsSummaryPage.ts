@@ -1,5 +1,8 @@
 import DocumentsFileListPage from "./DocumentsFileListPage";
 
+/**
+ * <FRONT_URL>/report/<reportId>/documents/summary
+ */
 export default class DocumentsSummaryPage extends DocumentsFileListPage{
   async goto() {
     await this.page.goto("/report/" + String(this.reportId) + "/documents/summary")

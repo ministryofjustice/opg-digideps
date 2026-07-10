@@ -1,6 +1,9 @@
 import { Page } from "@playwright/test"
 
-export default class DocumentsIntroPage {
+/**
+ * <FRONT_URL>/reports/<reportId>/documents
+ */
+export default class DocumentsFrontPage {
   constructor(private page: Page, private reportId: number) {
   }
 
