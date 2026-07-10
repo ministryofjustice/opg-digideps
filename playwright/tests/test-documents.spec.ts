@@ -5,7 +5,7 @@ import { fail } from "assert"
 import { mkdtemp } from "fs/promises"
 import { Page, test } from "@playwright/test"
 import { createSimpleLay, Scenario, setupScenario, testPassword } from "./fixtures/fixtures"
-import DocumentsIntroPage from "./pages/DocumentsIntroPage"
+import DocumentsFrontPage from "./pages/DocumentsFrontPage"
 import LoginPage from "./pages/LoginPage"
 import ReportOverviewPage from "./pages/ReportOverviewPage"
 import DocumentsUploadPage from "./pages/DocumentsUploadPage"
@@ -18,30 +18,22 @@ const deputyReference = "documents-user"
 
 const startDocumentsSection = async (
   page: Page, email: string, reportId: number, documentsToAdd: "yes" | "no"
-): Promise<DocumentsIntroPage> => {
+): Promise<DocumentsFrontPage> => {
   // login as deputy
   const loginPage = new LoginPage(page)
   await loginPage.goto()
   await loginPage.login({ email: email, password: testPassword })
 
   // start documents section
-  const documentsIntroPage = new DocumentsIntroPage(page, reportId)
-  await documentsIntroPage.start()
-  await documentsIntroPage.answerDocumentsToAddQuestion(documentsToAdd)
+  const documentsFrontPage = new DocumentsFrontPage(page, reportId)
+  await documentsFrontPage.start()
+  await documentsFrontPage.answerDocumentsToAddQuestion(documentsToAdd)
 
-  return documentsIntroPage
+  return documentsFrontPage
 }
 
 const setupScenarioAndRunTest = (runTest: (scenario: Scenario) => Promise<void>) => {
-  return setupScenario(createSimpleLay(deputyReference))
-    .then(scenario => {
-      if (scenario === null) {
-        throw new Error("Unable to create scenario for attaching further documents");
-      }
-
-      return scenario
-    })
-    .then(runTest)
+  return setupScenario(createSimpleLay(deputyReference)).then(runTest)
 }
 
 test("a user has no supporting documents to add", async ({ page }) => {
@@ -232,7 +224,7 @@ test("a user uploads a file and then selects 'no' for supporting documents", asy
     const reportId = scenario.orders[0].reports[1].id
     const email = scenario.users[deputyReference].email
 
-    const documentsIntroPage = await startDocumentsSection(page, email, reportId, "yes")
+    const documentsFrontPage = await startDocumentsSection(page, email, reportId, "yes")
 
     const documentsUploadPage = new DocumentsUploadPage(page, reportId)
     await documentsUploadPage.attachFiles(path.join(__dirname, "/testFiles/testimage1.png"))
@@ -241,7 +233,7 @@ test("a user uploads a file and then selects 'no' for supporting documents", asy
     await documentsSummaryPage.goto()
     await documentsSummaryPage.editSupportingDocumentsAnswer()
 
-    await documentsIntroPage.answerDocumentsToAddQuestion("no")
+    await documentsFrontPage.answerDocumentsToAddQuestion("no")
 
     const errors = new PageOpgErrorMessage(page)
     await errors.expectErrorMessage("Your answer could not be updated to 'No' because you have attached documents")
