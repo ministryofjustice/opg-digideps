@@ -72,17 +72,16 @@ async function getAuthToken(user: TestUser): Promise<string | null> {
   return res.headers.get("authtoken")
 }
 
-// returns a closure which creates a scenario
-export function createSimpleLay(deputyReference: string): ScenarioFunction {
+// returns a closure which creates a scenario;
+// path should include leading "/"
+export function createScenarioViaApi(path: string, body: { [key: string]: string }): ScenarioFunction {
   return async (authToken: string): Promise<Scenario> => {
-    const res = await fetch(new Request(apiUrl + "/fixtures/scenarios/simplelay", {
+    const res = await fetch(new Request(apiUrl + path, {
       method: "POST",
       headers: {
         "AuthToken": authToken
       },
-      body: JSON.stringify({
-        "deputyReference": deputyReference,
-      })
+      body: JSON.stringify(body)
     }))
 
     if (res.status !== 200) {
