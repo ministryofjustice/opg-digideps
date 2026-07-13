@@ -1,19 +1,11 @@
-import process = require("process")
-
-import { Page } from "@playwright/test";
+import AdminPage from "./AdminPage";
 
 /**
  * <ADMIN_URL>/login
  */
-export default class AdminLoginPage {
-  constructor(private page: Page, private adminURL: string|undefined = process.env.ADMIN_URL) {
-    if (this.adminURL === undefined) {
-      throw new Error("ADMIN_URL is not set");
-    }
-  }
-
+export default class AdminLoginPage extends AdminPage {
   async loginAdmin(user: { email: string; password: string }) {
-    await this.page.goto(this.adminURL + "/login");
+    await this.page.goto(this.getAdminURL() + "/login");
 
     await this.page.fill("#login_email", user.email);
     await this.page.fill("#login_password", user.password);

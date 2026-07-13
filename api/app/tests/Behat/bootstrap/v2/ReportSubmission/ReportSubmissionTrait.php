@@ -55,12 +55,6 @@ trait ReportSubmissionTrait
         $this->clickLink('Pending');
     }
 
-    #[Then('the report PDF document should be queued')]
-    public function documentsAreSetToQueued(): void
-    {
-        $this->assertRowWithStatusAppears('DigiRep-', 'Queued');
-    }
-
     #[Then('the document :filename should be queued')]
     public function documentShouldBeQueued(string $fileName): void
     {
