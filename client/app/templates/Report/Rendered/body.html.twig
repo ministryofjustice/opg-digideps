@@ -71,6 +71,12 @@
         } %}
     {% endif %}
 
+    {% if report.hasSection('moneyInShort') %}
+        {% include '@App/Report/Rendered/_money_in_low_asset.html.twig' with {
+            'view': review.getMoneyInShortReviewView
+        } %}
+    {% endif %}
+
     {% if report.hasSection('moneyIn') %}
         {% include '@App/Report/Rendered/_money_in_high_asset.html.twig' with {
             'report': report,
