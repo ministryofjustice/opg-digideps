@@ -12,7 +12,7 @@ import ReportReviewPage from "./pages/ReportReviewPage"
 
 const deputyReference = "document-synchronisation-user"
 
-test("submitting a report sets the report PDF document's synchronisation status to queued in the admin dashboard", async ({ page }) => {
+test("submitting a report sets documents' synchronisation status to queued in the admin dashboard", async ({ page }) => {
   const runTest = async (scenario: Scenario) => {
     const reportId = scenario.orders[0].reports[0].id
     const email = scenario.users[deputyReference].email
@@ -48,17 +48,32 @@ test("submitting a report sets the report PDF document's synchronisation status 
     await reportDeclarationPage.isExpected()
     await reportDeclarationPage.submitReport()
 
-    // check the report document's status in admin dashboard
-    const adminLoginPage = new AdminLoginPage(page)
-    await adminLoginPage.loginAdmin(getUserFixture("admin_user"))
-
     // check documents in admin UI
+    const adminUser = getUserFixture("admin_user")
+    const adminLoginPage = new AdminLoginPage(page)
+    await adminLoginPage.loginAdmin(adminUser)
+
     const adminClientSearchPage = new AdminDocumentsListPage(page)
     await adminClientSearchPage.goto()
     await adminClientSearchPage.openPendingTab()
     await adminClientSearchPage.search(caseNumber)
     await adminClientSearchPage.expectDocumentsWithStatuses(
       { name: /testimage1\.png/, status: "Queued" },
+      { name: new RegExp(`DigiRep-.+_${caseNumber}\.pdf`), status: "Queued" }
+    )
+
+    // submit another document on the already-submitted report
+    await documentsUploadPage.goto()
+    await documentsUploadPage.attachFiles(path.join(__dirname, `/testFiles/testimage2.png`))
+    await documentsUploadPage.sendDocuments()
+
+    // check newly-uploaded document is also queued
+    await adminClientSearchPage.goto()
+    await adminClientSearchPage.openPendingTab()
+    await adminClientSearchPage.search(caseNumber)
+    await adminClientSearchPage.expectDocumentsWithStatuses(
+      { name: /testimage1\.png/, status: "Queued" },
+      { name: /testimage2\.png/, status: "Queued" },
       { name: new RegExp(`DigiRep-.+_${caseNumber}\.pdf`), status: "Queued" }
     )
   }
@@ -73,5 +88,5 @@ test("submitting a report sets the report PDF document's synchronisation status 
 test("submitting a supporting document after a report submission sets that document's synchronisation status to queued in the admin dashboard", async ({ page }) => {
 })
 
-test("running the document sync command synchronises queued documents with Sirius", async ({ page }) => {
+test("running the document sync command in the admin UI synchronises queued documents with Sirius", async ({ page }) => {
 })
