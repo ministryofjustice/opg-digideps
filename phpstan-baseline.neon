@@ -193,6 +193,12 @@ parameters:
 			path: api/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\ProcessOrgCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: api/app/src/Command/ProcessOrgCSVCommand.php
+
+		-
 			message: '#^Part \$limit \(mixed\) of encapsed string cannot be cast to string\.$#'
 			identifier: encapsedStringPart.nonString
 			count: 1
@@ -5029,6 +5035,18 @@ parameters:
 			path: api/app/src/FixtureFactory/UserFactory.php
 
 		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: api/app/src/Kernel.php
+
+		-
+			message: '#^Parameter \#2 \$value of method Symfony\\Component\\DependencyInjection\\Container\:\:setParameter\(\) expects array\|bool\|float\|int\|string\|UnitEnum\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Kernel.php
+
+		-
 			message: '#^Class OPG\\Digideps\\Backend\\Repository\\AssetRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
@@ -7969,6 +7987,12 @@ parameters:
 			path: api/app/src/v2/Registration/Assembler/LayDeputyshipDtoCollectionAssembler.php
 
 		-
+			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\Assembler\\SiriusToLayDeputyshipDtoAssembler\:\:determineReportTypeIsSupported\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: api/app/src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
+
+		-
 			message: '#^Parameter \#1 \$caseNumber of method OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto\:\:setCaseNumber\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -8737,6 +8761,12 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/Common/BaseFeatureContext.php
 
 		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 1
+			path: api/app/tests/Behat/bootstrap/Common/BaseFeatureContext.php
+
+		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\Common\\BaseFeatureContext\:\:debug\(\) has parameter \$name with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -9262,12 +9292,6 @@ parameters:
 			message: '#^Cannot access property \$usage on mixed\.$#'
 			identifier: property.nonObject
 			count: 2
-			path: api/app/tests/Behat/bootstrap/FeatureContext.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
 			path: api/app/tests/Behat/bootstrap/FeatureContext.php
 
 		-
@@ -10807,6 +10831,12 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/AdminManagement/AdminManagementFeatureContext.php
 
 		-
+			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 5
+			path: api/app/tests/Behat/bootstrap/v2/AppNotification/AppNotificationFeatureContext.php
+
+		-
 			message: '#^Cannot access constant ADMIN_ROLES on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: classConstant.nonObject
 			count: 1
@@ -11301,7 +11331,7 @@ parameters:
 		-
 			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 6
+			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
@@ -12903,6 +12933,12 @@ parameters:
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\Client\>\:\:findByCaseNumber\(\)\.$#'
 			identifier: method.notFound
+			count: 1
+			path: api/app/tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
+
+		-
+			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
@@ -14647,12 +14683,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
 
 		-
-			message: '#^Using nullsafe method call on non\-nullable type OPG\\Digideps\\Backend\\Entity\\Organisation\|false\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
 			message: '#^Using nullsafe method call on non\-nullable type OPG\\Digideps\\Backend\\Entity\\User\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 1
@@ -15009,12 +15039,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Registration\\RegistrationFeatureContext\:\:theFormShouldBeValid\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
@@ -18961,7 +18985,7 @@ parameters:
 			path: api/app/tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
@@ -18991,7 +19015,7 @@ parameters:
 			path: api/app/tests/Integration/Command/SatisfactionPerformanceStatsCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Command/SatisfactionPerformanceStatsCommandTest.php
@@ -19001,30 +19025,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: api/app/tests/Integration/Command/UserCleanupCommandTest.php
-
-		-
-			message: '#^Access to an undefined property object\:\:\$headers\.$#'
-			identifier: property.notFound
-			count: 2
-			path: api/app/tests/Integration/Controller/AbstractTestController.php
-
-		-
-			message: '#^Binary operation "\." between ''Response\: '' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: api/app/tests/Integration/Controller/AbstractTestController.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getContent\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: api/app/tests/Integration/Controller/AbstractTestController.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getStatusCode\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: api/app/tests/Integration/Controller/AbstractTestController.php
 
 		-
 			message: '#^Cannot access offset ''code'' on mixed\.$#'
@@ -19057,19 +19057,7 @@ parameters:
 			path: api/app/tests/Integration/Controller/AbstractTestController.php
 
 		-
-			message: '#^Cannot call method contains\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Controller/AbstractTestController.php
-
-		-
 			message: '#^Cannot call method createNewJWT\(\) on OPG\\Digideps\\Backend\\Service\\JWT\\JWTService\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Controller/AbstractTestController.php
-
-		-
-			message: '#^Cannot call method get\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Integration/Controller/AbstractTestController.php
@@ -19183,12 +19171,6 @@ parameters:
 			path: api/app/tests/Integration/Controller/AbstractTestController.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:login\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/tests/Integration/Controller/AbstractTestController.php
-
-		-
 			message: '#^Parameter \#1 \$method of method Symfony\\Component\\BrowserKit\\AbstractBrowser\:\:request\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -19231,12 +19213,6 @@ parameters:
 			path: api/app/tests/Integration/Controller/AbstractTestController.php
 
 		-
-			message: '#^Access to an undefined property object\:\:\$headers\.$#'
-			identifier: property.notFound
-			count: 1
-			path: api/app/tests/Integration/Controller/AuthControllerTest.php
-
-		-
 			message: '#^Call to an undefined method object\:\:expire\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -19263,12 +19239,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''role_name'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/tests/Integration/Controller/AuthControllerTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Integration/Controller/AuthControllerTest.php
 
@@ -21709,12 +21679,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
 
 		-
-			message: '#^Using nullsafe method call on non\-nullable type DateTime\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 2
-			path: api/app/tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''accountFrom'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -23989,12 +23953,6 @@ parameters:
 			path: api/app/tests/Integration/v2/Controller/CourtOrderControllerTest.php
 
 		-
-			message: '#^Access to an undefined property object\:\:\$headers\.$#'
-			identifier: property.notFound
-			count: 10
-			path: api/app/tests/Integration/v2/Controller/OrganisationControllerTest.php
-
-		-
 			message: '#^Binary operation "\." between ''/v2/organisation/'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 22
@@ -24004,18 +23962,6 @@ parameters:
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: api/app/tests/Integration/v2/Controller/OrganisationControllerTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getContent\(\)\.$#'
-			identifier: method.notFound
-			count: 17
-			path: api/app/tests/Integration/v2/Controller/OrganisationControllerTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getStatusCode\(\)\.$#'
-			identifier: method.notFound
-			count: 29
 			path: api/app/tests/Integration/v2/Controller/OrganisationControllerTest.php
 
 		-
@@ -24082,12 +24028,6 @@ parameters:
 			message: '#^Cannot access offset 2 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: api/app/tests/Integration/v2/Controller/OrganisationControllerTest.php
-
-		-
-			message: '#^Cannot call method contains\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 10
 			path: api/app/tests/Integration/v2/Controller/OrganisationControllerTest.php
 
 		-
@@ -24289,7 +24229,7 @@ parameters:
 			path: api/app/tests/Integration/v2/Controller/OrganisationControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 16
 			path: api/app/tests/Integration/v2/Controller/OrganisationControllerTest.php
@@ -24319,7 +24259,7 @@ parameters:
 			path: api/app/tests/Integration/v2/Controller/OrganisationControllerTest.php
 
 		-
-			message: '#^Parameter \#3 \$message of method PHPUnit\\Framework\\Assert\:\:assertEquals\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#3 \$message of method PHPUnit\\Framework\\Assert\:\:assertEquals\(\) expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/v2/Controller/OrganisationControllerTest.php
@@ -24341,18 +24281,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: api/app/tests/Integration/v2/Controller/OrganisationControllerTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getContent\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: api/app/tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getStatusCode\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: api/app/tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
 
 		-
 			message: '#^Cannot access offset ''added'' on mixed\.$#'
@@ -24421,13 +24349,7 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$actual of method PHPUnit\\Framework\\Assert\:\:assertJson\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$actual of method PHPUnit\\Framework\\Assert\:\:assertJson\(\) expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
@@ -24435,13 +24357,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$response of method Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Registration\\Controller\\OrgDeputyshipControllerTest\:\:assertResponseHasArrayKeys\(\) expects Symfony\\Component\\HttpFoundation\\Response, object given\.$#'
-			identifier: argument.type
-			count: 1
+			count: 2
 			path: api/app/tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
 
 		-
@@ -26749,12 +26665,6 @@ parameters:
 			path: client/app/src/Component/Review/AssetsReviewView.php
 
 		-
-			message: '#^Using nullsafe method call on non\-nullable type DateTime\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: client/app/src/Component/Review/DocumentsReviewView.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -28643,78 +28553,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: client/app/src/Controller/Report/ProfCurrentFeesController.php
-
-		-
-			message: '#^Call to an undefined method Symfony\\Component\\Form\\FormInterface\:\:isClicked\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Cannot access offset ''hasMoreDetails'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: client/app/src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Cannot access offset ''typeId'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: client/app/src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Cannot call method getAmount\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Cannot call method getEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Cannot call method getProfDeputyCostsHasInterim\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Cannot call method getProfDeputyCostsHasPrevious\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Cannot call method getStartDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Parameter \#2 \$amount of class OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost constructor expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:put\(\) expects array\|object\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: client/app/src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Parameter \#3 \$hasMoreDetails of class OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Parameter \#4 \$moreDetails of class OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost constructor expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Report/ProfDeputyCostsController.php
 
 		-
 			message: '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\Session\\SessionInterface\:\:getFlashBag\(\)\.$#'
@@ -31207,12 +31045,6 @@ parameters:
 			path: client/app/src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:addProfDeputyInterimCosts\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:debtsValid\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -31327,18 +31159,6 @@ parameters:
 			path: client/app/src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getProfDeputyOtherCostByTypeId\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getProfDeputyOtherCostTypeIds\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getReasonForNoMoneyIn\(\) should return string\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -31377,12 +31197,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:isSectionFlaggedForAttention\(\) has parameter \$sectionId with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:profCostsInterimAtLeastOne\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: client/app/src/Entity/Report/Report.php
 
@@ -31573,12 +31387,6 @@ parameters:
 			path: client/app/src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyCostsHowCharged\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyEstimateCostTypeIds\(\) has parameter \$profDeputyEstimateCostTypeIds with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -31605,36 +31413,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyManagementCostTypeIds\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\ReportProfDeputyCostsEstimateTrait but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\)\.$#'
 			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyOtherCostIds\(\) should return \$this\(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyOtherCostTypeIds\(\) has parameter \$profDeputyOtherCostTypeIds with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyOtherCosts\(\) has parameter \$profDeputyOtherCosts with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyTotalCostsTakenFromClient\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyTotalCostsTakenFromClient\(\) has parameter \$profDeputyTotalCostsTakenFromClient with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: client/app/src/Entity/Report/Report.php
 
@@ -31849,24 +31627,6 @@ parameters:
 			path: client/app/src/Entity/Report/Report.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$profDeputyOtherCostTypeIds has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$profDeputyOtherCosts \(array\<OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost\>\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$profDeputyTotalCostsTakenFromClient \(float\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$reasonForNoMoneyIn has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -31893,7 +31653,7 @@ parameters:
 		-
 			message: '#^Variable \$submittedCost in empty\(\) always exists and is not falsy\.$#'
 			identifier: empty.variable
-			count: 2
+			count: 1
 			path: client/app/src/Entity/Report/Report.php
 
 		-
@@ -32987,12 +32747,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: client/app/src/EventListener/ResponseNoCacheListener.php
-
-		-
-			message: '#^Access to undefined constant Symfony\\Component\\HttpKernel\\HttpKernelInterface\:\:MASTER_REQUEST\.$#'
-			identifier: classConstant.notFound
-			count: 1
-			path: client/app/src/EventListener/SessionListener.php
 
 		-
 			message: '#^Cannot cast mixed to int\.$#'
@@ -34243,6 +33997,12 @@ parameters:
 			path: client/app/src/Form/YesNoType.php
 
 		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: client/app/src/Kernel.php
+
+		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Kernel\:\:__construct\(\) has parameter \$debug with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -34262,6 +34022,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$debug of method Symfony\\Component\\HttpKernel\\Kernel\:\:__construct\(\) expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Kernel.php
+
+		-
+			message: '#^Parameter \#2 \$value of method Symfony\\Component\\DependencyInjection\\Container\:\:setParameter\(\) expects array\|bool\|float\|int\|string\|UnitEnum\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/src/Kernel.php
@@ -34481,54 +34247,6 @@ parameters:
 			identifier: missingType.parameter
 			count: 1
 			path: client/app/src/Resolver/SubSectionRoute/ProfCostsEstimateSubSectionRouteResolver.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolver\:\:determineCurrentFixedCostSection\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: client/app/src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolver\:\:determineCurrentNonFixedCostSection\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: client/app/src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolver\:\:resolve\(\) has parameter \$state with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolver\:\:resolve\(\) should return string but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: client/app/src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolver\:\:sectionIsComplete\(\) has parameter \$state with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolver\:\:sectionNotStarted\(\) has parameter \$state with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: '#^Negated boolean expression is always true\.$#'
-			identifier: booleanNot.alwaysTrue
-			count: 1
-			path: client/app/src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: client/app/src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
 
 		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\Client\:\:getUserIds\(\)\.$#'
@@ -38755,7 +38473,7 @@ parameters:
 			path: client/app/tests/Unit/Command/CheckCSVUploadedCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Command/CheckCSVUploadedCommandTest.php
@@ -40289,96 +40007,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsEstimateSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Cannot call method setProfDeputyCostsAmountToScco\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Cannot call method setProfDeputyCostsHasInterim\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Cannot call method setProfDeputyFixedCost\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsBreakdownRouteWhenBreakdownCostsIncomplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsBreakdownRouteWhenFixedCostsSubsectionIsCompleteAndNoBreakdownCostsEntered\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsCostsReceivedRouteWhenFixedCostsSubsectionIsIncomplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsCostsReceivedRouteWhenInterimDoesntExistAndFixedCostSubsectionIsIncomplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsInterimExistsRouteWhenInterimExistsSubsectionIsIncomplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsInterimRouteWhenInterimExistsAndSubsectionIsIncomplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsNullIfSectionIsNotStarted\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsPreviousFeesExistRouteSubSectionIsIncomplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsSccoAmountRouteWhenAmountSccoSubsectionIsIncomplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsSummaryRouteIfSectionIsComplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Parameter \#1 \$profDeputyCostsHasPrevious of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyCostsHasPrevious\(\) expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Parameter \#1 \$profDeputyCostsHasPrevious of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyCostsHasPrevious\(\) expects string, true given\.$#'
-			identifier: argument.type
-			count: 7
-			path: client/app/tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Security\\ClientVoterTest\:\:deleteClientProvider\(\) has no return type specified\.$#'
@@ -44635,12 +44263,6 @@ parameters:
 			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
 
 		-
-			message: '#^Cannot call method setProfDeputyCostsHasInterim\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
 			message: '#^Cannot call method setTitle\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -44733,18 +44355,6 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:ensureDeputyCostsWithHowChargedNotAnswered\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:ensureDeputyCostsWithNonFixedAndInterimEqualTo\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:ensureDeputyCostsWithNonFixedAndInterimEqualTo\(\) has parameter \$interim with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
 
@@ -44914,12 +44524,6 @@ parameters:
 			message: '#^Parameter \#1 \$node of class Symfony\\Component\\DomCrawler\\Crawler constructor expects array\<DOMNode\>\|DOMNode\|DOMNodeList\<DOMNode\>\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#1 \$profDeputyCostsHowCharged of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyCostsHowCharged\(\) expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
 
 		-
