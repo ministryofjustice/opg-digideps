@@ -1,7 +1,7 @@
 import path = require("path")
 import { expect, test } from "@playwright/test"
-import { createScenarioViaApi, getUserFixture, Scenario, setupScenario, testPassword } from "./fixtures/fixtures";
-import AdminLoginPage from "./pages/AdminLoginPage";
+import { createScenarioViaApi, getUserFixture, Scenario, setupScenario, testPassword } from "./fixtures/fixtures"
+import AdminLoginPage from "./pages/AdminLoginPage"
 import DocumentsUploadPage from "./pages/DocumentsUploadPage"
 import LoginPage from "./pages/LoginPage"
 

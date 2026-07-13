@@ -1,4 +1,4 @@
-import { expect, Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test"
 
 /**
  * <FRONT_URL>/report/<reportId>/overview
@@ -25,5 +25,10 @@ export default class ReportOverviewPage {
     }
 
     expect(sectionStatuses[section]).toBe(status)
+  }
+
+  // press "Preview and check report"
+  async previewAndCheckReport() {
+    await this.page.locator("a.behat-link-report-submit").click()
   }
 }
