@@ -7,6 +7,10 @@ ignore:
     - '*':
         reason: "S3 access logging intentionally disabled because this bucket is development-only and only contains dev data"
 
+  SNYK-CC-AWS-426:
+    - '*':
+        reason: "Allow API termination as instance is ephemeral and needs to be kept up to date"
+
   SNYK-CC-TF-55:
     - '*':
         reason: "SNS encryption intentionally not enabled because Can't do cross region SNS encryption"
