@@ -18,7 +18,7 @@ class OrgUserCreatedSubscriber implements EventSubscriberInterface
         $this->mailer = $mailer;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             OrgUserCreatedEvent::NAME => 'sendEmail',
