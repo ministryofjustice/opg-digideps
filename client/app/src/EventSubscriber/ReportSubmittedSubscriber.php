@@ -32,7 +32,7 @@ class ReportSubmittedSubscriber implements EventSubscriberInterface
         $this->dateTimeProvider = $dateTimeProvider;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ReportSubmittedEvent::NAME => [
