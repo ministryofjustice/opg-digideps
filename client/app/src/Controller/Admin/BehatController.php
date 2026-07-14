@@ -10,7 +10,6 @@ use OPG\Digideps\Frontend\Sync\Command\ChecklistSyncCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,13 +39,12 @@ class BehatController extends AbstractController
         $application->setAutoExit(false);
 
         $input = new ArrayInput(['command' => 'digideps:document-sync']);
-        $output = new NullOutput();
 
-        $application->run($input, $output);
+        $application->run($input);
 
         $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, '0');
 
-        return new Response('');
+        return new Response('sync done');
     }
 
     /**

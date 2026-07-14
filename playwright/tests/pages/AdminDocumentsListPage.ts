@@ -53,5 +53,6 @@ export default class AdminDocumentsListPage {
     }
 
     expect(asExpected).toBe(expectedFileNamesAndStatuses.length)
+    expect(documentSubmissions.length).toBe(expectedFileNamesAndStatuses.length)
   }
 }

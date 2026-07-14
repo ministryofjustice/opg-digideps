@@ -20,6 +20,7 @@ use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\Report\Action;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
@@ -429,7 +430,18 @@ final class FixtureService
         $report->setSubmitted(true);
         $report->setSubmitDate((clone $report->getEndDate())->add(new \DateInterval('P15D')));
         $report->setSubmittedBy($submitter);
-        $this->persist(new ReportSubmission($report, $submitter));
+
+        $document = new Document($report);
+        $document->setIsReportPdf(true);
+        $document->setCreatedBy($submitter);
+        $document->setStorageReference("dd_doc_{$report->getId()}_" . time());
+        $document->setFileName("DigiRep-{$this->counter->nextString(8)}.pdf");
+        $this->persist($document);
+
+        $reportSubmission = new ReportSubmission($report, $submitter);
+        $reportSubmission->setUuid($this->counter->nextString(20));
+        $this->persist($reportSubmission);
+
         $this->persist($report);
     }
 
