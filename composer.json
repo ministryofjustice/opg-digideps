@@ -7,9 +7,9 @@
   "scripts": {
     "reformat": "php-cs-fixer fix -v",
     "reformat:check": "php-cs-fixer check -v",
-    "lint:phpstan": "phpstan",
-    "lint:phpstan:baseline": "phpstan && phpstan --generate-baseline",
-    "lint:phpstan:baseline:force": "phpstan --generate-baseline"
+    "lint:phpstan": "phpstan --memory-limit=512M",
+    "lint:phpstan:baseline": "phpstan --memory-limit=512M && phpstan --memory-limit=512M --generate-baseline",
+    "lint:phpstan:baseline:force": "phpstan --memory-limit=512M --generate-baseline"
   },
   "require": {
     "php": "^8.4"
