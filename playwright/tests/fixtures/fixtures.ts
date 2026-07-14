@@ -74,7 +74,7 @@ async function getAuthToken(user: TestUser): Promise<string | null> {
 
 // returns a closure which creates a scenario;
 // path should include leading "/"
-export function createScenarioViaApi(path: string, body: { [key: string]: string }): ScenarioFunction {
+export function createScenarioViaApi(path: string, body: { [key: string]: any }): ScenarioFunction {
   return async (authToken: string): Promise<Scenario> => {
     const res = await fetch(new Request(apiURL + path, {
       method: "POST",
