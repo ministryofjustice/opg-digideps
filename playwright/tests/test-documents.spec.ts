@@ -33,7 +33,7 @@ const startDocumentsSection = async (
 }
 
 const setupScenarioAndRunTest = (runTest: (scenario: Scenario) => Promise<void>) => {
-  return setupScenario(createScenarioViaApi("/fixtures/scenarios/laysimple", {deputyReference: deputyReference})).then(runTest)
+  return setupScenario(createScenarioViaApi("/fixtures/scenarios/laysimple", { deputyReference: deputyReference })).then(runTest)
 }
 
 test("a user has no supporting documents to add", async ({ page }) => {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
-use OPG\Digideps\Backend\Entity\Report\Document;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait DocumentsSectionTrait
@@ -76,80 +75,5 @@ trait DocumentsSectionTrait
     public function iShouldSeeFeeGuidance(): void
     {
         $this->assertOnAlertMessage($this->orgCostCertificateMessage);
-    }
-
-    /**
-     * @Given /^the supporting document has expired and is no longer stored in the S3 bucket$/
-     */
-    public function theSupportingDocumentHasExpiredAndIsNoLongerStoredInTheS3bucket(): void
-    {
-        $reportId = $this->loggedInUserDetails->getCurrentReportId();
-
-        $docs = $this->em->getRepository(Document::class)->findBy(['report' => $reportId]);
-
-        foreach ($docs as $doc) {
-            $this->fixtureHelper->deleteFilesFromS3($doc->getStorageReference());
-        }
-    }
-
-    /**
-     * @Given /^I try to submit my report with the expired document$/
-     */
-    public function iTryToSubmitMyReportWithTheExpiredDocument(): void
-    {
-        $this->visitFrontendPath($this->getReportOverviewUrl($this->loggedInUserDetails->getCurrentReportId()));
-        $this->clickLink('Preview and check report');
-    }
-
-    /**
-     * @Then /^I should be redirected to the re\-upload page$/
-     */
-    public function iShouldBeRedirectedToTheReUploadPage(): void
-    {
-        $this->iAmOnReUploadPage();
-    }
-
-    /**
-     * @Given I delete the missing document and re-upload :document to the report
-     */
-    public function iDeleteTheMissingDocumentAndReUploadToTheReport(string $document): void
-    {
-        $fileNameSplit = pathinfo($document);
-        $fileName = $fileNameSplit['filename'];
-
-        $endSpaces = preg_replace('/\s+(\.[^.]+)$/', '$1', $fileName);
-        $remainingSpaces = preg_replace('[[[:blank:]]]', '_', $endSpaces);
-        $specialChars = preg_replace('/[^\w_.-]/', '', $remainingSpaces ?? '');
-        $underScoresAndPeriods = preg_replace('/([.-])/', '_', $specialChars ?? '') ?? '';
-
-        $formattedDocName = isset($fileNameSplit['extension']) ?
-            $underScoresAndPeriods . '.' . $fileNameSplit['extension'] :
-            $underScoresAndPeriods;
-
-        $parentOfDtWithTextSelector = sprintf('//dt[contains(text(),"%s")]/..', $formattedDocName);
-        $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
-
-        if (is_null($documentRowDiv)) {
-            throw new BehatException(sprintf('An element containing a dt with the text %s was not found', $document));
-        }
-
-        $removeLinkSelector = '//a[contains(text(),"Remove")]';
-        $removeLink = $documentRowDiv->find('xpath', $removeLinkSelector);
-
-        if (is_null($removeLink)) {
-            throw new BehatException('A link with the text remove was not found in the document row');
-        }
-
-        $removeLink->click();
-        $this->iAmOnReUploadPage();
-
-        // re-upload document
-        $this->attachFileToField('report_document_upload_files', $document);
-        $this->pressButton('Upload');
-
-        $descriptionLists = $this->findAllCssElements('dl');
-        $this->findFileNamesInDls($descriptionLists, [$formattedDocName]);
-
-        $this->clickLink('Save and continue');
     }
 }
