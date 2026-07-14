@@ -7,9 +7,9 @@
   "scripts": {
     "reformat": "php-cs-fixer fix -v",
     "reformat:check": "php-cs-fixer check -v",
-    "lint:phpstan": "phpstan",
-    "lint:phpstan:baseline": "phpstan && phpstan --generate-baseline",
-    "lint:phpstan:baseline:force": "phpstan --generate-baseline"
+    "lint:phpstan": "phpstan --memory-limit=512M",
+    "lint:phpstan:baseline": "phpstan --memory-limit=512M && phpstan --memory-limit=512M --generate-baseline",
+    "lint:phpstan:baseline:force": "phpstan --memory-limit=512M --generate-baseline"
   },
   "require": {
     "php": "^8.4"
@@ -17,7 +17,7 @@
   "require-dev": {
     "phpstan/phpstan": "^2.1.5",
     "phpstan/phpstan-mockery": "^2.0",
-    "phpstan/phpstan-phpunit": "^2.0.5",
+    "phpstan/phpstan-phpunit": "^2.0",
     "jangregor/phpstan-prophecy": "^2.3",
     "friendsofphp/php-cs-fixer": "^3.95"
   }
