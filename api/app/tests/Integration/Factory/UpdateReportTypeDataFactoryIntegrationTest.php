@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\OPG\Digideps\Backend\Factory;
+namespace Tests\OPG\Digideps\Backend\Integration\Factory;
 
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
