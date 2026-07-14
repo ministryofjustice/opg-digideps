@@ -1,4 +1,4 @@
-@v2 @v2_sequential_2 @report-submissions @checklist-sync
+@v2 @v2_sequential_2 @checklist-synchronisation
 Feature: Synchronising Checklists with Sirius
 
     @super-admin @lay-health-welfare-submitted
