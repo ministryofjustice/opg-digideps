@@ -1,4 +1,4 @@
-const apiUrl = "http://api-webserver"
+const apiURL = "http://api-webserver"
 
 type UserType = "lay_user" | "pro_user" | "admin_user"
 
@@ -59,7 +59,7 @@ export function getUserFixture(type: UserType): TestUser {
 
 // login to the API and return the auth token from the response headers
 async function getAuthToken(user: TestUser): Promise<string | null> {
-  const res = await fetch(new Request(apiUrl + "/auth/login", {
+  const res = await fetch(new Request(apiURL + "/auth/login", {
     method: "POST",
     body: JSON.stringify({ "email": user.email, "password": user.password }),
     headers: {
@@ -76,7 +76,7 @@ async function getAuthToken(user: TestUser): Promise<string | null> {
 // path should include leading "/"
 export function createScenarioViaApi(path: string, body: { [key: string]: string }): ScenarioFunction {
   return async (authToken: string): Promise<Scenario> => {
-    const res = await fetch(new Request(apiUrl + path, {
+    const res = await fetch(new Request(apiURL + path, {
       method: "POST",
       headers: {
         "AuthToken": authToken
@@ -117,4 +117,12 @@ export async function setupScenario(scenarioFn: ScenarioFunction): Promise<Scena
       console.error(err)
       throw err
     })
+}
+
+export function getAdminURL(): string {
+  const adminURL = process.env.ADMIN_URL
+  if (adminURL === undefined) {
+    throw new Error("ADMIN_URL is not set")
+  }
+  return adminURL
 }

@@ -51,7 +51,7 @@ test("a user sends further documents", async ({ page }) => {
       const adminPage = new AdminLoginPage(page)
       await adminPage.loginAdmin(getUserFixture("admin_user"))
 
-      // go to submissions tag, search for case, click on pending tab,
+      // go to submissions tab, search for case, click on pending tab,
       // ensure there are two separate file submissions listed, one for each file
       await page.click(".behat-link-admin-documents")
       await page.fill("#search", clientCaseNumber)
@@ -66,7 +66,7 @@ test("a user sends further documents", async ({ page }) => {
         .toContainText(filesToUpload[1])
     }
 
-    await setupScenario(createScenarioViaApi("/fixtures/scenarios/laysimple", {deputyReference: deputyReference}))
+    await setupScenario(createScenarioViaApi("/fixtures/scenarios/laysimple", { deputyReference: deputyReference }))
       .then(scenario => {
         if (scenario === null) {
           throw new Error("Unable to create scenario for attaching further documents")

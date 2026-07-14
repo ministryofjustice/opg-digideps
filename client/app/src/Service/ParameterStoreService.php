@@ -13,14 +13,9 @@ class ParameterStoreService
     public const string FLAG_CHECKLIST_SYNC = 'checklist-sync';
     public const string FLAG_DOCUMENT_SYNC = 'document-sync';
 
-    /** @var SsmClient */
-    private $ssmClient;
-
-    /** @var string */
-    private $parameterPrefix;
-
-    /** @var string */
-    private $flagPrefix;
+    private SsmClient $ssmClient;
+    private string $parameterPrefix;
+    private string $flagPrefix;
 
     public function __construct(SsmClient $ssmClient, string $parameterPrefix, string $flagPrefix)
     {
@@ -45,13 +40,7 @@ class ParameterStoreService
         return $flag['Parameter']['Value'];
     }
 
-    public function putParameter(string $parameterName, string $parameterValue)
-    {
-        $parameterName = $this->parameterPrefix . $parameterName;
-        $this->ssmClient->putParameter(['Name' => $parameterName, 'Value' => $parameterValue, 'Overwrite' => true]);
-    }
-
-    public function putFeatureFlag(string $flagName, string $flagValue)
+    public function putFeatureFlag(string $flagName, string $flagValue): void
     {
         $flagName = $this->flagPrefix . $flagName;
         $this->ssmClient->putParameter(['Name' => $flagName, 'Value' => $flagValue, 'Overwrite' => true]);

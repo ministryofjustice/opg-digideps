@@ -1,6 +1,12 @@
 import path from "path"
 import { test } from "@playwright/test"
-import { createScenarioViaApi, getUserFixture, Scenario, setupScenario, testPassword } from "./fixtures/fixtures"
+import {
+  createScenarioViaApi,
+  getUserFixture,
+  Scenario,
+  setupScenario,
+  testPassword
+} from "./fixtures/fixtures"
 import AdminDocumentsListPage from "./pages/AdminDocumentsListPage"
 import AdminLoginPage from "./pages/AdminLoginPage"
 import DocumentsUploadPage from "./pages/DocumentsUploadPage"
@@ -12,7 +18,7 @@ import ReportReviewPage from "./pages/ReportReviewPage"
 
 const deputyReference = "document-synchronisation-user"
 
-test("submitting a report sets documents' synchronisation status to queued in the admin dashboard", async ({ page }) => {
+test("admin dashboard shows correct statuses for pending and synchronised documents", async ({ page }) => {
   const runTest = async (scenario: Scenario) => {
     const reportId = scenario.orders[0].reports[0].id
     const email = scenario.users[deputyReference].email
@@ -53,11 +59,11 @@ test("submitting a report sets documents' synchronisation status to queued in th
     const adminLoginPage = new AdminLoginPage(page)
     await adminLoginPage.loginAdmin(adminUser)
 
-    const adminClientSearchPage = new AdminDocumentsListPage(page)
-    await adminClientSearchPage.goto()
-    await adminClientSearchPage.openPendingTab()
-    await adminClientSearchPage.search(caseNumber)
-    await adminClientSearchPage.expectDocumentsWithStatuses(
+    const adminDocumentsListPage = new AdminDocumentsListPage(page)
+    await adminDocumentsListPage.goto()
+    await adminDocumentsListPage.openPendingTab()
+    await adminDocumentsListPage.search(caseNumber)
+    await adminDocumentsListPage.expectDocumentsWithStatuses(
       { name: /testimage1\.png/, status: "Queued" },
       { name: new RegExp(`DigiRep-.+_${caseNumber}\.pdf`), status: "Queued" }
     )
@@ -68,10 +74,12 @@ test("submitting a report sets documents' synchronisation status to queued in th
     await documentsUploadPage.sendDocuments()
 
     // check newly-uploaded document is also queued
-    await adminClientSearchPage.goto()
-    await adminClientSearchPage.openPendingTab()
-    await adminClientSearchPage.search(caseNumber)
-    await adminClientSearchPage.expectDocumentsWithStatuses(
+    await adminLoginPage.loginAdmin(adminUser)
+
+    await adminDocumentsListPage.goto()
+    await adminDocumentsListPage.openPendingTab()
+    await adminDocumentsListPage.search(caseNumber)
+    await adminDocumentsListPage.expectDocumentsWithStatuses(
       { name: /testimage1\.png/, status: "Queued" },
       { name: /testimage2\.png/, status: "Queued" },
       { name: new RegExp(`DigiRep-.+_${caseNumber}\.pdf`), status: "Queued" }
@@ -83,10 +91,4 @@ test("submitting a report sets documents' synchronisation status to queued in th
     createScenarioViaApi("/fixtures/scenarios/layreadytosubmit", {deputyReference: deputyReference})
   )
   .then(runTest)
-})
-
-test("submitting a supporting document after a report submission sets that document's synchronisation status to queued in the admin dashboard", async ({ page }) => {
-})
-
-test("running the document sync command in the admin UI synchronises queued documents with Sirius", async ({ page }) => {
 })
