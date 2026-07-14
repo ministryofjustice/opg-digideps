@@ -14,7 +14,6 @@ use Faker\Generator;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Service\File\Storage\S3Storage;
-use OPG\Digideps\Backend\Service\ParameterStoreService;
 use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -126,7 +125,6 @@ class BaseFeatureContext extends MinkContext
         protected readonly KernelInterface $symfonyKernel,
         protected readonly EntityManagerInterface $em,
         protected readonly ReportTestHelper $reportTestHelper,
-        protected readonly ParameterStoreService $parameterStoreService,
         protected readonly KernelInterface $kernel,
         protected readonly S3Storage $s3,
         protected readonly S3Client $s3Client,

@@ -359,17 +359,6 @@ services:
         tags:
             - { name: serializer.denormalizer }
 
-    Aws\Ssm\SsmClient:
-        arguments: ["%ssm_client_params%"]
-
-    OPG\Digideps\Backend\Service\ParameterStoreService:
-        arguments:
-            [
-                '@Aws\Ssm\SsmClient',
-                "%env(PARAMETER_PREFIX)%",
-                "%env(FEATURE_FLAG_PREFIX)%",
-            ]
-
     OPG\Digideps\Backend\Security\HeaderTokenAuthenticator:
         class: OPG\Digideps\Backend\Security\HeaderTokenAuthenticator
         arguments:

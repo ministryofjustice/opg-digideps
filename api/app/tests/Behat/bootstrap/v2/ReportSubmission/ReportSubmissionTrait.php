@@ -10,7 +10,6 @@ use Behat\Step\Then;
 use Behat\Step\When;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
-use OPG\Digideps\Backend\Service\ParameterStoreService;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
 use Tests\OPG\Digideps\Backend\Behat\v2\Common\UserDetails;
 
@@ -291,12 +290,6 @@ trait ReportSubmissionTrait
                 'Comparing expected status against status in table row that contains an expected filename'
             );
         }
-    }
-
-    #[Given('/^the document sync enabled flag is set to \'([^\']*)\'$/')]
-    public function theDocumentSyncEnabledFlagIsSetTo(string $documentFeatureFlagValue): void
-    {
-        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, $documentFeatureFlagValue);
     }
 
     #[Then('/^the \'([^\']*)\' tab \'([^\']*)\' visible$/')]

@@ -43,32 +43,6 @@ class ParameterStoreServiceTest extends TestCase
      * @dataProvider parameterDataProvider
      * @test
      */
-    public function putParameter($parameterName, $parameterValue)
-    {
-        $ssmClient = self::prophesize(SsmClient::class);
-        $parameterPrefix = '/param-prefix/';
-        $ssmClient
-            ->putParameter(
-                ['Name' => $parameterPrefix . $parameterName,
-                'Value' => $parameterValue,
-                'Overwrite' => true,
-                ]
-            )
-            ->shouldBeCalled()
-            ->willReturn([
-                'Tier' => 'Standard',
-                'Version' => 10,
-            ]);
-
-        $sut = new ParameterStoreService($ssmClient->reveal(), $parameterPrefix, '/flag-prefix/');
-
-        $sut->putParameter($parameterName, $parameterValue);
-    }
-
-    /**
-     * @dataProvider parameterDataProvider
-     * @test
-     */
     public function putFeatureFlag($flagName, $flagValue)
     {
         $ssmClient = self::prophesize(SsmClient::class);
