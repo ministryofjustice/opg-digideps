@@ -217,10 +217,10 @@ parameters:
 			path: api/app/src/Command/ReportStatusUpdaterCommand.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\ResyncResubmittableErrorChecklists\:\:\$defaultName has no type specified\.$#'
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\ResyncResubmittableErrorDocuments\:\:\$defaultName has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
-			path: api/app/src/Command/ResyncResubmittableErrorChecklists.php
+			path: api/app/src/Command/ResyncResubmittableErrorDocuments.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:deleteInactivateUsers\(\) should return int but returns mixed\.$#'
@@ -237,6 +237,12 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$user of method OPG\\Digideps\\Backend\\Command\\UserRetentionPolicyCommand\:\:storeUserIdForDeletion\(\) expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: api/app/src/Command/UserRetentionPolicyCommand.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\UserRetentionPolicyCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
 			count: 1
 			path: api/app/src/Command/UserRetentionPolicyCommand.php
 
@@ -16003,7 +16009,7 @@ parameters:
 			path: api/app/tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
@@ -21457,19 +21463,19 @@ parameters:
 			path: api/app/tests/Integration/v2/Service/CourtOrderServiceIntegrationTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/ProcessLayCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/ProcessOrgCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/UserRetentionPolicyCommandTest.php
@@ -22525,6 +22531,12 @@ parameters:
 			path: client/app/src/Command/CheckCSVUploadedCommand.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: client/app/src/Command/CheckCSVUploadedCommand.php
+
+		-
 			message: '#^Parameter \#1 \$array of function array_filter expects array, list\<string\>\|false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -22624,12 +22636,6 @@ parameters:
 			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, array\|bool\|float\|int\|string\|UnitEnum\|null given\.$#'
 			identifier: argument.type
 			count: 2
-			path: client/app/src/Command/ProcessLayCSVCommand.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Command\\ProcessLayCSVCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
 			path: client/app/src/Command/ProcessLayCSVCommand.php
 
 		-
@@ -32869,7 +32875,7 @@ parameters:
 			path: client/app/tests/Unit/Command/CheckCSVUploadedCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Command/CheckCSVUploadedCommandTest.php
