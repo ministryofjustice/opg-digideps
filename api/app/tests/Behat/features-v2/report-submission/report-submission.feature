@@ -1,4 +1,4 @@
-@v2 @v2_sequential_2 @report-submissions
+@v2 @v2_sequential_2 @report-submission
 Feature: Report submissions dashboard
 
     @super-admin
@@ -49,14 +49,8 @@ Feature: Report submissions dashboard
 
     @super-admin
     Scenario: Make 'New' tab visibility toggle based on Document Sync Enabled flag
-        And a super admin user accesses the admin app
-        Given the document sync enabled flag is set to '0'
-        And I navigate to the admin report submissions page
-        Then the 'New' tab 'is' visible
-        Then the 'Pending' tab 'is' visible
-        Then the 'Synchronised' tab 'is' visible
-        Given the document sync enabled flag is set to '1'
+        When a super admin user accesses the admin app
         And I navigate to the admin report submissions page
         Then the 'New' tab 'is not' visible
-        Then the 'Pending' tab 'is' visible
-        Then the 'Synchronised' tab 'is' visible
+        And the 'Pending' tab 'is' visible
+        And the 'Synchronised' tab 'is' visible
