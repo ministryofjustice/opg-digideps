@@ -159,6 +159,23 @@ final class FixtureService
         ];
     }
 
+    public function addSupportingDocumentWithoutS3Object(Report $report, string $filename): Document
+    {
+        // required so that the system recognises the report has documents
+        $report->setWishToProvideDocumentation('yes');
+        $this->persist($report);
+
+        $document = new Document($report);
+        $document->setIsReportPdf(false);
+        $document->setCreatedBy($report->getSubmittedBy());
+        $document->setStorageReference("dd_doc_{$report->getId()}_" . time());
+        $document->setFileName($filename);
+        $this->persist($document);
+        $this->flush();
+
+        return $document;
+    }
+
     /**
      * @param Persons $persons
      * @param Order|null $sibling
@@ -548,4 +565,6 @@ final class FixtureService
         $this->entityManager->persist($counter);
         $this->counter = $counter;
     }
+
+
 }
