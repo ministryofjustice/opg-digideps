@@ -103,6 +103,56 @@ class FixtureController extends AbstractController
         return $this->jsonifyScenario($details);
     }
 
+    /**
+     * Creates a lay deputy with user account and a complete but unsubmitted report;
+     * the report has documents attached but those documents have no objects in S3.
+     *
+     * @return array{users: array<string, FixtureUser>, orders: array<'pfa'|'hw', FixtureOrder>}
+     * @throws ValidationException|\DateInvalidOperationException
+     */
+    #[Route('/fixtures/scenarios/layreadytosubmit/expireds3objects', name: 'fixtures_scenarios_layreadytosubmit_expireds3objects', methods: ['POST'])]
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function scenarioLayReadyToSubmitExpiredS3Objects(Request $request): array
+    {
+        $payload = new ValidatingArray($request->getPayload()->all());
+
+        $deputyReference = $payload->getStringOrThrow('deputyReference');
+        $reportTypeStr = $payload->getStringOrNull('reportType') ?? '';
+        $supportingDocumentNames = $payload->getArrayOrDefault('supportingDocumentNames', ['receipt1.pdf', 'receipt2.pdf']);
+        $reportType = CourtOrderReportType::tryFrom($reportTypeStr) ?? CourtOrderReportType::OPG102;
+
+        $details = $this->fixtureService->instantiateScenario(
+            new Scenario(
+                new CourtOrderDescriptor(
+                    new DeputySet(
+                        new DeputyDescriptor($deputyReference)
+                    ),
+                    $reportType,
+                    latestReportReadyToSubmit: true,
+                    madeDate: new \DateTime()->sub(new \DateInterval('P1Y'))
+                )
+            )
+        );
+
+        // TODO refactor into a ReportsSet on a court order
+        // for each report on each court order, add all uploaded files to it, none with a backing S3 object
+        foreach ($details['orders'] as $orderPair) {
+            foreach (['pfa', 'hw'] as $orderType) {
+                $order = $orderPair[$orderType] ?? null;
+
+                if ($order !== null) {
+                    foreach ($order['reports'] as $report) {
+                        foreach ($supportingDocumentNames as $uploadedFile) {
+                            $this->fixtureService->addSupportingDocumentWithoutS3Object($report, $uploadedFile);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this->jsonifyScenario($details);
+    }
+
     private function jsonifyScenario(array $details): ?array
     {
         [
@@ -125,10 +175,15 @@ class FixtureController extends AbstractController
                 $order = $orderPair[$orderType] ?? null;
 
                 if ($order !== null) {
+                    $reports = array_map(fn ($report) => [
+                        'id' => $report->getId(),
+                        'documents' => array_map(fn ($document) => ['id' => $document->getId()], $report->getDocuments()->toArray()),
+                    ], $order['reports']);
+
                     $fixtureOrders[] = [
                         'courtOrderUid' => $order['order']->getCourtOrderUid(),
                         'caseNumber' => $client->getCaseNumber(),
-                        'reports' => array_map(fn ($report) => ['id' => $report->getId()], $order['reports']),
+                        'reports' => $reports,
                     ];
                 }
             }
