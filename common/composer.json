@@ -28,7 +28,7 @@
     }
   },
   "scripts": {
-    "lint:phpstan": "phpstan",
+    "lint:phpstan": "phpstan --memory-limit=512M",
     "tests:unit": "phpunit"
   },
   "autoload": {
