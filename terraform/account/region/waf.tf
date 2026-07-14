@@ -118,7 +118,7 @@ resource "aws_wafv2_web_acl" "main" {
 
       statement {
         rate_based_statement {
-          limit                 = 60
+          limit                 = 100
           aggregate_key_type    = "IP"
           evaluation_window_sec = 60
 
@@ -143,8 +143,138 @@ resource "aws_wafv2_web_acl" "main" {
   }
 
   rule {
-    name     = "AllowSpecificURIs"
+    name     = "RateLimitSuspiciousURIPatternsExec"
+    priority = 22
+
+    action {
+      block {}
+    }
+
+    statement {
+      rate_based_statement {
+        limit                 = 10
+        aggregate_key_type    = "IP"
+        evaluation_window_sec = 60
+
+        scope_down_statement {
+          regex_pattern_set_reference_statement {
+            arn = aws_wafv2_regex_pattern_set.suspicious_uri_patterns_exec.arn
+            field_to_match {
+              uri_path {}
+            }
+            text_transformation {
+              priority = 0
+              type     = "LOWERCASE"
+            }
+          }
+        }
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "RateLimitSuspiciousURIPatterns"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "RateLimitSuspiciousURIPatternsData"
+    priority = 23
+
+    action {
+      block {}
+    }
+
+    statement {
+      rate_based_statement {
+        limit                 = 10
+        aggregate_key_type    = "IP"
+        evaluation_window_sec = 60
+
+        scope_down_statement {
+          regex_pattern_set_reference_statement {
+            arn = aws_wafv2_regex_pattern_set.suspicious_uri_patterns_data.arn
+            field_to_match {
+              uri_path {}
+            }
+            text_transformation {
+              priority = 0
+              type     = "LOWERCASE"
+            }
+          }
+        }
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "RateLimitSuspiciousURIPatternsData"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "BlockSuspiciousExecURIPatterns"
+    priority = 24
+
+    action {
+      block {}
+    }
+
+    statement {
+      regex_pattern_set_reference_statement {
+        arn = aws_wafv2_regex_pattern_set.suspicious_uri_patterns_exec.arn
+
+        field_to_match {
+          uri_path {}
+        }
+
+        text_transformation {
+          priority = 0
+          type     = "LOWERCASE"
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "BlockSuspiciousExecURIPatterns"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "BlockSuspiciousDataURIPatterns"
     priority = 25
+
+    action {
+      block {}
+    }
+
+    statement {
+      regex_pattern_set_reference_statement {
+        arn = aws_wafv2_regex_pattern_set.suspicious_uri_patterns_data.arn
+
+        field_to_match {
+          uri_path {}
+        }
+
+        text_transformation {
+          priority = 0
+          type     = "LOWERCASE"
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "BlockSuspiciousDataURIPatterns"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "AllowSpecificURIs"
+    priority = 26
 
     action {
       allow {}
@@ -214,6 +344,26 @@ resource "aws_wafv2_regex_pattern_set" "block_uris" {
   }
 
   scope = "REGIONAL"
+}
+
+resource "aws_wafv2_regex_pattern_set" "suspicious_uri_patterns_exec" {
+  name        = "suspicious-uri-patterns-exec"
+  description = "Executable, script and archive file extensions"
+  scope       = "REGIONAL"
+
+  regular_expression {
+    regex_string = "(?i)\\.(dll|msi|bat|py|bin|apk|php|asp|aspx|cgi|sh|exe|war|jar|tar|gz|tgz|zip|rar|7z|z|bz2|lz|xz|lzh)$"
+  }
+}
+
+resource "aws_wafv2_regex_pattern_set" "suspicious_uri_patterns_data" {
+  name        = "suspicious-uri-patterns-data"
+  description = "Configuration, database, document and secret file extensions"
+  scope       = "REGIONAL"
+
+  regular_expression {
+    regex_string = "(?i)\\.(env|xml|sql|bak|cfg|rtf|xls|tmp|doc|db|sqlite|sqlitedb|config|conf|ini|log|pem|key|p12|pfx|crt|ovpn|htaccess|htpasswd|DS_Store|swp)$"
+  }
 }
 
 resource "aws_wafv2_regex_pattern_set" "allow_uris" {
