@@ -68,11 +68,8 @@ trait DebugTrait
      */
     public function debugOnException(AfterStepScope $scope): void
     {
-        if (
-            ($result = $scope->getTestResult())
-            && $result instanceof ExecutedStepResult
-            && $result->hasException()
-        ) {
+        $result = $scope->getTestResult();
+        if ($result instanceof ExecutedStepResult && $result->hasException()) {
             $feature = basename($scope->getFeature()->getFile());
             $this->debug($feature);
         }
