@@ -1,16 +1,23 @@
-import AdminPage from "./AdminPage"
-import { expect } from "@playwright/test";
+import { expect, Page } from "@playwright/test"
+import { getAdminURL } from "../fixtures/fixtures"
 
 /**
  * <ADMIN_URL>/admin/documents/list
  */
-export default class AdminDocumentsListPage extends AdminPage {
+export default class AdminDocumentsListPage {
+  constructor(protected page: Page) {
+  }
+
   async goto(): Promise<void> {
-    await this.page.goto(this.getAdminURL() + "/admin/documents/list")
+    await this.page.goto(getAdminURL() + "/admin/documents/list")
   }
 
   async openPendingTab(): Promise<void> {
     await this.page.getByRole("tab", { name: "Pending" }).click()
+  }
+
+  async openSynchronisedTab() {
+    await this.page.getByRole("tab", { name: "Synchronised" }).click()
   }
 
   async search(query: string): Promise<void> {
