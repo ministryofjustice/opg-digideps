@@ -143,6 +143,71 @@ resource "aws_wafv2_web_acl" "main" {
   }
 
   rule {
+    name     = "RateLimitSuspiciousURIPatterns"
+    priority = 22
+
+    action {
+      block {}
+    }
+
+    statement {
+      rate_based_statement {
+        limit                 = 10
+        aggregate_key_type    = "IP"
+        evaluation_window_sec = 60
+
+        scope_down_statement {
+          regex_pattern_set_reference_statement {
+            arn = aws_wafv2_regex_pattern_set.suspicious_uri_patterns.arn
+            field_to_match {
+              uri_path {}
+            }
+            text_transformation {
+              priority = 0
+              type     = "LOWERCASE"
+            }
+          }
+        }
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "RateLimitSuspiciousURIPatterns"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "BlockSuspiciousURIPatterns"
+    priority = 23
+
+    action {
+      block {}
+    }
+
+    statement {
+      regex_pattern_set_reference_statement {
+        arn = aws_wafv2_regex_pattern_set.suspicious_uri_patterns.arn
+
+        field_to_match {
+          uri_path {}
+        }
+
+        text_transformation {
+          priority = 0
+          type     = "LOWERCASE"
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "BlockSuspiciousURIPatterns"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
     name     = "AllowSpecificURIs"
     priority = 25
 
@@ -214,6 +279,18 @@ resource "aws_wafv2_regex_pattern_set" "block_uris" {
   }
 
   scope = "REGIONAL"
+}
+
+resource "aws_wafv2_regex_pattern_set" "suspicious_uri_patterns" {
+  name        = "suspicious-uri-patterns"
+  description = "Regex pattern set for suspicious URI patterns"
+  scope       = "REGIONAL"
+
+  regular_expression {
+    regex_string = "(?i)\\.(env|lzh|git|dll|msi|bat|py|bin|apk|xml|sql|bak|php|asp|aspx|cfg|rtf|xls|tmp|cgi|sh|doc|exe|tar|gz|tgz|zip|rar|7z|z|bz2|lz|xz|db|sqlite|sqlitedb|war|jar|config|conf|ini|log|pem|key|p12|pfx|crt|ovpn|htaccess|htpasswd|DS_Store|swp)$"
+  }
+
+  provider = aws.region
 }
 
 resource "aws_wafv2_regex_pattern_set" "allow_uris" {
