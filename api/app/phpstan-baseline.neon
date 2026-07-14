@@ -21859,18 +21859,6 @@ parameters:
 			path: tests/Integration/v2/Service/CourtOrderServiceIntegrationTest.php
 
 		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Backend\\Unit\\Command\\ProcessLayCSVCommandTest\:\:\$layRegistrationService\.$#'
-			identifier: property.notFound
-			count: 1
-			path: tests/Unit/Command/ProcessLayCSVCommandTest.php
-
-		-
-			message: '#^Class Tests\\OPG\\Digideps\\Backend\\Unit\\Command\\LayRegistrationService not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: tests/Unit/Command/ProcessLayCSVCommandTest.php
-
-		-
 			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1

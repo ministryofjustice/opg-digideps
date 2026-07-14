@@ -49,12 +49,6 @@ parameters:
 			path: src/Command/CheckCSVUploadedCommand.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\DocumentRecoverCommand\:\:execute\(\) should return int but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Command/DocumentRecoverCommand.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_filter expects array, list\<string\>\|false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -69,6 +63,12 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$shortcut of method Symfony\\Component\\Console\\Command\\Command\:\:addOption\(\) expects array\|string\|null, int given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Command/DocumentRecoverCommand.php
+
+		-
+			message: '#^Return type \(void\) of method OPG\\Digideps\\Frontend\\Command\\DocumentRecoverCommand\:\:execute\(\) should be compatible with return type \(int\) of method Symfony\\Component\\Console\\Command\\Command\:\:execute\(\)$#'
+			identifier: method.childReturnType
 			count: 1
 			path: src/Command/DocumentRecoverCommand.php
 

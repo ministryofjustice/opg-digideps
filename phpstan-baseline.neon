@@ -61,6 +61,12 @@ parameters:
 			path: api/app/src/Command/ApiComparison.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\ApiComparison\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: api/app/src/Command/ApiComparison.php
+
+		-
 			message: '#^Cannot call method warning\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -117,6 +123,12 @@ parameters:
 		-
 			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, array\|bool\|float\|int\|string\|UnitEnum\|null given\.$#'
 			identifier: argument.type
+			count: 1
+			path: api/app/src/Command/ProcessLayCSVCommand.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\ProcessLayCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
 			count: 1
 			path: api/app/src/Command/ProcessLayCSVCommand.php
 
@@ -193,12 +205,6 @@ parameters:
 			path: api/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\ProcessOrgCSVCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Command/ProcessOrgCSVCommand.php
-
-		-
 			message: '#^Part \$limit \(mixed\) of encapsed string cannot be cast to string\.$#'
 			identifier: encapsedStringPart.nonString
 			count: 1
@@ -209,12 +215,6 @@ parameters:
 			identifier: booleanAnd.rightAlwaysTrue
 			count: 1
 			path: api/app/src/Command/ReportStatusUpdaterCommand.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\SatisfactionPerformanceStatsCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Command/SatisfactionPerformanceStatsCommand.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:deleteInactivateUsers\(\) should return int but returns mixed\.$#'
@@ -1029,7 +1029,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: api/app/src/Controller/Report/ReportController.php
 
 		-
@@ -1341,7 +1341,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$criteriaOrId of method OPG\\Digideps\\Backend\\Controller\\RestController\:\:findEntityBy\(\) expects array\|int, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: api/app/src/Controller/Report/ReportController.php
 
 		-
@@ -6313,12 +6313,6 @@ parameters:
 			path: api/app/src/v2/Registration/DeputyshipProcessing/CSVDeputyshipProcessing.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between '''' and '''' will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
-			count: 1
-			path: api/app/src/v2/Registration/DeputyshipProcessing/CourtOrder/CourtOrderRelationshipResult.php
-
-		-
 			message: '#^Binary operation "\." between '''' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 2
@@ -6381,7 +6375,7 @@ parameters:
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 2
+			count: 1
 			path: api/app/src/v2/Registration/Uploader/LayDeputyshipUploader.php
 
 		-
@@ -6397,31 +6391,7 @@ parameters:
 			path: api/app/src/v2/Registration/Uploader/LayDeputyshipUploader.php
 
 		-
-			message: '#^Cannot call method getCaseNumber\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 1
-			path: api/app/src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
 			message: '#^Parameter \#1 \$layDeputyshipDto of method OPG\\Digideps\\Backend\\v2\\Registration\\Uploader\\LayDeputyshipUploader\:\:createAndPersistNewPreRegistrationEntity\(\) expects OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
-			message: '#^Parameter \#1 \$reportType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
-			message: '#^Parameter \#1 \$string of function strtolower expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/v2/Registration/Uploader/LayDeputyshipUploader.php
@@ -6633,12 +6603,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Tests\\OPG\\Digideps\\Backend\\Behat\\Common\\BaseFeatureContext\:\:clickLinkInsideElement\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: api/app/tests/Behat/bootstrap/Common/BaseFeatureContext.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
 			path: api/app/tests/Behat/bootstrap/Common/BaseFeatureContext.php
 
@@ -10783,12 +10747,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
 		-
-			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
-
-		-
 			message: '#^Cannot access offset ''address1'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
@@ -14125,51 +14083,15 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Cannot call method check\(\) on Behat\\Mink\\Element\\NodeElement\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Cannot call method find\(\) on Behat\\Mink\\Element\\NodeElement\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Cannot call method getClient\(\) on OPG\\Digideps\\Backend\\Entity\\CourtOrder\|null\.$#'
 			identifier: method.nonObject
 			count: 2
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Cannot call method getClientCaseNumber\(\) on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
-			identifier: method.nonObject
-			count: 9
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Cannot call method getClientCaseNumber\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Cannot call method getClientFirstName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Cannot call method getClientId\(\) on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: method.nonObject
 			count: 3
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Cannot call method getClientLastName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
@@ -14193,25 +14115,13 @@ parameters:
 		-
 			message: '#^Cannot call method getCurrentReportId\(\) on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Cannot call method getDeputyDocuments\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
+			count: 3
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
 			message: '#^Cannot call method getDeputyUid\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Cannot call method getDocuments\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission\|null\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
@@ -14223,7 +14133,7 @@ parameters:
 		-
 			message: '#^Cannot call method getHtml\(\) on Behat\\Mink\\Element\\NodeElement\|null\.$#'
 			identifier: method.nonObject
-			count: 3
+			count: 2
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
@@ -14240,12 +14150,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method getLastName\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Cannot call method getPreviousReportId\(\) on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
@@ -14287,12 +14191,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Cannot call method setFileName\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Document\|false\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Cannot call method setIsActive\(\) on OPG\\Digideps\\Backend\\Entity\\CourtOrderDeputy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -14311,12 +14209,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\ReportSubmission\\ReportSubmissionFeatureContext\:\:iSendTheDocumentsToCompleteTheUploadProcess\(\) has parameter \$reportStatus with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\ReportSubmission\\ReportSubmissionFeatureContext\:\:iVisitTheCourtOrderPageThatIAmAssociatedWith\(\) has parameter \$arg1 with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -14330,24 +14222,6 @@ parameters:
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\ReportSubmission\\ReportSubmissionFeatureContext\:\:iVisitThePagesOfTheCourtOrderThatAssociatedWith\(\) has parameter \$firstOrSecond with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\ReportSubmission\\ReportSubmissionFeatureContext\:\:tabVisibilityCheck\(\) has parameter \$tabName with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\ReportSubmission\\ReportSubmissionFeatureContext\:\:tabVisibilityCheck\(\) has parameter \$visibility with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\ReportSubmission\\ReportSubmissionFeatureContext\:\:theDocumentSyncEnabledFlagIsSetTo\(\) has parameter \$documentFeatureFlagValue with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
@@ -14389,12 +14263,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\ORM\\EntityManagerInterface\:\:refresh\(\) expects object, OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\CourtOrderDeputy\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -14402,12 +14270,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\Report\\Document\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
@@ -14443,12 +14305,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Parameter \#2 \$flagValue of method OPG\\Digideps\\Backend\\Service\\ParameterStoreService\:\:putFeatureFlag\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of function PHPUnit\\Framework\\assertStringContainsString expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -14463,7 +14319,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 7
+			count: 4
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
@@ -14475,18 +14331,12 @@ parameters:
 		-
 			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
 			message: '#^Parameter \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
 			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Part \$tabName \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
@@ -19525,12 +19375,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Cannot access offset ''report'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''start_date'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
@@ -19621,12 +19465,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Cannot call method getClient\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
 			message: '#^Cannot call method getCreatedBy\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\ChecklistInformation\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -19636,12 +19474,6 @@ parameters:
 			message: '#^Cannot call method getCreatedOn\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\ChecklistInformation\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method getEndDate\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
@@ -19681,12 +19513,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Cannot call method getStartDate\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
 			message: '#^Cannot call method setDueDate\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -19702,12 +19528,6 @@ parameters:
 			message: '#^Parameter \#1 \$array of function array_shift expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
@@ -20953,36 +20773,6 @@ parameters:
 			path: api/app/tests/Integration/Service/DeputyServiceIntegrationTest.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: api/app/tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getReports\(\) on object\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method isHybrid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
 			message: '#^Cannot call method getDeputyUid\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -22159,18 +21949,6 @@ parameters:
 			path: api/app/tests/Integration/v2/Service/CourtOrderServiceIntegrationTest.php
 
 		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Backend\\Unit\\Command\\ProcessLayCSVCommandTest\:\:\$layRegistrationService\.$#'
-			identifier: property.notFound
-			count: 1
-			path: api/app/tests/Unit/Command/ProcessLayCSVCommandTest.php
-
-		-
-			message: '#^Class Tests\\OPG\\Digideps\\Backend\\Unit\\Command\\LayRegistrationService not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: api/app/tests/Unit/Command/ProcessLayCSVCommandTest.php
-
-		-
 			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -22511,12 +22289,6 @@ parameters:
 			identifier: staticMethod.notFound
 			count: 1
 			path: api/app/tests/Unit/Service/Formatter/RestFormatterTest.php
-
-		-
-			message: '#^Parameter \#1 \$object_or_class of function is_a expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Unit/Service/LayRegistrationServiceTest.php
 
 		-
 			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''OPG\\\\Digideps\\\\Backend\\\\Entity\\\\Organisation'' and OPG\\Digideps\\Backend\\Entity\\Organisation will always evaluate to true\.$#'
@@ -23035,12 +22807,6 @@ parameters:
 			path: api/app/tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Factory\\ReportFactory\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: api/app/tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
-
-		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:expects\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -23067,13 +22833,13 @@ parameters:
 		-
 			message: '#^Cannot call method method\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 12
+			count: 11
 			path: api/app/tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
 
 		-
 			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 6
+			count: 5
 			path: api/app/tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
 
 		-
@@ -23085,7 +22851,7 @@ parameters:
 		-
 			message: '#^Cannot call method with\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 6
+			count: 5
 			path: api/app/tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
 
 		-
@@ -23107,12 +22873,6 @@ parameters:
 			path: api/app/tests/Unit/v2/Registration/Uploader/LayDeputyshipUploaderTest.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Repository\\ReportRepository\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: api/app/tests/Unit/v2/Registration/Uploader/LayDeputyshipUploaderTest.php
-
-		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\Registration\\Assembler\\SiriusToLayDeputyshipDtoAssembler\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -23121,7 +22881,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\Registration\\SelfRegistration\\Factory\\PreRegistrationFactory\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
 			identifier: method.notFound
-			count: 2
+			count: 1
 			path: api/app/tests/Unit/v2/Registration/Uploader/LayDeputyshipUploaderTest.php
 
 		-
@@ -23169,7 +22929,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: api/app/tests/Unit/v2/Registration/Uploader/LayDeputyshipUploaderTest.php
 
 		-
@@ -23251,10 +23011,10 @@ parameters:
 			path: client/app/src/Command/CheckCSVUploadedCommand.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\DocumentRecoverCommand\:\:execute\(\) should return int but return statement is missing\.$#'
-			identifier: return.missing
+			message: '#^Property OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
 			count: 1
-			path: client/app/src/Command/DocumentRecoverCommand.php
+			path: client/app/src/Command/CheckCSVUploadedCommand.php
 
 		-
 			message: '#^Parameter \#1 \$array of function array_filter expects array, list\<string\>\|false given\.$#'
@@ -23271,6 +23031,12 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$shortcut of method Symfony\\Component\\Console\\Command\\Command\:\:addOption\(\) expects array\|string\|null, int given\.$#'
 			identifier: argument.type
+			count: 1
+			path: client/app/src/Command/DocumentRecoverCommand.php
+
+		-
+			message: '#^Return type \(void\) of method OPG\\Digideps\\Frontend\\Command\\DocumentRecoverCommand\:\:execute\(\) should be compatible with return type \(int\) of method Symfony\\Component\\Console\\Command\\Command\:\:execute\(\)$#'
+			identifier: method.childReturnType
 			count: 1
 			path: client/app/src/Command/DocumentRecoverCommand.php
 
@@ -23356,6 +23122,12 @@ parameters:
 			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, array\|bool\|float\|int\|string\|UnitEnum\|null given\.$#'
 			identifier: argument.type
 			count: 2
+			path: client/app/src/Command/ProcessLayCSVCommand.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Command\\ProcessLayCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
 			path: client/app/src/Command/ProcessLayCSVCommand.php
 
 		-
@@ -23565,7 +23337,7 @@ parameters:
 		-
 			message: '#^Cannot call method getData\(\) on Symfony\\Component\\Form\\FormInterface\|null\.$#'
 			identifier: method.nonObject
-			count: 10
+			count: 9
 			path: client/app/src/Controller/Admin/Client/ReportController.php
 
 		-
@@ -39211,6 +38983,12 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
+			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\DocumentSyncCommand\:\:getDefaultName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
+
+		-
 			message: '#^Cannot call method method\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 4
@@ -39235,7 +39013,7 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
