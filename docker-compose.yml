@@ -401,6 +401,7 @@ services:
     environment:
       FRONT_URL: http://frontend-webserver
       ADMIN_URL: http://admin-webserver
+      API_URL: http://api-webserver
     image: playwright-check
     container_name: playwright-report
     restart: "no"
