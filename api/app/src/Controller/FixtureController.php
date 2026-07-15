@@ -168,8 +168,11 @@ class FixtureController extends AbstractController
         /** @var OrderPair[] $orderPairs */
         $orderPairs = $details['orders'] ?? [];
 
+        /** @var array $persons */
+        $persons = $details['persons'] ?? [];
+
         /** @var User[] $users */
-        $users = $details['persons']['users'] ?? [];
+        $users = $persons['users'] ?? [];
 
         /** @var Client $client */
         $client = $details['client'] ?? null;
@@ -177,7 +180,10 @@ class FixtureController extends AbstractController
             throw new \DomainException('Scenario did not generate a client');
         }
 
-        $fixtureUsers = array_map(fn ($user) => ['email' => $user->getEmail()], $users);
+        /** @var array<string, FixtureUser> $fixtureUsers */
+        $fixtureUsers = array_map(function ($user) {
+            return ['email' => $user->getEmail()];
+        }, $users);
 
         $fixtureOrders = [];
 
