@@ -1,12 +1,11 @@
-import { getAdminURL } from "../fixtures/fixtures"
-import { Page } from "@playwright/test"
+import { getAdminURL } from "../fixtures/fixtures";
+import { Page } from "@playwright/test";
 
 /**
  * <ADMIN_URL>/login
  */
 export default class AdminLoginPage {
-  constructor(protected page: Page) {
-  }
+  constructor(protected page: Page) {}
 
   async loginAdmin(user: { email: string; password: string }) {
     await this.page.goto(getAdminURL() + "/login");
