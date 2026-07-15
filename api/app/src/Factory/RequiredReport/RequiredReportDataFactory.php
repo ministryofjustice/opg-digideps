@@ -46,6 +46,7 @@ final readonly class RequiredReportDataFactory implements DataFactoryInterface
                 $class = $throwable::class;
                 $errors[] = "Could not generate required report for court order: {$courtOrder->getCourtOrderUid()}: {$class} {$throwable->getMessage()} in {$throwable->getFile()}({$throwable->getLine()})";
             }
+            $this->em->clear();
         }
 
         $dry = $dryRun ? '[Dry run] ' : '';
