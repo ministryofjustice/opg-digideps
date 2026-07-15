@@ -503,11 +503,11 @@ services:
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\RequiredReport\RequiredReportDataFactory',
-                      "dry-run-only",
+                      "active",
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\UpdateReportTypeDataFactory',
-                      "dry-run-only",
+                      "active",
                   ]
 
     OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
