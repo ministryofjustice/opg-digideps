@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\UserRepository;
 

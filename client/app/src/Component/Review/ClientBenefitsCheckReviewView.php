@@ -34,13 +34,25 @@ final class ClientBenefitsCheckReviewView
     {
         $clientBenefitsCheck = $report->getClientBenefitsCheck();
 
-        if ($clientBenefitsCheck !== null) {
-            $this->parameters = ['%client%' => $report->getClient()->getFirstname()];
-            $this->text = $this->makeText();
+        $this->parameters = ['%client%' => $report->getClient()->getFirstname()];
+        $this->text = $this->makeText();
 
+        if ($clientBenefitsCheck !== null) {
             $this->list = $this->makeList($clientBenefitsCheck);
             $this->table = $this->makeTable($clientBenefitsCheck);
+        } else {
+            $this->list = $this->makeDefaultList();
         }
+    }
+
+    private function makeDefaultList(): DefinitionList
+    {
+        $builder = new ListBuilder();
+
+        $builder->addEntry($this->text['benefitsCheck'], $this->text['notEntered']);
+        $builder->addEntry($this->text['doOthersReceiveMoney'], $this->text['notEntered']);
+
+        return $builder->makeList();
     }
 
     private function makeList(ClientBenefitsCheck $clientBenefitsCheck): DefinitionList
@@ -118,6 +130,7 @@ final class ClientBenefitsCheckReviewView
             'paymentRecipient' => $this->translate("summaryPage.table.moneyOtherPeopleReceive.column2Title"),
             'paymentAmount' => $this->translate("summaryPage.table.moneyOtherPeopleReceive.column3Title"),
             'paymentTotal' => $this->translate("review.totalAmount"),
+            'notEntered' => $this->translate("review.notEntered"),
         ];
     }
 

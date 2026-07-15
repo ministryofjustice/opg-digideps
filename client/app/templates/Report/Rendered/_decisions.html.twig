@@ -25,7 +25,7 @@
                         {% elseif report.mentalCapacity.hasCapacityChanged == 'changed' %}
                             Changed
                         {% else %}
-                            -
+                            Not entered
                         {% endif %}
                     </td>
                 </tr>
@@ -44,18 +44,16 @@
                         {{ 'mentalCapacity.form.mentalAssessmentDate.legend' | trans(transOptions,transDomain) }}
                     </th>
                     <td class="govuk-table__cell govuk-!-width-one-half">
-                        {% if report.mentalCapacity.mentalAssessmentDate %}
-                            {{ report.mentalCapacity.mentalAssessmentDate | date("m/Y") }}
-                        {% else %}
-                            -
-                        {% endif %}
+                        {{ (report.mentalCapacity.mentalAssessmentDate) ? report.mentalCapacity.mentalAssessmentDate | date("m/Y") | capitalize : 'Not entered' }}
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header govuk-!-width-one-half">
                         {{ 'existPage.form.hasDecisions.label' | trans(transOptions,transDomain) }}
                     </th>
-                    <td class="govuk-table__cell govuk-!-width-one-half">{{ report.significantDecisionsMade }}</td>
+                    <td class="govuk-table__cell govuk-!-width-one-half">
+                        {{ (report.significantDecisionsMade) ? report.significantDecisionsMade | capitalize : 'Not entered' }}
+                    </td>
                 </tr>
                 {% if report.reasonForNoDecisions %}
                     <tr class="govuk-table__row">

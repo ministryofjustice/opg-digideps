@@ -7,6 +7,7 @@ namespace OPG\Digideps\Backend\Entity\Staging;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 
 /**
  * Holds staging data taken from the data processed from the deputyship CSV file from Sirius.

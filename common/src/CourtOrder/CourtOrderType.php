@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Backend\Domain\CourtOrder;
+namespace OPG\Digideps\Common\CourtOrder;
 
 enum CourtOrderType: string
 {

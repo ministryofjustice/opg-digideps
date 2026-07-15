@@ -10,7 +10,7 @@ class MoneyShortCategory
      * @JMS\Type("string")
      * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
      */
-    private $typeId;
+    private string $typeId;
 
     /**
      * @var bool
@@ -23,27 +23,21 @@ class MoneyShortCategory
     /**
      * IncomeBenefit constructor.
      *
-     * @param $typeId
+     * @param string $typeId
      * @param bool $present
      */
-    public function __construct($typeId, $present)
+    public function __construct(string $typeId, $present)
     {
         $this->typeId = $typeId;
         $this->present = $present;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTypeId()
+    public function getTypeId(): string
     {
         return $this->typeId;
     }
 
-    /**
-     * @param mixed $typeId
-     */
-    public function setTypeId($typeId)
+    public function setTypeId(string $typeId): void
     {
         $this->typeId = $typeId;
     }
@@ -51,15 +45,12 @@ class MoneyShortCategory
     /**
      * @return bool
      */
-    public function isPresent()
+    public function isPresent(): bool
     {
         return $this->present;
     }
 
-    /**
-     * @param bool $present
-     */
-    public function setPresent($present)
+    public function setPresent(bool $present): void
     {
         $this->present = $present;
     }

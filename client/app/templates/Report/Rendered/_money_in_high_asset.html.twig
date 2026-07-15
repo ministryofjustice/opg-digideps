@@ -19,7 +19,7 @@
                         {{ 'summaryPage.moneyIn.hasMoneyIn.label' | trans(transOptions, transDomain) }}
                     </th>
                     <td class="govuk-table__cell govuk-!-width-one-half">
-                        {{ report.moneyInExists | capitalize }}
+                        {{ (report.moneyInExists) ? report.moneyInExists | capitalize : 'Not entered' }}
                     </td>
                 </tr>
             {% if report.moneyInExists == 'No' %}

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Factory\RequiredReport;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Factory\DataFactoryInterface;

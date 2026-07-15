@@ -2203,78 +2203,6 @@ parameters:
 			path: src/Controller/Report/ProfCurrentFeesController.php
 
 		-
-			message: '#^Call to an undefined method Symfony\\Component\\Form\\FormInterface\:\:isClicked\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Cannot access offset ''hasMoreDetails'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Cannot access offset ''typeId'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Cannot call method getAmount\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Cannot call method getEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Cannot call method getProfDeputyCostsHasInterim\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Cannot call method getProfDeputyCostsHasPrevious\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Cannot call method getStartDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Parameter \#2 \$amount of class OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost constructor expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:put\(\) expects array\|object\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Parameter \#3 \$hasMoreDetails of class OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: '#^Parameter \#4 \$moreDetails of class OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost constructor expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
 			message: '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\Session\\SessionInterface\:\:getFlashBag\(\)\.$#'
 			identifier: method.notFound
 			count: 3
@@ -4309,30 +4237,6 @@ parameters:
 			path: src/Entity/Report/MoneyReceivedOnClientsBehalf.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyShortCategory\:\:__construct\(\) has parameter \$typeId with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyShortCategory\:\:setPresent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyShortCategory\:\:setTypeId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyShortCategory\:\:\$typeId has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/MoneyShortCategory.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getCategoriesGrouped\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -4765,12 +4669,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:addProfDeputyInterimCosts\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:debtsValid\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -4885,18 +4783,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getProfDeputyOtherCostByTypeId\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getProfDeputyOtherCostTypeIds\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getReasonForNoMoneyIn\(\) should return string\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -4935,12 +4821,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:isSectionFlaggedForAttention\(\) has parameter \$sectionId with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:profCostsInterimAtLeastOne\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -5131,12 +5011,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyCostsHowCharged\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyEstimateCostTypeIds\(\) has parameter \$profDeputyEstimateCostTypeIds with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -5163,36 +5037,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyManagementCostTypeIds\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\ReportProfDeputyCostsEstimateTrait but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\)\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyOtherCostIds\(\) should return \$this\(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyOtherCostTypeIds\(\) has parameter \$profDeputyOtherCostTypeIds with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyOtherCosts\(\) has parameter \$profDeputyOtherCosts with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyTotalCostsTakenFromClient\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyTotalCostsTakenFromClient\(\) has parameter \$profDeputyTotalCostsTakenFromClient with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -5407,24 +5251,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$profDeputyOtherCostTypeIds has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$profDeputyOtherCosts \(array\<OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost\>\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$profDeputyTotalCostsTakenFromClient \(float\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$reasonForNoMoneyIn has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -5451,7 +5277,7 @@ parameters:
 		-
 			message: '#^Variable \$submittedCost in empty\(\) always exists and is not falsy\.$#'
 			identifier: empty.variable
-			count: 2
+			count: 1
 			path: src/Entity/Report/Report.php
 
 		-
@@ -8045,54 +7871,6 @@ parameters:
 			identifier: missingType.parameter
 			count: 1
 			path: src/Resolver/SubSectionRoute/ProfCostsEstimateSubSectionRouteResolver.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolver\:\:determineCurrentFixedCostSection\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolver\:\:determineCurrentNonFixedCostSection\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolver\:\:resolve\(\) has parameter \$state with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolver\:\:resolve\(\) should return string but empty return statement found\.$#'
-			identifier: return.empty
-			count: 1
-			path: src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolver\:\:sectionIsComplete\(\) has parameter \$state with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolver\:\:sectionNotStarted\(\) has parameter \$state with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: '#^Negated boolean expression is always true\.$#'
-			identifier: booleanNot.alwaysTrue
-			count: 1
-			path: src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: src/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolver.php
 
 		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\Client\:\:getUserIds\(\)\.$#'
@@ -13843,96 +13621,6 @@ parameters:
 			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsEstimateSubSectionRouteResolverTest.php
 
 		-
-			message: '#^Cannot call method setProfDeputyCostsAmountToScco\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Cannot call method setProfDeputyCostsHasInterim\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Cannot call method setProfDeputyFixedCost\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsBreakdownRouteWhenBreakdownCostsIncomplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsBreakdownRouteWhenFixedCostsSubsectionIsCompleteAndNoBreakdownCostsEntered\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsCostsReceivedRouteWhenFixedCostsSubsectionIsIncomplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsCostsReceivedRouteWhenInterimDoesntExistAndFixedCostSubsectionIsIncomplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsInterimExistsRouteWhenInterimExistsSubsectionIsIncomplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsInterimRouteWhenInterimExistsAndSubsectionIsIncomplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsNullIfSectionIsNotStarted\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsPreviousFeesExistRouteSubSectionIsIncomplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsSccoAmountRouteWhenAmountSccoSubsectionIsIncomplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsSubSectionRouteResolverTest\:\:testReturnsSummaryRouteIfSectionIsComplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Parameter \#1 \$profDeputyCostsHasPrevious of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyCostsHasPrevious\(\) expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
-			message: '#^Parameter \#1 \$profDeputyCostsHasPrevious of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyCostsHasPrevious\(\) expects string, true given\.$#'
-			identifier: argument.type
-			count: 7
-			path: tests/Unit/Resolver/SubSectionRoute/ProfCostsSubSectionRouteResolverTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Security\\ClientVoterTest\:\:deleteClientProvider\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -18211,12 +17899,6 @@ parameters:
 			path: tests/Unit/Templates/Report/FormattedTest.php
 
 		-
-			message: '#^Cannot call method setProfDeputyCostsHasInterim\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/Templates/Report/FormattedTest.php
-
-		-
 			message: '#^Cannot call method setTitle\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -18315,18 +17997,6 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:ensureDeputyCostsWithHowChargedNotAnswered\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:ensureDeputyCostsWithNonFixedAndInterimEqualTo\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:ensureDeputyCostsWithNonFixedAndInterimEqualTo\(\) has parameter \$interim with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: tests/Unit/Templates/Report/FormattedTest.php
 
@@ -18494,12 +18164,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$noTransfersToAdd of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setNoTransfersToAdd\(\) expects bool, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#1 \$profDeputyCostsHowCharged of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyCostsHowCharged\(\) expects string, null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Unit/Templates/Report/FormattedTest.php

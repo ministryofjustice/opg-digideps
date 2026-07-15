@@ -9,7 +9,6 @@ use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait ClientBenefitsCheckSectionTrait
 {
-    public bool $clientBenefitsSectionAvailable = true;
     private string $missingDateErrorText = 'Enter the date you last checked %s\'s benefits';
     private string $missingExplanationErrorText = 'Tell us why you don\'t know if anyone other than you received money on %s\'s behalf';
     private string $missingMoneyTypeErrorText = 'Enter the type of payment';
@@ -303,26 +302,6 @@ trait ClientBenefitsCheckSectionTrait
 
         if (!is_null($this->getSectionAnswers('moneyType'))) {
             $this->expectedResultsDisplayedSimplified('moneyType', true);
-        }
-    }
-
-    /**
-     * @Given the deputies :currentOrPrevious report ends and is due :moreOrLess than 60 days after the client benefits check feature flag date
-     */
-    public function reportIsDueAfterClientBenefitCheckFeatureFlagDate(string $currentOrPrevious, string $moreOrLess): void
-    {
-        $moreOrLess = strtolower($moreOrLess);
-
-        if (!in_array($moreOrLess, ['more', 'less'])) {
-            throw new BehatException(sprintf('This step only accepts "more" or "less". %s provided.', $moreOrLess));
-        }
-
-        if ($moreOrLess === 'more') {
-            $this->endDateAndDueDateLoggedInUsersCurrentReportSetToDate('2040-01-01', $currentOrPrevious);
-            $this->clientBenefitsSectionAvailable = true;
-        } else {
-            $this->endDateAndDueDateLoggedInUsersCurrentReportSetToDate('2020-01-01', $currentOrPrevious);
-            $this->clientBenefitsSectionAvailable = false;
         }
     }
 

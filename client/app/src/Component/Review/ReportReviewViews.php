@@ -54,4 +54,11 @@ final readonly class ReportReviewViews
         $section->mount($this->report);
         return $section;
     }
+
+    public function getMoneyInShortReviewView(): MoneyInShortReviewView
+    {
+        $section = new MoneyInShortReviewView($this->translator);
+        $section->mount($this->report);
+        return $section;
+    }
 }

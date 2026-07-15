@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Fixture;
 
-use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Common\Deputy\DeputyType;
 
 final readonly class DeputyDescriptor
 {

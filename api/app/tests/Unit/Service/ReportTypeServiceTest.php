@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
-use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
-use OPG\Digideps\Backend\Domain\Report\ReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\Deputy\DeputyType;
+use OPG\Digideps\Common\Report\ReportType;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Service\ReportTypeService;
 use PHPUnit\Framework\Attributes\Test;

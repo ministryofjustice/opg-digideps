@@ -64,13 +64,13 @@
                         </tr>
                     {% endfor %}
                     <tr class="govuk-table__row">
-                        <td class="govuk-table__cell govuk-!-width-one-third">
-                            <strong> Total Amount </strong>
+                        <td class="govuk-table__cell govuk-!-width-one-third govuk-!-font-weight-bold">
+                            Total Amount
                         </td>
                         <td class="govuk-table__cell govuk-!-width-one-third">
                         </td>
-                        <td class="govuk-table__cell govuk-!-width-one-third">
-                            <strong> £{{ report.giftsTotalValue | money_format }} </strong>
+                        <td class="govuk-table__cell govuk-!-width-one-third govuk-!-font-weight-bold">
+                            £{{ report.giftsTotalValue | money_format }}
                         </td>
                     </tr>
                 </tbody>

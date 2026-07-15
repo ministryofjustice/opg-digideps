@@ -1,0 +1,28 @@
+common:
+  overviewLink: Report overview
+  beforeStart: Before you start
+  continue: Continue
+
+title:
+  decisions: Decisions
+  contacts: Contacts
+  visitsCare: Visits and care
+  lifestyle: Health and lifestyle
+  clientBenefitsCheck: Benefits check and money others received
+  bankAccounts: Accounts
+  gifts: Gifts
+  moneyTransfers: Money transfers
+  moneyIn: Money in
+  moneyOut: Money out
+  balance: Balance
+  moneyInShort: Money in
+  moneyOutShort: Money out
+  assets: Assets
+  debts: Debts
+  deputyExpenses: Deputy expenses
+  paDeputyExpenses: Deputy fees and expenses
+  profDeputyCosts: Deputy costs
+  profDeputyCostsEstimate: Deputy costs estimate
+  actions: Actions you plan to take
+  otherInfo: Any other information
+  documents: Supporting documents

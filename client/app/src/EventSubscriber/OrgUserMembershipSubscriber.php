@@ -25,7 +25,7 @@ class OrgUserMembershipSubscriber implements EventSubscriberInterface
     /**
      * @return array|string[]
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             UserAddedToOrganisationEvent::NAME => 'logUserAddedEvent',

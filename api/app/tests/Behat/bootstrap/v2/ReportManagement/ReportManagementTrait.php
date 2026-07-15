@@ -220,9 +220,7 @@ trait ReportManagementTrait
             $extraFields = $this->profCombinedHighExtraCheckboxes;
         }
 
-        if ($this->clientBenefitsSectionAvailable) {
-            $extraFields['clientBenefitsCheck'] = 'Benefits check and money others received';
-        }
+        $extraFields['clientBenefitsCheck'] = 'Benefits check and money others received';
 
         $checkboxValuesAndTranslations = array_merge(
             $this->baseCombinedHighReportCheckboxValuesAndTranslations,
@@ -414,14 +412,6 @@ trait ReportManagementTrait
         if (!is_null($reportPdfLink)) {
             throw new BehatException('Download link for the report is visible when it should not be');
         }
-    }
-
-    /**
-     * @Given /^I should not see the client benefits check section in the checklist group$/
-     */
-    public function iShouldNotSeeTheClientBenefitsCheckSectionInTheChecklistGroup(): void
-    {
-        $this->assertClientBenefitsCheckboxVisible(false);
     }
 
     /**

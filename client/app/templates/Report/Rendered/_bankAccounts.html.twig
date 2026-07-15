@@ -22,6 +22,14 @@
             </tr>
             </thead>
             <tbody class="govuk-table__body">
+                {% if (report.bankAccounts | length) == 0 %}
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-width-one-third" colspan="3">
+                            Not entered
+                        </td>
+                    </tr>
+                {% endif %}
+
                 {% for account in report.bankAccounts %}
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell govuk-!-width-one-third">

@@ -38,6 +38,7 @@ locals {
   default_tags = {
     business-unit          = "OPG"
     application            = "Digideps"
+    service-area           = "Supervision"
     environment-name       = terraform.workspace
     owner                  = "OPG Supervision"
     infrastructure-support = "OPG WebOps: opgteam+digideps@digital.justice.gov.uk"

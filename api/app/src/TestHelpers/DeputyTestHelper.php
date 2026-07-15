@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\TestHelpers;
 
 use Doctrine\ORM\EntityManagerInterface;
-use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
 use Faker\Factory;

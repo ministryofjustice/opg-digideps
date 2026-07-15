@@ -222,3 +222,12 @@ notices:
     added: "Payment added"
     edited: "Payment edited"
     deleted: "Payment deleted"
+
+review:
+  question: Question
+  answer: Answer
+  yes: Yes
+  no: No
+  notEntered: Not entered
+  list: List of items of income over £1000
+  totalAmount: Total Amount

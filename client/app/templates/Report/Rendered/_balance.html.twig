@@ -100,8 +100,8 @@
                 <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'balanceTable.footer' | trans({},transDomain) }}
                 </dt>
-                <dd class="govuk-summary-list__value govuk-!-width-one-half">
-                    <strong>{{ not showBalanceCalculations ? 'Not entered' : '£' ~ report.calculatedBalance | money_format }}</strong>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half govuk-!-font-weight-bold">
+                    {{ not showBalanceCalculations ? 'Not entered' : '£' ~ report.calculatedBalance | money_format }}
                 </dd>
             </div>
         </dl>
@@ -143,8 +143,8 @@
                     {{ 'differenceTable.footer' | trans({},transDomain) }}
                 </dt>
                 <div class="govuk-summary-list__value govuk-!-width-one-half govuk-!-padding-right-0">
-                    <dd class="govuk-summary-list__value">
-                        <strong>£{{ report.totalsOffset | abs | money_format }}</strong>
+                    <dd class="govuk-summary-list__value govuk-!-font-weight-bold">
+                        £{{ report.totalsOffset | abs | money_format }}
                     </dd>
                     <dd class="govuk-summary-list__actions govuk-!-padding-right-0">
                         {% set accountBalanceState = report.isTotalsMatch ? 'matched' : 'notMatched' %}

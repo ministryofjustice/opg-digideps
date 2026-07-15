@@ -84,7 +84,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         $this->missingColumns = array_filter($this->missingColumns);
     }
 
-    private function determineReportTypeIsSupported(?string $reportType): ?string
+    private function determineReportTypeIsSupported(?string $reportType): string
     {
         $supported = match ($reportType) {
             'OPG102', 'OPG103', 'OPG104' => true,

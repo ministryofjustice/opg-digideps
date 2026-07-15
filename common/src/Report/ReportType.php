@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Backend\Domain\Report;
+namespace OPG\Digideps\Common\Report;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\Deputy\DeputyType;
 
 final readonly class ReportType implements \Stringable
 {
@@ -63,5 +63,10 @@ final readonly class ReportType implements \Stringable
         };
 
         return new ReportType($courtOrderReportType, $courtOrderType, $courtOrderKind, $deputyType);
+    }
+
+    public static function from(string $type): ReportType
+    {
+        return self::tryFrom($type) ?? throw new \DomainException("Invalid report type: {$type}");
     }
 }

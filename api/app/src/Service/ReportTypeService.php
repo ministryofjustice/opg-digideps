@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Service;
 
-use OPG\Digideps\Backend\Domain\Report\ReportType;
+use OPG\Digideps\Common\Report\ReportType;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 
 class ReportTypeService

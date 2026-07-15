@@ -34,10 +34,7 @@ class MigrationsMigrateLockCommand extends Command
         ;
     }
 
-    /**
-     * @return int
-     */
-    public function execute(InputInterface $input, OutputInterface $output): ?int
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         // release lock and exit
         if ($input->getOption('release-lock')) {

@@ -2059,13 +2059,13 @@ parameters:
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderReportType\:\:from\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderReportType\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 4
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/DataFixtures/LayUserFixtures.php
@@ -4149,18 +4149,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getSectionStatusesCached\(\) should return array but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getSectionsSettings\(\) should return array\<string, array\<string\>\> but returns array\<string, array\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Ternary operator condition is always false\.$#'
-			identifier: ternary.alwaysFalse
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -7975,6 +7963,12 @@ parameters:
 			path: src/v2/Registration/Assembler/LayDeputyshipDtoCollectionAssembler.php
 
 		-
+			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\Assembler\\SiriusToLayDeputyshipDtoAssembler\:\:determineReportTypeIsSupported\(\) should return string but returns string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
+
+		-
 			message: '#^Parameter \#1 \$caseNumber of method OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto\:\:setCaseNumber\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -10591,7 +10585,7 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
@@ -13501,7 +13495,7 @@ parameters:
 			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
@@ -15835,7 +15829,7 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
@@ -16363,7 +16357,7 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
@@ -16729,7 +16723,7 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php

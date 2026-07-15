@@ -8,7 +8,7 @@ final readonly class DefinitionList
 {
     public array $entries;
 
-    public function __construct(Entry ...$entries)
+    public function __construct(Entry | BulletPointEntry ...$entries)
     {
         $this->entries = $entries;
     }
