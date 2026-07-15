@@ -8,7 +8,7 @@ export default class ReportReviewPage {
   }
 
   async isExpected() {
-    await expect(this.page).toHaveURL(`/report/${this.reportId}/review`)
+    await expect(this.page).toHaveURL(`/report/${String(this.reportId)}/review`)
   }
 
   // press "Confirm contact details"

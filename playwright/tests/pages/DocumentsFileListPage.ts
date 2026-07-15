@@ -16,9 +16,9 @@ export default abstract class DocumentsFileListPage {
   async expectFileNames(...expectedFileNames: string[]) {
     const fileNameElements = await this.page.locator(this.fileNamesSelector).all()
 
-    let fileNames: string[] = []
+    const fileNames: string[] = []
     for (const fileNameElement of fileNameElements) {
-      let text = await fileNameElement.textContent()
+      const text = await fileNameElement.textContent()
       if (text !== null) {
         fileNames.push(text.trim())
       }

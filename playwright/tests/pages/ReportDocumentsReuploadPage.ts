@@ -10,7 +10,7 @@ export default class ReportDocumentsReuploadPage {
   }
 
   async isExpected() {
-    await expect(this.page).toHaveURL(`/report/${this.reportId}/documents/reupload`)
+    await expect(this.page).toHaveURL(`/report/${String(this.reportId)}/documents/reupload`)
   }
 
   async removeDocument(fileName:string) {

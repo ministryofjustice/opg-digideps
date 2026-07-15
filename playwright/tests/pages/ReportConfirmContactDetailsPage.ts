@@ -10,9 +10,10 @@ export default class ReportConfirmContactDetailsPage {
   }
 
   async isExpected() {
-    await expect(this.page).toHaveURL(`/report/${this.reportId}/confirm-details`)
+    await expect(this.page).toHaveURL(`/report/${String(this.reportId)}/confirm-details`)
   }
 
+  // press "Continue to declaration" button
   async continueToDeclaration() {
     await this.page.getByRole("link", { name: "Continue to declaration" }).click()
   }
