@@ -102,7 +102,7 @@ data "aws_iam_policy_document" "dr_backup" {
       "kms:CreateGrant",
       "kms:DescribeKey"
     ]
-    resources = [aws_kms_key.db_backup.arn]
+    resources = [aws_kms_key.db_backup.arn, var.rds_encryption_key_arn]
   }
 
   statement {

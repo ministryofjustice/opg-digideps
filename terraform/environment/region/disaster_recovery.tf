@@ -15,5 +15,6 @@ module "disaster_recovery_backup" {
   common_sg_rules         = local.common_sg_rules
   task_role_assume_policy = data.aws_iam_policy_document.task_role_assume_policy
   environment             = local.environment
+  rds_encryption_key_arn  = data.aws_kms_alias.rds_encryption_key.target_key_arn
   default_tags            = var.default_tags
 }
