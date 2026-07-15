@@ -722,7 +722,7 @@ trait SelfRegistrationTrait
         preg_match('/[^\/]+$/', $this->getCurrentUrl(), $matches);
         $clientId = (int)$matches[0];
 
-        if (!is_int($clientId) || $clientId <= 0) {
+        if ($clientId <= 0) {
             throw new BehatException(
                 sprintf('Client ID %s is not a valid integer, pulled from URL %s', $clientId, $this->getCurrentUrl())
             );
