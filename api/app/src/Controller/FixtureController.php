@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Controller;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -14,6 +13,7 @@ use OPG\Digideps\Backend\Fixture\DeputyDescriptor;
 use OPG\Digideps\Backend\Fixture\DeputySet;
 use OPG\Digideps\Backend\Fixture\FixtureService;
 use OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Common\Validating\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
