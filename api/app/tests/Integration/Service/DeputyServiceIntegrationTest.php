@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Service;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Service\DeputyService;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\CourtOrderTestHelper;
