@@ -7,7 +7,7 @@ export default class ReportOverviewPage {
   private readonly url: string;
 
   constructor(private page: Page, private reportId: number) {
-    this.url = `/report/${this.reportId}/overview`
+    this.url = `/report/${String(this.reportId)}/overview`
   }
 
   async goto() {
@@ -21,10 +21,10 @@ export default class ReportOverviewPage {
   async expectSectionStatus(section: string, status: string) {
     const sections = await this.page.locator('[data-role="report-overview-subsection"]').all()
 
-    let sectionStatuses: Record<string, string> = {}
+    const sectionStatuses: Record<string, string> = {}
     for (const section of sections) {
-      let sectionName = await section.locator('[data-role="report-overview-subsection-name"]').textContent()
-      let sectionStatus = await section.locator('[data-role="report-overview-subsection-status"]').textContent()
+      const sectionName = await section.locator('[data-role="report-overview-subsection-name"]').textContent()
+      const sectionStatus = await section.locator('[data-role="report-overview-subsection-status"]').textContent()
 
       if (sectionName !== null && sectionStatus !== null) {
         sectionStatuses[sectionName.trim()] = sectionStatus.trim()
