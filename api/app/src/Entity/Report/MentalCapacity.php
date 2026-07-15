@@ -102,33 +102,33 @@ class MentalCapacity
         return $this->hasCapacityChangedDetails;
     }
 
-    public function setHasCapacityChanged($hasCapacityChanged)
+    public function setHasCapacityChanged($hasCapacityChanged): static
     {
         $this->hasCapacityChanged = $hasCapacityChanged;
 
         return $this;
     }
 
-    public function setHasCapacityChangedDetails($hasCapacityChangedDetails)
+    public function setHasCapacityChangedDetails($hasCapacityChangedDetails): static
     {
         $this->hasCapacityChangedDetails = $hasCapacityChangedDetails;
 
         return $this;
     }
 
-    public function getMentalAssessmentDate()
+    public function getMentalAssessmentDate(): ?\DateTime
     {
         return $this->mentalAssessmentDate;
     }
 
-    public function setMentalAssessmentDate($mentalAssessmentDate)
+    public function setMentalAssessmentDate($mentalAssessmentDate): static
     {
         $this->mentalAssessmentDate = $mentalAssessmentDate;
 
         return $this;
     }
 
-    public function cleanUpUnusedData()
+    public function cleanUpUnusedData(): void
     {
         if ($this->hasCapacityChanged == self::CAPACITY_STAYED_SAME) {
             $this->hasCapacityChangedDetails = null;
