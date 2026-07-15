@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\Controller;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
 use OPG\Digideps\Backend\Fixture\DeputyDescriptor;
 use OPG\Digideps\Backend\Fixture\DeputySet;
@@ -20,11 +22,13 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * @phpstan-type FixtureReport array{id: int}
- * @phpstan-type FixtureOrder array{courtOrderUid: string, caseNumber: string, reports: array<FixtureReport>}
+ * @phpstan-type FixtureReport array{id: int, documents: array<FixtureDocument>}
+ * @phpstan-type FixtureDocument array{id: int}
+ * @phpstan-type FixtureOrder array{courtOrderUid: string, caseNumber: ?string, reports: array<FixtureReport>}
  * @phpstan-type FixtureUser array{email: string}
  * @phpstan-type Order array{order: CourtOrder, reports: array<Report>}
  * @phpstan-type OrderPair array<'pfa'|'hw', Order>
+ * @phpstan-type FixtureJson array{users: array<FixtureUser>, orders: array<FixtureOrder>}
  */
 class FixtureController extends AbstractController
 {
@@ -41,7 +45,7 @@ class FixtureController extends AbstractController
      *  - deputyReference (string used in email etc.)
      *  - reportType ("OPG102", "OPG103", "OPG104"; defaults to "OPG103")
      *
-     * @return array{users: array<string, FixtureUser>, orders: array<'pfa'|'hw', FixtureOrder>}
+     * @return FixtureJson
      * @throws ValidationException
      */
     #[Route('/fixtures/scenarios/laysimple', name: 'fixtures_scenarios_laysimple', methods: ['POST'])]
@@ -72,7 +76,7 @@ class FixtureController extends AbstractController
     /**
      * Creates a lay deputy with user account and a complete but unsubmitted report
      *
-     * @return array{users: array<string, FixtureUser>, orders: array<'pfa'|'hw', FixtureOrder>}
+     * @return FixtureJson
      * @throws ValidationException
      */
     #[Route('/fixtures/scenarios/layreadytosubmit', name: 'fixtures_scenarios_layreadytosubmit', methods: ['POST'])]
@@ -107,7 +111,7 @@ class FixtureController extends AbstractController
      * Creates a lay deputy with user account and a complete but unsubmitted report;
      * the report has documents attached but those documents have no objects in S3.
      *
-     * @return array{users: array<string, FixtureUser>, orders: array<'pfa'|'hw', FixtureOrder>}
+     * @return FixtureJson
      * @throws ValidationException|\DateInvalidOperationException
      */
     #[Route('/fixtures/scenarios/layreadytosubmit/expireds3objects', name: 'fixtures_scenarios_layreadytosubmit_expireds3objects', methods: ['POST'])]
@@ -118,7 +122,10 @@ class FixtureController extends AbstractController
 
         $deputyReference = $payload->getStringOrThrow('deputyReference');
         $reportTypeStr = $payload->getStringOrNull('reportType') ?? '';
+
+        /** @var string[] $supportingDocumentNames */
         $supportingDocumentNames = $payload->getArrayOrDefault('supportingDocumentNames', ['receipt1.pdf', 'receipt2.pdf']);
+
         $reportType = CourtOrderReportType::tryFrom($reportTypeStr) ?? CourtOrderReportType::OPG102;
 
         $details = $this->fixtureService->instantiateScenario(
@@ -153,25 +160,31 @@ class FixtureController extends AbstractController
         return $this->jsonifyScenario($details);
     }
 
-    private function jsonifyScenario(array $details): ?array
+    /**
+     * @return FixtureJson
+     */
+    private function jsonifyScenario(array $details): array
     {
-        [
-            'client' => $client,
-            'orders' => $orderPairs,
-            'persons' => [
-                'users' => $users,
-                'deputies' => $deputies,
-                'organisations' => $organisations,
-            ],
-        ] = $details;
+        /** @var OrderPair[] $orderPairs */
+        $orderPairs = $details['orders'] ?? [];
 
-        $fixtureUsers = array_map(function ($user) {
-            return ['email' => $user->getEmail()];
-        }, $users);
+        /** @var User[] $users */
+        $users = $details['users'] ?? [];
+
+        /** @var Client $client */
+        $client = $details['client'] ?? null;
+        if ($client === null) {
+            throw new \DomainException('Scenario did not generate a client');
+        }
+
+        $fixtureUsers = array_map(fn ($user) => ['email' => $user->getEmail()], $users);
 
         $fixtureOrders = [];
+
+        /** @var OrderPair $orderPair */
         foreach ($orderPairs as $orderPair) {
             foreach (['pfa', 'hw'] as $orderType) {
+                /** @var array{order: CourtOrder, reports: Report[]} $order */
                 $order = $orderPair[$orderType] ?? null;
 
                 if ($order !== null) {
@@ -180,8 +193,11 @@ class FixtureController extends AbstractController
                         'documents' => array_map(fn ($document) => ['id' => $document->getId()], $report->getDocuments()->toArray()),
                     ], $order['reports']);
 
+                    /** @var CourtOrder $courtOrder */
+                    $courtOrder = $order['order'];
+
                     $fixtureOrders[] = [
-                        'courtOrderUid' => $order['order']->getCourtOrderUid(),
+                        'courtOrderUid' => $courtOrder->getCourtOrderUid(),
                         'caseNumber' => $client->getCaseNumber(),
                         'reports' => $reports,
                     ];

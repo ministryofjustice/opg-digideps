@@ -42,7 +42,11 @@ abstract class AbstractTestController extends WebTestCase
         self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
 
         self::$em = static::getContainer()->get('em');
-        self::$fixtureService = static::getContainer()->get(FixtureService::class);
+
+        /** @var FixtureService $fixtureService */
+        $fixtureService = static::getContainer()->get(FixtureService::class);
+        self::$fixtureService = $fixtureService;
+
         self::$fixtures = new Fixtures(self::$em);
         self::$em->clear();
 
