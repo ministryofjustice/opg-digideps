@@ -31,7 +31,7 @@ export default class AdminDocumentsListPage {
     const selector = 'tr[data-role="report-submission-documents"] tbody tr'
     const documentSubmissions = await this.page.locator(selector).all()
 
-    let fileNames = []
+    const fileNames = []
     let asExpected = 0
     for (const documentSubmission of documentSubmissions) {
       let fileName = await documentSubmission.locator("td").nth(0).textContent()

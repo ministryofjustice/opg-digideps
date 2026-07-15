@@ -264,6 +264,10 @@ playwright-lint: ##@playwright Runs eslint on all tests.
 	docker compose build playwright-tests
 	docker compose run --rm playwright-tests lint
 
+playwright-lint-fix: ##@playwright Runs eslint on all tests and fixes any fixable issues.
+	docker compose build playwright-tests
+	docker compose run --rm playwright-tests lint-fix
+
 playwright-ui: ##@playwright Runs tests in UI interface for debugging.
 	docker compose build playwright-tests
 	docker compose run --rm -p 9525:9525 playwright-tests ui

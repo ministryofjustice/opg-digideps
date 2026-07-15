@@ -30,6 +30,10 @@ export interface Scenario {
   orders: OrderDetails[]
 }
 
+interface ApiPayload {
+  data: Scenario
+}
+
 interface ScenarioFunction {
   (authToken: string): Promise<Scenario>
 }
@@ -74,7 +78,7 @@ async function getAuthToken(user: TestUser): Promise<string | null> {
 
 // returns a closure which creates a scenario;
 // path should include leading "/"
-export function createScenarioViaApi(path: string, body: { [key: string]: any }): ScenarioFunction {
+export function createScenarioViaApi(path: string, body: { [key: string]: string }): ScenarioFunction {
   return async (authToken: string): Promise<Scenario> => {
     const res = await fetch(new Request(apiURL + path, {
       method: "POST",
@@ -89,8 +93,13 @@ export function createScenarioViaApi(path: string, body: { [key: string]: any })
       throw new Error(res.statusText)
     }
 
-    const text = await res.text();
-    return JSON.parse(text)["data"];
+    const text = await res.text()
+    const payload = JSON.parse(text) as ApiPayload
+    if (!(payload.hasOwnProperty("data"))) {
+      throw new Error("Could not create scenario via API")
+    }
+
+    return payload.data
   }
 }
 
@@ -105,17 +114,6 @@ export async function setupScenario(scenarioFn: ScenarioFunction): Promise<Scena
       }
 
       return scenarioFn(authToken)
-    })
-    .then(scenario => {
-      if (scenario === null) {
-        throw new Error("Unable to create scenario")
-      }
-
-      return scenario
-    })
-    .catch(err => {
-      console.error(err)
-      throw err
     })
 }
 

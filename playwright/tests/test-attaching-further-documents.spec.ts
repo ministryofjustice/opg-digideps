@@ -1,4 +1,4 @@
-import path = require("path")
+import path from "path"
 import { expect, test } from "@playwright/test"
 import { createScenarioViaApi, getUserFixture, Scenario, setupScenario, testPassword } from "./fixtures/fixtures"
 import AdminLoginPage from "./pages/AdminLoginPage"
@@ -23,12 +23,12 @@ test("a user sends further documents", async ({ page }) => {
       const documentsUploadPage = new DocumentsUploadPage(page, submittedReportId)
 
       // attach two files
-      let uploadedFiles = []
+      const uploadedFiles = []
       const filesToUpload = ["testimage1.png", "testimage2.png"]
       for (const fileToUpload of filesToUpload) {
         await documentsUploadPage.goto()
 
-        let fileToUploadFullPath = path.join(__dirname, `/testFiles/${fileToUpload}`)
+        const fileToUploadFullPath = path.join(__dirname, `/testFiles/${fileToUpload}`)
         await documentsUploadPage.attachFiles(fileToUploadFullPath)
         await documentsUploadPage.sendDocuments()
 
@@ -42,7 +42,7 @@ test("a user sends further documents", async ({ page }) => {
 
         await documentsUploadPage.goto()
         for (const uploadedFile of uploadedFiles) {
-          let selector = `dt[data-role="attached-document-name"]:has-text("${uploadedFile}")`
+          const selector = `dt[data-role="attached-document-name"]:has-text("${uploadedFile}")`
           await expect(page.locator(selector)).toHaveCount(1)
         }
       }
@@ -67,12 +67,5 @@ test("a user sends further documents", async ({ page }) => {
     }
 
     await setupScenario(createScenarioViaApi("/fixtures/scenarios/laysimple", { deputyReference: deputyReference }))
-      .then(scenario => {
-        if (scenario === null) {
-          throw new Error("Unable to create scenario for attaching further documents")
-        }
-
-        return scenario
-      })
       .then(runTest)
 })

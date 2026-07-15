@@ -1,6 +1,6 @@
-import fs = require("fs")
-import os = require("os")
-import path = require("path")
+import fs from "fs"
+import os from "os"
+import path from "path"
 import { fail } from "assert"
 import { mkdtemp } from "fs/promises"
 import { Page, test } from "@playwright/test"

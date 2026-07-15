@@ -10,7 +10,7 @@ export default class ReportDeclarationPage {
   }
 
   async isExpected() {
-    await expect(this.page).toHaveURL(`/report/${this.reportId}/declaration`)
+    await expect(this.page).toHaveURL(`/report/${String(this.reportId)}/declaration`)
   }
 
   // tick checkboxes etc. and submit report;

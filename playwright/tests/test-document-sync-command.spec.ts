@@ -1,5 +1,5 @@
-import path = require("path")
-import { expect, test } from "@playwright/test"
+import path from "path"
+import { test } from "@playwright/test"
 import { createScenarioViaApi, getUserFixture, Scenario, setupScenario, testPassword } from "./fixtures/fixtures"
 import AdminLoginPage from "./pages/AdminLoginPage"
 import DocumentsUploadPage from "./pages/DocumentsUploadPage"
@@ -63,12 +63,5 @@ test("document-sync command updates document statuses", async ( {page} ) => {
   }
 
   await setupScenario(createScenarioViaApi("/fixtures/scenarios/laysimple", { deputyReference: deputyReference }))
-    .then(scenario => {
-      if (scenario === null) {
-        throw new Error("Unable to create scenario for attaching further documents")
-      }
-
-      return scenario
-    })
     .then(runTest)
 })
