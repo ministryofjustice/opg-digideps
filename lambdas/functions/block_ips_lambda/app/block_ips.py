@@ -96,6 +96,10 @@ def filter_logs(logs):
 
         request_uri = log["request_uri"]
 
+        # Ignore ACME, security.txt, etc.
+        if request_uri.startswith("/.well-known/"):
+            continue
+
         if status == 404:
             if suffix_pattern.match(request_uri):
                 filtered_logs[ip]["404_with_suffix"] += 1
