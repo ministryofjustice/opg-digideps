@@ -28,7 +28,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  * @phpstan-type FixtureUser array{email: string}
  * @phpstan-type Order array{order: CourtOrder, reports: array<Report>}
  * @phpstan-type OrderPair array<'pfa'|'hw', Order>
- * @phpstan-type FixtureJson array{users: array<FixtureUser>, orders: array<FixtureOrder>}
+ * @phpstan-type FixtureJson array{users: array<string, FixtureUser>, orders: array<FixtureOrder>}
  */
 class FixtureController extends AbstractController
 {
@@ -169,7 +169,7 @@ class FixtureController extends AbstractController
         $orderPairs = $details['orders'] ?? [];
 
         /** @var User[] $users */
-        $users = $details['users'] ?? [];
+        $users = $details['persons']['users'] ?? [];
 
         /** @var Client $client */
         $client = $details['client'] ?? null;
