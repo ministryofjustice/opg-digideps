@@ -1,4 +1,4 @@
-const apiURL = "http://api-webserver";
+const apiURL = process.env.API_URL;
 
 type UserType = "lay_user" | "pro_user" | "admin_user";
 
