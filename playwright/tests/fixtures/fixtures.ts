@@ -82,7 +82,7 @@ async function getAuthToken(user: TestUser): Promise<string | null> {
 // path should include leading "/"
 export function createScenarioViaApi(
   path: string,
-  body: { [key: string]: string },
+  body: { [key: string]: string|string[] },
 ): ScenarioFunction {
   return async (authToken: string): Promise<Scenario> => {
     const res = await fetch(
