@@ -33,7 +33,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class FixtureController extends AbstractController
 {
     public function __construct(
-        private readonly FixtureService $fixtureService
+        private readonly FixtureService $fixtureService,
+        private readonly string $workspace
     ) {
     }
 
@@ -49,9 +50,11 @@ class FixtureController extends AbstractController
      * @throws ValidationException
      */
     #[Route('/fixtures/scenarios/laysimple', name: 'fixtures_scenarios_laysimple', methods: ['POST'])]
-    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function scenarioLaySimple(Request $request): array
     {
+        $this->checkIfAccessible();
+
         $payload = new ValidatingArray($request->getPayload()->all());
 
         $deputyReference = $payload->getStringOrThrow('deputyReference');
@@ -80,9 +83,11 @@ class FixtureController extends AbstractController
      * @throws ValidationException
      */
     #[Route('/fixtures/scenarios/layreadytosubmit', name: 'fixtures_scenarios_layreadytosubmit', methods: ['POST'])]
-    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function scenarioLayReadyToSubmit(Request $request): array
     {
+        $this->checkIfAccessible();
+
         $payload = new ValidatingArray($request->getPayload()->all());
 
         $deputyReference = $payload->getStringOrThrow('deputyReference');
@@ -115,9 +120,11 @@ class FixtureController extends AbstractController
      * @throws ValidationException|\DateInvalidOperationException
      */
     #[Route('/fixtures/scenarios/layreadytosubmit/expireds3objects', name: 'fixtures_scenarios_layreadytosubmit_expireds3objects', methods: ['POST'])]
-    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function scenarioLayReadyToSubmitExpiredS3Objects(Request $request): array
     {
+        $this->checkIfAccessible();
+
         $payload = new ValidatingArray($request->getPayload()->all());
 
         $deputyReference = $payload->getStringOrThrow('deputyReference');
@@ -215,5 +222,12 @@ class FixtureController extends AbstractController
             'users' => $fixtureUsers,
             'orders' => $fixtureOrders,
         ];
+    }
+
+    private function checkIfAccessible(): void
+    {
+        if ($this->workspace === 'production') {
+            throw new \RuntimeException('User not found', 404);
+        }
     }
 }
