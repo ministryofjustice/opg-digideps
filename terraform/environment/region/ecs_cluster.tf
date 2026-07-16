@@ -73,6 +73,10 @@ locals {
     {
       name  = "FIXTURES_ENABLED",
       value = tostring(var.account.environment.fixtures_enabled)
+    },
+    {
+      name  = "WORKSPACE",
+      value = local.environment
     }
   ]
 
@@ -112,10 +116,6 @@ locals {
     {
       name  = "SECRETS_PREFIX",
       value = join("", [var.secrets_prefix, "/"])
-    },
-    {
-      name  = "WORKSPACE",
-      value = local.environment
     },
     {
       name  = "S3_BUCKETNAME",
