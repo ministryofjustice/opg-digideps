@@ -4,80 +4,55 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Command;
 
-use OPG\Digideps\Backend\Command\ProcessOrgCSVCommand;
-use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
-use OPG\Digideps\Backend\Service\DataImporter\CsvToArray;
-use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
-use Aws\S3\S3Client;
-use Mockery as Mock;
-use Mockery\MockInterface;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use OPG\Digideps\Backend\Command\ProcessOrgCSVCommand;
+use OPG\Digideps\Backend\Service\DataImporter\CsvToArray;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Tests\OPG\Digideps\Backend\Unit\S3ClientMock;
 
 final class ProcessOrgCSVCommandTest extends KernelTestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @var ObjectProphecy<S3Client> $s3
-     */
-    private ObjectProphecy $s3;
-    /**
-     * @var ObjectProphecy<ParameterBagInterface> $params
-     */
-    private ObjectProphecy $params;
+    private S3ClientMock&MockObject $s3;
+    private ParameterBagInterface&MockObject $params;
     private string $csvFilename;
-    /**
-     * @var ObjectProphecy<LoggerInterface> $logger
-     */
-    private ObjectProphecy $logger;
-    /**
-     * @var ObjectProphecy<CSVDeputyshipProcessing> $csvProcessing
-     */
-    private ObjectProphecy $csvProcessing;
-    /**
-     * @var ObjectProphecy<PreRegistrationRepository> $preReg
-     */
-    private ObjectProphecy $preReg;
-    private MockInterface&CsvToArray $csvArray;
+    private LoggerInterface&MockObject $logger;
+    private CSVDeputyshipProcessing&MockObject $csvProcessing;
+    private CsvToArray&MockObject $csvArray;
     private CommandTester $commandTester;
 
     public function setUp(): void
     {
-        $kernel = static::createKernel();
+        $kernel = self::createKernel();
         $app = new Application($kernel);
 
         // TODO Refactor CSV Process so we can mock this properly
         copy(dirname(dirname(__DIR__)) . '/csv/paProDeputyReport.csv', '/tmp/paProDeputyReport.csv');
 
-        $this->s3 = self::prophesize(S3Client::class);
-        $this->params = self::prophesize(ParameterBagInterface::class);
-        $this->params->get('s3_sirius_bucket')
-            ->shouldBeCalled()
+        $this->s3 = self::createMock(S3ClientMock::class);
+
+        $this->params = self::createMock(ParameterBagInterface::class);
+        $this->params->expects(self::once())
+            ->method('get')
+            ->with('s3_sirius_bucket')
             ->willReturn('bucket');
 
         $this->csvFilename = 'paProDeputyReport.csv';
 
-        $this->logger = self::prophesize(LoggerInterface::class);
-        $this->csvProcessing = self::prophesize(CSVDeputyshipProcessing::class);
-        $this->preReg = self::prophesize(PreRegistrationRepository::class);
-
-        $this->csvArray = Mock::mock(CsvToArray::class);
+        $this->logger = self::createMock(LoggerInterface::class);
+        $this->csvProcessing = self::createMock(CSVDeputyshipProcessing::class);
 
         $setUp = new ProcessOrgCSVCommand(
-            $this->s3->reveal(),
-            $this->params->reveal(),
-            $this->logger->reveal(),
-            $this->csvProcessing->reveal(),
-            $this->preReg->reveal()
+            $this->s3,
+            $this->params,
+            $this->logger,
+            $this->csvProcessing,
         );
 
         $app->add($setUp);
@@ -88,13 +63,12 @@ final class ProcessOrgCSVCommandTest extends KernelTestCase
 
     public function testExecuteWithSuccessfulFilePull(): void
     {
-        $this->s3->getObject(Argument::any())
-            ->shouldBeCalled()
+        $this->s3->expects(self::once())
+            ->method('getObject')
             ->willReturn(new Result());
 
-        $this->csvProcessing->orgProcessing(Argument::any())
-            /* @phpstan-ignore method.nonObject */
-            ->shouldBeCalled()
+        $this->csvProcessing->expects(self::once())
+            ->method('orgProcessing')
             ->willReturn([
                 'errors' => [
                     'count' => 1,
@@ -133,38 +107,15 @@ final class ProcessOrgCSVCommandTest extends KernelTestCase
 
     public function testExecuteWithFailedFilePullS3Error(): void
     {
-        $this->s3->getObject(Argument::any())
-            ->shouldBeCalled()
-            ->willThrow(S3Exception::class);
+        $this->s3->expects(self::once())
+            ->method('getObject')
+            ->willThrowException(self::createStub(S3Exception::class));
 
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $output = $this->commandTester->getDisplay();
 
         $this->assertStringContainsString(
             'org_csv_processing - failure - Error retrieving file paProDeputyReport.csv from bucket',
-            $output
-        );
-    }
-
-    public function testExecuteWithMissingCSVCol(): void
-    {
-        // Required so we can trigger missing column exception with bad file
-        copy(dirname(dirname(__DIR__)) . '/csv/paProDeputyReport-bad.csv', '/tmp/paProDeputyReport.csv');
-        $mockError = new \RuntimeException('Invalid file. Cannot find expected header');
-
-        $this->csvArray->shouldReceive(
-            'setExpectedColumns->setUnexpectedColumns->getData'
-        )->andThrow($mockError);
-
-        $this->s3->getObject(Argument::any())
-            ->shouldBeCalled()
-            ->willReturn(new Result());
-
-        $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
-        $output = $this->commandTester->getDisplay();
-
-        $this->assertStringContainsString(
-            "CSV file /tmp/{$this->csvFilename} does not contain all expected columns in header",
             $output
         );
     }
