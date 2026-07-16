@@ -1,4 +1,5 @@
 const apiURL = process.env.API_URL;
+const clientSecret = process.env.API_CLIENT_SECRET ?? '';
 
 type UserType = "lay_user" | "pro_user" | "admin_user";
 
@@ -68,8 +69,7 @@ async function getAuthToken(user: TestUser): Promise<string | null> {
       method: "POST",
       body: JSON.stringify({ email: user.email, password: user.password }),
       headers: {
-        // TODO get from env
-        ClientSecret: "api-admin-key",
+        ClientSecret: clientSecret,
         "Content-Type": "application/json",
       },
     }),
