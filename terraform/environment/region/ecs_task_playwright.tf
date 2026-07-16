@@ -39,6 +39,13 @@ locals {
       target_type = "cidr_block"
       target      = "0.0.0.0/0"
     }
+    api_access = {
+      port        = 80
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.api_service_security_group.id
+    }
   }
 }
 
@@ -90,6 +97,7 @@ locals {
     environment = [
       { name = "ADMIN_URL", value = "https://${var.admin_fully_qualified_domain_name}" },
       { name = "FRONT_URL", value = "https://${var.front_fully_qualified_domain_name}" },
+      { name = "API_URL", value = local.api_url },
       { name = "ENVIRONMENT", value = var.secrets_prefix }
     ]
   })
