@@ -13,14 +13,11 @@ use OPG\Digideps\Backend\Repository\ReportRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 final class ClientBenefitsCheckFactoryTest extends TestCase
 {
-    use ProphecyTrait;
-
     private ?ClientBenefitsCheck $moneyClientBenefitsCheck;
 
     private ?float $moneyAmount;
@@ -66,14 +63,17 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $validData = $this->generateValidFormData(true);
 
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
-        $this->set($report, $this->reportId);
+        $report->setId($this->reportId);
 
-        $reportRepo = self::prophesize(ReportRepository::class);
-        $em = self::prophesize(EntityManagerInterface::class);
+        $reportRepo = self::createMock(ReportRepository::class);
+        $em = self::createMock(EntityManagerInterface::class);
 
-        $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
+        $reportRepo->expects(self::once())
+            ->method('find')
+            ->with($this->reportId)
+            ->willReturn($report);
 
-        $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $em->reveal());
+        $sut = new ClientBenefitsCheckFactory($reportRepo, $em);
 
         $existingMoney = new MoneyReceivedOnClientsBehalf()
             ->setId(Uuid::fromString($this->moneyId));
@@ -132,29 +132,23 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         ];
     }
 
-    private function set(Report $entity, ?int $value, $propertyName = 'id'): void
-    {
-        $class = new \ReflectionClass($entity);
-        $property = $class->getProperty($propertyName);
-        $property->setAccessible(true);
-
-        $property->setValue($entity, $value);
-    }
-
     #[Test]
     public function createFromFormDataNewEntity(): void
     {
         $validData = $this->generateValidFormData(false);
 
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
-        $this->set($report, $this->reportId);
+        $report->setId($this->reportId);
 
-        $reportRepo = self::prophesize(ReportRepository::class);
-        $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
+        $reportRepo = self::createMock(ReportRepository::class);
+        $reportRepo->expects(self::once())
+            ->method('find')
+            ->with($this->reportId)
+            ->willReturn($report);
 
-        $em = self::prophesize(EntityManagerInterface::class);
+        $em = self::createMock(EntityManagerInterface::class);
 
-        $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $em->reveal());
+        $sut = new ClientBenefitsCheckFactory($reportRepo, $em);
 
         $processedClientBenefitsCheck = $sut->createFromFormData($validData);
 
@@ -183,10 +177,13 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $validData = $this->generateValidFormDataRemoveMoneys();
 
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
-        $this->set($report, $this->reportId);
+        $report->setId($this->reportId);
 
-        $reportRepo = self::prophesize(ReportRepository::class);
-        $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
+        $reportRepo = self::createMock(ReportRepository::class);
+        $reportRepo->expects(self::once())
+            ->method('find')
+            ->with($this->reportId)
+            ->willReturn($report);
 
         $existingMoney = new MoneyReceivedOnClientsBehalf()
             ->setId(Uuid::fromString($this->moneyId))
@@ -200,11 +197,14 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
 
         $existingMoney->setClientBenefitsCheck($existingClientBenefitsCheck);
 
-        $em = self::prophesize(EntityManagerInterface::class);
-        $em->remove($existingMoney)->shouldBeCalled();
-        $em->flush()->shouldBeCalled();
+        $em = self::createMock(EntityManagerInterface::class);
+        $em->expects(self::once())
+            ->method('remove')
+            ->with($existingMoney);
+        $em->expects(self::once())
+            ->method('flush');
 
-        $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $em->reveal());
+        $sut = new ClientBenefitsCheckFactory($reportRepo, $em);
 
         $processedClientBenefitsCheck = $sut->createFromFormData(
             $validData,
