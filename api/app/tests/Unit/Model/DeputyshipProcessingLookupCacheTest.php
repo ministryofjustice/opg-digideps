@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Model;
 
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipProcessingLookupCache;
 use OPG\Digideps\Backend\Repository\ClientRepository;
 use OPG\Digideps\Backend\Repository\CourtOrderRepository;
 use OPG\Digideps\Backend\Repository\DeputyRepository;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 
 final class DeputyshipProcessingLookupCacheTest extends TestCase
