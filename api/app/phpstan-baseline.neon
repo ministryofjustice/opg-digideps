@@ -2479,6 +2479,12 @@ parameters:
 			path: src/Factory/DataFactoryResult.php
 
 		-
+			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\Report\\Report\>\:\:clear\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Factory/UpdateReportTypeDataFactory.php
+
+		-
 			message: '#^Parameter \#1 \$deputyshipLength of method OPG\\Digideps\\Backend\\Entity\\UserResearch\\UserResearchResponse\:\:setDeputyshipLength\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
