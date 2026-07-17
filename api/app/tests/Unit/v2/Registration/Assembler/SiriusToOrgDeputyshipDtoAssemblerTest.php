@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Assembler;
 
-use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Service\ReportUtils;
-use Tests\OPG\Digideps\Backend\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
+use Tests\OPG\Digideps\Backend\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 
 final class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
 {
-    use ProphecyTrait;
-
     #[Test]
     public function assembleFromArrayProfPFAHighAssets(): void
     {
@@ -29,22 +26,25 @@ final class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
         $expectedClientDateOfBirth = \DateTime::createFromFormat('Y-m-d', $siriusArray['ClientDateOfBirth']);
         $expectedMadeDate = \DateTime::createFromFormat('Y-m-d', $siriusArray['MadeDate']);
 
-        $reportUtils = self::prophesize(ReportUtils::class);
+        $reportUtils = self::createMock(ReportUtils::class);
 
-        $reportUtils->determineReportType($siriusArray['ReportType'], $siriusArray['OrderType'], $siriusArray['DeputyType'])
-            ->shouldBeCalled()
+        $reportUtils->expects(self::once())
+            ->method('determineReportType')
+            ->with($siriusArray['ReportType'], $siriusArray['OrderType'], $siriusArray['DeputyType'])
             ->willReturn('102-5');
 
-        $reportUtils->generateReportStartDateFromEndDate($expectedReportEndDate)->shouldBeCalled()->willReturn($expectedReportStartDate);
+        $reportUtils->expects(self::once())
+            ->method('generateReportStartDateFromEndDate')
+            ->with($expectedReportEndDate)
+            ->willReturn($expectedReportStartDate);
 
-        $sut = new SiriusToOrgDeputyshipDtoAssembler($reportUtils->reveal());
+        $sut = new SiriusToOrgDeputyshipDtoAssembler($reportUtils);
 
         $dto = $sut->assembleSingleDtoFromArray($siriusArray);
         $dateTimeDob = $dto->getClientDateOfBirth() ?? new \DateTime();
         $dateTimeCourt = $dto->getCourtDate() ?? new \DateTime();
         $dateTimeReportStart = $dto->getReportStartDate() ?? new \DateTime();
         $dateTimeReportEnd = $dto->getReportEndDate() ?? new \DateTime();
-
 
         self::assertEquals($siriusArray['Case'], $dto->getCaseNumber());
         self::assertEquals($siriusArray['ClientForename'], $dto->getClientFirstname());
@@ -84,15 +84,18 @@ final class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
 
         $reportEndDate = \DateTime::createFromFormat('Y-m-d', $siriusArray['LastReportDay']);
 
-        $reportUtils = self::prophesize(ReportUtils::class);
+        $reportUtils = self::createMock(ReportUtils::class);
 
-        $reportUtils->determineReportType($siriusArray['ReportType'], $siriusArray['OrderType'], $siriusArray['DeputyType'])
-            ->shouldBeCalled()
+        $reportUtils->expects(self::once())
+            ->method('determineReportType')
+            ->with($siriusArray['ReportType'], $siriusArray['OrderType'], $siriusArray['DeputyType'])
             ->willReturn('103-4-6');
 
-        $reportUtils->generateReportStartDateFromEndDate($reportEndDate)->shouldBeCalled();
+        $reportUtils->expects(self::once())
+            ->method('generateReportStartDateFromEndDate')
+            ->with($reportEndDate);
 
-        $sut = new SiriusToOrgDeputyshipDtoAssembler($reportUtils->reveal());
+        $sut = new SiriusToOrgDeputyshipDtoAssembler($reportUtils);
 
         $dto = $sut->assembleSingleDtoFromArray($siriusArray);
 
