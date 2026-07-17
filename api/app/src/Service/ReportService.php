@@ -72,8 +72,6 @@ class ReportService
         // Set user to active once they have submitted a report
         $user->setActive(true);
 
-        $newYearReport = null;
-
         if ($currentReport->getUnSubmitDate()) {
             $this->logger->warning("Creating next year report for client $clientId (existing unsubmitted report) at $now");
 
