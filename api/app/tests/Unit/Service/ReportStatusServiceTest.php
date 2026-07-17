@@ -143,15 +143,15 @@ final class ReportStatusServiceTest extends TestCase
 
     public static function lifestyleProvider(): array
     {
-        $empty = self::createConfiguredMock(Lifestyle::class, [
+        $empty = self::createConfiguredStub(Lifestyle::class, [
             'getCareAppointments' => null,
             'getDoesClientUndertakeSocialActivities' => null,
         ]);
-        $incomplete = self::createConfiguredMock(Lifestyle::class, [
+        $incomplete = self::createConfiguredStub(Lifestyle::class, [
             'getCareAppointments' => 'yes',
             'getDoesClientUndertakeSocialActivities' => null,
         ]);
-        $done = self::createConfiguredMock(Lifestyle::class, [
+        $done = self::createConfiguredStub(Lifestyle::class, [
             'getCareAppointments' => 'yes',
             'getDoesClientUndertakeSocialActivities' => 'yes',
         ]);
@@ -205,8 +205,8 @@ final class ReportStatusServiceTest extends TestCase
 
     public static function moneyInShortProvider(): array
     {
-        $cat = self::createMock(MoneyShortCategory::class);
-        $t = self::createMock(MoneyTransactionShort::class);
+        $cat = self::createStub(MoneyShortCategory::class);
+        $t = self::createStub(MoneyTransactionShort::class);
 
         $oneCategory = new ArrayCollection([$cat]);
         $emptyCategories = new ArrayCollection([]);
@@ -232,8 +232,8 @@ final class ReportStatusServiceTest extends TestCase
 
     public static function moneyOutShortProvider(): array
     {
-        $cat = self::createMock(MoneyShortCategory::class);
-        $t = self::createMock(MoneyTransactionShort::class);
+        $cat = self::createStub(MoneyShortCategory::class);
+        $t = self::createStub(MoneyTransactionShort::class);
 
         $emptyCategories = new ArrayCollection([]);
         $oneCategory = new ArrayCollection([$cat]);
@@ -504,12 +504,12 @@ final class ReportStatusServiceTest extends TestCase
 
     public static function decisionsProvider(): array
     {
-        $decision = self::createMock(Decision::class);
-        $mcPartial = self::createConfiguredMock(MentalCapacity::class, [
+        $decision = self::createStub(Decision::class);
+        $mcPartial = self::createConfiguredStub(MentalCapacity::class, [
             'getHasCapacityChanged' => 'no',
             'getMentalAssessmentDate' => null,
         ]);
-        $mcComplete = self::createConfiguredMock(MentalCapacity::class, [
+        $mcComplete = self::createConfiguredStub(MentalCapacity::class, [
             'getHasCapacityChanged' => 'no',
             'getMentalAssessmentDate' => new \DateTime('2016-01-01'),
         ]);
@@ -529,7 +529,7 @@ final class ReportStatusServiceTest extends TestCase
 
     public static function contactsProvider(): array
     {
-        $contact = self::createMock(Contact::class);
+        $contact = self::createStub(Contact::class);
 
         return [
             [[], ReportStatusService::STATE_NOT_STARTED, false],
@@ -541,19 +541,19 @@ final class ReportStatusServiceTest extends TestCase
 
     public static function visitsCareProvider(): array
     {
-        $empty = self::createConfiguredMock(VisitsCare::class, [
+        $empty = self::createConfiguredStub(VisitsCare::class, [
             'getDoYouLiveWithClient' => null,
             'getDoesClientReceivePaidCare' => null,
             'getWhoIsDoingTheCaring' => null,
             'getDoesClientHaveACarePlan' => null,
         ]);
-        $incomplete = self::createConfiguredMock(VisitsCare::class, [
+        $incomplete = self::createConfiguredStub(VisitsCare::class, [
             'getDoYouLiveWithClient' => 'yes',
             'getDoesClientReceivePaidCare' => null,
             'getWhoIsDoingTheCaring' => null,
             'getDoesClientHaveACarePlan' => null,
         ]);
-        $done = self::createConfiguredMock(VisitsCare::class, [
+        $done = self::createConfiguredStub(VisitsCare::class, [
             'getDoYouLiveWithClient' => 'yes',
             'getDoesClientReceivePaidCare' => 'yes',
             'getWhoIsDoingTheCaring' => 'xxx',
@@ -569,17 +569,17 @@ final class ReportStatusServiceTest extends TestCase
 
     public static function actionsProvider(): array
     {
-        $empty = self::createConfiguredMock(Action::class, [
+        $empty = self::createConfiguredStub(Action::class, [
             'getDoYouExpectFinancialDecisions' => null,
             'getDoYouHaveConcerns' => null,
         ]);
 
-        $incomplete = self::createConfiguredMock(Action::class, [
+        $incomplete = self::createConfiguredStub(Action::class, [
             'getDoYouExpectFinancialDecisions' => 'yes',
             'getDoYouHaveConcerns' => null,
         ]);
 
-        $done = self::createConfiguredMock(Action::class, [
+        $done = self::createConfiguredStub(Action::class, [
             'getDoYouExpectFinancialDecisions' => 'yes',
             'getDoYouHaveConcerns' => 'no',
         ]);
@@ -609,11 +609,11 @@ final class ReportStatusServiceTest extends TestCase
 
     public static function documentsProvider(): array
     {
-        $document = self::createMock(Document::class);
+        $document = self::createStub(Document::class);
 
         return [
             [['getWishToProvideDocumentation' => 'no'], ReportStatusService::STATE_DONE],
-            [['getDocuments' => []], ReportStatusService::STATE_NOT_STARTED],
+            [['getDocuments' => new ArrayCollection([])], ReportStatusService::STATE_NOT_STARTED],
             [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => new ArrayCollection([])], ReportStatusService::STATE_INCOMPLETE],
             [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => new ArrayCollection([$document])], ReportStatusService::STATE_DONE],
         ];
@@ -649,11 +649,11 @@ final class ReportStatusServiceTest extends TestCase
 
     public static function bankAccountProvider(): array
     {
-        $accounts = new ArrayCollection([self::createMock(BankAccount::class)]);
+        $accounts = new ArrayCollection([self::createStub(BankAccount::class)]);
         $emptyAccounts = new ArrayCollection([]);
 
         return [
-            [['getBankAccounts' => $emptyAccounts, 'getBankAccountsIncomplete' => []], ReportStatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => $emptyAccounts, 'getBankAccountsIncomplete' => $emptyAccounts], ReportStatusService::STATE_NOT_STARTED],
             [['getBankAccounts' => $accounts, 'getBankAccountsIncomplete' => $accounts], ReportStatusService::STATE_INCOMPLETE],
             [['getBankAccounts' => $accounts, 'getBankAccountsIncomplete' => $emptyAccounts], ReportStatusService::STATE_DONE],
         ];
@@ -669,7 +669,7 @@ final class ReportStatusServiceTest extends TestCase
 
     public static function assetsProvider(): array
     {
-        $asset = self::createMock(Asset::class);
+        $asset = self::createStub(Asset::class);
 
         return [
             [['getAssets' => new ArrayCollection([]), 'getNoAssetToAdd' => null], ReportStatusService::STATE_NOT_STARTED],
@@ -681,10 +681,10 @@ final class ReportStatusServiceTest extends TestCase
 
     public static function debtsProvider(): array
     {
-        $debt = self::createMock(Debt::class);
+        $debt = self::createStub(Debt::class);
 
         return [
-            [['getHasDebts' => false], ReportStatusService::STATE_NOT_STARTED],
+            [['getHasDebts' => null], ReportStatusService::STATE_NOT_STARTED],
             [['getHasDebts' => 'yes'], ReportStatusService::STATE_INCOMPLETE],
             [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => new ArrayCollection([$debt])], ReportStatusService::STATE_INCOMPLETE],
             [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => new ArrayCollection([$debt]), 'getDebtManagement' => ''], ReportStatusService::STATE_INCOMPLETE],
@@ -695,9 +695,9 @@ final class ReportStatusServiceTest extends TestCase
 
     public static function moneyTransferProvider(): array
     {
-        $account1 = self::createMock(BankAccount::class);
-        $account2 = self::createMock(BankAccount::class);
-        $mt1 = self::createMock(MoneyTransfer::class);
+        $account1 = self::createStub(BankAccount::class);
+        $account2 = self::createStub(BankAccount::class);
+        $mt1 = self::createStub(MoneyTransfer::class);
 
         $bothAccounts = new ArrayCollection([$account1, $account2]);
         $noAccounts = new ArrayCollection([]);
