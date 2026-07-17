@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManager;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\PreRegistration;
@@ -14,37 +14,15 @@ use OPG\Digideps\Backend\Repository\ClientRepository;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\PreRegistrationVerificationService;
 use OPG\Digideps\Backend\Service\UserRegistrationService;
-use Doctrine\ORM\EntityManager;
-use Mockery as m;
 use OPG\Digideps\Common\Registration\SelfRegisterData;
-use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class UserRegistrationServiceTest extends TestCase
 {
-    private UserRegistrationService $userRegistrationService;
-
-    public function setUp(): void
-    {
-        $mockUserRepository = m::mock('\Doctrine\ORM\EntityRepository')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
-
-        $em = m::mock(EntityManager::class)
-            ->shouldReceive('getRepository')->with('App\Entity\User')->andReturn($mockUserRepository)
-            ->getMock();
-
-        $mockPreRegVerificationService = m::mock(PreRegistrationVerificationService::class);
-        $mockPreRegVerificationService->shouldIgnoreMissing();
-
-        $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegVerificationService);
-    }
-
-    #[Test]
-    public function renderRegistrationHtmlEmail(): void
+    public function testUserRegistrationSuccess(): void
     {
         $data = new SelfRegisterData();
-
         $data->setFirstname('Zac');
         $data->setLastname('Tolley');
         $data->setEmail('zac@thetolleys.com');
@@ -53,61 +31,25 @@ final class UserRegistrationServiceTest extends TestCase
         $data->setCaseNumber('12341234');
         $data->setPostcode('AB12CD');
 
-        $mockUser = m::mock(User::class)
-            ->shouldReceive('getId')->andReturn(1)
-            ->getMock();
+        $em = $this->getStubEntityManager(null);
+        $em->method('getConnection')->willReturn(self::createStub(Connection::class));
 
-        $mockUser->shouldReceive('setCreatedBy')->with($mockUser);
+        $preregRecord = self::createConfiguredStub(PreRegistration::class, ['getDeputyUid' => '21214313']);
 
-        $mockClient = m::mock(Client::class)
-            ->shouldIgnoreMissing(true)
-            ->makePartial()
-            ->shouldReceive('getCourtDate')->andReturn(new \DateTime('2015-05-04'))
-            ->getMock();
+        $preRegVerificationService = self::createMock(PreRegistrationVerificationService::class);
+        $preRegVerificationService->expects(self::once())->method('isMultiDeputyCase')->willReturn(false);
+        $preRegVerificationService->expects(self::once())->method('validate')->willReturn([$preregRecord]);
 
-        $datetime = new \DateTime('2015-05-04');
-        $mockClient->shouldIgnoreMissing(true)
-            ->shouldReceive('getCourtDate')->andReturn($datetime)
-            ->getMock();
+        $userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
+        $user = $userRegistrationService->selfRegisterUser($data);
 
-        $mockConnection = m::mock(Connection::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('beginTransaction')
-            ->shouldReceive('commit')
-            ->getMock();
-
-        $mockUserRepository = m::mock(EntityRepository::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('findOneByEmail')->with('zac@thetolleys.com')->andReturn(null)
-            ->getMock();
-
-        $mockClientRepository = m::mock(EntityRepository::class)
-            ->shouldIgnoreMissing(false)
-            ->shouldReceive('findOneBy')->withAnyArgs()->andReturn(false)
-            ->getMock();
-
-        $em = m::mock(EntityManager::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getConnection')->andReturn($mockConnection)
-            ->shouldReceive('flush')->twice()
-            ->shouldReceive('persist')->with($mockUser)
-            ->shouldReceive('persist')->with($mockClient)
-            ->shouldReceive('getRepository')->with(User::class)->andReturn($mockUserRepository)
-            ->shouldReceive('getRepository')->with(Client::class)->andReturn($mockClientRepository)
-            ->getMock();
-
-        $mockPreRegistrationVerificationService = m::mock(PreRegistrationVerificationService::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('validate')->andReturn([new PreRegistration([])])
-            ->shouldReceive('isMultiDeputyCase')->with('12341234')->andReturn(false)
-            ->shouldReceive('getLastMatchedDeputyNumbers')->andReturn(['123'])
-            ->getMock();
-
-        $this->userRegistrationService = new UserRegistrationService($em, $mockPreRegistrationVerificationService);
-        $selfRegisteredUser = $this->userRegistrationService->selfRegisterUser($data);
-
-        self::assertEquals(User::SELF_REGISTER, $selfRegisteredUser->getRegistrationRoute());
-        self::assertTrue($selfRegisteredUser->getPreRegisterValidatedDate() instanceof \DateTime);
+        self::assertInstanceOf(User::class, $user);
+        self::assertEquals('Zac', $user->getFirstname());
+        self::assertEquals('Tolley', $user->getLastname());
+        self::assertEquals('zac@thetolleys.com', $user->getEmail());
+        self::assertEquals('21214313', $user->getDeputyUid());
+        self::assertNotNull($user->getRegistrationToken());
+        self::assertEquals(User::ROLE_LAY_DEPUTY, $user->getRoleName());
     }
 
     public function testUserCannotRegisterIfClientExistsWithDeputies(): void
@@ -119,34 +61,20 @@ final class UserRegistrationServiceTest extends TestCase
         $data->setClientLastname('Cross-Tolley');
         $data->setCaseNumber('12341234');
 
-        $client = m::mock(Client::class)
-            ->shouldReceive('hasDeputies')->andReturn(true)
-            ->shouldReceive('getOrganisation')->andReturn(null)
-            ->shouldReceive('getCaseNumber')->andReturn('12341234')
-            ->getMock();
+        $client = self::createMock(Client::class);
+        $client->expects($this->once())->method('hasDeputies')->willReturn(true);
+        $client->expects($this->once())->method('getCaseNumber')->willReturn('12341234');
 
-        $clientRepo = m::mock(ClientRepository::class)
-            ->shouldReceive('findByCaseNumber')->andReturn($client)
-            ->getMock();
+        $em = $this->getStubEntityManager($client);
 
-        $userRepo = m::mock(UserRepository::class)
-            ->shouldReceive('findOneByEmail')->andReturn(null)
-            ->getMock();
-
-        $em = m::mock(EntityManager::class)
-            ->shouldReceive('getRepository')->with(Client::class)->andReturn($clientRepo)
-            ->shouldReceive('getRepository')->with(User::class)->andReturn($userRepo)
-            ->getMock();
-
-        $preRegVerificationService = m::mock(PreRegistrationVerificationService::class)
-            ->shouldReceive('isMultiDeputyCase')->andReturn(false)
-            ->getMock();
+        $preRegVerificationService = self::createMock(PreRegistrationVerificationService::class);
+        $preRegVerificationService->expects(self::once())->method('isMultiDeputyCase')->willReturn(false);
 
         self::expectException(\RuntimeException::class);
         self::expectExceptionMessage('User registration: Case number 12341234 already used');
 
-        $this->userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
-        $this->userRegistrationService->selfRegisterUser($data);
+        $userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
+        $userRegistrationService->selfRegisterUser($data);
     }
 
     public function testUserCannotRegisterIfClientExistsWithDeputiesCaseNumberWithT(): void
@@ -158,34 +86,20 @@ final class UserRegistrationServiceTest extends TestCase
         $data->setClientLastname('Cross-Tolley');
         $data->setCaseNumber('1234123T');
 
-        $client = m::mock(Client::class)
-            ->shouldReceive('hasDeputies')->andReturn(true)
-            ->shouldReceive('getOrganisation')->andReturn(null)
-            ->shouldReceive('getCaseNumber')->andReturn('1234123t')
-            ->getMock();
+        $client = self::createMock(Client::class);
+        $client->expects(self::once())->method('hasDeputies')->willReturn(true);
+        $client->expects(self::once())->method('getCaseNumber')->willReturn('1234123t');
 
-        $clientRepo = m::mock(ClientRepository::class)
-            ->shouldReceive('findByCaseNumber')->andReturn($client)
-            ->getMock();
+        $em = $this->getStubEntityManager($client);
 
-        $userRepo = m::mock(UserRepository::class)
-            ->shouldReceive('findOneByEmail')->andReturn(null)
-            ->getMock();
-
-        $em = m::mock(EntityManager::class)
-            ->shouldReceive('getRepository')->with(Client::class)->andReturn($clientRepo)
-            ->shouldReceive('getRepository')->with(User::class)->andReturn($userRepo)
-            ->getMock();
-
-        $preRegVerificationService = m::mock(PreRegistrationVerificationService::class)
-            ->shouldReceive('isMultiDeputyCase')->andReturn(false)
-            ->getMock();
+        $preRegVerificationService = self::createMock(PreRegistrationVerificationService::class);
+        $preRegVerificationService->expects(self::once())->method('isMultiDeputyCase')->willReturn(false);
 
         self::expectException(\RuntimeException::class);
         self::expectExceptionMessage('User registration: Case number 1234123t already used');
 
-        $this->userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
-        $this->userRegistrationService->selfRegisterUser($data);
+        $userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
+        $userRegistrationService->selfRegisterUser($data);
     }
 
     public function testUserCannotRegisterIfOrganisationExists(): void
@@ -197,38 +111,40 @@ final class UserRegistrationServiceTest extends TestCase
         $data->setClientLastname('Cross-Tolley');
         $data->setCaseNumber('12341234');
 
-        $client = m::mock(Client::class)
-            ->shouldReceive('hasDeputies')->andReturn(false)
-            ->shouldReceive('getOrganisation')->andReturn(new Organisation())
-            ->shouldReceive('getCaseNumber')->andReturn('12341234')
-            ->getMock();
+        $client = self::createMock(Client::class);
+        $client->expects(self::once())->method('hasDeputies')->willReturn(false);
+        $client->expects(self::once())->method('getOrganisation')->willReturn(new Organisation());
+        $client->expects(self::once())->method('getCaseNumber')->willReturn('12341234');
 
-        $clientRepo = m::mock(ClientRepository::class)
-            ->shouldReceive('findByCaseNumber')->andReturn($client)
-            ->getMock();
-
-        $userRepo = m::mock(UserRepository::class)
-            ->shouldReceive('findOneByEmail')->andReturn(null)
-            ->getMock();
-
-        $em = m::mock(EntityManager::class)
-            ->shouldReceive('getRepository')->with(Client::class)->andReturn($clientRepo)
-            ->shouldReceive('getRepository')->with(User::class)->andReturn($userRepo)
-            ->getMock();
-
-        $preRegVerificationService = m::mock(PreRegistrationVerificationService::class)
-            ->shouldReceive('isMultiDeputyCase')->andReturn(false)
-            ->getMock();
+        $preRegVerificationService = self::createMock(PreRegistrationVerificationService::class);
+        $preRegVerificationService->expects(self::once())->method('isMultiDeputyCase')->willReturn(false);
 
         self::expectException(\RuntimeException::class);
         self::expectExceptionMessage('User registration: Case number 12341234 already used');
 
-        $this->userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
-        $this->userRegistrationService->selfRegisterUser($data);
+        $em = $this->getStubEntityManager($client);
+
+        $userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
+        $userRegistrationService->selfRegisterUser($data);
     }
 
-    public function tearDown(): void
+    private function getStubEntityManager(?Client $client, ?User $user = null): EntityManager&Stub
     {
-        m::close();
+        $clientRepo = self::createMock(ClientRepository::class);
+        $clientRepo->expects(self::once())->method('findByCaseNumber')->willReturn($client);
+
+        $userRepo = self::createMock(UserRepository::class);
+        $userRepo->expects(self::once())->method('findOneByEmail')->willReturn($user);
+
+        $em = self::createStub(EntityManager::class);
+        $em->method('getRepository')->willReturnCallback(function (string $class) use ($clientRepo, $userRepo) {
+            return match ($class) {
+                Client::class => $clientRepo,
+                User::class => $userRepo,
+                default => throw new \InvalidArgumentException("Unexpected class: $class"),
+            };
+        });
+
+        return $em;
     }
 }
