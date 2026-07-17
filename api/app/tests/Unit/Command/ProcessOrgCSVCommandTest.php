@@ -7,7 +7,6 @@ namespace Tests\OPG\Digideps\Backend\Unit\Command;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
 use OPG\Digideps\Backend\Command\ProcessOrgCSVCommand;
-use OPG\Digideps\Backend\Service\DataImporter\CsvToArray;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -24,7 +23,6 @@ final class ProcessOrgCSVCommandTest extends KernelTestCase
     private string $csvFilename;
     private LoggerInterface&MockObject $logger;
     private CSVDeputyshipProcessing&MockObject $csvProcessing;
-    private CsvToArray&MockObject $csvArray;
     private CommandTester $commandTester;
 
     public function setUp(): void
