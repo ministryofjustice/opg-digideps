@@ -41,8 +41,6 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Common\Report\Section\ReportSection;
 use OPG\Digideps\Common\Report\Section\Sections;
-use OPG\Digideps\Common\Validator\Constraints as AppAssert;
-use OPG\Digideps\Common\Validator\Constraints\StartEndDateComparableInterface;
 
 /**
  * Reports.
@@ -54,9 +52,7 @@ use OPG\Digideps\Common\Validator\Constraints\StartEndDateComparableInterface;
 #[ORM\Index(columns: ['report_status_cached'], name: 'report_status_cached_idx')]
 #[ORM\Entity(repositoryClass: ReportRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[AppAssert\EndDateNotGreaterThanFifteenMonths(groups: ['startEndDates'])]
-#[AppAssert\EndDateNotBeforeStartDate(groups: ['startEndDates'])]
-class Report implements StartEndDateComparableInterface
+class Report
 {
     use CreateUpdateTimestamps;
     use AssetTrait;
