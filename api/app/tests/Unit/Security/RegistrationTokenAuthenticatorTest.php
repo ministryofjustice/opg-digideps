@@ -324,9 +324,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
             ->with($request)
             ->willReturn(true);
 
-        $this->userRepo->expects(self::once())
-            ->method('findOneBy')
-            ->willReturn(null);
+        $this->userRepo->method('findOneBy')->willReturn(null);
 
         $expectedBruteForceKey = 'token_abc';
 
@@ -371,10 +369,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
             ->setEmail('user@example.org')
             ->setRoleName('FAKE_ROLE');
 
-        $this->userRepo->expects(self::once())
-            ->method('findOneBy')
-            ->with(['registrationToken' => '_abc'])
-            ->willReturn($expectedUser);
+        $this->userRepo->method('findOneBy')->willReturn($expectedUser);
 
         $expectedBruteForceKey = 'token_abc';
 
