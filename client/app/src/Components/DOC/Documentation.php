@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Components\DOC;
 
+use OPG\Digideps\Frontend\Components\GOV\Breadcrumbs\BreadcrumbsBuilder;
 use OPG\Digideps\Frontend\Components\GOV\List\ListBuilder;
 use OPG\Digideps\Frontend\Components\GOV\Summary\SummaryListBuilder;
 use OPG\Digideps\Frontend\Components\GOV\Table\Table;
@@ -115,20 +116,25 @@ final class Documentation
         $table = new TableBuilder()->addColumns(1, 2, 1)
             ->addHeader('Fii', 'Foo', 'Fuu')
             ->addRow('Hello', 'Hello World', 'World')
-            ->addRow('Quod', "Erat", "Demonstrandum")
+            ->addRow('Quod', 'Erat', 'Demonstrandum')
             ->makeTable();
         $tableWithCaption = new TableBuilder(caption: 'The quick brown fox jumps over the lazy dog')->addColumns(1, 1, 2)
             ->addRow('Fii', 'Foo', 'Fuu')
-            ->addHeader('Quod', "Erat", "Demonstrandum")
+            ->addHeader('Quod', 'Erat', 'Demonstrandum')
             ->addRow($unorderedList, $orderedList, 'World')
-
             ->makeTable();
+        $breadcrumbs = new BreadcrumbsBuilder()
+            ->addItem('/admin/dev', 'Developers')
+            ->addItem('/admin/dev/design-system', 'Design System')
+            ->addItem('/admin/dev/design-system/overview', 'Overview')
+            ->makeBreadcrumbs();
         return [
             'list' => $summaryList,
             'orderedList' => $orderedList,
             'unorderedList' => $unorderedList,
             'table' => $table,
-            'tableWithCaption' => $tableWithCaption
+            'tableWithCaption' => $tableWithCaption,
+            'breadcrumbs' => $breadcrumbs,
         ];
     }
 }
