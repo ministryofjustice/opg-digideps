@@ -41,6 +41,8 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Common\Report\Section\ReportSection;
 use OPG\Digideps\Common\Report\Section\Sections;
+use OPG\Digideps\Common\Validator\Constraints as AppAssert;
+use OPG\Digideps\Common\Validator\Constraints\StartEndDateComparableInterface;
 
 /**
  * Reports.
@@ -52,7 +54,9 @@ use OPG\Digideps\Common\Report\Section\Sections;
 #[ORM\Index(columns: ['report_status_cached'], name: 'report_status_cached_idx')]
 #[ORM\Entity(repositoryClass: ReportRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class Report
+#[AppAssert\EndDateNotGreaterThanFifteenMonths(groups: ['startEndDates'])]
+#[AppAssert\EndDateNotBeforeStartDate(groups: ['startEndDates'])]
+class Report implements StartEndDateComparableInterface
 {
     use CreateUpdateTimestamps;
     use AssetTrait;
@@ -253,7 +257,7 @@ class Report
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: ClientBenefitsCheck::class, cascade: ['persist', 'remove'])]
     private ?ClientBenefitsCheck $clientBenefitsCheck = null;
 
-    #[JMS\Groups(['report', 'report-period'])]
+    #[JMS\Groups(['report', 'report-period','startEndDates'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[ORM\Column(name: 'start_date', type: 'date', nullable: true)]
     private \DateTime $startDate;
@@ -263,7 +267,7 @@ class Report
     #[ORM\Column(name: 'due_date', type: 'date', nullable: true)]
     private \DateTime $dueDate;
 
-    #[JMS\Groups(['report', 'report-period'])]
+    #[JMS\Groups(['report', 'report-period','startEndDates'])]
     #[JMS\Accessor(getter: 'getEndDate')]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[ORM\Column(name: 'end_date', type: 'date', nullable: true)]

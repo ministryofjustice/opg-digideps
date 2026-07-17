@@ -22,14 +22,14 @@ class ManageActiveReportType extends AbstractType
                 'invalid_message' => 'report.startDate.invalidMessage',
                 'constraints' => [
                     new Constraints\NotBlank(['message' => 'report.startDate.notBlank', 'groups' => ['startEndDates']]),
-                    new Constraints\Date(['message' => 'report.startDate.invalidMessage', 'groups' => ['startEndDates ']]),
+                    new Constraints\Date(['message' => 'report.startDate.invalidMessage', 'groups' => ['startEndDates']]),
                 ],
             ])
             ->add('endDate', DateType::class, [
                 'invalid_message' => 'report.endDate.invalidMessage',
                 'constraints' => [
                     new Constraints\NotBlank(['message' => 'report.endDate.notBlank', 'groups' => ['startEndDates']]),
-                    new Constraints\Date(['message' => 'report.endDate.invalidMessage', 'groups' => ['startEndDates ']]),
+                    new Constraints\Date(['message' => 'report.endDate.invalidMessage', 'groups' => ['startEndDates']]),
                 ],
             ])
             ->add('dueDateChoice', ReportDueDateType::class)
@@ -51,6 +51,7 @@ class ManageActiveReportType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'admin-clients',
             'compound' => true,
+            'validation_groups' => 'startEndDates',
         ]);
     }
 
