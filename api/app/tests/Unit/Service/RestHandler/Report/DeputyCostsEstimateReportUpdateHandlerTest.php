@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service\RestHandler\Report;
 
-use PHPUnit\Framework\Attributes\DataProvider;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
 {
-    private DeputyCostsEstimateReportUpdateHandler $sut;
     private EntityManager&MockObject $em;
     private Report&MockObject $report;
+    private DeputyCostsEstimateReportUpdateHandler $sut;
 
     public function setUp(): void
     {
@@ -173,19 +173,14 @@ final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
 
     private function ensureSectionStatusCacheWillBeUpdated(): void
     {
-        $this
-            ->report
-            ->expects($this->once())
+        $this->report->expects(self::once())
             ->method('updateSectionsStatusCache')
             ->with([Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE]);
     }
 
     private function ensureEachProfDeputyEstimateCostWillBePersisted(int $count): void
     {
-        $this
-            ->em
-            ->expects($this->exactly($count))
-            ->method('persist');
+        $this->em->expects($this->exactly($count))->method('persist');
     }
 
     private function invokeHandler(array $data): void
