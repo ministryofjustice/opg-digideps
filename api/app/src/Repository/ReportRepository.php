@@ -27,11 +27,16 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class ReportRepository extends ServiceEntityRepository
 {
     public function __construct(
-        ManagerRegistry $registry,
+        private readonly ManagerRegistry $registry,
         private readonly ClientSearchFilter $filter,
         private readonly ReportAccessService $reportAccessService,
     ) {
-        parent::__construct($registry, Report::class);
+        parent::__construct($this->registry, Report::class);
+    }
+
+    public function clear(): void
+    {
+        $this->registry->getManager()->clear();
     }
 
     /**
