@@ -1,0 +1,8 @@
+{
+    "link": "https://design-system.service.gov.uk/components/back-link/",
+    "props": [
+        { "name": "href", "type": "string" },
+        { "name": "inverse", "type": "bool", "default": "false" }
+    ],
+    "examples": ["back-link"]
+}
