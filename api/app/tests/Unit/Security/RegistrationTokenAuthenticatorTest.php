@@ -1,11 +1,10 @@
 <?php
 
+//
 declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Security;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Exception\InvalidRegistrationTokenException;
 use OPG\Digideps\Backend\Exception\UnauthorisedException;
@@ -15,9 +14,11 @@ use OPG\Digideps\Backend\Security\RegistrationTokenAuthenticator;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\NullToken;
@@ -29,46 +30,29 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 final class RegistrationTokenAuthenticatorTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @var ObjectProphecy<UserRepository> $userRepo
-     */
-    private ObjectProphecy $userRepo;
-    /**
-     * @var ObjectProphecy<TokenStorageInterface> $tokenStorage
-     */
-    private ObjectProphecy $tokenStorage;
-    /**
-     * @var ObjectProphecy<AuthService> $authService
-     */
-    private ObjectProphecy $authService;
-    /**
-     * @var ObjectProphecy<AttemptsInTimeChecker> $attemptsInTimeChecker
-     */
-    private ObjectProphecy $attemptsInTimeChecker;
-    /**
-     * @var ObjectProphecy<AttemptsIncrementalWaitingChecker> $incrementalWaitingTimeChecker
-     */
-    private ObjectProphecy $incrementalWaitingTimeChecker;
+    private UserRepository&Stub $userRepo;
+    private TokenStorageInterface&MockObject $tokenStorage;
+    private AuthService&MockObject $authService;
+    private AttemptsInTimeChecker&MockObject $attemptsInTimeChecker;
+    private AttemptsIncrementalWaitingChecker&MockObject $incrementalWaitingTimeChecker;
     private RegistrationTokenAuthenticator $sut;
 
     public function setUp(): void
     {
-        $this->userRepo = self::prophesize(UserRepository::class);
-        $this->tokenStorage = self::prophesize(TokenStorageInterface::class);
-        $this->authService = self::prophesize(AuthService::class);
-        $this->attemptsInTimeChecker = self::prophesize(AttemptsInTimeChecker::class);
-        $this->incrementalWaitingTimeChecker = self::prophesize(AttemptsIncrementalWaitingChecker::class);
-        $verboseLogger = self::prophesize(LoggerInterface::class);
+        $this->userRepo = self::createStub(UserRepository::class);
+        $this->tokenStorage = self::createMock(TokenStorageInterface::class);
+        $this->authService = self::createMock(AuthService::class);
+        $this->attemptsInTimeChecker = self::createMock(AttemptsInTimeChecker::class);
+        $this->incrementalWaitingTimeChecker = self::createMock(AttemptsIncrementalWaitingChecker::class);
+        $verboseLogger = self::createMock(LoggerInterface::class);
 
         $this->sut = new RegistrationTokenAuthenticator(
-            $this->userRepo->reveal(),
-            $this->tokenStorage->reveal(),
-            $this->authService->reveal(),
-            $this->attemptsInTimeChecker->reveal(),
-            $this->incrementalWaitingTimeChecker->reveal(),
-            $verboseLogger->reveal(),
+            $this->userRepo,
+            $this->tokenStorage,
+            $this->authService,
+            $this->attemptsInTimeChecker,
+            $this->incrementalWaitingTimeChecker,
+            $verboseLogger,
         );
     }
 
@@ -127,9 +111,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
             json_encode(['token' => 'a-token', 'password' => 'abc'])
         );
 
-        $this->userRepo->findOneBy(['registrationToken' => 'a-token'])
-            ->shouldBeCalled()
-            ->willReturn(new User()->setId(1));
+        $this->userRepo->method('findOneBy')->willReturn(new User()->setId(1));
 
         self::assertEquals(true, $this->sut->supports($request));
     }
@@ -138,8 +120,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
     #[Test]
     public function supportsFirstPasswordRouteFailures(Request $request): void
     {
-        $this->userRepo->findOneBy(['registrationToken' => 'a-token'])
-            ->willReturn(new User()->setId(1));
+        $this->userRepo->method('findOneBy')->willReturn(new User()->setId(1));
 
         self::assertEquals(false, $this->sut->supports($request));
     }
@@ -189,8 +170,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
     #[Test]
     public function supportsFirstPasswordRouteUserWithTokenDoesNotExist(): void
     {
-        $this->userRepo->findOneBy(['registrationToken' => 'a-token'])
-            ->willReturn(null);
+        $this->userRepo->method('findOneBy')->willReturn(null);
 
         $request = Request::create(
             'user/1/set-password',
@@ -218,8 +198,9 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
             json_encode(['token' => '_abc'])
         );
 
-        $this->authService->isSecretValid($request)
-            ->shouldBeCalled()
+        $this->authService->expects(self::once())
+            ->method('isSecretValid')
+            ->with($request)
             ->willReturn(true);
 
         $expectedUser = new User()
@@ -227,22 +208,26 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
             ->setEmail('user@example.org')
             ->setRoleName('FAKE_ROLE');
 
-        $this->userRepo->findOneBy(['registrationToken' => '_abc'])
-            ->shouldBeCalled()
-            ->willReturn($expectedUser);
+        $this->userRepo->method('findOneBy')->willReturn($expectedUser);
 
         $expectedBruteForceKey = 'token_abc';
 
-        $this->attemptsInTimeChecker->registerAttempt($expectedBruteForceKey)
-            ->shouldBeCalled();
-        $this->incrementalWaitingTimeChecker->registerAttempt($expectedBruteForceKey)
-            ->shouldBeCalled();
-        $this->incrementalWaitingTimeChecker->isFrozen($expectedBruteForceKey)
-            ->shouldBeCalled()
+        $this->attemptsInTimeChecker->expects(self::once())
+            ->method('registerAttempt')
+            ->with($expectedBruteForceKey);
+
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('registerAttempt')
+            ->with($expectedBruteForceKey);
+
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('isFrozen')
+            ->with($expectedBruteForceKey)
             ->willReturn(false);
 
-        $this->authService->isSecretValidForRole('FAKE_ROLE', $request)
-            ->shouldBecalled()
+        $this->authService->expects(self::once())
+            ->method('isSecretValidForRole')
+            ->with('FAKE_ROLE', $request)
             ->willReturn(true);
 
         $expectedPassport = new SelfValidatingPassport(
@@ -269,8 +254,9 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
             json_encode(['token' => '_abc'])
         );
 
-        $this->authService->isSecretValid($request)
-            ->shouldBeCalled()
+        $this->authService->expects(self::once())
+            ->method('isSecretValid')
+            ->with($request)
             ->willReturn(false);
 
         $this->sut->authenticate($request);
@@ -291,20 +277,28 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
             json_encode(['token' => '_abc'])
         );
 
-        $this->authService->isSecretValid($request)
-            ->shouldBeCalled()
+        $this->authService->expects(self::once())
+            ->method('isSecretValid')
+            ->with($request)
             ->willReturn(true);
 
         $expectedBruteForceKey = 'token_abc';
 
-        $this->attemptsInTimeChecker->registerAttempt($expectedBruteForceKey)
+        $this->attemptsInTimeChecker->expects(self::once())
+            ->method('registerAttempt')
+            ->with($expectedBruteForceKey)
             ->willReturn(null);
-        $this->incrementalWaitingTimeChecker->registerAttempt($expectedBruteForceKey)
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('registerAttempt')
+            ->with($expectedBruteForceKey)
             ->willReturn(null);
-        $this->incrementalWaitingTimeChecker->isFrozen($expectedBruteForceKey)
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('isFrozen')
+            ->with($expectedBruteForceKey)
             ->willReturn(true);
-        $this->incrementalWaitingTimeChecker->getUnfrozenAt($expectedBruteForceKey)
-            ->shouldBeCalled()
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('getUnfrozenAt')
+            ->with($expectedBruteForceKey)
             ->willReturn('10000000000');
 
         $this->sut->authenticate($request);
@@ -325,19 +319,28 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
             json_encode(['token' => '_abc'])
         );
 
-        $this->authService->isSecretValid($request)
+        $this->authService->expects(self::once())
+            ->method('isSecretValid')
+            ->with($request)
             ->willReturn(true);
 
-        $this->userRepo->findOneBy(['registrationToken' => '_abc'])
+        $this->userRepo->expects(self::once())
+            ->method('findOneBy')
             ->willReturn(null);
 
         $expectedBruteForceKey = 'token_abc';
 
-        $this->attemptsInTimeChecker->registerAttempt($expectedBruteForceKey)
+        $this->attemptsInTimeChecker->expects(self::once())
+            ->method('registerAttempt')
+            ->with($expectedBruteForceKey)
             ->willReturn(null);
-        $this->incrementalWaitingTimeChecker->registerAttempt($expectedBruteForceKey)
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('registerAttempt')
+            ->with($expectedBruteForceKey)
             ->willReturn(null);
-        $this->incrementalWaitingTimeChecker->isFrozen($expectedBruteForceKey)
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('isFrozen')
+            ->with($expectedBruteForceKey)
             ->willReturn(false);
 
         $this->sut->authenticate($request);
@@ -358,7 +361,9 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
             json_encode(['token' => '_abc'])
         );
 
-        $this->authService->isSecretValid($request)
+        $this->authService->expects(self::once())
+            ->method('isSecretValid')
+            ->with($request)
             ->willReturn(true);
 
         $expectedUser = new User()
@@ -366,20 +371,29 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
             ->setEmail('user@example.org')
             ->setRoleName('FAKE_ROLE');
 
-        $this->userRepo->findOneBy(['registrationToken' => '_abc'])
+        $this->userRepo->expects(self::once())
+            ->method('findOneBy')
+            ->with(['registrationToken' => '_abc'])
             ->willReturn($expectedUser);
 
         $expectedBruteForceKey = 'token_abc';
 
-        $this->attemptsInTimeChecker->registerAttempt($expectedBruteForceKey)
+        $this->attemptsInTimeChecker->expects(self::once())
+            ->method('registerAttempt')
+            ->with($expectedBruteForceKey)
             ->willReturn($this->attemptsInTimeChecker);
-        $this->incrementalWaitingTimeChecker->registerAttempt($expectedBruteForceKey)
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('registerAttempt')
+            ->with($expectedBruteForceKey)
             ->willReturn($this->incrementalWaitingTimeChecker);
-        $this->incrementalWaitingTimeChecker->isFrozen($expectedBruteForceKey)
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('isFrozen')
+            ->with($expectedBruteForceKey)
             ->willReturn(false);
 
-        $this->authService->isSecretValidForRole('FAKE_ROLE', $request)
-            ->shouldBecalled()
+        $this->authService->expects(self::once())
+            ->method('isSecretValidForRole')
+            ->with('FAKE_ROLE', $request)
             ->willReturn(false);
 
         $this->sut->authenticate($request);
@@ -391,12 +405,9 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $this->sut->setBruteForceKey('_abc');
         $expectedToken = new NullToken();
 
-        $this->attemptsInTimeChecker->resetAttempts('_abc')
-            ->shouldBeCalled();
-        $this->incrementalWaitingTimeChecker->resetAttempts('_abc')
-            ->shouldBeCalled();
-        $this->tokenStorage->setToken($expectedToken)
-            ->shouldBeCalled();
+        $this->attemptsInTimeChecker->expects(self::once())->method('resetAttempts');
+        $this->incrementalWaitingTimeChecker->expects(self::once())->method('resetAttempts')->with('_abc');
+        $this->tokenStorage->expects(self::once())->method('setToken')->with($expectedToken);
 
         $this->sut->onAuthenticationSuccess(new Request(), $expectedToken, 'a-firewall');
     }
@@ -410,8 +421,9 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
 
         $this->sut->setBruteForceKey('_abc');
 
-        $this->attemptsInTimeChecker->maxAttemptsReached('_abc')
-            ->shouldBeCalled()
+        $this->attemptsInTimeChecker->expects(self::once())
+            ->method('maxAttemptsReached')
+            ->with('_abc')
             ->willReturn(false);
 
         $authException = new AuthenticationException('Failure message', 123);
@@ -427,8 +439,9 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
 
         $this->sut->setBruteForceKey('_abc');
 
-        $this->attemptsInTimeChecker->maxAttemptsReached('_abc')
-            ->shouldBeCalled()
+        $this->attemptsInTimeChecker->expects(self::once())
+            ->method('maxAttemptsReached')
+            ->with('_abc')
             ->willReturn(true);
 
         $authException = new AuthenticationException('Failure message', 123);
