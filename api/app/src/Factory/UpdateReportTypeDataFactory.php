@@ -10,7 +10,6 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Service\ReportTypeService;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Psr\Log\LoggerInterface;
 
 readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
@@ -28,39 +27,43 @@ readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
     }
 
     /**
-     * @return \Generator<Report>
+     * @return \Generator<int>
      */
-    private function getAllReportsOnActiveCourtOrders(): \Generator
+    private function getAllReportIdsOnActiveCourtOrders(): \Generator
     {
-        $rsm = new ResultSetMappingBuilder($this->entityManager);
-        $rsm->addRootEntityFromClassMetadata(Report::class, 'r');
-
-        /** @var Report[] $result */
-        $result = $this->entityManager->createNativeQuery(<<<SQL
-            SELECT DISTINCT r.* FROM report r
+        $result = $this->entityManager->getConnection()->executeQuery(<<<SQL
+            SELECT DISTINCT r.id FROM report r
             INNER JOIN court_order_report cor ON cor.report_id = r.id
             INNER JOIN court_order co ON co.id = cor.court_order_id
             WHERE co.status = 'ACTIVE'
-        SQL, $rsm)->getResult();
+        SQL);
 
-        foreach ($result as $report) {
-            yield $report;
+        foreach ($result->iterateColumn() as $reportId) {
+            if (is_int($reportId)) {
+                yield $reportId;
+            }
         }
     }
 
     public function run(bool $dryRun): DataFactoryResult
     {
-        $count = 0;
         $indeterminate = [];
         $dangerous = [];
+        $count = 0;
+        $repository = $this->entityManager->getRepository(Report::class);
 
-        foreach ($this->getAllReportsOnActiveCourtOrders() as $report) {
-            $reportId = $report->getId();
+        foreach ($this->getAllReportIdsOnActiveCourtOrders() as $reportId) {
+            $this->entityManager->clear();
+
+            $report = $this->entityManager->getRepository(Report::class)->find($reportId) ?? throw new \LogicException("Report with id {$reportId} is proven to exist.");
 
             $courtOrders = $report->getActiveCourtOrders();
+            $possibleReportType = ReportTypeService::determineReportType($courtOrders);
+            $this->entityManager->clear();
+            $repository->clear();
+            $report = $repository->find($reportId) ?? throw new \LogicException("Report with id {$reportId} is proven to exist.");
 
             $currentReportType = ReportType::tryFrom($report->getType());
-            $possibleReportType = ReportTypeService::determineReportType($courtOrders);
 
             if ((string) $currentReportType === (string) $possibleReportType) {
                 continue;
@@ -85,21 +88,16 @@ readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
             }
 
             if (!$dryRun) {
-                $report->setType((string) $possibleReportType);
+                $report->setType("{$possibleReportType}");
                 $this->entityManager->persist($report);
-                ++$count;
-
-                if ($count % 128 === 0) {
-                    $this->entityManager->flush();
-                }
+                $this->entityManager->flush();
+                $count++;
             } else {
                 $this->logger->info(
                     "DRYRUN[{$this->getName()}]: Report with ID: $reportId; report type change from $currentReportType to $possibleReportType"
                 );
             }
         }
-
-        $this->entityManager->flush();
 
         $messages = ['success' => ["Updated $count report types"]];
 
