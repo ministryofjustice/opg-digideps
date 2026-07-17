@@ -10,7 +10,7 @@ use Aws\S3\S3Client;
 // because S3Client uses magic methods which phpunit can't mock
 class S3ClientMock extends S3Client
 {
-    public function getObject(...$names): Result
+    public function getObject(array $args): Result
     {
         return new Result();
     }
