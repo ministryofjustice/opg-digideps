@@ -104,7 +104,7 @@ class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
         ];
     }
 
-    private function setUpTestData(array $data): Report
+    private function setUpTestData(array $data): int
     {
         ++self::$count;
 
@@ -119,39 +119,36 @@ class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
         /** @var CourtOrderKind $courtOrderKind */
         $courtOrderKind = $data['orderKind'];
 
-        $courtOrder = self::$fixtures->createCourtOrder(
-            uid: $uid,
-            type: $courtOrderType,
-            kind: $courtOrderKind,
-            status: 'ACTIVE',
-            courtOrderReportType: $courtOrderReportType,
-        );
+        $client = self::$fixtures->createClient();
 
         $deputy = self::$fixtures->createDeputy([
             'setDeputyUid' => $uid,
             'setDeputyType' => $data['deputyType'],
         ]);
 
-        $client = self::$fixtures->createClient();
+        $courtOrder = self::$fixtures->createCourtOrder(
+            uid: $uid,
+            type: $courtOrderType,
+            kind: $courtOrderKind,
+            status: 'ACTIVE',
+            courtOrderReportType: $courtOrderReportType,
+            deputy: $deputy,
+            client: $client,
+        );
 
-        $report = self::$fixtures->createReport($client, ['setType' => $data['existingReportType']]);
+        $report = self::$fixtures->createReport($client, ['setType' => $data['existingReportType']], $courtOrder);
 
         self::$fixtures->persist($courtOrder, $client, $report, $deputy);
-
-        $courtOrder->addReport($report);
-        $deputy->associateWithCourtOrder($courtOrder);
-
         self::$fixtures->flush();
-        self::$fixtures->refresh($report);
-        self::$fixtures->refresh($courtOrder);
+        self::$fixtures->clear();
 
-        return $report;
+        return $report->getId();
     }
 
     #[DataProvider('reportTypeChanges')]
     public function testRun(array $data): void
     {
-        $report = $this->setUpTestData($data);
+        $reportId = $this->setUpTestData($data);
 
         $dataFactoryResult = self::$sut->run(false);
 
@@ -164,9 +161,9 @@ class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
         /** @var int $errorCount */
         $errorCount = $data['errorCount'];
 
-        $this->assertEquals(
+        $this->assertSame(
             $data['expectedReportType'],
-            $report->getType(),
+            self::$fixtures->getReportById($reportId)?->getType(),
             sprintf(
                 'ReportType differs from expected type "%s"',
                 $expectedReportType,
@@ -188,7 +185,7 @@ class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
     #[DataProvider('reportTypeChanges')]
     public function testDryRun(array $data): void
     {
-        $report = $this->setUpTestData($data);
+        $reportId = $this->setUpTestData($data);
 
         $dataFactoryResult = self::$sut->run(true);
 
@@ -200,7 +197,7 @@ class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
 
         $this->assertEquals(
             $expectedReportType,
-            $report->getType(),
+            self::$fixtures->getReportById($reportId)?->getType(),
             sprintf(
                 'ReportType differs from expected type "%s"',
                 $existingReportType,
