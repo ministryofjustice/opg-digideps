@@ -14,4 +14,34 @@ class S3ClientMock extends S3Client
     {
         return new Result();
     }
+
+    public function putObject(array $args): Result
+    {
+        return new Result();
+    }
+
+    public function putObjectTagging(array $args): Result
+    {
+        return new Result();
+    }
+
+    public function getObjectTagging(array $args): Result
+    {
+        return new Result();
+    }
+
+    public function deleteObject(array $args): Result
+    {
+        return new Result();
+    }
+
+    public function deleteObjects(array $args): Result
+    {
+        return new Result();
+    }
+
+    public function listObjectVersions(array $args): Result
+    {
+        return new Result();
+    }
 }
