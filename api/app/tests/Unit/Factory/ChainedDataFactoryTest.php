@@ -9,6 +9,7 @@ use OPG\Digideps\Backend\Factory\DataFactoryInterface;
 use OPG\Digideps\Backend\Factory\DataFactoryResult;
 use OPG\Digideps\Backend\Factory\FactoryExecutionFlag;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 class ChainedDataFactoryTest extends TestCase
 {
@@ -31,7 +32,7 @@ class ChainedDataFactoryTest extends TestCase
         $mockDataFactory2->expects(self::once())->method('run')->with(false)->willReturn($failure);
 
         // sut
-        $sut = new ChainedDataFactory(dataFactories: [
+        $sut = new ChainedDataFactory(new NullLogger(), dataFactories: [
             [$mockDataFactory1, FactoryExecutionFlag::Active->value],
             [$mockDataFactory2, FactoryExecutionFlag::Active->value],
         ]);
@@ -70,7 +71,7 @@ class ChainedDataFactoryTest extends TestCase
         $mockDataFactory2->expects(self::once())->method('run')->with(true)->willReturn($failure);
 
         // sut
-        $sut = new ChainedDataFactory(dataFactories: [
+        $sut = new ChainedDataFactory(new NullLogger(), dataFactories: [
             [$mockDataFactory1, FactoryExecutionFlag::Active->value],
             [$mockDataFactory2, FactoryExecutionFlag::Active->value],
         ]);
@@ -113,7 +114,7 @@ class ChainedDataFactoryTest extends TestCase
         $mockDataFactory3->expects(self::never())->method('run');
 
         // sut
-        $sut = new ChainedDataFactory(dataFactories: [
+        $sut = new ChainedDataFactory(new NullLogger(), dataFactories: [
             [$mockDataFactory1, FactoryExecutionFlag::DryRunOnly->value],
             [$mockDataFactory2, FactoryExecutionFlag::Active->value],
             [$mockDataFactory3, FactoryExecutionFlag::Inactive->value],
