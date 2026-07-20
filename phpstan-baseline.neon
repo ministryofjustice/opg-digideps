@@ -193,12 +193,6 @@ parameters:
 			path: api/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\ProcessOrgCSVCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Command/ProcessOrgCSVCommand.php
-
-		-
 			message: '#^Part \$limit \(mixed\) of encapsed string cannot be cast to string\.$#'
 			identifier: encapsedStringPart.nonString
 			count: 1
@@ -211,20 +205,8 @@ parameters:
 			path: api/app/src/Command/ReportStatusUpdaterCommand.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\ResyncResubmittableErrorChecklists\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Command/ResyncResubmittableErrorChecklists.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:deleteInactivateUsers\(\) should return int but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: api/app/src/Command/UserCleanupCommand.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: api/app/src/Command/UserCleanupCommand.php
 
@@ -10825,12 +10807,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/AdminManagement/AdminManagementFeatureContext.php
 
 		-
-			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 5
-			path: api/app/tests/Behat/bootstrap/v2/AppNotification/AppNotificationFeatureContext.php
-
-		-
 			message: '#^Cannot access constant ADMIN_ROLES on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: classConstant.nonObject
 			count: 1
@@ -11325,7 +11301,7 @@ parameters:
 		-
 			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 1
+			count: 6
 			path: api/app/tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
@@ -18979,7 +18955,7 @@ parameters:
 			path: api/app/tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
@@ -24733,7 +24709,7 @@ parameters:
 			path: api/app/tests/Integration/v2/Service/CourtOrderServiceIntegrationTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/ProcessLayCSVCommandTest.php
@@ -24751,13 +24727,13 @@ parameters:
 			path: api/app/tests/Unit/Command/ProcessOrgCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/ProcessOrgCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/UserRetentionPolicyCommandTest.php
@@ -26620,12 +26596,6 @@ parameters:
 			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, array\|bool\|float\|int\|string\|UnitEnum\|null given\.$#'
 			identifier: argument.type
 			count: 2
-			path: client/app/src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Command\\ProcessOrgCSVCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
 			path: client/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
@@ -30589,30 +30559,6 @@ parameters:
 			path: client/app/src/Entity/Report/MoneyReceivedOnClientsBehalf.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyShortCategory\:\:__construct\(\) has parameter \$typeId with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyShortCategory\:\:setPresent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyShortCategory\:\:setTypeId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/MoneyShortCategory.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyShortCategory\:\:\$typeId has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/MoneyShortCategory.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getCategoriesGrouped\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -30631,12 +30577,6 @@ parameters:
 			path: client/app/src/Entity/Report/MoneyTransaction.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:setAmount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/MoneyTransaction.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:setBankAccount\(\) has parameter \$bankAccount with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -30645,18 +30585,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:setBankAccountId\(\) has parameter \$bankAccountId with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: client/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:setCategory\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:setDescription\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: client/app/src/Entity/Report/MoneyTransaction.php
 
@@ -30976,12 +30904,6 @@ parameters:
 			message: '#^Binary operation "\+\=" between float and mixed results in an error\.$#'
 			identifier: assignOp.invalid
 			count: 2
-			path: client/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Binary operation "\+\=" between mixed and array results in an error\.$#'
-			identifier: assignOp.invalid
-			count: 1
 			path: client/app/src/Entity/Report/Report.php
 
 		-
@@ -32751,18 +32673,6 @@ parameters:
 		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
-			count: 1
-			path: client/app/src/EventListener/SessionListener.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\EventListener\\SessionListener\:\:handleTimeout\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/EventListener/SessionListener.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\EventListener\\SessionListener\:\:hasReachedTimeout\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: client/app/src/EventListener/SessionListener.php
 
@@ -37711,12 +37621,6 @@ parameters:
 			path: client/app/src/Twig/ComponentsExtension.php
 
 		-
-			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:transChoice\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: client/app/src/Twig/ComponentsExtension.php
-
-		-
 			message: '#^Cannot call method format\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -37732,18 +37636,6 @@ parameters:
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 3
-			path: client/app/src/Twig/ComponentsExtension.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Twig\\ComponentsExtension\:\:formatTimeDifference\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 2
-			path: client/app/src/Twig/ComponentsExtension.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Twig\\ComponentsExtension\:\:getName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: client/app/src/Twig/ComponentsExtension.php
 
 		-
@@ -37809,7 +37701,7 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$domain of method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:trans\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 4
 			path: client/app/src/Twig/ComponentsExtension.php
 
 		-
@@ -38947,42 +38839,6 @@ parameters:
 			path: client/app/tests/Unit/EventListener/ResponseNoCacheListenerTest.php
 
 		-
-			message: '#^Binary operation "\+" between int\<1, max\> and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/tests/Unit/EventListener/SessionListenerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\EventListener\\SessionListenerTest\:\:onKernelRequest\(\) has parameter \$callsToManualExpire with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/EventListener/SessionListenerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\EventListener\\SessionListenerTest\:\:onKernelRequest\(\) has parameter \$idleTimeout with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/EventListener/SessionListenerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\EventListener\\SessionListenerTest\:\:onKernelRequest\(\) has parameter \$lastUsedRelativeToCurrentTime with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/EventListener/SessionListenerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\EventListener\\SessionListenerTest\:\:onKernelRequestNoLastUsed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/EventListener/SessionListenerTest.php
-
-		-
-			message: '#^Parameter \#1 \$limit of method Mockery\\Expectation\:\:times\(\) expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 8
-			path: client/app/tests/Unit/EventListener/SessionListenerTest.php
-
-		-
 			message: '#^Class OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers constructor invoked with 0 parameters, 1 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -39787,67 +39643,25 @@ parameters:
 			path: client/app/tests/Unit/Form/CoDeputyInviteTypeTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Form\\FeedbackTypeTest\:\:getExtensions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Form/FeedbackTypeTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Form\\FeedbackTypeTest\:\:testSubmitInvalidData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Form/FeedbackTypeTest.php
-
-		-
-			message: '#^Parameter \#1 \$translator of class OPG\\Digideps\\Frontend\\Form\\FeedbackType constructor expects Symfony\\Contracts\\Translation\\TranslatorInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Form/FeedbackTypeTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Form\\FeedbackTypeTest\:\:\$translator has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Form/FeedbackTypeTest.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''\-TRANSLATED'' results in an error\.$#'
-			identifier: binaryOp.invalid
+			message: '#^Access to undefined constant PHPUnit\\Framework\\Constraint\\IsType\:\:TYPE_STRING\.$#'
+			identifier: classConstant.notFound
 			count: 1
 			path: client/app/tests/Unit/Form/Report/Asset/AssetTypeTitleTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Form\\Report\\Asset\\AssetTypeTitleTest\:\:testgetTitleChoices\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: client/app/tests/Unit/Form/Report/Asset/AssetTypeTitleTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Form\\Report\\Asset\\AssetTypeTitleTest\:\:testgetTitleChoices\(\) has parameter \$expectedOutput with no type specified\.$#'
-			identifier: missingType.parameter
+			message: '#^Cannot call method willReturnCallback\(\) on mixed\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: client/app/tests/Unit/Form/Report/Asset/AssetTypeTitleTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Form\\Report\\Asset\\AssetTypeTitleTest\:\:testgetTitleChoices\(\) has parameter \$input with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Form/Report/Asset/AssetTypeTitleTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Form\\Report\\Asset\\AssetTypeTitleTest\:\:titleChoices\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Form/Report/Asset/AssetTypeTitleTest.php
-
-		-
-			message: '#^Parameter \#1 \$assetDropdownKeys of class OPG\\Digideps\\Frontend\\Form\\Report\\Asset\\AssetTypeTitle constructor expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Form/Report/Asset/AssetTypeTitleTest.php
-
-		-
-			message: '#^Parameter \#2 \$translator of class OPG\\Digideps\\Frontend\\Form\\Report\\Asset\\AssetTypeTitle constructor expects Symfony\\Contracts\\Translation\\TranslatorInterface, Mockery\\MockInterface\|Symfony\\Contracts\\Translation\\TranslatorInterface given\.$#'
+			message: '#^Parameter \#1 \$type of class PHPUnit\\Framework\\Constraint\\IsType constructor expects PHPUnit\\Framework\\NativeType, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Form/Report/Asset/AssetTypeTitleTest.php
@@ -39929,54 +39743,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: client/app/tests/Unit/Mapper/ReportSubmission/ReportSubmissionSummaryMapperTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\MockeryStub\:\:chainMock\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\MockeryStub\:\:mockShouldReceiveAndReturn\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\MockeryStub\:\:stub\(\) should return Mockery\\MockInterface but returns Mockery\\MockInterface\|string\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Parameter \#1 \$mock of static method Tests\\OPG\\Digideps\\Frontend\\Unit\\MockeryStub\:\:chainMock\(\) expects Mockery\\MockInterface, Mockery\\MockInterface\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Parameter \#1 \$mock of static method Tests\\OPG\\Digideps\\Frontend\\Unit\\MockeryStub\:\:mockShouldReceiveAndReturn\(\) expects Mockery\\MockInterface, Mockery\\MockInterface\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, array\<string, class\-string\>\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Parameter \#2 \$shouldReceive of static method Tests\\OPG\\Digideps\\Frontend\\Unit\\MockeryStub\:\:mockShouldReceiveAndReturn\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Variable \$lastMock might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: client/app/tests/Unit/MockeryStub.php
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Resolver\\SubSectionRoute\\ProfCostsEstimateSubSectionRouteResolverTest\:\:testReturnsBreakdownRouteIfSectionIsIncompleteAndBreakdownCostsNotEntered\(\) has no return type specified\.$#'
@@ -41005,9 +40771,15 @@ parameters:
 			path: client/app/tests/Unit/Service/Client/Internal/UserApiTest.php
 
 		-
-			message: '#^Call to an undefined method Mockery\\Expectation\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
+			message: '#^Access to undefined constant PHPUnit\\Framework\\Constraint\\IsType\:\:TYPE_OBJECT\.$#'
+			identifier: classConstant.notFound
 			count: 1
+			path: client/app/tests/Unit/Service/Client/RestClientTest.php
+
+		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
+			count: 36
 			path: client/app/tests/Unit/Service/Client/RestClientTest.php
 
 		-
@@ -41065,104 +40837,20 @@ parameters:
 			path: client/app/tests/Unit/Service/Client/RestClientTest.php
 
 		-
-			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
+			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 34
+			path: client/app/tests/Unit/Service/Client/RestClientTest.php
+
+		-
+			message: '#^Cannot call method willThrowException\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: client/app/tests/Unit/Service/Client/RestClientTest.php
 
 		-
-			message: '#^Cannot call method getMock\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testDelete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testGetArray\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testGetEntities\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testGetEntity\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testGetHistory\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testGetNoSuccess\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testGetWrongExpectedType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testJWTReturnedWhenSuperAdminLogsIn\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testLoadUserByToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testLogin\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testLogout\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testNetworkExceptionIsLoggedAndReThrown\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testPost\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testPut\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\RestClientTest\:\:testRegisterUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Parameter \#1 \$type of class PHPUnit\\Framework\\Constraint\\IsType constructor expects PHPUnit\\Framework\\NativeType, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Service/Client/RestClientTest.php
 
@@ -41185,14 +40873,32 @@ parameters:
 			path: client/app/tests/Unit/Service/Client/RestClientTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\TokenStorage\\RedisStorageTest\:\:testGet\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: client/app/tests/Unit/Service/Client/TokenStorage/RedisStorageTest.php
+
+		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\MockBuilder\<Predis\\Client\>\:\:addMethods\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: client/app/tests/Unit/Service/Client/TokenStorage/RedisStorageTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\TokenStorage\\RedisStorageTest\:\:testSet\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Cannot call method getMock\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: client/app/tests/Unit/Service/Client/TokenStorage/RedisStorageTest.php
+
+		-
+			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: client/app/tests/Unit/Service/Client/TokenStorage/RedisStorageTest.php
+
+		-
+			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\TokenStorage\\RedisStorageTest\:\:\$redis \(PHPUnit\\Framework\\MockObject\\MockObject&Predis\\Client\) does not accept mixed\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: client/app/tests/Unit/Service/Client/TokenStorage/RedisStorageTest.php
 
@@ -41215,195 +40921,27 @@ parameters:
 			path: client/app/tests/Unit/Service/Csv/SatisfactionCsvGeneratorTest.php
 
 		-
-			message: '#^Binary operation "%%" between mixed and 3 results in an error\.$#'
-			identifier: binaryOp.invalid
+			message: '#^Access to undefined constant PHPUnit\\Framework\\Constraint\\IsType\:\:TYPE_STRING\.$#'
+			identifier: classConstant.notFound
 			count: 1
 			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
 
 		-
-			message: '#^Binary operation "\*" between mixed and 2 results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Binary operation "\." between ''Custom bank name '' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Binary operation "\." between ''Firstname'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Binary operation "\." between ''Lastname'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Binary operation "\." between ''description for…'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Binary operation "\." between ''explanation for…'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Binary operation "\." between mixed and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Binary operation "\." between string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setAmount\(\)\.$#'
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
 
 		-
-			message: '#^Call to an undefined method object\:\:setBankAccount\(\)\.$#'
-			identifier: method.notFound
+			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
 
 		-
-			message: '#^Call to an undefined method object\:\:setCategory\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setDescription\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setExplanation\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateBankAccount\(\) has parameter \$counter with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateBankAccount\(\) should return Mockery\\Mock but returns Mockery\\MockInterface&OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockClient\(\) has parameter \$counter with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockClient\(\) should return Mockery\\Mock but returns Mockery\\MockInterface&OPG\\Digideps\\Frontend\\Entity\\Client\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockReport\(\) has parameter \$dueDate with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockReport\(\) has parameter \$numExpenses with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockReport\(\) has parameter \$numGifts with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockReport\(\) has parameter \$numMoneyIn with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockReport\(\) has parameter \$numMoneyOut with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockReport\(\) has parameter \$reportId with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockReport\(\) has parameter \$submitDate with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockTransactionEntity\(\) has parameter \$class with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockTransactionEntity\(\) has parameter \$counter with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockTransactions\(\) has parameter \$class with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockTransactions\(\) has parameter \$qty with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:testGenerateTransactionsCsvNoTransactions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:testGenerateTransactionsCsvWtihTransactions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$type of class PHPUnit\\Framework\\Constraint\\IsType constructor expects PHPUnit\\Framework\\NativeType, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
 
 		-
@@ -41479,67 +41017,31 @@ parameters:
 			path: client/app/tests/Unit/Service/DataImporter/CsvToArrayTest.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 5
+			message: '#^Access to undefined constant PHPUnit\\Framework\\Constraint\\IsType\:\:TYPE_ARRAY\.$#'
+			identifier: classConstant.notFound
+			count: 1
 			path: client/app/tests/Unit/Service/DeputyProviderTest.php
 
 		-
-			message: '#^Call to an undefined method Psr\\Log\\LoggerInterface\:\:shouldReceive\(\)\.$#'
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
 			identifier: method.notFound
 			count: 2
 			path: client/app/tests/Unit/Service/DeputyProviderTest.php
 
 		-
-			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
+			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 3
-			path: client/app/tests/Unit/Service/DeputyProviderTest.php
-
-		-
-			message: '#^Cannot call method andReturnUsing\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/tests/Unit/Service/DeputyProviderTest.php
-
-		-
-			message: '#^Cannot call method andThrow\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/tests/Unit/Service/DeputyProviderTest.php
-
-		-
-			message: '#^Cannot call method once\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: client/app/tests/Unit/Service/DeputyProviderTest.php
-
-		-
-			message: '#^Cannot call method with\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: client/app/tests/Unit/Service/DeputyProviderTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\DeputyProviderTest\:\:testLoadUserByIdentifier\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/DeputyProviderTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\DeputyProviderTest\:\:testLoginFail\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/DeputyProviderTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\DeputyProviderTest\:\:testSupportsClass\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
+			count: 2
 			path: client/app/tests/Unit/Service/DeputyProviderTest.php
 
 		-
 			message: '#^Parameter \#1 \$message of class Exception constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/tests/Unit/Service/DeputyProviderTest.php
+
+		-
+			message: '#^Parameter \#1 \$type of class PHPUnit\\Framework\\Constraint\\IsType constructor expects PHPUnit\\Framework\\NativeType, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Service/DeputyProviderTest.php
@@ -42271,33 +41773,21 @@ parameters:
 			path: client/app/tests/Unit/Service/File/Scanner/ClamFileScannerTest.php
 
 		-
-			message: '#^Call to an undefined method Aws\\Result\|Prophecy\\Prophecy\\MethodProphecy\:\:willThrow\(\)\.$#'
-			identifier: method.notFound
-			count: 3
+			message: '#^Access to undefined constant PHPUnit\\Framework\\Constraint\\IsType\:\:TYPE_ARRAY\.$#'
+			identifier: classConstant.notFound
+			count: 5
 			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
 
 		-
-			message: '#^Call to an undefined method Aws\\S3\\S3ClientInterface\:\:shouldNotReceive\(\)\.$#'
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
+			count: 13
+			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
+
+		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\MockBuilder\<Aws\\S3\\S3ClientInterface\>\:\:addMethods\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Call to an undefined method Aws\\S3\\S3ClientInterface\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 11
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Call to an undefined method Aws\\S3\\S3Client\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Call to an undefined method Psr\\Log\\LoggerInterface\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 2
 			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
 
 		-
@@ -42307,38 +41797,26 @@ parameters:
 			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
 
 		-
-			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
+			message: '#^Cannot call method getMockForAbstractClass\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 11
+			count: 1
 			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
 
 		-
-			message: '#^Cannot call method once\(\) on mixed\.$#'
+			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 8
+			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
+
+		-
+			message: '#^Cannot call method willThrowException\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 4
 			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
 
 		-
-			message: '#^Cannot call method with\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Cannot call method withAnyArgs\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Method PHPUnit\\Framework\\TestCase\:\:expectException\(\) invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 7
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\File\\Storage\\S3StorageTest\:\:generateAwsResult\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\File\\Storage\\S3StorageTest\:\:createAwsMock\(\) should return Aws\\S3\\S3ClientInterface&PHPUnit\\Framework\\MockObject\\MockObject but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
 
@@ -42361,84 +41839,6 @@ parameters:
 			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\File\\Storage\\S3StorageTest\:\:testFailedUploadBinaryContent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\File\\Storage\\S3StorageTest\:\:testRemoveFromS3NoErrors\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\File\\Storage\\S3StorageTest\:\:testRemoveFromS3WhenS3NotWorking\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\File\\Storage\\S3StorageTest\:\:testRemoveFromS3WithErrors\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\File\\Storage\\S3StorageTest\:\:testRemoveFromS3WithKeyNotFound\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\File\\Storage\\S3StorageTest\:\:testRemoveFromS3WithNoKey\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\File\\Storage\\S3StorageTest\:\:testRetrieveFromS3NotMissingFileError\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\File\\Storage\\S3StorageTest\:\:testRetrieveFromS3WhenAccessDenied\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\File\\Storage\\S3StorageTest\:\:testRetrieveFromS3WhenNoSuchKey\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\File\\Storage\\S3StorageTest\:\:testSuccessfulUploadBinaryContent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\File\\Storage\\S3StorageTest\:\:testUploadDownloadDeleteTextContent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$awsClient contains generic class Prophecy\\Prophecy\\ObjectProphecy but does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 3
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Aws\\S3\\S3Client\|Prophecy\\Prophecy\\ObjectProphecy is not subtype of native type Prophecy\\Prophecy\\ObjectProphecy\.$#'
-			identifier: varTag.nativeType
-			count: 3
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
 			message: '#^Parameter \#1 \$as_float of function microtime expects bool, int given\.$#'
 			identifier: argument.type
 			count: 8
@@ -42448,12 +41848,6 @@ parameters:
 			message: '#^Parameter \#1 \$content of method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\File\\Storage\\S3StorageTest\:\:createMockStream\(\) expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 1
-			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Parameter \#1 \$s3Client of class OPG\\Digideps\\Frontend\\Service\\File\\Storage\\S3Storage constructor expects Aws\\S3\\S3ClientInterface, object given\.$#'
-			identifier: argument.type
-			count: 3
 			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
 
 		-
@@ -42472,6 +41866,12 @@ parameters:
 			message: '#^Parameter \#1 \$stream of function rewind expects resource, resource\|false given\.$#'
 			identifier: argument.type
 			count: 1
+			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
+
+		-
+			message: '#^Parameter \#1 \$type of class PHPUnit\\Framework\\Constraint\\IsType constructor expects PHPUnit\\Framework\\NativeType, mixed given\.$#'
+			identifier: argument.type
+			count: 5
 			path: client/app/tests/Unit/Service/File/Storage/S3StorageTest.php
 
 		-
@@ -43237,93 +42637,27 @@ parameters:
 			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
 
 		-
-			message: '#^Call to an undefined method Mockery\\Expectation\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 4
-			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
-
-		-
-			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 30
-			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
-
-		-
-			message: '#^Cannot call method shouldReceive\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 26
-			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
-
-		-
-			message: '#^Cannot call method with\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 30
-			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSectionLinksServiceTest\:\:testgetSectionParamsLay\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSectionLinksServiceTest\:\:testgetSectionParamsPa\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSectionLinksServiceTest\:\:testgetSectionParamsProf\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
-
-		-
 			message: '#^Parameter \#1 \$data of function http_build_query expects array\|object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
 
 		-
-			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Cannot call method once\(\) on mixed\.$#'
-			identifier: method.nonObject
+			message: '#^Access to undefined constant PHPUnit\\Framework\\Constraint\\IsType\:\:TYPE_STRING\.$#'
+			identifier: classConstant.notFound
 			count: 2
 			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
 
 		-
-			message: '#^Cannot call method shouldBeCalled\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 8
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Cannot call method shouldNotBeCalled\(\) on mixed\.$#'
-			identifier: method.nonObject
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
 			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Cannot call method shouldReceive\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 5
 			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
 
 		-
 			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 5
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Cannot call method with\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 5
+			count: 1
 			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
 
 		-
@@ -43333,183 +42667,27 @@ parameters:
 			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
 
 		-
-			message: '#^PHPDoc tag @var for property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$csvGenerator contains unresolvable type\.$#'
-			identifier: property.unresolvableType
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^PHPDoc tag @var for property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$fileUploader contains unresolvable type\.$#'
-			identifier: property.unresolvableType
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^PHPDoc tag @var for property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$mailFactory contains unresolvable type\.$#'
-			identifier: property.unresolvableType
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^PHPDoc tag @var for property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$mailSender contains unresolvable type\.$#'
-			identifier: property.unresolvableType
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^PHPDoc tag @var for property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$pdfGenerator contains unresolvable type\.$#'
-			identifier: property.unresolvableType
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^PHPDoc tag @var for property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$restClient contains unresolvable type\.$#'
-			identifier: property.unresolvableType
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^PHPDoc tag @var for property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$twig contains unresolvable type\.$#'
-			identifier: property.unresolvableType
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$csvGenerator of class OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService constructor expects OPG\\Digideps\\Frontend\\Service\\Csv\\TransactionsCsvGenerator, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
 			message: '#^Parameter \#1 \$reportSubmission of method OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService\:\:assertReportSubmissionIsDownloadable\(\) expects OPG\\Digideps\\Frontend\\Entity\\Report\\ReportSubmission, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
 
 		-
-			message: '#^Parameter \#2 \$templating of class OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService constructor expects Twig\\Environment, mixed given\.$#'
+			message: '#^Parameter \#1 \$type of class PHPUnit\\Framework\\Constraint\\IsType constructor expects PHPUnit\\Framework\\NativeType, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
 
 		-
-			message: '#^Parameter \#3 \$fileUploader of class OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService constructor expects OPG\\Digideps\\Frontend\\Service\\File\\S3FileUploader, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Parameter \#4 \$restClient of class OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService constructor expects OPG\\Digideps\\Frontend\\Service\\Client\\RestClient, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Parameter \#5 \$logger of class OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService constructor expects Psr\\Log\\LoggerInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Parameter \#5 \$logger of class OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService constructor expects Psr\\Log\\LoggerInterface, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Parameter \#6 \$htmltopdf of class OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService constructor expects OPG\\Digideps\\Frontend\\Service\\HtmlToPdfGenerator, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$logger \(Prophecy\\Prophecy\\ObjectProphecy&Psr\\Log\\LoggerInterface\) does not accept Prophecy\\Prophecy\\ObjectProphecy\<Psr\\Log\\LoggerInterface\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$logger with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$mailFactory is unused\.$#'
-			identifier: property.unused
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$mailSender is unused\.$#'
-			identifier: property.unused
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$mockCsvGenerator has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$mockFileUploader has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$mockLogger has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$mockPdfGenerator has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$mockRestClient has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$mockTemplatingEngine has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\RequestIdLoggerProcessorTest\:\:testProcessRecordHasNoRequest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
+			count: 10
 			path: client/app/tests/Unit/Service/RequestIdLoggerProcessorTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\RequestIdLoggerProcessorTest\:\:testProcessRecordHasNoRequestId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/RequestIdLoggerProcessorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\RequestIdLoggerProcessorTest\:\:testProcessRecordHasRequestId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/RequestIdLoggerProcessorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\RequestIdLoggerProcessorTest\:\:testProcessRecordHasRequestIdAndSessionSafeId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/RequestIdLoggerProcessorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\RequestIdLoggerProcessorTest\:\:testProcessRecordNoReqStack\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
+			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 10
 			path: client/app/tests/Unit/Service/RequestIdLoggerProcessorTest.php
 
 		-
@@ -43609,12 +42787,6 @@ parameters:
 			path: client/app/tests/Unit/Service/StringUtilsTest.php
 
 		-
-			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\ChecklistSyncCommand\:\:getDefaultName\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
-
-		-
 			message: '#^Cannot call method expects\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -43651,7 +42823,7 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
@@ -43699,12 +42871,6 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
-			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\DocumentSyncCommand\:\:getDefaultName\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
-
-		-
 			message: '#^Cannot call method method\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 4
@@ -43729,7 +42895,7 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
@@ -43957,666 +43123,6 @@ parameters:
 			path: client/app/tests/Unit/Sync/Service/SiriusApiErrorTranslatorTest.php
 
 		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:\$frameworkBundleClient\.$#'
-			identifier: property.notFound
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:\$mockRouter\.$#'
-			identifier: property.notFound
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Binary operation "\+" between mixed and array\{messages\: array\{singlePage\: ''\{0\} Showing 0…'', multiPage\: ''Showing %%from%% \- …''\}, recordsPerPage\: 15, routeName\: ''route'', routeParams\: array\{a\: ''b''\}\} results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''/'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Cannot call method render\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:html\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:html\(\) has parameter \$params with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:multiPageProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:singlePageProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:testMultiPage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:testMultiPage\(\) has parameter \$currentOffset with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:testMultiPage\(\) has parameter \$expectedLink with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:testMultiPage\(\) has parameter \$expectedText with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:testMultiPage\(\) has parameter \$totalRecords with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:testSinglePage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:testSinglePage\(\) has parameter \$expectedText with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:testSinglePage\(\) has parameter \$totalRecords with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Parameter \#1 \$array of function ksort expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Parameter \#1 \$data of function http_build_query expects array\|object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Parameter \#1 \$needle of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Parameter \#1 \$node of class Symfony\\Component\\DomCrawler\\Crawler constructor expects array\<DOMNode\>\|DOMNode\|DOMNodeList\<DOMNode\>\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertStringNotContainsString\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Components\\PaginatorTest\:\:\$twig has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Templates/Components/PaginatorTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$account1\.$#'
-			identifier: property.notFound
-			count: 5
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$account2\.$#'
-			identifier: property.notFound
-			count: 4
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$action1\.$#'
-			identifier: property.notFound
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$asset1\.$#'
-			identifier: property.notFound
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$asset2\.$#'
-			identifier: property.notFound
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$assetProp\.$#'
-			identifier: property.notFound
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$assetProp2\.$#'
-			identifier: property.notFound
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$container\.$#'
-			identifier: property.notFound
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$debt1\.$#'
-			identifier: property.notFound
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$decision1\.$#'
-			identifier: property.notFound
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$decision2\.$#'
-			identifier: property.notFound
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$frameworkBundleClient\.$#'
-			identifier: property.notFound
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$reportStatus\.$#'
-			identifier: property.notFound
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$transactionIn1\.$#'
-			identifier: property.notFound
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$transactionIn2\.$#'
-			identifier: property.notFound
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$transactionOut1\.$#'
-			identifier: property.notFound
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$transfer1\.$#'
-			identifier: property.notFound
-			count: 3
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$transfer2\.$#'
-			identifier: property.notFound
-			count: 3
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$user\.$#'
-			identifier: property.notFound
-			count: 3
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:push\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Cannot call method render\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Cannot call method setAmount\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Cannot call method setDescription\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Cannot call method setId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Cannot call method setOpeningBalance\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Cannot call method setOwned\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Cannot call method setOwnedPercentage\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Cannot call method setPostcode\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Cannot call method setTitle\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Cannot call method setValue\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Cannot call method setid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Cannot call method shouldReceive\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Symfony\\Component\\DependencyInjection\\ContainerInterface\:\:set\(\) invoked with 3 parameters, 2 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:assertAttributeExists\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:assertAttributeExists\(\) has parameter \$attributeXpath with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:assertAttributeExistsNtimes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:assertAttributeExistsNtimes\(\) has parameter \$attributeXpath with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:assertAttributeExistsNtimes\(\) has parameter \$count with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:assertAttributeNotExists\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:assertAttributeNotExists\(\) has parameter \$attributeXpath with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:assertSectionExists\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:assertSectionExists\(\) has parameter \$section with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:ensureDeputyCostsWithFixedOnly\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:ensureDeputyCostsWithHowChargedNotAnswered\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:ensureDeputyCostsWithNonFixedAndInterimNotAnswered\(\) should return \$this\(Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:html\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:html\(\) has parameter \$expr with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:renderTemplateOntoCrawler\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testAction\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testAssets\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testBalance\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testBankAccounts\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testClient\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testDebts\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testDecisions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testDeputy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testGifts\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testMoneyTransactions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testMoneyTransfers\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testProfDeputyCostsDefaultLayout\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testProfDeputyCostsDisplaysFixedCostQuestion\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testProfDeputyCostsDisplaysInterimCostItems\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testProfDeputyCostsDisplaysInterimCostQuestion\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:testSummaryinfo\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#1 \$action of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setAction\(\) expects OPG\\Digideps\\Frontend\\Entity\\Report\\Action, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransfer\:\:setAmount\(\) expects string, float given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#1 \$clientInvolvedDetails of method OPG\\Digideps\\Frontend\\Entity\\Report\\Decision\:\:setClientInvolvedDetails\(\) expects bool, string given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#1 \$decisions of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setDecisions\(\) expects array\<OPG\\Digideps\\Frontend\\Entity\\Report\\Decision\>, array\<int, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#1 \$from of method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransfer\:\:setAccountFrom\(\) expects OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#1 \$noTransfersToAdd of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setNoTransfersToAdd\(\) expects bool, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#1 \$node of class Symfony\\Component\\DomCrawler\\Crawler constructor expects array\<DOMNode\>\|DOMNode\|DOMNodeList\<DOMNode\>\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#1 \$selector of method Symfony\\Component\\DomCrawler\\Crawler\:\:filter\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#1 \$to of method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransfer\:\:setAccountTo\(\) expects OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#1 \$xpath of method Symfony\\Component\\DomCrawler\\Crawler\:\:filterXPath\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#2 \$amount of class OPG\\Digideps\\Frontend\\Entity\\Report\\Debt constructor expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 17
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertStringNotContainsString\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Parameter \#3 \$hasMoreDetails of class OPG\\Digideps\\Frontend\\Entity\\Report\\Debt constructor expects string, false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$contacts has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$decisions has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$deputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$reportClient has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Templates\\Report\\FormattedTest\:\:\$twig has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 5
-			path: client/app/tests/Unit/Templates/Report/FormattedTest.php
-
-		-
 			message: '#^Binary operation "\+" between mixed and 2 results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -44713,164 +43219,8 @@ parameters:
 			path: client/app/tests/Unit/Transformer/ReportSubmission/ReportSubmissionBurFixedWidthTransformerTest.php
 
 		-
-			message: '#^Call to an undefined method Mockery\\MockInterface\|Symfony\\Contracts\\Translation\\TranslatorInterface\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 5
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Cannot access offset 2 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Cannot access offset 3 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
 			message: '#^Cannot access property \$textContent on Dom\\Element\|null\.$#'
 			identifier: property.nonObject
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:accordionLinksProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:behatNamify\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:behatNamify\(\) has parameter \$expected with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:behatNamify\(\) has parameter \$input with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:behatNamifyProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:className\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:formatLastLoginProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:formatTimeDifference\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:formatTimeDifference\(\) has parameter \$expectedMethodCalled with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:formatTimeDifference\(\) has parameter \$input with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:formatTimeDifference\(\) has parameter \$methodArgs with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:lcfirst\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:moneyFormat\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:moneyFormat\(\) has parameter \$expected with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:moneyFormat\(\) has parameter \$input with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:moneyFormatProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:padDayMonth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:padDayMonth\(\) has parameter \$expected with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:padDayMonth\(\) has parameter \$input with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:padDayMonthProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Twig\\ComponentsExtensionTest\:\:progressBarRegistrationProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
 
@@ -44917,13 +43267,7 @@ parameters:
 			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
 
 		-
-			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php
-
-		-
-			message: '#^Parameter \#1 \$translator of class Symfony\\Bridge\\Twig\\Extension\\TranslationExtension constructor expects Symfony\\Contracts\\Translation\\TranslatorInterface\|null, Mockery\\MockInterface\|Symfony\\Contracts\\Translation\\TranslatorInterface given\.$#'
+			message: '#^Parameter \#1 \$constraint of method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:method\(\) expects PHPUnit\\Framework\\Constraint\\Constraint\|PHPUnit\\Framework\\MockObject\\Runtime\\PropertyHook\|non\-empty\-string, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Twig/ComponentsExtensionTest.php

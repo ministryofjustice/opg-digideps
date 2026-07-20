@@ -70,10 +70,8 @@ class Gift
 
     /**
      * @param mixed $explanation
-     *
-     * @return Gift
      */
-    public function setExplanation($explanation)
+    public function setExplanation($explanation): static
     {
         $this->explanation = $explanation;
 
@@ -90,10 +88,8 @@ class Gift
 
     /**
      * @param string $amount
-     *
-     * @return Gift
      */
-    public function setAmount($amount)
+    public function setAmount($amount): static
     {
         $this->amount = $amount;
 
