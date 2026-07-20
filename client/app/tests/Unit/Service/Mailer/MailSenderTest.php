@@ -11,9 +11,7 @@ use OPG\Digideps\Frontend\Service\Mailer\MailFactory;
 use OPG\Digideps\Frontend\Service\Mailer\MailSender;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -21,57 +19,49 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class MailSenderTest extends WebTestCase
 {
-    use ProphecyTrait;
-
-    private ObjectProphecy|LoggerInterface $logger;
-    private ObjectProphecy|NotifyClient $notifyClient;
-    private ObjectProphecy|DateTimeProvider $dateTimeProvider;
-    private ObjectProphecy|TokenStorageInterface $tokenStorage;
+    private MockObject&LoggerInterface $logger;
+    private MockObject&NotifyClient $notifyClient;
+    private MockObject&DateTimeProvider $dateTimeProvider;
+    private MockObject&TokenStorageInterface $tokenStorage;
     private MailSender $sut;
 
     public function setup(): void
     {
-        $this->logger = self::prophesize(LoggerInterface::class);
-        $this->notifyClient = self::prophesize(NotifyClient::class);
-        $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
-        $this->tokenStorage = self::prophesize(TokenStorageInterface::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
+        $this->notifyClient = $this->createMock(NotifyClient::class);
+        $this->dateTimeProvider = $this->createMock(DateTimeProvider::class);
+        $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
 
         $user = UserHelpers::createSuperAdminUser();
         $token = new UsernamePasswordToken($user, 'firewall', $user->getRoles());
-        $this->tokenStorage->getToken()->willReturn($token);
+        $this->tokenStorage->method('getToken')->willReturn($token);
 
-        $this->dateTimeProvider->getDateTime()->willReturn(new \DateTime());
+        $this->dateTimeProvider->method('getDateTime')->willReturn(new \DateTime());
 
         $this->sut = new MailSender(
-            $this->logger->reveal(),
-            $this->notifyClient->reveal(),
-            $this->dateTimeProvider->reveal(),
-            $this->tokenStorage->reveal()
+            $this->logger,
+            $this->notifyClient,
+            $this->dateTimeProvider,
+            $this->tokenStorage
         );
     }
 
-    /**
-     * @test
-     */
-    public function sendNotify()
+    public function testSendNotify(): void
     {
         $email = $this->generateEmail();
 
-        $this->logger->notice(Argument::cetera())->shouldBeCalled();
-        $this->notifyClient->sendEmail('to@email.address', MailFactory::ACTIVATION_TEMPLATE_ID, ['param' => 'param value'], '', 'fake-id')->shouldBeCalled();
+        $this->logger->expects($this->atLeastOnce())->method('notice');
+        $this->notifyClient->expects($this->atLeastOnce())->method('sendEmail')->with('to@email.address', MailFactory::ACTIVATION_TEMPLATE_ID, ['param' => 'param value'], '', 'fake-id');
 
-        self::assertTrue($this->sut->send($email));
+        $this->assertTrue($this->sut->send($email));
     }
 
-    /**
-     * @return Email
-     */
     private function generateEmail(
         string $toEmail = 'to@email.address',
         string $templateID = MailFactory::ACTIVATION_TEMPLATE_ID,
         array $parameters = ['param' => 'param value'],
         string $fromEmailNotifyID = 'fake-id'
-    ) {
+    ): Email {
         return new Email()
             ->setToEmail($toEmail)
             ->setTemplate($templateID)
@@ -79,18 +69,15 @@ class MailSenderTest extends WebTestCase
             ->setFromEmailNotifyID($fromEmailNotifyID);
     }
 
-    /**
-     * @test
-     */
-    public function sendNotifyExceptionsAreLogged()
+    public function testSendNotifyExceptionsAreLogged(): void
     {
         $email = $this->generateEmail();
 
-        $this->logger->notice(Argument::cetera())->shouldBeCalled();
-        $this->logger->error('Error sending email: Error message')->shouldBeCalled();
+        $this->logger->expects($this->atLeastOnce())->method('notice');
+        $this->logger->expects($this->atLeastOnce())->method('error')->with('Error sending email: Error message');
 
-        $this->notifyClient->sendEmail(Argument::cetera())->willThrow(new NotifyException('Error message'));
+        $this->notifyClient->method('sendEmail')->willThrowException(new NotifyException('Error message'));
 
-        self::assertFalse($this->sut->send($email));
+        $this->assertFalse($this->sut->send($email));
     }
 }
