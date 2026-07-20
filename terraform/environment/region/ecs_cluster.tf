@@ -4,6 +4,12 @@ resource "aws_service_discovery_http_namespace" "cloudmap_namespace" {
   description = "Namespace for Service Discovery"
 }
 
+# Used for non service tasks to connect
+resource "aws_service_discovery_private_dns_namespace" "internal_ecs" {
+  name = "internal.digideps.${local.environment}"
+  vpc  = data.aws_vpc.main.id
+}
+
 resource "aws_ecs_cluster" "main" {
   name = local.environment
   tags = var.default_tags

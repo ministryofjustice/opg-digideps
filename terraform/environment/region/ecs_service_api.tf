@@ -44,6 +44,10 @@ resource "aws_ecs_service" "api" {
     }
   }
 
+  service_registries {
+    registry_arn = aws_service_discovery_service.api_ecs.arn
+  }
+
   capacity_provider_strategy {
     capacity_provider = local.capacity_provider
     weight            = 1
@@ -58,6 +62,22 @@ resource "aws_ecs_service" "api" {
     rollback = false
   }
 }
+
+resource "aws_service_discovery_service" "api_ecs" {
+  name = "api"
+
+  dns_config {
+    namespace_id = aws_service_discovery_private_dns_namespace.internal_ecs.id
+
+    dns_records {
+      ttl  = 10
+      type = "A"
+    }
+
+    routing_policy = "MULTIVALUE"
+  }
+}
+
 
 locals {
   api_web = jsonencode(
