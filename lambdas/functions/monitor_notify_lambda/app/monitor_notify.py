@@ -60,6 +60,10 @@ def generate_message(event):
         for record in event["Records"]:
             if "Sns" in record:
                 message = json.loads(record["Sns"]["Message"])
+                if message.get("AlarmName", "").startswith(
+                    "training-"
+                ):  # Suppress Training Alarms
+                    return ""
                 subject = record["Sns"]["Subject"]
                 topic_arn = record["Sns"]["TopicArn"]
                 region = topic_arn.split(":")[3]
@@ -85,6 +89,9 @@ def generate_message(event):
 
 def lambda_handler(event, context):
     payload = generate_message(event)
+
+    if payload is None:
+        return 0
 
     pause_notifications = os.getenv("PAUSE_NOTIFICATIONS", "0")
     if pause_notifications == "1":

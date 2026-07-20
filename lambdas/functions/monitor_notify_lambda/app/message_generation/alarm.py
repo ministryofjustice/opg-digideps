@@ -14,6 +14,8 @@ def alarm_message(message, region):
     logger.info(f"Attempting to process alarm event for branch {alarm_name}")
 
     environment = alarm_name.split("-")[0] if "-" in alarm_name else "Unknown"
+    if environment == "training":
+        return None
     new_state = message.get("NewStateValue")
     old_state = message.get("OldStateValue")
     service = "cloudwatch"
