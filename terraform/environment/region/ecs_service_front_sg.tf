@@ -24,6 +24,13 @@ locals {
       target_type = "security_group_id"
       target      = module.front_elb_security_group.id
     }
+    front_elb_http_secure = {
+      port        = 8080
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.front_elb_security_group.id
+    }
     front_cache = {
       port        = 6379
       type        = "egress"

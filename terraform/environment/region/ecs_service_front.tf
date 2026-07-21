@@ -34,7 +34,7 @@ resource "aws_ecs_service" "front" {
   load_balancer {
     target_group_arn = aws_lb_target_group.front.arn
     container_name   = "front_web"
-    container_port   = 80
+    container_port   = 8080
   }
 
   service_connect_configuration {
@@ -45,7 +45,7 @@ resource "aws_ecs_service" "front" {
       port_name      = "front-port"
       client_alias {
         dns_name = "front"
-        port     = 80
+        port     = 8080
       }
     }
   }
@@ -82,8 +82,8 @@ locals {
       name        = "front_web",
       portMappings = [{
         name          = "front-port",
-        containerPort = 80,
-        hostPort      = 80,
+        containerPort = 8080,
+        hostPort      = 8080,
         protocol      = "tcp"
       }],
       healthCheck = {
