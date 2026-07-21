@@ -1,0 +1,8 @@
+{% props h, id, n, section %}
+
+<div class="govuk-accordion__section{% if section.expanded %} govuk-accordion__section--expanded{% endif %}">
+    <twig:GOV:Accordion:Header id="{{ id }}" n="{{ n }}" h="{{ h }}" summary="{{ section.summary }}" heading="{{ section.heading }}"/>
+    <twig:GOV:Accordion:Content id="{{ id }}" n="{{ n }}">
+        <twig:Render self="{{ section.content }}"/>
+    </twig:GOV:Accordion:Content>
+</div>
