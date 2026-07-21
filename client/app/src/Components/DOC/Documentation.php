@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Components\DOC;
 
+use OPG\Digideps\Frontend\Components\GOV\Accordion\AccordionBuilder;
 use OPG\Digideps\Frontend\Components\GOV\Breadcrumbs\BreadcrumbsBuilder;
 use OPG\Digideps\Frontend\Components\GOV\List\ListBuilder;
 use OPG\Digideps\Frontend\Components\GOV\Summary\SummaryListBuilder;
@@ -128,6 +129,11 @@ final class Documentation
             ->addItem('/admin/dev/design-system', 'Design System')
             ->addItem('/admin/dev/design-system/overview', 'Overview')
             ->makeBreadcrumbs();
+        $accordion = new AccordionBuilder()
+            ->addSection('Alpha', 'The quick brown fox jumps over the lazy dog')
+            ->addSection('Beta', $unorderedList)
+            ->addSection('Gamma', ['The quick brown fox jumps over the lazy dog', 'The quick brown fox jumps over the lazy dog'], true, 'Expanded')
+            ->makeAccordion();
         return [
             'list' => $summaryList,
             'orderedList' => $orderedList,
@@ -135,6 +141,7 @@ final class Documentation
             'table' => $table,
             'tableWithCaption' => $tableWithCaption,
             'breadcrumbs' => $breadcrumbs,
+            'accordion' => $accordion,
         ];
     }
 }
