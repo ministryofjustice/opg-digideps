@@ -82,6 +82,7 @@ final class FixtureService
 
     public function instantiateOnlyUser(UserType $userType, DeputyType $deputyType, ?string $emailDomain = null, ?Deputy $deputy = null, ?Organisation $organisation = null): User
     {
+        $this->entityManager->clear();
         $this->refreshCounter();
         $user = $this->persist($this->makeUser(new DeputyDescriptor('', $deputyType, $userType, emailDomain: $emailDomain), $deputy, $organisation));
         if ($userType === UserType::Deputy && $deputy === null) {
@@ -104,6 +105,7 @@ final class FixtureService
             'organisations' => [],
         ]
     ): array {
+        $this->entityManager->clear();
         $this->refreshCounter();
 
         $client = $this->persist($this->makeClient());
