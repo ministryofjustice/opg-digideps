@@ -11,13 +11,6 @@ module "front_elb_security_group" {
 locals {
   front_elb_sg_rules = {
     front_service_http = {
-      port        = 80
-      type        = "egress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.front_service_security_group.id
-    },
-    front_service_http_secure = {
       port        = 8080
       type        = "egress"
       protocol    = "tcp"

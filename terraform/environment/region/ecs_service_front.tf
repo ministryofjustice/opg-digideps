@@ -80,6 +80,7 @@ locals {
       image       = local.images.client-webserver,
       mountPoints = [],
       name        = "front_web",
+      user        = "nginx"
       portMappings = [{
         name          = "front-port",
         containerPort = 8080,
@@ -117,6 +118,7 @@ locals {
       image       = local.images.client,
       mountPoints = [],
       name        = "front_app",
+      user        = "www-data",
       portMappings = [{
         containerPort = 9000,
         hostPort      = 9000,

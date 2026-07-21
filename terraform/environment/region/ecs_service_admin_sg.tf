@@ -18,13 +18,6 @@ locals {
     ecr_api = local.common_sg_rules.ecr_api
     secrets = local.common_sg_rules.secrets
     admin_elb_http = {
-      port        = 80
-      type        = "ingress"
-      protocol    = "tcp"
-      target_type = "security_group_id"
-      target      = module.admin_elb_security_group.id
-    }
-    admin_elb_http_secure = {
       port        = 8080
       type        = "ingress"
       protocol    = "tcp"

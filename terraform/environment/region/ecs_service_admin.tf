@@ -78,6 +78,7 @@ locals {
       image       = local.images.client-webserver,
       mountPoints = [],
       name        = "admin_web",
+      user        = "nginx",
       portMappings = [
         {
           name : "admin-port",
@@ -117,6 +118,7 @@ locals {
       image       = local.images.client,
       mountPoints = [],
       name        = "admin_app",
+      user        = "www-data",
       portMappings = [{
         containerPort = 9000,
         hostPort      = 9000,
