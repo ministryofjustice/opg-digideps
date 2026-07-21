@@ -1,0 +1,5 @@
+{
+    "link": "https://design-system.service.gov.uk/styles/paragraphs/",
+    "props": [{ "name": "size", "type": "'s' | 'm' | 'l'", "default": "'m'" }],
+    "examples": ["paragraph"]
+}
