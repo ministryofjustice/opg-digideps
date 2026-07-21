@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Fixture;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
 use Faker\Factory;
 use Faker\Generator;
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
@@ -82,6 +83,7 @@ final class FixtureService
 
     public function instantiateOnlyUser(UserType $userType, DeputyType $deputyType, ?string $emailDomain = null, ?Deputy $deputy = null, ?Organisation $organisation = null): User
     {
+        $this->entityManager->clear();
         $this->refreshCounter();
         $user = $this->persist($this->makeUser(new DeputyDescriptor('', $deputyType, $userType, emailDomain: $emailDomain), $deputy, $organisation));
         if ($userType === UserType::Deputy && $deputy === null) {
@@ -95,6 +97,7 @@ final class FixtureService
     /**
      * @param Persons $persons
      * @return array{client: Client, orders: array<OrderPair>, persons: Persons}
+     * @throws ORMException
      */
     public function instantiateScenario(
         Scenario $scenario,
@@ -104,6 +107,8 @@ final class FixtureService
             'organisations' => [],
         ]
     ): array {
+        $this->entityManager->clear();
+        $this->reattach($persons);
         $this->refreshCounter();
 
         $client = $this->persist($this->makeClient());
@@ -393,6 +398,19 @@ final class FixtureService
         $report->setSubmittedBy($submitter);
         $this->persist(new ReportSubmission($report, $submitter));
         $this->persist($report);
+    }
+
+    /**
+     * @param Persons $persons
+     * @throws ORMException
+     */
+    private function reattach(array &$persons): void
+    {
+        foreach ($persons as &$group) {
+            foreach ($group as $ref => $entity) {
+                $group[$ref] = $this->entityManager->getReference($entity::class, $entity->getId());
+            }
+        }
     }
 
     private function refreshCounter(): void
