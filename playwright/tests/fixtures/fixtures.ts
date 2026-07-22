@@ -1,5 +1,5 @@
 const apiURL = process.env.API_URL ?? "";
-const clientSecret = process.env.API_CLIENT_SECRET ?? "";
+const clientSecret = process.env.ADMIN_API_CLIENT_SECRET ?? "";
 
 type UserType = "lay_user" | "pro_user" | "admin_user";
 

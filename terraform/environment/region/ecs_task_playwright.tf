@@ -95,7 +95,7 @@ locals {
       }
     },
     secrets = [
-      { name = "API_CLIENT_SECRET", valueFrom = data.aws_secretsmanager_secret.front_api_client_secret.arn }
+      { name = "ADMIN_API_CLIENT_SECRET", valueFrom = data.aws_secretsmanager_secret.admin_api_client_secret.arn }
     ],
     environment = [
       { name = "ADMIN_URL", value = "https://${var.admin_fully_qualified_domain_name}" },
