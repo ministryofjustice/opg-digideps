@@ -43,7 +43,6 @@ final class UserRegistrationServiceTest extends TestCase
         $userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
         $user = $userRegistrationService->selfRegisterUser($data);
 
-        self::assertInstanceOf(User::class, $user);
         self::assertEquals('Zac', $user->getFirstname());
         self::assertEquals('Tolley', $user->getLastname());
         self::assertEquals('zac@thetolleys.com', $user->getEmail());

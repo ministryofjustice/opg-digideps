@@ -112,15 +112,16 @@ final class UserServiceTest extends TestCase
         $invitee = new InviteeDto('foo@bar.com', 'Karban', 'Steelcore');
 
         $existingUser = self::createMock(User::class);
+        $existingUser->method('getDeputyUid')->willReturn($deputyUid);
 
         $this->userRepository->expects(self::atLeastOnce())
             ->method('findOneBy')
             ->with(new IsType(IsType::TYPE_ARRAY))
             ->willReturnCallback(function (array $criteria) use ($deputyUid, $existingUser) {
                 if (
-                    $criteria['deputyUid'] ?? $deputyUid === null
-                    && $criteria['active'] ?? null === true
-                    && $criteria['isPrimary'] ?? null === true
+                    ($criteria['deputyUid'] ?? null) === $deputyUid
+                    && ($criteria['active'] ?? null) === true
+                    && ($criteria['isPrimary'] ?? null) === true
                 ) {
                     return $existingUser;
                 }
