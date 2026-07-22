@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Controller\Admin;
 
 use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Service\ParameterStoreService;
 use OPG\Digideps\Frontend\Sync\Command\ChecklistSyncCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,6 +19,7 @@ class BehatController extends AbstractController
     public function __construct(
         private readonly KernelInterface $kernel,
         private readonly bool $fixturesEnabled,
+        private readonly ParameterStoreService $parameterStoreService
     ) {
     }
 
@@ -32,15 +33,18 @@ class BehatController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, '1');
+
         $application = new Application($this->kernel);
         $application->setAutoExit(false);
 
         $input = new ArrayInput(['command' => 'digideps:document-sync']);
-        $output = new NullOutput();
 
-        $application->run($input, $output);
+        $application->run($input);
 
-        return new Response('');
+        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, '0');
+
+        return new Response('sync done');
     }
 
     /**

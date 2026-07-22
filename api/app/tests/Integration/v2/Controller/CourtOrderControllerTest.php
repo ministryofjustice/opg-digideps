@@ -8,10 +8,10 @@ use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\User;
-use Tests\OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
-use Tests\OPG\Digideps\Backend\Fixture\DeputySet;
-use Tests\OPG\Digideps\Backend\Fixture\Scenario;
-use Tests\OPG\Digideps\Backend\Fixture\UserType;
+use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputySet;
+use OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Backend\Fixture\UserType;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class CourtOrderControllerTest extends AbstractTestController

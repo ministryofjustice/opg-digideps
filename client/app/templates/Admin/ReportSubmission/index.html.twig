@@ -210,7 +210,8 @@
                     </tr>
 
                     <tr id="docs-table-{{ reportSubmission.id }}"
-                        class="behat-region-report-submission-documents-{{ loop.index }}">
+                        class="behat-region-report-submission-documents-{{ loop.index }}"
+                        data-role="report-submission-documents">
                         <td colspan="7">
                             {{ include('@App/Admin/ReportSubmission/_document-sync-table.html.twig', { reportSubmission: reportSubmission, documents: reportSubmission.documents, report: report }) }}
                         </td>

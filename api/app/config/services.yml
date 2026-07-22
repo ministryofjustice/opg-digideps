@@ -74,7 +74,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     OPG\Digideps\Backend\:
         resource: "../src/*"
-        exclude: "../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}"
+        exclude: "../src/{DependencyInjection,Entity,Fixture,Migrations,Tests,Kernel.php}"
 
     OPG\Digideps\Backend\Controller\:
         resource: "../src/Controller/"
@@ -359,17 +359,6 @@ services:
         tags:
             - { name: serializer.denormalizer }
 
-    Aws\Ssm\SsmClient:
-        arguments: ["%ssm_client_params%"]
-
-    OPG\Digideps\Backend\Service\ParameterStoreService:
-        arguments:
-            [
-                '@Aws\Ssm\SsmClient',
-                "%env(PARAMETER_PREFIX)%",
-                "%env(FEATURE_FLAG_PREFIX)%",
-            ]
-
     OPG\Digideps\Backend\Security\HeaderTokenAuthenticator:
         class: OPG\Digideps\Backend\Security\HeaderTokenAuthenticator
         arguments:
@@ -518,3 +507,6 @@ services:
         arguments:
             $preCSVDataFactory: "@preCSVDataFactory"
             $postCSVDataFactory: "@postCSVDataFactory"
+
+    OPG\Digideps\Backend\Fixture\FixtureService:
+        public: true

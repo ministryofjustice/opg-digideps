@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\OPG\Digideps\Backend\Fixture;
+namespace OPG\Digideps\Backend\Fixture;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
@@ -12,12 +12,19 @@ use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\ClientBenefitsCheckInterface;
 use OPG\Digideps\Backend\Entity\Counter\Counter;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Report\Action;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\Report\VisitsCare;
 use OPG\Digideps\Backend\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -115,8 +122,26 @@ final class FixtureService
         $current = $scenario;
         $first = true;
         while ($current !== null) {
-            $pfa = $this->instantiateCourtOrder($client, $current, $first, CourtOrderType::PFA, $persons);
-            $hw = $this->instantiateCourtOrder($client, $current, $first, CourtOrderType::HW, $persons, $pfa);
+            $latestReportReadyToSubmit = $scenario->courtOrderDescriptor->latestReportReadyToSubmit;
+
+            $pfa = $this->instantiateCourtOrder(
+                $client,
+                $current,
+                $first,
+                CourtOrderType::PFA,
+                $persons,
+                latestReportReadyToSubmit: $latestReportReadyToSubmit
+            );
+
+            $hw = $this->instantiateCourtOrder(
+                $client,
+                $current,
+                $first,
+                CourtOrderType::HW,
+                $persons,
+                $pfa,
+                latestReportReadyToSubmit: $latestReportReadyToSubmit
+            );
 
             $orders[] = array_filter([
                 'pfa' => $pfa,
@@ -134,13 +159,37 @@ final class FixtureService
         ];
     }
 
+    public function addSupportingDocumentWithoutS3Object(Report $report, string $filename): Document
+    {
+        // required so that the system recognises the report has documents
+        $report->setWishToProvideDocumentation('yes');
+        $this->persist($report);
+
+        $document = new Document($report);
+        $document->setIsReportPdf(false);
+        $document->setCreatedBy($report->getSubmittedBy());
+        $document->setStorageReference("dd_doc_{$report->getId()}_" . time());
+        $document->setFileName($filename);
+        $this->persist($document);
+        $this->flush();
+
+        return $document;
+    }
+
     /**
      * @param Persons $persons
      * @param Order|null $sibling
      * @return Order|null
      */
-    private function instantiateCourtOrder(Client $client, Scenario $scenario, bool $first, CourtOrderType $type, array &$persons, ?array $sibling = null): ?array
-    {
+    private function instantiateCourtOrder(
+        Client $client,
+        Scenario $scenario,
+        bool $first,
+        CourtOrderType $type,
+        array &$persons,
+        ?array $sibling = null,
+        bool $latestReportReadyToSubmit = false
+    ): ?array {
         $descriptor = $scenario->courtOrderDescriptor;
         if ($descriptor->single && (($type === CourtOrderType::HW && $descriptor->reportType !== CourtOrderReportType::OPG104) || ($type === CourtOrderType::PFA && $descriptor->reportType === CourtOrderReportType::OPG104))) {
             return null;
@@ -207,12 +256,17 @@ final class FixtureService
         }
 
         if ($reports === null) {
+            /** @var array<Report> $reports */
             $reports = [];
             if (!$descriptor->noReports) {
                 for ($i = 0; $i <= $descriptor->submittedReports; $i++) {
                     $reports[] = $this->persist($this->makeReport($courtOrder, $reports[$i - 1] ?? null, $primary));
                 }
-                if (!$first) {
+                if ($first) {
+                    if ($latestReportReadyToSubmit) {
+                        $this->makeReportSubmittable($reports[count($reports) - 1]);
+                    }
+                } else {
                     $this->makeReportSubmitted($reports[count($reports) - 1], $primary);
                 }
             }
@@ -246,15 +300,16 @@ final class FixtureService
             ->setCreatedAt(null);
     }
 
-
     private function makeCourtOrder(CourtOrderDescriptor $descriptor, Client $client, CourtOrderType $type): CourtOrder
     {
-        $madeDate = new \DateTime()->sub(new \DateInterval('P6M'))->sub(new \DateInterval("P{$descriptor->submittedReports}Y"));
+        $madeDate = $descriptor->madeDate ??
+            new \DateTime()->sub(new \DateInterval('P6M'))->sub(new \DateInterval("P{$descriptor->submittedReports}Y"));
+
         $client->setCourtDate($madeDate);
 
         return $this->persist(new CourtOrder()
             ->setId($this->counter->nextInt())
-            ->setCourtOrderUid($this->counter->nextString(8, prefix: 'C', postfix: 'C'))
+            ->setCourtOrderUid($this->counter->nextString(8))
             ->setClient($client)
             ->setOrderType($type)
             ->setOrderKind($descriptor->single ? CourtOrderKind::Single : ($descriptor->siblingDeputySet !== null ? CourtOrderKind::Hybrid : CourtOrderKind::Dual))
@@ -280,7 +335,7 @@ final class FixtureService
             ->setAddress3('')
             ->setAddress4('')
             ->setAddress5('')
-            ->setAddressCountry(null)
+            ->setAddressCountry('GB')
             ->setAddressPostcode($this->faker->postcode())
             ->setPhoneMain($this->faker->phoneNumber())
             ->setPhoneAlternative($this->faker->phoneNumber());
@@ -303,9 +358,9 @@ final class FixtureService
         $organisation = new Organisation()
             ->setId($this->counter->nextInt())
             ->setIsActivated(true)
-            ->setDeletedAt(null)
+            ->setDeletedAt()
             ->setName($descriptor->organisation);
-        $organisation->setEmailIdentifier("@{$organisation->getId()}.{$descriptor->emailDomain}");
+        $organisation->setEmailIdentifier("@{$organisation->getId()}.$descriptor->emailDomain");
 
         $organisation->getClients()->add($client);
 
@@ -325,11 +380,11 @@ final class FixtureService
             ->setAddress3($deputy?->getAddress3() ?? '')
             ->setAddress4($deputy?->getAddress4() ?? '')
             ->setAddress5($deputy?->getAddress5() ?? '')
-            ->setAddressCountry(null)
+            ->setAddressCountry('GB')
             ->setAddressPostcode($deputy?->getAddressPostcode() ?? $this->faker->postcode())
             ->setPhoneMain($deputy?->getPhoneMain() ?? $this->faker->phoneNumber())
             ->setRoleName(match ($descriptor->userType) {
-                UserType::Deputy =>  match ($descriptor->type) {
+                UserType::Deputy => match ($descriptor->type) {
                     DeputyType::LAY => User::ROLE_LAY_DEPUTY,
                     DeputyType::PRO => User::ROLE_PROF_NAMED,
                     DeputyType::PA => User::ROLE_PA_NAMED,
@@ -353,6 +408,7 @@ final class FixtureService
             ->setAgreeTermsUse(true)
             ->setPassword($this->password)
             ->setRegistrationDate(new \DateTime()->sub(new \DateInterval('P1Y')))
+            ->setRegistrationRoute(User::SELF_REGISTER)
         ;
 
         if ($organisation !== null) {
@@ -391,7 +447,102 @@ final class FixtureService
         $report->setSubmitted(true);
         $report->setSubmitDate((clone $report->getEndDate())->add(new \DateInterval('P15D')));
         $report->setSubmittedBy($submitter);
-        $this->persist(new ReportSubmission($report, $submitter));
+
+        $document = new Document($report);
+        $document->setIsReportPdf(true);
+        $document->setCreatedBy($submitter);
+        $document->setStorageReference("dd_doc_{$report->getId()}_" . time());
+        $document->setFileName("DigiRep-{$this->counter->nextString(8)}.pdf");
+        $this->persist($document);
+
+        $reportSubmission = new ReportSubmission($report, $submitter);
+        $reportSubmission->setUuid($this->counter->nextString(20));
+        $this->persist($reportSubmission);
+
+        $this->persist($report);
+    }
+
+    // this may be incomplete for making a HW report or a PFA 103 submittable,
+    // but completes all necessary fields for a PFA 102
+    private function makeReportSubmittable(Report $report): void
+    {
+        // decisions
+        $report->setSignificantDecisionsMade('No')
+            ->setReasonForNoDecisions('Nothing to be decided');
+
+        $mentalCapacity = new MentalCapacity($report)
+            ->setMentalAssessmentDate(new \DateTime())
+            ->setHasCapacityChanged(MentalCapacity::CAPACITY_STAYED_SAME);
+
+        // contacts
+        $report->setReasonForNoContacts('No contacts necessary');
+
+        // visits and care
+        $visitsCare = new VisitsCare()
+            ->setReport($report)
+            ->setDoYouLiveWithClient('yes')
+            ->setDoesClientReceivePaidCare('no')
+            ->setWhoIsDoingTheCaring('family')
+            ->setDoesClientHaveACarePlan('no');
+
+        // benefits check
+        $benefitsCheck = new ClientBenefitsCheck()
+            ->setReport($report)
+            ->setWhenLastCheckedEntitlement(ClientBenefitsCheckInterface::WHEN_CHECKED_IM_CURRENTLY_CHECKING)
+            ->setDoOthersReceiveMoneyOnClientsBehalf('no');
+
+        // accounts
+        $account = new BankAccount()
+            ->setReport($report)
+            ->setBank('Test Account')
+            ->setAccountType('current')
+            ->setAccountNumber('0011')
+            ->setOpeningBalance('100.00')
+            ->setClosingBalance('100.00')
+            ->setIsJointAccount('no');
+
+        // deputy expenses
+        $report->setPaidForAnything('no');
+
+        // gifts
+        $report->setGiftsExist('no');
+
+        // money in
+        $report->setMoneyInExists('no')
+            ->setReasonForNoMoneyIn('Nothing received');
+
+        // money out
+        $report->setMoneyOutExists('no')
+            ->setReasonForNoMoneyOut('Nothing to pay for');
+
+        // assets
+        $report->setNoAssetToAdd(true);
+
+        // debts
+        $report->setHasDebts('no');
+
+        // actions
+        $action = new Action($report)
+            ->setDoYouExpectFinancialDecisions('no')
+            ->setDoYouHaveConcerns('no');
+
+        // any other information
+        $report->setActionMoreInfo('no');
+
+        // supporting documents
+        $report->setWishToProvideDocumentation('no');
+
+        $this->persist($action);
+        $this->persist($account);
+        $this->persist($benefitsCheck);
+        $this->persist($visitsCare);
+        $this->persist($mentalCapacity);
+        $this->persist($report);
+        $this->flush();
+
+        $this->entityManager->refresh($report);
+
+        $report->updateSectionsStatusCache();
         $this->persist($report);
     }
 
@@ -414,4 +565,6 @@ final class FixtureService
         $this->entityManager->persist($counter);
         $this->counter = $counter;
     }
+
+
 }

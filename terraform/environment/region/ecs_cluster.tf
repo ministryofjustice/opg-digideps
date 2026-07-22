@@ -4,6 +4,12 @@ resource "aws_service_discovery_http_namespace" "cloudmap_namespace" {
   description = "Namespace for Service Discovery"
 }
 
+# Used for non service tasks to connect
+resource "aws_service_discovery_private_dns_namespace" "internal_ecs" {
+  name = "internal.digideps.${local.environment}"
+  vpc  = data.aws_vpc.main.id
+}
+
 resource "aws_ecs_cluster" "main" {
   name = local.environment
   tags = var.default_tags
@@ -73,6 +79,10 @@ locals {
     {
       name  = "FIXTURES_ENABLED",
       value = tostring(var.account.environment.fixtures_enabled)
+    },
+    {
+      name  = "WORKSPACE",
+      value = local.environment
     }
   ]
 
@@ -112,10 +122,6 @@ locals {
     {
       name  = "SECRETS_PREFIX",
       value = join("", [var.secrets_prefix, "/"])
-    },
-    {
-      name  = "WORKSPACE",
-      value = local.environment
     },
     {
       name  = "S3_BUCKETNAME",
@@ -184,7 +190,7 @@ locals {
   frontend_base_variables = [
     { name = "ADMIN_HOST", value = "https://${var.admin_fully_qualified_domain_name}" },
     { name = "NONADMIN_HOST", value = "https://${var.front_fully_qualified_domain_name}" },
-    { name = "API_URL", value = "http://api" },
+    { name = "API_URL", value = local.api_url },
     { name = "APP_ENV", value = var.account.environment.app_env },
     { name = "AUDIT_LOG_GROUP_NAME", value = "audit-${local.environment}" },
     { name = "EMAIL_SEND_INTERNAL", value = var.account.environment.is_production == 1 ? "true" : "false" },

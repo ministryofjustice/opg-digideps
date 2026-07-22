@@ -39,6 +39,13 @@ locals {
       target_type = "cidr_block"
       target      = "0.0.0.0/0"
     }
+    api_access = {
+      port        = 80
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.api_service_security_group.id
+    }
   }
 }
 
@@ -87,9 +94,13 @@ locals {
         awslogs-stream-prefix = "end-to-end-tests"
       }
     },
+    secrets = [
+      { name = "ADMIN_API_CLIENT_SECRET", valueFrom = data.aws_secretsmanager_secret.admin_api_client_secret.arn }
+    ],
     environment = [
       { name = "ADMIN_URL", value = "https://${var.admin_fully_qualified_domain_name}" },
       { name = "FRONT_URL", value = "https://${var.front_fully_qualified_domain_name}" },
+      { name = "API_URL", value = "http://${aws_service_discovery_service.api_ecs.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}" },
       { name = "ENVIRONMENT", value = var.secrets_prefix }
     ]
   })
