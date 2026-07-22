@@ -242,7 +242,6 @@ class Report
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: Action::class, cascade: ['persist', 'remove'])]
     private ?Action $action = null;
 
-
     #[JMS\Groups(['mental-capacity'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\MentalCapacity')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: MentalCapacity::class, cascade: ['persist', 'remove'])]
@@ -436,7 +435,7 @@ class Report
      *
      * @param bool $dateChecks if true, perform checks around multiple reports and dates. Useful for PA upload
      */
-    public function __construct(Client $client, string $type, \DateTime $startDate, \DateTime $endDate, $dateChecks = true)
+    public function __construct(Client $client, string $type, \DateTime $startDate, \DateTime $endDate, bool $dateChecks = true)
     {
         $reportType = ReportType::tryFrom($type);
         if ($reportType === null) {
@@ -980,7 +979,7 @@ class Report
     }
 
     /**
-     * Previous report data. Just return id and type for second api call to allo new JMS groups.
+     * Previous report data. Just return id and type for second api call to allow new JMS groups.
      */
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('previous_report_data')]
@@ -988,28 +987,9 @@ class Report
     #[JMS\Type('array')]
     public function getPreviousReportData(): array
     {
-        $previousReport = $this->getPreviousReport();
+        $values = $this->getClient()->getReports()->getValues();
 
-        if ($previousReport === null) {
-            return [];
-        }
-
-        return [
-            'report-summary' => $previousReport->getReportSummary(),
-            'financial-summary' => $previousReport->getFinancialSummary(),
-        ];
-    }
-
-    /**
-     * Method to identify and return previous report.
-     */
-    private function getPreviousReport(): ?Report
-    {
-        $clientReports = $this->getClient()->getReports();
-
-        // ensure order is correct most recent first
-        $values = $clientReports->getValues();
-
+        // sort so highest ID is first in the list
         uasort(
             $values,
             function ($a, $b): int {
@@ -1019,15 +999,17 @@ class Report
 
         $orderedClientReports = new ArrayCollection($values);
 
-        // try previous reports
         foreach ($orderedClientReports as $clientReport) {
             if ($clientReport->getId() < $this->getId()) {
-                // less than should imply their previous report
-                return $clientReport;
+                // if ID is lower, it implies that the report with a lower ID is before the current report
+                return [
+                    'report-summary' => $clientReport->getReportSummary(),
+                    'financial-summary' => $clientReport->getFinancialSummary(),
+                ];
             }
         }
 
-        return null;
+        return [];
     }
 
     /**

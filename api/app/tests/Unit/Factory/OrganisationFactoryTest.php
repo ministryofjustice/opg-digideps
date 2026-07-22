@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Factory;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Factory\OrganisationFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class OrganisationFactoryTest extends TestCase
