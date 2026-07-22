@@ -103,3 +103,25 @@ resource "aws_lb_target_group" "front" {
     create_before_destroy = true
   }
 }
+
+resource "aws_lb_target_group" "front_http" {
+  name                 = "front-target-${local.environment}"
+  port                 = 8080
+  protocol             = "HTTP"
+  target_type          = "ip"
+  vpc_id               = data.aws_vpc.main.id
+  deregistration_delay = 0
+  tags                 = var.default_tags
+
+  #  health_check {
+  #    path                = "/health-check"
+  #    interval            = 30
+  #    timeout             = 10
+  #    unhealthy_threshold = 3
+  #    protocol            = "HTTP"
+  #  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
