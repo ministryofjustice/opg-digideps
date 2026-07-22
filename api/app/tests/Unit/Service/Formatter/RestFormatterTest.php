@@ -5,31 +5,27 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\Service\Formatter;
 
 use OPG\Digideps\Backend\EventListener\RestInputOutputFormatter;
-use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use OPG\Digideps\Backend\Service\Validator\RestArrayValidator;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\Request;
 
 final class RestFormatterTest extends TestCase
 {
-    use ProphecyTrait;
-
-    private ObjectProphecy $inputOutputFormatter;
-    private ObjectProphecy $validator;
+    private RestInputOutputFormatter&MockObject $inputOutputFormatter;
+    private RestArrayValidator&MockObject $validator;
     private RestFormatter $sut;
 
     public function setUp(): void
     {
-        $this->inputOutputFormatter = self::prophesize(RestInputOutputFormatter::class);
-        $this->validator = self::prophesize(RestArrayValidator::class);
+        $this->inputOutputFormatter = self::createMock(RestInputOutputFormatter::class);
+        $this->validator = self::createMock(RestArrayValidator::class);
 
         $this->sut = new RestFormatter(
-            $this->inputOutputFormatter->reveal(),
-            $this->validator->reveal()
+            $this->inputOutputFormatter,
+            $this->validator
         );
     }
 
@@ -39,13 +35,16 @@ final class RestFormatterTest extends TestCase
         $incomingRequest = new Request();
         $expectedContentArray = ['aKey' => 'some data'];
         $this->inputOutputFormatter
-            ->requestContentToArray($incomingRequest)
-            ->shouldBeCalled()
+            ->expects($this->once())
+            ->method('requestContentToArray')
+            ->with($incomingRequest)
             ->willReturn($expectedContentArray);
 
         $assertions = ['aDataKey' => 'someAssertion'];
 
-        $this->validator->validateArray($expectedContentArray, $assertions)->shouldBeCalled();
+        $this->validator->expects(self::once())
+            ->method('validateArray')
+            ->with($expectedContentArray, $assertions);
 
         $actualContentArray = $this->sut->deserializeBodyContent($incomingRequest, $assertions);
 
@@ -58,8 +57,9 @@ final class RestFormatterTest extends TestCase
         $serialiserGroups = ['group1', 'group2'];
 
         $this->inputOutputFormatter
-            ->addContextModifier(Argument::type('Callable'))
-            ->shouldBeCalled();
+            ->expects($this->once())
+            ->method('addContextModifier')
+            ->with(self::isType('callable'));
 
         $this->sut->setJmsSerialiserGroups($serialiserGroups);
     }
@@ -69,7 +69,9 @@ final class RestFormatterTest extends TestCase
     {
         $data = ['some' => 'data'];
         $assertions = ['some' => 'assertions'];
-        $this->validator->validateArray($data, $assertions)->shouldBeCalled();
+        $this->validator->expects(self::once())
+            ->method('validateArray')
+            ->with($data, $assertions);
 
         $this->sut->validateArray($data, $assertions);
     }
