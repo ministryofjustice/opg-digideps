@@ -125,7 +125,7 @@ class ReportSubmissionService
 
     public function getReportSubmissionById(string $id)
     {
-        return $this->restClient->get("report-submission/$id", 'Report\\ReportSubmission');
+        return $this->restClient->get("report-submission/$id", ReportSubmission::class);
     }
 
     public function getReportSubmissionsByIds(array $ids): array
