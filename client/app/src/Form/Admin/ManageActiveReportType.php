@@ -30,6 +30,20 @@ class ManageActiveReportType extends AbstractType
                 'constraints' => [
                     new Constraints\NotBlank(['message' => 'report.endDate.notBlank', 'groups' => ['startEndDates']]),
                     new Constraints\Date(['message' => 'report.endDate.invalidMessage', 'groups' => ['startEndDates ']]),
+                    new Constraints\GreaterThan([
+                        'propertyPath' => 'parent.all[startDate].data',
+                        'message' => 'report.endDate.beforeStart',
+                        'groups' => ['startEndDates'],
+                    ]),
+                    new Constraints\Expression([
+                        'expression' => 'this.getParent().get("startDate").getData().modify("+15 months") > this.getData()',
+                        'message' => 'report.endDate.greaterThan15Months',
+                        'groups' => ['startEndDates'],
+                    ]),
+                    new Constraints\Expression([
+                        'expression' => 'this.getParent().get("startDate").getData().modify("-15 months")',
+                        'groups' => ['startEndDates'],
+                    ]),
                 ],
             ])
             ->add('dueDateChoice', ReportDueDateType::class)
