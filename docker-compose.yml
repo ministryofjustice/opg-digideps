@@ -28,7 +28,7 @@ services:
         APP_HOST: frontend-app
         APP_PORT: 9000
     ports:
-      - 8070:80
+      - 8070:8080
     depends_on:
       - frontend-app
     healthcheck:
@@ -73,7 +73,7 @@ services:
         APP_HOST: admin-app
         APP_PORT: 9000
     ports:
-      - 8071:80
+      - 8071:8080
     depends_on:
       - admin-app
     healthcheck:
@@ -399,7 +399,7 @@ services:
     build:
       context: ./playwright
     environment:
-      FRONT_URL: http://frontend-webserver
+      FRONT_URL: http://frontend-webserver:8080
     image: playwright-check
     container_name: playwright-report
     restart: "no"
