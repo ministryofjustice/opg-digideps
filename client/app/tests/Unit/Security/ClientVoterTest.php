@@ -9,33 +9,26 @@ use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Security\ClientVoter;
 use OPG\Digideps\Frontend\TestHelpers\ClientHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Security;
 
 class ClientVoterTest extends KernelTestCase
 {
-    use ProphecyTrait;
-
     /**
      * @dataProvider deleteClientProvider
-     *
-     * @test
      */
-    public function determineDeletePermission(User $user, Client $client, int $expectedPermission)
+    public function testDetermineDeletePermission(User $user, Client $client, int $expectedPermission): void
     {
-        $security = self::prophesize(Security::class);
-
-        /** @var ClientVoter() $sut */
-        $sut = new ClientVoter($security->reveal());
+        $security = $this->createStub(Security::class);
+        $sut = new ClientVoter($security);
 
         $token = new UsernamePasswordToken($user, 'firewall', $user->getRoles());
 
-        self::assertEquals($expectedPermission, $sut->vote($token, $client, [ClientVoter::DELETE]));
+        self::assertSame($expectedPermission, $sut->vote($token, $client, [ClientVoter::DELETE]));
     }
 
-    public function deleteClientProvider()
+    public static function deleteClientProvider(): array
     {
         $client = ClientHelpers::createClient();
 

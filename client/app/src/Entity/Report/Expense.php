@@ -70,10 +70,8 @@ class Expense
 
     /**
      * @param mixed $explanation
-     *
-     * @return Expense
      */
-    public function setExplanation($explanation)
+    public function setExplanation($explanation): static
     {
         $this->explanation = $explanation;
 
@@ -90,10 +88,8 @@ class Expense
 
     /**
      * @param string $amount
-     *
-     * @return Expense
      */
-    public function setAmount($amount)
+    public function setAmount($amount): static
     {
         $this->amount = $amount;
 
