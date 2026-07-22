@@ -415,6 +415,15 @@ class ReportController extends AbstractController
             }
         }
 
+        if ($dueDateChoice === null && $newDueDate < $report->getEndDate()) {
+            $newDueDate = clone $report->getEndDate();
+            if ($report->isLayReport()) {
+                $newDueDate = $newDueDate->add(new \DateInterval('P21D'));
+            } else {
+                $newDueDate = $newDueDate->add(new \DateInterval('P56D'));
+            }
+        }
+
         return $newDueDate;
     }
 
