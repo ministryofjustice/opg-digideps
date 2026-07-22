@@ -10,34 +10,25 @@ use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Security\UserVoter;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 class UserVoterTest extends TestCase
 {
-    use ProphecyTrait;
-
     /**
      * @dataProvider deleteUserProvider
-     *
-     * @test
      */
-    public function determineDeletePermission(User $deletor, User $deletee, int $expectedPermission)
+    public function testDetermineDeletePermission(User $deletor, User $deletee, int $expectedPermission): void
     {
-        /** @var AccessDecisionManagerInterface&ObjectProphecy $dm */
-        $dm = self::prophesize(AccessDecisionManagerInterface::class);
-
-        /** @var UserVoter $sut */
-        $sut = new UserVoter($dm->reveal());
+        $dm = $this->createStub(AccessDecisionManagerInterface::class);
+        $sut = new UserVoter($dm);
 
         $token = new UsernamePasswordToken($deletor, 'firewall', $deletor->getRoles());
 
         self::assertEquals($expectedPermission, $sut->vote($token, $deletee, [UserVoter::DELETE_USER]));
     }
 
-    public function deleteUserProvider()
+    public static function deleteUserProvider()
     {
         $clientNoReports = new Client();
         $clientWithReport = new Client()->setReports([new Report()]);
@@ -228,21 +219,17 @@ class UserVoterTest extends TestCase
 
     /**
      * @dataProvider addEditUserProvider
-     *
-     * @test
      */
-    public function determineAddEditPermission(User $actor, User $subject, int $expectedPermission)
+    public function testDetermineAddEditPermission(User $actor, User $subject, int $expectedPermission): void
     {
-        /** @var UserVoter $sut */
         $sut = new UserVoter();
-
         $token = new UsernamePasswordToken($actor, 'firewall', $actor->getRoles());
 
         self::assertEquals($expectedPermission, $sut->vote($token, $subject, [UserVoter::EDIT_USER]));
         self::assertEquals($expectedPermission, $sut->vote($token, $subject, [UserVoter::ADD_USER]));
     }
 
-    public function addEditUserProvider()
+    public static function addEditUserProvider(): array
     {
         $admin = UserHelpers::createAdminUser();
         $admin2 = UserHelpers::createAdminUser();
@@ -444,13 +431,10 @@ class UserVoterTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @dataProvider canAddUserProvider
      */
-    public function determineCanAddPermission(User $actor, int $expectedPermission)
+    public function testDetermineCanAddPermission(User $actor, int $expectedPermission): void
     {
-        /** @var UserVoter $sut */
         $sut = new UserVoter();
 
         $token = new UsernamePasswordToken($actor, 'firewall', $actor->getRoles());
@@ -458,7 +442,7 @@ class UserVoterTest extends TestCase
         self::assertEquals($expectedPermission, $sut->vote($token, null, [UserVoter::CAN_ADD_USER]));
     }
 
-    public function canAddUserProvider()
+    public static function canAddUserProvider(): array
     {
         $admin = UserHelpers::createAdminUser();
         $superAdmin = UserHelpers::createSuperAdminUser();
