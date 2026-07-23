@@ -4,11 +4,7 @@
   "enabled": true,
   "timezone": "Europe/London",
 
-  "extends": [
-    "config:recommended",
-    "docker:pinDigests",
-    "helpers:pinGitHubActionDigests"
-  ],
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
 
   "branchPrefix": "renovate/",
   "labels": ["dependencies", "renovate"],
@@ -51,14 +47,6 @@
       "matchManagers": ["dockerfile", "docker-compose"],
       "matchUpdateTypes": ["minor", "patch"],
       "labels": ["dependencies", "docker"],
-      "schedule": ["before 9am on Monday"],
-      "minimumReleaseAge": "7 days"
-    },
-    {
-      "groupName": "Terraform dependency updates",
-      "matchManagers": ["terraform"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "labels": ["dependencies", "terraform"],
       "schedule": ["before 9am on Monday"],
       "minimumReleaseAge": "7 days"
     },
