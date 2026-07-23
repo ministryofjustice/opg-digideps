@@ -122,7 +122,7 @@ Feature: Report Management (applies to all admin roles)
         And I fill in the declaration page and submit the report
         Then my report should be submitted
 
-  @admin-manager @lay-combined-high-submitted
+  @admin-manager @lay-combined-high-submitted @iqpal
   Scenario: An admin user tries to select a report duration of more than 15 months
     Given a Lay Deputy has submitted a Combined High Assets report
     And all the reports for the first client are associated with a pfa court order
@@ -130,12 +130,12 @@ Feature: Report Management (applies to all admin roles)
     When I visit the admin client details page associated with the deputy I'm interacting with
     And I manage the deputies 'submitted' report
     And I change the report 'start' date to '29 June 2021'
-    And I change the report 'end' date to '28 June 2024'
+    And I change the report 'end' date to '29 Sept 2022'
     And I confirm all report sections are incomplete
     When I click continue to submit the new report details
     Then it shows an error message that the report duration is more than 15 months
 
-  @admin-manager @lay-combined-high-submitted
+  @admin-manager @lay-combined-high-submitted @iqpal
   Scenario: An admin user tries to select a report end date that is before the start date
     Given a Lay Deputy has submitted a Combined High Assets report
     And all the reports for the first client are associated with a pfa court order
@@ -143,7 +143,7 @@ Feature: Report Management (applies to all admin roles)
     When I visit the admin client details page associated with the deputy I'm interacting with
     And I manage the deputies 'submitted' report
     And I change the report 'start' date to '29 June 2021'
-    And I change the report 'end' date to '28 June 2020'
+    And I change the report 'end' date to '28 June 2021'
     And I confirm all report sections are incomplete
     When I click continue to submit the new report details
     Then it shows an error message that the start date is before the end date
