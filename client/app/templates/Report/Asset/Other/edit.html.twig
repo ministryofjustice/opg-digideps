@@ -14,7 +14,7 @@
 
 {% set transOptions = {'%client%': report.client.firstname | striptags, '%assetTitle%': assetTitle } %}
 
-{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans(transOptions) }}{% endblock %}
 
 
@@ -28,9 +28,6 @@
 
 {% block pageContent %}
 
-{% include '@App/Report/Asset/Other/_form.html.twig' with {
-    'translationDomain': translationDomain,
-    'form': form
-} %}
+    {% include '@App/Report/Asset/Other/_form.html.twig' %}
 
 {% endblock %}
