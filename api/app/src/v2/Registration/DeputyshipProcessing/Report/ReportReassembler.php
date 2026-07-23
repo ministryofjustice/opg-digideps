@@ -41,7 +41,7 @@ final readonly class ReportReassembler
 
         $this->entityManager->flush();
 
-        $result->appendMessage(implode('; ', $transitionResult->messages));
+        $result->appendMessage(implode('; ', array_map(fn (callable|string $message): string => is_string($message) ? $message : $message(), $transitionResult->messages)));
 
         return $result;
     }
