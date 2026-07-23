@@ -101,11 +101,13 @@
                 }) }}
             </div>
 
-            {{ form_add_another({
-                'addAnother': form.addAnother,
-                'thingTranslationKey': 'form.thing'|trans(transOptions, translationDomain),
-                translationDomain: translationDomain,
-            }) }}
+            {% if form.addAnother %}
+                {{ form_add_another({
+                    'addAnother': form.addAnother,
+                    'thingTranslationKey': 'form.thing'|trans(transOptions, translationDomain),
+                    translationDomain: translationDomain,
+                }) }}
+            {% endif %}
         </div>
     </div>
 

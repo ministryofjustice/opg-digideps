@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Frontend\Form\Report\Asset;
 
 use OPG\Digideps\Frontend\Entity\Report\AssetProperty;
-use OPG\Digideps\Frontend\Form\AddAnotherThingType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -68,8 +67,7 @@ class AssetTypeProperty extends AbstractType
                 'grouping' => true,
                 'scale' => 2,
                 'invalid_message' => 'asset.property.rentIncomeMonth.type',
-            ])
-            ->add('addAnother', AddAnotherThingType::class);
+            ]);
 
         $builder
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {

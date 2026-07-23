@@ -198,6 +198,9 @@ class AssetController extends AbstractController
         }
 
         $form = $this->createForm(AssetTypeProperty::class, $asset);
+        if (!$assetId) {
+            $form->add('addAnother', AddAnotherThingType::class);
+        }
         $form->handleRequest($request);
 
 
@@ -213,14 +216,7 @@ class AssetController extends AbstractController
                         $request->getSession()->getFlashBag()->add('notice', 'Asset edited');
                     }
                 }
-
-                $addAnother = $validatingForm->getStringOrNull('addAnother');
-                switch ($addAnother) {
-                    case 'yes':
-                        return $this->redirectToRoute('assets_type', ['reportId' => $reportId, 'from' => 'another']);
-                    case 'no':
-                        return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
-                }
+                return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
             }
 
             if ($asset instanceof AssetProperty) {
