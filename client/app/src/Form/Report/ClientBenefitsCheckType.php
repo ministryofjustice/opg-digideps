@@ -77,8 +77,6 @@ class ClientBenefitsCheckType extends AbstractType
                 },
                 'allow_delete' => true,
             ]);
-
-            $builder->add('addAnother', SubmitType::class);
         }
 
         $builder->add('save', SubmitType::class);
