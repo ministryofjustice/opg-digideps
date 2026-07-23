@@ -121,3 +121,19 @@ Feature: Report Management (applies to all admin roles)
         Then I follow the submission process to the declaration page for previous report
         And I fill in the declaration page and submit the report
         Then my report should be submitted
+
+  @admin-manager @lay-combined-high-submitted
+  Scenario: An admin user tries to select an invalid report duration that returns errors
+    Given a Lay Deputy has submitted a Combined High Assets report
+    And all the reports for the first client are associated with a pfa court order
+    And an admin manager user accesses the admin app
+    When I visit the admin client details page associated with the deputy I'm interacting with
+    And I manage the deputies 'submitted' report
+    And I change the report 'start' date to '29 June 2021'
+    And I change the report 'end' date to '29 Sept 2022'
+    And I confirm all report sections are incomplete
+    When I click continue to submit the new report details
+    Then it shows an error message that the report duration is more than 15 months
+    And I change the report 'end' date to '28 June 2021'
+    When I click continue to submit the new report details
+    Then it shows an error message that the end date is before the start date

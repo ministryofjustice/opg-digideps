@@ -252,7 +252,7 @@ class Report
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: ClientBenefitsCheck::class, cascade: ['persist', 'remove'])]
     private ?ClientBenefitsCheck $clientBenefitsCheck = null;
 
-    #[JMS\Groups(['report', 'report-period'])]
+    #[JMS\Groups(['report', 'report-period','startEndDates'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[ORM\Column(name: 'start_date', type: 'date', nullable: true)]
     private \DateTime $startDate;
@@ -262,7 +262,7 @@ class Report
     #[ORM\Column(name: 'due_date', type: 'date', nullable: true)]
     private \DateTime $dueDate;
 
-    #[JMS\Groups(['report', 'report-period'])]
+    #[JMS\Groups(['report', 'report-period','startEndDates'])]
     #[JMS\Accessor(getter: 'getEndDate')]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[ORM\Column(name: 'end_date', type: 'date', nullable: true)]
