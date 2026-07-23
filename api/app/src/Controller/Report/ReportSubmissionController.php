@@ -62,8 +62,8 @@ class ReportSubmissionController extends RestController
             $request->get('status'),
             $request->get('q'),
             $request->get('created_by_role'),
-            $request->get('offset', 0),
-            $request->get('limit', 15),
+            $request->query->getInt('offset', 0),
+            $request->query->getInt('limit', 15),
             $request->get('orderBy', 'createdOn'),
             $request->get('order', 'DESC')
         );
