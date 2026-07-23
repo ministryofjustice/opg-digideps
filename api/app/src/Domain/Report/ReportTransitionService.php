@@ -214,7 +214,7 @@ final readonly class ReportTransitionService
 
                 $result->updatedReports[] = $newReport;
 
-                $result->messages[] = "Single -> Dual: Added new {$newReport->getType()} report " .
+                $result->messages[] = fn () => "Single -> Dual: Added new {$newReport->getType()} report " .
                     "{$newReport->getId()} to court order {$courtOrder->getCourtOrderUid()}";
 
                 $secondReportCreated = true;
