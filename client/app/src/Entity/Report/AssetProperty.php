@@ -214,7 +214,7 @@ class AssetProperty extends Asset
 
     /**
      * Get address.
-     * @return array<string>
+     * @return String[]
      */
     public function getAddressValidLines(): array
     {
