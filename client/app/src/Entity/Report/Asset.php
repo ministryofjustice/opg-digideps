@@ -6,19 +6,12 @@ use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @JMS\Discriminator(field = "type", map = {
- *    "other": "OPG\Digideps\Frontend\Entity\Report\AssetOther",
- *    "property": "OPG\Digideps\Frontend\Entity\Report\AssetProperty"
- * })
- */
+#[JMS\Discriminator(field: 'type', map: ['other' => 'OPG\Digideps\Frontend\Entity\Report\AssetOther', 'property' => 'OPG\Digideps\Frontend\Entity\Report\AssetProperty'])]
 abstract class Asset
 {
     use HasReportTrait;
 
-    /**
-     * @JMS\Exclude
-     */
+    #[JMS\Exclude]
     protected $type;
 
     /**
@@ -40,49 +33,31 @@ abstract class Asset
         }
     }
 
-    /**
-     * @JMS\Type("integer")
-     */
+    #[JMS\Type('integer')]
     private $id;
 
-    /**
-     * @Assert\NotBlank(message="asset.title.notBlank", groups={"title_only"})
-     *
-     * @Assert\Length(max=100, maxMessage= "asset.title.maxMessage", groups={"title_only"})
-     *
-     * @JMS\Type("string")
-     */
+    #[Assert\NotBlank(message: 'asset.title.notBlank', groups: ['title_only'])]
+    #[Assert\Length(max: 100, maxMessage: 'asset.title.maxMessage', groups: ['title_only'])]
+    #[JMS\Type('string')]
     private ?string $title = null;
 
-    /**
-     * @Assert\NotBlank(message="asset.value.notBlank")
-     *
-     * @Assert\Type(type="numeric", message="asset.value.type")
-     *
-     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "asset.value.outOfRange")
-     *
-     * @Assert\NotBlank(message="asset.property.value.notBlank", groups={"property-value"})
-     *
-     * @Assert\Type(type="numeric", message="asset.property.value.type", groups={"property-value"})
-     *
-     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "asset.property.value.outOfRange", groups={"property-value"})
-     *
-     * @JMS\Type("string")
-     */
+    #[Assert\NotBlank(message: 'asset.value.notBlank')]
+    #[Assert\Type(type: 'numeric', message: 'asset.value.type')]
+    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'asset.value.outOfRange')]
+    #[Assert\NotBlank(message: 'asset.property.value.notBlank', groups: ['property-value'])]
+    #[Assert\Type(type: 'numeric', message: 'asset.property.value.type', groups: ['property-value'])]
+    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'asset.property.value.outOfRange', groups: ['property-value'])]
+    #[JMS\Type('string')]
     private $value;
 
     /**
-     * @JMS\Type("double")
-     *
      * @var float
      */
+    #[JMS\Type('double')]
     private $valueTotal;
 
-    /**
-     * @Assert\Type(type="DateTime", message="asset.date.date")
-     *
-     * @JMS\Type("DateTime")
-     */
+    #[Assert\Type(type: 'DateTime', message: 'asset.date.date')]
+    #[JMS\Type('DateTime')]
     protected ?\DateTime $valuationDate = null;
 
     public function getId()

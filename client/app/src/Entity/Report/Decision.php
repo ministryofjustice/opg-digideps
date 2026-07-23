@@ -11,43 +11,41 @@ class Decision
     use HasReportTrait;
 
     /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"decision"})
      *
      * @var int
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['decision'])]
     private $id;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"decision"})
-     *
-     * @Assert\NotBlank( message="decision.description.notBlank", groups={"decision-description"})
-     * @Assert\Length( min=2, minMessage="decision.description.length", groups={"decision-description"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['decision'])]
+    #[Assert\NotBlank(message: 'decision.description.notBlank', groups: ['decision-description'])]
+    #[Assert\Length(min: 2, minMessage: 'decision.description.length', groups: ['decision-description'])]
     private $description;
 
     /**
-     * @Assert\NotBlank( message="decision.clientInvolvedBoolean.notBlank", groups={"decision-client-involved"})
      *
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"decision"})
      *
      * @var bool
      */
+    #[Assert\NotBlank(message: 'decision.clientInvolvedBoolean.notBlank', groups: ['decision-client-involved'])]
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['decision'])]
     private $clientInvolvedBoolean;
 
     /**
-     * @Assert\NotBlank( message="decision.clientInvolvedDetails.notBlank", groups={"decision-client-involved-details"})
-     * @Assert\Length( min=2, minMessage="decision.clientInvolvedDetails.length", groups={"decision-client-involved-details"})
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"decision"})
      *
      * @var bool
      */
+    #[Assert\NotBlank(message: 'decision.clientInvolvedDetails.notBlank', groups: ['decision-client-involved-details'])]
+    #[Assert\Length(min: 2, minMessage: 'decision.clientInvolvedDetails.length', groups: ['decision-client-involved-details'])]
+    #[JMS\Type('string')]
+    #[JMS\Groups(['decision'])]
     private $clientInvolvedDetails;
 
     /**

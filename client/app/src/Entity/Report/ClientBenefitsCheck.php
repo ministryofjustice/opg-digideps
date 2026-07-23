@@ -7,7 +7,6 @@ namespace OPG\Digideps\Frontend\Entity\Report;
 use OPG\Digideps\Frontend\Entity\ClientBenefitsCheckInterface;
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -16,65 +15,61 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 {
     use HasReportTrait;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $id = null;
 
-    /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"report", "client-benefits-check"})
-     */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?\DateTime $created = null;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $whenLastCheckedEntitlement = null;
 
     /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?\DateTime $dateLastCheckedEntitlement = null;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $neverCheckedExplanation = null;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $doOthersReceiveMoneyOnClientsBehalf = '';
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $dontKnowMoneyExplanation = null;
 
     /**
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf>")
-     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
-     * @Assert\Valid(groups={"client-benefits-check"})
      */
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf>')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
+    #[Assert\Valid(groups: ['client-benefits-check'])]
     private ?ArrayCollection $typesOfMoneyReceivedOnClientsBehalf = null;
 
     public function getWhenLastCheckedEntitlement(): ?string

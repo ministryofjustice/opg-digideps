@@ -11,43 +11,31 @@ class Lifestyle
     use HasReportTrait;
 
     /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"lifestyle"})
      *
      * @var int
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['lifestyle'])]
     private $id;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"lifestyle"})
-     *
-     * @Assert\NotBlank(message="lifestyle.careAppointments.notBlank", groups={"lifestyle-care-appointments"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['lifestyle'])]
+    #[Assert\NotBlank(message: 'lifestyle.careAppointments.notBlank', groups: ['lifestyle-care-appointments'])]
     private $careAppointments;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"lifestyle"})
-     *
-     * @Assert\NotBlank(message="lifestyle.doesClientUndertakeSocialActivities.notBlank", groups={"lifestyle-undertake-social-activities"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['lifestyle'])]
+    #[Assert\NotBlank(message: 'lifestyle.doesClientUndertakeSocialActivities.notBlank', groups: ['lifestyle-undertake-social-activities'])]
     private $doesClientUndertakeSocialActivities;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"lifestyle"})
-     *
-     * @Assert\NotBlank(message="lifestyle.activityDetailsYes.notBlank", groups={"lifestyle-activity-details-yes"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['lifestyle'])]
+    #[Assert\NotBlank(message: 'lifestyle.activityDetailsYes.notBlank', groups: ['lifestyle-activity-details-yes'])]
     private $activityDetailsYes;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"lifestyle"})
-     *
-     * @Assert\NotBlank(message="lifestyle.activityDetailsNo.notBlank", groups={"lifestyle-activity-details-no"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['lifestyle'])]
+    #[Assert\NotBlank(message: 'lifestyle.activityDetailsNo.notBlank', groups: ['lifestyle-activity-details-no'])]
     private $activityDetailsNo;
 
     /**
@@ -79,7 +67,7 @@ class Lifestyle
     /**
      * @param mixed $careAppointments
      */
-    public function setCareAppointments($careAppointments)
+    public function setCareAppointments($careAppointments): void
     {
         $this->careAppointments = $careAppointments;
     }
@@ -95,7 +83,7 @@ class Lifestyle
     /**
      * @param mixed $doesClientUndertakeSocialActivities
      */
-    public function setDoesClientUndertakeSocialActivities($doesClientUndertakeSocialActivities)
+    public function setDoesClientUndertakeSocialActivities($doesClientUndertakeSocialActivities): void
     {
         $this->doesClientUndertakeSocialActivities = $doesClientUndertakeSocialActivities;
     }
@@ -103,7 +91,7 @@ class Lifestyle
     /**
      * @return bool
      */
-    public function keepOnlyRelevantLifestyleData()
+    public function keepOnlyRelevantLifestyleData(): bool
     {
         return true;
     }
@@ -119,7 +107,7 @@ class Lifestyle
     /**
      * @param mixed $activityDetailsYes
      */
-    public function setActivityDetailsYes($activityDetailsYes)
+    public function setActivityDetailsYes($activityDetailsYes): void
     {
         $this->activityDetailsYes = $activityDetailsYes;
     }
@@ -135,7 +123,7 @@ class Lifestyle
     /**
      * @param mixed $activityDetailsNo
      */
-    public function setActivityDetailsNo($activityDetailsNo)
+    public function setActivityDetailsNo($activityDetailsNo): void
     {
         $this->activityDetailsNo = $activityDetailsNo;
     }

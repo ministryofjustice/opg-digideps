@@ -19,287 +19,275 @@ class Client
     use ActiveAudit;
 
     /**
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"edit", "pa-edit", "client-id"})
      *
      * @var int
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['edit', 'pa-edit', 'client-id'])]
     private $id;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\NotBlank( message="client.firstname.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit", "pa-client"})
      *
-     * @Assert\Length(min=2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage", groups={"lay-deputy-client", "pa-client"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\NotBlank(message: 'client.firstname.notBlank', groups: ['lay-deputy-client', 'lay-deputy-client-edit', 'pa-client'])]
+    #[Assert\Length(min: 2, minMessage: 'client.firstname.minMessage', max: 50, maxMessage: 'client.firstname.maxMessage', groups: ['lay-deputy-client', 'pa-client'])]
     private $firstname;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\NotBlank( message="client.lastname.notBlank", groups={"lay-deputy-client", "verify-codeputy", "lay-deputy-client-edit", "pa-client"})
      *
-     * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage", groups={"lay-deputy-client", "verify-codeputy", "pa-client"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\NotBlank(message: 'client.lastname.notBlank', groups: ['lay-deputy-client', 'verify-codeputy', 'lay-deputy-client-edit', 'pa-client'])]
+    #[Assert\Length(min: 2, minMessage: 'client.lastname.minMessage', max: 50, maxMessage: 'client.lastname.maxMessage', groups: ['lay-deputy-client', 'verify-codeputy', 'pa-client'])]
     private $lastname;
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\User>")
-     *
      * @var User[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\User>')]
     private $users = [];
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Deputy")
-     *
      * @var Deputy|null
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Deputy')]
     private $deputy;
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Report>")
-     *
      * @var array
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Report>')]
     private array $reports = [];
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Report")
-     *
      * @var Report
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Report')]
     private $currentReport;
 
     /**
-     * @JMS\Exclude()
-     *
      * @var string
      */
+    #[JMS\Exclude]
     private $fullname;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"edit", "client-case-number"})
      *
-     * @Assert\NotBlank( message="client.caseNumber.notBlank", groups={"lay-deputy-client", "verify-codeputy"})
      *
-     * @Assert\Regex(
-     *       pattern="/^.{8}$|^.{10}$/",
-     *       message="client.caseNumber.exactMessage",
-     *       groups={"lay-deputy-client", "verify-codeputy"}
-     *   )
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'client-case-number'])]
+    #[Assert\NotBlank(message: 'client.caseNumber.notBlank', groups: ['lay-deputy-client', 'verify-codeputy'])]
+    #[Assert\Regex(pattern: '/^.{8}$|^.{10}$/', message: 'client.caseNumber.exactMessage', groups: ['lay-deputy-client', 'verify-codeputy'])]
     private $caseNumber;
 
     /**
-     * @JMS\Accessor(setter="setCourtDateWithoutTime")
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\Groups({"edit", "client-court-date", "checklist-information"})
      *
-     * @Assert\NotBlank( message="client.courtDate.notBlank", groups={"lay-deputy-client"})
      *
-     * @Assert\Type(type="DateTimeInterface", message="client.courtDate.message", groups={"lay-deputy-client"})
      *
-     * @Assert\LessThan("today", groups={"pa-client"}, message="client.courtDate.lessThan", groups={"lay-deputy-client"})
      *
      * @var \DateTime|null
      */
+    #[JMS\Accessor(setter: 'setCourtDateWithoutTime')]
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['edit', 'client-court-date', 'checklist-information'])]
+    #[Assert\NotBlank(message: 'client.courtDate.notBlank', groups: ['lay-deputy-client'])]
+    #[Assert\Type(type: 'DateTimeInterface', message: 'client.courtDate.message', groups: ['lay-deputy-client'])]
+    #[Assert\LessThan('today', groups: ['lay-deputy-client'], message: 'client.courtDate.lessThan')]
     private $courtDate;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\NotBlank( message="client.address.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
      *
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\NotBlank(message: 'client.address.notBlank', groups: ['lay-deputy-client', 'lay-deputy-client-edit'])]
+    #[Assert\Length(max: 200, maxMessage: 'client.address.maxMessage', groups: ['lay-deputy-client', 'pa-client'])]
     private $address;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\Length(max: 200, maxMessage: 'client.address.maxMessage', groups: ['lay-deputy-client', 'pa-client', 'lay-deputy-client-edit'])]
     private $address2;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\Length(max: 200, maxMessage: 'client.address.maxMessage', groups: ['lay-deputy-client', 'pa-client', 'lay-deputy-client-edit'])]
     private $address3;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\Length(max: 200, maxMessage: 'client.address.maxMessage', groups: ['lay-deputy-client', 'pa-client', 'lay-deputy-client-edit'])]
     private $address4;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\Length(max: 200, maxMessage: 'client.address.maxMessage', groups: ['lay-deputy-client', 'pa-client', 'lay-deputy-client-edit'])]
     private $address5;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\NotBlank( message="client.postcode.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
      *
-     * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\NotBlank(message: 'client.postcode.notBlank', groups: ['lay-deputy-client', 'lay-deputy-client-edit'])]
+    #[Assert\Length(max: 10, maxMessage: 'client.postcode.maxMessage', groups: ['lay-deputy-client', 'pa-client', 'lay-deputy-client-edit'])]
     private $postcode;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"edit"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit'])]
     private $country;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\Length(min: 10, max: 20, minMessage: 'common.genericPhone.minLength', maxMessage: 'common.genericPhone.maxLength', groups: ['lay-deputy-client', 'pa-client', 'lay-deputy-client-edit'])]
     private $phone;
 
     /**
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"pa-edit", "client-email"})
      *
-     * @Assert\Email( message="client.email.invalid", groups={"pa-client"})
      *
-     * @Assert\Length(max=60, maxMessage="client.email.maxLength", groups={"pa-client"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['pa-edit', 'client-email'])]
+    #[Assert\Email(message: 'client.email.invalid', groups: ['pa-client'])]
+    #[Assert\Length(max: 60, maxMessage: 'client.email.maxLength', groups: ['pa-client'])]
     private $email;
 
     /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\Groups({"pa-edit"})
      *
-     * @Assert\LessThan("today", groups={"pa-client"}, message="client.dateOfBirth.lessThan")
      *
      * @var \DateTime|null
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['pa-edit'])]
+    #[Assert\LessThan('today', groups: ['pa-client'], message: 'client.dateOfBirth.lessThan')]
     private $dateOfBirth;
 
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\Note>")
      *
-     * @JMS\Groups({"notes"})
      */
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Frontend\Entity\Note>')]
+    #[JMS\Groups(['notes'])]
     private $notes;
 
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\ClientContact>")
      *
-     * @JMS\Groups({"clientcontacts"})
      */
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Frontend\Entity\ClientContact>')]
+    #[JMS\Groups(['clientcontacts'])]
     private $clientContacts;
 
     /**
      * @var int
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"total-report-count"})
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['total-report-count'])]
     private $totalReportCount;
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Organisation")
-     *
      * @var Organisation
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Organisation')]
     private $organisation;
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
      */
+    #[JMS\Type('integer')]
     private $unsubmittedReportsCount;
 
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\Groups({"checklist-information"})
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['checklist-information'])]
     private $expectedReportStartDate;
 
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\Groups({"checklist-information"})
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['checklist-information'])]
     private $expectedReportEndDate;
 
     /**
      * @var \DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     private $archivedAt;
 
     public function __construct()
@@ -331,7 +319,7 @@ class Client
      *
      * @return bool
      */
-    public function hasUser(User $user)
+    public function hasUser(User $user): bool
     {
         foreach ($this->users ?: [] as $currentUser) {
             if (
@@ -371,9 +359,9 @@ class Client
     /**
      * @return array $reports
      */
-    public function getReportsSubmittedAtLeastOnce()
+    public function getReportsSubmittedAtLeastOnce(): array
     {
-        return array_filter($this->getReports() ?: [], function (Report $report) {
+        return array_filter($this->getReports() ?: [], function (Report $report): bool {
             return $report->getSubmitted() || $report->getUnSubmitDate();
         });
     }
@@ -411,7 +399,7 @@ class Client
      *
      * @return Client
      */
-    public function setReports($reports)
+    public function setReports(array $reports)
     {
         $this->reports = $reports;
 
@@ -461,7 +449,7 @@ class Client
         }
     }
 
-    public function hasReport()
+    public function hasReport(): bool
     {
         if (!empty($this->reports)) {
             return true;
@@ -477,7 +465,7 @@ class Client
         return $this->fullname;
     }
 
-    public function setCourtDateWithoutTime($courtDate = null)
+    public function setCourtDateWithoutTime($courtDate = null): void
     {
         $this->courtDate = ($courtDate instanceof \DateTime) ?
                 new \DateTime($courtDate->format('Y-m-d')) : null;
@@ -692,7 +680,7 @@ class Client
     /**
      * @return array
      */
-    public function getAddressNotEmptyParts()
+    public function getAddressNotEmptyParts(): array
     {
         return array_filter([
             $this->address,
@@ -784,7 +772,7 @@ class Client
     /**
      * @param ArrayCollection $notes
      */
-    public function setNotes($notes)
+    public function setNotes($notes): void
     {
         $this->notes = $notes;
     }
@@ -800,7 +788,7 @@ class Client
     /**
      * @param ArrayCollection $clientContacts
      */
-    public function setClientContacts($clientContacts)
+    public function setClientContacts($clientContacts): void
     {
         $this->clientContacts = $clientContacts;
     }
@@ -844,7 +832,7 @@ class Client
     /**
      * @param int $totalReportCount
      */
-    public function setTotalReportCount($totalReportCount)
+    public function setTotalReportCount($totalReportCount): void
     {
         $this->totalReportCount = $totalReportCount;
     }
@@ -944,7 +932,7 @@ class Client
         $this->organisation = $organisation;
     }
 
-    public function userBelongsToClientsOrganisation(User $user)
+    public function userBelongsToClientsOrganisation(User $user): bool
     {
         if ($this->getOrganisation() instanceof Organisation && $this->getOrganisation()->isActivated()) {
             foreach ($user->getOrganisations() as $organisation) {
@@ -998,7 +986,7 @@ class Client
     /**
      * @return array $coDeps an array of users sorted by firstname, or email if no firstname
      */
-    public function getCoDeputies()
+    public function getCoDeputies(): array
     {
         $coDeps = [];
         if (is_array($this->users) && count($this->users) > 0) {
