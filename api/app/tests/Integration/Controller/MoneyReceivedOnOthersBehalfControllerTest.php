@@ -43,7 +43,7 @@ class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
 
             $reportUrl = sprintf(
                 '/report/money-type/delete/%s',
-                $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId()
+                $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()?->getId()
             );
 
 

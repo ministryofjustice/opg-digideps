@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Mockery as m;
-use Mockery\MockInterface;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\ClientRepository;
@@ -15,17 +12,16 @@ use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\UserService;
 use OPG\Digideps\Backend\v2\DTO\InviteeDto;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Constraint\IsType;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-
-use function PHPUnit\Framework\assertInstanceOf;
-use function PHPUnit\Framework\isInstanceOf;
 
 final class UserServiceTest extends TestCase
 {
     private User $user;
-    private EntityManager&MockInterface $em;
-    private ClientRepository&MockInterface $clientRepository;
-    private UserRepository&MockInterface $userRepository;
+    private EntityManager&MockObject $em;
+    private ClientRepository&MockObject $clientRepository;
+    private UserRepository&MockObject $userRepository;
     private UserService $sut;
 
     public function setUp(): void
@@ -38,29 +34,13 @@ final class UserServiceTest extends TestCase
         $client->setCaseNumber('12345678');
         $client->setCourtDate(new \DateTime('2014-06-06'));
 
-        $this->em = m::mock(EntityManager::class);
-        $this->clientRepository = m::mock(ClientRepository::class);
-        $this->userRepository = m::mock(UserRepository::class);
+        $this->em = self::createMock(EntityManager::class);
+        $this->clientRepository = self::createMock(ClientRepository::class);
+        $this->userRepository = self::createMock(UserRepository::class);
 
-        $this->em->shouldReceive('getRepository')->andReturnUsing(
-            function ($arg) {
-                if ($arg !== User::class) {
-                    return null;
-                }
-
-                return m::mock(EntityRepository::class)->shouldReceive('findOneBy')
-                    ->with(['email' => 'test@tester.co.uk'])
-                    ->andReturn(null)
-                    ->getMock();
-            }
-        );
+        $this->em->method('getRepository')->with(Client::class)->willReturn($this->clientRepository);
 
         $this->sut = new UserService($this->em, $this->clientRepository, $this->userRepository);
-    }
-
-    public function tearDown(): void
-    {
-        m::close();
     }
 
     /**
@@ -69,25 +49,26 @@ final class UserServiceTest extends TestCase
     public static function setRoleForLoggedInUser(): array
     {
         return [
-            [User::ROLE_LAY_DEPUTY, User::CO_DEPUTY_INVITE, 100],
-            [User::ROLE_ADMIN, User::ADMIN_INVITE, null],
-            [User::ROLE_PROF_ADMIN, User::ORG_ADMIN_INVITE, null],
+            [User::ROLE_LAY_DEPUTY, User::CO_DEPUTY_INVITE, 100, 1],
+            [User::ROLE_ADMIN, User::ADMIN_INVITE, null, 0],
+            [User::ROLE_PROF_ADMIN, User::ORG_ADMIN_INVITE, null, 0],
         ];
     }
 
     #[DataProvider('setRoleForLoggedInUser')]
-    public function testRegistrationRoute(string $role, string $expectedRoute, ?int $clientId): void
+    public function testRegistrationRoute(string $role, string $expectedRoute, ?int $clientId, int $numSaveUserToClient): void
     {
         $loggedInUser = $this->user;
         $loggedInUser->setRoleName($role);
 
         $userToAdd = new User('', '', 'test@tester.co.uk');
 
-        $this->em->shouldReceive('persist');
-        $this->em->shouldReceive('flush');
-        $this->userRepository->shouldReceive('findOneBy')
-            ->with(['email' => 'test@tester.co.uk']);
-        $this->clientRepository->shouldReceive('saveUserToClient')->with($userToAdd, $clientId);
+        $this->em->expects(self::atLeastOnce())->method('persist');
+        $this->em->expects(self::atLeastOnce())->method('flush');
+        $this->userRepository->expects(self::atLeastOnce())->method('findOneBy')->with(['email' => 'test@tester.co.uk']);
+        $this->clientRepository->expects(self::exactly($numSaveUserToClient))
+            ->method('saveUserToClient')
+            ->with($userToAdd, $clientId);
 
         $this->sut->addUser($loggedInUser, $userToAdd, $clientId);
 
@@ -101,20 +82,21 @@ final class UserServiceTest extends TestCase
 
         $invitee = new InviteeDto('foo@bar.com', 'Karban', 'Steelcore');
 
-        $existingUser = m::mock(User::class);
-        $existingUser->shouldReceive('getRegistrationToken')->andReturn(null);
-        $existingUser->shouldReceive('recreateRegistrationToken');
-        $existingUser->shouldReceive('setActive')->with(true);
+        $existingUser = self::createMock(User::class);
+        $existingUser->method('getRegistrationToken')->willReturn(null);
+        $existingUser->expects(self::atLeastOnce())->method('recreateRegistrationToken');
+        $existingUser->expects(self::atLeastOnce())->method('setActive')->with(true);
 
-        $this->userRepository->shouldReceive('findOneBy')
+        $this->userRepository->expects(self::atLeastOnce())->method('findOneBy')
             ->with(['email' => 'foo@bar.com'])
-            ->andReturn($existingUser);
+            ->willReturn($existingUser);
 
-        $this->clientRepository->shouldReceive('saveUserToClient')
+        $this->clientRepository->expects(self::atLeastOnce())
+            ->method('saveUserToClient')
             ->with($existingUser, $clientId);
 
-        $this->em->shouldReceive('persist')->with($existingUser);
-        $this->em->shouldReceive('flush');
+        $this->em->expects(self::once())->method('persist')->with($existingUser);
+        $this->em->expects(self::atLeastOnce())->method('flush');
 
         $user = $this->sut->getOrAddUser($invitee, $this->user, 12345667, $clientId);
 
@@ -128,28 +110,34 @@ final class UserServiceTest extends TestCase
         $clientId = 1837478367;
         $invitee = new InviteeDto('foo@bar.com', 'Karban', 'Steelcore');
 
-        $existingUser = m::mock(User::class);
+        $existingUser = self::createMock(User::class);
+        $existingUser->method('getDeputyUid')->willReturn($deputyUid);
 
-        $this->userRepository->shouldReceive('findOneBy')
-            ->with(['email' => 'foo@bar.com'])
-            ->andReturn(null);
+        $this->userRepository->expects(self::atLeastOnce())
+            ->method('findOneBy')
+            ->with(new IsType(IsType::TYPE_ARRAY))
+            ->willReturnCallback(function (array $criteria) use ($deputyUid, $existingUser) {
+                if (
+                    ($criteria['deputyUid'] ?? null) === $deputyUid
+                    && ($criteria['active'] ?? null) === true
+                    && ($criteria['isPrimary'] ?? null) === true
+                ) {
+                    return $existingUser;
+                }
 
-        $this->userRepository->shouldReceive('findOneBy')
-            ->with([
-                'deputyUid' => $deputyUid,
-                'active' => true,
-                'isPrimary' => true,
-            ])
-            ->andReturn($existingUser);
+                // if user is searched for by anything other than the above, return null
+                return null;
+            });
 
-        $this->em->shouldReceive('persist')->with(isInstanceOf(User::class));
-        $this->em->shouldReceive('flush');
+        $this->em->expects(self::atLeastOnce())->method('persist')->with(self::isInstanceOf(User::class));
+        $this->em->expects(self::atLeastOnce())->method('flush');
 
-        $this->clientRepository->shouldReceive('saveUserToClient')
-            ->with(isInstanceOf(User::class), $clientId);
+        $this->clientRepository->expects(self::once())
+            ->method('saveUserToClient')
+            ->with(self::isInstanceOf(User::class), $clientId);
 
         $user = $this->sut->getOrAddUser($invitee, $this->user, $deputyUid, $clientId);
 
-        assertInstanceOf(User::class, $user);
+        self::assertEquals($deputyUid, $user->getDeputyUid());
     }
 }

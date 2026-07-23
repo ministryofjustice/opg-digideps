@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Entity\Report;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
+use Doctrine\Common\Collections\ArrayCollection;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
@@ -21,185 +20,166 @@ use OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyPreviousCost;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
-use Mockery\MockInterface;
-use Mockery as m;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
-final class ReportTest extends KernelTestCase
+final class ReportTest extends TestCase
 {
-    private MockInterface&Client $client;
-    private array $validReportCtorArgs;
-    private Report $report;
-    private MockInterface&Gift $gift1;
-    private MockInterface&Gift $gift2;
-    private MockInterface&Expense $expense1;
-    private MockInterface&Expense $expense2;
-    private EntityManagerInterface $em;
-
-    public function setUp(): void
-    {
-        $this->client = m::mock(Client::class, ['getUnsubmittedReports' => new ArrayCollection(), 'getSubmittedReports' => new ArrayCollection()]);
-        $this->validReportCtorArgs = [$this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
-        $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
-
-        $this->gift1 = m::mock(Gift::class, ['getAmount' => 1]);
-        $this->gift2 = m::mock(Gift::class, ['getAmount' => 10]);
-        $this->expense1 = m::mock(Expense::class, ['getAmount' => 2]);
-        $this->expense2 = m::mock(Expense::class, ['getAmount' => 20]);
-
-        $kernel = self::bootKernel();
-        $this->em = $kernel->getContainer()->get('doctrine')->getManager();
-    }
-
-    public function tearDown(): void
-    {
-        m::close();
-    }
-
     public function testDueDate(): void
     {
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
+        self::assertEquals('2019-01-21', $report->getDueDate()->format('Y-m-d'));
+    }
+
+    public function testConstructorClientAlreadyHasUnsubmittedReport(): void
+    {
+        // client already has an unsubmitted report
         $startDate = new \DateTime('2017-01-01');
         $endDate = new \DateTime('2018-12-31');
 
-        $report = new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate, false);
-        $this->assertEquals('2019-01-21', $report->getDueDate()->format('Y-m-d'));
-    }
+        $this->expectExceptionMessage('already has an unsubmitted report');
 
-    public static function constructorProvider(): array
-    {
-        return [
-            // start date, end date, submitted (true/false)
-            ['2017-06-23', '2018-06-22', [['2016-06-23', '2017-06-22', false]], 'unsubmitted report'],
-            // ['2017-06-23', '2018-06-24', [['2016-06-23', '2017-06-22', true]], 'cannot cover more than one year'],
-            ['2017-06-24', '2018-06-23', [['2016-06-23', '2017-06-22', true], ['2015-06-23', '2016-06-22', true]], 'new report is expected to start on'],
-        ];
-    }
-
-    #[DataProvider('constructorProvider')]
-    public function testConstructorExceptions(string $startDate, string $endDate, array $clientReports, string $expectedTextInException): void
-    {
         $client = new Client();
-        foreach ($clientReports as $rep) {
-            $report = new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime($rep[0]), new \DateTime($rep[1]))->setSubmitted($rep[2]);
-            $client->addReport($report);
-        }
+        $report1 = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate);
+        $client->addReport($report1);
 
-        $this->expectException(\RuntimeException::class);
+        // this throws the exception as the client already has an unsubmitted report
+        new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate);
+    }
 
-        new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime($startDate), new \DateTime($endDate));
+    public function testConstructorClientAlreadyHasReportCoveringPeriod(): void
+    {
+        // if the client already has a report and a new report is created within its reporting period,
+        // an exception is thrown
+        $startDate = new \DateTime('2017-01-01');
+        $endDate = new \DateTime('2018-12-31');
+        $badStartDate = $endDate->sub(new \DateInterval('P10D'));
+
+        $this->expectExceptionMessage('Incorrect start date');
+
+        $client = new Client();
+        $report1 = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate)
+            ->setSubmitted(true);
+        $client->addReport($report1);
+
+        // this throws the exception as the client already has a report whose reporting period overlaps the new report's
+        new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $badStartDate, $endDate);
     }
 
     public function testGetMoneyTotal(): void
     {
         // 102
-        $this->assertEquals(0, $this->report->getMoneyInTotal());
-        $this->assertEquals(0, $this->report->getMoneyOutTotal());
-        $this->report->setMoneyTransactions(new ArrayCollection([
-            new MoneyTransaction($this->report, 'account-interest')->setAmount(1),
-            new MoneyTransaction($this->report, 'dividends')->setAmount(2),
-            new MoneyTransaction($this->report, 'broadband')->setAmount(3),
-            new MoneyTransaction($this->report, 'food')->setAmount(4),
+        $report1 = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
+        self::assertEquals(0, $report1->getMoneyInTotal());
+        self::assertEquals(0, $report1->getMoneyOutTotal());
+        $report1->setMoneyTransactions(new ArrayCollection([
+            new MoneyTransaction($report1, 'account-interest')->setAmount(1),
+            new MoneyTransaction($report1, 'dividends')->setAmount(2),
+            new MoneyTransaction($report1, 'broadband')->setAmount(3),
+            new MoneyTransaction($report1, 'food')->setAmount(4),
         ]));
-        $this->assertEquals(1 + 2, $this->report->getMoneyInTotal());
-        $this->assertEquals(3 + 4, $this->report->getMoneyOutTotal());
+        self::assertEquals(1 + 2, $report1->getMoneyInTotal());
+        self::assertEquals(3 + 4, $report1->getMoneyOutTotal());
 
         // 103
-        $this->report->setType(Report::LAY_PFA_LOW_ASSETS_TYPE);
-        $this->assertEquals(0, $this->report->getMoneyInTotal());
-        $this->assertEquals(0, $this->report->getMoneyOutTotal());
-        $this->report->getMoneyTransactionsShort()->clear();
-        $this->report->getMoneyTransactionsShort()->add(new MoneyTransactionShortIn($this->report)->setAmount(10));
-        $this->report->getMoneyTransactionsShort()->add(new MoneyTransactionShortIn($this->report)->setAmount(20));
-        $this->report->getMoneyTransactionsShort()->add(new MoneyTransactionShortOut($this->report)->setAmount(30));
-        $this->report->getMoneyTransactionsShort()->add(new MoneyTransactionShortOut($this->report)->setAmount(40));
-        $this->assertEquals(10 + 20, $this->report->getMoneyInTotal());
-        $this->assertEquals(30 + 40, $this->report->getMoneyOutTotal());
+        $report2 = new Report(new Client(), Report::LAY_PFA_LOW_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
+        self::assertEquals(0, $report2->getMoneyInTotal());
+        self::assertEquals(0, $report2->getMoneyOutTotal());
+        $report2->getMoneyTransactionsShort()->clear();
+        $report2->getMoneyTransactionsShort()->add(new MoneyTransactionShortIn($report2)->setAmount(10));
+        $report2->getMoneyTransactionsShort()->add(new MoneyTransactionShortIn($report2)->setAmount(20));
+        $report2->getMoneyTransactionsShort()->add(new MoneyTransactionShortOut($report2)->setAmount(30));
+        $report2->getMoneyTransactionsShort()->add(new MoneyTransactionShortOut($report2)->setAmount(40));
+        self::assertEquals(10 + 20, $report2->getMoneyInTotal());
+        self::assertEquals(30 + 40, $report2->getMoneyOutTotal());
     }
 
     public function testGetAccountsOpeningBalanceTotal(): void
     {
-        $this->assertEquals(0, $this->report->getAccountsOpeningBalanceTotal());
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
+        self::assertEquals(0, $report->getAccountsOpeningBalanceTotal());
 
-        $this->report->addAccount(new BankAccount($this->report)->setBank('bank1')->setOpeningBalance(1));
-        $this->report->addAccount(new BankAccount($this->report)->setBank('bank2')->setOpeningBalance(3));
-        $this->report->addAccount(new BankAccount($this->report)->setBank('bank3')->setOpeningBalance(0));
+        $report->addAccount(new BankAccount($report)->setBank('bank1')->setOpeningBalance('1'));
+        $report->addAccount(new BankAccount($report)->setBank('bank2')->setOpeningBalance('3'));
+        $report->addAccount(new BankAccount($report)->setBank('bank3')->setOpeningBalance('0'));
 
-        $this->assertEquals(4, $this->report->getAccountsOpeningBalanceTotal());
+        self::assertEquals(4, $report->getAccountsOpeningBalanceTotal());
     }
 
     public function testGetAccountsClosingBalanceTotal(): void
     {
-        $this->assertEquals(0, $this->report->getAccountsClosingBalanceTotal());
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
 
-        $this->report->addAccount(new BankAccount($this->report)->setBank('bank1')->setClosingBalance(1));
+        self::assertEquals(0, $report->getAccountsClosingBalanceTotal());
 
-        $this->assertEquals(1, $this->report->getAccountsClosingBalanceTotal());
+        $report->addAccount(new BankAccount($report)->setBank('bank1')->setClosingBalance('1'));
 
-        $this->report->addAccount(new BankAccount($this->report)->setBank('bank2')->setClosingBalance(3));
-        $this->report->addAccount(new BankAccount($this->report)->setBank('bank3')->setClosingBalance(0));
+        self::assertEquals(1, $report->getAccountsClosingBalanceTotal());
 
-        $this->assertEquals(4, $this->report->getAccountsClosingBalanceTotal());
+        $report->addAccount(new BankAccount($report)->setBank('bank2')->setClosingBalance('3'));
+        $report->addAccount(new BankAccount($report)->setBank('bank3')->setClosingBalance('0'));
+
+        self::assertEquals(4, $report->getAccountsClosingBalanceTotal());
     }
 
     public function testGetCalculatedBalance(): void
     {
-        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
-        $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
+        $report = new Report(new Client(), Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
+        self::assertFalse($report->has106Flag());
 
-        $this->report->shouldReceive('has106Flag')->andReturn(false);
+        self::assertEquals(0, $report->getCalculatedBalance());
 
-        $this->assertEquals(0, $this->report->getCalculatedBalance());
+        $report->addAccount(new BankAccount($report)->setBank('bank1')->setOpeningBalance('1'));
 
-        $this->report->addAccount(new BankAccount($this->report)->setBank('bank1')->setOpeningBalance(1));
+        self::assertEquals(1, $report->getCalculatedBalance());
 
-        $this->assertEquals(1, $this->report->getCalculatedBalance());
+        $report->addMoneyTransaction(new MoneyTransaction($report, 'account-interest')->setAmount(20)); // in
+        $report->addMoneyTransaction(new MoneyTransaction($report, 'account-interest')->setAmount(20)); // in
+        $report->addMoneyTransaction(new MoneyTransaction($report, 'rent')->setAmount(15)); // out
+        $report->addMoneyTransaction(new MoneyTransaction($report, 'rent')->setAmount(15)); // out
 
-        $this->report->addMoneyTransaction(new MoneyTransaction($this->report, 'account-interest')->setAmount(20)); // in
-        $this->report->addMoneyTransaction(new MoneyTransaction($this->report, 'account-interest')->setAmount(20)); // in
-        $this->report->addMoneyTransaction(new MoneyTransaction($this->report, 'rent')->setAmount(15)); // out
-        $this->report->addMoneyTransaction(new MoneyTransaction($this->report, 'rent')->setAmount(15)); // out
-        $this->report->setGifts(new ArrayCollection([$this->gift1, $this->gift2]));
-        $this->report->setExpenses(new ArrayCollection([$this->expense1, $this->expense2]));
+        $gift1 = new Gift($report, 'present')->setAmount('2');
+        $gift2 = new Gift($report, 'bonus')->setAmount('20');
+        $report->setGifts(new ArrayCollection([$gift1, $gift2]));
 
-        $calculatedBalance = 1 + 20 + 20 - 15 - 15 - 11 - 22;
+        $expense1 = new Expense($report, 'car fix')->setAmount('1');
+        $expense2 = new Expense($report, 'stationery')->setAmount('10');
+        $report->setExpenses(new ArrayCollection([$expense1, $expense2]));
 
-        $this->assertEquals($calculatedBalance, $this->report->getCalculatedBalance());
+        $calculatedBalance = 1 + 20 + 20 - 15 - 15 - 22 - 11;
+
+        self::assertEquals($calculatedBalance, $report->getCalculatedBalance());
     }
 
     public function testGetCalculatedBalanceProfDeputy(): void
     {
-        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
-        $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
+        $report = new Report(new Client(), Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
 
-        $this->report->shouldReceive('has106Flag')->andReturn(false);
+        self::assertEquals(0, $report->getCalculatedBalance());
 
-        $this->assertEquals(0, $this->report->getCalculatedBalance());
-
-        $this->report->setProfDeputyCostsHowCharged('fixed');
-        $this->report->setProfDeputyCostsHasPrevious('yes');
-        $this->report->setProfDeputyPreviousCosts(new ArrayCollection([
-            new ProfDeputyPreviousCost($this->report, 1),
-            new ProfDeputyPreviousCost($this->report, 1),
+        $report->setProfDeputyCostsHowCharged('fixed');
+        $report->setProfDeputyCostsHasPrevious('yes');
+        $report->setProfDeputyPreviousCosts(new ArrayCollection([
+            new ProfDeputyPreviousCost($report, 1),
+            new ProfDeputyPreviousCost($report, 1),
         ]));
-        $this->report->setProfDeputyCostsHasInterim('no');
-        $this->report->setProfDeputyFixedCost(3);
-        $this->report->setProfDeputyOtherCosts(new ArrayCollection([
-            new ProfDeputyOtherCost($this->report, 'id1', false, '10'),
-            new ProfDeputyOtherCost($this->report, 'id2', false, '10'),
+        $report->setProfDeputyCostsHasInterim('no');
+        $report->setProfDeputyFixedCost(3);
+        $report->setProfDeputyOtherCosts(new ArrayCollection([
+            new ProfDeputyOtherCost($report, 'id1', false, '10'),
+            new ProfDeputyOtherCost($report, 'id2', false, '10'),
         ]));
 
-        $this->assertEquals(-1 - 1 - 3 - 10 - 10, $this->report->getCalculatedBalance());
+        self::assertEquals(-1 - 1 - 3 - 10 - 10, $report->getCalculatedBalance());
 
         // change interim yes->no
-        $this->report->setProfDeputyCostsHasInterim('yes');
-        $this->report->setProfDeputyInterimCosts(new ArrayCollection([
-            new ProfDeputyInterimCost($this->report, new \DateTime('now'), '11'),
-            new ProfDeputyInterimCost($this->report, new \DateTime('now'), '11'),
+        $report->setProfDeputyCostsHasInterim('yes');
+        $report->setProfDeputyInterimCosts(new ArrayCollection([
+            new ProfDeputyInterimCost($report, new \DateTime('now'), '11'),
+            new ProfDeputyInterimCost($report, new \DateTime('now'), '11'),
         ]));
-        $this->assertEquals(-1 - 1 - 11 - 11 - 10 - 10, $this->report->getCalculatedBalance());
+
+        self::assertEquals(-1 - 1 - 11 - 11 - 10 - 10, $report->getCalculatedBalance());
     }
 
     /**
@@ -208,64 +188,73 @@ final class ReportTest extends KernelTestCase
      */
     public function testGetTotalsOffsetAndMatch(): void
     {
-        $this->report->shouldReceive('has106Flag')->andReturn(false);
+        $report = new Report(new Client(), Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
 
-        $this->assertEquals(0, $this->report->getTotalsOffset());
-        $this->assertEquals(true, $this->report->getTotalsMatch());
+        self::assertEquals(0, $report->getTotalsOffset());
+        self::assertTrue($report->getTotalsMatch());
 
         // account opened with 1000, closed with 2000. 1500 money in, 400 out. balance is 100
-        $this->report->addAccount(new BankAccount($this->report)->setBank('bank1')->setOpeningBalance(1000)->setClosingBalance(2000));
-        $this->report->addMoneyTransaction(new MoneyTransaction($this->report, 'account-interest')->setAmount(1500)); // in
-        $this->report->addMoneyTransaction(new MoneyTransaction($this->report, 'rent')->setAmount(400)); // out
-        $this->report->setGifts(new ArrayCollection([$this->gift1, $this->gift2]));
-        $this->report->setExpenses(new ArrayCollection([$this->expense1, $this->expense2]));
+        $report->addAccount(new BankAccount($report)->setBank('bank1')->setOpeningBalance('1000')->setClosingBalance('2000'));
+        $report->addMoneyTransaction(new MoneyTransaction($report, 'account-interest')->setAmount(1500)); // in
+        $report->addMoneyTransaction(new MoneyTransaction($report, 'rent')->setAmount(400)); // out
 
-        $exepectedTotalOffset = 67; // 1000 - 2000 + 1500 - 400 - 11 - 22
-        $this->assertEquals($exepectedTotalOffset, $this->report->getTotalsOffset());
-        $this->assertEquals(false, $this->report->getTotalsMatch());
+        $gift1 = new Gift($report, 'present')->setAmount('2');
+        $gift2 = new Gift($report, 'bonus')->setAmount('20');
+        $report->setGifts(new ArrayCollection([$gift1, $gift2]));
+
+        $expense1 = new Expense($report, 'car')->setAmount('1');
+        $expense2 = new Expense($report, 'stationery')->setAmount('10');
+        $report->setExpenses(new ArrayCollection([$expense1, $expense2]));
+
+        $expectedTotalOffset = 67; // 1000 - 2000 + 1500 - 400 - 11 - 22
+
+        self::assertEquals($expectedTotalOffset, $report->getTotalsOffset());
+        self::assertFalse($report->getTotalsMatch());
 
         // add missing transaction that fix the balance
-        $this->report->addMoneyTransaction(new MoneyTransaction($this->report, 'rent')->setAmount(67)); // in
+        $report->addMoneyTransaction(new MoneyTransaction($report, 'rent')->setAmount(67)); // in
 
-        $this->assertEquals(0, $this->report->getTotalsOffset());
-        $this->assertEquals(true, $this->report->getTotalsMatch());
+        self::assertEquals(0, $report->getTotalsOffset());
+        self::assertTrue($report->getTotalsMatch());
     }
 
     public function testGetFeesTotal(): void
     {
-        $fee1 = m::mock(Fee::class, ['getAmount' => 2]);
-        $reportWith = function ($fees) {
-            return m::mock(Report::class . '[getFees]', $this->validReportCtorArgs)
-                ->shouldReceive('getFees')->andReturn(new ArrayCollection($fees))
-                ->getMock();
-        };
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
+        self::assertEquals(0, $report->getFeesTotal());
 
-        $this->assertEquals(0, $reportWith([])->getFeesTotal());
-        $this->assertEquals(2 + 2, $reportWith([$fee1, $fee1])->getFeesTotal());
+        $fee1 = new Fee($report, 'annual-management-fee')->setAmount('2');
+        $report->addFee($fee1);
+
+        $fee2 = new Fee($report, 'travel-costs')->setAmount('4');
+        $report->addFee($fee2);
+
+        self::assertEquals(2.0 + 4.0, $report->getFeesTotal());
     }
 
     public function testGetExpensesTotal(): void
     {
-        $exp1 = m::mock(Expense::class, ['getAmount' => 1]);
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
+        self::assertEquals(0, $report->getExpensesTotal());
 
-        $reportWith = function ($expenses) {
-            return m::mock(Report::class . '[getExpenses]', $this->validReportCtorArgs)
-                ->shouldReceive('getExpenses')->andReturn(new ArrayCollection($expenses))
-                ->getMock();
-        };
+        $expense1 = new Expense($report, 'car')->setAmount('1');
+        $report->addExpense($expense1);
 
-        $this->assertEquals(0, $reportWith([])->getExpensesTotal());
-        $this->assertEquals(1 + 1, $reportWith([$exp1, $exp1])->getExpensesTotal());
+        $expense2 = new Expense($report, 'garden')->setAmount('2');
+        $report->addExpense($expense2);
+
+        self::assertEquals(1.0 + 2.0, $report->getExpensesTotal());
     }
 
     public function testGetAssetsTotalValue(): void
     {
-        $this->assertEquals(0, $this->report->getAssetsTotalValue());
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
+        self::assertEquals(0, $report->getAssetsTotalValue());
 
-        $this->report->addAsset(m::mock(AssetOther::class, ['getValueTotal' => 1]));
-        $this->report->addAsset(m::mock(AssetProperty::class, ['getValueTotal' => 1]));
+        $report->addAsset(new AssetOther($report)->setValue('1'));
+        $report->addAsset(new AssetProperty($report)->setValue('2'));
 
-        $this->assertEquals(2, $this->report->getAssetsTotalValue());
+        self::assertEquals(3, $report->getAssetsTotalValue());
     }
 
     public static function sectionsSettingsProvider(): array
@@ -283,30 +272,34 @@ final class ReportTest extends KernelTestCase
     #[DataProvider('sectionsSettingsProvider')]
     public function testAvailableSectionsAndHasSection(string $type, array $expectedSections, array $unExpectedSections): void
     {
-        $this->report = new Report($this->client, $type, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'))
+        $report = new Report(new Client(), $type, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'))
             ->setBenefitsSectionReleaseDate(new \DateTime('2016-01-01'));
 
         foreach ($expectedSections as $section) {
-            $this->assertContains($section, $this->report->getAvailableSections());
-            $this->assertTrue($this->report->hasSection($section));
+            $this->assertContains($section, $report->getAvailableSections());
+            $this->assertTrue($report->hasSection($section));
         }
         foreach ($unExpectedSections as $section) {
-            $this->assertNotContains($section, $this->report->getAvailableSections(), "$type should NOT have $section section ");
-            $this->assertFalse($this->report->hasSection($section));
+            $this->assertNotContains($section, $report->getAvailableSections(), "$type should NOT have $section section ");
+            $this->assertFalse($report->hasSection($section));
         }
     }
 
     public function testGetPreviousReportData(): void
     {
-        $mockClient = m::mock(Client::class);
-        $mockClient->shouldReceive('getUnsubmittedReports')->andReturn(new ArrayCollection());
-        $mockClient->shouldReceive('getSubmittedReports')->andReturn(new ArrayCollection());
+        $now = new \DateTime();
+        $client = new Client();
 
-        $reportCurrent = m::mock(Report::class)->makePartial();
-        $reportCurrent->shouldReceive('getId')->andReturn(10);
-        $reportCurrent->shouldReceive('getClient')->andReturn($mockClient);
+        $reportTwoYearsAgo = new Report($client, Report::PROF_COMBINED_LOW_ASSETS_TYPE, $now, $now);
+        $reportTwoYearsAgo->setId(8);
 
-        $bankAccount0 = new BankAccount($this->createStub(Report::class));
+        $reportLastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $now, $now);
+        $reportLastYear->setId(9);
+
+        $reportLatest = new Report($client, Report::LAY_PFA_LOW_ASSETS_TYPE, $now, $now);
+        $reportLatest->setId(10);
+
+        $bankAccount0 = new BankAccount($reportTwoYearsAgo);
         $bankAccount0->setId(1);
         $bankAccount0->setBank('bank0');
         $bankAccount0->setAccountNumber('1111');
@@ -314,7 +307,7 @@ final class ReportTest extends KernelTestCase
         $bankAccount0->setOpeningBalance('600');
         $bankAccount0->setClosingBalance('600');
 
-        $bankAccount1 = new BankAccount($this->createStub(Report::class));
+        $bankAccount1 = new BankAccount($reportLastYear);
         $bankAccount1->setId(2);
         $bankAccount1->setBank('bank1');
         $bankAccount1->setAccountNumber('2222');
@@ -322,7 +315,7 @@ final class ReportTest extends KernelTestCase
         $bankAccount1->setOpeningBalance('200');
         $bankAccount1->setClosingBalance('300');
 
-        $bankAccount2 = new BankAccount($this->createStub(Report::class));
+        $bankAccount2 = new BankAccount($reportLastYear);
         $bankAccount2->setId(3);
         $bankAccount2->setBank('bank2');
         $bankAccount2->setAccountNumber('3333');
@@ -330,68 +323,58 @@ final class ReportTest extends KernelTestCase
         $bankAccount2->setOpeningBalance('700');
         $bankAccount2->setClosingBalance('500');
 
-        $mockReport1 = m::mock(Report::class)->makePartial();
-        $mockReport1->shouldReceive('getId')->andReturn(9);
-        $mockReport1->shouldReceive('getClient')->andReturn($mockClient);
-        $mockReport1->shouldReceive('getType')->andReturn('102');
-        $mockReport1->shouldReceive('getBankAccounts')->andReturn(new ArrayCollection([$bankAccount1, $bankAccount2]));
+        $client->addReport($reportTwoYearsAgo);
+        $client->addReport($reportLastYear);
+        $client->addReport($reportLatest);
 
-        $mockReport2 = m::mock(Report::class)->makePartial();
-        $mockReport2->shouldReceive('getId')->andReturn(8);
-        $mockReport2->shouldReceive('getClient')->andReturn($mockClient);
-        $mockReport2->shouldReceive('getBankAccounts')->andReturn(new ArrayCollection([$bankAccount0]));
-        $mockReport2->shouldReceive('getType')->andReturn('103-4-5');
+        // assert empty as no report prior to the first report, completed two years ago
+        $this->assertEmpty($reportTwoYearsAgo->getPreviousReportData());
 
-        $clientReports = new ArrayCollection([$reportCurrent, $mockReport1, $mockReport2]);
-        $mockClient->shouldReceive('getReports')->andReturn($clientReports);
+        // this should be the report from two years ago
+        $report1PreviousData = $reportLastYear->getPreviousReportData();
 
-        // assert empty as no previous reports set yet
-        $this->assertEmpty($mockReport2->getPreviousReportData());
-
-        // assert report 1 contains NDR data
-        $report1PreviousData = $mockReport1->getPreviousReportData();
         $this->assertArrayHasKey('financial-summary', $report1PreviousData);
         $this->assertArrayHasKey('report-summary', $report1PreviousData);
-        $this->assertEquals(
-            $report1PreviousData['report-summary']['type'],
-            '103-4-5'
+        self::assertEquals(
+            Report::PROF_COMBINED_LOW_ASSETS_TYPE,
+            $report1PreviousData['report-summary']['type']
         );
 
         $this->assertCount(1, $report1PreviousData['financial-summary']['accounts']);
         $this->assertArrayHasKey('opening-balance-total', $report1PreviousData['financial-summary']);
         $this->assertArrayHasKey('closing-balance-total', $report1PreviousData['financial-summary']);
-        $this->assertEquals(
+        self::assertEquals(
             $report1PreviousData['financial-summary']['opening-balance-total'],
             $report1PreviousData['financial-summary']['closing-balance-total']
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             'bank0',
             $report1PreviousData['financial-summary']['accounts'][$bankAccount0->getId()]['bank']
         );
         $this->assertArrayHasKey('nameOneLine', $report1PreviousData['financial-summary']['accounts'][$bankAccount0->getId()]);
-        $this->assertEquals($report1PreviousData['financial-summary']['closing-balance-total'], $bankAccount0->getClosingBalance());
+        self::assertEquals($report1PreviousData['financial-summary']['closing-balance-total'], $bankAccount0->getClosingBalance());
 
         // assert current report contains report1 data
-        $currentReportPreviousData = $reportCurrent->getPreviousReportData();
+        $currentReportPreviousData = $reportLatest->getPreviousReportData();
         $this->assertArrayHasKey('financial-summary', $currentReportPreviousData);
         $this->assertArrayHasKey('report-summary', $report1PreviousData);
 
         $this->assertCount(2, $currentReportPreviousData['financial-summary']['accounts']);
-        $this->assertEquals(
+        self::assertEquals(
             'bank1',
             $currentReportPreviousData['financial-summary']['accounts'][$bankAccount1->getId()]['bank']
         );
-        $this->assertEquals(
+        self::assertEquals(
             'bank2',
             $currentReportPreviousData['financial-summary']['accounts'][$bankAccount2->getId()]['bank']
         );
-        $this->assertEquals(
-            $currentReportPreviousData['report-summary']['type'],
-            '102'
+        self::assertEquals(
+            '102',
+            $currentReportPreviousData['report-summary']['type']
         );
         $this->assertArrayHasKey('nameOneLine', $currentReportPreviousData['financial-summary']['accounts'][$bankAccount1->getId()]);
-        $this->assertEquals(
+        self::assertEquals(
             $currentReportPreviousData['financial-summary']['closing-balance-total'],
             (float)$bankAccount1->getClosingBalance() + (float)$bankAccount2->getClosingBalance()
         );
@@ -426,24 +409,24 @@ final class ReportTest extends KernelTestCase
     #[DataProvider('reportTypeTranslationKeyProvider')]
     public function testGetReportTitle(string $reportType, string $expected): void
     {
-        $this->report->setType($reportType);
-
-        $this->assertEquals($expected, $this->report->getReportTitle());
+        $report = new Report(new Client(), $reportType, new \DateTime(), new \DateTime());
+        self::assertEquals($expected, $report->getReportTitle());
     }
 
     public function testInvalidAgreedBehalfOption(): void
     {
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
         $this->expectException(\InvalidArgumentException::class);
-        $this->report->setAgreedBehalfDeputy('BAD_VALUE');
+        $report->setAgreedBehalfDeputy('BAD_VALUE');
     }
 
     public function testValidAgreedBehalfOptions(): void
     {
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
         $values = ['not_deputy', 'only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
         foreach ($values as $value) {
-            $this->report->setAgreedBehalfDeputy($value);
-
-            $this->assertEquals($this->report->getAgreedBehalfDeputy(), $value);
+            $report->setAgreedBehalfDeputy($value);
+            self::assertEquals($report->getAgreedBehalfDeputy(), $value);
         }
     }
 
@@ -490,7 +473,7 @@ final class ReportTest extends KernelTestCase
         $startDate = $startDate->modify('-1 year');
 
         $report = new Report($client, $type, $startDate, $endDate);
-        $this->assertEquals($expectedResult, $report->isLayReport());
+        self::assertEquals($expectedResult, $report->isLayReport());
     }
 
     #[DataProvider('reportTypesWithEndDateProvider')]
@@ -505,24 +488,20 @@ final class ReportTest extends KernelTestCase
 
         $report->updateDueDateBasedOnEndDate();
 
-        $this->assertEquals($expectedDueDate, $report->getDueDate()->format('Y-m-d'));
-        $this->assertEquals($endDate, $report->getEndDate());
-        $this->assertEquals($startDate, $report->getStartDate());
+        self::assertEquals($expectedDueDate, $report->getDueDate()->format('Y-m-d'));
+        self::assertEquals($endDate, $report->getEndDate());
+        self::assertEquals($startDate, $report->getStartDate());
     }
 
-
     #[DataProvider('benefitsCheckSectionRequiredProvider')]
-    #[Test]
-    public function requiresBenefitsCheckSection(
+    public function testRequiresBenefitsCheckSection(
         \DateTime $featureFlagDate,
         \DateTime $dueDate,
         ?ClientBenefitsCheck $clientBenefitSection,
         ?\DateTime $unsubmitDate,
         bool $expectedResult
     ): void {
-        $reportTestHelper = ReportTestHelper::create();
-
-        $report = $reportTestHelper->generateReport($this->em)
+        $report = new Report(new Client(), Report::LAY_PFA_LOW_ASSETS_TYPE, new \DateTime(), new \DateTime(), false)
             ->setDueDate($dueDate)
             ->setClientBenefitsCheck($clientBenefitSection)
             ->setUnSubmitDate($unsubmitDate)

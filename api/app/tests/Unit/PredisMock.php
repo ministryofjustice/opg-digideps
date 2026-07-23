@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\OPG\Digideps\Backend\Unit\Service;
+namespace Tests\OPG\Digideps\Backend\Unit;
 
 use Predis\Client;
 

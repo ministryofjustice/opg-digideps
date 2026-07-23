@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\TestHelpers;
 
-use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Organisation;

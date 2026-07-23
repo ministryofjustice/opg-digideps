@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\DataProvider;
+use Doctrine\ORM\EntityManager;
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Factory\OrganisationFactory;
 use OPG\Digideps\Backend\Repository\OrganisationRepository;
@@ -13,51 +12,36 @@ use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\RestHandler\OrganisationCreationException;
 use OPG\Digideps\Backend\Service\RestHandler\OrganisationRestHandler;
 use OPG\Digideps\Backend\Service\RestHandler\OrganisationUpdateException;
-use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class OrganisationRestHandlerTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @var ObjectProphecy<EntityManager>
-     */
-    private ObjectProphecy $em;
-    /**
-     * @var ObjectProphecy<ValidatorInterface> $validator
-     */
-    private ObjectProphecy $validator;
-    /**
-     * @var ObjectProphecy<OrganisationRepository> $orgRepository
-     */
-    private ObjectProphecy $orgRepository;
-    /**
-     * @var ObjectProphecy<OrganisationFactory> $orgFactory
-     */
-    private ObjectProphecy $orgFactory;
+    private EntityManager&MockObject $em;
+    private ValidatorInterface&MockObject $validator;
+    private OrganisationRepository&MockObject $orgRepository;
+    private OrganisationFactory&MockObject $orgFactory;
     private OrganisationRestHandler $sut;
 
     public function setUp(): void
     {
-        $this->em = self::prophesize(EntityManager::class);
-        $this->validator = self::prophesize(ValidatorInterface::class);
-        $this->orgRepository = self::prophesize(OrganisationRepository::class);
-        $userRepository = self::prophesize(UserRepository::class);
-        $this->orgFactory = self::prophesize(OrganisationFactory::class);
+        $this->em = self::createMock(EntityManager::class);
+        $this->validator = self::createMock(ValidatorInterface::class);
+        $this->orgRepository = self::createMock(OrganisationRepository::class);
+        $userRepository = self::createMock(UserRepository::class);
+        $this->orgFactory = self::createMock(OrganisationFactory::class);
         $sharedDomains = ['gmail.com'];
         $this->sut = new OrganisationRestHandler(
-            $this->em->reveal(),
-            $this->validator->reveal(),
-            $this->orgRepository->reveal(),
-            $userRepository->reveal(),
-            $this->orgFactory->reveal(),
+            $this->em,
+            $this->validator,
+            $this->orgRepository,
+            $userRepository,
+            $this->orgFactory,
             $sharedDomains
         );
     }
@@ -65,12 +49,15 @@ final class OrganisationRestHandlerTest extends TestCase
     #[Test]
     public function createValidOrgDetails(): void
     {
-        $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
-        $this->validator->validate(Argument::any())->willReturn(new ConstraintViolationList());
-        $this->orgFactory->createFromEmailIdentifier(Argument::any(), Argument::any(), Argument::any())->willReturn(new Organisation('', ''));
+        $this->orgRepository->expects(self::once())->method('findOneBy')->willReturn(null);
 
-        $this->em->persist(Argument::type(Organisation::class))->shouldBeCalled();
-        $this->em->flush()->shouldBeCalled();
+        $this->validator->expects(self::once())->method('validate')->willReturn(new ConstraintViolationList());
+
+        $this->orgFactory->expects(self::once())->method('createFromEmailIdentifier')->willReturn(new Organisation('foo', 'example.org'));
+
+        $this->em->expects(self::once())->method('persist')->with(self::isInstanceOf(Organisation::class));
+
+        $this->em->expects(self::once())->method('flush');
 
         self::assertInstanceOf(
             Organisation::class,
@@ -104,7 +91,7 @@ final class OrganisationRestHandlerTest extends TestCase
     #[Test]
     public function createOrgAlreadyExists(): void
     {
-        $this->orgRepository->findOneBy(Argument::any())->willReturn(new Organisation('ABC', 'gmail.com', true));
+        $this->orgRepository->expects(self::once())->method('findOneBy')->willReturn(new Organisation('ABC', 'gmail.com', true));
 
         self::expectException(OrganisationCreationException::class);
 
@@ -114,7 +101,7 @@ final class OrganisationRestHandlerTest extends TestCase
     #[Test]
     public function createEmailIdentifierInSharedDomains(): void
     {
-        $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
+        $this->orgRepository->expects(self::once())->method('findOneBy')->willReturn(null);
 
         self::expectException(OrganisationCreationException::class);
 
@@ -124,11 +111,15 @@ final class OrganisationRestHandlerTest extends TestCase
     #[Test]
     public function createOrgValidationFails(): void
     {
-        $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
-        $this->validator->validate(Argument::any())->willReturn(new ConstraintViolationList([
-            new ConstraintViolation('an error', null, [], null, null, null)
-        ]));
-        $this->orgFactory->createFromEmailIdentifier(Argument::any(), Argument::any(), Argument::any())->willReturn(new Organisation('', ''));
+        $this->orgRepository->expects(self::once())->method('findOneBy')->willReturn(null);
+
+        $this->validator->expects(self::once())
+            ->method('validate')
+            ->willReturn(new ConstraintViolationList([
+                new ConstraintViolation('an error', null, [], null, null, null)
+            ]));
+
+        $this->orgFactory->expects(self::once())->method('createFromEmailIdentifier')->willReturn(new Organisation('bar', 'example.org'));
 
         self::expectException(OrganisationCreationException::class);
 
@@ -140,12 +131,14 @@ final class OrganisationRestHandlerTest extends TestCase
     {
         $originalOrg = new Organisation('Your Organisation', 'cba@.com');
 
-        $this->orgRepository->find(Argument::any())->willReturn($originalOrg);
-        $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
-        $this->validator->validate(Argument::any())->willReturn(new ConstraintViolationList());
+        $this->orgRepository->expects(self::once())->method('find')->willReturn($originalOrg);
+        $this->orgRepository->expects(self::once())->method('findOneBy')->willReturn(null);
 
-        $this->em->persist(Argument::type(Organisation::class))->shouldBeCalled();
-        $this->em->flush()->shouldBeCalled();
+        $this->validator->expects(self::once())->method('validate')->willReturn(new ConstraintViolationList());
+
+        $this->em->expects(self::once())->method('persist')->with(self::isInstanceOf(Organisation::class));
+
+        $this->em->expects(self::once())->method('flush');
 
         $updatedOrg = $this->sut->update(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true], 1);
 
@@ -166,7 +159,7 @@ final class OrganisationRestHandlerTest extends TestCase
     #[Test]
     public function updateOrgDoesNotExist(): void
     {
-        $this->orgRepository->find(Argument::any())->willReturn(null);
+        $this->orgRepository->expects(self::once())->method('find')->willReturn(null);
 
         $updatedOrg = $this->sut->update(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true], 1);
 
@@ -178,8 +171,9 @@ final class OrganisationRestHandlerTest extends TestCase
     {
         $originalOrg = new Organisation('Your Organisation', 'cba@.com');
 
-        $this->orgRepository->find(Argument::any())->willReturn($originalOrg);
-        $this->orgRepository->findOneBy(Argument::any())->willReturn($originalOrg);
+        $this->orgRepository->expects(self::once())->method('find')->willReturn($originalOrg);
+
+        $this->orgRepository->expects(self::once())->method('findOneBy')->willReturn($originalOrg);
 
         self::expectException(OrganisationUpdateException::class);
 
@@ -191,9 +185,10 @@ final class OrganisationRestHandlerTest extends TestCase
     {
         $originalOrg = new Organisation('Your Organisation', 'cba@.com');
 
-        $this->orgRepository->find(Argument::any())->willReturn($originalOrg);
-        $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
-        $this->validator->validate(Argument::any())->willReturn(new ConstraintViolationList([
+        $this->orgRepository->expects(self::once())->method('find')->willReturn($originalOrg);
+        $this->orgRepository->expects(self::once())->method('findOneBy')->willReturn(null);
+
+        $this->validator->expects(self::once())->method('validate')->willReturn(new ConstraintViolationList([
             new ConstraintViolation('an error', null, [], null, null, null)
         ]));
 

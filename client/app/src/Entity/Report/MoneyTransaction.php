@@ -151,7 +151,7 @@ class MoneyTransaction
     private $type;
 
     /**
-     * @var array
+     * @var ?string
      *
      * @JMS\Type("string")
      * @JMS\Groups({"transaction"})
@@ -214,7 +214,7 @@ class MoneyTransaction
     /**
      * @param mixed $category
      */
-    public function setCategory($category)
+    public function setCategory($category): static
     {
         if (MoneyTransaction::isValidCategory($category)) {
             $this->category = $category;
@@ -224,7 +224,7 @@ class MoneyTransaction
     }
 
     /**
-     * @return array
+     * @return ?string
      */
     public function getAmount()
     {
@@ -232,9 +232,9 @@ class MoneyTransaction
     }
 
     /**
-     * @param array $amount
+     * @param ?string $amount
      */
-    public function setAmount($amount)
+    public function setAmount($amount): static
     {
         $this->amount = $amount;
 
@@ -252,9 +252,10 @@ class MoneyTransaction
     /**
      * @param mixed $description
      */
-    public function setDescription($description)
+    public function setDescription($description): static
     {
         $this->description = $description;
+        return $this;
     }
 
     /**

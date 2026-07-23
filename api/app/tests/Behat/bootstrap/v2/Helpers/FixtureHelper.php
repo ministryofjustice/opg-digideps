@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Helpers;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
-use OPG\Digideps\Backend\Domain\Report\ReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\Report\ReportType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;

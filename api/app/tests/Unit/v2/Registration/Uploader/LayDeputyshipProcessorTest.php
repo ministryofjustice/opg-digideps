@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Uploader;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Exception;
+use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
@@ -13,9 +16,6 @@ use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use OPG\Digideps\Backend\v2\Registration\Uploader\ClientMatch;
 use OPG\Digideps\Backend\v2\Registration\Uploader\LayClientMatcher;
 use OPG\Digideps\Backend\v2\Registration\Uploader\LayDeputyshipProcessor;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\DBAL\Exception;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 

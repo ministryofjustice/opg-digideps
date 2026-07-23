@@ -724,7 +724,7 @@ trait SelfRegistrationTrait
 
         if ($clientId <= 0) {
             throw new BehatException(
-                sprintf('Client ID %s is not a valid integer, pulled from URL %s', $clientId, $this->getCurrentUrl())
+                sprintf('Client ID %s does not have a valid value, pulled from URL %s', $clientId, $this->getCurrentUrl())
             );
         }
 

@@ -2,17 +2,17 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Entity;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use Faker\Factory;
+use Faker\Generator;
 use OPG\Digideps\Backend\Entity\Client;
-use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Repository\DeputyRepository;
 use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
-use Faker\Factory;
-use Faker\Generator;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 
 class DeputyIntegrationTest extends ApiIntegrationTestCase
 {

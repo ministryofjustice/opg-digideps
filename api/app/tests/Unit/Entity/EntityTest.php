@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Entity;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
-use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\ClientContact;
 use OPG\Digideps\Backend\Entity\CourtOrder;
@@ -46,6 +42,10 @@ use OPG\Digideps\Backend\Entity\Report\VisitsCare;
 use OPG\Digideps\Backend\Entity\Satisfaction;
 use OPG\Digideps\Backend\Entity\Setting;
 use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\Deputy\DeputyType;
 use PHPUnit\Framework\TestCase;
 
 final class EntityTest extends TestCase

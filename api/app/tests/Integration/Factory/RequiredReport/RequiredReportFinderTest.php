@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Integration\Factory\RequiredReport;
 
 use Doctrine\ORM\Id\AbstractIdGenerator;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;

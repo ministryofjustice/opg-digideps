@@ -7,9 +7,6 @@ namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProce
 use Doctrine\ORM\Id\AbstractIdGenerator;
 use Doctrine\ORM\Id\AssignedGenerator;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Domain\Report\ReportTransitionService;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
@@ -18,6 +15,9 @@ use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOr
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipReader;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipResult;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportReassembler;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 
 class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase

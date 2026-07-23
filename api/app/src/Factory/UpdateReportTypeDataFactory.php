@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Factory;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\Report\ReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\Report\ReportType;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Service\ReportTypeService;

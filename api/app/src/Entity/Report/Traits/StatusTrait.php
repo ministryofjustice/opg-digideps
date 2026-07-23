@@ -72,12 +72,6 @@ trait StatusTrait
 
         $currentSectionStatus = $this->getSectionStatusesCached();
 
-        foreach ($currentSectionStatus as $statusKey => $statusValues) {
-            if (in_array($statusKey, $this->getExcludeSections())) {
-                unset($currentSectionStatus[$statusKey]);
-            }
-        }
-
         $currentReportStatus = $this->getStatus();
 
         $sectionIds[] = Report::SECTION_MONEY_TRANSFERS;

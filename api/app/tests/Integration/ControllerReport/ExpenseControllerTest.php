@@ -66,9 +66,12 @@ class ExpenseControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
 
+        /** @var float $amount */
+        $amount = $data['amount'];
+
         $this->assertEquals(self::$expense1->getId(), $data['id']);
         $this->assertEquals(self::$expense1->getExplanation(), $data['explanation']);
-        $this->assertEquals((float)self::$expense1->getAmount(), (float)$data['amount']);
+        $this->assertEquals((float)self::$expense1->getAmount(), $amount);
     }
 
     public function testPostPutAuth(): void
