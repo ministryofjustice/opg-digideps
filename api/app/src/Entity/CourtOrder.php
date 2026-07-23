@@ -78,15 +78,15 @@ class CourtOrder
     private string $orderKind;
 
     /**
-     * @var Collection<int, Report> $reports
+     * @var Collection<int, Report> $pfaReports
      */
-    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Report>')]
-    #[JMS\Groups(['court-order-full'])]
-    #[ORM\JoinTable(name: 'court_order_report')]
-    #[ORM\JoinColumn(name: 'court_order_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\InverseJoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToMany(targetEntity: Report::class, inversedBy: 'courtOrders', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
-    private Collection $reports;
+    #[ORM\OneToMany(mappedBy: 'pfaCourtOrder', targetEntity: Report::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+    private Collection $pfaReports;
+    /**
+     * @var Collection<int, Report> $hwReports
+     */
+    #[ORM\OneToMany(mappedBy: 'hwCourtOrder', targetEntity: Report::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+    private Collection $hwReports;
 
     /**
      * @var Collection<int, CourtOrderDeputy>
@@ -107,7 +107,8 @@ class CourtOrder
         string $status = 'ACTIVE'
     ) {
         $this->courtOrderDeputyRelationships = new ArrayCollection();
-        $this->reports = new ArrayCollection();
+        $this->pfaReports = new ArrayCollection();
+        $this->hwReports = new ArrayCollection();
         $this->courtOrderUid = $courtOrderUid;
         $this->orderType = $orderType->value;
         $this->orderReportType = $orderReportType->value;
@@ -258,14 +259,19 @@ class CourtOrder
 
     public function addReport(Report $report): static
     {
-        $this->reports->add($report);
-
+        $this->removeReport($report);
+        if ($report->isHw()) {
+            $this->hwReports->add($report);
+        } elseif ($report->isPfa()) {
+            $this->pfaReports->add($report);
+        }
         return $this;
     }
 
     public function removeReport(Report $report): static
     {
-        $this->reports->removeElement($report);
+        $this->pfaReports->removeElement($report);
+        $this->hwReports->removeElement($report);
 
         return $this;
     }
@@ -279,11 +285,14 @@ class CourtOrder
     }
 
     /**
-     * @return Collection<int, Report>
+     * @return array<Report>
      */
-    public function getReports(): Collection
+    #[JMS\VirtualProperty(name: 'reports')]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['court-order-full'])]
+    public function getReports(): array
     {
-        return $this->reports;
+        return [...$this->pfaReports, ...$this->hwReports];
     }
 
     /**
@@ -294,7 +303,7 @@ class CourtOrder
         /** @var ?Report $latest */
         $latest = null;
 
-        foreach ($this->reports as $report) {
+        foreach ($this->getReports() as $report) {
             if (is_null($latest) || $report->getStartDate() > $latest->getStartDate()) {
                 $latest = $report;
             }
@@ -316,6 +325,11 @@ class CourtOrder
     public function isHybrid(): bool
     {
         return $this->getOrderKind() === CourtOrderKind::Hybrid;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === 'ACTIVE';
     }
 
     public function getDesiredReportType(): ReportType

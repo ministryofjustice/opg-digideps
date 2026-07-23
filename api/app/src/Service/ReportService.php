@@ -63,7 +63,7 @@ class ReportService
 
         $this->em->persist($submission);
 
-        $courtOrders = $currentReport->getCourtOrders()->toArray();
+        $courtOrders = $currentReport->getCourtOrders();
         $client = $currentReport->getClient();
         $clientId = $client->getId();
         $now = new \DateTime()->format('Y-m-d H:i:s');
@@ -93,7 +93,7 @@ class ReportService
 
             $newYearReport = $this->createNextYearReport($currentReport);
 
-            foreach ($courtOrders as $courtOrder) {
+            foreach ($currentReport->getCourtOrders() as $courtOrder) {
                 if ($courtOrder->getStatus() === 'ACTIVE') {
                     $courtOrder->addReport($newYearReport);
                     $this->em->persist($courtOrder);
