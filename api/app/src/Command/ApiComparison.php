@@ -73,7 +73,6 @@ class ApiComparison extends Command
             $result = $conn->executeQuery($sqlStatement);
             $arrayAssociative = $result->fetchAllAssociative();
 
-            assert(is_array($arrayAssociative), 'Expected an array from fetchAllAssociative()');
             assert(count($arrayAssociative) > 0, 'Expected at least one row from the SQL query');
 
             foreach ($arrayAssociative as $row) {
