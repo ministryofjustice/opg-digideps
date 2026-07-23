@@ -60,7 +60,6 @@ readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
             $courtOrders = $report->getActiveCourtOrders();
             $possibleReportType = ReportTypeService::determineReportType($courtOrders);
             $this->entityManager->clear();
-            $repository->clear();
             $report = $repository->find($reportId) ?? throw new \LogicException("Report with id {$reportId} is proven to exist.");
 
             $currentReportType = ReportType::tryFrom($report->getType());
