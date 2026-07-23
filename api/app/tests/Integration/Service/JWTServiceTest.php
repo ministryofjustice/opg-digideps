@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\OPG\Digideps\Backend\Integration;
+namespace Tests\OPG\Digideps\Backend\Integration\Service;
 
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key\InMemory;
@@ -31,14 +31,14 @@ class JWTServiceTest extends TestCase
         $this->logger = self::createMock(LoggerInterface::class);
         $this->dateTimeProvider = self::createMock(DateTimeProvider::class);
 
-        $this->secretsManager->expects(self::once())
+        $this->secretsManager->expects(self::atLeastOnce())
             ->method('getSecret')
-            ->with('public-jwt-key-base64')
-            ->willReturn(base64_encode($this->publicKeyPem));
-        $this->secretsManager->expects(self::once())
-            ->method('getSecret')
-            ->with('private-jwt-key-base64')
-            ->willReturn(base64_encode($this->privateKeyPem));
+            ->willReturnCallback(function (string $keyname) {
+                return match ($keyname) {
+                    SecretManagerService::PRIVATE_JWT_KEY_BASE64_SECRET_NAME => base64_encode($this->privateKeyPem),
+                    SecretManagerService::PUBLIC_JWT_KEY_BASE64_SECRET_NAME => base64_encode($this->publicKeyPem),
+                };
+            });
 
         $this->sut = new JWTService(
             $this->secretsManager,
@@ -87,18 +87,14 @@ class JWTServiceTest extends TestCase
         $plus1Hour = new \DateTimeImmutable('+1 hour');
         $sub10Seconds = new \DateTimeImmutable('-10 seconds');
 
-        $this->dateTimeProvider->expects(self::once())
-            ->method('getDateTimeImmutable')
-            ->with('now')
-            ->willReturn($now);
-        $this->dateTimeProvider->expects(self::once())
-            ->method('getDateTimeImmutable')
-            ->with('+1 hour')
-            ->willReturn($plus1Hour);
-        $this->dateTimeProvider->expects(self::once())
-            ->method('getDateTimeImmutable')
-            ->with('-10 seconds')
-            ->willReturn($sub10Seconds);
+        $this->dateTimeProvider->method('getDateTimeImmutable')
+            ->willReturnCallback(function ($delta) use ($now, $plus1Hour, $sub10Seconds) {
+                return match ($delta) {
+                    'now' => $now,
+                    '+1 hour' => $plus1Hour,
+                    '-10 seconds' => $sub10Seconds
+                };
+            });
 
         $user = new User()
             ->setId(22)
