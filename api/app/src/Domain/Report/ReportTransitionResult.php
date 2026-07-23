@@ -10,7 +10,7 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 final class ReportTransitionResult
 {
     public function __construct(
-        /** @var string[] $messages */
+        /** @var array<string|callable():string> $messages */
         public array $messages = [],
         /** @var string[] $errorMessages */
         public array $errorMessages = [],
