@@ -169,6 +169,8 @@ class VisitsCareControllerTest extends AbstractTestController
         $this->assertEquals('y-m', $visitsCare->getDoYouLiveWithClient());
         $this->assertEquals('hodycc', $visitsCare->getHowOftenDoYouContactClient());
         $this->assertEquals(self::$report1->getId(), $visitsCare->getReport()->getId());
+
+        self::fixtures()->clear();
         // TODO assert other fields
     }
 
