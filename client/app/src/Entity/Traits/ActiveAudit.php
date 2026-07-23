@@ -2,6 +2,8 @@
 
 namespace OPG\Digideps\Frontend\Entity\Traits;
 
+use JMS\Serializer\Annotation as JMS;
+
 /**
  * ActiveAudit Trait, usable with PHP >= 5.4
  *
@@ -12,19 +14,18 @@ trait ActiveAudit
      * Get date that this entity was active from
      *
      * @var \DateTime
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     * @JMS\Groups({"active-period"})
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    #[JMS\Groups(['active-period'])]
     private $activeFrom;
 
     /**
      * Get date that this entity was active to
      *
      * @var \DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     * @JMS\Groups({"active-period"})
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    #[JMS\Groups(['active-period'])]
     private $activeTo;
 
     /**

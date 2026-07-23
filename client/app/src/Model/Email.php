@@ -6,23 +6,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Email
 {
-    /**
-     * @Assert\NotBlank(message="sendEmail.toEmail.notBlank", groups={"html","text"})
-     * @Assert\Email(message="sendEmail.toEmail.invalid", groups={"html","text"})
-     */
+    #[Assert\NotBlank(message: 'sendEmail.toEmail.notBlank', groups: ['html', 'text'])]
+    #[Assert\Email(message: 'sendEmail.toEmail.invalid', groups: ['html', 'text'])]
     private $toEmail;
 
-    /**
-     * @Assert\NotBlank(message="sendEmail.fromName.notBlank", groups={"html","text"})
-     * @Assert\Type(type="string", message="sendEmail.fromName.invalid", groups={"html","text"})
-     */
+    #[Assert\NotBlank(message: 'sendEmail.fromName.notBlank', groups: ['html', 'text'])]
+    #[Assert\Type(type: 'string', message: 'sendEmail.fromName.invalid', groups: ['html', 'text'])]
     private $fromName;
 
     private $fromEmailNotifyID;
 
-    /**
-     * @Assert\NotBlank(message="sendEmail.subject.notBlank", groups={"html","text"})
-     */
+    #[Assert\NotBlank(message: 'sendEmail.subject.notBlank', groups: ['html', 'text'])]
     private $subject;
 
     private $template;

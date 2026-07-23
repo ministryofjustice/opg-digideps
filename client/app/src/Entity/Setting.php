@@ -9,31 +9,30 @@ class Setting
 {
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"setting"})
-     * @Assert\NotBlank( message="adminSetting.content.notBlank", groups={"setting"} )
      *
-     * @JMS\Type("string")
      */
+    #[JMS\Groups(['setting'])]
+    #[Assert\NotBlank(message: 'adminSetting.content.notBlank', groups: ['setting'])]
+    #[JMS\Type('string')]
     private $content;
 
 
     /**
      * @var bool
      *
-     * @JMS\Groups({"setting"})
-     * @Assert\NotNull(message="adminSetting.enabled.notBlank", groups={"setting"} )
      *
      *
-     * @JMS\Type("boolean")
      */
+    #[JMS\Groups(['setting'])]
+    #[Assert\NotNull(message: 'adminSetting.enabled.notBlank', groups: ['setting'])]
+    #[JMS\Type('boolean')]
     private $enabled;
 
     /**

@@ -152,7 +152,7 @@ class CourtOrder
      */
     public function getSubmittedReports(): array
     {
-        return array_values(array_filter($this->reports, fn ($report) => $report->isSubmitted()));
+        return array_values(array_filter($this->reports, fn (Report $report): bool => $report->isSubmitted()));
     }
 
     public function getClient(): Client
@@ -174,7 +174,7 @@ class CourtOrder
     {
         $deputies = $this->activeDeputies;
 
-        uasort($deputies, fn ($deputyA, $deputyB) => strcmp($deputyA->getFirstName(), $deputyB->getFirstName()));
+        uasort($deputies, fn ($deputyA, $deputyB): int => strcmp($deputyA->getFirstName(), $deputyB->getFirstName()));
 
         return array_values($deputies);
     }

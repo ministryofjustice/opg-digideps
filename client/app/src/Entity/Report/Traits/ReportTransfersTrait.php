@@ -8,18 +8,17 @@ use JMS\Serializer\Annotation as JMS;
 trait ReportTransfersTrait
 {
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransfer>")
-     *
      * @var MoneyTransfer[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransfer>')]
     private $moneyTransfers = [];
 
     /**
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"money-transfers-no-transfers"})
      *
      * @var bool
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['money-transfers-no-transfers'])]
     private $noTransfersToAdd;
 
     /**

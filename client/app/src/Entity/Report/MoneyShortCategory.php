@@ -6,18 +6,15 @@ use JMS\Serializer\Annotation as JMS;
 
 class MoneyShortCategory
 {
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
     private string $typeId;
 
     /**
      * @var bool
-     *
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
     private $present;
 
     /**

@@ -2,6 +2,8 @@
 
 namespace OPG\Digideps\Frontend\Entity\Traits;
 
+use JMS\Serializer\Annotation as JMS;
+
 /**
  * SoftDeletable Trait, usable with PHP >= 5.4
  *
@@ -10,11 +12,8 @@ trait IsSoftDeleteableEntity
 {
     /**
      * @var \DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @var \DateTime
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     protected $deletedAt;
 
     /**

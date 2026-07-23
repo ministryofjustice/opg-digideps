@@ -12,125 +12,120 @@ class AssetProperty extends Asset
     public const string OWNED_PARTLY = 'partly';
 
     /**
-     * @Assert\NotBlank(message="asset.property.address.notBlank", groups={"property-address"})
-     * @Assert\Length( max=200, maxMessage="asset.property.address.maxMessage", groups={"property-address"})
-     * @JMS\Type("string")
      *
      * @var string
      */
+    #[Assert\NotBlank(message: 'asset.property.address.notBlank', groups: ['property-address'])]
+    #[Assert\Length(max: 200, maxMessage: 'asset.property.address.maxMessage', groups: ['property-address'])]
+    #[JMS\Type('string')]
     private $address;
 
     /**
-     * @Assert\Length( max=200, maxMessage="asset.property.address.maxMessage", groups={"property-address"})
-     * @JMS\Type("string")
      *
      * @var string
      */
+    #[Assert\Length(max: 200, maxMessage: 'asset.property.address.maxMessage', groups: ['property-address'])]
+    #[JMS\Type('string')]
     private $address2;
 
     /**
-     * @Assert\Length( max=75, maxMessage="asset.property.county.maxMessage", groups={"property-address"})
-     * @JMS\Type("string")
      *
      * @var string
      */
+    #[Assert\Length(max: 75, maxMessage: 'asset.property.county.maxMessage', groups: ['property-address'])]
+    #[JMS\Type('string')]
     private $county;
 
     /**
-     * @Assert\NotBlank(message="asset.property.postcode.notBlank", groups={"property-address"})
-     * @Assert\Length(max=10, maxMessage= "asset.property.postcode.maxMessage", groups={"property-address"})
-     * @JMS\Type("string")
      *
      * @var string
      */
+    #[Assert\NotBlank(message: 'asset.property.postcode.notBlank', groups: ['property-address'])]
+    #[Assert\Length(max: 10, maxMessage: 'asset.property.postcode.maxMessage', groups: ['property-address'])]
+    #[JMS\Type('string')]
     private $postcode;
 
     /**
-     * @Assert\NotBlank(message="asset.property.occupants.notBlank", groups={"property-occupants"})
-     * @Assert\Length( max=550, maxMessage="asset.property.occupants.maxMessage", groups={"property-occupants"})
-     *
      * @var string
      *
-     * @JMS\Type("string")
      */
+    #[Assert\NotBlank(message: 'asset.property.occupants.notBlank', groups: ['property-occupants'])]
+    #[Assert\Length(max: 550, maxMessage: 'asset.property.occupants.maxMessage', groups: ['property-occupants'])]
+    #[JMS\Type('string')]
     private $occupants;
 
     /**
      * @var string fully/partly
-     * @Assert\NotBlank(message="asset.property.owned.notBlank", groups={"property-owned"})
      *
-     * @JMS\Type("string")
      */
+    #[Assert\NotBlank(message: 'asset.property.owned.notBlank', groups: ['property-owned'])]
+    #[JMS\Type('string')]
     private $owned;
 
     /**
      * @var float 0-100
      *
-     * @Assert\NotBlank(message="asset.property.ownedPercentage.notBlank", groups={"property-owned-partly"})
-     * @Assert\Range(min=1, max=100, notInRangeMessage = "asset.property.ownedPercentage.type", groups={"property-owned-partly"})
      *
-     * @JMS\Type("float")
      */
+    #[Assert\NotBlank(message: 'asset.property.ownedPercentage.notBlank', groups: ['property-owned-partly'])]
+    #[Assert\Range(min: 1, max: 100, notInRangeMessage: 'asset.property.ownedPercentage.type', groups: ['property-owned-partly'])]
+    #[JMS\Type('float')]
     private $ownedPercentage;
 
-    /**
-     * @Assert\NotBlank(message="asset.property.isSubjectToEquityRelease.notBlank", groups={"property-subject-equity-release"})
-     * @JMS\Type("string")
-     */
+    #[Assert\NotBlank(message: 'asset.property.isSubjectToEquityRelease.notBlank', groups: ['property-subject-equity-release'])]
+    #[JMS\Type('string')]
     private $isSubjectToEquityRelease;
 
     /**
-     * @Assert\NotBlank(message="asset.property.hasMortgage.notBlank", groups={"property-mortgage"})
-     *
      * @var string
-     * @JMS\Type("string")
      */
+    #[Assert\NotBlank(message: 'asset.property.hasMortgage.notBlank', groups: ['property-mortgage'])]
+    #[JMS\Type('string')]
     private $hasMortgage;
 
     /**
-     * @Assert\NotBlank(message="asset.property.mortgageOutstandingAmount.notBlank", groups={"property-mortgage-outstanding-amount"})
-     * @Assert\Type( type="numeric", message="asset.property.mortgageOutstandingAmount.type", groups={"property-mortgage-outstanding-amount"})
-     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "asset.property.mortgageOutstandingAmount.outOfRange", groups={"property-mortgage-outstanding-amount"})
      *
      * @var string
-     * @JMS\Type("integer")
      */
+    #[Assert\NotBlank(message: 'asset.property.mortgageOutstandingAmount.notBlank', groups: ['property-mortgage-outstanding-amount'])]
+    #[Assert\Type(type: 'numeric', message: 'asset.property.mortgageOutstandingAmount.type', groups: ['property-mortgage-outstanding-amount'])]
+    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'asset.property.mortgageOutstandingAmount.outOfRange', groups: ['property-mortgage-outstanding-amount'])]
+    #[JMS\Type('integer')]
     private $mortgageOutstandingAmount;
 
     /**
-     * @Assert\NotBlank(message="asset.property.hasCharges.notBlank", groups={"property-has-charges"})
      *
      * @var string
      *
-     * @JMS\Type("string")
      */
+    #[Assert\NotBlank(message: 'asset.property.hasCharges.notBlank', groups: ['property-has-charges'])]
+    #[JMS\Type('string')]
     private $hasCharges;
 
     /**
-     * @Assert\NotBlank(message="asset.property.isRentedOut.notBlank", groups={"property-rented-out"})
      *
      * @var string
      *
-     * @JMS\Type("string")
      */
+    #[Assert\NotBlank(message: 'asset.property.isRentedOut.notBlank', groups: ['property-rented-out'])]
+    #[JMS\Type('string')]
     private $isRentedOut;
 
     /**
-     * @Assert\NotBlank(message="asset.property.rentAgreementEndDate.notBlank", groups={"property-rent-agree-date"})
-     *
      * @var \DateTime
-     * @JMS\Type("DateTime<'Y-m-d'>")
      */
+    #[Assert\NotBlank(message: 'asset.property.rentAgreementEndDate.notBlank', groups: ['property-rent-agree-date'])]
+    #[JMS\Type("DateTime<'Y-m-d'>")]
     private $rentAgreementEndDate;
 
     /**
-     * @Assert\NotBlank(message="asset.property.rentIncomeMonth.notBlank", groups={"property-rent-income-month"})
-     * @Assert\Type( type="numeric", message="asset.property.rentIncomeMonth.type", groups={"property-rent-income-month"})
-     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "asset.property.rentIncomeMonth.outOfRange", groups={"property-rent-income-month"})
      *
      * @var float
-     * @JMS\Type("float")
      */
+    #[Assert\NotBlank(message: 'asset.property.rentIncomeMonth.notBlank', groups: ['property-rent-income-month'])]
+    #[Assert\Type(type: 'numeric', message: 'asset.property.rentIncomeMonth.type', groups: ['property-rent-income-month'])]
+    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'asset.property.rentIncomeMonth.outOfRange', groups: ['property-rent-income-month'])]
+    #[JMS\Type('float')]
     private $rentIncomeMonth;
 
     /**
@@ -220,7 +215,7 @@ class AssetProperty extends Asset
     /**
      * Get address.
      */
-    public function getAddressValidLines()
+    public function getAddressValidLines(): array
     {
         return array_filter([$this->address, $this->address2, $this->county, $this->postcode]);
     }
@@ -349,12 +344,12 @@ class AssetProperty extends Asset
         return $this;
     }
 
-    public function getType()
+    public function getType(): string
     {
         return 'property';
     }
 
-    public function getListTemplateName()
+    public function getListTemplateName(): string
     {
         return 'property';
     }

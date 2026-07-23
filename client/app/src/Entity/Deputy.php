@@ -11,119 +11,101 @@ class Deputy implements DeputyInterface
 {
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
      */
+    #[JMS\Type('integer')]
     private $id;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $deputyUid;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $firstname;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $lastname;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $email1;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $email2;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $email3;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $address1;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $address2;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $address3;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $address4;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $address5;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $addressPostcode;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $addressCountry;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $phoneMain;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $phoneAlternative;
 
-    /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
-     */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
     public ?User $user = null;
 
     /**
@@ -419,7 +401,7 @@ class Deputy implements DeputyInterface
     /**
      * @return array
      */
-    public function getAddressNotEmptyParts()
+    public function getAddressNotEmptyParts(): array
     {
         return array_filter([
             $this->address1,

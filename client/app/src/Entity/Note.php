@@ -19,9 +19,8 @@ class Note
      * Keep in sync with API.
      *
      * Possible refactor would be moving some entities data into a shared library
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     public static $categories = [
         // categoryId | categoryTranslationKey
         'To Do' => 'todo',
@@ -35,44 +34,39 @@ class Note
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
      */
+    #[JMS\Type('integer')]
     private $id;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"add_note"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['add_note'])]
     private $category;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     * @JMS\Groups({"add_note"})
      *
-     * @Assert\NotBlank( message="note.form.title.notBlank", groups={"add_note", "edit_note"})
-     * @Assert\Length(max=150, maxMessage="note.form.title.maxLength",
-     *     groups={"add_note", "edit_note"} )
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['add_note'])]
+    #[Assert\NotBlank(message: 'note.form.title.notBlank', groups: ['add_note', 'edit_note'])]
+    #[Assert\Length(max: 150, maxMessage: 'note.form.title.maxLength', groups: ['add_note', 'edit_note'])]
     private $title;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"add_note"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['add_note'])]
     private $content;
 
     /**
      * @var Client
-     *
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Client")
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Client')]
     private $client;
 
     /**

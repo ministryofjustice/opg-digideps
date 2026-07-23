@@ -11,39 +11,37 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 trait ReportDebtsTrait
 {
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Debt>")
-     * @JMS\Groups({"debt"})
      *
      * @var Debt[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Debt>')]
+    #[JMS\Groups(['debt'])]
     private $debts = [];
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt"})
-     *
-     * @Assert\NotBlank(message="report.hasDebts.notBlank", groups={"debts"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['debt'])]
+    #[Assert\NotBlank(message: 'report.hasDebts.notBlank', groups: ['debts'])]
     private $hasDebts;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt-management"})
-     *
-     * @Assert\NotBlank(message="report.debts-management.notBlank", groups={"debt-management"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['debt-management'])]
+    #[Assert\NotBlank(message: 'report.debts-management.notBlank', groups: ['debt-management'])]
     private $debtManagement;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt"})
      *
      * @var string $debtsTotalAmount
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['debt'])]
     private $debtsTotalAmount;
 
     /**
@@ -51,7 +49,7 @@ trait ReportDebtsTrait
      *
      * @return float
      */
-    public function getDebtsTotalValue()
+    public function getDebtsTotalValue(): int|float
     {
         $ret = 0;
         foreach ($this->getDebts() as $debt) {
@@ -159,7 +157,7 @@ trait ReportDebtsTrait
         return $this;
     }
 
-    public function debtsValid(ExecutionContextInterface $context)
+    public function debtsValid(ExecutionContextInterface $context): void
     {
         if ($this->getHasDebts() == 'yes' && count($this->getDebtsWithValidAmount()) === 0) {
             $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
@@ -171,7 +169,7 @@ trait ReportDebtsTrait
      */
     public function getDebtsWithValidAmount()
     {
-        $debtsWithAValidAmount = array_filter($this->debts, function ($debt) {
+        $debtsWithAValidAmount = array_filter($this->debts, function ($debt): bool {
             return !empty($debt->getAmount());
         });
 

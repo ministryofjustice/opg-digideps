@@ -11,63 +11,50 @@ use Symfony\Component\Validator\Constraints as Assert;
 class MoneyTransfer
 {
     /**
-     * @JMS\Type("integer")
-     *
      * @var int
      */
+    #[JMS\Type('integer')]
     private $id;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank(message="transfer.amount.notBlank", groups={"money-transfer-amount"})
-     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "transfer.amount.notInRangeMessage", groups={"money-transfer-amount"})
-     * @JMS\Type("string")
-     * @JMS\Groups({"money-transfer"})
      */
+    #[Assert\NotBlank(message: 'transfer.amount.notBlank', groups: ['money-transfer-amount'])]
+    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'transfer.amount.notInRangeMessage', groups: ['money-transfer-amount'])]
+    #[JMS\Type('string')]
+    #[JMS\Groups(['money-transfer'])]
     private $amount;
 
     /**
      * @var BankAccount
-     *
-     * @JMS\SerializedName("accountFrom")
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\BankAccount")
      */
+    #[JMS\SerializedName('accountFrom')]
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\BankAccount')]
     private $accountFrom;
 
-    /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"money-transfer"})
-     * @Assert\NotBlank(message="transfer.accountFrom.notBlank", groups={"money-transfer-account-from"})
-     */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['money-transfer'])]
+    #[Assert\NotBlank(message: 'transfer.accountFrom.notBlank', groups: ['money-transfer-account-from'])]
     private $accountFromId;
 
     /**
      * @var BankAccount
-     *
-     * @JMS\SerializedName("accountTo")
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\BankAccount")
      */
+    #[JMS\SerializedName('accountTo')]
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\BankAccount')]
     private $accountTo;
 
-    /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"money-transfer"})
-     * @Assert\NotBlank(message="transfer.accountTo.notBlank", groups={"money-transfer-account-to"})
-     * @Assert\Expression(
-     *     "(value == '' or value != this.getAccountFromId() )",
-     *     message="transfer.accountTo.sameAsFromAccount",
-     *     groups={"money-transfer-account-to"}
-     * )
-     */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['money-transfer'])]
+    #[Assert\NotBlank(message: 'transfer.accountTo.notBlank', groups: ['money-transfer-account-to'])]
+    #[Assert\Expression("(value == '' or value != this.getAccountFromId() )", message: 'transfer.accountTo.sameAsFromAccount', groups: ['money-transfer-account-to'])]
     private $accountToId;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"money-transfer"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['money-transfer'])]
     private $description;
 
     /**
@@ -155,7 +142,7 @@ class MoneyTransfer
     /**
      * @param mixed $accountFromId
      */
-    public function setAccountFromId($accountFromId)
+    public function setAccountFromId($accountFromId): void
     {
         $this->accountFromId = $accountFromId;
     }
@@ -171,7 +158,7 @@ class MoneyTransfer
     /**
      * @param mixed $accountToId
      */
-    public function setAccountToId($accountToId)
+    public function setAccountToId($accountToId): void
     {
         $this->accountToId = $accountToId;
     }

@@ -12,8 +12,8 @@ class Status
 
     /**
      * @var Report
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Report")
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Report')]
     private $report;
 
     public function __construct(Report $report)
@@ -22,178 +22,153 @@ class Status
     }
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $decisionsState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $contactsState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $visitsCareState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $clientBenefitsCheckState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $bankAccountsState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $moneyTransferState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $moneyInState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $moneyOutState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $moneyInShortState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $moneyOutShortState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $balanceState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $assetsState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $debtsState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $paFeesExpensesState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $actionsState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $otherInfoState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $expensesState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $giftsState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $documentsState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $lifestyleState = [];
 
     /**
-     * @JMS\Type("boolean")
-     *
      * @var array
      */
+    #[JMS\Type('boolean')]
     private $isReadyToSubmit;
 
     /**
-     * @JMS\Type("string")
-     *
      * @var array
      */
+    #[JMS\Type('string')]
     private $status;
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $profCurrentFeesState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $profDeputyCostsState = [];
 
     /**
-     * @JMS\Type("array")
-     *
      * @var array
      */
+    #[JMS\Type('array')]
     private $profDeputyCostsEstimateState = [];
 
     /**
@@ -207,7 +182,7 @@ class Status
     /**
      * @param mixed $decisionsState
      */
-    public function setDecisionsState($decisionsState)
+    public function setDecisionsState($decisionsState): void
     {
         $this->decisionsState = $decisionsState;
     }
@@ -223,7 +198,7 @@ class Status
     /**
      * @param mixed $contactsState
      */
-    public function setContactsState($contactsState)
+    public function setContactsState($contactsState): void
     {
         $this->contactsState = $contactsState;
     }
@@ -239,7 +214,7 @@ class Status
     /**
      * @param mixed $visitsCareState
      */
-    public function setVisitsCareState($visitsCareState)
+    public function setVisitsCareState($visitsCareState): void
     {
         $this->visitsCareState = $visitsCareState;
     }
@@ -255,7 +230,7 @@ class Status
     /**
      * @param mixed $bankAccountsState
      */
-    public function setBankAccountsState($bankAccountsState)
+    public function setBankAccountsState($bankAccountsState): void
     {
         $this->bankAccountsState = $bankAccountsState;
     }
@@ -271,7 +246,7 @@ class Status
     /**
      * @param mixed $moneyTransferState
      */
-    public function setMoneyTransferState($moneyTransferState)
+    public function setMoneyTransferState($moneyTransferState): void
     {
         $this->moneyTransferState = $moneyTransferState;
     }
@@ -287,7 +262,7 @@ class Status
     /**
      * @param mixed $moneyInState
      */
-    public function setMoneyInState($moneyInState)
+    public function setMoneyInState($moneyInState): void
     {
         $this->moneyInState = $moneyInState;
     }
@@ -303,7 +278,7 @@ class Status
     /**
      * @param mixed $moneyOutState
      */
-    public function setMoneyOutState($moneyOutState)
+    public function setMoneyOutState($moneyOutState): void
     {
         $this->moneyOutState = $moneyOutState;
     }
@@ -319,7 +294,7 @@ class Status
     /**
      * @param mixed $moneyInShortState
      */
-    public function setMoneyInShortState($moneyInShortState)
+    public function setMoneyInShortState($moneyInShortState): void
     {
         $this->moneyInShortState = $moneyInShortState;
     }
@@ -335,7 +310,7 @@ class Status
     /**
      * @param mixed $moneyOutShortState
      */
-    public function setMoneyOutShortState($moneyOutShortState)
+    public function setMoneyOutShortState($moneyOutShortState): void
     {
         $this->moneyOutShortState = $moneyOutShortState;
     }
@@ -351,7 +326,7 @@ class Status
     /**
      * @param mixed $balanceState
      */
-    public function setBalanceState($balanceState)
+    public function setBalanceState($balanceState): void
     {
         $this->balanceState = $balanceState;
     }
@@ -367,7 +342,7 @@ class Status
     /**
      * @param mixed $assetsState
      */
-    public function setAssetsState($assetsState)
+    public function setAssetsState($assetsState): void
     {
         $this->assetsState = $assetsState;
     }
@@ -383,7 +358,7 @@ class Status
     /**
      * @param mixed $debtsState
      */
-    public function setDebtsState($debtsState)
+    public function setDebtsState($debtsState): void
     {
         $this->debtsState = $debtsState;
     }
@@ -399,7 +374,7 @@ class Status
     /**
      * @param array $paFeesExpensesState
      */
-    public function setPaFeesExpensesState($paFeesExpensesState)
+    public function setPaFeesExpensesState($paFeesExpensesState): void
     {
         $this->paFeesExpensesState = $paFeesExpensesState;
     }
@@ -415,7 +390,7 @@ class Status
     /**
      * @param mixed $actionsState
      */
-    public function setActionsState($actionsState)
+    public function setActionsState($actionsState): void
     {
         $this->actionsState = $actionsState;
     }
@@ -431,7 +406,7 @@ class Status
     /**
      * @param mixed $otherInfoState
      */
-    public function setOtherInfoState($otherInfoState)
+    public function setOtherInfoState($otherInfoState): void
     {
         $this->otherInfoState = $otherInfoState;
     }
@@ -447,7 +422,7 @@ class Status
     /**
      * @param mixed $expensesState
      */
-    public function setExpensesState($expensesState)
+    public function setExpensesState($expensesState): void
     {
         $this->expensesState = $expensesState;
     }
@@ -463,7 +438,7 @@ class Status
     /**
      * @param mixed $giftsState
      */
-    public function setGiftsState($giftsState)
+    public function setGiftsState($giftsState): void
     {
         $this->giftsState = $giftsState;
     }
@@ -487,7 +462,7 @@ class Status
     /**
      * @param mixed $isReadyToSubmit
      */
-    public function setIsReadyToSubmit($isReadyToSubmit)
+    public function setIsReadyToSubmit($isReadyToSubmit): void
     {
         $this->isReadyToSubmit = $isReadyToSubmit;
     }
@@ -503,7 +478,7 @@ class Status
     /**
      * @param mixed $status
      */
-    public function setStatus($status)
+    public function setStatus($status): void
     {
         $this->status = $status;
     }
@@ -519,7 +494,7 @@ class Status
     /**
      * @param array $documentsState
      */
-    public function setDocumentsState($documentsState)
+    public function setDocumentsState($documentsState): void
     {
         $this->documentsState = $documentsState;
     }
@@ -535,7 +510,7 @@ class Status
     /**
      * @param array $lifestyleState
      */
-    public function setLifestyleState($lifestyleState)
+    public function setLifestyleState($lifestyleState): void
     {
         $this->lifestyleState = $lifestyleState;
     }
@@ -551,7 +526,7 @@ class Status
     /**
      * @param array $profCurrentFeesState
      */
-    public function setProfCurrentFeesState($profCurrentFeesState)
+    public function setProfCurrentFeesState($profCurrentFeesState): void
     {
         $this->profCurrentFeesState = $profCurrentFeesState;
     }
@@ -567,7 +542,7 @@ class Status
     /**
      * @param array $profDeputyCostsState
      */
-    public function setProfDeputyCostsState($profDeputyCostsState)
+    public function setProfDeputyCostsState($profDeputyCostsState): void
     {
         $this->profDeputyCostsState = $profDeputyCostsState;
     }
@@ -583,7 +558,7 @@ class Status
     /**
      * @param array $profDeputyCostsEstimateState
      */
-    public function setProfDeputyCostsEstimateState($profDeputyCostsEstimateState)
+    public function setProfDeputyCostsEstimateState($profDeputyCostsEstimateState): void
     {
         $this->profDeputyCostsEstimateState = $profDeputyCostsEstimateState;
     }

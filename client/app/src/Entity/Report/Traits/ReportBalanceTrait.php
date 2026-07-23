@@ -4,31 +4,30 @@ namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportBalanceTrait
 {
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"balance", "balance_mismatch_explanation"})
-     * @Assert\NotBlank(message="report.balanceMismatchExplanation.notBlank", groups={"balance"})
-     * @Assert\Length( min=10, minMessage="report.balanceMismatchExplanation.length", groups={"balance"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['balance', 'balance_mismatch_explanation'])]
+    #[Assert\NotBlank(message: 'report.balanceMismatchExplanation.notBlank', groups: ['balance'])]
+    #[Assert\Length(min: 10, minMessage: 'report.balanceMismatchExplanation.length', groups: ['balance'])]
     private $balanceMismatchExplanation;
 
     /**
-     * @JMS\Type("double")
-     *
      * @var float
      */
+    #[JMS\Type('double')]
     private $totalsOffset;
 
     /**
-     * @JMS\Type("boolean")
-     *
      * @var bool
      */
+    #[JMS\Type('boolean')]
     private $totalsMatch;
 
     /**
@@ -44,16 +43,15 @@ trait ReportBalanceTrait
      *
      * @return Report
      */
-    public function setBalanceMismatchExplanation($balanceMismatchExplanation)
+    public function setBalanceMismatchExplanation($balanceMismatchExplanation): void
     {
         $this->balanceMismatchExplanation = $balanceMismatchExplanation;
     }
 
     /**
-     * @JMS\Type("double")
-     *
      * @var float
      */
+    #[JMS\Type('double')]
     private $calculatedBalance;
 
     /**
@@ -107,7 +105,7 @@ trait ReportBalanceTrait
     /**
      * @param bool $totalsMatch
      */
-    public function setTotalsMatch($totalsMatch)
+    public function setTotalsMatch($totalsMatch): void
     {
         $this->totalsMatch = $totalsMatch;
     }
