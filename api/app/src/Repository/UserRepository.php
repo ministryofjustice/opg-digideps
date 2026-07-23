@@ -71,8 +71,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $sort_order = strtoupper($request->get('sort_order', 'DESC'));
 
         $this->qb
-            ->setFirstResult($request->get('offset', 0))
-            ->setMaxResults($request->get('limit', 50))
+            ->setFirstResult($request->query->getInt('offset', 0))
+            ->setMaxResults($request->query->getInt('limit', 50))
             ->orderBy('u.' . $order_by, $sort_order)
             ->groupBy('u.id');
 
@@ -347,8 +347,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function findByFiltersWithCounts(
         $q,
-        $offset,
-        $limit,
+        int $offset,
+        int $limit,
         $id,
     ): array {
         // BASE QUERY BUILDER with filters (for both count and results)
