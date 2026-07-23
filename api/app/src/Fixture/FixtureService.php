@@ -207,7 +207,7 @@ final class FixtureService
 
             if ($deputy !== null) {
                 $persons['deputies'][$deputyDescriptor->deputyReference] = $deputy;
-                $deputy->associateWithCourtOrder($courtOrder);
+                $deputy->associateWithCourtOrder($courtOrder, $deputyDescriptor->isActive);
                 if ($organisation !== null) {
                     $deputy->setOrganisation($organisation);
                 } else {
@@ -243,6 +243,9 @@ final class FixtureService
             $courtOrder->setSibling($sibling['order']);
             if ($courtOrder->getOrderKind() === CourtOrderKind::Hybrid) {
                 $reports = $sibling['reports'];
+                foreach ($reports as $report) {
+                    $report->setCourtOrder($courtOrder);
+                }
             }
         }
 
@@ -402,6 +405,7 @@ final class FixtureService
             ->setCoDeputyClientConfirmed(true)
             ->setPassword($this->password)
             ->setRegistrationDate(new \DateTime()->sub(new \DateInterval('P1Y')))
+            ->setLastLoggedIn(new \DateTime())
             ->setRegistrationRoute(User::SELF_REGISTER)
         ;
 
@@ -415,7 +419,7 @@ final class FixtureService
     {
         $reportType = $order->getDesiredReportType();
         $report = new Report(
-            $order->getClient(),
+            $order,
             "{$reportType}",
             \DateTime::createFromImmutable($reportDescriptor->startDate),
             \DateTime::createFromImmutable($reportDescriptor->endDate),

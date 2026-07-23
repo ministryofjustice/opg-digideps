@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\v2\Registration\Uploader;
 
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
@@ -290,9 +291,9 @@ class OrgDeputyshipUploader
 
     private function handleReport(OrgDeputyshipDto $dto): void
     {
-        $report = $this->client->getCurrentReport();
+        $report = $this->client?->getCurrentReport();
 
-        if ($report) {
+        if ($report !== null) {
             if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
                 if ($dto->getHybrid() == OrgDeputyshipDto::DUAL_TYPE) {
                     if ($this->client->getDeputy()->getDeputyUid() == $dto->getDeputyUid()) {
@@ -311,22 +312,16 @@ class OrgDeputyshipUploader
                     }
                 }
             }
-
-            //            if ($this->clientHasNewOrgAndDeputy($this->client, $this->deputy)) {
-            //                $report = new Report(
-            //                    $this->client,
-            //                    $dto->getReportType(),
-            //                    $dto->getReportStartDate(),
-            //                    $dto->getReportEndDate()
-            //                );
-            //
-            //                $this->client->addReport($report);
-            //
-            //                $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
-            //            }
         } else {
+            $courtOrder = $this->client
+                ?->getCourtOrders()
+                ?->filter(fn (CourtOrder $courtOrder) => $courtOrder->isActive())
+                ?->reduce(fn (?CourtOrder $current, CourtOrder $next): CourtOrder => $current !== null && $current->getOrderMadeDate() > $next->getOrderMadeDate() ? $current : $next);
+            if ($courtOrder === null) {
+                return;
+            }
             $report = new Report(
-                $this->client,
+                $courtOrder,
                 $dto->getReportType(),
                 $dto->getReportStartDate(),
                 $dto->getReportEndDate()
