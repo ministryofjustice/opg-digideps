@@ -32,8 +32,8 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         $status,
         $q,
         $createdByRole,
-        $offset,
-        $limit,
+        int $offset,
+        int $limit,
         string $orderBy = 'createdOn',
         $order = 'ASC'
     ): array {
