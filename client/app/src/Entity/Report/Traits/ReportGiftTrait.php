@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use OPG\Digideps\Frontend\Entity\Report\Gift;
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -51,10 +50,8 @@ trait ReportGiftTrait
 
     /**
      * @param array $gifts
-     *
-     * @return Report
      */
-    public function setGifts($gifts)
+    public function setGifts($gifts): static
     {
         $this->gifts = $gifts;
 
@@ -66,7 +63,7 @@ trait ReportGiftTrait
      *
      * @return float
      */
-    public function getGiftsTotalValue(): int|float
+    public function getGiftsTotalValue()
     {
         $ret = 0;
         foreach ($this->getGifts() as $gift) {

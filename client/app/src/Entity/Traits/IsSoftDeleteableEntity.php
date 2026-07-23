@@ -14,16 +14,12 @@ trait IsSoftDeleteableEntity
      * @var \DateTime
      */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
-    protected $deletedAt;
+    protected ?\DateTime $deletedAt;
 
     /**
      * Sets deletedAt.
-     *
-     * @param \Datetime|null $deletedAt
-     *
-     * @return $this
      */
-    public function setDeletedAt(?\DateTime $deletedAt = null)
+    public function setDeletedAt(?\DateTime $deletedAt = null): static
     {
         $this->deletedAt = $deletedAt;
 
@@ -35,7 +31,7 @@ trait IsSoftDeleteableEntity
      *
      * @return \DateTime
      */
-    public function getDeletedAt()
+    public function getDeletedAt(): ?\DateTime
     {
         return $this->deletedAt;
     }
