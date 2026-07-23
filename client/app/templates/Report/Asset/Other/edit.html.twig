@@ -28,6 +28,9 @@
 
 {% block pageContent %}
 
-    {% include '@App/Report/Asset/Other/_form.html.twig' %}
+{% include '@App/Report/Asset/Other/_form.html.twig' with {
+    'translationDomain': translationDomain,
+    'form': form
+} %}
 
 {% endblock %}

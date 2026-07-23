@@ -9,6 +9,7 @@ use OPG\Digideps\Frontend\Entity\Report\AssetOther;
 use OPG\Digideps\Frontend\Entity\Report\AssetProperty;
 use OPG\Digideps\Frontend\Entity\Report\Status;
 use OPG\Digideps\Frontend\Form;
+use OPG\Digideps\Frontend\Form\AddAnotherThingType;
 use OPG\Digideps\Frontend\Form\Report\Asset\AssetTypeOther;
 use OPG\Digideps\Frontend\Form\Report\Asset\AssetTypeProperty;
 use OPG\Digideps\Frontend\Form\Report\Asset\AssetTypeTitle;
@@ -125,6 +126,7 @@ class AssetController extends AbstractController
         $asset->setReport($report);
 
         $form = $this->createForm(AssetTypeOther::class, $asset);
+        $form->add('addAnother', AddAnotherThingType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
