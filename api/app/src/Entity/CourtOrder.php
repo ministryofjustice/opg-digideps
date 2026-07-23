@@ -330,8 +330,13 @@ class CourtOrder
                 }
             }
 
+            $courtOrderReportType = $this->getOrderReportType();
+            if ($this->getOrderKind() === CourtOrderKind::Hybrid && $courtOrderReportType === CourtOrderReportType::OPG104) {
+                $courtOrderReportType = $this->getSibling()?->getOrderReportType() ?? CourtOrderReportType::OPG103;
+            }
+
             $this->desiredReportType = new ReportType(
-                $this->getOrderReportType(),
+                $courtOrderReportType,
                 $this->getOrderType(),
                 $this->getOrderKind(),
                 $deputyType
