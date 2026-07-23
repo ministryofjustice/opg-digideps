@@ -50,6 +50,8 @@ readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
         $indeterminate = [];
         $dangerous = [];
         $count = 0;
+
+        /** @var ReportRepository $repository */
         $repository = $this->entityManager->getRepository(Report::class);
 
         foreach ($this->getAllReportIdsOnActiveCourtOrders() as $reportId) {
