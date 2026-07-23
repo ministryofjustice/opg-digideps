@@ -2,6 +2,9 @@
 
 namespace OPG\Digideps\Backend\Controller\Report;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 use OPG\Digideps\Backend\Controller\RestController;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Checklist;
@@ -18,9 +21,6 @@ use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use OPG\Digideps\Backend\Service\ReportService;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

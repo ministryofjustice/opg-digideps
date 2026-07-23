@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\Domain\CourtOrder;
 
 use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 
 /**
  * Represents a pair of court orders, one hw and one pfa.

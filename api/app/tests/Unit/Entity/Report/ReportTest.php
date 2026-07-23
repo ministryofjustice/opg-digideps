@@ -306,6 +306,7 @@ final class ReportTest extends TestCase
         $bankAccount0->setSortCode('111111');
         $bankAccount0->setOpeningBalance('600');
         $bankAccount0->setClosingBalance('600');
+        $reportTwoYearsAgo->addAccount($bankAccount0);
 
         $bankAccount1 = new BankAccount($reportLastYear);
         $bankAccount1->setId(2);
@@ -314,6 +315,7 @@ final class ReportTest extends TestCase
         $bankAccount1->setSortCode('222222');
         $bankAccount1->setOpeningBalance('200');
         $bankAccount1->setClosingBalance('300');
+        $reportLastYear->addAccount($bankAccount1);
 
         $bankAccount2 = new BankAccount($reportLastYear);
         $bankAccount2->setId(3);
@@ -322,6 +324,7 @@ final class ReportTest extends TestCase
         $bankAccount2->setSortCode('333333');
         $bankAccount2->setOpeningBalance('700');
         $bankAccount2->setClosingBalance('500');
+        $reportLastYear->addAccount($bankAccount2);
 
         $client->addReport($reportTwoYearsAgo);
         $client->addReport($reportLastYear);
@@ -331,34 +334,34 @@ final class ReportTest extends TestCase
         $this->assertEmpty($reportTwoYearsAgo->getPreviousReportData());
 
         // this should be the report from two years ago
-        $report1PreviousData = $reportLastYear->getPreviousReportData();
+        $reportTwoYearsAgoData = $reportLastYear->getPreviousReportData();
 
-        $this->assertArrayHasKey('financial-summary', $report1PreviousData);
-        $this->assertArrayHasKey('report-summary', $report1PreviousData);
+        $this->assertArrayHasKey('financial-summary', $reportTwoYearsAgoData);
+        $this->assertArrayHasKey('report-summary', $reportTwoYearsAgoData);
         self::assertEquals(
             Report::PROF_COMBINED_LOW_ASSETS_TYPE,
-            $report1PreviousData['report-summary']['type']
+            $reportTwoYearsAgoData['report-summary']['type']
         );
 
-        $this->assertCount(1, $report1PreviousData['financial-summary']['accounts']);
-        $this->assertArrayHasKey('opening-balance-total', $report1PreviousData['financial-summary']);
-        $this->assertArrayHasKey('closing-balance-total', $report1PreviousData['financial-summary']);
+        $this->assertCount(1, $reportTwoYearsAgoData['financial-summary']['accounts']);
+        $this->assertArrayHasKey('opening-balance-total', $reportTwoYearsAgoData['financial-summary']);
+        $this->assertArrayHasKey('closing-balance-total', $reportTwoYearsAgoData['financial-summary']);
         self::assertEquals(
-            $report1PreviousData['financial-summary']['opening-balance-total'],
-            $report1PreviousData['financial-summary']['closing-balance-total']
+            $reportTwoYearsAgoData['financial-summary']['opening-balance-total'],
+            $reportTwoYearsAgoData['financial-summary']['closing-balance-total']
         );
 
         self::assertEquals(
             'bank0',
-            $report1PreviousData['financial-summary']['accounts'][$bankAccount0->getId()]['bank']
+            $reportTwoYearsAgoData['financial-summary']['accounts'][$bankAccount0->getId()]['bank']
         );
-        $this->assertArrayHasKey('nameOneLine', $report1PreviousData['financial-summary']['accounts'][$bankAccount0->getId()]);
-        self::assertEquals($report1PreviousData['financial-summary']['closing-balance-total'], $bankAccount0->getClosingBalance());
+        $this->assertArrayHasKey('nameOneLine', $reportTwoYearsAgoData['financial-summary']['accounts'][$bankAccount0->getId()]);
+        self::assertEquals($reportTwoYearsAgoData['financial-summary']['closing-balance-total'], $bankAccount0->getClosingBalance());
 
         // assert current report contains report1 data
         $currentReportPreviousData = $reportLatest->getPreviousReportData();
         $this->assertArrayHasKey('financial-summary', $currentReportPreviousData);
-        $this->assertArrayHasKey('report-summary', $report1PreviousData);
+        $this->assertArrayHasKey('report-summary', $reportTwoYearsAgoData);
 
         $this->assertCount(2, $currentReportPreviousData['financial-summary']['accounts']);
         self::assertEquals(

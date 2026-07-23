@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Domain\Report;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderPair;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\CourtOrderRepository;
 use OPG\Digideps\Backend\Service\ReportService;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipChange;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 
 /**
  * Transition a report from its old report type to its new one, splitting/merging/removing reports as necessary.

@@ -41,10 +41,8 @@ class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
         foreach ([self::$tokenDeputy, self::$tokenPa, self::$tokenProf] as $deputyToken) {
             $report = $this->prepareReport();
 
-            $reportUrl = sprintf(
-                '/report/money-type/delete/%s',
-                $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()?->getId()
-            );
+            $firstMoneyReceived = $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first();
+            $reportUrl = sprintf('/report/money-type/delete/%s', $firstMoneyReceived->getId());
 
 
             $this->assertEndpointAllowedFor('DELETE', $reportUrl, $deputyToken);

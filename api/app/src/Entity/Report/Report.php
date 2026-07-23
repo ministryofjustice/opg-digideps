@@ -6,6 +6,7 @@ namespace OPG\Digideps\Backend\Entity\Report;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -32,6 +33,13 @@ use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Service\ReportService;
 use OPG\Digideps\Backend\Service\ReportStatusService;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\Deputy\DeputyType;
+use OPG\Digideps\Common\Report\ReportType;
+use OPG\Digideps\Common\Report\Section\ReportSection;
+use OPG\Digideps\Common\Report\Section\Sections;
 
 #[ORM\Table(name: 'report')]
 #[ORM\Index(columns: ['end_date'], name: 'end_date_idx')]
@@ -58,12 +66,6 @@ class Report
     use ReportProfDeputyCostsTrait;
     use ReportProfDeputyCostsEstimateTrait;
     use StatusTrait;
-
-    /**
-     * Reports with total amount of assets
-     * Threshold under which reports should be 103, and not 102.
-     */
-    public const int ASSETS_TOTAL_VALUE_103_THRESHOLD = 21000;
 
     public const string STATUS_NOT_STARTED = 'notStarted';
     public const string STATUS_READY_TO_SUBMIT = 'readyToSubmit';
@@ -92,9 +94,6 @@ class Report
 
     public const string TYPE_HEALTH_WELFARE = '104';
     public const string TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
-    public const string TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS = '103';
-    public const string TYPE_COMBINED_HIGH_ASSETS = '102-4';
-    public const string TYPE_COMBINED_LOW_ASSETS = '103-4';
 
     public const string SECTION_DECISIONS = 'decisions';
     public const string SECTION_CONTACTS = 'contacts';
@@ -133,46 +132,6 @@ class Report
     public const string PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
 
     public const int BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS = 60;
-
-    // Decisions
-    public const string SIGNIFICANT_DECISION_MADE = 'Yes';
-    public const string SIGNIFICANT_DECISION_NOT_MADE = 'No';
-
-    /**
-     * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations.
-     *
-     * @return array<string, array<string>>
-     */
-    public static function getSectionsSettings(): array
-    {
-        return [
-            self::SECTION_DECISIONS => self::allRolesAllReportTypes(),
-            self::SECTION_CONTACTS => self::allRolesAllReportTypes(),
-            self::SECTION_VISITS_CARE => self::allRolesAllReportTypes(),
-            self::SECTION_LIFESTYLE => self::allRolesHwAndCombinedReportTypes(),
-            // money
-            self::SECTION_BANK_ACCOUNTS => self::allRolesPfaAndCombinedReportTypes(),
-            self::SECTION_MONEY_TRANSFERS => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
-            self::SECTION_MONEY_IN => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
-            self::SECTION_MONEY_OUT => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
-            self::SECTION_MONEY_IN_SHORT => self::allRolesPfaAndCombinedLowAssetsReportTypes(),
-            self::SECTION_MONEY_OUT_SHORT => self::allRolesPfaAndCombinedLowAssetsReportTypes(),
-            self::SECTION_ASSETS => self::allRolesPfaAndCombinedReportTypes(),
-            self::SECTION_DEBTS => self::allRolesPfaAndCombinedReportTypes(),
-            self::SECTION_GIFTS => self::allRolesPfaAndCombinedReportTypes(),
-            self::SECTION_BALANCE => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
-            self::SECTION_CLIENT_BENEFITS_CHECK => self::allRolesPfaAndCombinedReportTypes(),
-            // end money
-            self::SECTION_ACTIONS => self::allRolesAllReportTypes(),
-            self::SECTION_OTHER_INFO => self::allRolesAllReportTypes(),
-            self::SECTION_DEPUTY_EXPENSES => self::layPfaAndCombinedReportTypes(),
-            self::SECTION_PA_DEPUTY_EXPENSES => self::paPfaAndCombinedReportTypes(),
-            self::SECTION_PROF_DEPUTY_COSTS => self::allProfReportTypes(),
-            // add when ready
-            self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => self::allProfReportTypes(),
-            self::SECTION_DOCUMENTS => self::allRolesAllReportTypes(),
-        ];
-    }
 
     /**
      * @return array<string>
@@ -1161,30 +1120,6 @@ class Report
             self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
             self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
             self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
-        ];
-    }
-
-    /**
-     * @return array<string>
-     */
-    public static function allRolesHwAndCombinedReportTypes(): array
-    {
-        return [
-            self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
-            self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
-            self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
-        ];
-    }
-
-    /**
-     * @return array<string>
-     */
-    public static function allRolesPfaAndCombinedReportTypes(): array
-    {
-        return [
-            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
-            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
-            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
         ];
     }
 
