@@ -160,13 +160,42 @@ get-audit-logs: ##@localstack Get audit log groups by passing event name e.g. ge
 	docker compose exec localstack awslocal logs get-log-events --log-group-name audit-local --log-stream-name $(event_name)
 
 composer-api: ##@application Runs composer on Api
-	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/api/app:/app --volume ${PWD}/common:/common composer ${COMPOSER_ARGS}
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/api/app:/app --volume ${PWD}/common:/common composer install ${COMPOSER_ARGS}
 
 composer-client: ##@application Runs composer on Client
-	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client/app:/app --volume ${PWD}/common:/common composer ${COMPOSER_ARGS}
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client/app:/app --volume ${PWD}/common:/common composer install ${COMPOSER_ARGS}
 
 composer-common: ##@application Runs composer on Common
-	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/common:/app composer ${COMPOSER_ARGS}
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/common:/app composer install ${COMPOSER_ARGS}
+
+composer-api-audit: ##@application Runs audit composer on Api
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/api/app:/app --volume ${PWD}/common:/common composer audit ${COMPOSER_ARGS}
+
+composer-client-audit: ##@application Runs audit composer on Client
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client/app:/app --volume ${PWD}/common:/common composer audit ${COMPOSER_ARGS}
+
+composer-common-audit: ##@application Runs audit composer on Common
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/common:/app composer audit ${COMPOSER_ARGS}
+
+composer-client-fix: ##@application Runs fix composer package on Client (eg make composer-client-fix package=mypackage)
+	docker compose run --rm \
+	--volume ~/.composer:/tmp \
+	--volume ${PWD}/client/app:/app \
+	--volume ${PWD}/common:/common \
+	composer sh -c 'composer update $(package) --with-all-dependencies --no-scripts && composer bump'
+
+composer-api-fix: ##@application Runs fix composer package on Api (eg make composer-api-fix package=mypackage)
+	docker compose run --rm \
+	--volume ~/.composer:/tmp \
+	--volume ${PWD}/api/app:/app \
+	--volume ${PWD}/common:/common \
+	composer sh -c 'composer update $(package) --with-all-dependencies --no-scripts && composer bump'
+
+composer-common-fix: ##@application Runs fix composer package on Common (eg make composer-common-fix package=mypackage)
+	docker compose run --rm \
+	--volume ~/.composer:/tmp \
+	--volume ${PWD}/common:/app \
+	composer sh -c 'composer update $(package) --with-all-dependencies --no-scripts && composer bump'
 
 js-lint: ##@javascript Lint JS resources
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm node-js npm run lint
