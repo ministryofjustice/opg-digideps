@@ -34,7 +34,7 @@ resource "aws_ecs_service" "admin" {
   load_balancer {
     target_group_arn = aws_lb_target_group.admin.arn
     container_name   = "admin_web"
-    container_port   = 80
+    container_port   = 8080
   }
 
   service_connect_configuration {
@@ -45,7 +45,7 @@ resource "aws_ecs_service" "admin" {
       port_name      = "admin-port"
       client_alias {
         dns_name = "admin"
-        port     = 80
+        port     = 8080
       }
     }
   }
@@ -78,11 +78,12 @@ locals {
       image       = local.images.client-webserver,
       mountPoints = [],
       name        = "admin_web",
+      user        = "nginx",
       portMappings = [
         {
           name : "admin-port",
-          containerPort : 80,
-          hostPort = 80,
+          containerPort : 8080,
+          hostPort = 8080,
           protocol = "tcp"
         }
       ],
@@ -117,6 +118,7 @@ locals {
       image       = local.images.client,
       mountPoints = [],
       name        = "admin_app",
+      user        = "www-data",
       portMappings = [{
         containerPort = 9000,
         hostPort      = 9000,

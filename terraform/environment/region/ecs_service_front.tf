@@ -34,7 +34,7 @@ resource "aws_ecs_service" "front" {
   load_balancer {
     target_group_arn = aws_lb_target_group.front.arn
     container_name   = "front_web"
-    container_port   = 80
+    container_port   = 8080
   }
 
   service_connect_configuration {
@@ -45,7 +45,7 @@ resource "aws_ecs_service" "front" {
       port_name      = "front-port"
       client_alias {
         dns_name = "front"
-        port     = 80
+        port     = 8080
       }
     }
   }
@@ -80,10 +80,11 @@ locals {
       image       = local.images.client-webserver,
       mountPoints = [],
       name        = "front_web",
+      user        = "nginx"
       portMappings = [{
         name          = "front-port",
-        containerPort = 80,
-        hostPort      = 80,
+        containerPort = 8080,
+        hostPort      = 8080,
         protocol      = "tcp"
       }],
       healthCheck = {
@@ -117,6 +118,7 @@ locals {
       image       = local.images.client,
       mountPoints = [],
       name        = "front_app",
+      user        = "www-data",
       portMappings = [{
         containerPort = 9000,
         hostPort      = 9000,

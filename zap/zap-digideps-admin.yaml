@@ -3,18 +3,18 @@ env:
   contexts:
     - name: "Digideps"
       urls:
-        - "http://admin-webserver/admin/organisations/3"
+        - "http://admin-webserver:8080/admin/organisations/3"
       includePaths:
-        - "http://admin-webserver/login"
-        - "http://admin-webserver/admin/organisations.*"
+        - "http://admin-webserver:8080/login"
+        - "http://admin-webserver:8080/admin/organisations.*"
       excludePaths:
-        - "http://admin-webserver/logout"
+        - "http://admin-webserver:8080/logout"
       authentication:
         method: "script"
         parameters:
           script: "/zap/wrk/auth-digi.js"
           scriptEngine: "ECMAScript : Oracle Nashorn"
-          Login_URL: "http://admin-webserver/login"
+          Login_URL: "http://admin-webserver:8080/login"
           CSRF_Field: "login[_token]"
           POST_Data: "login[email]={%username%}&login[password]={%password%}&login[_token]={%login[_token]%}"
         verification:
@@ -69,7 +69,7 @@ jobs:
     parameters:
       context: "Digideps"
       user: "admin"
-      url: "http://admin-webserver/admin/organisations"
+      url: "http://admin-webserver:8080/admin/organisations"
       maxDepth: 10
       maxParseSizeBytes: 26214400
 
