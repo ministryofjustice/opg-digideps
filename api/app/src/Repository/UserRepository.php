@@ -18,9 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
-/**
- * @method null|User findOneByEmail(string $email)
- */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
     private QueryBuilder $qb;
@@ -479,5 +476,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    public function findOneByEmail(string $email): ?User
+    {
+        /** @var ?User $user */
+        $user = $this->findOneBy(['email' => $email]);
+        return $user;
     }
 }
