@@ -6,6 +6,7 @@ namespace Tests\OPG\Digideps\Backend\Behat\v2\Helpers;
 
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\User;
 
 class FixtureHelperBuilder
@@ -73,7 +74,12 @@ class FixtureHelperBuilder
     public static function buildOrgUserDetails(User $user): array
     {
         $organisation = $user->getOrganisations()->first();
-        $deputy = $organisation?->getClients()[0]->getDeputy();
+
+        if (!($organisation instanceof Organisation)) {
+            throw new \InvalidArgumentException('User does not have any organisations');
+        }
+
+        $deputy = $organisation->getClients()[0]->getDeputy();
 
         if ($deputy) {
             $details = [
