@@ -468,4 +468,55 @@ trait ReportManagementTrait
         $date = new \DateTime();
         $this->customDueDate = $date->setDate($year, $month, $day);
     }
+
+    /**
+     * @When I click continue to submit the new report details
+     */
+    public function iClickContinueToSubmitNewReportDetails(): void
+    {
+        $this->iAmOnAdminManageReportPage();
+        $this->pressButton('Continue');
+    }
+
+    /**
+     * @Then it shows an error message that the report duration is more than 15 months
+     */
+    public function iShouldSeeMoreThan15monthsDurationError(): void
+    {
+        $this->iAmOnAdminManageReportPage();
+
+        $errorMessage = $this->getSession()->getPage()->find('xpath', '//div[contains(@class, "govuk-error-summary")]//li');
+
+        if (is_null($errorMessage)) {
+            throw new BehatException('Could not find an error message on the page');
+        }
+
+        $expectedErrorMessage = 'Check the end date: your reporting period cannot be more than 15 months';
+        $actualErrorMessage = trim($errorMessage->getText());
+
+        if ($actualErrorMessage !== $expectedErrorMessage) {
+            throw new BehatException(sprintf('Expected error message "%s", but got "%s"', $expectedErrorMessage, $actualErrorMessage));
+        }
+    }
+
+    /**
+     * @Then it shows an error message that the start date is before the end date
+     */
+    public function iShouldSeeEndDateIsBeforeStartDateError(): void
+    {
+        $this->iAmOnAdminManageReportPage();
+
+        $errorMessage = $this->getSession()->getPage()->find('xpath', '//div[contains(@class, "govuk-error-summary")]//li');
+
+        if (is_null($errorMessage)) {
+            throw new BehatException('Could not find an error message on the page');
+        }
+
+        $expectedErrorMessage = 'Check the end date: it cannot be before the start date';
+        $actualErrorMessage = trim($errorMessage->getText());
+
+        if ($actualErrorMessage !== $expectedErrorMessage) {
+            throw new BehatException(sprintf('Expected error message "%s", but got "%s"', $expectedErrorMessage, $actualErrorMessage));
+        }
+    }
 }
