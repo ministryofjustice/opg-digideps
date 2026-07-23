@@ -500,7 +500,7 @@ trait ReportManagementTrait
     }
 
     /**
-     * @Then it shows an error message that the start date is before the end date
+     * @Then it shows an error message that the end date is before the start date
      */
     public function iShouldSeeEndDateIsBeforeStartDateError(): void
     {

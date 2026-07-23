@@ -136,4 +136,4 @@ Feature: Report Management (applies to all admin roles)
     Then it shows an error message that the report duration is more than 15 months
     And I change the report 'end' date to '28 June 2021'
     When I click continue to submit the new report details
-    Then it shows an error message that the start date is before the end date
+    Then it shows an error message that the end date is before the start date
