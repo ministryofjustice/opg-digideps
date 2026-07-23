@@ -6,61 +6,54 @@ namespace OPG\Digideps\Frontend\Entity\Report;
 
 use OPG\Digideps\Frontend\Entity\MoneyReceivedOnClientsBehalfInterface;
 use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
-use DateTime;
 use JMS\Serializer\Annotation as JMS;
 
 class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterface
 {
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $id = null;
 
-    /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"report", "client-benefits-check"})
-     */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?\DateTime $created = null;
 
-    /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck")
-     * @JMS\Groups({"report", "client-benefits-check"})
-     */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?ClientBenefitsCheck $clientBenefitsCheck = null;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $moneyType = null;
 
     /**
-     * @JMS\Type("float")
-     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
      */
+    #[JMS\Type('float')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?float $amount = null;
 
     /**
-     * @JMS\Type("bool")
-     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
      *
      * This will not be persisted - it exists to enable a checkbox in the form
      */
+    #[JMS\Type('bool')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?bool $amountDontKnow = null;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $whoReceivedMoney;
 
     public function getId(): ?string

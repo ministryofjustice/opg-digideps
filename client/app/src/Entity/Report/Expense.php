@@ -13,35 +13,35 @@ class Expense
     use HasBankAccountTrait;
 
     /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"expenses"})
      *
      * @var int
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['expenses'])]
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     * @JMS\Groups({"expenses"})
      *
-     * @Assert\NotBlank(message="expenses.explanation.notBlank", groups={"deputy-expense"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['expenses'])]
+    #[Assert\NotBlank(message: 'expenses.explanation.notBlank', groups: ['deputy-expense'])]
     private $explanation;
 
     /**
      * @var float
      *
-     * @JMS\Type("string")
-     * @JMS\Groups({"expenses"})
      *
-     * @Assert\NotBlank(message="expenses.amount.notBlank", groups={"deputy-expense"})
-     * @Assert\Type(type="numeric", message="expenses.amount.type", groups={"deputy-expense"})
-     * @Assert\Range(min=0.01, max=100000000000, notInRangeMessage="expenses.amount.notInRangeMessage", groups={"deputy-expense"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['expenses'])]
+    #[Assert\NotBlank(message: 'expenses.amount.notBlank', groups: ['deputy-expense'])]
+    #[Assert\Type(type: 'numeric', message: 'expenses.amount.type', groups: ['deputy-expense'])]
+    #[Assert\Range(min: 0.01, max: 100000000000, notInRangeMessage: 'expenses.amount.notInRangeMessage', groups: ['deputy-expense'])]
     private $amount;
 
     /**
@@ -55,7 +55,7 @@ class Expense
     /**
      * @param mixed $id
      */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }

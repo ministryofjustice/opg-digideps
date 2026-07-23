@@ -8,25 +8,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportDeputyExpenseTrait
 {
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"expenses-paid-anything"})
-     * @Assert\NotBlank(message="expenses.paidForAnything.notBlank", groups={"expenses-paid-anything"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['expenses-paid-anything'])]
+    #[Assert\NotBlank(message: 'expenses.paidForAnything.notBlank', groups: ['expenses-paid-anything'])]
     private ?string $paidForAnything;
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Expense>")
-     * @JMS\Groups({"expenses"})
      *
      * @var Expense[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Expense>')]
+    #[JMS\Groups(['expenses'])]
     private array $expenses = [];
 
-    /**
-     * @JMS\Type("double")
-     * @JMS\Groups({"expenses-total"})
-     */
+    #[JMS\Type('double')]
+    #[JMS\Groups(['expenses-total'])]
     private $expensesTotal;
 
     public function getPaidForAnything(): ?string

@@ -6,39 +6,25 @@ use JMS\Serializer\Annotation as JMS;
 
 class ReportSubmissionSummary
 {
-    /**
-     * @JMS\Type("integer")
-     */
+    #[JMS\Type('integer')]
     private $id;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     private $caseNumber;
 
-    /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
     private $dateReceived;
 
-    /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
     private $scanDate;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     private $formType;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     private $documentType;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     private $documentId;
 
     /**
