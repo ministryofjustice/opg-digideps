@@ -25,7 +25,7 @@ resource "aws_lb_listener" "front_https" {
   certificate_arn   = local.certificate_arn
 
   default_action {
-    target_group_arn = aws_lb_target_group.front.arn
+    target_group_arn = aws_lb_target_group.front_http.arn
     type             = "forward"
   }
 }
@@ -84,6 +84,28 @@ resource "aws_lb_listener" "front_http" {
 
 resource "aws_lb_target_group" "front" {
   name                 = "front-tg-${local.environment}"
+  port                 = 80
+  protocol             = "HTTP"
+  target_type          = "ip"
+  vpc_id               = data.aws_vpc.main.id
+  deregistration_delay = 0
+  tags                 = var.default_tags
+
+  health_check {
+    path                = "/health-check"
+    interval            = 30
+    timeout             = 10
+    unhealthy_threshold = 3
+    protocol            = "HTTP"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_lb_target_group" "front_http" {
+  name                 = "front-target-${local.environment}"
   port                 = 8080
   protocol             = "HTTP"
   target_type          = "ip"

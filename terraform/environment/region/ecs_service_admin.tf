@@ -32,7 +32,7 @@ resource "aws_ecs_service" "admin" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.admin.arn
+    target_group_arn = aws_lb_target_group.admin_http.arn
     container_name   = "admin_web"
     container_port   = 8080
   }

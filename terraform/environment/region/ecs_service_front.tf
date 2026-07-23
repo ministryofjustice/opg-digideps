@@ -32,7 +32,7 @@ resource "aws_ecs_service" "front" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.front.arn
+    target_group_arn = aws_lb_target_group.front_http.arn
     container_name   = "front_web"
     container_port   = 8080
   }
