@@ -4,34 +4,22 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration;
 
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Service\JWT\JWTService;
 use OPG\Digideps\Backend\Service\SecretManagerService;
 use OPG\Digideps\Backend\Service\Time\DateTimeProvider;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Key\InMemory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class JWTServiceTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @var ObjectProphecy<SecretManagerService> $secretsManager
-     */
-    private ObjectProphecy $secretsManager;
-    /**
-     * @var ObjectProphecy<LoggerInterface> $logger
-     */
-    private ObjectProphecy $logger;
-    /**
-     * @var ObjectProphecy<DateTimeProvider> $dateTimeProvider
-     */
-    private ObjectProphecy $dateTimeProvider;
+    private SecretManagerService&MockObject $secretsManager;
+    private LoggerInterface&MockObject $logger;
+    private DateTimeProvider&MockObject $dateTimeProvider;
     private string $publicKeyPem;
     private string $privateKeyPem;
 
@@ -39,18 +27,24 @@ class JWTServiceTest extends TestCase
     {
         [$this->publicKeyPem, $this->privateKeyPem] = $this->createPemKeyPair();
 
-        $this->secretsManager = self::prophesize(SecretManagerService::class);
-        $this->logger = self::prophesize(LoggerInterface::class);
-        $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $this->secretsManager = self::createMock(SecretManagerService::class);
+        $this->logger = self::createMock(LoggerInterface::class);
+        $this->dateTimeProvider = self::createMock(DateTimeProvider::class);
 
-        $this->secretsManager->getSecret('public-jwt-key-base64')->willReturn(base64_encode($this->publicKeyPem));
-        $this->secretsManager->getSecret('private-jwt-key-base64')->willReturn(base64_encode($this->privateKeyPem));
+        $this->secretsManager->expects(self::once())
+            ->method('getSecret')
+            ->with('public-jwt-key-base64')
+            ->willReturn(base64_encode($this->publicKeyPem));
+        $this->secretsManager->expects(self::once())
+            ->method('getSecret')
+            ->with('private-jwt-key-base64')
+            ->willReturn(base64_encode($this->privateKeyPem));
 
         $this->sut = new JWTService(
-            $this->secretsManager->reveal(),
-            $this->logger->reveal(),
+            $this->secretsManager,
+            $this->logger,
             'https://example.org',
-            $this->dateTimeProvider->reveal()
+            $this->dateTimeProvider
         );
     }
 
@@ -93,9 +87,18 @@ class JWTServiceTest extends TestCase
         $plus1Hour = new \DateTimeImmutable('+1 hour');
         $sub10Seconds = new \DateTimeImmutable('-10 seconds');
 
-        $this->dateTimeProvider->getDateTimeImmutable('now')->willReturn($now);
-        $this->dateTimeProvider->getDateTimeImmutable('+1 hour')->willReturn($plus1Hour);
-        $this->dateTimeProvider->getDateTimeImmutable('-10 seconds')->willReturn($sub10Seconds);
+        $this->dateTimeProvider->expects(self::once())
+            ->method('getDateTimeImmutable')
+            ->with('now')
+            ->willReturn($now);
+        $this->dateTimeProvider->expects(self::once())
+            ->method('getDateTimeImmutable')
+            ->with('+1 hour')
+            ->willReturn($plus1Hour);
+        $this->dateTimeProvider->expects(self::once())
+            ->method('getDateTimeImmutable')
+            ->with('-10 seconds')
+            ->willReturn($sub10Seconds);
 
         $user = new User()
             ->setId(22)
