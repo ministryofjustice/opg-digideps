@@ -238,6 +238,7 @@ class AssetController extends AbstractController
             'form' => $form->createView(),
             'backLink' => $this->generateUrl('assets_summary', ['reportId' => $reportId]),
             'skipLink' => null,
+            'assetId' => $assetId,
         ];
     }
 

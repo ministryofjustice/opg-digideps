@@ -29,6 +29,8 @@ typePage:
   backLink: Back
 
 stepPageProperty:
+  editHtmlTitle: "Edit an asset: property - Complete the deputy report | GOV.UK"
+  editPageTitle: "Edit an asset: property"
   htmlTitle: "Add an asset: property - Complete the deputy report | GOV.UK"
   pageTitle: "Add an asset: property"
   supportTitle: Assets
