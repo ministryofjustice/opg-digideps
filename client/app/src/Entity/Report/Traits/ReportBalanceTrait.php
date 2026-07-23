@@ -2,7 +2,6 @@
 
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -40,12 +39,12 @@ trait ReportBalanceTrait
 
     /**
      * @param string $balanceMismatchExplanation
-     *
-     * @return Report
      */
-    public function setBalanceMismatchExplanation($balanceMismatchExplanation): void
+    public function setBalanceMismatchExplanation($balanceMismatchExplanation): static
     {
         $this->balanceMismatchExplanation = $balanceMismatchExplanation;
+
+        return $this;
     }
 
     /**
@@ -64,10 +63,8 @@ trait ReportBalanceTrait
 
     /**
      * @param float $calculatedBalance
-     *
-     * @return Report
      */
-    public function setCalculatedBalance($calculatedBalance)
+    public function setCalculatedBalance($calculatedBalance): static
     {
         $this->calculatedBalance = $calculatedBalance;
 
@@ -84,10 +81,8 @@ trait ReportBalanceTrait
 
     /**
      * @param float $totalsOffset
-     *
-     * @return Report
      */
-    public function setTotalsOffset($totalsOffset)
+    public function setTotalsOffset($totalsOffset): static
     {
         $this->totalsOffset = $totalsOffset;
 
