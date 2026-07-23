@@ -493,7 +493,7 @@ class Fixtures
     }
 
     /**
-     * @template T
+     * @template T of object
      * @param class-string<T> $entity
      * @return EntityRepository<T>
      */

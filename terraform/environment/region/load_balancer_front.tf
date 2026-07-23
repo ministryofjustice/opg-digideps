@@ -113,13 +113,13 @@ resource "aws_lb_target_group" "front_http" {
   deregistration_delay = 0
   tags                 = var.default_tags
 
-  #  health_check {
-  #    path                = "/health-check"
-  #    interval            = 30
-  #    timeout             = 10
-  #    unhealthy_threshold = 3
-  #    protocol            = "HTTP"
-  #  }
+  health_check {
+    path                = "/health-check"
+    interval            = 30
+    timeout             = 10
+    unhealthy_threshold = 3
+    protocol            = "HTTP"
+  }
 
   lifecycle {
     create_before_destroy = true
