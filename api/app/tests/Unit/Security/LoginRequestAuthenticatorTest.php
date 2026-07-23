@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Security;
 
-use OPG\Digideps\Backend\Exception\UserWrongCredentialsManyAttempts;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Exception\UnauthorisedException;
 use OPG\Digideps\Backend\Exception\UserWrongCredentialsException;
+use OPG\Digideps\Backend\Exception\UserWrongCredentialsManyAttempts;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Security\LoginRequestAuthenticator;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
 use OPG\Digideps\Backend\Service\DateTimeProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -31,52 +30,32 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 
 final class LoginRequestAuthenticatorTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @var ObjectProphecy<UserRepository> $userRepo
-     */
-    private ObjectProphecy $userRepo;
-    /**
-     * @var ObjectProphecy<AttemptsInTimeChecker> $attemptsInTimeChecker
-     */
-    private ObjectProphecy $attemptsInTimeChecker;
-    /**
-     * @var ObjectProphecy<AttemptsIncrementalWaitingChecker> $incrementalWaitingTimeChecker
-     */
-    private ObjectProphecy $incrementalWaitingTimeChecker;
-    /**
-     * @var ObjectProphecy<AuthService> $authService
-     */
-    private ObjectProphecy $authService;
-    /**
-     * @var ObjectProphecy<TokenStorageInterface> $tokenStorage
-     */
-    private ObjectProphecy $tokenStorage;
-    /**
-     * @var ObjectProphecy<DateTimeProvider> $dateTimeProvider
-     */
-    private ObjectProphecy $dateTimeProvider;
+    private UserRepository&MockObject $userRepo;
+    private AttemptsInTimeChecker&MockObject $attemptsInTimeChecker;
+    private AttemptsIncrementalWaitingChecker&MockObject $incrementalWaitingTimeChecker;
+    private AuthService&MockObject $authService;
+    private TokenStorageInterface&MockObject $tokenStorage;
+    private DateTimeProvider&MockObject $dateTimeProvider;
     private LoginRequestAuthenticator $sut;
 
     public function setUp(): void
     {
-        $this->userRepo = self::prophesize(UserRepository::class);
-        $this->attemptsInTimeChecker = self::prophesize(AttemptsInTimeChecker::class);
-        $this->incrementalWaitingTimeChecker = self::prophesize(AttemptsIncrementalWaitingChecker::class);
-        $this->authService = self::prophesize(AuthService::class);
-        $this->tokenStorage = self::prophesize(TokenStorageInterface::class);
-        $verboseLogger = self::prophesize(LoggerInterface::class);
-        $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $this->userRepo = self::createMock(UserRepository::class);
+        $this->attemptsInTimeChecker = self::createMock(AttemptsInTimeChecker::class);
+        $this->incrementalWaitingTimeChecker = self::createMock(AttemptsIncrementalWaitingChecker::class);
+        $this->authService = self::createMock(AuthService::class);
+        $this->tokenStorage = self::createMock(TokenStorageInterface::class);
+        $verboseLogger = self::createMock(LoggerInterface::class);
+        $this->dateTimeProvider = self::createMock(DateTimeProvider::class);
 
         $this->sut = new LoginRequestAuthenticator(
-            $this->userRepo->reveal(),
-            $this->attemptsInTimeChecker->reveal(),
-            $this->incrementalWaitingTimeChecker->reveal(),
-            $this->authService->reveal(),
-            $this->tokenStorage->reveal(),
-            $verboseLogger->reveal(),
-            $this->dateTimeProvider->reveal()
+            $this->userRepo,
+            $this->attemptsInTimeChecker,
+            $this->incrementalWaitingTimeChecker,
+            $this->authService,
+            $this->tokenStorage,
+            $verboseLogger,
+            $this->dateTimeProvider
         );
     }
 
@@ -201,10 +180,19 @@ final class LoginRequestAuthenticatorTest extends TestCase
             ->setPassword('password123')
             ->setRoleName('ROLE_USER');
 
-        $this->authService->isSecretValid($request)->willReturn(true);
-        $this->authService->isSecretValidForRole('ROLE_USER', $request)->willReturn(true);
+        $this->authService->expects(self::once())
+            ->method('isSecretValid')
+            ->with($request)
+            ->willReturn(true);
+        $this->authService->expects(self::once())
+            ->method('isSecretValidForRole')
+            ->with('ROLE_USER', $request)
+            ->willReturn(true);
 
-        $this->userRepo->findOneBy(['email' => 'a@b.com'])->willReturn($user);
+        $this->userRepo->expects(self::once())
+            ->method('findOneBy')
+            ->with(['email' => 'a@b.com'])
+            ->willReturn($user);
 
         $expectedPassport = new Passport(
             new UserBadge('a@b.com'),
@@ -229,7 +217,10 @@ final class LoginRequestAuthenticatorTest extends TestCase
             json_encode(['email' => 'a@b.com', 'password' => 'password123']),
         );
 
-        $this->authService->isSecretValid($request)->willReturn(false);
+        $this->authService->expects(self::once())
+            ->method('isSecretValid')
+            ->with($request)
+            ->willReturn(false);
 
         $this->sut->authenticate($request);
     }
@@ -250,7 +241,10 @@ final class LoginRequestAuthenticatorTest extends TestCase
             json_encode($loginDetails),
         );
 
-        $this->authService->isSecretValid($request)->willReturn(true);
+        $this->authService->expects(self::once())
+            ->method('isSecretValid')
+            ->with($request)
+            ->willReturn(true);
 
         $this->sut->authenticate($request);
     }
@@ -294,14 +288,31 @@ final class LoginRequestAuthenticatorTest extends TestCase
             json_encode(['email' => 'a@b.com', 'password' => 'password123']),
         );
 
-        $this->authService->isSecretValid($request)->willReturn(true);
+        $this->authService->expects(self::once())
+            ->method('isSecretValid')
+            ->with($request)
+            ->willReturn(true);
 
-        $this->attemptsInTimeChecker->registerAttempt('emaila@b.com')->willReturn($this->attemptsInTimeChecker);
-        $this->incrementalWaitingTimeChecker->registerAttempt('emaila@b.com')->willReturn($this->incrementalWaitingTimeChecker);
+        $this->attemptsInTimeChecker->expects(self::once())
+            ->method('registerAttempt')
+            ->with('emaila@b.com')
+            ->willReturn($this->attemptsInTimeChecker);
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('registerAttempt')
+            ->with('emaila@b.com')
+            ->willReturn($this->incrementalWaitingTimeChecker);
 
-        $this->incrementalWaitingTimeChecker->isFrozen('emaila@b.com')->willReturn(true);
-        $this->dateTimeProvider->getDateTime()->willReturn($now);
-        $this->incrementalWaitingTimeChecker->getUnfrozenAt('emaila@b.com')->willReturn($nowPlusOneHourTime);
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('isFrozen')
+            ->with('emaila@b.com')
+            ->willReturn(true);
+        $this->dateTimeProvider->expects(self::once())
+            ->method('getDateTime')
+            ->willReturn($now);
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('getUnfrozenAt')
+            ->with('emaila@b.com')
+            ->willReturn($nowPlusOneHourTime);
 
         try {
             $this->sut->authenticate($request);
@@ -329,14 +340,29 @@ final class LoginRequestAuthenticatorTest extends TestCase
             json_encode(['email' => 'a@b.com', 'password' => 'password123']),
         );
 
-        $this->authService->isSecretValid($request)->willReturn(true);
+        $this->authService->expects(self::once())
+            ->method('isSecretValid')
+            ->with($request)
+            ->willReturn(true);
 
-        $this->attemptsInTimeChecker->registerAttempt('emaila@b.com')->willReturn($this->attemptsInTimeChecker);
-        $this->incrementalWaitingTimeChecker->registerAttempt('emaila@b.com')->willReturn($this->incrementalWaitingTimeChecker);
+        $this->attemptsInTimeChecker->expects(self::once())
+            ->method('registerAttempt')
+            ->with('emaila@b.com')
+            ->willReturn($this->attemptsInTimeChecker);
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('registerAttempt')
+            ->with('emaila@b.com')
+            ->willReturn($this->incrementalWaitingTimeChecker);
 
-        $this->incrementalWaitingTimeChecker->isFrozen('emaila@b.com')->willReturn(false);
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('isFrozen')
+            ->with('emaila@b.com')
+            ->willReturn(false);
 
-        $this->userRepo->findOneBy(['email' => 'a@b.com'])->willReturn(null);
+        $this->userRepo->expects(self::once())
+            ->method('findOneBy')
+            ->with(['email' => 'a@b.com'])
+            ->willReturn(null);
 
         $this->sut->authenticate($request);
     }
@@ -356,19 +382,37 @@ final class LoginRequestAuthenticatorTest extends TestCase
             json_encode(['email' => 'a@b.com', 'password' => 'password123']),
         );
 
-        $this->authService->isSecretValid($request)->willReturn(true);
+        $this->authService->expects(self::once())
+            ->method('isSecretValid')
+            ->with($request)
+            ->willReturn(true);
 
-        $this->attemptsInTimeChecker->registerAttempt('emaila@b.com')->willReturn($this->attemptsInTimeChecker);
-        $this->incrementalWaitingTimeChecker->registerAttempt('emaila@b.com')->willReturn($this->incrementalWaitingTimeChecker);
+        $this->attemptsInTimeChecker->expects(self::once())
+            ->method('registerAttempt')
+            ->with('emaila@b.com')
+            ->willReturn($this->attemptsInTimeChecker);
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('registerAttempt')
+            ->with('emaila@b.com')
+            ->willReturn($this->incrementalWaitingTimeChecker);
 
-        $this->incrementalWaitingTimeChecker->isFrozen('emaila@b.com')->willReturn(false);
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('isFrozen')
+            ->with('emaila@b.com')
+            ->willReturn(false);
 
         $user = new User()
             ->setPassword('password123')
             ->setRoleName('ROLE_USER');
-        $this->userRepo->findOneBy(['email' => 'a@b.com'])->willReturn($user);
+        $this->userRepo->expects(self::once())
+            ->method('findOneBy')
+            ->with(['email' => 'a@b.com'])
+            ->willReturn($user);
 
-        $this->authService->isSecretValidForRole('ROLE_USER', $request)->willReturn(false);
+        $this->authService->expects(self::once())
+            ->method('isSecretValidForRole')
+            ->with('ROLE_USER', $request)
+            ->willReturn(false);
 
         $this->sut->authenticate($request);
     }
@@ -378,9 +422,15 @@ final class LoginRequestAuthenticatorTest extends TestCase
     {
         $token = new UsernamePasswordToken(new User(), 'private-firewall');
 
-        $this->tokenStorage->setToken($token)->shouldBeCalled();
-        $this->attemptsInTimeChecker->resetAttempts('')->shouldBeCalled();
-        $this->incrementalWaitingTimeChecker->resetAttempts('')->shouldBeCalled();
+        $this->tokenStorage->expects(self::once())
+            ->method('setToken')
+            ->with($token);
+        $this->attemptsInTimeChecker->expects(self::once())
+            ->method('resetAttempts')
+            ->with('');
+        $this->incrementalWaitingTimeChecker->expects(self::once())
+            ->method('resetAttempts')
+            ->with('');
 
         $request = Request::create(
             '/auth/login',
@@ -401,7 +451,10 @@ final class LoginRequestAuthenticatorTest extends TestCase
         self::expectExceptionObject(new UserWrongCredentialsException());
 
         $authException = new AuthenticationException('It broke', 444);
-        $this->attemptsInTimeChecker->maxAttemptsReached('')->willReturn(false);
+        $this->attemptsInTimeChecker->expects(self::once())
+            ->method('maxAttemptsReached')
+            ->with('')
+            ->willReturn(false);
 
         $request = Request::create(
             '/auth/login',
@@ -423,7 +476,10 @@ final class LoginRequestAuthenticatorTest extends TestCase
 
         self::expectExceptionObject(new UserWrongCredentialsManyAttempts());
 
-        $this->attemptsInTimeChecker->maxAttemptsReached('')->willReturn(true);
+        $this->attemptsInTimeChecker->expects(self::once())
+            ->method('maxAttemptsReached')
+            ->with('')
+            ->willReturn(true);
 
         $request = Request::create(
             '/auth/login',

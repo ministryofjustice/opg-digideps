@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service\RestHandler\Report;
 
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\Attributes\DataProvider;
+use Doctrine\ORM\EntityManager;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Service\RestHandler\Report\DeputyCostsReportUpdateHandler;
-use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class DeputyCostsReportUpdateHandlerTest extends TestCase
 {
-    private DeputyCostsReportUpdateHandler $sut;
     private EntityManager&MockObject $em;
     private Report&MockObject $report;
+    private DeputyCostsReportUpdateHandler $sut;
 
     public function setUp(): void
     {
@@ -91,18 +91,6 @@ final class DeputyCostsReportUpdateHandlerTest extends TestCase
         $this->assertCount(3, $this->report->getProfDeputyInterimCosts());
     }
 
-    //    public function testPreviousCostsAdded()
-    //    {
-    //        $data['prof_deputy_costs_has_interim'] = 'yes';
-    //        $data['prof_deputy_interim_costs'] = $this->generateValidInterimCosts();
-    //
-    //        $this->invokeHandler($data);
-    //
-    //        $this->assertNull($this->report->getProfDeputyFixedCost());
-    //        $this->assertReportFieldValueIsEqualTo('profDeputyCostsHasInterim', 'yes');
-    //        $this->assertCount(3, $this->report->getProfDeputyInterimCosts());
-    //    }
-
     public function testUpdateFixedCostAmount(): void
     {
         $data['prof_deputy_fixed_cost'] = '234.56';
@@ -152,14 +140,6 @@ final class DeputyCostsReportUpdateHandlerTest extends TestCase
             ->expects($this->once())
             ->method('updateSectionsStatusCache')
             ->with([Report::SECTION_PROF_DEPUTY_COSTS]);
-    }
-
-    private function ensureEachProfDeputyCostWillBePersisted(int $count): void
-    {
-        $this
-            ->em
-            ->expects($this->exactly($count))
-            ->method('persist');
     }
 
     private function invokeHandler(array $data): void

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
+use Doctrine\DBAL\Exception;
 use OPG\Digideps\Backend\Factory\DataFactoryResult;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
-use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
