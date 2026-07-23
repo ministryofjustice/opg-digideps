@@ -6,7 +6,6 @@ namespace OPG\Digideps\Frontend\Entity\UserResearch;
 
 use OPG\Digideps\Frontend\Entity\Report\Satisfaction;
 use OPG\Digideps\Frontend\Entity\User;
-use DateTime;
 use JMS\Serializer\Annotation as JMS;
 
 class UserResearchResponse
@@ -16,39 +15,25 @@ class UserResearchResponse
     public const string SIX_TO_TEN = 'sixToTen';
     public const string OVER_TEN = 'overTen';
 
-    /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\UserResearch\ResearchType")
-     */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\UserResearch\ResearchType')]
     private $researchType;
 
-    /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
-     */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
     private User $user;
 
-    /**
-     * @JMS\Type("int")
-     */
+    #[JMS\Type('int')]
     private int $id;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     private string $deputyshipLength;
 
-    /**
-     * @JMS\Type("boolean")
-     */
+    #[JMS\Type('boolean')]
     private bool $hasAccessToVideoCallDevice;
 
-    /**
-     * @JMS\Type("DateTime")
-     */
+    #[JMS\Type('DateTime')]
     private $created;
 
-    /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Satisfaction")
-     */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Satisfaction')]
     private $satisfaction;
 
     public function getDeputyshipLength(): string

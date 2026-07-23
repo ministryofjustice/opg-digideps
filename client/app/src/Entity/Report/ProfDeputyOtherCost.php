@@ -6,39 +6,34 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-/**
- * @Assert\Callback(callback="moreDetailsValidate", groups={"prof-deputy-other-costs"})
- */
+#[Assert\Callback(callback: 'moreDetailsValidate', groups: ['prof-deputy-other-costs'])]
 class ProfDeputyOtherCost
 {
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"prof-deputy-other-costs"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-deputy-other-costs'])]
     private $profDeputyOtherCostTypeId;
 
     /**
      * @var string|null decimal
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"prof-deputy-other-costs"})
-     * @Assert\Type(type="numeric", message="profDeputyOtherCost.amount.notNumeric", groups={"prof-deputy-other-costs"})
-     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "profDeputyOtherCost.amount.notInRangeMessage", groups={"prof-deputy-other-costs"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-deputy-other-costs'])]
+    #[Assert\Type(type: 'numeric', message: 'profDeputyOtherCost.amount.notNumeric', groups: ['prof-deputy-other-costs'])]
+    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'profDeputyOtherCost.amount.notInRangeMessage', groups: ['prof-deputy-other-costs'])]
     private ?string $amount;
 
     /**
      * @var bool
-     * @JMS\Groups({"prof-deputy-other-costs"})
-     * @JMS\Type("boolean")
      */
+    #[JMS\Groups(['prof-deputy-other-costs'])]
+    #[JMS\Type('boolean')]
     private bool $hasMoreDetails;
 
     /**
      * @var string|null
-     * @JMS\Groups({"prof-deputy-other-costs"})
-     * @JMS\Type("string")
      */
+    #[JMS\Groups(['prof-deputy-other-costs'])]
+    #[JMS\Type('string')]
     private ?string $moreDetails;
 
     /**
@@ -68,7 +63,7 @@ class ProfDeputyOtherCost
     /**
      * @param $profDeputyOtherCostTypeId
      */
-    public function setProfDeputyOtherCostTypeId($profDeputyOtherCostTypeId)
+    public function setProfDeputyOtherCostTypeId($profDeputyOtherCostTypeId): void
     {
         $this->profDeputyOtherCostTypeId = $profDeputyOtherCostTypeId;
     }
@@ -84,7 +79,7 @@ class ProfDeputyOtherCost
     /**
      * @param string $amount decimal
      */
-    public function setAmount($amount)
+    public function setAmount(?string $amount): void
     {
         $this->amount = $amount;
     }
@@ -92,7 +87,7 @@ class ProfDeputyOtherCost
     /**
      * @return bool
      */
-    public function getHasMoreDetails()
+    public function getHasMoreDetails(): bool
     {
         return $this->hasMoreDetails;
     }
@@ -100,7 +95,7 @@ class ProfDeputyOtherCost
     /**
      * @param bool $hasMoreDetails
      */
-    public function setHasMoreDetails($hasMoreDetails)
+    public function setHasMoreDetails(bool $hasMoreDetails): void
     {
         $this->hasMoreDetails = $hasMoreDetails;
     }
@@ -116,12 +111,12 @@ class ProfDeputyOtherCost
     /**
      * @param string $moreDetails
      */
-    public function setMoreDetails($moreDetails)
+    public function setMoreDetails(?string $moreDetails): void
     {
         $this->moreDetails = $moreDetails;
     }
 
-    public function moreDetailsValidate(ExecutionContextInterface $context)
+    public function moreDetailsValidate(ExecutionContextInterface $context): void
     {
         $hasMoreDetails = false;
         if (!$this->getHasMoreDetails()) {

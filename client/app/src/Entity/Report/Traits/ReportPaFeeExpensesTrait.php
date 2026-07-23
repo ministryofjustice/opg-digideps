@@ -10,36 +10,34 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 trait ReportPaFeeExpensesTrait
 {
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Fee>")
-     * @JMS\Groups({"fee"})
      *
      * @var Fee[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Fee>')]
+    #[JMS\Groups(['fee'])]
     private $fees = [];
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"reasonForNoFees"})
-     *
-     * @Assert\NotBlank(message="fee.reasonForNoFees.notBlank", groups={"reasonForNoFees"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['reasonForNoFees'])]
+    #[Assert\NotBlank(message: 'fee.reasonForNoFees.notBlank', groups: ['reasonForNoFees'])]
     private $reasonForNoFees;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"fee"})
      *
      * @var string $hasFees
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['fee'])]
     private $hasFees;
 
     /**
-     * @JMS\Type("double")
-     *
      * @var string $feesTotal
      */
+    #[JMS\Type('double')]
     private $feesTotal;
 
     /**
@@ -53,7 +51,7 @@ trait ReportPaFeeExpensesTrait
     /**
      * @param Fee[] $fees
      */
-    public function setFees($fees)
+    public function setFees($fees): void
     {
         $this->fees = $fees;
     }
@@ -69,7 +67,7 @@ trait ReportPaFeeExpensesTrait
     /**
      * @param string $reasonForNoFees
      */
-    public function setReasonForNoFees($reasonForNoFees)
+    public function setReasonForNoFees($reasonForNoFees): void
     {
         $this->reasonForNoFees = $reasonForNoFees;
     }
@@ -85,12 +83,12 @@ trait ReportPaFeeExpensesTrait
     /**
      * @param string $feesTotal
      */
-    public function setFeesTotal($feesTotal)
+    public function setFeesTotal($feesTotal): void
     {
         $this->feesTotal = $feesTotal;
     }
 
-    public function feesValid(ExecutionContextInterface $context)
+    public function feesValid(ExecutionContextInterface $context): void
     {
         if (empty($this->getReasonForNoFees()) && count($this->getFeesWithValidAmount()) === 0) {
             $context->addViolation('fee.mustHaveAtLeastOneFee');
@@ -108,7 +106,7 @@ trait ReportPaFeeExpensesTrait
     /**
      * @param string $hasFees
      */
-    public function setHasFees($hasFees)
+    public function setHasFees($hasFees): void
     {
         $this->hasFees = $hasFees;
     }
@@ -116,9 +114,9 @@ trait ReportPaFeeExpensesTrait
     /**
      * @return Fee[]
      */
-    public function getFeesWithValidAmount()
+    public function getFeesWithValidAmount(): array
     {
-        return array_filter($this->fees, function ($fee) {
+        return array_filter($this->fees, function ($fee): bool {
             return !empty($fee->getAmount());
         });
     }

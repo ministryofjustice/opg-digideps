@@ -7,6 +7,7 @@ namespace OPG\Digideps\Frontend\Entity\Report;
 use OPG\Digideps\Frontend\Entity\ClientBenefitsCheckInterface;
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -14,67 +15,61 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 {
     use HasReportTrait;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $id = null;
 
-    /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"report", "client-benefits-check"})
-     */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?\DateTime $created = null;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $whenLastCheckedEntitlement = null;
 
     /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?\DateTime $dateLastCheckedEntitlement = null;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $neverCheckedExplanation = null;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $doOthersReceiveMoneyOnClientsBehalf = '';
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report", "client-benefits-check"})
-     *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $dontKnowMoneyExplanation = null;
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf>")
-     * @JMS\Groups({"report", "client-benefits-check"})
-     *
      * @var MoneyReceivedOnClientsBehalf[]|null
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
-     * @Assert\Valid(groups={"client-benefits-check"})
      */
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf>')]
+    #[JMS\Groups(['report', 'client-benefits-check'])]
+    #[Assert\Valid(groups: ['client-benefits-check'])]
     private ?array $typesOfMoneyReceivedOnClientsBehalf = null;
 
     public function getWhenLastCheckedEntitlement(): ?string
@@ -162,17 +157,14 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     }
 
     /**
-     * @return array<MoneyReceivedOnClientsBehalf>|null
+     * @return ArrayCollection<MoneyReceivedOnClientsBehalf>|null
      */
-    public function getTypesOfMoneyReceivedOnClientsBehalf(): ?array
+    public function getTypesOfMoneyReceivedOnClientsBehalf(): ?ArrayCollection
     {
         return $this->typesOfMoneyReceivedOnClientsBehalf;
     }
 
-    /**
-     * @param array<MoneyReceivedOnClientsBehalf>|null $typesOfMoneyReceivedOnClientsBehalf
-     */
-    public function setTypesOfMoneyReceivedOnClientsBehalf(?array $typesOfMoneyReceivedOnClientsBehalf): ClientBenefitsCheck
+    public function setTypesOfMoneyReceivedOnClientsBehalf(?ArrayCollection $typesOfMoneyReceivedOnClientsBehalf): ClientBenefitsCheck
     {
         $this->typesOfMoneyReceivedOnClientsBehalf = $typesOfMoneyReceivedOnClientsBehalf;
 
@@ -181,7 +173,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 
     public function addTypeOfMoneyReceivedOnClientsBehalf(MoneyReceivedOnClientsBehalf $moneyReceivedOnClientsBehalf): ClientBenefitsCheck
     {
-        $this->typesOfMoneyReceivedOnClientsBehalf[] = $moneyReceivedOnClientsBehalf;
+        $this->typesOfMoneyReceivedOnClientsBehalf->add($moneyReceivedOnClientsBehalf);
 
         return $this;
     }
