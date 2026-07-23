@@ -19,61 +19,55 @@ class PreRegistration
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @Assert\NotBlank()
      */
+    #[JMS\Type('string')]
+    #[Assert\NotBlank]
     private $caseNumber;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @Assert\NotBlank()
      */
+    #[JMS\Type('string')]
+    #[Assert\NotBlank]
     private $clientLastname;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @Assert\NotBlank()
      */
+    #[JMS\Type('string')]
+    #[Assert\NotBlank]
     private $deputyUid;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @Assert\NotBlank()
      */
+    #[JMS\Type('string')]
+    #[Assert\NotBlank]
     private $deputySurname;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @Assert\Length(min=2, max=20, minMessage="postcode too short", maxMessage="postcode too long" )
      */
+    #[JMS\Type('string')]
+    #[Assert\Length(min: 2, max: 20, minMessage: 'postcode too short', maxMessage: 'postcode too long')]
     private $deputyPostCode;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     private $typeOfReport;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     private $orderType;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     private $otherColumns;
 
     /**

@@ -12,63 +12,55 @@ class Organisation
 {
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
      */
+    #[JMS\Type('integer')]
     private $id;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="organisation.name.notBlank")
-     * @Assert\Length(max=256, maxMessage="organisation.name.maxLength")
      */
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'organisation.name.notBlank')]
+    #[Assert\Length(max: 256, maxMessage: 'organisation.name.maxLength')]
     private $name;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $emailIdentifier;
 
     /**
      * @var bool
-     *
-     * @JMS\Type("boolean")
-     * @Assert\NotNull(message="organisation.isActivated.notBlank")
      */
+    #[JMS\Type('boolean')]
+    #[Assert\NotNull(message: 'organisation.isActivated.notBlank')]
     private $isActivated;
 
     /**
      * @var array<User>
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\User>")
      */
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Frontend\Entity\User>')]
     private array $users = [];
 
     /**
      * @var array<Client>
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Client>")
      */
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Frontend\Entity\Client>')]
     private array $clients = [];
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     * @JMS\Groups({"total-user-count"})
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['total-user-count'])]
     private $totalUserCount;
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     * @JMS\Groups({"total-client-count"})
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['total-client-count'])]
     private $totalClientCount;
 
     /**
@@ -217,7 +209,6 @@ class Organisation
     }
 
     /**
-     * @param User $user
      * @return bool
      */
     public function hasUser(User $user): bool
@@ -236,7 +227,6 @@ class Organisation
     }
 
     /**
-     * @param int $userId
      * @return User|null
      */
     public function getUserById(int $userId): ?User

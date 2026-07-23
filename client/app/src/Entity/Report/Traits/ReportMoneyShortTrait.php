@@ -5,57 +5,50 @@ namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 use OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory;
 use OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportMoneyShortTrait
 {
     /**
      * @var MoneyShortCategory[]
-     *
-     * @JMS\Groups({"moneyShortCategoriesIn"})
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory>")
      */
+    #[JMS\Groups(['moneyShortCategoriesIn'])]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory>')]
     private $moneyShortCategoriesIn = [];
 
     /**
      * @var MoneyShortCategory[]
-     *
-     * @JMS\Groups({"moneyShortCategoriesOut"})
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory>")
      */
+    #[JMS\Groups(['moneyShortCategoriesOut'])]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory>')]
     private $moneyShortCategoriesOut = [];
 
     /**
      * @var MoneyTransactionShort[]
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort>")
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort>')]
     private $moneyTransactionsShortIn = [];
 
     /**
      * @var MoneyTransactionShort[]
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort>")
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort>')]
     private $moneyTransactionsShortOut = [];
 
     /**
-     * @var string yes|no|null
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"money-transactions-short-in-exist"})
-     *
-     * @Assert\NotBlank(message="moneyTransactionShort.exist.notBlank", groups={"exist"})
+     * @var string 'yes'|'no'|null
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['money-transactions-short-in-exist'])]
+    #[Assert\NotBlank(message: 'moneyTransactionShort.exist.notBlank', groups: ['exist'])]
     private $moneyTransactionsShortInExist;
 
     /**
-     * @var string yes|no|null
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"money-transactions-short-out-exist"})
-     *
-     * @Assert\NotBlank(message="moneyTransactionShort.exist.notBlank", groups={"exist"})
+     * @var string 'yes'|'no'|null
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['money-transactions-short-out-exist'])]
+    #[Assert\NotBlank(message: 'moneyTransactionShort.exist.notBlank', groups: ['exist'])]
     private $moneyTransactionsShortOutExist;
 
     /**
@@ -69,9 +62,9 @@ trait ReportMoneyShortTrait
     /**
      * @return MoneyShortCategory[]
      */
-    public function getMoneyShortCategoriesInPresent()
+    public function getMoneyShortCategoriesInPresent(): array
     {
-        return array_filter($this->moneyShortCategoriesIn ?: [], function ($st) {
+        return array_filter($this->moneyShortCategoriesIn ?: [], function ($st): bool {
             return method_exists($st, 'isPresent') && $st->isPresent();
         });
     }
@@ -79,7 +72,7 @@ trait ReportMoneyShortTrait
     /**
      * @param MoneyShortCategory[] $moneyShortCategoriesIn
      */
-    public function setMoneyShortCategoriesIn($moneyShortCategoriesIn)
+    public function setMoneyShortCategoriesIn($moneyShortCategoriesIn): void
     {
         $this->moneyShortCategoriesIn = $moneyShortCategoriesIn;
     }
@@ -95,9 +88,9 @@ trait ReportMoneyShortTrait
     /**
      * @return MoneyShortCategory[]
      */
-    public function getMoneyShortCategoriesOutPresent()
+    public function getMoneyShortCategoriesOutPresent(): array
     {
-        return array_filter($this->moneyShortCategoriesOut ?: [], function ($st) {
+        return array_filter($this->moneyShortCategoriesOut ?: [], function ($st): bool {
             return method_exists($st, 'isPresent') && $st->isPresent();
         });
     }
@@ -105,7 +98,7 @@ trait ReportMoneyShortTrait
     /**
      * @param MoneyShortCategory[] $moneyShortCategoriesOut
      */
-    public function setMoneyShortCategoriesOut($moneyShortCategoriesOut)
+    public function setMoneyShortCategoriesOut($moneyShortCategoriesOut): void
     {
         $this->moneyShortCategoriesOut = $moneyShortCategoriesOut;
     }
@@ -121,7 +114,7 @@ trait ReportMoneyShortTrait
     /**
      * @param MoneyTransactionShort[] $moneyTransactionsShortIn
      */
-    public function setMoneyTransactionsShortIn($moneyTransactionsShortIn)
+    public function setMoneyTransactionsShortIn($moneyTransactionsShortIn): void
     {
         $this->moneyTransactionsShortIn = $moneyTransactionsShortIn;
     }
@@ -137,7 +130,7 @@ trait ReportMoneyShortTrait
     /**
      * @param mixed $moneyTransactionsShortOut
      */
-    public function setMoneyTransactionsShortOut($moneyTransactionsShortOut)
+    public function setMoneyTransactionsShortOut($moneyTransactionsShortOut): void
     {
         $this->moneyTransactionsShortOut = $moneyTransactionsShortOut;
     }
@@ -153,7 +146,7 @@ trait ReportMoneyShortTrait
     /**
      * @param string $moneyTransactionsShortInExist
      */
-    public function setMoneyTransactionsShortInExist($moneyTransactionsShortInExist)
+    public function setMoneyTransactionsShortInExist($moneyTransactionsShortInExist): void
     {
         $this->moneyTransactionsShortInExist = $moneyTransactionsShortInExist;
     }
@@ -169,7 +162,7 @@ trait ReportMoneyShortTrait
     /**
      * @param string $moneyTransactionsShortOutExist
      */
-    public function setMoneyTransactionsShortOutExist($moneyTransactionsShortOutExist)
+    public function setMoneyTransactionsShortOutExist($moneyTransactionsShortOutExist): void
     {
         $this->moneyTransactionsShortOutExist = $moneyTransactionsShortOutExist;
     }

@@ -18,12 +18,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @AppAssert\YearMustBeFourDigitsAndValid(groups={"start-end-dates"})
  *
  * @AppAssert\ProfDeputyCostsEstimate\CostBreakdownNotGreaterThanTotal(groups={"prof-deputy-estimate-costs"})
- *
- * @Assert\Callback(callback="debtsValid", groups={"debts"})
- * @Assert\Callback(callback="feesValid", groups={"fees"})
- * @Assert\Callback(callback="profCostsInterimAtLeastOne", groups={"prof-deputy-interim-costs"})
- * @Assert\Callback(callback="unsubmittedSectionAtLeastOnce", groups={"unsubmitted_sections"})
  */
+#[Assert\Callback(callback: 'debtsValid', groups: ['debts'])]
+#[Assert\Callback(callback: 'feesValid', groups: ['fees'])]
+#[Assert\Callback(callback: 'profCostsInterimAtLeastOne', groups: ['prof-deputy-interim-costs'])]
+#[Assert\Callback(callback: 'unsubmittedSectionAtLeastOnce', groups: ['unsubmitted_sections'])]
 class Report implements StartEndDateComparableInterface
 {
     use ReportTraits\ReportAssetTrait;
@@ -100,376 +99,289 @@ class Report implements StartEndDateComparableInterface
     public const string NO_MONEY_EXISTS = 'No';
 
     /**
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"visits-care", "report-id"})
-     *
      * @var int
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['visits-care', 'report-id'])]
     private $id;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report_type"})
-     *
      * see TYPE_* constant
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report_type'])]
     private $type;
 
     /**
-     * @JMS\Type("boolean")
-     *
      * @var bool
      */
+    #[JMS\Type('boolean')]
     private $has106flag;
 
     /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @JMS\Groups({"startEndDates"})
-     *
-     * @Assert\NotBlank( message="report.startDate.notBlank", groups={"start-end-dates"} )
-     *
-     * @Assert\Type(type="DateTimeInterface", message="report.startDate.invalidMessage", groups={"start-end-dates"} )
-     *
      * @var \DateTime|null
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['startEndDates'])]
+    #[Assert\NotBlank(message: 'report.startDate.notBlank', groups: ['start-end-dates'])]
+    #[Assert\Type(type: 'DateTimeInterface', message: 'report.startDate.invalidMessage', groups: ['start-end-dates'])]
     private $startDate;
 
     /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @JMS\Groups({"startEndDates"})
-     *
-     * @Assert\NotBlank( message="report.endDate.notBlank", groups={"start-end-dates"} )
-     *
-     * @Assert\Type(type="DateTimeInterface", message="report.endDate.invalidMessage", groups={"start-end-dates"} )
-     *
      * @var \DateTime|null
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['startEndDates'])]
+    #[Assert\NotBlank(message: 'report.endDate.notBlank', groups: ['start-end-dates'])]
+    #[Assert\Type(type: 'DateTimeInterface', message: 'report.endDate.invalidMessage', groups: ['start-end-dates'])]
     private $endDate;
 
     /**
      * @var bool
-     *
-     * @JMS\Type("boolean")
      */
+    #[JMS\Type('boolean')]
     private $isDue;
 
     /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @JMS\Groups({"report_due_date"})
-     *
      * @var \DateTime|null
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['report_due_date'])]
     private $dueDate;
 
-    /**
-     * @JMS\Type("DateTime")
-     *
-     * @JMS\Groups({"submit"})
-     */
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['submit'])]
     private ?\DateTimeInterface $submitDate = null;
 
     /**
      * @var \DateTime|null
-     *
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @JMS\Groups({"unsubmit_date"})
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['unsubmit_date'])]
     private $unSubmitDate;
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
-     *
      * @var User
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
     private $submittedBy;
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ReportSubmission>")
-     *
      * @var ReportSubmission[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ReportSubmission>')]
     private $reportSubmissions;
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Client")
-     *
      * @var Client
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Client')]
     private $client;
 
     /**
-     * @JMS\Exclude
-     *
      * @var string
      */
+    #[JMS\Exclude]
     private $period;
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Contact>")
-     *
      * @var Contact[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Contact>')]
     private $contacts = [];
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Decision>")
-     *
      * @var Decision[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Decision>')]
     private $decisions = [];
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\VisitsCare")
-     *
      * @var VisitsCare|null
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\VisitsCare')]
     private $visitsCare;
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Lifestyle")
-     *
      * @var Lifestyle|null
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Lifestyle')]
     private $lifestyle;
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Action")
-     *
      * @var Action|null
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Action')]
     private $action;
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\MentalCapacity")
-     *
      * @var MentalCapacity
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\MentalCapacity')]
     private $mentalCapacity;
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck")
-     *
-     * @Assert\Valid(groups={"client-benefits-check"})
-     *
-     * @JMS\Groups({"client-benefits-check"})
-     *
      * @var ClientBenefitsCheck
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck')]
+    #[Assert\Valid(groups: ['client-benefits-check'])]
+    #[JMS\Groups(['client-benefits-check'])]
     private $clientBenefitsCheck;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"reasonForNoContacts"})
-     *
-     * @Assert\NotBlank( message="contact.reasonForNoContacts.notBlank", groups={"reasonForNoContacts"})
-     *
      * @var string|null
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['reasonForNoContacts'])]
+    #[Assert\NotBlank(message: 'contact.reasonForNoContacts.notBlank', groups: ['reasonForNoContacts'])]
     private $reasonForNoContacts;
 
-    /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report","significantDecisionsMade"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'significantDecisionsMade'])]
     private $significantDecisionsMade;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"reasonForNoDecisions"})
-     *
-     * @Assert\NotBlank( message="decision.reasonForNoDecisions.notBlank", groups={"reason-no-decisions"})
-     *
      * @var string|null
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['reasonForNoDecisions'])]
+    #[Assert\NotBlank(message: 'decision.reasonForNoDecisions.notBlank', groups: ['reason-no-decisions'])]
     private $reasonForNoDecisions;
 
     /**
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"noAssetsToAdd"})
-     *
      * @var bool
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['noAssetsToAdd'])]
     private $noAssetToAdd;
 
     /**
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"submit", "submitted"})
-     *
      * @var bool
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['submit', 'submitted'])]
     private $submitted;
 
     /**
-     * @JMS\Type("boolean")
-     *
      * @var bool
      */
+    #[JMS\Type('boolean')]
     private $reportSeen;
 
     /**
      * @var bool
-     *
-     * @JMS\Type("boolean")
-     *
-     * @Assert\IsTrue(message="report.agree", groups={"declare"} )
      */
+    #[JMS\Type('boolean')]
+    #[Assert\IsTrue(message: 'report.agree', groups: ['declare'])]
     private $agree;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report","submit", "submit_agreed"})
-     *
-     * @Assert\NotBlank(message="report.agreedBehalfDeputy.notBlank", groups={"declare"} )
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'submit', 'submit_agreed'])]
+    #[Assert\NotBlank(message: 'report.agreedBehalfDeputy.notBlank', groups: ['declare'])]
     private $agreedBehalfDeputy;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report","submit", "submit_agreed"})
-     *
-     * @Assert\NotBlank(message="report.agreedBehalfDeputyExplanation.notBlank", groups={"declare-explanation"} )
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'submit', 'submit_agreed'])]
+    #[Assert\NotBlank(message: 'report.agreedBehalfDeputyExplanation.notBlank', groups: ['declare-explanation'])]
     private $agreedBehalfDeputyExplanation;
 
     /**
      * @var Document[]
-     *
-     * @JMS\Groups({"report-documents"})
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Document>")
      */
+    #[JMS\Groups(['report-documents'])]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Document>')]
     private $documents = [];
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Document>")
-     *
-     * @JMS\Groups({"report-documents"})
-     *
      * @var Document[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Document>')]
+    #[JMS\Groups(['report-documents'])]
     private $submittedDocuments = [];
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Document>")
-     *
-     * @JMS\Groups({"report-documents"})
-     *
      * @var Document[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Document>')]
+    #[JMS\Groups(['report-documents'])]
     private $unsubmittedDocuments = [];
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Status")
-     *
      * @var Status
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Status')]
     private $status;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report", "wish-to-provide-documentation", "report-documents"})
-     *
-     * @Assert\NotBlank(message="document.wishToProvideDocumentation.notBlank", groups={"wish-to-provide-documentation"})
-     *
      * @var ?string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'wish-to-provide-documentation', 'report-documents'])]
+    #[Assert\NotBlank(message: 'document.wishToProvideDocumentation.notBlank', groups: ['wish-to-provide-documentation'])]
     private $wishToProvideDocumentation;
 
     /**
      * @var array
-     *
-     * @JMS\Type("array")
      */
+    #[JMS\Type('array')]
     private $availableSections = [];
 
     /**
      * @var Checklist
-     *
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Checklist")
      **/
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Checklist')]
     private $checklist;
 
     /**
      * @var ReviewChecklist
-     *
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\ReviewChecklist")
      **/
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\ReviewChecklist')]
     private $reviewChecklist;
 
     /**
      * @var array
-     *
-     * @JMS\Type("array")
      **/
+    #[JMS\Type('array')]
     private $previousReportData = [];
 
     /**
-     * @JMS\Type("string")
-     *
      * @var string
      */
+    #[JMS\Type('string')]
     private $reportTitle;
 
-    /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report", "doesMoneyInExist"})
-     *
-     * @Assert\NotBlank( message="moneyIn.moneyInChoice.notBlank", groups={"doesMoneyInExist"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'doesMoneyInExist'])]
+    #[Assert\NotBlank(message: 'moneyIn.moneyInChoice.notBlank', groups: ['doesMoneyInExist'])]
     private $moneyInExists;
 
     /**
-     * @var string captures reason for no money in. Required if no money has gone in
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report", "reasonForNoMoneyIn"})
-     *
-     * @Assert\NotBlank( message="moneyIn.reasonForNoMoneyIn.notBlank", groups={"reasonForNoMoneyIn"})
-     *
-     * @var string|null
+     * @var string|null captures reason for no money in. Required if no money has gone in
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'reasonForNoMoneyIn'])]
+    #[Assert\NotBlank(message: 'moneyIn.reasonForNoMoneyIn.notBlank', groups: ['reasonForNoMoneyIn'])]
     private $reasonForNoMoneyIn;
 
-    /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report", "doesMoneyOutExist"})
-     *
-     * @Assert\NotBlank( message="moneyOut.moneyOutChoice.notBlank", groups={"doesMoneyOutExist"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'doesMoneyOutExist'])]
+    #[Assert\NotBlank(message: 'moneyOut.moneyOutChoice.notBlank', groups: ['doesMoneyOutExist'])]
     private $moneyOutExists;
 
     /**
      * @var string captures reason for no money out. Required if no money has gone out
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report", "reasonForNoMoneyOut"})
-     *
-     * @Assert\NotBlank( message="moneyOut.reasonForNoMoneyOut.notBlank", groups={"reasonForNoMoneyOut"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'reasonForNoMoneyOut'])]
+    #[Assert\NotBlank(message: 'moneyOut.reasonForNoMoneyOut.notBlank', groups: ['reasonForNoMoneyOut'])]
     private $reasonForNoMoneyOut;
 
     /**
@@ -523,7 +435,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * @param bool $has106flag
      */
-    public function setHas106flag($has106flag)
+    public function setHas106flag($has106flag): void
     {
         $this->has106flag = $has106flag;
     }
@@ -908,7 +820,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * @param VisitsCare $visitsCare
      */
-    public function setVisitsCare($visitsCare)
+    public function setVisitsCare($visitsCare): void
     {
         $this->visitsCare = $visitsCare;
     }
@@ -924,7 +836,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * @param Lifestyle $lifestyle
      */
-    public function setLifestyle($lifestyle)
+    public function setLifestyle($lifestyle): void
     {
         $this->lifestyle = $lifestyle;
     }
@@ -1020,7 +932,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * @param bool $agree
      */
-    public function setAgree($agree)
+    public function setAgree($agree): void
     {
         $this->agree = $agree;
     }
@@ -1098,10 +1010,10 @@ class Report implements StartEndDateComparableInterface
      *
      * @return Document[]
      */
-    public function getDeputyDocuments()
+    public function getDeputyDocuments(): array
     {
         if (is_array($this->documents)) {
-            return array_filter($this->documents, function ($document) {
+            return array_filter($this->documents, function (Document $document): bool {
                 /* @var $document Document */
                 return !($document->isAdminDocument() || $document->isReportPdf());
             });
@@ -1131,7 +1043,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * @param Status $status $statusrvice
      */
-    public function setStatus($status)
+    public function setStatus($status): void
     {
         $this->status = $status;
     }
@@ -1205,7 +1117,7 @@ class Report implements StartEndDateComparableInterface
      *
      * @return bool
      */
-    public function hasSection($section)
+    public function hasSection($section): bool
     {
         return in_array($section, $this->getAvailableSections());
     }
@@ -1215,7 +1127,7 @@ class Report implements StartEndDateComparableInterface
      *
      * @return bool
      */
-    public function isSubmitted()
+    public function isSubmitted(): bool
     {
         return (bool) $this->getSubmitted();
     }
@@ -1227,7 +1139,7 @@ class Report implements StartEndDateComparableInterface
      *
      * @return string
      */
-    public function get104TransSuffix()
+    public function get104TransSuffix(): string
     {
         return (strpos($this->getType(), '-4') > 0) ?
             '-4' :
@@ -1268,7 +1180,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * @param ReviewChecklist $reviewChecklist
      */
-    public function setReviewChecklist($reviewChecklist)
+    public function setReviewChecklist($reviewChecklist): void
     {
         $this->reviewChecklist = $reviewChecklist;
     }
@@ -1324,7 +1236,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * @return bool
      */
-    public function canLinkToBankAccounts()
+    public function canLinkToBankAccounts(): bool
     {
         return in_array(
             $this->getType(),

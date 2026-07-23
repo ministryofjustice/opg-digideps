@@ -13,9 +13,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-/**
- * @Assert\Callback(callback="isValidForReport", groups={"document"})
- */
+#[Assert\Callback(callback: 'isValidForReport', groups: ['document'])]
 class Document implements DocumentInterface, SynchronisableInterface
 {
     use CreationAudit;
@@ -56,59 +54,50 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     * @JMS\Groups({"document"})
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['document'])]
     private $id;
 
     /**
      * // add more validators here if needed
      * http://symfony.com/doc/current/reference/constraints/File.html.
      *
-     * @Assert\NotBlank(message="Please choose a file", groups={"document"})
-     * @Assert\File(
-     *     maxSize = "15M",
-     *     maxSizeMessage = "document.file.errors.maxSizeMessage",
-     *     mimeTypes = {"application/pdf", "application/x-pdf", "image/png", "image/jpeg", "image/heif"},
-     *     mimeTypesMessage = "document.file.errors.mimeTypesMessage",
-     *     groups={"document"}
-     * )
      *
      * @var UploadedFile
      */
+    #[Assert\NotBlank(message: 'Please choose a file', groups: ['document'])]
+    #[Assert\File(maxSize: '15M', maxSizeMessage: 'document.file.errors.maxSizeMessage', mimeTypes: ['application/pdf', 'application/x-pdf', 'image/png', 'image/jpeg', 'image/heif'], mimeTypesMessage: 'document.file.errors.mimeTypesMessage', groups: ['document'])]
     private $file;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"document"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['document'])]
     private $fileName;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"document"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['document'])]
     private $storageReference;
 
     /**
      * @var bool
-     *
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"document"})
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['document'])]
     private $isReportPdf;
 
     /**
      * @var ReportSubmission
-     *
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\ReportSubmission")
-     * @JMS\Groups({"document-report-subnmission"})
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\ReportSubmission')]
+    #[JMS\Groups(['document-report-subnmission'])]
     private $reportSubmission;
 
     /**

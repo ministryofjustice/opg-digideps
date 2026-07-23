@@ -12,82 +12,67 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 trait ReportProfDeputyCostsTrait
 {
-    /**
-     * @Assert\NotBlank(message="profDeputyCostsHowCharged.notBlank", groups={"prof-deputy-costs-how-charged"} )
-     * @JMS\Type("string")
-     * @JMS\Groups({"deputyCostsHowCharged"})
-     */
+    #[Assert\NotBlank(message: 'profDeputyCostsHowCharged.notBlank', groups: ['prof-deputy-costs-how-charged'])]
+    #[JMS\Type('string')]
+    #[JMS\Groups(['deputyCostsHowCharged'])]
     private ?string $profDeputyCostsHowCharged;
 
     /**
      * null/'yes'/'no'
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"profDeputyCostsHasPrevious"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['profDeputyCostsHasPrevious'])]
     private ?string $profDeputyCostsHasPrevious;
 
     /**
      * @var ProfDeputyOtherCost[]
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyOtherCost>")
-     * @JMS\Groups({"prof-deputy-other-costs"})
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyOtherCost>')]
+    #[JMS\Groups(['prof-deputy-other-costs'])]
     private array $profDeputyOtherCosts = [];
 
     private array $profDeputyOtherCostIds;
 
     /**
      * @var ProfDeputyPreviousCost[]
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyPreviousCost>")
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyPreviousCost>')]
     private array $profDeputyPreviousCosts = [];
 
-    /**
-     * @Assert\NotBlank( message="profDeputyFixedCost.amount.notBlank", groups={"prof-deputy-fixed-cost"} )
-     * @Assert\Range(min=0, minMessage = "profDeputyFixedCost.amount.minMessage", groups={"prof-deputy-fixed-cost"})
-     * @JMS\Type("double")
-     * @JMS\Groups({"profDeputyFixedCost"})
-     */
+    #[Assert\NotBlank(message: 'profDeputyFixedCost.amount.notBlank', groups: ['prof-deputy-fixed-cost'])]
+    #[Assert\Range(min: 0, minMessage: 'profDeputyFixedCost.amount.minMessage', groups: ['prof-deputy-fixed-cost'])]
+    #[JMS\Type('double')]
+    #[JMS\Groups(['profDeputyFixedCost'])]
     private ?float $profDeputyFixedCost = null;
 
     /**
      *  null/'yes'/'no'
-     * @JMS\Type("string")
-     * @JMS\Groups({"profDeputyCostsHasInterim"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['profDeputyCostsHasInterim'])]
     private ?string $profDeputyCostsHasInterim;
 
     /**
      * @var ProfDeputyInterimCost[]
-     * @JMS\Groups({"profDeputyInterimCosts"})
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyInterimCost>")
      */
+    #[JMS\Groups(['profDeputyInterimCosts'])]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyInterimCost>')]
     private array $profDeputyInterimCosts = [];
 
-    /**
-     * @Assert\NotBlank( message="profDeputyCostsScco.amountToScco.notBlank", groups={"prof-deputy-costs-scco"} )
-     * @Assert\Range(min=0, minMessage = "profDeputyCostsScco.amountToScco.minMessage", groups={"prof-deputy-costs-scco"})
-     * @JMS\Type("double")
-     * @JMS\Groups({"profDeputyCostsScco"})
-     */
+    #[Assert\NotBlank(message: 'profDeputyCostsScco.amountToScco.notBlank', groups: ['prof-deputy-costs-scco'])]
+    #[Assert\Range(min: 0, minMessage: 'profDeputyCostsScco.amountToScco.minMessage', groups: ['prof-deputy-costs-scco'])]
+    #[JMS\Type('double')]
+    #[JMS\Groups(['profDeputyCostsScco'])]
     private ?float $profDeputyCostsAmountToScco = null;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"profDeputyCostsScco"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['profDeputyCostsScco'])]
     private ?string $profDeputyCostsReasonBeyondEstimate;
 
-    /**
-     * @JMS\Type("double")
-     */
+    #[JMS\Type('double')]
     private ?float $profDeputyTotalCosts = null;
 
-    /**
-     * @JMS\Type("double")
-     */
+    #[JMS\Type('double')]
     private ?float $profDeputyTotalCostsTakenFromClient = null;
 
     /**
@@ -98,10 +83,8 @@ trait ReportProfDeputyCostsTrait
         return $this->getProfDeputyCostsHowCharged() == Report::PROF_DEPUTY_COSTS_TYPE_FIXED;
     }
 
-    /**
-     * @JMS\Type("array")
-     * @JMS\Groups({"prof-deputy-other-costs"})
-     */
+    #[JMS\Type('array')]
+    #[JMS\Groups(['prof-deputy-other-costs'])]
     private array $profDeputyOtherCostTypeIds = [];
 
     public function getProfDeputyOtherCostTypeIds(): array
