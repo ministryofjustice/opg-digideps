@@ -49,7 +49,7 @@ trait ReportDebtsTrait
      *
      * @return float
      */
-    public function getDebtsTotalValue(): int|float
+    public function getDebtsTotalValue()
     {
         $ret = 0;
         foreach ($this->getDebts() as $debt) {
@@ -123,10 +123,8 @@ trait ReportDebtsTrait
 
     /**
      * @param $hasDebts bool
-     *
-     * @return Report
      */
-    public function setHasDebts($hasDebts)
+    public function setHasDebts($hasDebts): static
     {
         $this->hasDebts = $hasDebts;
 
@@ -147,10 +145,8 @@ trait ReportDebtsTrait
      * Set debt management text.
      *
      * @param string $debtManagement
-     *
-     * @return $this
      */
-    public function setDebtManagement($debtManagement)
+    public function setDebtManagement($debtManagement): static
     {
         $this->debtManagement = $debtManagement;
 
@@ -167,7 +163,7 @@ trait ReportDebtsTrait
     /**
      * @return Debt[]
      */
-    public function getDebtsWithValidAmount()
+    public function getDebtsWithValidAmount(): array
     {
         $debtsWithAValidAmount = array_filter($this->debts, function ($debt): bool {
             return !empty($debt->getAmount());
