@@ -50,7 +50,6 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
         $this->logger = self::createMock(LoggerInterface::class);
         $this->csvProcessing = self::createMock(CSVDeputyshipProcessing::class);
         $this->preReg = self::createMock(PreRegistrationRepository::class);
-        $this->layRegistrationService = self::createMock(LayRegistrationService::class);
         $this->deputyCaseService = self::createMock(DeputyCaseService::class);
 
         $setUp = new ProcessLayCSVCommand(
