@@ -73,7 +73,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
 
         self::assertEquals($this->reportId, $processedClientBenefitsCheck->getReport()->getId());
         self::assertEquals($this->id, $processedClientBenefitsCheck->getId()->toString());
-        self::assertEquals($this->created, $processedClientBenefitsCheck->getCreated()->format('Y-m-d'));
+        self::assertEquals($this->created, $processedClientBenefitsCheck->getCreated()?->format('Y-m-d'));
         self::assertEquals($this->whenLastCheckedEntitlement, $processedClientBenefitsCheck->getWhenLastCheckedEntitlement());
         self::assertEquals($this->dateLastCheckedEntitlement, $processedClientBenefitsCheck->getDateLastCheckedEntitlement()->format('Y-m-d'));
         self::assertEquals($this->neverCheckedExplanation, $processedClientBenefitsCheck->getNeverCheckedExplanation());
@@ -138,9 +138,9 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
 
         self::assertEquals($this->reportId, $processedClientBenefitsCheck->getReport()->getId());
         self::assertEquals(true, $processedClientBenefitsCheck->getId() instanceof UuidInterface);
-        self::assertEquals($this->created, $processedClientBenefitsCheck->getCreated()->format('Y-m-d'));
+        self::assertEquals($this->created, $processedClientBenefitsCheck->getCreated()?->format('Y-m-d'));
         self::assertEquals($this->whenLastCheckedEntitlement, $processedClientBenefitsCheck->getWhenLastCheckedEntitlement());
-        self::assertEquals($this->dateLastCheckedEntitlement, $processedClientBenefitsCheck->getDateLastCheckedEntitlement()->format('Y-m-d'));
+        self::assertEquals($this->dateLastCheckedEntitlement, $processedClientBenefitsCheck->getDateLastCheckedEntitlement()?->format('Y-m-d'));
         self::assertEquals($this->neverCheckedExplanation, $processedClientBenefitsCheck->getNeverCheckedExplanation());
         self::assertEquals($this->doOthersReceiveMoneyOnClientsBehalf, $processedClientBenefitsCheck->getDoOthersReceiveMoneyOnClientsBehalf());
         self::assertEquals($this->dontKnowMoneyExplanation, $processedClientBenefitsCheck->getDontKnowMoneyExplanation());

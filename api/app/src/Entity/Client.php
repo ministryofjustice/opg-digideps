@@ -14,9 +14,6 @@ use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use OPG\Digideps\Backend\Entity\Traits\IsSoftDeleteableEntity;
 use OPG\Digideps\Backend\Repository\ClientRepository;
 
-/**
- * Client.
- */
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
 #[ORM\Table(name: 'client', options: ['collate' => 'utf8_general_ci', 'charset' => 'utf8'])]
 #[ORM\Index(columns: ['case_number'], name: 'case_number_idx')]
@@ -616,21 +613,19 @@ class Client
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\SerializedName('expected_report_start_date')]
     #[JMS\Groups(['checklist-information'])]
-    public function getExpectedReportStartDate($year = null): ?\DateTime
+    public function getExpectedReportStartDate(?int $year = null): ?\DateTime
     {
         if (is_null($this->getCourtDate())) {
             return null;
         }
 
         // Default year to current
-        if (!isset($year)) {
-            $year = date('Y');
-        }
+        $year ??= (int)date('Y');
 
         $expectedReportStartDate = clone $this->getCourtDate();
 
         // if court Date is this year, just return it as the start date
-        if ($expectedReportStartDate->format('Y') == $year) {
+        if ((int)$expectedReportStartDate->format('Y') === $year) {
             return $this->getCourtDate();
         }
 
@@ -647,7 +642,7 @@ class Client
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\SerializedName('expected_report_end_date')]
     #[JMS\Groups(['checklist-information'])]
-    public function getExpectedReportEndDate($year = null): ?\DateTime
+    public function getExpectedReportEndDate(?int $year = null): ?\DateTime
     {
         if (!($this->getExpectedReportStartDate($year) instanceof \DateTime)) {
             return null;
@@ -752,5 +747,11 @@ class Client
     public function filterReports(int ...$reportIds): void
     {
         $this->reports = $this->reports->filter(fn (Report $report) => in_array($report->getId(), $reportIds));
+    }
+
+    public function addCourtOrder(CourtOrder $courtOrder): static
+    {
+        $this->courtOrders->add($courtOrder);
+        return $this;
     }
 }

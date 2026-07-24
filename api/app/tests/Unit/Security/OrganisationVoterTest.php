@@ -21,8 +21,8 @@ final class OrganisationVoterTest extends KernelTestCase
 
     public function setUp(): void
     {
-        $this->user = new User();
-        $this->subject = new Organisation();
+        $this->user = new User('', '', '');
+        $this->subject = new Organisation('', '');
 
         $this->security = self::createStub(Security::class);
         $this->security->method('isGranted')->willReturn(false);

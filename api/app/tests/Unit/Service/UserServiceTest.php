@@ -26,7 +26,7 @@ final class UserServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->user = new User();
+        $this->user = new User('', '', '');
         $this->user->setRoleName(User::ROLE_LAY_DEPUTY);
 
         $client = new Client();
@@ -61,9 +61,8 @@ final class UserServiceTest extends TestCase
         $loggedInUser = $this->user;
         $loggedInUser->setRoleName($role);
 
-        $userToAdd = new User();
+        $userToAdd = new User('', '', 'test@tester.co.uk');
 
-        $userToAdd->setEmail('test@tester.co.uk');
         $this->em->expects(self::atLeastOnce())->method('persist');
         $this->em->expects(self::atLeastOnce())->method('flush');
         $this->userRepository->expects(self::atLeastOnce())->method('findOneBy')->with(['email' => 'test@tester.co.uk']);

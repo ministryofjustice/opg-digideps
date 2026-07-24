@@ -5,6 +5,7 @@ namespace Tests\OPG\Digideps\Backend\Integration\Entity;
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Entity\Client;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
@@ -32,24 +33,27 @@ class DeputyIntegrationTest extends ApiIntegrationTestCase
 
     public function testGetCourtOrdersWithStatus(): void
     {
-        $fakeUid = self::$faker->unique()->randomNumber(8);
+        $fakeUid = (string)self::$faker->unique()->randomNumber(8);
 
         $deputyHelper = new DeputyTestHelper();
         $deputy = $deputyHelper->generateDeputy();
         $deputy->setLastname('MONK');
 
-        $courtOrder = new CourtOrder();
-        $courtOrder
-            ->setCourtOrderUid($fakeUid)
-            ->setOrderType(CourtOrderType::PFA)
-            ->setOrderKind(CourtOrderKind::Hybrid)
-            ->setOrderReportType(CourtOrderReportType::OPG102)
-            ->setStatus('ACTIVE')
-            ->setOrderMadeDate(new \DateTime('2020-06-14'));
+        $client = new Client();
+
+        $courtOrder = new CourtOrder(
+            $fakeUid,
+            CourtOrderType::PFA,
+            CourtOrderReportType::OPG102,
+            CourtOrderKind::Hybrid,
+            new \DateTime('2020-06-14'),
+            $client
+        );
 
         $deputy->associateWithCourtOrder($courtOrder);
 
         self::$entityManager->persist($courtOrder);
+        self::$entityManager->persist($client);
         self::$entityManager->persist($deputy);
         self::$entityManager->flush();
 
@@ -75,25 +79,27 @@ class DeputyIntegrationTest extends ApiIntegrationTestCase
      */
     public function testCascadeDeleteCourtOrderDeputy(): void
     {
-        $fakeCourtOrderUid = self::$faker->unique()->randomNumber(8);
-        $fakeDeputyUid = self::$faker->unique()->randomNumber(8);
+        $fakeCourtOrderUid = (string)self::$faker->unique()->randomNumber(8);
+        $fakeDeputyUid = (string)self::$faker->unique()->randomNumber(8);
 
         $deputyHelper = new DeputyTestHelper();
         $deputy = $deputyHelper->generateDeputy(deputyUid: $fakeDeputyUid);
         $deputy->setLastname('VOLO');
+        $client = new Client();
 
-        $courtOrder = new CourtOrder();
-        $courtOrder
-            ->setCourtOrderUid($fakeCourtOrderUid)
-            ->setOrderType(CourtOrderType::PFA)
-            ->setOrderKind(CourtOrderKind::Hybrid)
-            ->setOrderReportType(CourtOrderReportType::OPG102)
-            ->setStatus('ACTIVE')
-            ->setOrderMadeDate(new \DateTime('2020-06-14'));
+        $courtOrder = new CourtOrder(
+            $fakeCourtOrderUid,
+            CourtOrderType::PFA,
+            CourtOrderReportType::OPG102,
+            CourtOrderKind::Hybrid,
+            new \DateTime('2020-06-14'),
+            $client
+        );
 
         $deputy->associateWithCourtOrder($courtOrder);
 
         self::$entityManager->persist($courtOrder);
+        self::$entityManager->persist($client);
         self::$entityManager->persist($deputy);
         self::$entityManager->flush();
 

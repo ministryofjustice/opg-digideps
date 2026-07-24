@@ -60,7 +60,7 @@ final class UserRetentionPolicyCommandTest extends KernelTestCase
 
     public function testExecuteWithInactiveAdminUser(): void
     {
-        $user = new User();
+        $user = new User('', '', '');
         $user->setRoleName(User::ROLE_ADMIN);
         $user->setId(1);
         $user->setLastLoggedIn(new \DateTime('-36 months'));
@@ -90,22 +90,22 @@ final class UserRetentionPolicyCommandTest extends KernelTestCase
 
     public function testExecuteWithInactiveAdminUsers(): void
     {
-        $inactiveAdminUser = new User();
+        $inactiveAdminUser = new User('', '', '');
         $inactiveAdminUser->setRoleName(User::ROLE_ADMIN);
         $inactiveAdminUser->setId(1);
         $inactiveAdminUser->setLastLoggedIn(new \DateTime('-36 months'));
 
-        $inactiveAdminManagerUser = new User();
+        $inactiveAdminManagerUser = new User('', '', '');
         $inactiveAdminManagerUser->setRoleName(User::ROLE_ADMIN_MANAGER);
         $inactiveAdminManagerUser->setId(2);
         $inactiveAdminManagerUser->setLastLoggedIn(new \DateTime('-30 months'));
 
-        $activeSuperAdmin = new User();
+        $activeSuperAdmin = new User('', '', '');
         $activeSuperAdmin->setRoleName(User::ROLE_SUPER_ADMIN);
         $activeSuperAdmin->setId(3);
         $activeSuperAdmin->setLastLoggedIn(new \DateTime('-2 months'));
 
-        $inactiveSuperAdminProtected = new User();
+        $inactiveSuperAdminProtected = new User('', '', '');
         $inactiveSuperAdminProtected->setRoleName(User::ROLE_SUPER_ADMIN);
         $inactiveSuperAdminProtected->setId(4);
         $inactiveSuperAdminProtected->setLastLoggedIn(new \DateTime('-26 months'));
