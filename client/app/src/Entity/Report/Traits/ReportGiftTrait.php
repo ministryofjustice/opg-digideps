@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use OPG\Digideps\Frontend\Entity\Report\Gift;
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -11,19 +10,18 @@ trait ReportGiftTrait
 {
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"gifts-exist"})
-     * @Assert\NotBlank(message="gifts.giftsExist.notBlank", groups={"gifts-exist"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['gifts-exist'])]
+    #[Assert\NotBlank(message: 'gifts.giftsExist.notBlank', groups: ['gifts-exist'])]
     private $giftsExist;
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Gift>")
-     * @JMS\Groups({"gifts"})
      *
      * @var Gift[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Gift>')]
+    #[JMS\Groups(['gifts'])]
     private $gifts = [];
 
     /**
@@ -37,7 +35,7 @@ trait ReportGiftTrait
     /**
      * @param string $giftsExist
      */
-    public function setGiftsExist($giftsExist)
+    public function setGiftsExist($giftsExist): void
     {
         $this->giftsExist = $giftsExist;
     }
@@ -52,10 +50,8 @@ trait ReportGiftTrait
 
     /**
      * @param array $gifts
-     *
-     * @return Report
      */
-    public function setGifts($gifts)
+    public function setGifts($gifts): static
     {
         $this->gifts = $gifts;
 

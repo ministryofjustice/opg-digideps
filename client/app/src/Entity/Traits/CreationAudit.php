@@ -2,6 +2,7 @@
 
 namespace OPG\Digideps\Frontend\Entity\Traits;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\User;
 
 /**
@@ -12,19 +13,19 @@ trait CreationAudit
     /**
      * Created by.
      *
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      *
      * @var User
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
     protected $createdBy;
 
     /**
      * Created on.
      *
-     * @JMS\Type("DateTime")
      *
      * @var \DateTime
      */
+    #[JMS\Type('DateTime')]
     protected $createdOn;
 
     /**

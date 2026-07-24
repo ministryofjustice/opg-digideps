@@ -7,12 +7,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class AssetOther extends Asset
 {
-    /**
-     * @Assert\NotBlank(message="asset.description.notBlank")
-     * @Assert\Length(min=3, minMessage="asset.description.length")
-     *
-     * @JMS\Type("string")
-     */
+    #[Assert\NotBlank(message: 'asset.description.notBlank')]
+    #[Assert\Length(min: 3, minMessage: 'asset.description.length')]
+    #[JMS\Type('string')]
     private ?string $description;
 
     /**

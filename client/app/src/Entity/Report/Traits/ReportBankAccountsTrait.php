@@ -9,25 +9,22 @@ use JMS\Serializer\Annotation as JMS;
 trait ReportBankAccountsTrait
 {
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\BankAccount>")
-     *
      * @var BankAccount[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\BankAccount>')]
     private $bankAccounts = [];
 
     /**
-     * @JMS\Type("double")
-     *
      * @var float
      */
+    #[JMS\Type('double')]
     private $accountsClosingBalanceTotal;
 
 
     /**
-     * @JMS\Type("double")
-     *
      * @var float
      */
+    #[JMS\Type('double')]
     private $accountsOpeningBalanceTotal;
 
     /**
@@ -57,9 +54,9 @@ trait ReportBankAccountsTrait
     /**
      * @return BankAccount[]
      */
-    public function getBankAccountsIncomplete()
+    public function getBankAccountsIncomplete(): array
     {
-        return array_filter($this->bankAccounts ?: [], function ($b) {
+        return array_filter($this->bankAccounts ?: [], function ($b): bool {
             return $b->getClosingBalance() === null;
         });
     }
@@ -123,7 +120,7 @@ trait ReportBankAccountsTrait
     /**
      * @param float $accountsOpeningBalanceTotal
      */
-    public function setAccountsOpeningBalanceTotal($accountsOpeningBalanceTotal)
+    public function setAccountsOpeningBalanceTotal($accountsOpeningBalanceTotal): void
     {
         $this->accountsOpeningBalanceTotal = $accountsOpeningBalanceTotal;
     }

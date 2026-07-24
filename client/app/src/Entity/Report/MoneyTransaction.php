@@ -34,8 +34,8 @@ class MoneyTransaction
      * ORDER is deprecated, re-order moving elements in the code.
      *
      * @var array<array{string, bool, string, string}> $categories
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     public static array $categories = [
         // category | hasMoreDetails | order | group | type (in/out) | allowed users (optional)
 
@@ -126,47 +126,37 @@ class MoneyTransaction
         ['anything-else-paid-out', true, 'moneyout-other', 'out'],
     ];
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"transaction"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['transaction'])]
     private $id;
 
-    /**
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="moneyTransaction.form.category.notBlank", groups={"transaction-group"})
-     */
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'moneyTransaction.form.category.notBlank', groups: ['transaction-group'])]
     private $group;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"transaction"})
-     * @Assert\NotBlank(message="moneyTransaction.form.category.notBlank", groups={"transaction-category"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['transaction'])]
+    #[Assert\NotBlank(message: 'moneyTransaction.form.category.notBlank', groups: ['transaction-category'])]
     private $category;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     private $type;
 
     /**
      * @var ?string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"transaction"})
-     * @Assert\NotBlank(message="moneyTransaction.form.amount.notBlank", groups={"transaction-amount"})
-     * @Assert\Range(min=0.01, max=100000000000, notInRangeMessage = "moneyTransaction.form.amount.notInRangeMessage", groups={"transaction-amount"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['transaction'])]
+    #[Assert\NotBlank(message: 'moneyTransaction.form.amount.notBlank', groups: ['transaction-amount'])]
+    #[Assert\Range(min: 0.01, max: 100000000000, notInRangeMessage: 'moneyTransaction.form.amount.notInRangeMessage', groups: ['transaction-amount'])]
     private $amount;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"transaction"})
-     * @Assert\NotBlank(message="moneyTransaction.form.description.notBlank", groups={"transaction-description"})
-     * @JMS\Type("string")
      */
+    #[JMS\Groups(['transaction'])]
+    #[Assert\NotBlank(message: 'moneyTransaction.form.description.notBlank', groups: ['transaction-description'])]
+    #[JMS\Type('string')]
     private $description;
 
     /**
@@ -198,7 +188,7 @@ class MoneyTransaction
     /**
      * @param mixed $group
      */
-    public function setGroup($group)
+    public function setGroup($group): void
     {
         $this->group = $group;
     }
@@ -265,7 +255,7 @@ class MoneyTransaction
      *
      * @return bool
      */
-    public static function isValidCategory($category = '')
+    public static function isValidCategory($category = ''): bool
     {
         foreach (self::$categories as $cat) {
             list($categoryId, $hasDetails, $groupId, $type) = $cat;
@@ -283,12 +273,12 @@ class MoneyTransaction
     /**
      * Get the type (in/out) based on the category.
      *
-     * @JMS\VirtualProperty
-     * @JMS\SerializedName("type")
-     * @JMS\Groups({"transaction", "transactionsIn", "transactionsOut"})
      *
      * @return string in/out
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('type')]
+    #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
     public function getType()
     {
         foreach (self::$categories as $cat) {

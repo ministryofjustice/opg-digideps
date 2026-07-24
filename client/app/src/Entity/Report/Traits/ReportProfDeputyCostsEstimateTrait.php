@@ -9,67 +9,53 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportProfDeputyCostsEstimateTrait
 {
-    /**
-     * @Assert\NotBlank( message="profDeputyEstimateCost.profDeputyCostsEstimateHowCharged.notBlank", groups={"prof-deputy-costs-estimate-how-charged"} )
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"deputyCostsEstimateHowCharged"})
-     */
+    #[Assert\NotBlank(message: 'profDeputyEstimateCost.profDeputyCostsEstimateHowCharged.notBlank', groups: ['prof-deputy-costs-estimate-how-charged'])]
+    #[JMS\Type('string')]
+    #[JMS\Groups(['deputyCostsEstimateHowCharged'])]
     private ?string $profDeputyCostsEstimateHowCharged = null;
 
     /**
      * @var ProfDeputyEstimateCost[]
      *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyEstimateCost>")
      *
-     * @JMS\Groups({"prof-deputy-estimate-costs"})
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyEstimateCost>')]
+    #[JMS\Groups(['prof-deputy-estimate-costs'])]
     private $profDeputyEstimateCosts = [];
 
-    /**
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"prof-deputy-estimate-costs"})
-     */
+    #[JMS\Type('array')]
+    #[JMS\Groups(['prof-deputy-estimate-costs'])]
     private $profDeputyEstimateCostTypeIds = [];
 
     /**
      * @var float
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"prof-deputy-estimate-management-costs"})
      *
-     * @Assert\NotBlank( message="profDeputyEstimateCost.profDeputyManagementCostAmount.amount.notBlank", groups={"prof-deputy-estimate-management-costs"} )
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-deputy-estimate-management-costs'])]
+    #[Assert\NotBlank(message: 'profDeputyEstimateCost.profDeputyManagementCostAmount.amount.notBlank', groups: ['prof-deputy-estimate-management-costs'])]
     private $profDeputyManagementCostAmount;
 
-    /**
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"prof-deputy-estimate-costs"})
-     */
+    #[JMS\Type('array')]
+    #[JMS\Groups(['prof-deputy-estimate-costs'])]
     private $profDeputyManagementCostTypeIds = [];
 
     /**
      * @var string yes/no
      *
-     * @Assert\NotBlank(message="common.yesnochoice.notBlank", groups={"prof-deputy-costs-estimate-more-info"})
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"deputyCostsEstimateMoreInfo"})
      */
+    #[Assert\NotBlank(message: 'common.yesnochoice.notBlank', groups: ['prof-deputy-costs-estimate-more-info'])]
+    #[JMS\Type('string')]
+    #[JMS\Groups(['deputyCostsEstimateMoreInfo'])]
     private $profDeputyCostsEstimateHasMoreInfo;
 
-    /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"deputyCostsEstimateMoreInfo"})
-     *
-     * @Assert\NotBlank(message="profDeputyCostsEstimateMoreInfo.details.notBlank", groups={"prof-deputy-costs-estimate-more-info-details"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['deputyCostsEstimateMoreInfo'])]
+    #[Assert\NotBlank(message: 'profDeputyCostsEstimateMoreInfo.details.notBlank', groups: ['prof-deputy-costs-estimate-more-info-details'])]
     private $profDeputyCostsEstimateMoreInfoDetails;
 
     /**

@@ -11,69 +11,48 @@ class VisitsCare
     use HasReportTrait;
 
     /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"visits-care"})
      *
      * @var int
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['visits-care'])]
     private $id;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"visits-care"})
-     *
-     * @Assert\NotBlank(message="visitsCare.doYouLiveWithClient.notBlank", groups={"visits-care-live-client"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['visits-care'])]
+    #[Assert\NotBlank(message: 'visitsCare.doYouLiveWithClient.notBlank', groups: ['visits-care-live-client'])]
     private $doYouLiveWithClient;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"visits-care"})
-     *
-     * @Assert\NotBlank(message="visitsCare.howOftenDoYouContactClient.notBlank", groups={"visits-care-how-often-contact"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['visits-care'])]
+    #[Assert\NotBlank(message: 'visitsCare.howOftenDoYouContactClient.notBlank', groups: ['visits-care-how-often-contact'])]
     private $howOftenDoYouContactClient;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"visits-care"})
-     *
-     * @Assert\NotBlank(message="visitsCare.doesClientReceivePaidCare.notBlank", groups={"visits-care-receive-paid-care"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['visits-care'])]
+    #[Assert\NotBlank(message: 'visitsCare.doesClientReceivePaidCare.notBlank', groups: ['visits-care-receive-paid-care'])]
     private $doesClientReceivePaidCare;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"visits-care"})
-     *
-     * @Assert\NotBlank(message="visitsCare.howIsCareFunded.notBlank", groups={"visits-care-how-care-funded"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['visits-care'])]
+    #[Assert\NotBlank(message: 'visitsCare.howIsCareFunded.notBlank', groups: ['visits-care-how-care-funded'])]
     private $howIsCareFunded;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"visits-care"})
-     *
-     * @Assert\NotBlank(message="visitsCare.whoIsDoingTheCaring.notBlank", groups={"visits-care-who-does-caring"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['visits-care'])]
+    #[Assert\NotBlank(message: 'visitsCare.whoIsDoingTheCaring.notBlank', groups: ['visits-care-who-does-caring'])]
     private $whoIsDoingTheCaring;
 
-    /**
-     * @JMS\SerializedName("does_client_have_a_care_plan")
-     * @JMS\Type("string")
-     * @JMS\Groups({"visits-care"})
-     *
-     * @Assert\NotBlank(message="visitsCare.doesClientHaveACarePlan.notBlank", groups={"visits-care-have-care-plan"})
-     */
+    #[JMS\SerializedName('does_client_have_a_care_plan')]
+    #[JMS\Type('string')]
+    #[JMS\Groups(['visits-care'])]
+    #[Assert\NotBlank(message: 'visitsCare.doesClientHaveACarePlan.notBlank', groups: ['visits-care-have-care-plan'])]
     private $doesClientHaveACarePlan;
 
-    /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"visits-care"})
-     *
-     * @Assert\NotBlank(message="visitsCare.whenWasCarePlanLastReviewed.notBlank", groups={"visits-care-care-plan-last-review"})
-     * @Assert\Type(type="DateTime", message="visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-care-plan-last-review"} )
-     */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['visits-care'])]
+    #[Assert\NotBlank(message: 'visitsCare.whenWasCarePlanLastReviewed.notBlank', groups: ['visits-care-care-plan-last-review'])]
+    #[Assert\Type(type: 'DateTime', message: 'visitsCare.whenWasCarePlanLastReviewed.invalidMessage', groups: ['visits-care-care-plan-last-review'])]
     private ?\DateTimeInterface $whenWasCarePlanLastReviewed = null;
 
     /**
@@ -129,7 +108,7 @@ class VisitsCare
     /**
      * @param string $howOftenDoYouContactClient
      */
-    public function setHowOftenDoYouContactClient($howOftenDoYouContactClient)
+    public function setHowOftenDoYouContactClient($howOftenDoYouContactClient): void
     {
         $this->howOftenDoYouContactClient = $howOftenDoYouContactClient;
     }
@@ -213,7 +192,7 @@ class VisitsCare
      *
      * @return VisitsCare
      */
-    public function setWhenWasCarePlanLastReviewed($whenWasCarePlanLastReviewed)
+    public function setWhenWasCarePlanLastReviewed(?\DateTimeInterface $whenWasCarePlanLastReviewed)
     {
         $this->whenWasCarePlanLastReviewed = $whenWasCarePlanLastReviewed;
 

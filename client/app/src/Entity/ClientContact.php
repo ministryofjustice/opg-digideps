@@ -13,118 +13,105 @@ class ClientContact
 
     /**
      * @var int
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $id;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     private $address1;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     private $address2;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     private $address3;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @Assert\Length(max=10, maxMessage="clientContact.form.postcode.maxMessage",
-     *     groups={"edit_clientcontact", "add_clientcontact"})
-     * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
+    #[JMS\Type('string')]
+    #[Assert\Length(max: 10, maxMessage: 'clientContact.form.postcode.maxMessage', groups: ['edit_clientcontact', 'add_clientcontact'])]
+    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     private $addressPostcode;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     private $addressCountry;
 
     /**
      * @var string
-     *
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Client")
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Client')]
     private $client;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     * @Assert\Email( message="clientContact.form.email.invalid", groups={"add_clientcontact", "edit_clientcontact"},   )
-     * @Assert\Length( max=60, maxMessage="clientContact.form.email.maxLength", groups={"add_clientcontact", "edit_clientcontact"} )
      *
-     * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
+    #[JMS\Type('string')]
+    #[Assert\Email(message: 'clientContact.form.email.invalid', groups: ['add_clientcontact', 'edit_clientcontact'])]
+    #[Assert\Length(max: 60, maxMessage: 'clientContact.form.email.maxLength', groups: ['add_clientcontact', 'edit_clientcontact'])]
+    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     private $email;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     * @Assert\NotBlank( message="clientContact.form.firstname.notBlank", groups={"edit_clientcontact", "add_clientcontact"})
-     * @Assert\Length(min=2, max=10, minMessage="clientContact.form.firstname.minMessage", maxMessage="clientContact.form.firstname.maxMessage",
-     *     groups={"edit_clientcontact", "add_clientcontact"})
      *
-     * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'clientContact.form.firstname.notBlank', groups: ['edit_clientcontact', 'add_clientcontact'])]
+    #[Assert\Length(min: 2, max: 10, minMessage: 'clientContact.form.firstname.minMessage', maxMessage: 'clientContact.form.firstname.maxMessage', groups: ['edit_clientcontact', 'add_clientcontact'])]
+    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     private $firstName;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @Assert\Length(min=2, max=100, minMessage="clientContact.form.firstname.minMessage", maxMessage="clientContact.form.firstname.maxMessage" )
-     * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
+    #[JMS\Type('string')]
+    #[Assert\Length(min: 2, max: 100, minMessage: 'clientContact.form.firstname.minMessage', maxMessage: 'clientContact.form.firstname.maxMessage')]
+    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     private $jobTitle;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     * @Assert\NotBlank( message="clientContact.form.lastname.notBlank", groups={"edit_clientcontact", "add_clientcontact"})
-     * @Assert\Length(min=2, max=100, minMessage="clientContact.form.lastname.minMessage", maxMessage="clientContact.form.lastname.maxMessage",
-     *     groups={"edit_clientcontact", "add_clientcontact"})
      *
-     * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'clientContact.form.lastname.notBlank', groups: ['edit_clientcontact', 'add_clientcontact'])]
+    #[Assert\Length(min: 2, max: 100, minMessage: 'clientContact.form.lastname.minMessage', maxMessage: 'clientContact.form.lastname.maxMessage', groups: ['edit_clientcontact', 'add_clientcontact'])]
+    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     private $lastName;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     private $orgName;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"add_clientcontact", "edit_clientcontact"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     private $phone;
 
     /**

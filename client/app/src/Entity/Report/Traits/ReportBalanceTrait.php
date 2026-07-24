@@ -2,33 +2,31 @@
 
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportBalanceTrait
 {
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"balance", "balance_mismatch_explanation"})
-     * @Assert\NotBlank(message="report.balanceMismatchExplanation.notBlank", groups={"balance"})
-     * @Assert\Length( min=10, minMessage="report.balanceMismatchExplanation.length", groups={"balance"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['balance', 'balance_mismatch_explanation'])]
+    #[Assert\NotBlank(message: 'report.balanceMismatchExplanation.notBlank', groups: ['balance'])]
+    #[Assert\Length(min: 10, minMessage: 'report.balanceMismatchExplanation.length', groups: ['balance'])]
     private $balanceMismatchExplanation;
 
     /**
-     * @JMS\Type("double")
-     *
      * @var float
      */
+    #[JMS\Type('double')]
     private $totalsOffset;
 
     /**
-     * @JMS\Type("boolean")
-     *
      * @var bool
      */
+    #[JMS\Type('boolean')]
     private $totalsMatch;
 
     /**
@@ -41,19 +39,18 @@ trait ReportBalanceTrait
 
     /**
      * @param string $balanceMismatchExplanation
-     *
-     * @return Report
      */
-    public function setBalanceMismatchExplanation($balanceMismatchExplanation)
+    public function setBalanceMismatchExplanation($balanceMismatchExplanation): static
     {
         $this->balanceMismatchExplanation = $balanceMismatchExplanation;
+
+        return $this;
     }
 
     /**
-     * @JMS\Type("double")
-     *
      * @var float
      */
+    #[JMS\Type('double')]
     private $calculatedBalance;
 
     /**
@@ -66,10 +63,8 @@ trait ReportBalanceTrait
 
     /**
      * @param float $calculatedBalance
-     *
-     * @return Report
      */
-    public function setCalculatedBalance($calculatedBalance)
+    public function setCalculatedBalance($calculatedBalance): static
     {
         $this->calculatedBalance = $calculatedBalance;
 
@@ -86,10 +81,8 @@ trait ReportBalanceTrait
 
     /**
      * @param float $totalsOffset
-     *
-     * @return Report
      */
-    public function setTotalsOffset($totalsOffset)
+    public function setTotalsOffset($totalsOffset): static
     {
         $this->totalsOffset = $totalsOffset;
 
@@ -107,7 +100,7 @@ trait ReportBalanceTrait
     /**
      * @param bool $totalsMatch
      */
-    public function setTotalsMatch($totalsMatch)
+    public function setTotalsMatch($totalsMatch): void
     {
         $this->totalsMatch = $totalsMatch;
     }

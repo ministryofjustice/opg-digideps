@@ -8,24 +8,21 @@ use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 trait LoginInfoTrait
 {
     /**
-     * @JMS\Type("integer")
-     *
      * @var int|null
      */
+    #[JMS\Type('integer')]
     private $idOfClientWithDetails;
 
     /**
-     * @JMS\Type("integer")
-     *
      * @var int|null
      */
+    #[JMS\Type('integer')]
     private $activeReportId;
 
     /**
-     * @JMS\Type("integer")
-     *
      * @var int|null
      */
+    #[JMS\Type('integer')]
     private $numberOfReports;
 
     public function getIdOfClientWithDetails(): ?int

@@ -4,7 +4,6 @@ namespace OPG\Digideps\Frontend\Entity\Report;
 
 use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
 use OPG\Digideps\Frontend\Validator\Constraints\StartEndDateComparableInterface;
-use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -16,49 +15,48 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProfDeputyPreviousCost implements StartEndDateComparableInterface
 {
     /**
-     * @JMS\Type("integer")
-     *
      * @var int
      */
+    #[JMS\Type('integer')]
     private $id;
 
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\Groups({"profDeputyPrevCosts"})
      *
-     * @Assert\NotBlank(message="profDeputyPreviousCost.startDate.notBlank", groups={"prof-deputy-prev-costs"})
      *
-     * @Assert\Type(type="DateTimeInterface",message="profDeputyPreviousCost.startDate.notValid", groups={"prof-deputy-prev-costs"})
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['profDeputyPrevCosts'])]
+    #[Assert\NotBlank(message: 'profDeputyPreviousCost.startDate.notBlank', groups: ['prof-deputy-prev-costs'])]
+    #[Assert\Type(type: 'DateTimeInterface', message: 'profDeputyPreviousCost.startDate.notValid', groups: ['prof-deputy-prev-costs'])]
     private $startDate;
 
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @JMS\Groups({"profDeputyPrevCosts"})
      *
-     * @Assert\NotBlank(message="profDeputyPreviousCost.endDate.notBlank", groups={"prof-deputy-prev-costs"})
      *
-     * @Assert\Type(type="DateTimeInterface",message="profDeputyPreviousCost.endDate.notValid", groups={"prof-deputy-prev-costs"})
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['profDeputyPrevCosts'])]
+    #[Assert\NotBlank(message: 'profDeputyPreviousCost.endDate.notBlank', groups: ['prof-deputy-prev-costs'])]
+    #[Assert\Type(type: 'DateTimeInterface', message: 'profDeputyPreviousCost.endDate.notValid', groups: ['prof-deputy-prev-costs'])]
     private $endDate;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"profDeputyPrevCosts"})
      *
-     * @Assert\NotBlank(message="profDeputyPreviousCost.amount.notBlank", groups={"prof-deputy-prev-costs"})
      *
-     * @Assert\Range(min=0.01, max=10000000, notInRangeMessage="profDeputyPreviousCost.amount.notInRangeMessage", groups={"prof-deputy-prev-costs"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['profDeputyPrevCosts'])]
+    #[Assert\NotBlank(message: 'profDeputyPreviousCost.amount.notBlank', groups: ['prof-deputy-prev-costs'])]
+    #[Assert\Range(min: 0.01, max: 10000000, notInRangeMessage: 'profDeputyPreviousCost.amount.notInRangeMessage', groups: ['prof-deputy-prev-costs'])]
     private $amount;
 
     /**
@@ -72,7 +70,7 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
     /**
      * @param int $id
      */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }

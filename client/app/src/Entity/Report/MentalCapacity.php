@@ -16,34 +16,26 @@ class MentalCapacity
 
 
     /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"mental-capacity"})
      *
      * @var int
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['mental-capacity'])]
     private $id;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"mental-capacity"})
-     * @Assert\NotBlank(message="mentalCapacity.hasCapacityChanged.notBlank", groups={"capacity"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['mental-capacity'])]
+    #[Assert\NotBlank(message: 'mentalCapacity.hasCapacityChanged.notBlank', groups: ['capacity'])]
     private $hasCapacityChanged;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"mental-capacity"})
-     *
-     * @Assert\NotBlank(message="mentalCapacity.hasCapacityChangedDetails.notBlank", groups={"has-capacity-changed-yes"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['mental-capacity'])]
+    #[Assert\NotBlank(message: 'mentalCapacity.hasCapacityChangedDetails.notBlank', groups: ['has-capacity-changed-yes'])]
     private $hasCapacityChangedDetails;
 
-    /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"mental-assessment-date"})
-     *
-     * @Assert\NotBlank(message="mentalCapacity.mentalAssessmentDate.notBlank", groups={"mental-assessment-date"})
-     */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['mental-assessment-date'])]
+    #[Assert\NotBlank(message: 'mentalCapacity.mentalAssessmentDate.notBlank', groups: ['mental-assessment-date'])]
     private $mentalAssessmentDate;
 
     public function getId()

@@ -7,17 +7,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class FeedbackReport
 {
-    /**
-     * @Assert\NotBlank(message="feedbackAfterReport.satisfactionLevel.notEmpty")
-     * @JMS\Type("string")
-     */
+    #[Assert\NotBlank(message: 'feedbackAfterReport.satisfactionLevel.notEmpty')]
+    #[JMS\Type('string')]
     private $satisfactionLevel;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $comments;
 
     public function getSatisfactionLevel()

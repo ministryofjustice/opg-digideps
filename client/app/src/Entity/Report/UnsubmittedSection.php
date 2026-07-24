@@ -49,7 +49,7 @@ class UnsubmittedSection
     /**
      * @param bool $present
      */
-    public function setPresent($present)
+    public function setPresent($present): void
     {
         $this->present = $present;
     }

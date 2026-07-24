@@ -2,6 +2,7 @@
 
 namespace OPG\Digideps\Frontend\Entity\Traits;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\User;
 
 /**
@@ -12,21 +13,21 @@ trait ModifyAudit
     /**
      * Last modified by.
      *
-     * @JMS\Groups({"last-modified"})
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      *
      * @var User
      */
+    #[JMS\Groups(['last-modified'])]
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
     protected $lastModifiedBy;
 
     /**
      * Last modified on.
      *
-     * @JMS\Groups({"last-modified"})
-     * @JMS\Type("DateTime")
      *
      * @var \DateTime
      */
+    #[JMS\Groups(['last-modified'])]
+    #[JMS\Type('DateTime')]
     protected $lastModifiedOn;
 
     /**

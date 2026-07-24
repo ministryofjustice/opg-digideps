@@ -13,9 +13,8 @@ trait ReportAssetTrait
     /**
      * Titles matching this will be included in the count for "Cash" in summary page
      * Note: it relies on the translation (see report-assets.en.yml form.choices) for historical reasons
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     private static $cashAssetTitles = [
         'Unit trusts',
         'National Savings certificates',
@@ -25,17 +24,15 @@ trait ReportAssetTrait
 
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Asset>")
-     *
      * @var Asset[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Asset>')]
     private $assets = [];
 
     /**
-     * @JMS\Type("double")
-     *
      * @var float
      */
+    #[JMS\Type('double')]
     private $assetsTotalValue;
 
     /**
@@ -71,7 +68,7 @@ trait ReportAssetTrait
     /**
      * @param string $type property|cash|other
      */
-    public function getAssetsTotalsSummaryPage($type)
+    public function getAssetsTotalsSummaryPage($type): float|int
     {
         $ret = 0;
 
@@ -141,7 +138,7 @@ trait ReportAssetTrait
      *
      * @return bool
      */
-    public function hasAssetWithId($id)
+    public function hasAssetWithId($id): bool
     {
         foreach ($this->getAssets() as $asset) {
             if ($asset->getId() == $id) {

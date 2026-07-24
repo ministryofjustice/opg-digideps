@@ -9,33 +9,31 @@ use JMS\Serializer\Annotation as JMS;
 trait ReportMoneyTransactionTrait
 {
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>")
-     * @JMS\Groups({"transactionsIn"})
      *
      * @var MoneyTransaction[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>')]
+    #[JMS\Groups(['transactionsIn'])]
     private $moneyTransactionsIn = [];
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>")
-     * @JMS\Groups({"transactionsOut"})
      *
      * @var MoneyTransaction[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>')]
+    #[JMS\Groups(['transactionsOut'])]
     private $moneyTransactionsOut = [];
 
     /**
-     * @JMS\Type("double")
-     *
      * @var float
      */
+    #[JMS\Type('double')]
     private $moneyInTotal;
 
     /**
-     * @JMS\Type("double")
-     *
      * @var float
      */
+    #[JMS\Type('double')]
     private $moneyOutTotal;
 
     /**

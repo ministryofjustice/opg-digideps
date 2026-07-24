@@ -9,34 +9,22 @@ use Ramsey\Uuid\UuidInterface;
 
 class ResearchType
 {
-    /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\UserResearch\UserResearchResponse")
-     */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\UserResearch\UserResearchResponse')]
     private $userResearchResponse;
 
-    /**
-     * @JMS\Type("string")
-     */
-    private $id;
+    #[JMS\Type('string')]
+    private UuidInterface $id;
 
-    /**
-     * @JMS\Type("bool")
-     */
+    #[JMS\Type('bool')]
     private ?bool $surveys = null;
 
-    /**
-     * @JMS\Type("bool")
-     */
+    #[JMS\Type('bool')]
     private ?bool $videoCall = null;
 
-    /**
-     * @JMS\Type("bool")
-     */
+    #[JMS\Type('bool')]
     private ?bool $phone = null;
 
-    /**
-     * @JMS\Type("bool")
-     */
+    #[JMS\Type('bool')]
     private ?bool $inPerson = null;
 
     public function getUserResearchResponse(): UserResearchResponse
@@ -109,7 +97,7 @@ class ResearchType
         return $this;
     }
 
-    public function getCommaSeparatedTypesAgreed()
+    public function getCommaSeparatedTypesAgreed(): string
     {
         $props = get_object_vars($this);
 

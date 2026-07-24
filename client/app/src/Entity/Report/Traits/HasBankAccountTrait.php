@@ -9,17 +9,15 @@ trait HasBankAccountTrait
 {
     /**
      * @var BankAccount
-     * @JMS\SerializedName("bankAccount")
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\BankAccount")
      *
-     * @JMS\Groups({"account"})
      */
+    #[JMS\SerializedName('bankAccount')]
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\BankAccount')]
+    #[JMS\Groups(['account'])]
     private $bankAccount;
 
-    /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"account"})
-     **/
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['account'])]
     private $bankAccountId;
 
     /**
