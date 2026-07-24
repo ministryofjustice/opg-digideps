@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Form\Report;
 
-use OPG\Digideps\Frontend\Entity\MoneyReceivedOnClientsBehalfInterface;
 use OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf;
 use OPG\Digideps\Frontend\Form\DateType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -28,8 +28,8 @@ class ClientBenefitsCheckType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->step = (int) $options['step'];
-        $baseTransParams = ['%client%' => $options['label_translation_parameters']['clientFirstname']];
+        $this->step = is_numeric($options['step']) ? (int) $options['step'] : 1;
+        $baseTransParams = is_array($options['label_translation_parameters']) ? ['%client%' => $options['label_translation_parameters']['clientFirstname']] : [];
         $domain = 'report-client-benefits-check';
 
         if ($this->step === 1) {
@@ -72,7 +72,7 @@ class ClientBenefitsCheckType extends AbstractType
             $builder->add('typesOfMoneyReceivedOnClientsBehalf', CollectionType::class, [
                 'entry_type' => MoneyReceivedOnClientsBehalfType::class,
                 'entry_options' => ['label' => false, 'empty_data' => null],
-                'delete_empty' => function (MoneyReceivedOnClientsBehalfInterface $money) use ($options) {
+                'delete_empty' => function (MoneyReceivedOnClientsBehalf $money) use ($options) {
                     return $money->getAmount() === null && $money->getMoneyType() === null && $money->getAmountDontKnow() === false && $options['allow_delete_empty'];
                 },
                 'allow_delete' => true,
@@ -84,8 +84,10 @@ class ClientBenefitsCheckType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
 
-            if (!empty($data['dateLastCheckedEntitlement']['month']) && !empty($data['dateLastCheckedEntitlement']['year'])) {
-                $data['dateLastCheckedEntitlement']['day'] = '01';
+            if (is_array($data) && is_array($data['dateLastCheckedEntitlement'])) {
+                if (!empty($data['dateLastCheckedEntitlement']['month']) && !empty($data['dateLastCheckedEntitlement']['year'])) {
+                    $data['dateLastCheckedEntitlement']['day'] = '01';
+                }
             }
 
             $event->setData($data);

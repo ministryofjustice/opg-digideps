@@ -219,8 +219,9 @@ class AssetProperty extends Asset
 
     /**
      * Get address.
+     * @return array<string>
      */
-    public function getAddressValidLines()
+    public function getAddressValidLines(): array
     {
         return array_filter([$this->address, $this->address2, $this->county, $this->postcode]);
     }

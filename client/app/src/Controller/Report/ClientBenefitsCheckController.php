@@ -122,6 +122,7 @@ class ClientBenefitsCheckController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var ClientBenefitsCheck $formData */
             $formData = $form->getData();
             $formData->setReport($report);
 
