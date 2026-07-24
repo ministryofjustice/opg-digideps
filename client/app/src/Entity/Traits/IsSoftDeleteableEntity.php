@@ -10,11 +10,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 trait IsSoftDeleteableEntity
 {
-    /**
-     * @var \DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
-    protected ?\DateTime $deletedAt;
+    protected ?\DateTime $deletedAt = null;
 
     /**
      * Sets deletedAt.
