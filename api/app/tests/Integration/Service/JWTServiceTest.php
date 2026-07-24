@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Integration\Service;
 
 use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\InvalidKeyProvided;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Lcobucci\JWT\UnencryptedToken;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Service\JWT\JWTService;
 use OPG\Digideps\Backend\Service\SecretManagerService;
@@ -22,6 +24,7 @@ class JWTServiceTest extends TestCase
     private DateTimeProvider&MockObject $dateTimeProvider;
     private string $publicKeyPem;
     private string $privateKeyPem;
+    private JWTService $sut;
 
     public function setUp(): void
     {
@@ -37,6 +40,7 @@ class JWTServiceTest extends TestCase
                 return match ($keyname) {
                     SecretManagerService::PRIVATE_JWT_KEY_BASE64_SECRET_NAME => base64_encode($this->privateKeyPem),
                     SecretManagerService::PUBLIC_JWT_KEY_BASE64_SECRET_NAME => base64_encode($this->publicKeyPem),
+                    default => throw new \InvalidArgumentException('Invalid key name')
                 };
             });
 
@@ -49,50 +53,55 @@ class JWTServiceTest extends TestCase
     }
 
     /** @test */
-    public function verifyWithAValidJWT()
+    public function verifyWithAValidJWT(): void
     {
-        $jwt = $this->createSignedJWTString($this->publicKeyPem, $this->privateKeyPem);
+        $jwt = $this->createSignedJWTString();
 
         self::assertTrue($this->sut->verify($jwt));
     }
 
     /** @test */
-    public function verifyWithMissingAlgorithmFails()
+    public function verifyWithMissingAlgorithmFails(): void
     {
-        $jwt = $this->createUnsignedJWTString($this->publicKeyPem, 'https://example.org');
+        $jwt = $this->createUnsignedJWTString('https://example.org');
 
         self::assertFalse($this->sut->verify($jwt));
     }
 
     /** @test */
-    public function verifyWithIncorrectAudienceFails()
+    public function verifyWithIncorrectAudienceFails(): void
     {
-        $jwt = $this->createSignedJWTString($this->publicKeyPem, $this->privateKeyPem, 'wrong_aud');
+        $jwt = $this->createSignedJWTString('wrong_aud');
 
         self::assertFalse($this->sut->verify($jwt));
     }
 
     /** @test */
-    public function verifyWithIncorrectIssuerFails()
+    public function verifyWithIncorrectIssuerFails(): void
     {
-        $jwt = $this->createSignedJWTString($this->publicKeyPem, $this->privateKeyPem, 'urn:opg:registration_service', 'wrong_iss');
+        $jwt = $this->createSignedJWTString('urn:opg:registration_service', 'wrong_iss');
 
         self::assertFalse($this->sut->verify($jwt));
     }
 
     /** @test */
-    public function createNewJWT()
+    public function createNewJWT(): void
     {
+        if ($this->privateKeyPem === '' || $this->publicKeyPem === '') {
+            throw new \InvalidArgumentException('One or both keys are empty');
+        }
+
         $now = new \DateTimeImmutable();
         $plus1Hour = new \DateTimeImmutable('+1 hour');
         $sub10Seconds = new \DateTimeImmutable('-10 seconds');
 
         $this->dateTimeProvider->method('getDateTimeImmutable')
-            ->willReturnCallback(function ($delta) use ($now, $plus1Hour, $sub10Seconds) {
+            ->willReturnCallback(function (string $delta) use ($now, $plus1Hour, $sub10Seconds) {
                 return match ($delta) {
                     'now' => $now,
                     '+1 hour' => $plus1Hour,
-                    '-10 seconds' => $sub10Seconds
+                    '-10 seconds' => $sub10Seconds,
+                    default => throw new \InvalidArgumentException('Invalid time delta supplied')
                 };
             });
 
@@ -100,7 +109,7 @@ class JWTServiceTest extends TestCase
             ->setId(22)
             ->setRoleName('A_ROLE');
 
-        $actuaklJwt = $this->sut->createNewJWT($user);
+        $actualJwt = $this->sut->createNewJWT($user);
 
         $config = Configuration::forAsymmetricSigner(
             new Sha256(),
@@ -108,12 +117,13 @@ class JWTServiceTest extends TestCase
             InMemory::plainText($this->publicKeyPem),
         );
 
-        $token = $config->parser()->parse($actuaklJwt);
+        /** @var UnencryptedToken $token */
+        $token = $config->parser()->parse($actualJwt);
 
         self::assertTrue($token->hasBeenIssuedBy('urn:opg:digideps'));
         self::assertTrue($token->isPermittedFor('urn:opg:registration_service'));
         self::assertTrue($token->isRelatedTo('urn:opg:digideps:users:22'));
-        self::assertSame('urn:opg:digideps:A_ROLE', $token->claims()->get('role'));
+        self::assertEquals('urn:opg:digideps:A_ROLE', $token->claims()->get('role'));
 
         self::assertTrue($token->isMinimumTimeBefore($sub10Seconds));
         self::assertTrue($token->hasBeenIssuedBefore($now));
@@ -121,18 +131,20 @@ class JWTServiceTest extends TestCase
     }
 
     private function createSignedJWTString(
-        string $publicKey,
-        string $privateKey,
         string $aud = 'urn:opg:registration_service',
         string $iss = 'urn:opg:digideps',
         string $jkuAddress = 'https://example.org',
     ): string {
-        $kid = openssl_digest($publicKey, 'sha256');
+        if ($this->privateKeyPem === '' || $this->publicKeyPem === '') {
+            throw new \InvalidArgumentException('One or both keys are empty');
+        }
+
+        $kid = openssl_digest($this->publicKeyPem, 'sha256');
 
         $config = Configuration::forAsymmetricSigner(
             new Sha256(),
-            InMemory::plainText($privateKey),
-            InMemory::plainText($publicKey)
+            InMemory::plainText($this->privateKeyPem),
+            InMemory::plainText($this->publicKeyPem)
         );
 
         $plainToken = $config->builder()
@@ -150,9 +162,9 @@ class JWTServiceTest extends TestCase
         return $plainToken->toString();
     }
 
-    private function createUnsignedJWTString(string $publicKey, string $jkuAddress): string
+    private function createUnsignedJWTString(string $jkuAddress): string
     {
-        $kid = openssl_digest($publicKey, 'sha256');
+        $kid = openssl_digest($this->publicKeyPem, 'sha256');
 
         $config = Configuration::forUnsecuredSigner();
 
@@ -171,12 +183,28 @@ class JWTServiceTest extends TestCase
         return $plainToken->toString();
     }
 
+    /**
+     * @return array<int, non-empty-string>
+     */
     private function createPemKeyPair(): array
     {
         $options = ['private_key_bits' => 2048, 'private_key_type' => OPENSSL_KEYTYPE_RSA];
         $keyPair = openssl_pkey_new($options);
-        $publicKeyPem = openssl_pkey_get_details($keyPair)['key'];
-        openssl_pkey_export($keyPair, $privateKeyPem);
+
+        $publicKeyPem = '';
+        $privateKeyPem = '';
+        if ($keyPair instanceof \OpenSSLAsymmetricKey) {
+            $keyDetails = openssl_pkey_get_details($keyPair);
+            if (is_array($keyDetails) && is_string($keyDetails['key'])) {
+                $publicKeyPem = $keyDetails['key'];
+            }
+
+            openssl_pkey_export($keyPair, $privateKeyPem);
+        }
+
+        if (!is_string($privateKeyPem) || $privateKeyPem === '' || $publicKeyPem === '') {
+            throw new InvalidKeyProvided('Unable to get keys from key pair');
+        }
 
         return [$publicKeyPem, $privateKeyPem];
     }
