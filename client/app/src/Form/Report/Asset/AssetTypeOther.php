@@ -2,7 +2,6 @@
 
 namespace OPG\Digideps\Frontend\Form\Report\Asset;
 
-use OPG\Digideps\Frontend\Form\AddAnotherThingType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,8 +28,7 @@ class AssetTypeOther extends AbstractType
                     'format' => 'dd-MM-yyyy',
                     'invalid_message' => 'Enter a valid date',
                     'required' => false,
-                ])
-                ->add('addAnother', AddAnotherThingType::class);
+                ]);
 
 
         $builder

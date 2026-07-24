@@ -270,8 +270,6 @@ trait ClientBenefitsCheckSectionTrait
                 $this->faker->sentence(3),
                 'moneyType'
             );
-            $this->addAnotherClientBenefit('no');
-            $this->pressButton('Save and continue');
         } elseif (strtolower($action) === 'remove') {
             $this->removeAnswerFromSection(
                 array_key_first($moneyTypeAnswers),
