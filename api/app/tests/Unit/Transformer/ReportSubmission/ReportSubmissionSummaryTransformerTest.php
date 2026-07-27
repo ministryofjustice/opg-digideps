@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Transformer\ReportSubmission;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -12,13 +11,13 @@ use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Service\DateTimeProvider;
 use OPG\Digideps\Backend\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class ReportSubmissionSummaryTransformerTest extends TestCase
 {
     private ReportSubmissionSummaryTransformer $sut;
     private DateTimeProvider&MockObject $dateTimeProvider;
-    private ReportSubmission&MockObject $reportSubmission;
     private array $result;
 
     public function setUp(): void
@@ -113,8 +112,9 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
         return $reportSubmission;
     }
 
-    private function buildReportOfType(string $type, array $data): MockObject
+    private function buildReportOfType(string $type, array $data): Report&MockObject
     {
+        /** @var Report&MockObject $report */
         $report = $this
             ->getMockBuilder($type)
             ->disableOriginalConstructor()
@@ -128,6 +128,7 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
 
     private function buildDocumentWith(array $document): Document
     {
+        /** @var Report&MockObject $report */
         $report = $this->getMockBuilder(Report::class)->disableOriginalConstructor()->getMock();
 
         return new Document($report)

@@ -93,7 +93,7 @@ trait ReportMoneyTransactionTrait
                 $ret[$group] = ['entries' => [], 'amountTotal' => 0];
             }
             $ret[$group]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
-            $ret[$group]['amountTotal'] += $transaction->getAmount();
+            $ret[$group]['amountTotal'] += (float)$transaction->getAmount();
         }
 
         return $ret;

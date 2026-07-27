@@ -7,45 +7,33 @@ namespace Tests\OPG\Digideps\Backend\Unit\Security;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Security\HeaderTokenAuthenticator;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Predis\Client;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
+use Tests\OPG\Digideps\Backend\Unit\PredisMock;
 
 final class HeaderTokenAuthenticatorTest extends TestCase
 {
-    use ProphecyTrait;
-
+    private PredisMock&MockObject $redisClient;
+    private UserRepository&MockObject $userRepository;
+    private LoggerInterface&MockObject $logger;
     private HeaderTokenAuthenticator $sut;
-    /**
-     * @var ObjectProphecy<Client> $redisClient
-     */
-    private ObjectProphecy $redisClient;
-    /**
-     * @var ObjectProphecy<UserRepository> $userRepository
-     */
-    private ObjectProphecy $userRepository;
-    /**
-     * @var ObjectProphecy<LoggerInterface> $logger
-     */
-    private ObjectProphecy $logger;
 
     public function setUp(): void
     {
-        $this->redisClient = self::prophesize(Client::class);
-        $this->userRepository = self::prophesize(UserRepository::class);
-        $this->logger = self::prophesize(LoggerInterface::class);
+        $this->redisClient = self::createMock(PredisMock::class);
+        $this->userRepository = self::createMock(UserRepository::class);
+        $this->logger = self::createMock(LoggerInterface::class);
 
         $this->sut = new HeaderTokenAuthenticator(
-            $this->redisClient->reveal(),
-            $this->userRepository->reveal(),
-            $this->logger->reveal()
+            $this->redisClient,
+            $this->userRepository,
+            $this->logger
         );
     }
 
@@ -66,26 +54,16 @@ final class HeaderTokenAuthenticatorTest extends TestCase
         $supportedRequest = new Request();
         $supportedRequest->headers->set('AuthToken', 'AuthTokenValue');
 
-        $user = new User()
-            ->setEmail('a@b.com');
+        $user = new User()->setEmail('a@b.com');
         $postAuthToken = new PostAuthenticationToken($user, 'a_firewall', ['ROLE_LAY_DEPUTY']);
-        $this->userRepository->findOneBy(['email' => 'a@b.com'])->willReturn($user);
 
-        $this->redisClient->get('AuthTokenValue')->willReturn(serialize($postAuthToken));
+        $this->userRepository->expects($this->once())->method('findOneBy')->with(['email' => 'a@b.com'])->willReturn($user);
 
-        $passport = new SelfValidatingPassport(
-            new UserBadge($postAuthToken->getUserIdentifier(), function (string $userEmail): User {
-                $user = $this->userRepository->findOneBy(['email' => strtolower($userEmail)]);
+        $this->redisClient->expects(self::once())->method('get')->with('AuthTokenValue')->willReturn(serialize($postAuthToken));
 
-                if ($user instanceof User) {
-                    return $user;
-                }
+        $passport = $this->sut->authenticate($supportedRequest);
 
-                throw new UserNotFoundException('User not found');
-            })
-        );
-
-        self::assertEquals($passport, $this->sut->authenticate($supportedRequest));
+        self::assertEquals($passport->getUser(), $user);
     }
 
     public function testAuthenticateRedisKeyDoesNotExistThrowsError(): void
@@ -95,7 +73,7 @@ final class HeaderTokenAuthenticatorTest extends TestCase
         $supportedRequest = new Request();
         $supportedRequest->headers->set('AuthToken', 'AuthTokenValue');
 
-        $this->redisClient->get('AuthTokenValue')->willReturn(null);
+        $this->redisClient->expects(self::once())->method('get')->with('AuthTokenValue')->willReturn(null);
 
         $this->sut->authenticate($supportedRequest);
     }
@@ -109,8 +87,8 @@ final class HeaderTokenAuthenticatorTest extends TestCase
             ->setEmail('a@b.com');
         $postAuthToken = new PostAuthenticationToken($user, 'a_firewall', ['ROLE_LAY_DEPUTY']);
 
-        $this->redisClient->get('AuthTokenValue')->shouldBeCalled()->willReturn(serialize($postAuthToken));
-        $this->userRepository->findOneBy(['email' => 'a@b.com'])->shouldNotBeCalled();
+        $this->redisClient->expects(self::once())->method('get')->with('AuthTokenValue')->willReturn(serialize($postAuthToken));
+        $this->userRepository->expects(self::never())->method('findOneBy');
 
         $passport = new SelfValidatingPassport(
             new UserBadge($postAuthToken->getUserIdentifier(), function ($userEmail): User {

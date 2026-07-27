@@ -34,7 +34,7 @@ trait HasBankAccountTrait
      * @param $bankAccount
      * @return $this
      */
-    public function setBankAccount($bankAccount)
+    public function setBankAccount($bankAccount): static
     {
         $this->bankAccount = $bankAccount;
         return $this;

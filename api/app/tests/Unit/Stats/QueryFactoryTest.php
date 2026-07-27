@@ -10,7 +10,6 @@ use OPG\Digideps\Backend\Service\Stats\Query\Query;
 use OPG\Digideps\Backend\Service\Stats\QueryFactory;
 use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 use Doctrine\ORM\EntityManager;
-use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
 final class QueryFactoryTest extends TestCase
@@ -19,13 +18,8 @@ final class QueryFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        $em = m::mock(EntityManager::class)->makePartial();
+        $em = self::createMock(EntityManager::class);
         $this->factory = new QueryFactory($em);
-    }
-
-    public function tearDown(): void
-    {
-        m::close();
     }
 
     public static function metricNameProvider(): array
@@ -43,6 +37,7 @@ final class QueryFactoryTest extends TestCase
         ]);
 
         $query = $this->factory->create($sq);
+
         $this->assertInstanceOf(Query::class, $query);
     }
 
@@ -55,6 +50,6 @@ final class QueryFactoryTest extends TestCase
         ]);
 
         $this->expectException(\InvalidArgumentException::class);
-        $query = $this->factory->create($sq);
+        $this->factory->create($sq);
     }
 }

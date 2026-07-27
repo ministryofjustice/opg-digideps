@@ -549,10 +549,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @param string $email
-     *
-     * @return User
      */
-    public function setEmail($email)
+    public function setEmail($email): static
     {
         $this->email = $email;
 
@@ -776,7 +774,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return self::$allowedRoles[$this->roleName] ?? '';
     }
 
-    public function setRoleName($roleName)
+    public function setRoleName($roleName): static
     {
         $this->roleName = $roleName;
 
@@ -851,7 +849,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    public function setAddressCountry($addressCountry)
+    public function setAddressCountry($addressCountry): static
     {
         $this->addressCountry = $addressCountry;
 

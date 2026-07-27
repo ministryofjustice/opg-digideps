@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Search;
 
-use PHPUnit\Framework\Attributes\Test;
-use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

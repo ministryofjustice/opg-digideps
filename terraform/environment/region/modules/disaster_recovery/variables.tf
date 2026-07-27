@@ -74,6 +74,11 @@ variable "cross_account_role_name" {
   type        = string
 }
 
+variable "rds_encryption_key_arn" {
+  description = "The ARN of the rds encryption key."
+  type        = string
+}
+
 variable "logs_kms_key_arn" {
   description = "The ARN of the KMS key used for logs encryption."
   type        = string

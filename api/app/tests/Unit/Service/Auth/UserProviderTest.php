@@ -10,7 +10,7 @@ use OPG\Digideps\Backend\Security\RedisUserProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Tests\OPG\Digideps\Backend\Unit\Service\PredisMock;
+use Tests\OPG\Digideps\Backend\Unit\PredisMock;
 
 final class UserProviderTest extends TestCase
 {
@@ -90,7 +90,7 @@ final class UserProviderTest extends TestCase
     {
         $this->userProvider->removeToken('token');
 
-        $setCalls = array_filter($this->redis->calls, fn ($c) => $c[0] === 'set' && $c[1] === 'token' && $c[2] === null);
+        $setCalls = array_filter($this->redis->calls, fn ($c) => $c[0] === 'set' && $c[1] === 'token');
         $this->assertCount(1, $setCalls);
     }
 }

@@ -9,8 +9,7 @@ use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Event\UserRetentionPolicyCommandEvent;
 use OPG\Digideps\Backend\EventDispatcher\ObservableEventDispatcher;
 use OPG\Digideps\Backend\Repository\UserRepository;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -18,35 +17,24 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 final class UserRetentionPolicyCommandTest extends KernelTestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @var ObjectProphecy<UserRepository> $userRepository
-     */
-    private ObjectProphecy $userRepository;
-    /**
-     * @var ObjectProphecy<ObservableEventDispatcher> $eventDispatcher
-     */
-    private ObjectProphecy $eventDispatcher;
-    /**
-     * @var ObjectProphecy<LoggerInterface> $logger
-     */
-    private ObjectProphecy $logger;
+    private UserRepository&MockObject $userRepository;
+    private ObservableEventDispatcher&MockObject $eventDispatcher;
+    private LoggerInterface&MockObject $logger;
     private CommandTester $commandTester;
 
     public function setUp(): void
     {
-        $kernel = static::createKernel();
+        $kernel = self::createKernel();
         $app = new Application($kernel);
 
-        $this->userRepository = self::prophesize(UserRepository::class);
-        $this->eventDispatcher = self::prophesize(ObservableEventDispatcher::class);
-        $this->logger = self::prophesize(LoggerInterface::class);
+        $this->userRepository = self::createMock(UserRepository::class);
+        $this->eventDispatcher = self::createMock(ObservableEventDispatcher::class);
+        $this->logger = self::createMock(LoggerInterface::class);
 
         $sut = new UserRetentionPolicyCommand(
-            $this->userRepository->reveal(),
-            $this->eventDispatcher->reveal(),
-            $this->logger->reveal()
+            $this->userRepository,
+            $this->eventDispatcher,
+            $this->logger
         );
 
         $app->add($sut);
@@ -57,12 +45,13 @@ final class UserRetentionPolicyCommandTest extends KernelTestCase
 
     public function testOutputWithNoInactiveAdminUsers(): void
     {
-        $this->userRepository->getAllAdminAccountsNotUsedWithin('-24 months')
-            ->shouldBeCalled()
+        $this->userRepository->expects(self::once())
+            ->method('getAllAdminAccountsNotUsedWithin')
+            ->with('-24 months')
             ->willReturn(null);
 
-        $this->userRepository->getAllDeletionProtectedAccounts()
-            ->shouldBeCalled()
+        $this->userRepository->expects(self::once())
+            ->method('getAllDeletionProtectedAccounts')
             ->willReturn([1, 2, 3, 4, 5, 6]);
 
         $result = $this->commandTester->execute([]);
@@ -76,12 +65,13 @@ final class UserRetentionPolicyCommandTest extends KernelTestCase
         $user->setId(1);
         $user->setLastLoggedIn(new \DateTime('-36 months'));
 
-        $this->userRepository->getAllAdminAccountsNotUsedWithin('-24 months')
-            ->shouldBeCalled()
+        $this->userRepository->expects(self::once())
+            ->method('getAllAdminAccountsNotUsedWithin')
+            ->with('-24 months')
             ->willReturn($user);
 
-        $this->userRepository->getAllDeletionProtectedAccounts()
-            ->shouldBeCalled()
+        $this->userRepository->expects(self::once())
+            ->method('getAllDeletionProtectedAccounts')
             ->willReturn([2, 3, 4, 5, 6]);
 
         $trigger = 'USER_DELETED_AUTOMATION';
@@ -90,7 +80,9 @@ final class UserRetentionPolicyCommandTest extends KernelTestCase
         $this->eventDispatcher->dispatch($userRetentionEvent, 'user.deleted');
         $this->logger->notice('Deleted user account with id: 1 at admin permission level due to 2 year expiry.');
 
-        $this->userRepository->deleteInactiveAdminUsers([1])->shouldBeCalled();
+        $this->userRepository->expects(self::once())
+            ->method('deleteInactiveAdminUsers')
+            ->with([1]);
 
         $result = $this->commandTester->execute([]);
         $this->assertEquals(0, $result);
@@ -124,12 +116,13 @@ final class UserRetentionPolicyCommandTest extends KernelTestCase
             $inactiveSuperAdminProtected,
         ];
 
-        $this->userRepository->getAllAdminAccountsNotUsedWithin('-24 months')
-            ->shouldBeCalled()
+        $this->userRepository->expects(self::once())
+            ->method('getAllAdminAccountsNotUsedWithin')
+            ->with('-24 months')
             ->willReturn($expectedInactiveAdminUsersReturned);
 
-        $this->userRepository->getAllDeletionProtectedAccounts()
-            ->shouldBeCalled()
+        $this->userRepository->expects(self::once())
+            ->method('getAllDeletionProtectedAccounts')
             ->willReturn([4]);
 
         $trigger = 'USER_DELETED_AUTOMATION';
@@ -142,7 +135,9 @@ final class UserRetentionPolicyCommandTest extends KernelTestCase
         $this->eventDispatcher->dispatch($userRetentionEvent, 'user.deleted');
         $this->logger->notice('Deleted user account with id: 2 at admin permission level due to 2 year expiry.');
 
-        $this->userRepository->deleteInactiveAdminUsers([1, 2])->shouldBeCalled();
+        $this->userRepository->expects(self::once())
+            ->method('deleteInactiveAdminUsers')
+            ->with([1, 2]);
 
         $result = $this->commandTester->execute([]);
         $this->assertEquals(0, $result);

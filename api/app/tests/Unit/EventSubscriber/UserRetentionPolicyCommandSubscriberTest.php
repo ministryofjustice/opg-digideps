@@ -4,23 +4,20 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\EventSubscriber;
 
-use OPG\Digideps\Backend\Service\Audit\AuditEvents;
-use OPG\Digideps\Backend\Service\Time\DateTimeProvider;
-use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Event\UserRetentionPolicyCommandEvent;
 use OPG\Digideps\Backend\EventSubscriber\UserRetentionPolicyCommandSubscriber;
+use OPG\Digideps\Backend\Service\Audit\AuditEvents;
+use OPG\Digideps\Backend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 final class UserRetentionPolicyCommandSubscriberTest extends KernelTestCase
 {
-    use ProphecyTrait;
-
-    private ObjectProphecy $logger;
+    private LoggerInterface&MockObject $logger;
     private DateTimeProvider $dateTimeProvider;
     private UserRetentionPolicyCommandSubscriber $sut;
 
@@ -40,10 +37,10 @@ final class UserRetentionPolicyCommandSubscriberTest extends KernelTestCase
     #[Test]
     public function logEvent(): void
     {
-        $this->logger = self::prophesize(LoggerInterface::class);
+        $this->logger = self::createMock(LoggerInterface::class);
 
         $this->sut = (new UserRetentionPolicyCommandSubscriber(
-            $this->logger->reveal(),
+            $this->logger,
             $this->dateTimeProvider
         ));
 
@@ -65,7 +62,7 @@ final class UserRetentionPolicyCommandSubscriberTest extends KernelTestCase
             'type' => 'audit',
         ];
 
-        $this->logger->notice('', $expectedEvent)->shouldBeCalled();
+        $this->logger->expects(self::once())->method('notice')->with('', $expectedEvent);
 
         $userRetentionDeletionEvent = new UserRetentionPolicyCommandEvent($deletedAdminUser, $trigger);
 

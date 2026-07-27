@@ -160,8 +160,8 @@ class ReportRepository extends ServiceEntityRepository
     public function getAllByUserId(int $userId, ParameterBag $query, string $status): array
     {
         return $this->getAllByUserIdQuery($userId, $query, 'reports', $status)
-            ?->setFirstResult($query->get('offset', 0))
-            ?->setMaxResults($query->get('limit', 15))
+            ?->setFirstResult($query->getInt('offset', 0))
+            ?->setMaxResults($query->getInt('limit', 15))
             ?->addOrderBy('r.dueDate', 'ASC')
             ?->addOrderBy('c.caseNumber', 'ASC')
             ?->getQuery()

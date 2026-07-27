@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Transformer;
 
-use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\v2\DTO\DeputyDto;
 use OPG\Digideps\Backend\v2\Transformer\DeputyTransformer;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class DeputyTransformerTest extends TestCase

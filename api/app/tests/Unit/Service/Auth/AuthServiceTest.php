@@ -31,10 +31,10 @@ final class AuthServiceTest extends TestCase
     ];
 
     private RoleHierarchy $roleHierarchy;
-    private MockObject&UserRepository $userRepo;
-    private MockObject&LoggerInterface $logger;
-    private MockObject&UserPasswordHasherInterface $passwordHasher;
-    private MockObject&JWTService $JWTService;
+    private UserRepository&MockObject $userRepo;
+    private LoggerInterface&MockObject $logger;
+    private UserPasswordHasherInterface&MockObject $passwordHasher;
+    private JWTService&MockObject $JWTService;
 
     public function setUp(): void
     {

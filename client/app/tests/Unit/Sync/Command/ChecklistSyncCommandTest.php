@@ -8,23 +8,17 @@ use OPG\Digideps\Frontend\Sync\Command\ChecklistSyncCommand;
 use OPG\Digideps\Frontend\Sync\Service\ChecklistSyncService;
 use OPG\Digideps\Frontend\TestHelpers\ChecklistTestHelper;
 use PHPUnit\Framework\MockObject\MockObject;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class ChecklistSyncCommandTest extends KernelTestCase
 {
-    use ProphecyTrait;
+    private ChecklistSyncService&MockObject $syncService;
+    private MockObject&ParameterStoreService $parameterStore;
+    private MockObject&ReportApi $reportApi;
 
-    /** @var MockObject */
-    private $syncService;
-    private $parameterStore;
-    private $reportApi;
-    private $pdfGenerator;
-
-    /** @var CommandTester */
-    private $commandTester;
+    private CommandTester $commandTester;
 
     private ?string $output = null;
 

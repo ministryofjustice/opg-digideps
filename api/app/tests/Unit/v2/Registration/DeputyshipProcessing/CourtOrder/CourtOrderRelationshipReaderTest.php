@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing\CourtOrder;
 
-use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipReader;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipReader;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use PHPUnit\Framework\TestCase;
 
 class CourtOrderRelationshipReaderTest extends TestCase

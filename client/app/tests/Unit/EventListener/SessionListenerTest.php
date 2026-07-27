@@ -2,94 +2,88 @@
 
 namespace Tests\OPG\Digideps\Frontend\Unit\EventListener;
 
-use Mockery as m;
-use Mockery\MockInterface;
 use OPG\Digideps\Frontend\EventListener\SessionListener;
+use PHPUnit\Framework\Constraint\IsInstanceOf;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Storage\MetadataBag;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Act on session on each request.
  */
 class SessionListenerTest extends TestCase
 {
-    private RequestEvent&MockInterface $event;
-    private Router&MockInterface $router;
-    private LoggerInterface&MockInterface $logger;
+    private RequestEvent&MockObject $event;
+    private Router&MockObject $router;
+    private LoggerInterface&MockObject $logger;
 
     public function setUp(): void
     {
-        $this->event = m::mock(RequestEvent::class);
-        $this->router = m::mock(Router::class);
-        $this->logger = m::mock(LoggerInterface::class);
+        $this->event = $this->createMock(RequestEvent::class);
+        $this->router = $this->createMock(Router::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
     }
 
-    /**
-     * @test
-     */
-    public function onKernelRequestNoMasterWrongCtor(): void
+    public function testOnKernelRequestNoMasterWrongCtor(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         new SessionListener($this->router, $this->logger, ['idleTimeout' => 0]);
     }
 
-    /**
-     * @test
-     */
-    public function onKernelRequestNoMasterReq(): void
+    public function testOnKernelRequestNoMasterReq(): void
     {
         $object = new SessionListener($this->router, $this->logger, ['idleTimeout' => 600]);
 
-        $this->event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::SUB_REQUEST);
+        $this->event->method('getRequestType')->willReturn(HttpKernelInterface::SUB_REQUEST);
         $this->assertEquals('no-master-request', $object->onKernelRequest($this->event));
     }
 
-    /**
-     * @test
-     */
-    public function onKernelRequestNoSession(): void
+    public function testOnKernelRequestNoSession(): void
     {
         $object = new SessionListener($this->router, $this->logger, ['idleTimeout' => 600]);
 
-        $event = m::mock('Symfony\Component\HttpKernel\Event\RequestEvent');
-        $event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::MAIN_REQUEST);
-        $event->shouldReceive('getRequest->hasSession')->andReturn(false);
+        $event = $this->createMock(RequestEvent::class);
+        $event->method('getRequestType')->willReturn(HttpKernelInterface::MAIN_REQUEST);
+        $event->method('getRequest')->willReturn(new Request());
         $this->assertEquals('no-session', $object->onKernelRequest($event));
     }
 
-    /**
-     * @test
-     */
-    public function onKernelRequestSessionNotInitialisedLastUsed(): void
+    public function testOnKernelRequestSessionNotInitialisedLastUsed(): void
     {
         $object = new SessionListener($this->router, $this->logger, ['idleTimeout' => 600]);
 
-        $event = m::mock(RequestEvent::class);
+        $event = $this->createMock(RequestEvent::class);
 
-        $event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::MAIN_REQUEST);
-        $event->shouldReceive('getRequest->hasSession')->andReturn(true);
-
-        $event->shouldReceive('getRequest->getSession->getMetadataBag->getCreated')->andReturn(0);
+        $event->method('getRequestType')->willReturn(HttpKernelInterface::MAIN_REQUEST);
+        $session = $this->createMock(SessionInterface::class);
+        $session->method('getMetadataBag')->willReturn(new MetadataBag());
+        $request = new Request();
+        $request->setSession($session);
+        $event->method('getRequest')->willReturn($request);
         $this->assertEquals('no-timeout', $object->onKernelRequest($event));
     }
 
-    /**
-     * @test
-     */
-    public function onKernelRequestNoLastUsed()
+    public function testOnKernelRequestNoLastUsed(): void
     {
         $object = new SessionListener($this->router, $this->logger, ['idleTimeout' => 600]);
 
-        $event = m::mock(RequestEvent::class);
+        $event = $this->createMock(RequestEvent::class);
 
-        $event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::MAIN_REQUEST);
-        $event->shouldReceive('getRequest->hasSession')->andReturn(true);
+        $event->method('getRequestType')->willReturn(HttpKernelInterface::MAIN_REQUEST);
+        $session = $this->createMock(SessionInterface::class);
+        $session->method('getMetadataBag')->willReturn(new MetadataBag());
+        $request = new Request();
+        $request->setSession($session);
+        $event->method('getRequest')->willReturn($request);
 
-        $event->shouldReceive('getRequest->getSession->getMetadataBag->getCreated')->andReturn(time());
-        $event->shouldReceive('getRequest->getSession->getMetadataBag->getLastUsed')->andReturn(0);
         $this->assertEquals('no-timeout', $object->onKernelRequest($event));
     }
 
@@ -98,7 +92,7 @@ class SessionListenerTest extends TestCase
         return [
             [1500, 0, 0],
             [1500, -10, 0],
-            [1500, -1490, 0], // close to epire
+            [1500, -1490, 0], // close to expire
 
             [1500, -1500 - 10, 1], // expired 10 sec ago
             [1500, -1500 - 25 * 3600, 1], // expired 25h ago
@@ -106,39 +100,44 @@ class SessionListenerTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @dataProvider provider
-     *
-     * @doesNotPerformAssertions
      */
-    public function onKernelRequest($idleTimeout, $lastUsedRelativeToCurrentTime, $callsToManualExpire): void
+    public function testOnKernelRequest(int $idleTimeout, int $lastUsedRelativeToCurrentTime, int $callsToManualExpire): void
     {
-        $object = new SessionListener($this->router, $this->logger, ['idleTimeout' => $idleTimeout]);
+        $event = $this->createMock(RequestEvent::class);
+        $router = $this->createMock(Router::class);
+        $logger = $this->createMock(LoggerInterface::class);
+        $object = new SessionListener($router, $logger, ['idleTimeout' => $idleTimeout]);
 
-        $this->event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::MAIN_REQUEST);
-        $this->event->shouldReceive('getRequest->hasSession')->andReturn(true);
+        $event->method('getRequestType')->willReturn(HttpKernelInterface::MAIN_REQUEST);
+        $metadata = $this->createMock(MetadataBag::class);
+        $session = $this->createMock(SessionInterface::class);
+        $session->method('getMetadataBag')->willReturn($metadata);
+        $request = $this->createMock(Request::class);
+        $request->method('getSession')->willReturn($session);
+        $request->method('hasSession')->willReturn(true);
+        $event->method('getRequest')->willReturn($request);
 
-        $this->event->shouldReceive('getRequest->getSession->getMetadataBag->getCreated')->andReturn(time());
-        $this->event->shouldReceive('getRequest->getSession->getMetadataBag->getLastUsed')->andReturn(time() + $lastUsedRelativeToCurrentTime);
+        $metadata->method('getCreated')->willReturn(time());
+        $metadata->method('getLastUsed')->willReturn(time() + $lastUsedRelativeToCurrentTime);
 
         // expectations
-        $this->logger->shouldReceive('notice')->times($callsToManualExpire);
-        $this->event->shouldReceive('getRequest->getSession->invalidate')->times($callsToManualExpire);
-        $this->event->shouldReceive('getRequest->getSession->set')->times($callsToManualExpire)->with('_security.secured_area.target_path', 'URI');
-        $this->event->shouldReceive('getRequest->getSession->set')->times($callsToManualExpire)->with('loggedOutFrom', 'timeout');
+        $logger->expects($this->exactly($callsToManualExpire))->method('notice');
+        $session->expects($this->exactly($callsToManualExpire))->method('invalidate');
+        $session->expects($this->exactly($callsToManualExpire * 2))->method('set')->willReturnCallback(function (string $key, string $value) {
+            $this->assertSame($value, match ($key) {
+                '_security.secured_area.target_path' => 'URI',
+                'loggedOutFrom' => 'timeout',
+                default => null
+            });
+        });
 
-        $this->event->shouldReceive('setResponse')->times($callsToManualExpire)->with(m::type('Symfony\Component\HttpFoundation\RedirectResponse'));
-        $this->event->shouldReceive('stopPropagation')->times($callsToManualExpire);
-        $this->router->shouldReceive('generate')->with('login')->times($callsToManualExpire)->andReturn('/login/timeout');
+        $event->expects($this->exactly($callsToManualExpire))->method('setResponse')->with(new IsInstanceOf(RedirectResponse::class));
+        $event->expects($this->exactly($callsToManualExpire))->method('stopPropagation');
+        $router->expects($this->exactly($callsToManualExpire))->method('generate')->with('login', [], UrlGeneratorInterface::ABSOLUTE_PATH)->willReturn('/login/timeout');
 
-        $this->event->shouldReceive('getRequest->getUri')->times($callsToManualExpire)->andReturn('URI');
+        $request->expects($this->exactly($callsToManualExpire))->method('getUri')->willReturn('URI');
 
-        $object->onKernelRequest($this->event);
-    }
-
-    public function tearDown(): void
-    {
-        m::close();
+        $object->onKernelRequest($event);
     }
 }

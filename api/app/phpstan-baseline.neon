@@ -1525,18 +1525,6 @@ parameters:
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: '#^Parameter \#4 \$offset of method OPG\\Digideps\\Backend\\Repository\\ReportSubmissionRepository\:\:findByFiltersWithCounts\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: '#^Parameter \#5 \$limit of method OPG\\Digideps\\Backend\\Repository\\ReportSubmissionRepository\:\:findByFiltersWithCounts\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
 			message: '#^Parameter \#6 \$orderBy of method OPG\\Digideps\\Backend\\Repository\\ReportSubmissionRepository\:\:findByFiltersWithCounts\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -5083,18 +5071,6 @@ parameters:
 			path: src/Repository/ClientRepository.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:findByFiltersWithCounts\(\) has parameter \$limit with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Repository/ClientRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:findByFiltersWithCounts\(\) has parameter \$offset with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Repository/ClientRepository.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:findByFiltersWithCounts\(\) has parameter \$q with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -5133,18 +5109,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) should return array but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Repository/ClientRepository.php
-
-		-
-			message: '#^Parameter \#1 \$firstResult of method Doctrine\\ORM\\QueryBuilder\:\:setFirstResult\(\) expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Repository/ClientRepository.php
-
-		-
-			message: '#^Parameter \#1 \$maxResults of method Doctrine\\ORM\\QueryBuilder\:\:setMaxResults\(\) expects int\|null, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Repository/ClientRepository.php
 
@@ -5383,18 +5347,6 @@ parameters:
 			path: src/Repository/ReportRepository.php
 
 		-
-			message: '#^Parameter \#1 \$firstResult of method Doctrine\\ORM\\QueryBuilder\:\:setFirstResult\(\) expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Repository/ReportRepository.php
-
-		-
-			message: '#^Parameter \#1 \$maxResults of method Doctrine\\ORM\\QueryBuilder\:\:setMaxResults\(\) expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Repository/ReportRepository.php
-
-		-
 			message: '#^Parameter \#1 \$searchTerm of method OPG\\Digideps\\Backend\\Service\\Search\\ClientSearchFilter\:\:handleSearchTermFilter\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -5521,18 +5473,6 @@ parameters:
 			path: src/Repository/UserRepository.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:findByFiltersWithCounts\(\) has parameter \$limit with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Repository/UserRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:findByFiltersWithCounts\(\) has parameter \$offset with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Repository/UserRepository.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:findByFiltersWithCounts\(\) has parameter \$q with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -5611,21 +5551,9 @@ parameters:
 			path: src/Repository/UserRepository.php
 
 		-
-			message: '#^Parameter \#1 \$firstResult of method Doctrine\\ORM\\QueryBuilder\:\:setFirstResult\(\) expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Repository/UserRepository.php
-
-		-
 			message: '#^Parameter \#1 \$haystack of function str_contains expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Repository/UserRepository.php
-
-		-
-			message: '#^Parameter \#1 \$maxResults of method Doctrine\\ORM\\QueryBuilder\:\:setMaxResults\(\) expects int\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Repository/UserRepository.php
 
 		-
@@ -7963,12 +7891,6 @@ parameters:
 			path: src/v2/Registration/Assembler/LayDeputyshipDtoCollectionAssembler.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\Assembler\\SiriusToLayDeputyshipDtoAssembler\:\:determineReportTypeIsSupported\(\) should return string but returns string\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
-
-		-
 			message: '#^Parameter \#1 \$caseNumber of method OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto\:\:setCaseNumber\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -9262,12 +9184,6 @@ parameters:
 			message: '#^Cannot access property \$usage on mixed\.$#'
 			identifier: property.nonObject
 			count: 2
-			path: tests/Behat/bootstrap/FeatureContext.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
 			path: tests/Behat/bootstrap/FeatureContext.php
 
 		-
@@ -11301,7 +11217,7 @@ parameters:
 		-
 			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 6
+			count: 1
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
@@ -14647,12 +14563,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
 
 		-
-			message: '#^Using nullsafe method call on non\-nullable type OPG\\Digideps\\Backend\\Entity\\Organisation\|false\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
-
-		-
 			message: '#^Using nullsafe method call on non\-nullable type OPG\\Digideps\\Backend\\Entity\\User\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 1
@@ -15009,12 +14919,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Registration\\RegistrationFeatureContext\:\:theFormShouldBeValid\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
@@ -21625,12 +21529,6 @@ parameters:
 			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
 
 		-
-			message: '#^Using nullsafe method call on non\-nullable type DateTime\. Use \-\> instead\.$#'
-			identifier: nullsafe.neverNull
-			count: 2
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''accountFrom'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -23089,12 +22987,6 @@ parameters:
 			path: tests/Integration/Fixtures.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getRepo\(\) should return Doctrine\\ORM\\EntityRepository\<T\> but returns Doctrine\\ORM\\EntityRepository\<object\>\.$#'
-			identifier: return.type
-			count: 1
-			path: tests/Integration/Fixtures.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:initDb\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -23114,12 +23006,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$dql of method Doctrine\\ORM\\EntityManager\:\:createQuery\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Fixtures.php
-
-		-
-			message: '#^Parameter \#1 \$entityName of method Doctrine\\ORM\\EntityManager\:\:getRepository\(\) expects class\-string\<object\>, class\-string\<T\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Integration/Fixtures.php
@@ -23151,18 +23037,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: tests/Integration/Fixtures.php
-
-		-
-			message: '#^Type mixed in generic type Doctrine\\ORM\\EntityRepository\<mixed\> in PHPDoc tag @return is not subtype of template type T of object of class Doctrine\\ORM\\EntityRepository\.$#'
-			identifier: generics.notSubtype
-			count: 1
-			path: tests/Integration/Fixtures.php
-
-		-
-			message: '#^Unable to resolve the template type T in call to method Doctrine\\ORM\\EntityManager\:\:getRepository\(\)$#'
-			identifier: argument.templateType
 			count: 1
 			path: tests/Integration/Fixtures.php
 
@@ -23305,18 +23179,6 @@ parameters:
 			path: tests/Integration/Model/QueryPagerIntegrationTest.php
 
 		-
-			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\MockObject\|Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\:\:method\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/Integration/Security/ClientVoterTest.php
-
-		-
-			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\MockObject\|Symfony\\Component\\Security\\Core\\Security\:\:method\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/Security/ClientVoterTest.php
-
-		-
 			message: '#^Call to an undefined method object\:\:flush\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -23344,12 +23206,6 @@ parameters:
 			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\UserTestHelper\:\:createAndPersistUser\(\) expects Doctrine\\ORM\\EntityManagerInterface, object given\.$#'
 			identifier: argument.type
 			count: 12
-			path: tests/Integration/Security/ClientVoterTest.php
-
-		-
-			message: '#^Parameter \#1 \$token of method Symfony\\Component\\Security\\Core\\Authorization\\Voter\\Voter\<string,OPG\\Digideps\\Backend\\Entity\\Client\>\:\:vote\(\) expects Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface, PHPUnit\\Framework\\MockObject\\MockObject\|Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Integration/Security/ClientVoterTest.php
 
 		-
@@ -24655,18 +24511,6 @@ parameters:
 			path: tests/Unit/Command/ProcessLayCSVCommandTest.php
 
 		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Command\\ProcessLayCSVCommandTest\:\:\$csvArray is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: tests/Unit/Command/ProcessLayCSVCommandTest.php
-
-		-
-			message: '#^Class OPG\\Digideps\\Backend\\Command\\ProcessOrgCSVCommand constructor invoked with 5 parameters, 4 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: tests/Unit/Command/ProcessOrgCSVCommandTest.php
-
-		-
 			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -24709,36 +24553,6 @@ parameters:
 			path: tests/Unit/Entity/Report/AssetTest.php
 
 		-
-			message: '#^Parameter \#1 \$value of method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:setValue\(\) expects string, float given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Entity/Report/AssetTest.php
-
-		-
-			message: '#^Call to an undefined method Mockery\\MockInterface\:\:getExpensesTotal\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Call to an undefined method Mockery\\MockInterface\:\:getFeesTotal\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:getManager\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
 			message: '#^Cannot access offset ''accounts'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 5
@@ -24763,33 +24577,9 @@ parameters:
 			path: tests/Unit/Entity/Report/ReportTest.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Cannot access offset 2 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
 			message: '#^Cannot access offset int on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 5
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: tests/Unit/Entity/Report/ReportTest.php
 
 		-
@@ -24799,55 +24589,13 @@ parameters:
 			path: tests/Unit/Entity/Report/ReportTest.php
 
 		-
-			message: '#^Parameter \#1 \$closingBalance of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setClosingBalance\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 4
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Parameter \#1 \$elements of class Doctrine\\Common\\Collections\\ArrayCollection constructor expects array\<TKey of \(int\|string\), T\>, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Parameter \#1 \$expenses of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setExpenses\(\) expects Doctrine\\Common\\Collections\\Collection\<int, OPG\\Digideps\\Backend\\Entity\\Report\\Expense\>, Doctrine\\Common\\Collections\\ArrayCollection\<int, Mockery\\MockInterface&OPG\\Digideps\\Backend\\Entity\\Report\\Expense\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Parameter \#1 \$gifts of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setGifts\(\) expects Doctrine\\Common\\Collections\\Collection\<int, OPG\\Digideps\\Backend\\Entity\\Report\\Gift\>, Doctrine\\Common\\Collections\\ArrayCollection\<int, Mockery\\MockInterface&OPG\\Digideps\\Backend\\Entity\\Report\\Gift\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
 			message: '#^Parameter \#1 \$moneyTransactions of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setMoneyTransactions\(\) expects Doctrine\\Common\\Collections\\Collection\<int, OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\>, Doctrine\\Common\\Collections\\ArrayCollection\<int, mixed\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Unit/Entity/Report/ReportTest.php
 
 		-
-			message: '#^Parameter \#1 \$openingBalance of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setOpeningBalance\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 5
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
 			message: '#^Parameter \#1 \$section of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:hasSection\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Parameter \#1 \$submitted of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setSubmitted\(\) expects bool\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Unit/Entity/Report/ReportTest.php
@@ -24877,22 +24625,10 @@ parameters:
 			path: tests/Unit/Entity/Report/ReportTest.php
 
 		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Entity\\Report\\ReportTest\:\:\$em \(Doctrine\\ORM\\EntityManagerInterface\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
 			message: '#^Parameter \#1 \$deletedAdminUser of class OPG\\Digideps\\Backend\\Event\\UserRetentionPolicyCommandEvent constructor expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Unit/Event/UserRetentionPolicyCommandEventTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\EventSubscriber\\UserRetentionPolicyCommandSubscriberTest\:\:\$logger with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: tests/Unit/EventSubscriber/UserRetentionPolicyCommandSubscriberTest.php
 
 		-
 			message: '#^Cannot call method format\(\) on DateTime\|null\.$#'
@@ -24913,67 +24649,13 @@ parameters:
 			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Unit\\Factory\\ClientBenefitsCheckFactoryTest\:\:set\(\) has parameter \$propertyName with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
 
 		-
-			message: '#^Parameter \#1 \$moneyType of method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyReceivedOnClientsBehalf\:\:setMoneyType\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$name of method ReflectionClass\<OPG\\Digideps\\Backend\\Entity\\Report\\Report\>\:\:getProperty\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$uuid of static method Ramsey\\Uuid\\Uuid\:\:fromString\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Factory\\ClientBenefitsCheckFactoryTest\:\:\$created \(string\|null\) is never assigned null so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Factory\\ClientBenefitsCheckFactoryTest\:\:\$dateLastCheckedEntitlement \(string\|null\) is never assigned null so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Factory\\ClientBenefitsCheckFactoryTest\:\:\$doOthersReceiveMoneyOnClientsBehalf \(string\|null\) is never assigned null so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Factory\\ClientBenefitsCheckFactoryTest\:\:\$dontKnowMoneyExplanation \(string\|null\) is never assigned string so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Factory\\ClientBenefitsCheckFactoryTest\:\:\$id \(string\|null\) is never assigned null so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Factory\\ClientBenefitsCheckFactoryTest\:\:\$moneyAmount \(float\|null\) is never assigned null so it can be removed from the property type\.$#'
 			identifier: property.unusedType
 			count: 1
 			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
@@ -24991,43 +24673,7 @@ parameters:
 			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
 
 		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Factory\\ClientBenefitsCheckFactoryTest\:\:\$moneyCreated \(string\|null\) is never assigned null so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Factory\\ClientBenefitsCheckFactoryTest\:\:\$moneyId \(string\|null\) is never assigned null so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Factory\\ClientBenefitsCheckFactoryTest\:\:\$moneyType \(string\|null\) is never assigned null so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Factory\\ClientBenefitsCheckFactoryTest\:\:\$neverCheckedExplanation \(string\|null\) is never assigned string so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Factory\\ClientBenefitsCheckFactoryTest\:\:\$reportId \(int\|null\) is never assigned null so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Factory\\ClientBenefitsCheckFactoryTest\:\:\$whenLastCheckedEntitlement \(string\|null\) is never assigned null so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Factory\\ClientBenefitsCheckFactoryTest\:\:\$whoReceivedMoney \(string\|null\) is never assigned null so it can be removed from the property type\.$#'
 			identifier: property.unusedType
 			count: 1
 			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
@@ -25067,30 +24713,6 @@ parameters:
 			identifier: method.nonObject
 			count: 3
 			path: tests/Unit/Model/DeputyshipProcessingLookupCacheTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManager\|Mockery\\MockInterface\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/Repository/ReportRepositoryTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\|Mockery\\MockInterface\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 7
-			path: tests/Unit/Repository/ReportRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method OPG\\Digideps\\Backend\\Repository\\ReportRepository\:\:addFeesToReportIfMissing\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, Doctrine\\ORM\\EntityRepository\|Mockery\\MockInterface given\.$#'
-			identifier: argument.type
-			count: 3
-			path: tests/Unit/Repository/ReportRepositoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Repository\\ReportRepositoryTest\:\:\$mockReport with generic class Doctrine\\ORM\\EntityRepository does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: tests/Unit/Repository/ReportRepositoryTest.php
 
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManagerInterface\:\:method\(\)\.$#'
@@ -25165,12 +24787,6 @@ parameters:
 			path: tests/Unit/Search/ClientSearchFilterTest.php
 
 		-
-			message: '#^Anonymous function should never return but return statement found\.$#'
-			identifier: return.never
-			count: 2
-			path: tests/Unit/Security/HeaderTokenAuthenticatorTest.php
-
-		-
 			message: '#^Parameter \#1 \$string of function strtolower expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -25213,57 +24829,9 @@ parameters:
 			path: tests/Unit/Service/BruteForce/AttemptsInTimeCheckerTest.php
 
 		-
-			message: '#^Call to an undefined method Aws\\S3\\S3ClientInterface\:\:shouldNotReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Call to an undefined method Aws\\S3\\S3ClientInterface\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 8
-			path: tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Call to an undefined method Psr\\Log\\LoggerInterface\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
 			message: '#^Cannot access offset ''statusCode'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 8
-			path: tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Cannot call method never\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Cannot call method with\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Cannot call method withAnyArgs\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Method PHPUnit\\Framework\\TestCase\:\:expectException\(\) invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 7
 			path: tests/Unit/Service/File/Storage/S3StorageTest.php
 
 		-
@@ -25295,18 +24863,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/Unit/Service/File/Storage/S3StorageTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\Formatter\\RestFormatterTest\:\:\$inputOutputFormatter with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: tests/Unit/Service/Formatter/RestFormatterTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\Formatter\\RestFormatterTest\:\:\$validator with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: tests/Unit/Service/Formatter/RestFormatterTest.php
 
 		-
 			message: '#^Parameter \#1 \$object_or_class of function is_a expects object, mixed given\.$#'
@@ -25369,63 +24925,9 @@ parameters:
 			path: tests/Unit/Service/ReportServiceTest.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 6
-			path: tests/Unit/Service/ReportStatusServiceTest.php
-
-		-
-			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 6
-			path: tests/Unit/Service/ReportStatusServiceTest.php
-
-		-
-			message: '#^Cannot call method with\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 6
-			path: tests/Unit/Service/ReportStatusServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\ReportStatusServiceTest\:\:getReportMocked\(\) has parameter \$hasBalance with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/Service/ReportStatusServiceTest.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
-			path: tests/Unit/Service/ReportStatusServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Symfony\\Component\\DependencyInjection\\Container\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 12
-			path: tests/Unit/Service/RequestIdLoggerProcessorTest.php
-
-		-
-			message: '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\RequestStack\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 15
-			path: tests/Unit/Service/RequestIdLoggerProcessorTest.php
-
-		-
-			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 27
-			path: tests/Unit/Service/RequestIdLoggerProcessorTest.php
-
-		-
-			message: '#^Cannot call method with\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 22
-			path: tests/Unit/Service/RequestIdLoggerProcessorTest.php
-
-		-
 			message: '#^Property Symfony\\Component\\HttpFoundation\\Request\:\:\$headers \(Symfony\\Component\\HttpFoundation\\HeaderBag\) does not accept Symfony\\Component\\HttpFoundation\\ParameterBag\.$#'
 			identifier: assign.propertyType
-			count: 3
+			count: 1
 			path: tests/Unit/Service/RequestIdLoggerProcessorTest.php
 
 		-
@@ -25475,78 +24977,6 @@ parameters:
 			identifier: method.nonObject
 			count: 7
 			path: tests/Unit/Service/UserDeputyServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Mockery\\Expectation\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 9
-			path: tests/Unit/Service/UserRegistrationServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Mockery\\LegacyMockInterface\:\:getMock\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/Service/UserRegistrationServiceTest.php
-
-		-
-			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 13
-			path: tests/Unit/Service/UserRegistrationServiceTest.php
-
-		-
-			message: '#^Cannot call method getMock\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 9
-			path: tests/Unit/Service/UserRegistrationServiceTest.php
-
-		-
-			message: '#^Cannot call method shouldReceive\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 8
-			path: tests/Unit/Service/UserRegistrationServiceTest.php
-
-		-
-			message: '#^Cannot call method twice\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/Service/UserRegistrationServiceTest.php
-
-		-
-			message: '#^Cannot call method with\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 8
-			path: tests/Unit/Service/UserRegistrationServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class OPG\\Digideps\\Backend\\Service\\UserRegistrationService constructor expects Doctrine\\ORM\\EntityManagerInterface, Mockery\\MockInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/UserRegistrationServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class OPG\\Digideps\\Backend\\Service\\UserRegistrationService constructor expects Doctrine\\ORM\\EntityManagerInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: tests/Unit/Service/UserRegistrationServiceTest.php
-
-		-
-			message: '#^Parameter \#2 \$preRegistrationVerificationService of class OPG\\Digideps\\Backend\\Service\\UserRegistrationService constructor expects OPG\\Digideps\\Backend\\Service\\PreRegistrationVerificationService, Mockery\\MockInterface given\.$#'
-			identifier: argument.type
-			count: 3
-			path: tests/Unit/Service/UserRegistrationServiceTest.php
-
-		-
-			message: '#^Parameter \#2 \$preRegistrationVerificationService of class OPG\\Digideps\\Backend\\Service\\UserRegistrationService constructor expects OPG\\Digideps\\Backend\\Service\\PreRegistrationVerificationService, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/UserRegistrationServiceTest.php
-
-		-
-			message: '#^Call to function PHPUnit\\Framework\\assertInstanceOf\(\) with ''OPG\\\\Digideps\\\\Backend\\\\Entity\\\\User'' and OPG\\Digideps\\Backend\\Entity\\User will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: tests/Unit/Service/UserServiceTest.php
 
 		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''OPG\\\\Digideps\\\\Backend\\\\Service\\\\Stats\\\\Query\\\\Query'' and OPG\\Digideps\\Backend\\Service\\Stats\\Query\\Query will always evaluate to true\.$#'
@@ -25657,12 +25087,6 @@ parameters:
 			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
 
 		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, PHPUnit\\Framework\\MockObject\\MockObject given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
-
-		-
 			message: '#^Parameter \#1 \$type of method Tests\\OPG\\Digideps\\Backend\\Unit\\Transformer\\ReportSubmission\\ReportSubmissionSummaryTransformerTest\:\:buildReportOfType\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -25671,12 +25095,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$data of method Tests\\OPG\\Digideps\\Backend\\Unit\\Transformer\\ReportSubmission\\ReportSubmissionSummaryTransformerTest\:\:buildReportOfType\(\) expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Transformer\\ReportSubmission\\ReportSubmissionSummaryTransformerTest\:\:\$reportSubmission is unused\.$#'
-			identifier: property.unused
 			count: 1
 			path: tests/Unit/Transformer/ReportSubmission/ReportSubmissionSummaryTransformerTest.php
 
@@ -25949,90 +25367,6 @@ parameters:
 			identifier: method.nonObject
 			count: 1
 			path: tests/Unit/v2/Registration/SelfRegistration/Factory/PreRegistrationFactoryTest.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Binary operation "\." between mixed and '' '' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Cannot call method contains\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Cannot call method getClients\(\) on object\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Cannot call method getDeputy\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Cannot call method getOrganisation\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Cannot call method getReports\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Cannot call method getType\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|false\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Cannot call method getType\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$data of function gzcompress expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$email1 of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setEmail1\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$row of method OPG\\Digideps\\Backend\\v2\\Registration\\Assembler\\SiriusToOrgDeputyshipDtoAssembler\:\:assembleSingleDtoFromArray\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$string of function base64_encode expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
 
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManagerInterface\:\:expects\(\)\.$#'

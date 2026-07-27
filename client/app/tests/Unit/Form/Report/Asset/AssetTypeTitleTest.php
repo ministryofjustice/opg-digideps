@@ -2,25 +2,23 @@
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Form\Report\Asset;
 
-use Mockery as m;
-use Mockery\MockInterface;
 use OPG\Digideps\Frontend\Form\Report\Asset\AssetTypeTitle;
+use PHPUnit\Framework\Constraint\IsType;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AssetTypeTitleTest extends TestCase
 {
-    private TranslatorInterface|MockInterface $translator;
+    private TranslatorInterface&MockObject $translator;
 
     public function setUp(): void
     {
-        $this->translator = m::mock('Symfony\Contracts\Translation\TranslatorInterface');
-        $this->translator->shouldReceive('trans')->with(m::any(), [], 'domain')->andReturnUsing(function ($a) {
-            return $a . '-TRANSLATED';
-        });
+        $this->translator = $this->createMock('Symfony\Contracts\Translation\TranslatorInterface');
+        $this->translator->method('trans')->with(new IsType(IsType::TYPE_STRING), [], 'domain')->willReturnCallback(fn (string $a) => "{$a}-TRANSLATED");
     }
 
-    public function titleChoices()
+    public function titleChoices(): array
     {
         return [
             [[], []],
@@ -32,15 +30,10 @@ class AssetTypeTitleTest extends TestCase
     /**
      * @dataProvider titleChoices
      */
-    public function testgetTitleChoices($input, $expectedOutput)
+    public function testGetTitleChoices(array $input, array $expectedOutput): void
     {
         $object = new AssetTypeTitle($input, $this->translator, 'domain');
 
         $this->assertEquals($expectedOutput, $object->getTitleChoices());
-    }
-
-    public function tearDown(): void
-    {
-        m::close();
     }
 }
