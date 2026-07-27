@@ -246,7 +246,6 @@ services:
 
   composer:
     image: composer:2.9.8@sha256:b09bccd91a78fe8a9ab4b33d707b862e8fe54fec17782e32683ad2a69c46867d
-    command: ["install"]
 
   custom-sql-query:
     image: custom-sql-query:latest
