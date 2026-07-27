@@ -46,6 +46,7 @@ resource "aws_secretsmanager_secret" "slack_webhook_url" {
 }
 
 resource "aws_secretsmanager_secret" "preproduction_anonymise_default_pw" {
+  count       = var.account.name == "preproduction" ? 1 : 0
   name        = "anonymisation-default-user-pw"
   description = "Default password for anonymisation users"
   kms_key_id  = module.secret_kms.eu_west_1_target_key_arn
