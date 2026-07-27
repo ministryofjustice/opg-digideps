@@ -118,21 +118,28 @@ data "aws_iam_policy_document" "execution_role" {
   }
 }
 
+locals {
+  execution_role_secrets_resources = [
+    data.aws_secretsmanager_secret.public_jwt_key_base64.arn,
+    data.aws_secretsmanager_secret.private_jwt_key_base64.arn,
+    data.aws_secretsmanager_secret.front_notify_api_key.arn,
+    data.aws_secretsmanager_secret.front_frontend_secret.arn,
+    data.aws_secretsmanager_secret.front_api_client_secret.arn,
+    data.aws_secretsmanager_secret.admin_frontend_secret.arn,
+    data.aws_secretsmanager_secret.admin_api_client_secret.arn,
+  ]
+  execution_role_secrets_resources_pre = concat(
+    local.execution_role_secrets_resources,
+    [var.account.environment.name == "preproduction" ? data.aws_secretsmanager_secret.anonymise-default-pw[0].arn : ""]
+  )
+}
+
 data "aws_iam_policy_document" "execution_role_secrets" {
   statement {
-    sid    = "AllowSecretsAccess"
-    effect = "Allow"
-    resources = [
-      data.aws_secretsmanager_secret.public_jwt_key_base64.arn,
-      data.aws_secretsmanager_secret.private_jwt_key_base64.arn,
-      data.aws_secretsmanager_secret.front_notify_api_key.arn,
-      data.aws_secretsmanager_secret.front_frontend_secret.arn,
-      data.aws_secretsmanager_secret.front_api_client_secret.arn,
-      data.aws_secretsmanager_secret.admin_frontend_secret.arn,
-      data.aws_secretsmanager_secret.admin_api_client_secret.arn,
-      data.aws_secretsmanager_secret.anonymise-default-pw.arn
-    ]
-    actions = ["secretsmanager:GetSecretValue"]
+    sid       = "AllowSecretsAccess"
+    effect    = "Allow"
+    resources = var.account.environment.name == "preproduction" ? local.execution_role_secrets_resources_pre : local.execution_role_secrets_resources
+    actions   = ["secretsmanager:GetSecretValue"]
   }
 
   statement {
