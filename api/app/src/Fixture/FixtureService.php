@@ -565,6 +565,4 @@ final class FixtureService
         $this->entityManager->persist($counter);
         $this->counter = $counter;
     }
-
-
 }
