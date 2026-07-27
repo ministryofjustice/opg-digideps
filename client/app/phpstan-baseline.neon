@@ -1513,12 +1513,6 @@ parameters:
 			path: src/Controller/Report/ActionController.php
 
 		-
-			message: '#^Parameter \#2 \$array of function implode expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
 			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:put\(\) expects array\|object\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1547,30 +1541,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
-			message: '#^Cannot call method setReport\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
-			message: '#^Parameter \#1 \$clientBenefitsCheck of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\ClientBenefitsCheckApi\:\:post\(\) expects OPG\\Digideps\\Frontend\\Entity\\ClientBenefitsCheckInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
-			message: '#^Parameter \#1 \$clientBenefitsCheck of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\ClientBenefitsCheckApi\:\:put\(\) expects OPG\\Digideps\\Frontend\\Entity\\ClientBenefitsCheckInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
 
 		-
 			message: '#^Binary operation "\." between ''/report/contact/'' and mixed results in an error\.$#'
@@ -7199,60 +7169,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: src/Form/Report/Asset/AssetTypeTitle.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\MoneyReceivedOnClientsBehalfInterface\:\:getAmount\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Form/Report/ClientBenefitsCheckType.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\MoneyReceivedOnClientsBehalfInterface\:\:getAmountDontKnow\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Form/Report/ClientBenefitsCheckType.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\MoneyReceivedOnClientsBehalfInterface\:\:getMoneyType\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Form/Report/ClientBenefitsCheckType.php
-
-		-
-			message: '#^Cannot access offset ''clientFirstname'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Form/Report/ClientBenefitsCheckType.php
-
-		-
-			message: '#^Cannot access offset ''dateLastCheckedEntitlement'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Form/Report/ClientBenefitsCheckType.php
-
-		-
-			message: '#^Cannot access offset ''day'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Form/Report/ClientBenefitsCheckType.php
-
-		-
-			message: '#^Cannot access offset ''month'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Form/Report/ClientBenefitsCheckType.php
-
-		-
-			message: '#^Cannot access offset ''year'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Form/Report/ClientBenefitsCheckType.php
-
-		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: src/Form/Report/ClientBenefitsCheckType.php
 
 		-
 			message: '#^Cannot call method getData\(\) on Symfony\\Component\\Form\\FormInterface\|null\.$#'

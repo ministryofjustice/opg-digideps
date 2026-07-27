@@ -116,12 +116,13 @@ class ClientBenefitsCheckController extends AbstractController
             ]
         );
 
-        if ($step === 3) {
+        if ($step === 3 && $moneyTypeId === null) {
             $form->add('addAnother', AddAnotherThingType::class);
         }
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var ClientBenefitsCheck $formData */
             $formData = $form->getData();
             $formData->setReport($report);
 
