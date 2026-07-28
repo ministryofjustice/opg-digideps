@@ -1,4 +1,4 @@
-: static<?php
+<?php
 
 namespace OPG\Digideps\Frontend\Entity;
 
