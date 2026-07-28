@@ -11,19 +11,16 @@ use OPG\Digideps\Backend\Security\ClientVoter;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use PHPUnit\Framework\MockObject\MockObject;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Security;
 
 class ClientVoterTest extends KernelTestCase
 {
-    use ProphecyTrait;
-
     private ClientVoter $voter;
-    private Security|MockObject $security;
-    private TokenInterface|MockObject $token;
+    private Security&MockObject $security;
+    private TokenInterface&MockObject $token;
     private User $user;
     private int $decision;
 
@@ -252,9 +249,9 @@ class ClientVoterTest extends KernelTestCase
      */
     public function testDetermineDeletePermission(User $user, Client $client, int $expectedPermission): void
     {
-        $security = self::prophesize(Security::class);
+        $security = self::createMock(Security::class);
 
-        $sut = new ClientVoter($security->reveal());
+        $sut = new ClientVoter($security);
 
         $token = new UsernamePasswordToken($user, 'private-firewall');
 
