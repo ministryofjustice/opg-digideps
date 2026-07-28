@@ -41,10 +41,8 @@ trait SynchronisableTrait
 
     /**
      * @param string $status
-     *
-     * @return $this
      */
-    public function setSynchronisationStatus(?string $status)
+    public function setSynchronisationStatus(?string $status): static
     {
         if (
             !in_array($status, [
@@ -70,10 +68,8 @@ trait SynchronisableTrait
 
     /**
      * @param \DateTime $time
-     *
-     * @return $this
      */
-    public function setSynchronisationTime(?\DateTime $time)
+    public function setSynchronisationTime(?\DateTime $time): static
     {
         $this->synchronisationTime = $time;
 
@@ -87,10 +83,8 @@ trait SynchronisableTrait
 
     /**
      * @param string $error
-     *
-     * @return $this
      */
-    public function setSynchronisationError(?string $error)
+    public function setSynchronisationError(?string $error): static
     {
         $this->synchronisationError = $error;
 
@@ -104,10 +98,8 @@ trait SynchronisableTrait
 
     /**
      * @param User $user
-     *
-     * @return $this
      */
-    public function setSynchronisedBy(?User $user)
+    public function setSynchronisedBy(?User $user): static
     {
         $this->synchronisedBy = $user;
 

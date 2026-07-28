@@ -42,8 +42,8 @@ class ClientContact
      * @var string
      */
     #[JMS\Type('string')]
-    #[Assert\Length(max: 10, maxMessage: 'clientContact.form.postcode.maxMessage', groups: ['edit_clientcontact', 'add_clientcontact'])]
     #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
+    #[Assert\Length(max: 10, maxMessage: 'clientContact.form.postcode.maxMessage', groups: ['edit_clientcontact', 'add_clientcontact'])]
     private $addressPostcode;
 
     /**
@@ -61,43 +61,37 @@ class ClientContact
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Type('string')]
+    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     #[Assert\Email(message: 'clientContact.form.email.invalid', groups: ['add_clientcontact', 'edit_clientcontact'])]
     #[Assert\Length(max: 60, maxMessage: 'clientContact.form.email.maxLength', groups: ['add_clientcontact', 'edit_clientcontact'])]
-    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     private $email;
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Type('string')]
+    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     #[Assert\NotBlank(message: 'clientContact.form.firstname.notBlank', groups: ['edit_clientcontact', 'add_clientcontact'])]
     #[Assert\Length(min: 2, max: 10, minMessage: 'clientContact.form.firstname.minMessage', maxMessage: 'clientContact.form.firstname.maxMessage', groups: ['edit_clientcontact', 'add_clientcontact'])]
-    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     private $firstName;
 
     /**
      * @var string
      */
     #[JMS\Type('string')]
-    #[Assert\Length(min: 2, max: 100, minMessage: 'clientContact.form.firstname.minMessage', maxMessage: 'clientContact.form.firstname.maxMessage')]
     #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
+    #[Assert\Length(min: 2, max: 100, minMessage: 'clientContact.form.firstname.minMessage', maxMessage: 'clientContact.form.firstname.maxMessage')]
     private $jobTitle;
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Type('string')]
+    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     #[Assert\NotBlank(message: 'clientContact.form.lastname.notBlank', groups: ['edit_clientcontact', 'add_clientcontact'])]
     #[Assert\Length(min: 2, max: 100, minMessage: 'clientContact.form.lastname.minMessage', maxMessage: 'clientContact.form.lastname.maxMessage', groups: ['edit_clientcontact', 'add_clientcontact'])]
-    #[JMS\Groups(['add_clientcontact', 'edit_clientcontact'])]
     private $lastName;
 
     /**
@@ -140,12 +134,11 @@ class ClientContact
 
     /**
      * @param string $address1
-     *
-     * @return string
      */
-    public function setAddress1($address1)
+    public function setAddress1($address1): static
     {
         $this->address1 = $address1;
+
         return $this;
     }
 
@@ -159,12 +152,11 @@ class ClientContact
 
     /**
      * @param string $address2
-     *
-     * @return string
      */
-    public function setAddress2($address2)
+    public function setAddress2($address2): static
     {
         $this->address2 = $address2;
+
         return $this;
     }
 
@@ -178,12 +170,11 @@ class ClientContact
 
     /**
      * @param string $address3
-     *
-     * @return string
      */
-    public function setAddress3($address3)
+    public function setAddress3($address3): static
     {
         $this->address3 = $address3;
+
         return $this;
     }
 
@@ -197,12 +188,11 @@ class ClientContact
 
     /**
      * @param string $addressPostcode
-     *
-     * @return string
      */
-    public function setAddressPostcode($addressPostcode)
+    public function setAddressPostcode($addressPostcode): static
     {
         $this->addressPostcode = $addressPostcode;
+
         return $this;
     }
 
@@ -216,12 +206,11 @@ class ClientContact
 
     /**
      * @param string $addressCountry
-     *
-     * @return string
      */
-    public function setAddressCountry($addressCountry)
+    public function setAddressCountry($addressCountry): static
     {
         $this->addressCountry = $addressCountry;
+
         return $this;
     }
 
@@ -236,6 +225,7 @@ class ClientContact
     public function setClient(string $client): static
     {
         $this->client = $client;
+
         return $this;
     }
 
@@ -250,6 +240,7 @@ class ClientContact
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -263,12 +254,11 @@ class ClientContact
 
     /**
      * @param string $firstName
-     *
-     * @return string
      */
-    public function setFirstName($firstName)
+    public function setFirstName($firstName): static
     {
         $this->firstName = $firstName;
+
         return $this;
     }
 
@@ -282,12 +272,11 @@ class ClientContact
 
     /**
      * @param string $jobTitle
-     *
-     * @return string
      */
-    public function setJobTitle($jobTitle)
+    public function setJobTitle($jobTitle): static
     {
         $this->jobTitle = $jobTitle;
+
         return $this;
     }
 
@@ -301,12 +290,11 @@ class ClientContact
 
     /**
      * @param string $lastName
-     *
-     * @return string
      */
-    public function setLastName($lastName)
+    public function setLastName($lastName): static
     {
         $this->lastName = $lastName;
+
         return $this;
     }
 
@@ -320,12 +308,11 @@ class ClientContact
 
     /**
      * @param string $orgName
-     *
-     * @return string
      */
-    public function setOrgName($orgName)
+    public function setOrgName($orgName): static
     {
         $this->orgName = $orgName;
+
         return $this;
     }
 
@@ -339,12 +326,11 @@ class ClientContact
 
     /**
      * @param string $phone
-     *
-     * @return string
      */
-    public function setPhone($phone)
+    public function setPhone($phone): static
     {
         $this->phone = $phone;
+
         return $this;
     }
 }

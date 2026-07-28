@@ -22,7 +22,7 @@ trait ReportGiftTrait
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Gift>')]
     #[JMS\Groups(['gifts'])]
-    private $gifts = [];
+    private array $gifts = [];
 
     /**
      * @return string
@@ -35,23 +35,25 @@ trait ReportGiftTrait
     /**
      * @param string $giftsExist
      */
-    public function setGiftsExist($giftsExist): void
+    public function setGiftsExist($giftsExist): static
     {
         $this->giftsExist = $giftsExist;
+
+        return $this;
     }
 
     /**
      * @return Gift[]
      */
-    public function getGifts()
+    public function getGifts(): array
     {
         return $this->gifts;
     }
 
     /**
-     * @param array $gifts
+     * @param Gift[] $gifts
      */
-    public function setGifts($gifts): static
+    public function setGifts(array $gifts): static
     {
         $this->gifts = $gifts;
 

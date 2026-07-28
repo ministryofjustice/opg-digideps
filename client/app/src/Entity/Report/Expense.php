@@ -13,7 +13,6 @@ class Expense
     use HasBankAccountTrait;
 
     /**
-     *
      * @var int
      */
     #[JMS\Type('integer')]
@@ -22,8 +21,6 @@ class Expense
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['expenses'])]
@@ -32,16 +29,13 @@ class Expense
 
     /**
      * @var float
-     *
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['expenses'])]
     #[Assert\NotBlank(message: 'expenses.amount.notBlank', groups: ['deputy-expense'])]
     #[Assert\Type(type: 'numeric', message: 'expenses.amount.type', groups: ['deputy-expense'])]
-    #[Assert\Range(min: 0.01, max: 100000000000, notInRangeMessage: 'expenses.amount.notInRangeMessage', groups: ['deputy-expense'])]
+    #[Assert\Range(notInRangeMessage: 'expenses.amount.notInRangeMessage', min: 0.01, max: 100000000000, groups: ['deputy-expense'])]
     private $amount;
 
     /**
@@ -55,9 +49,11 @@ class Expense
     /**
      * @param mixed $id
      */
-    public function setId($id): void
+    public function setId($id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**

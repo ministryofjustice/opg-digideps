@@ -11,7 +11,6 @@ class Decision
     use HasReportTrait;
 
     /**
-     *
      * @var int
      */
     #[JMS\Type('integer')]
@@ -19,7 +18,6 @@ class Decision
     private $id;
 
     /**
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -29,8 +27,6 @@ class Decision
     private $description;
 
     /**
-     *
-     *
      * @var bool
      */
     #[Assert\NotBlank(message: 'decision.clientInvolvedBoolean.notBlank', groups: ['decision-client-involved'])]
@@ -39,7 +35,6 @@ class Decision
     private $clientInvolvedBoolean;
 
     /**
-     *
      * @var bool
      */
     #[Assert\NotBlank(message: 'decision.clientInvolvedDetails.notBlank', groups: ['decision-client-involved-details'])]
@@ -58,10 +53,8 @@ class Decision
 
     /**
      * @param int $id
-     *
-     * @return Decision
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -78,10 +71,8 @@ class Decision
 
     /**
      * @param string $description
-     *
-     * @return Decision
      */
-    public function setDescription($description)
+    public function setDescription($description): static
     {
         $this->description = $description;
 
@@ -98,10 +89,8 @@ class Decision
 
     /**
      * @param bool $clientInvolvedBoolean
-     *
-     * @return Decision
      */
-    public function setClientInvolvedBoolean($clientInvolvedBoolean)
+    public function setClientInvolvedBoolean($clientInvolvedBoolean): static
     {
         $this->clientInvolvedBoolean = $clientInvolvedBoolean;
 
@@ -118,10 +107,8 @@ class Decision
 
     /**
      * @param bool $clientInvolvedDetails
-     *
-     * @return Decision
      */
-    public function setClientInvolvedDetails($clientInvolvedDetails)
+    public function setClientInvolvedDetails($clientInvolvedDetails): static
     {
         $this->clientInvolvedDetails = $clientInvolvedDetails;
 

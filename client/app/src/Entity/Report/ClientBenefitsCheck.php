@@ -24,7 +24,6 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     private ?\DateTime $created = null;
 
     /**
-     *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
     #[JMS\Type('string')]
@@ -32,7 +31,6 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     private ?string $whenLastCheckedEntitlement = null;
 
     /**
-     *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
     #[JMS\Type("DateTime<'Y-m-d'>")]
@@ -40,7 +38,6 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     private ?\DateTime $dateLastCheckedEntitlement = null;
 
     /**
-     *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
     #[JMS\Type('string')]
@@ -48,7 +45,6 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     private ?string $neverCheckedExplanation = null;
 
     /**
-     *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
     #[JMS\Type('string')]

@@ -12,7 +12,7 @@ trait ReportUnsubmittedSections
     /**
      * @var UnsubmittedSection[]
      */
-    private $unsubmittedSection = [];
+    private array $unsubmittedSection = [];
 
     /**
      * @var string
@@ -34,7 +34,7 @@ trait ReportUnsubmittedSections
      *
      * @return UnsubmittedSection[]
      */
-    public function getUnsubmittedSection()
+    public function getUnsubmittedSection(): array
     {
         // init with available section if empty
         if (empty($this->unsubmittedSection)) {
