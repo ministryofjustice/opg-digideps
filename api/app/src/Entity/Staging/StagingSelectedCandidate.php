@@ -6,6 +6,7 @@ namespace OPG\Digideps\Backend\Entity\Staging;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Repository\StagingSelectedCandidateRepository;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 
@@ -21,7 +22,7 @@ use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
  * transformation/translation when dumping data into this table.
  */
 #[ORM\Table(name: 'selectedCandidates', schema: 'staging')]
-#[ORM\Entity]
+#[ORM\Entity(StagingSelectedCandidateRepository::class)]
 class StagingSelectedCandidate
 {
     #[JMS\Type('integer')]
