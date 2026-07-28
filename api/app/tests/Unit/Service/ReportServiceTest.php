@@ -7,6 +7,7 @@ namespace Tests\OPG\Digideps\Backend\Unit\Service;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
@@ -22,6 +23,7 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 final class ReportServiceTest extends TestCase
 {
@@ -374,5 +376,57 @@ final class ReportServiceTest extends TestCase
         self::assertEquals($expectedReportTypes, array_map(function (Report $report) {
             return $report->getType();
         }, $reports));
+    }
+
+    #[DataProvider('provideForDetermineStartDateOfFirstReport')]
+    public function testDetermineStartDateOfFirstReport(\DateTimeImmutable $now, \DateTimeImmutable $madeDate, ?\DateTimeImmutable $expectedStartDate): void
+    {
+        $em = $this->createStub(EntityManagerInterface::class);
+        $em->method('getRepository')->willReturn($this->createStub(PreRegistrationRepository::class));
+
+        $reportService = new ReportService(
+            $em,
+            new ReportFactory(),
+            new NullLogger(),
+            $now
+        );
+        $courtOrder = $this->createStub(CourtOrder::class);
+        $courtOrder->method('getOrderMadeDate')->willReturn(\DateTime::createFromImmutable($madeDate));
+
+        if ($expectedStartDate === null) {
+            $this->expectException(\DomainException::class);
+        }
+        $startDate = $reportService->determineStartDateOfFirstReport($courtOrder);
+        if ($expectedStartDate !== null) {
+            $this->assertSame($expectedStartDate->format('Y-m-d H:i:s'), $startDate->format('Y-m-d H:i:s'));
+        }
+    }
+
+    public static function provideForDetermineStartDateOfFirstReport(): array
+    {
+        return array_map(
+            fn (array $scenario) => array_map(fn (?string $date): ?\DateTimeImmutable => $date ? \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $date) ?: null: null, $scenario),
+            [
+                ['2023-03-15 00:00:00', '2023-06-15 00:00:00', null],
+                ['2023-06-14 23:59:59', '2023-06-15 00:00:00', null],
+                ['2023-06-15 00:00:00', '2023-06-15 00:00:00', '2023-06-15 00:00:00'],
+                ['2023-09-15 00:00:00', '2023-06-15 00:00:00', '2023-06-15 00:00:00'],
+
+                ['2024-03-15 00:00:00', '2023-06-15 00:00:00', '2023-06-15 00:00:00'],
+                ['2024-06-14 23:59:59', '2023-06-15 00:00:00', '2023-06-15 00:00:00'],
+                ['2024-06-15 00:00:00', '2023-06-15 00:00:00', '2024-06-15 00:00:00'],
+                ['2024-09-15 00:00:00', '2023-06-15 00:00:00', '2024-06-15 00:00:00'],
+
+                ['2025-03-15 00:00:00', '2023-06-15 00:00:00', '2024-06-15 00:00:00'],
+                ['2025-06-14 23:59:59', '2023-06-15 00:00:00', '2024-06-15 00:00:00'],
+                ['2025-06-15 00:00:00', '2023-06-15 00:00:00', '2025-06-15 00:00:00'],
+                ['2025-09-15 00:00:00', '2023-06-15 00:00:00', '2025-06-15 00:00:00'],
+
+                ['2026-03-15 00:00:00', '2023-06-15 00:00:00', '2025-06-15 00:00:00'],
+                ['2026-06-14 23:59:59', '2023-06-15 00:00:00', '2025-06-15 00:00:00'],
+                ['2026-06-15 00:00:00', '2023-06-15 00:00:00', '2026-06-15 00:00:00'],
+                ['2026-09-15 00:00:00', '2023-06-15 00:00:00', '2026-06-15 00:00:00'],
+            ]
+        );
     }
 }
