@@ -26,6 +26,7 @@ class ReportService
         private readonly EntityManagerInterface $em,
         private readonly ReportFactory $reportFactory,
         private readonly LoggerInterface $logger,
+        private readonly \DateTimeImmutable $now = new \DateTimeImmutable()
     ) {
         /** @var PreRegistrationRepository $preRegistrationRepository */
         $preRegistrationRepository = $em->getRepository(PreRegistration::class);
@@ -424,16 +425,34 @@ class ReportService
 
     public function createReportFromOrder(CourtOrder $courtOrder): Report
     {
+        $startDate = $this->determineStartDateOfFirstReport($courtOrder);
+
         $newReport = new Report(
             client: $courtOrder->getClient(),
             type: "{$courtOrder->getDesiredReportType()}",
-            startDate: $courtOrder->getOrderMadeDate(),
-            endDate: (clone $courtOrder->getOrderMadeDate())->modify('+12 months -1 day'),
+            startDate: \DateTime::createFromImmutable($startDate),
+            endDate: \DateTime::createFromImmutable($startDate)->modify('+12 months -1 day'),
             dateChecks: false,
         );
 
         $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
 
         return $newReport;
+    }
+
+    public function determineStartDateOfFirstReport(CourtOrder $courtOrder): \DateTimeImmutable
+    {
+        $startDate = \DateTimeImmutable::createFromMutable($courtOrder->getOrderMadeDate())->setTime(0, 0);
+        if ($this->now < $startDate) {
+            throw new \DomainException("Encountered a court order with uid {$courtOrder->getCourtOrderUid()} before this court order's made date.");
+        }
+
+        $aYear = new \DateInterval('P1Y');
+
+        $latestStartDate = $this->now->setTime(0, 0)->sub($aYear);
+        while ($startDate <= $latestStartDate) {
+            $startDate = $startDate->add($aYear);
+        }
+        return $startDate;
     }
 }
