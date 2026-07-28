@@ -8,9 +8,13 @@
 {% set transOptions = {'%client%': report.client.firstname | striptags } %}
 {% set translationPrefix = "form.property." %}
 
-{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.pageTitle') | trans(transOptions) }}{% endblock %}
+{% block htmlTitle %}
+    {{ (page ~ (assetId ? '.editHtmlTitle' : '.htmlTitle')) | trans(transOptions) }}
+{% endblock %}
 
+{% block pageTitle %}
+    {{ (page ~ (assetId ? '.editPageTitle' : '.pageTitle')) | trans(transOptions) }}
+{% endblock %}
 
 {% block supportTitleTop %}
     <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
@@ -101,11 +105,13 @@
                 }) }}
             </div>
 
-            {{ form_add_another({
-                'addAnother': form.addAnother,
-                'thingTranslationKey': 'form.thing'|trans(transOptions, translationDomain),
-                translationDomain: translationDomain,
-            }) }}
+            {% if form.addAnother %}
+                {{ form_add_another({
+                    'addAnother': form.addAnother,
+                    'thingTranslationKey': 'form.thing'|trans(transOptions, translationDomain),
+                    translationDomain: translationDomain,
+                }) }}
+            {% endif %}
         </div>
     </div>
 

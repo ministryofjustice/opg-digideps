@@ -119,6 +119,8 @@ class DocumentRepository extends ServiceEntityRepository
                         d.synchronisation_error LIKE 'Document failed to sync after%'
                         OR
                         d.synchronisation_error LIKE '%OPGDATA-API-FORBIDDEN%'
+                        OR
+                        rs.created_on > (CURRENT_DATE - INTERVAL '3 days')
                     )
             ) OR
             (

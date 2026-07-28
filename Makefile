@@ -95,8 +95,8 @@ api-integration-tests: reset-database-integration-tests ##@integration-tests Run
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh ${INTEGRATION_SELECTION}
 
 api-integration-tests-solo: reset-database-integration-tests ##@integration-tests Run individual api integration test
-#Example command: make api-integration-test-solo suite=Controller/AuthControllerTest.php test_case=testBruteForceSameEmail (test case argument is optional)
-	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh selection-solo Controller/AuthControllerTest.php testBruteForceSameEmail
+	# Example command: make api-integration-test-solo suite=Controller/AuthControllerTest.php test_case=testBruteForceSameEmail (test case argument is optional)
+	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh selection-solo $(suite) $(test_case)
 
 reset-database-integration-tests: ##@database Resets the DB schema and runs migrations
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm api-integration-tests sh scripts/reset_db_structure.sh local
@@ -160,13 +160,42 @@ get-audit-logs: ##@localstack Get audit log groups by passing event name e.g. ge
 	docker compose exec localstack awslocal logs get-log-events --log-group-name audit-local --log-stream-name $(event_name)
 
 composer-api: ##@application Runs composer on Api
-	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/api/app:/app --volume ${PWD}/common:/common composer ${COMPOSER_ARGS}
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/api/app:/app --volume ${PWD}/common:/common composer install ${COMPOSER_ARGS}
 
 composer-client: ##@application Runs composer on Client
-	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client/app:/app --volume ${PWD}/common:/common composer ${COMPOSER_ARGS}
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client/app:/app --volume ${PWD}/common:/common composer install ${COMPOSER_ARGS}
 
 composer-common: ##@application Runs composer on Common
-	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/common:/app composer ${COMPOSER_ARGS}
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/common:/app composer install ${COMPOSER_ARGS}
+
+composer-api-audit: ##@application Runs audit composer on Api
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/api/app:/app --volume ${PWD}/common:/common composer audit ${COMPOSER_ARGS}
+
+composer-client-audit: ##@application Runs audit composer on Client
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client/app:/app --volume ${PWD}/common:/common composer audit ${COMPOSER_ARGS}
+
+composer-common-audit: ##@application Runs audit composer on Common
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/common:/app composer audit ${COMPOSER_ARGS}
+
+composer-client-fix: ##@application Runs fix composer package on Client (eg make composer-client-fix package=mypackage)
+	docker compose run --rm \
+	--volume ~/.composer:/tmp \
+	--volume ${PWD}/client/app:/app \
+	--volume ${PWD}/common:/common \
+	composer sh -c 'composer update $(package) --with-all-dependencies --no-scripts && composer bump'
+
+composer-api-fix: ##@application Runs fix composer package on Api (eg make composer-api-fix package=mypackage)
+	docker compose run --rm \
+	--volume ~/.composer:/tmp \
+	--volume ${PWD}/api/app:/app \
+	--volume ${PWD}/common:/common \
+	composer sh -c 'composer update $(package) --with-all-dependencies --no-scripts && composer bump'
+
+composer-common-fix: ##@application Runs fix composer package on Common (eg make composer-common-fix package=mypackage)
+	docker compose run --rm \
+	--volume ~/.composer:/tmp \
+	--volume ${PWD}/common:/app \
+	composer sh -c 'composer update $(package) --with-all-dependencies --no-scripts && composer bump'
 
 js-lint: ##@javascript Lint JS resources
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm node-js npm run lint
