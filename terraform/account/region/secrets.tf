@@ -22,19 +22,6 @@ module "environment_secrets" {
   tags    = var.default_tags
 }
 
-module "development_environment_secrets" {
-  count = var.account.name == "development" ? 1 : 0
-
-  source      = "./modules/environment_secrets"
-  environment = var.account.name
-  secrets = [
-    "browserstack-username",
-    "browserstack-access-key"
-  ]
-  kms_key = module.secret_kms.eu_west_1_target_key_arn
-  tags    = var.default_tags
-}
-
 # Account wide secrets
 #trivy:ignore:avd-aws-0098 - Complications with updating this secret and not a particularly sensitive secret
 
