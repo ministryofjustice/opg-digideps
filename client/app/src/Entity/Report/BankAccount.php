@@ -333,10 +333,8 @@ class BankAccount implements BankAccountInterface
 
     /**
      * Format the account name for CSV.
-     *
-     * @return string
      */
-    public function getDisplayName(): string
+    public function getDisplayName(): ?string
     {
         switch ($this->getAccountType()) {
             case 'current':
@@ -353,6 +351,8 @@ class BankAccount implements BankAccountInterface
                 return ($this->getIsJointAccount() ? 'Joint other ' : 'Other') . ' account ' . ' (****' . $this->getAccountNumber() . ' / ' . $this->getDisplaySortCode() . ')';
             case 'other_no_sortcode':
                 return ($this->getIsJointAccount() ? 'Joint other ' : 'Other') . ' account ' . ' (****' . $this->getAccountNumber() . ')';
+            default:
+                return null;
         }
     }
 

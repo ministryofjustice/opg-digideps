@@ -84,7 +84,7 @@ final class MoneyInShortReviewView
             $this->text['amount'],
         );
 
-        foreach (($report->getMoneyTransactionsShortIn() ?? []) as $entry) {
+        foreach ($report->getMoneyTransactionsShortIn() as $entry) {
             if ($entry->getDate() !== null) {
                 $date = $entry->getDate()->format("j F Y");
             } else {
