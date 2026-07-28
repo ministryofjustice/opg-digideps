@@ -46,7 +46,7 @@ class CourtOrder
         return $this->id;
     }
 
-    public function setId(int $id): CourtOrder
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -58,7 +58,7 @@ class CourtOrder
         return $this->courtOrderUid;
     }
 
-    public function setCourtOrderUid(string $courtOrderUid): CourtOrder
+    public function setCourtOrderUid(string $courtOrderUid): static
     {
         $this->courtOrderUid = $courtOrderUid;
 
@@ -70,7 +70,7 @@ class CourtOrder
         return $this->orderType;
     }
 
-    public function setOrderType(string $orderType): CourtOrder
+    public function setOrderType(string $orderType): static
     {
         $this->orderType = $orderType;
 
@@ -82,7 +82,7 @@ class CourtOrder
         return $this->status;
     }
 
-    public function setStatus(string $status): CourtOrder
+    public function setStatus(string $status): static
     {
         $this->status = $status;
 
@@ -100,7 +100,7 @@ class CourtOrder
     /**
      * @param Report[] $reports
      */
-    public function setReports(array $reports): CourtOrder
+    public function setReports(array $reports): static
     {
         $this->reports = $reports;
 
@@ -118,7 +118,7 @@ class CourtOrder
     /**
      * @param Deputy[] $activeDeputies
      */
-    public function setActiveDeputies(array $activeDeputies): CourtOrder
+    public function setActiveDeputies(array $activeDeputies): static
     {
         $this->activeDeputies = $activeDeputies;
 

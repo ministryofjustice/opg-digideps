@@ -19,8 +19,6 @@ class Client
     use ActiveAudit;
 
     /**
-     *
-     *
      * @var int
      */
     #[JMS\Type('integer')]
@@ -28,10 +26,6 @@ class Client
     private $id;
 
     /**
-     *
-     *
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -41,10 +35,6 @@ class Client
     private $firstname;
 
     /**
-     *
-     *
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -57,7 +47,7 @@ class Client
      * @var User[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\User>')]
-    private $users = [];
+    private array $users = [];
 
     /**
      * @var Deputy|null
@@ -66,7 +56,7 @@ class Client
     private $deputy;
 
     /**
-     * @var array
+     * @var Report[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Report>')]
     private array $reports = [];
@@ -84,10 +74,6 @@ class Client
     private $fullname;
 
     /**
-     *
-     *
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -97,27 +83,17 @@ class Client
     private $caseNumber;
 
     /**
-     *
-     *
-     *
-     *
-     *
-     *
      * @var \DateTime|null
      */
-    #[JMS\Accessor(setter: 'setCourtDateWithoutTime')]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['edit', 'client-court-date', 'checklist-information'])]
+    #[JMS\Accessor(setter: 'setCourtDateWithoutTime')]
     #[Assert\NotBlank(message: 'client.courtDate.notBlank', groups: ['lay-deputy-client'])]
     #[Assert\Type(type: 'DateTimeInterface', message: 'client.courtDate.message', groups: ['lay-deputy-client'])]
     #[Assert\LessThan('today', groups: ['lay-deputy-client'], message: 'client.courtDate.lessThan')]
     private $courtDate;
 
     /**
-     *
-     *
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -127,9 +103,6 @@ class Client
     private $address;
 
     /**
-     *
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -138,9 +111,6 @@ class Client
     private $address2;
 
     /**
-     *
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -149,9 +119,6 @@ class Client
     private $address3;
 
     /**
-     *
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -160,9 +127,6 @@ class Client
     private $address4;
 
     /**
-     *
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -171,10 +135,6 @@ class Client
     private $address5;
 
     /**
-     *
-     *
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -184,8 +144,6 @@ class Client
     private $postcode;
 
     /**
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -193,9 +151,6 @@ class Client
     private $country;
 
     /**
-     *
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -204,10 +159,6 @@ class Client
     private $phone;
 
     /**
-     *
-     *
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -217,20 +168,15 @@ class Client
     private $email;
 
     /**
-     *
-     *
-     *
      * @var \DateTime|null
      */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['pa-edit'])]
-    #[Assert\LessThan('today', groups: ['pa-client'], message: 'client.dateOfBirth.lessThan')]
+    #[Assert\LessThan('today', message: 'client.dateOfBirth.lessThan', groups: ['pa-client'])]
     private $dateOfBirth;
 
     /**
      * @var ArrayCollection
-     *
-     *
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Frontend\Entity\Note>')]
     #[JMS\Groups(['notes'])]
@@ -238,8 +184,6 @@ class Client
 
     /**
      * @var ArrayCollection
-     *
-     *
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Frontend\Entity\ClientContact>')]
     #[JMS\Groups(['clientcontacts'])]
@@ -247,8 +191,6 @@ class Client
 
     /**
      * @var int
-     *
-     *
      */
     #[JMS\Type('integer')]
     #[JMS\Groups(['total-report-count'])]
@@ -268,8 +210,6 @@ class Client
 
     /**
      * @var \DateTime
-     *
-     *
      */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['checklist-information'])]
@@ -277,8 +217,6 @@ class Client
 
     /**
      * @var \DateTime
-     *
-     *
      */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['checklist-information'])]
@@ -304,7 +242,7 @@ class Client
         return $this->users;
     }
 
-    public function setDeputy(Deputy $deputy): self
+    public function setDeputy(Deputy $deputy): static
     {
         $this->deputy = $deputy;
 
@@ -316,32 +254,24 @@ class Client
      * Return false if any of the user is not an instance of the User class or the ID is not present.
      *
      * Mainly used from voters
-     *
-     * @return bool
      */
     public function hasUser(User $user): bool
     {
-        foreach ($this->users ?: [] as $currentUser) {
-            if (
-                $user->getId()
-                && $currentUser instanceof User && $currentUser->getId()
-                && $user->getId() == $currentUser->getId()
-            ) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->users ?: [], fn ($currentUser) =>
+            $user->getId()
+            && $currentUser instanceof User
+            && $currentUser->getId()
+            && $user->getId() == $currentUser->getId());
     }
 
-    public function setUsers($users)
+    public function setUsers($users): static
     {
         $this->users = $users;
 
         return $this;
     }
 
-    public function addUser($user)
+    public function addUser($user): static
     {
         $this->users[] = $user;
 
@@ -368,26 +298,16 @@ class Client
 
     /**
      * @param int $id report ID
-     *
-     * @return Report|null
      */
-    public function getReportById($id)
+    public function getReportById($id): ?Report
     {
-        foreach ($this->reports as $report) {
-            if ($report->getId() == $id) {
-                return $report;
-            }
-        }
-
-        return null;
+        return array_find($this->reports, fn ($report) => $report->getId() == $id);
     }
 
     /**
      * @param Report $report
-     *
-     * @return Client
      */
-    public function addReport($report)
+    public function addReport($report): static
     {
         $this->reports[] = $report;
 
@@ -396,10 +316,8 @@ class Client
 
     /**
      * @param Report[] $reports
-     *
-     * @return Client
      */
-    public function setReports(array $reports)
+    public function setReports(array $reports): static
     {
         $this->reports = $reports;
 
@@ -417,14 +335,14 @@ class Client
     /**
      * @param Report $currentReport
      */
-    public function setCurrentReport($currentReport): self
+    public function setCurrentReport($currentReport): static
     {
         $this->currentReport = $currentReport;
 
         return $this;
     }
 
-    public function removeReport($report)
+    public function removeReport($report): static
     {
         if (!empty($this->reports)) {
             foreach ($this->reports as $key => $reportObj) {
@@ -439,23 +357,14 @@ class Client
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasDetails()
+    public function hasDetails(): bool
     {
-        if (!empty($this->getAddress())) {
-            return true;
-        }
+        return !empty($this->getAddress());
     }
 
     public function hasReport(): bool
     {
-        if (!empty($this->reports)) {
-            return true;
-        }
-
-        return false;
+        return !empty($this->reports);
     }
 
     public function getFullname(): string
@@ -481,10 +390,8 @@ class Client
 
     /**
      * @param int $id
-     *
-     * @return Client
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -501,10 +408,8 @@ class Client
 
     /**
      * @param string $firstname
-     *
-     * @return Client
      */
-    public function setFirstname($firstname)
+    public function setFirstname($firstname): static
     {
         $this->firstname = $firstname;
 
@@ -521,10 +426,8 @@ class Client
 
     /**
      * @param string $lastname
-     *
-     * @return Client
      */
-    public function setLastname($lastname)
+    public function setLastname($lastname): static
     {
         $this->lastname = $lastname;
 
@@ -541,10 +444,8 @@ class Client
 
     /**
      * @param string $caseNumber
-     *
-     * @return Client
      */
-    public function setCaseNumber($caseNumber)
+    public function setCaseNumber($caseNumber): static
     {
         $this->caseNumber = $caseNumber;
 
@@ -561,10 +462,8 @@ class Client
 
     /**
      * @param \DateTime|null $courtDate
-     *
-     * @return Client
      */
-    public function setCourtDate($courtDate)
+    public function setCourtDate($courtDate): static
     {
         $this->courtDate = $courtDate;
 
@@ -582,7 +481,7 @@ class Client
     /**
      * @param string $address
      */
-    public function setAddress($address): self
+    public function setAddress($address): static
     {
         $this->address = $address;
 
@@ -594,7 +493,7 @@ class Client
         return $this->address2;
     }
 
-    public function setAddress2(?string $address2): self
+    public function setAddress2(?string $address2): static
     {
         $this->address2 = $address2;
 
@@ -606,7 +505,7 @@ class Client
         return $this->address3;
     }
 
-    public function setAddress3(?string $address3): self
+    public function setAddress3(?string $address3): static
     {
         $this->address3 = $address3;
 
@@ -618,7 +517,7 @@ class Client
         return $this->address4;
     }
 
-    public function setAddress4(?string $address4): self
+    public function setAddress4(?string $address4): static
     {
         $this->address4 = $address4;
 
@@ -630,7 +529,7 @@ class Client
         return $this->address5;
     }
 
-    public function setAddress5(?string $address5): self
+    public function setAddress5(?string $address5): static
     {
         $this->address5 = $address5;
 
@@ -647,10 +546,8 @@ class Client
 
     /**
      * @param string $postcode
-     *
-     * @return Client
      */
-    public function setPostcode($postcode)
+    public function setPostcode($postcode): static
     {
         $this->postcode = $postcode;
 
@@ -667,10 +564,8 @@ class Client
 
     /**
      * @param string $country
-     *
-     * @return Client
      */
-    public function setCountry($country)
+    public function setCountry($country): static
     {
         $this->country = $country;
 
@@ -700,10 +595,8 @@ class Client
 
     /**
      * @param string $phone
-     *
-     * @return Client
      */
-    public function setPhone($phone)
+    public function setPhone($phone): static
     {
         $this->phone = $phone;
 
@@ -720,10 +613,8 @@ class Client
 
     /**
      * @param string $email
-     *
-     * @return Client
      */
-    public function setEmail($email)
+    public function setEmail($email): static
     {
         $this->email = $email;
 
@@ -738,17 +629,14 @@ class Client
         return $this->dateOfBirth;
     }
 
-    /**
-     * @return Client
-     */
-    public function setDateOfBirth(?\DateTime $dateOfBirth = null)
+    public function setDateOfBirth(?\DateTime $dateOfBirth = null): static
     {
         $this->dateOfBirth = $dateOfBirth;
 
         return $this;
     }
 
-    /*
+    /**
      * @return int
      */
     public function getAge()
@@ -772,9 +660,11 @@ class Client
     /**
      * @param ArrayCollection $notes
      */
-    public function setNotes($notes): void
+    public function setNotes($notes): static
     {
         $this->notes = $notes;
+
+        return $this;
     }
 
     /**
@@ -788,9 +678,11 @@ class Client
     /**
      * @param ArrayCollection $clientContacts
      */
-    public function setClientContacts($clientContacts): void
+    public function setClientContacts($clientContacts): static
     {
         $this->clientContacts = $clientContacts;
+
+        return $this;
     }
 
     /**
@@ -812,13 +704,7 @@ class Client
      */
     public function getUnsubmittedReport()
     {
-        foreach ($this->getReports() as $report) {
-            if (!$report->isSubmitted() && $report->getUnSubmitDate()) {
-                return $report;
-            }
-        }
-
-        return null;
+        return array_find($this->getReports(), fn ($report) => !$report->isSubmitted() && $report->getUnSubmitDate());
     }
 
     /**
@@ -832,9 +718,11 @@ class Client
     /**
      * @param int $totalReportCount
      */
-    public function setTotalReportCount($totalReportCount): void
+    public function setTotalReportCount($totalReportCount): static
     {
         $this->totalReportCount = $totalReportCount;
+
+        return $this;
     }
 
     /**
@@ -847,10 +735,8 @@ class Client
 
     /**
      * @param int $unsubmittedReportsCount
-     *
-     * @return Client
      */
-    public function setUnsubmittedReportsCount($unsubmittedReportsCount)
+    public function setUnsubmittedReportsCount($unsubmittedReportsCount): static
     {
         $this->unsubmittedReportsCount = $unsubmittedReportsCount;
 
@@ -885,10 +771,8 @@ class Client
 
     /**
      * @param \DateTime $expectedReportEndDate
-     *
-     * @return $this
      */
-    public function setExpectedReportEndDate($expectedReportEndDate)
+    public function setExpectedReportEndDate($expectedReportEndDate): static
     {
         $this->expectedReportEndDate = $expectedReportEndDate;
 
@@ -927,9 +811,11 @@ class Client
         return $this->organisation;
     }
 
-    public function setOrganisation(Organisation $organisation): void
+    public function setOrganisation(Organisation $organisation): static
     {
         $this->organisation = $organisation;
+
+        return $this;
     }
 
     public function userBelongsToClientsOrganisation(User $user): bool

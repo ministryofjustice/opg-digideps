@@ -34,7 +34,7 @@ trait ReportMoreInfoTrait
     /**
      * @param ?string $actionMoreInfo
      */
-    public function setActionMoreInfo($actionMoreInfo): self
+    public function setActionMoreInfo($actionMoreInfo): static
     {
         $this->actionMoreInfo = $actionMoreInfo;
 
@@ -52,7 +52,7 @@ trait ReportMoreInfoTrait
     /**
      * @param mixed $actionMoreInfoDetails
      */
-    public function setActionMoreInfoDetails($actionMoreInfoDetails): self
+    public function setActionMoreInfoDetails($actionMoreInfoDetails): static
     {
         $this->actionMoreInfoDetails = $actionMoreInfoDetails;
 

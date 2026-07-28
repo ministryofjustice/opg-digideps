@@ -25,13 +25,19 @@ class BankAccount implements BankAccountInterface
         'other_no_sortcode',
     ];
 
-    private static $typesNotRequiringSortCode = [
+    /**
+     * @var string[] $typesNotRequiringSortCode
+     */
+    private static array $typesNotRequiringSortCode = [
         'postoffice',
         'cfo',
         'other_no_sortcode',
     ];
 
-    private static $typesNotRequiringBankName = [
+    /**
+     * @var string[] $typesNotRequiringBankName
+     */
+    private static array $typesNotRequiringBankName = [
         'postoffice',
         'cfo',
     ];
@@ -43,14 +49,12 @@ class BankAccount implements BankAccountInterface
     private $id;
 
     /**
-     *
-     *
      * @var string
      */
+    #[JMS\Groups(['account'])]
     #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'account.accountType.notBlank', groups: ['bank-account-type'])]
     #[Assert\Length(max: 100, maxMessage: 'account.accountType.maxMessage', groups: ['bank-account-type'])]
-    #[JMS\Groups(['account'])]
     private $accountType;
 
     /**
@@ -58,10 +62,10 @@ class BankAccount implements BankAccountInterface
      *
      * @var string
      */
+    #[JMS\Groups(['account'])]
     #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'account.bank.notBlank', groups: ['bank-account-name'])]
     #[Assert\Length(max: 500, min: 2, minMessage: 'account.bank.minMessage', maxMessage: 'account.bank.maxMessage', groups: ['bank-account-name'])]
-    #[JMS\Groups(['account'])]
     private $bank;
 
     /**
@@ -74,16 +78,14 @@ class BankAccount implements BankAccountInterface
      *
      * @var string
      */
+    #[JMS\Groups(['account'])]
     #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'account.accountNumber.notBlank', groups: ['bank-account-number'])]
     #[Assert\Type(type: 'alnum', message: 'account.accountNumber.type', groups: ['bank-account-number'])]
     #[Assert\Length(exactMessage: 'account.accountNumber.length', min: 4, max: 4, groups: ['bank-account-number'])]
-    #[JMS\Groups(['account'])]
     private $accountNumber;
 
     /**
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -104,7 +106,6 @@ class BankAccount implements BankAccountInterface
     private mixed $closingBalance = null;
 
     /**
-     *
      * @var bool
      */
     #[JMS\Type('boolean')]
@@ -113,7 +114,6 @@ class BankAccount implements BankAccountInterface
     private $isClosed;
 
     /**
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -122,7 +122,6 @@ class BankAccount implements BankAccountInterface
     private $isJointAccount;
 
     /**
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -148,14 +147,14 @@ class BankAccount implements BankAccountInterface
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    public function setBank($bank)
+    public function setBank($bank): static
     {
         $this->bank = $bank;
 
@@ -167,7 +166,7 @@ class BankAccount implements BankAccountInterface
         return $this->bank;
     }
 
-    public function setSortCode($sortCode)
+    public function setSortCode($sortCode): static
     {
         $this->sortCode = $sortCode;
 
@@ -179,7 +178,7 @@ class BankAccount implements BankAccountInterface
         return $this->sortCode;
     }
 
-    public function setAccountNumber($accountNumber)
+    public function setAccountNumber($accountNumber): static
     {
         $this->accountNumber = $accountNumber;
 
@@ -191,7 +190,7 @@ class BankAccount implements BankAccountInterface
         return $this->accountNumber;
     }
 
-    public function setOpeningBalance($openingBalance)
+    public function setOpeningBalance($openingBalance): static
     {
         $this->openingBalance = $openingBalance;
 
@@ -228,9 +227,6 @@ class BankAccount implements BankAccountInterface
         return !is_null($this->closingBalance) && $this->getClosingBalance() === 0.0;
     }
 
-    /**
-     * @return bool
-     */
     public function hasClosingBalance(): bool
     {
         if (is_null($this->closingBalance)) {
@@ -245,7 +241,7 @@ class BankAccount implements BankAccountInterface
         return $this->isClosed;
     }
 
-    public function setIsClosed($isClosed)
+    public function setIsClosed($isClosed): static
     {
         $this->isClosed = $isClosed;
 
@@ -298,7 +294,7 @@ class BankAccount implements BankAccountInterface
         return $this->isJointAccount;
     }
 
-    public function setIsJointAccount($isJointAccount)
+    public function setIsJointAccount($isJointAccount): static
     {
         $this->isJointAccount = $isJointAccount;
 
@@ -310,7 +306,7 @@ class BankAccount implements BankAccountInterface
         return $this->meta;
     }
 
-    public function setMeta($meta)
+    public function setMeta($meta): static
     {
         $this->meta = $meta;
 
@@ -327,10 +323,8 @@ class BankAccount implements BankAccountInterface
 
     /**
      * @param string $nameOneLine
-     *
-     * @return $this
      */
-    public function setNameOneLine($nameOneLine)
+    public function setNameOneLine($nameOneLine): static
     {
         $this->nameOneLine = $nameOneLine;
 
@@ -342,7 +336,7 @@ class BankAccount implements BankAccountInterface
      *
      * @return string
      */
-    public function getDisplayName()
+    public function getDisplayName(): string
     {
         switch ($this->getAccountType()) {
             case 'current':

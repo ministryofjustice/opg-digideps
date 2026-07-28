@@ -44,9 +44,11 @@ class ResearchType
         return $this->id;
     }
 
-    public function setId(UuidInterface $id): void
+    public function setId(UuidInterface $id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
     public function getSurveys(): ?bool
@@ -54,7 +56,7 @@ class ResearchType
         return $this->surveys;
     }
 
-    public function setSurveys(?bool $surveys): ResearchType
+    public function setSurveys(?bool $surveys): static
     {
         $this->surveys = $surveys;
 
@@ -66,7 +68,7 @@ class ResearchType
         return $this->videoCall;
     }
 
-    public function setVideoCall(?bool $videoCall): ResearchType
+    public function setVideoCall(?bool $videoCall): static
     {
         $this->videoCall = $videoCall;
 
@@ -78,7 +80,7 @@ class ResearchType
         return $this->phone;
     }
 
-    public function setPhone(?bool $phone): ResearchType
+    public function setPhone(?bool $phone): static
     {
         $this->phone = $phone;
 
@@ -90,7 +92,7 @@ class ResearchType
         return $this->inPerson;
     }
 
-    public function setInPerson(?bool $inPerson): ResearchType
+    public function setInPerson(?bool $inPerson): static
     {
         $this->inPerson = $inPerson;
 

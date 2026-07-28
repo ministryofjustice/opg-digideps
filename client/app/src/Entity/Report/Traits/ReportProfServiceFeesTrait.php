@@ -37,7 +37,7 @@ trait ReportProfServiceFeesTrait
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ProfServiceFee>')]
     #[JMS\Groups(['report-prof-service-fees'])]
-    private $profServiceFees = [];
+    private array $profServiceFees = [];
 
     /**
      * @return string
@@ -49,10 +49,8 @@ trait ReportProfServiceFeesTrait
 
     /**
      * @param $currentProfPaymentsReceived
-     *
-     * @return $this
      */
-    public function setCurrentProfPaymentsReceived($currentProfPaymentsReceived)
+    public function setCurrentProfPaymentsReceived($currentProfPaymentsReceived): static
     {
         $this->currentProfPaymentsReceived = $currentProfPaymentsReceived;
 
@@ -61,15 +59,8 @@ trait ReportProfServiceFeesTrait
 
     /**
      * Return filtered array of ProfServiceFee's.
-     *
-     * @param string $feeTypeId       current|estimated|previous
-     * @param string $fixedOrAssessed
-     *
-     * @throws \Exception
-     *
-     * @return array
      */
-    public function getFilteredFees($feeTypeId, $fixedOrAssessed): array
+    public function getFilteredFees(string $feeTypeId, string $fixedOrAssessed): array
     {
         switch ($feeTypeId) {
             case ProfServiceFee::TYPE_CURRENT_FEE:
@@ -121,10 +112,8 @@ trait ReportProfServiceFeesTrait
 
     /**
      * Returns current Fixed service fees.
-     *
-     * @return array
      */
-    public function getCurrentFixedServiceFees()
+    public function getCurrentFixedServiceFees(): array
     {
         return $this->getFilteredFees(
             ProfServiceFee::TYPE_CURRENT_FEE,
@@ -134,10 +123,8 @@ trait ReportProfServiceFeesTrait
 
     /**
      * Returns current Assessed service fees.
-     *
-     * @return array
      */
-    public function getCurrentAssessedServiceFees()
+    public function getCurrentAssessedServiceFees(): array
     {
         return $this->getFilteredFees(
             ProfServiceFee::TYPE_CURRENT_FEE,
@@ -155,10 +142,8 @@ trait ReportProfServiceFeesTrait
 
     /**
      * @param string $previousProfFeesEstimateGiven
-     *
-     * @return $this
      */
-    public function setPreviousProfFeesEstimateGiven($previousProfFeesEstimateGiven)
+    public function setPreviousProfFeesEstimateGiven($previousProfFeesEstimateGiven): static
     {
         $this->previousProfFeesEstimateGiven = $previousProfFeesEstimateGiven;
 
@@ -178,7 +163,7 @@ trait ReportProfServiceFeesTrait
      *
      * @return $this
      */
-    public function setProfFeesEstimateSccoReason($profFeesEstimateSccoReason)
+    public function setProfFeesEstimateSccoReason($profFeesEstimateSccoReason): static
     {
         $this->profFeesEstimateSccoReason = $profFeesEstimateSccoReason;
 
@@ -188,7 +173,7 @@ trait ReportProfServiceFeesTrait
     /**
      * @return ProfServiceFee[]
      */
-    public function getProfServiceFees()
+    public function getProfServiceFees(): array
     {
         return $this->profServiceFees;
     }
@@ -196,9 +181,11 @@ trait ReportProfServiceFeesTrait
     /**
      * @param ProfServiceFee[] $profServiceFees
      */
-    public function setProfServiceFees($profServiceFees): void
+    public function setProfServiceFees(array $profServiceFees): static
     {
         $this->profServiceFees = $profServiceFees;
+
+        return $this;
     }
 
     /**
@@ -252,14 +239,13 @@ trait ReportProfServiceFeesTrait
     /**
      * Calculate total Received Fees.
      *
-     * @return float
+     * @param ProfServiceFee[] $profFees
      */
     private function getTotalReceivedFees(array $profFees): float
     {
         $total = 0.00;
 
         foreach ($profFees as $profFee) {
-            /* @var ProfServiceFee $profFee */
             $total += $profFee->getAmountReceived();
         }
 
@@ -269,14 +255,13 @@ trait ReportProfServiceFeesTrait
     /**
      * Calculate total Charged Fees.
      *
-     * @return float
+     * @param ProfServiceFee[] $profFees
      */
     private function getTotalChargedFees(array $profFees): float
     {
         $total = 0.00;
 
         foreach ($profFees as $profFee) {
-            /* @var ProfServiceFee $profFee */
             $total += $profFee->getAmountCharged();
         }
 

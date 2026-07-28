@@ -34,9 +34,11 @@ class MoneyShortCategory
         return $this->typeId;
     }
 
-    public function setTypeId(string $typeId): void
+    public function setTypeId(string $typeId): static
     {
         $this->typeId = $typeId;
+
+        return $this;
     }
 
     /**
@@ -47,8 +49,10 @@ class MoneyShortCategory
         return $this->present;
     }
 
-    public function setPresent(bool $present): void
+    public function setPresent(bool $present): static
     {
         $this->present = $present;
+
+        return $this;
     }
 }

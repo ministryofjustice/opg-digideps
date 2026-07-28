@@ -190,13 +190,13 @@ class Report implements StartEndDateComparableInterface
      * @var Contact[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Contact>')]
-    private $contacts = [];
+    private array $contacts = [];
 
     /**
      * @var Decision[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Decision>')]
-    private $decisions = [];
+    private array $decisions = [];
 
     /**
      * @var VisitsCare|null
@@ -298,14 +298,14 @@ class Report implements StartEndDateComparableInterface
      */
     #[JMS\Groups(['report-documents'])]
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Document>')]
-    private $documents = [];
+    private array $documents = [];
 
     /**
      * @var Document[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Document>')]
     #[JMS\Groups(['report-documents'])]
-    private $submittedDocuments = [];
+    private array $submittedDocuments = [];
 
     /**
      * @var Document[]
@@ -332,7 +332,7 @@ class Report implements StartEndDateComparableInterface
      * @var array
      */
     #[JMS\Type('array')]
-    private $availableSections = [];
+    private array $availableSections = [];
 
     /**
      * @var Checklist
@@ -350,7 +350,7 @@ class Report implements StartEndDateComparableInterface
      * @var array
      **/
     #[JMS\Type('array')]
-    private $previousReportData = [];
+    private array $previousReportData = [];
 
     /**
      * @var string
@@ -394,8 +394,6 @@ class Report implements StartEndDateComparableInterface
 
     /**
      * @param int $id
-     *
-     * @return Report
      */
     public function setId($id)
     {
@@ -414,10 +412,8 @@ class Report implements StartEndDateComparableInterface
 
     /**
      * @param string $type
-     *
-     * @return $this
      */
-    public function setType($type)
+    public function setType($type): static
     {
         $this->type = $type;
 
@@ -435,9 +431,11 @@ class Report implements StartEndDateComparableInterface
     /**
      * @param bool $has106flag
      */
-    public function setHas106flag($has106flag): void
+    public function setHas106flag($has106flag): static
     {
         $this->has106flag = $has106flag;
+
+        return $this;
     }
 
     /**
@@ -448,9 +446,6 @@ class Report implements StartEndDateComparableInterface
         return $this->startDate;
     }
 
-    /**
-     * @return Report
-     */
     public function setStartDate(?\DateTime $startDate = null)
     {
         if ($startDate instanceof \DateTime) {
@@ -469,7 +464,7 @@ class Report implements StartEndDateComparableInterface
         return $this->endDate;
     }
 
-    public function setDueDate(?\DateTime $dueDate = null): self
+    public function setDueDate(?\DateTime $dueDate = null): static
     {
         $this->dueDate = $dueDate;
 
@@ -538,10 +533,7 @@ class Report implements StartEndDateComparableInterface
         return $this->unSubmitDate;
     }
 
-    /**
-     * @return Report
-     */
-    public function setUnSubmitDate(?\DateTime $unSubmitDate)
+    public function setUnSubmitDate(?\DateTime $unSubmitDate): static
     {
         $this->unSubmitDate = $unSubmitDate;
 
@@ -563,10 +555,7 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    /**
-     * @return Report
-     */
-    public function setEndDate(?\DateTime $endDate = null)
+    public function setEndDate(?\DateTime $endDate = null): static
     {
         if ($endDate instanceof \DateTime) {
             $endDate->setTime(23, 59, 59);
@@ -678,10 +667,7 @@ class Report implements StartEndDateComparableInterface
         return $this->client;
     }
 
-    /**
-     * @return Report
-     */
-    public function setClient(Client $client)
+    public function setClient(Client $client): static
     {
         $this->client = $client;
 
@@ -691,37 +677,30 @@ class Report implements StartEndDateComparableInterface
     /**
      * @return array $contacts
      */
-    public function getContacts()
+    public function getContacts(): array
     {
         return $this->contacts;
     }
 
     /**
      * @param array $contacts
-     *
-     * @return $this
      */
-    public function setContacts($contacts)
+    public function setContacts(array $contacts): static
     {
         $this->contacts = $contacts;
 
         return $this;
     }
 
-    /**
-     * @var array
-     */
-    public function getDecisions()
+    public function getDecisions(): array
     {
         return $this->decisions;
     }
 
     /**
      * @param Decision[] $decisions
-     *
-     * @return Report
      */
-    public function setDecisions($decisions)
+    public function setDecisions(array $decisions): static
     {
         $this->decisions = $decisions;
 
@@ -973,7 +952,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * @return Document[]
      */
-    public function getDocuments()
+    public function getDocuments(): array
     {
         return $this->documents;
     }
@@ -981,7 +960,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * @return Document[]
      */
-    public function getSubmittedDocuments()
+    public function getSubmittedDocuments(): array
     {
         return $this->submittedDocuments;
     }
@@ -989,7 +968,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * @param Document[] $submittedDocuments
      */
-    public function setSubmittedDocuments(array $submittedDocuments): self
+    public function setSubmittedDocuments(array $submittedDocuments): static
     {
         $this->submittedDocuments = $submittedDocuments;
 
@@ -999,7 +978,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * @return Document[]
      */
-    public function getUnsubmittedDocuments()
+    public function getUnsubmittedDocuments(): array
     {
         return $this->unsubmittedDocuments;
     }
@@ -1025,7 +1004,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * @param Document[] $documents
      */
-    public function setDocuments($documents)
+    public function setDocuments(array $documents): static
     {
         $this->documents = $documents;
 
@@ -1092,20 +1071,15 @@ class Report implements StartEndDateComparableInterface
         return $attachmentName;
     }
 
-    /**
-     * @return array
-     */
-    public function getAvailableSections()
+    public function getAvailableSections(): array
     {
         return $this->availableSections;
     }
 
     /**
      * @param array $availableSections
-     *
-     * @return Report
      */
-    public function setAvailableSections($availableSections)
+    public function setAvailableSections(array $availableSections): static
     {
         $this->availableSections = $availableSections;
 
@@ -1159,10 +1133,8 @@ class Report implements StartEndDateComparableInterface
 
     /**
      * @param Checklist $checklist
-     *
-     * @return $this
      */
-    public function setChecklist($checklist)
+    public function setChecklist($checklist): static
     {
         $this->checklist = $checklist;
 
@@ -1180,9 +1152,11 @@ class Report implements StartEndDateComparableInterface
     /**
      * @param ReviewChecklist $reviewChecklist
      */
-    public function setReviewChecklist($reviewChecklist): void
+    public function setReviewChecklist($reviewChecklist): static
     {
         $this->reviewChecklist = $reviewChecklist;
+
+        return $this;
     }
 
     /**
@@ -1195,10 +1169,8 @@ class Report implements StartEndDateComparableInterface
 
     /**
      * @param array $previousReportData
-     *
-     * @return $this
      */
-    public function setPreviousReportData($previousReportData)
+    public function setPreviousReportData($previousReportData): static
     {
         $this->previousReportData = $previousReportData;
 
@@ -1223,19 +1195,14 @@ class Report implements StartEndDateComparableInterface
 
     /**
      * @param string $reportTitle
-     *
-     * @return $this
      */
-    public function setReportTitle($reportTitle)
+    public function setReportTitle($reportTitle): static
     {
         $this->reportTitle = $reportTitle;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function canLinkToBankAccounts(): bool
     {
         return in_array(
@@ -1277,14 +1244,14 @@ class Report implements StartEndDateComparableInterface
     /**
      * @param ReportSubmission[] $reportSubmissions
      */
-    public function setReportSubmissions(array $reportSubmissions): self
+    public function setReportSubmissions(array $reportSubmissions): static
     {
         $this->reportSubmissions = $reportSubmissions;
 
         return $this;
     }
 
-    public function determineReportType()
+    public function determineReportType(): string
     {
         // Remove report type suffix if there is one.
         if (str_ends_with($this->getType(), '-5') || str_ends_with($this->getType(), '-6')) {
@@ -1318,7 +1285,7 @@ class Report implements StartEndDateComparableInterface
         return $this->clientBenefitsCheck;
     }
 
-    public function setClientBenefitsCheck(?ClientBenefitsCheck $clientBenefitsCheck): Report
+    public function setClientBenefitsCheck(?ClientBenefitsCheck $clientBenefitsCheck): static
     {
         $this->clientBenefitsCheck = $clientBenefitsCheck;
 
@@ -1330,7 +1297,7 @@ class Report implements StartEndDateComparableInterface
         return $this->moneyInExists;
     }
 
-    public function setMoneyInExists(?string $moneyInExists): self
+    public function setMoneyInExists(?string $moneyInExists): static
     {
         $this->moneyInExists = $moneyInExists;
 
@@ -1342,7 +1309,7 @@ class Report implements StartEndDateComparableInterface
         return $this->reasonForNoMoneyIn;
     }
 
-    public function setReasonForNoMoneyIn(?string $reasonForNoMoneyIn): self
+    public function setReasonForNoMoneyIn(?string $reasonForNoMoneyIn): static
     {
         $this->reasonForNoMoneyIn = $reasonForNoMoneyIn;
 
@@ -1354,7 +1321,7 @@ class Report implements StartEndDateComparableInterface
         return $this->moneyOutExists;
     }
 
-    public function setMoneyOutExists(?string $moneyOutExists): self
+    public function setMoneyOutExists(?string $moneyOutExists): static
     {
         $this->moneyOutExists = $moneyOutExists;
 
@@ -1366,7 +1333,7 @@ class Report implements StartEndDateComparableInterface
         return $this->reasonForNoMoneyOut;
     }
 
-    public function setReasonForNoMoneyOut(?string $reasonForNoMoneyOut): self
+    public function setReasonForNoMoneyOut(?string $reasonForNoMoneyOut): static
     {
         $this->reasonForNoMoneyOut = $reasonForNoMoneyOut;
 

@@ -11,69 +11,38 @@ class PreRegistration
     public const string REALM_PROF = 'REALM_PROF';
     public const string REALM_LAY = 'REALM_LAY';
 
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     *
-     *
-     */
     #[JMS\Type('string')]
     #[Assert\NotBlank]
-    private $caseNumber;
+    private string $caseNumber;
 
-    /**
-     * @var string
-     *
-     *
-     */
     #[JMS\Type('string')]
     #[Assert\NotBlank]
-    private $clientLastname;
+    private string $clientLastname;
 
-    /**
-     * @var string
-     *
-     *
-     */
     #[JMS\Type('string')]
     #[Assert\NotBlank]
-    private $deputyUid;
+    private string $deputyUid;
 
-    /**
-     * @var string
-     *
-     *
-     */
     #[JMS\Type('string')]
     #[Assert\NotBlank]
-    private $deputySurname;
+    private string $deputySurname;
 
-    /**
-     * @var string
-     *
-     *
-     */
     #[JMS\Type('string')]
     #[Assert\Length(min: 2, max: 20, minMessage: 'postcode too short', maxMessage: 'postcode too long')]
-    private $deputyPostCode;
+    private string $deputyPostCode;
 
     #[JMS\Type('string')]
-    private $typeOfReport;
+    private string $typeOfReport;
 
     #[JMS\Type('string')]
-    private $orderType;
+    private string $orderType;
 
     #[JMS\Type('string')]
-    private $otherColumns;
+    private string $otherColumns;
 
-    /**
-     * @var \DateTime
-     */
-    private $orderDate;
+    private \DateTime $orderDate;
 
     public function __construct()
     {
@@ -119,7 +88,7 @@ class PreRegistration
         return $this->orderDate;
     }
 
-    public function setOrderDate(\DateTime $orderDate): PreRegistration
+    public function setOrderDate(\DateTime $orderDate): static
     {
         $this->orderDate = $orderDate;
 

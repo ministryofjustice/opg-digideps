@@ -38,7 +38,7 @@ class Satisfaction
         return $this->id;
     }
 
-    public function setId(int $id): Satisfaction
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -50,7 +50,7 @@ class Satisfaction
         return $this->score;
     }
 
-    public function setScore(int $score): Satisfaction
+    public function setScore(int $score): static
     {
         $this->score = $score;
 
@@ -62,7 +62,7 @@ class Satisfaction
         return $this->comments;
     }
 
-    public function setComments(string $comments): Satisfaction
+    public function setComments(string $comments): static
     {
         $this->comments = $comments;
 
@@ -74,7 +74,7 @@ class Satisfaction
         return $this->deputyrole;
     }
 
-    public function setDeputyrole(string $deputyrole): Satisfaction
+    public function setDeputyrole(string $deputyrole): static
     {
         $this->deputyrole = $deputyrole;
 
@@ -86,7 +86,7 @@ class Satisfaction
         return $this->reporttype;
     }
 
-    public function setReporttype(string $reporttype): Satisfaction
+    public function setReporttype(string $reporttype): static
     {
         $this->reporttype = $reporttype;
 
@@ -110,7 +110,7 @@ class Satisfaction
         return $this->userResearchResponse;
     }
 
-    public function setUserResearchResponse(UserResearchResponse $userResearchResponse): Satisfaction
+    public function setUserResearchResponse(UserResearchResponse $userResearchResponse): static
     {
         $this->userResearchResponse = $userResearchResponse;
 
@@ -122,7 +122,7 @@ class Satisfaction
         return $this->report;
     }
 
-    public function setReport(?Report $report): Satisfaction
+    public function setReport(?Report $report): static
     {
         $this->report = $report;
 
