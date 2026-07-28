@@ -15,8 +15,6 @@ class Setting
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Groups(['setting'])]
     #[Assert\NotBlank(message: 'adminSetting.content.notBlank', groups: ['setting'])]
@@ -26,9 +24,6 @@ class Setting
 
     /**
      * @var bool
-     *
-     *
-     *
      */
     #[JMS\Groups(['setting'])]
     #[Assert\NotNull(message: 'adminSetting.enabled.notBlank', groups: ['setting'])]
@@ -44,10 +39,9 @@ class Setting
     }
 
     /**
-     * @param  string  $id
-     * @return Setting
+     * @param string $id
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -63,10 +57,9 @@ class Setting
     }
 
     /**
-     * @param  string  $content
-     * @return Setting
+     * @param string $content
      */
-    public function setContent($content)
+    public function setContent($content): static
     {
         $this->content = $content;
 
@@ -82,10 +75,9 @@ class Setting
     }
 
     /**
-     * @param  bool    $enabled
-     * @return Setting
+     * @param bool $enabled
      */
-    public function setEnabled($enabled)
+    public function setEnabled($enabled): static
     {
         $this->enabled = $enabled;
 

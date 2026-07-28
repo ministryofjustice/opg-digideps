@@ -11,7 +11,6 @@ class Lifestyle
     use HasReportTrait;
 
     /**
-     *
      * @var int
      */
     #[JMS\Type('integer')]
@@ -49,7 +48,7 @@ class Lifestyle
     /**
      * @param int $id
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -67,9 +66,11 @@ class Lifestyle
     /**
      * @param mixed $careAppointments
      */
-    public function setCareAppointments($careAppointments): void
+    public function setCareAppointments($careAppointments): static
     {
         $this->careAppointments = $careAppointments;
+
+        return $this;
     }
 
     /**
@@ -83,9 +84,11 @@ class Lifestyle
     /**
      * @param mixed $doesClientUndertakeSocialActivities
      */
-    public function setDoesClientUndertakeSocialActivities($doesClientUndertakeSocialActivities): void
+    public function setDoesClientUndertakeSocialActivities($doesClientUndertakeSocialActivities): static
     {
         $this->doesClientUndertakeSocialActivities = $doesClientUndertakeSocialActivities;
+
+        return $this;
     }
 
     /**
@@ -107,9 +110,11 @@ class Lifestyle
     /**
      * @param mixed $activityDetailsYes
      */
-    public function setActivityDetailsYes($activityDetailsYes): void
+    public function setActivityDetailsYes($activityDetailsYes): static
     {
         $this->activityDetailsYes = $activityDetailsYes;
+
+        return $this;
     }
 
     /**
@@ -123,8 +128,10 @@ class Lifestyle
     /**
      * @param mixed $activityDetailsNo
      */
-    public function setActivityDetailsNo($activityDetailsNo): void
+    public function setActivityDetailsNo($activityDetailsNo): static
     {
         $this->activityDetailsNo = $activityDetailsNo;
+
+        return $this;
     }
 }

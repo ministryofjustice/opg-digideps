@@ -11,7 +11,6 @@ class VisitsCare
     use HasReportTrait;
 
     /**
-     *
      * @var int
      */
     #[JMS\Type('integer')]
@@ -43,9 +42,9 @@ class VisitsCare
     #[Assert\NotBlank(message: 'visitsCare.whoIsDoingTheCaring.notBlank', groups: ['visits-care-who-does-caring'])]
     private $whoIsDoingTheCaring;
 
-    #[JMS\SerializedName('does_client_have_a_care_plan')]
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
+    #[JMS\SerializedName('does_client_have_a_care_plan')]
     #[Assert\NotBlank(message: 'visitsCare.doesClientHaveACarePlan.notBlank', groups: ['visits-care-have-care-plan'])]
     private $doesClientHaveACarePlan;
 
@@ -108,19 +107,19 @@ class VisitsCare
     /**
      * @param string $howOftenDoYouContactClient
      */
-    public function setHowOftenDoYouContactClient($howOftenDoYouContactClient): void
+    public function setHowOftenDoYouContactClient($howOftenDoYouContactClient): static
     {
         $this->howOftenDoYouContactClient = $howOftenDoYouContactClient;
+
+        return $this;
     }
 
     /**
      * Set doesClientReceivePaidCare.
      *
      * @param string $doesClientReceivePaidCare
-     *
-     * @return VisitsCare
      */
-    public function setDoesClientReceivePaidCare($doesClientReceivePaidCare)
+    public function setDoesClientReceivePaidCare($doesClientReceivePaidCare): static
     {
         $this->doesClientReceivePaidCare = $doesClientReceivePaidCare;
 
@@ -141,10 +140,8 @@ class VisitsCare
      * Set whoIsDoingTheCaring.
      *
      * @param string $whoIsDoingTheCaring
-     *
-     * @return VisitsCare
      */
-    public function setWhoIsDoingTheCaring($whoIsDoingTheCaring)
+    public function setWhoIsDoingTheCaring($whoIsDoingTheCaring): static
     {
         $this->whoIsDoingTheCaring = $whoIsDoingTheCaring;
 
@@ -165,10 +162,8 @@ class VisitsCare
      * Set doesClientHaveACarePlan.
      *
      * @param string $doesClientHaveACarePlan
-     *
-     * @return VisitsCare
      */
-    public function setDoesClientHaveACarePlan($doesClientHaveACarePlan)
+    public function setDoesClientHaveACarePlan($doesClientHaveACarePlan): static
     {
         $this->doesClientHaveACarePlan = $doesClientHaveACarePlan;
 
@@ -189,10 +184,8 @@ class VisitsCare
      * Set whenWasCarePlanLastReviewed.
      *
      * @param \DateTime $whenWasCarePlanLastReviewed
-     *
-     * @return VisitsCare
      */
-    public function setWhenWasCarePlanLastReviewed(?\DateTimeInterface $whenWasCarePlanLastReviewed)
+    public function setWhenWasCarePlanLastReviewed(?\DateTimeInterface $whenWasCarePlanLastReviewed): static
     {
         $this->whenWasCarePlanLastReviewed = $whenWasCarePlanLastReviewed;
 
@@ -211,10 +204,8 @@ class VisitsCare
      * Set howIsCareFunded.
      *
      * @param string $howIsCareFunded
-     *
-     * @return VisitsCare
      */
-    public function setHowIsCareFunded($howIsCareFunded)
+    public function setHowIsCareFunded($howIsCareFunded): static
     {
         $this->howIsCareFunded = $howIsCareFunded;
 

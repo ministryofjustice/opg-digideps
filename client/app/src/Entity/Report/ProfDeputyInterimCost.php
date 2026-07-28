@@ -15,18 +15,14 @@ class ProfDeputyInterimCost
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['profDeputyInterimCosts'])]
-    #[Assert\Range(min: 0.01, max: 10000000, notInRangeMessage: 'profDeputyInterimCost.amount.notInRangeMessage', groups: ['prof-deputy-interim-costs'])]
+    #[Assert\Range(notInRangeMessage: 'profDeputyInterimCost.amount.notInRangeMessage', min: 0.01, max: 10000000, groups: ['prof-deputy-interim-costs'])]
     private $amount;
 
     /**
      * @var \DateTime
-     *
-     *
      */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['profDeputyInterimCosts'])]
@@ -45,9 +41,11 @@ class ProfDeputyInterimCost
     /**
      * @param int $id
      */
-    public function setId($id): void
+    public function setId($id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -61,9 +59,11 @@ class ProfDeputyInterimCost
     /**
      * @param string $amount
      */
-    public function setAmount($amount): void
+    public function setAmount($amount): static
     {
         $this->amount = $amount;
+
+        return $this;
     }
 
     /**
@@ -77,8 +77,10 @@ class ProfDeputyInterimCost
     /**
      * @param \DateTime $date
      */
-    public function setDate($date): void
+    public function setDate($date): static
     {
         $this->date = $date;
+
+        return $this;
     }
 }

@@ -14,26 +14,26 @@ trait ReportMoneyShortTrait
      */
     #[JMS\Groups(['moneyShortCategoriesIn'])]
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory>')]
-    private $moneyShortCategoriesIn = [];
+    private array $moneyShortCategoriesIn = [];
 
     /**
      * @var MoneyShortCategory[]
      */
     #[JMS\Groups(['moneyShortCategoriesOut'])]
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory>')]
-    private $moneyShortCategoriesOut = [];
+    private array $moneyShortCategoriesOut = [];
 
     /**
      * @var MoneyTransactionShort[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort>')]
-    private $moneyTransactionsShortIn = [];
+    private array $moneyTransactionsShortIn = [];
 
     /**
      * @var MoneyTransactionShort[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort>')]
-    private $moneyTransactionsShortOut = [];
+    private array $moneyTransactionsShortOut = [];
 
     /**
      * @var string 'yes'|'no'|null
@@ -54,7 +54,7 @@ trait ReportMoneyShortTrait
     /**
      * @return MoneyShortCategory[]
      */
-    public function getMoneyShortCategoriesIn()
+    public function getMoneyShortCategoriesIn(): array
     {
         return $this->moneyShortCategoriesIn;
     }
@@ -72,15 +72,17 @@ trait ReportMoneyShortTrait
     /**
      * @param MoneyShortCategory[] $moneyShortCategoriesIn
      */
-    public function setMoneyShortCategoriesIn($moneyShortCategoriesIn): void
+    public function setMoneyShortCategoriesIn(array $moneyShortCategoriesIn): static
     {
         $this->moneyShortCategoriesIn = $moneyShortCategoriesIn;
+
+        return $this;
     }
 
     /**
      * @return MoneyShortCategory[]
      */
-    public function getMoneyShortCategoriesOut()
+    public function getMoneyShortCategoriesOut(): array
     {
         return $this->moneyShortCategoriesOut;
     }
@@ -98,15 +100,17 @@ trait ReportMoneyShortTrait
     /**
      * @param MoneyShortCategory[] $moneyShortCategoriesOut
      */
-    public function setMoneyShortCategoriesOut($moneyShortCategoriesOut): void
+    public function setMoneyShortCategoriesOut(array $moneyShortCategoriesOut): static
     {
         $this->moneyShortCategoriesOut = $moneyShortCategoriesOut;
+
+        return $this;
     }
 
     /**
      * @return MoneyTransactionShort[]
      */
-    public function getMoneyTransactionsShortIn()
+    public function getMoneyTransactionsShortIn(): array
     {
         return $this->moneyTransactionsShortIn;
     }
@@ -114,9 +118,11 @@ trait ReportMoneyShortTrait
     /**
      * @param MoneyTransactionShort[] $moneyTransactionsShortIn
      */
-    public function setMoneyTransactionsShortIn($moneyTransactionsShortIn): void
+    public function setMoneyTransactionsShortIn(array $moneyTransactionsShortIn): static
     {
         $this->moneyTransactionsShortIn = $moneyTransactionsShortIn;
+
+        return $this;
     }
 
     /**
@@ -130,9 +136,11 @@ trait ReportMoneyShortTrait
     /**
      * @param mixed $moneyTransactionsShortOut
      */
-    public function setMoneyTransactionsShortOut($moneyTransactionsShortOut): void
+    public function setMoneyTransactionsShortOut(array $moneyTransactionsShortOut): static
     {
         $this->moneyTransactionsShortOut = $moneyTransactionsShortOut;
+
+        return $this;
     }
 
     /**
@@ -146,9 +154,11 @@ trait ReportMoneyShortTrait
     /**
      * @param string $moneyTransactionsShortInExist
      */
-    public function setMoneyTransactionsShortInExist($moneyTransactionsShortInExist): void
+    public function setMoneyTransactionsShortInExist($moneyTransactionsShortInExist): static
     {
         $this->moneyTransactionsShortInExist = $moneyTransactionsShortInExist;
+
+        return $this;
     }
 
     /**
@@ -162,9 +172,11 @@ trait ReportMoneyShortTrait
     /**
      * @param string $moneyTransactionsShortOutExist
      */
-    public function setMoneyTransactionsShortOutExist($moneyTransactionsShortOutExist): void
+    public function setMoneyTransactionsShortOutExist($moneyTransactionsShortOutExist): static
     {
         $this->moneyTransactionsShortOutExist = $moneyTransactionsShortOutExist;
+
+        return $this;
     }
 
     /**

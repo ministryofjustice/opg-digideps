@@ -148,15 +148,15 @@ class MoneyTransaction
     #[JMS\Type('string')]
     #[JMS\Groups(['transaction'])]
     #[Assert\NotBlank(message: 'moneyTransaction.form.amount.notBlank', groups: ['transaction-amount'])]
-    #[Assert\Range(min: 0.01, max: 100000000000, notInRangeMessage: 'moneyTransaction.form.amount.notInRangeMessage', groups: ['transaction-amount'])]
+    #[Assert\Range(notInRangeMessage: 'moneyTransaction.form.amount.notInRangeMessage', min: 0.01, max: 100000000000, groups: ['transaction-amount'])]
     private $amount;
 
     /**
      * @var string
      */
+    #[JMS\Type('string')]
     #[JMS\Groups(['transaction'])]
     #[Assert\NotBlank(message: 'moneyTransaction.form.description.notBlank', groups: ['transaction-description'])]
-    #[JMS\Type('string')]
     private $description;
 
     /**
@@ -170,7 +170,7 @@ class MoneyTransaction
     /**
      * @param mixed $id
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -188,9 +188,11 @@ class MoneyTransaction
     /**
      * @param mixed $group
      */
-    public function setGroup($group): void
+    public function setGroup($group): static
     {
         $this->group = $group;
+
+        return $this;
     }
 
     /**
@@ -245,17 +247,11 @@ class MoneyTransaction
     public function setDescription($description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
-    /**
-     * Checks category is valid.
-     *
-     * @param string $category
-     *
-     * @return bool
-     */
-    public static function isValidCategory($category = ''): bool
+    public static function isValidCategory(string $category = ''): bool
     {
         foreach (self::$categories as $cat) {
             list($categoryId, $hasDetails, $groupId, $type) = $cat;
@@ -272,8 +268,6 @@ class MoneyTransaction
 
     /**
      * Get the type (in/out) based on the category.
-     *
-     *
      * @return string in/out
      */
     #[JMS\VirtualProperty]

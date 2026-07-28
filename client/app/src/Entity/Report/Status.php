@@ -10,136 +10,72 @@ class Status
     public const string STATE_INCOMPLETE = 'incomplete';
     public const string STATE_DONE = 'done';
 
-    /**
-     * @var Report
-     */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Report')]
-    private $report;
+    private Report $report;
 
     public function __construct(Report $report)
     {
         $this->report = $report;
     }
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $decisionsState = [];
+    private array $decisionsState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $contactsState = [];
+    private array $contactsState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $visitsCareState = [];
+    private array $visitsCareState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $clientBenefitsCheckState = [];
+    private array $clientBenefitsCheckState = [];
+    #[JMS\Type('array')]
+    private array $bankAccountsState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $bankAccountsState = [];
+    private array $moneyTransferState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $moneyTransferState = [];
+    private array $moneyInState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $moneyInState = [];
+    private array $moneyOutState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $moneyOutState = [];
+    private array $moneyInShortState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $moneyInShortState = [];
+    private array $moneyOutShortState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $moneyOutShortState = [];
+    private array $balanceState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $balanceState = [];
+    private array $assetsState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $assetsState = [];
+    private array $debtsState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $debtsState = [];
+    private array $paFeesExpensesState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $paFeesExpensesState = [];
+    private array $actionsState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $actionsState = [];
+    private array $otherInfoState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $otherInfoState = [];
+    private array $expensesState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $expensesState = [];
+    private array $giftsState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $giftsState = [];
+    private array $documentsState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $documentsState = [];
-
-    /**
-     * @var array
-     */
-    #[JMS\Type('array')]
-    private $lifestyleState = [];
+    private array $lifestyleState = [];
 
     /**
      * @var array
@@ -153,251 +89,182 @@ class Status
     #[JMS\Type('string')]
     private $status;
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $profCurrentFeesState = [];
+    private array $profCurrentFeesState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $profDeputyCostsState = [];
+    private array $profDeputyCostsState = [];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('array')]
-    private $profDeputyCostsEstimateState = [];
-
-    /**
-     * @return array
-     */
+    private array $profDeputyCostsEstimateState = [];
     public function getDecisionsState(): array
     {
         return $this->decisionsState;
     }
 
-    /**
-     * @param mixed $decisionsState
-     */
-    public function setDecisionsState($decisionsState): void
+    public function setDecisionsState(array $decisionsState): static
     {
         $this->decisionsState = $decisionsState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getContactsState(): array
     {
         return $this->contactsState;
     }
 
-    /**
-     * @param mixed $contactsState
-     */
-    public function setContactsState($contactsState): void
+    public function setContactsState(array $contactsState): static
     {
         $this->contactsState = $contactsState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getVisitsCareState(): array
     {
         return $this->visitsCareState;
     }
 
-    /**
-     * @param mixed $visitsCareState
-     */
-    public function setVisitsCareState($visitsCareState): void
+    public function setVisitsCareState(array $visitsCareState): static
     {
         $this->visitsCareState = $visitsCareState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getBankAccountsState(): array
     {
         return $this->bankAccountsState;
     }
 
-    /**
-     * @param mixed $bankAccountsState
-     */
-    public function setBankAccountsState($bankAccountsState): void
+    public function setBankAccountsState(array $bankAccountsState): static
     {
         $this->bankAccountsState = $bankAccountsState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getMoneyTransferState(): array
     {
         return $this->moneyTransferState;
     }
 
-    /**
-     * @param mixed $moneyTransferState
-     */
-    public function setMoneyTransferState($moneyTransferState): void
+    public function setMoneyTransferState(array $moneyTransferState): static
     {
         $this->moneyTransferState = $moneyTransferState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getMoneyInState(): array
     {
         return $this->moneyInState;
     }
 
-    /**
-     * @param mixed $moneyInState
-     */
-    public function setMoneyInState($moneyInState): void
+    public function setMoneyInState(array $moneyInState): static
     {
         $this->moneyInState = $moneyInState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getMoneyOutState(): array
     {
         return $this->moneyOutState;
     }
 
-    /**
-     * @param mixed $moneyOutState
-     */
-    public function setMoneyOutState($moneyOutState): void
+    public function setMoneyOutState(array $moneyOutState): static
     {
         $this->moneyOutState = $moneyOutState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getMoneyInShortState(): array
     {
         return $this->moneyInShortState;
     }
 
-    /**
-     * @param mixed $moneyInShortState
-     */
-    public function setMoneyInShortState($moneyInShortState): void
+    public function setMoneyInShortState($moneyInShortState): static
     {
         $this->moneyInShortState = $moneyInShortState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getMoneyOutShortState(): array
     {
         return $this->moneyOutShortState;
     }
 
-    /**
-     * @param mixed $moneyOutShortState
-     */
-    public function setMoneyOutShortState($moneyOutShortState): void
+    public function setMoneyOutShortState(array $moneyOutShortState): static
     {
         $this->moneyOutShortState = $moneyOutShortState;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getBalanceState()
+    public function getBalanceState(): array
     {
         return $this->balanceState;
     }
 
-    /**
-     * @param mixed $balanceState
-     */
-    public function setBalanceState($balanceState): void
+    public function setBalanceState(array $balanceState): static
     {
         $this->balanceState = $balanceState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getAssetsState(): array
     {
         return $this->assetsState;
     }
 
-    /**
-     * @param mixed $assetsState
-     */
-    public function setAssetsState($assetsState): void
+    public function setAssetsState(array $assetsState): static
     {
         $this->assetsState = $assetsState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getDebtsState(): array
     {
         return $this->debtsState;
     }
 
-    /**
-     * @param mixed $debtsState
-     */
-    public function setDebtsState($debtsState): void
+    public function setDebtsState(array $debtsState): static
     {
         $this->debtsState = $debtsState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getPaFeesExpensesState()
+    public function getPaFeesExpensesState(): array
     {
         return $this->paFeesExpensesState;
     }
 
-    /**
-     * @param array $paFeesExpensesState
-     */
-    public function setPaFeesExpensesState($paFeesExpensesState): void
+    public function setPaFeesExpensesState(array $paFeesExpensesState): static
     {
         $this->paFeesExpensesState = $paFeesExpensesState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getActionsState(): array
     {
         return $this->actionsState;
     }
 
-    /**
-     * @param mixed $actionsState
-     */
-    public function setActionsState($actionsState): void
+    public function setActionsState(array $actionsState): static
     {
         $this->actionsState = $actionsState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getOtherInfoState(): array
     {
         return $this->otherInfoState;
@@ -406,41 +273,35 @@ class Status
     /**
      * @param mixed $otherInfoState
      */
-    public function setOtherInfoState($otherInfoState): void
+    public function setOtherInfoState($otherInfoState): static
     {
         $this->otherInfoState = $otherInfoState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getExpensesState(): array
     {
         return $this->expensesState;
     }
 
-    /**
-     * @param mixed $expensesState
-     */
-    public function setExpensesState($expensesState): void
+    public function setExpensesState(array $expensesState): static
     {
         $this->expensesState = $expensesState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getGiftsState(): array
     {
         return $this->giftsState;
     }
 
-    /**
-     * @param mixed $giftsState
-     */
-    public function setGiftsState($giftsState): void
+    public function setGiftsState(array $giftsState): static
     {
         $this->giftsState = $giftsState;
+
+        return $this;
     }
 
     /**
@@ -459,12 +320,11 @@ class Status
         return $this->isReadyToSubmit;
     }
 
-    /**
-     * @param mixed $isReadyToSubmit
-     */
-    public function setIsReadyToSubmit($isReadyToSubmit): void
+    public function setIsReadyToSubmit(array $isReadyToSubmit): static
     {
         $this->isReadyToSubmit = $isReadyToSubmit;
+
+        return $this;
     }
 
     /**
@@ -478,92 +338,74 @@ class Status
     /**
      * @param mixed $status
      */
-    public function setStatus($status): void
+    public function setStatus($status): static
     {
         $this->status = $status;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getDocumentsState()
+    public function getDocumentsState(): array
     {
         return $this->documentsState;
     }
 
-    /**
-     * @param array $documentsState
-     */
-    public function setDocumentsState($documentsState): void
+    public function setDocumentsState(array $documentsState): static
     {
         $this->documentsState = $documentsState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getLifestyleState()
+    public function getLifestyleState(): array
     {
         return $this->lifestyleState;
     }
 
-    /**
-     * @param array $lifestyleState
-     */
-    public function setLifestyleState($lifestyleState): void
+    public function setLifestyleState(array $lifestyleState): static
     {
         $this->lifestyleState = $lifestyleState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getProfCurrentFeesState()
+    public function getProfCurrentFeesState(): array
     {
         return $this->profCurrentFeesState;
     }
 
-    /**
-     * @param array $profCurrentFeesState
-     */
-    public function setProfCurrentFeesState($profCurrentFeesState): void
+    public function setProfCurrentFeesState(array $profCurrentFeesState): static
     {
         $this->profCurrentFeesState = $profCurrentFeesState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getProfDeputyCostsState()
+    public function getProfDeputyCostsState(): array
     {
         return $this->profDeputyCostsState;
     }
 
-    /**
-     * @param array $profDeputyCostsState
-     */
-    public function setProfDeputyCostsState($profDeputyCostsState): void
+    public function setProfDeputyCostsState(array $profDeputyCostsState): static
     {
         $this->profDeputyCostsState = $profDeputyCostsState;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getProfDeputyCostsEstimateState()
+    public function getProfDeputyCostsEstimateState(): array
     {
         return $this->profDeputyCostsEstimateState;
     }
 
-    /**
-     * @param array $profDeputyCostsEstimateState
-     */
-    public function setProfDeputyCostsEstimateState($profDeputyCostsEstimateState): void
+    public function setProfDeputyCostsEstimateState(array $profDeputyCostsEstimateState): static
     {
         $this->profDeputyCostsEstimateState = $profDeputyCostsEstimateState;
+
+        return $this;
     }
 
-    public function getState()
+    public function getState(): string
     {
         switch ($this->status) {
             case 'notStarted':
@@ -580,7 +422,7 @@ class Status
         return $this->clientBenefitsCheckState;
     }
 
-    public function setClientBenefitsCheckState(array $clientBenefitsCheckState): Status
+    public function setClientBenefitsCheckState(array $clientBenefitsCheckState): static
     {
         $this->clientBenefitsCheckState = $clientBenefitsCheckState;
 
