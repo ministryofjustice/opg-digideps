@@ -56,13 +56,9 @@ trait ReportBankAccountsTrait
         });
     }
 
-    public function getBankAccountById(int $id): BankAccount
+    public function getBankAccountById(int $id): ?BankAccount
     {
-        foreach ($this->bankAccounts as $account) {
-            if ($account->getId() == $id) {
-                return $account;
-            }
-        }
+        return array_find($this->bankAccounts, fn ($account) => $account->getId() == $id);
     }
 
     /**

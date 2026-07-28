@@ -61,6 +61,8 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
     public function setId($id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
