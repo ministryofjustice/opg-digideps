@@ -15,7 +15,7 @@ trait ReportPaFeeExpensesTrait
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Fee>')]
     #[JMS\Groups(['fee'])]
-    private $fees = [];
+    private array $fees = [];
 
     /**
      *
@@ -43,7 +43,7 @@ trait ReportPaFeeExpensesTrait
     /**
      * @return Fee[]
      */
-    public function getFees()
+    public function getFees(): array
     {
         return $this->fees;
     }
@@ -51,9 +51,11 @@ trait ReportPaFeeExpensesTrait
     /**
      * @param Fee[] $fees
      */
-    public function setFees($fees): void
+    public function setFees(array $fees): static
     {
         $this->fees = $fees;
+
+        return $this;
     }
 
     /**
@@ -67,9 +69,11 @@ trait ReportPaFeeExpensesTrait
     /**
      * @param string $reasonForNoFees
      */
-    public function setReasonForNoFees($reasonForNoFees): void
+    public function setReasonForNoFees($reasonForNoFees): static
     {
         $this->reasonForNoFees = $reasonForNoFees;
+
+        return $this;
     }
 
     /**
@@ -83,9 +87,11 @@ trait ReportPaFeeExpensesTrait
     /**
      * @param string $feesTotal
      */
-    public function setFeesTotal($feesTotal): void
+    public function setFeesTotal($feesTotal): static
     {
         $this->feesTotal = $feesTotal;
+
+        return $this;
     }
 
     public function feesValid(ExecutionContextInterface $context): void
@@ -106,9 +112,11 @@ trait ReportPaFeeExpensesTrait
     /**
      * @param string $hasFees
      */
-    public function setHasFees($hasFees): void
+    public function setHasFees($hasFees): static
     {
         $this->hasFees = $hasFees;
+
+        return $this;
     }
 
     /**

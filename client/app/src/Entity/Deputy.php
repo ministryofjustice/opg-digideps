@@ -118,10 +118,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param int $id
-     *
-     * @return $this
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -133,7 +131,7 @@ class Deputy implements DeputyInterface
         return $this->deputyUid;
     }
 
-    public function setDeputyUid(string $deputyUid): Deputy
+    public function setDeputyUid(string $deputyUid): static
     {
         $this->deputyUid = $deputyUid;
 
@@ -150,10 +148,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param string $firstname
-     *
-     * @return $this
      */
-    public function setFirstname($firstname)
+    public function setFirstname($firstname): static
     {
         $this->firstname = $firstname;
 
@@ -170,10 +166,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param string $lastname
-     *
-     * @return $this
      */
-    public function setLastname($lastname)
+    public function setLastname($lastname): static
     {
         $this->lastname = $lastname;
 
@@ -190,7 +184,6 @@ class Deputy implements DeputyInterface
 
     /**
      * @return string
-     * @return $this
      */
     public function getEmail1()
     {
@@ -199,7 +192,6 @@ class Deputy implements DeputyInterface
 
     /**
      * @return string
-     * @return $this
      */
     public function getEmail()
     {
@@ -208,10 +200,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param string $email1
-     *
-     * @return $this
      */
-    public function setEmail1($email1)
+    public function setEmail1($email1): static
     {
         $this->email1 = $email1;
 
@@ -228,10 +218,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param string $email2
-     *
-     * @return $this
      */
-    public function setEmail2($email2)
+    public function setEmail2($email2): static
     {
         $this->email2 = $email2;
 
@@ -248,10 +236,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param string $email3
-     *
-     * @return $this
      */
-    public function setEmail3($email3)
+    public function setEmail3($email3): static
     {
         $this->email3 = $email3;
 
@@ -268,10 +254,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param string $address1
-     *
-     * @return $this
      */
-    public function setAddress1($address1)
+    public function setAddress1($address1): static
     {
         $this->address1 = $address1;
 
@@ -288,10 +272,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param string $address2
-     *
-     * @return $this
      */
-    public function setAddress2($address2)
+    public function setAddress2($address2): static
     {
         $this->address2 = $address2;
 
@@ -308,10 +290,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param string $address3
-     *
-     * @return $this
      */
-    public function setAddress3($address3)
+    public function setAddress3($address3): static
     {
         $this->address3 = $address3;
 
@@ -328,10 +308,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param string $address4
-     *
-     * @return $this
      */
-    public function setAddress4($address4)
+    public function setAddress4($address4): static
     {
         $this->address4 = $address4;
 
@@ -348,10 +326,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param string $address5
-     *
-     * @return $this
      */
-    public function setAddress5($address5)
+    public function setAddress5($address5): static
     {
         $this->address5 = $address5;
 
@@ -368,10 +344,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param string $addressPostcode
-     *
-     * @return $this
      */
-    public function setAddressPostcode($addressPostcode)
+    public function setAddressPostcode($addressPostcode): static
     {
         $this->addressPostcode = $addressPostcode;
 
@@ -388,10 +362,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param string $addressCountry
-     *
-     * @return $this
      */
-    public function setAddressCountry($addressCountry)
+    public function setAddressCountry($addressCountry): static
     {
         $this->addressCountry = $addressCountry;
 
@@ -424,10 +396,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param string $phoneMain
-     *
-     * @return $this
      */
-    public function setPhoneMain($phoneMain)
+    public function setPhoneMain($phoneMain): static
     {
         $this->phoneMain = trim($phoneMain);
 
@@ -444,10 +414,8 @@ class Deputy implements DeputyInterface
 
     /**
      * @param string $phoneAlternative
-     *
-     * @return $this
      */
-    public function setPhoneAlternative($phoneAlternative)
+    public function setPhoneAlternative($phoneAlternative): static
     {
         $this->phoneAlternative = trim($phoneAlternative);
 

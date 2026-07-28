@@ -17,7 +17,7 @@ class Debt
     #[JMS\Type('string')]
     #[JMS\Groups(['debt'])]
     #[Assert\Type(type: 'numeric', message: 'debt.amount.notNumeric', groups: ['debts'])]
-    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'debt.amount.notInRangeMessage', groups: ['debts'])]
+    #[Assert\Range(notInRangeMessage: 'debt.amount.notInRangeMessage', min: 0, max: 100000000000, groups: ['debts'])]
     private $amount;
 
     /**
@@ -29,7 +29,6 @@ class Debt
 
     /**
      * @var string
-     *
      */
     #[JMS\Groups(['debt'])]
     #[JMS\Type('string')]
@@ -63,9 +62,11 @@ class Debt
     /**
      * @param mixed $debtTypeId
      */
-    public function setDebtTypeId($debtTypeId): void
+    public function setDebtTypeId($debtTypeId): static
     {
         $this->debtTypeId = $debtTypeId;
+
+        return $this;
     }
 
     /**
@@ -79,9 +80,11 @@ class Debt
     /**
      * @param string $amount decimal
      */
-    public function setAmount($amount): void
+    public function setAmount($amount): static
     {
         $this->amount = $amount;
+
+        return $this;
     }
 
     /**
@@ -95,9 +98,11 @@ class Debt
     /**
      * @param string $hasMoreDetails
      */
-    public function setHasMoreDetails($hasMoreDetails): void
+    public function setHasMoreDetails($hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
+
+        return $this;
     }
 
     /**
@@ -111,8 +116,10 @@ class Debt
     /**
      * @param string $moreDetails
      */
-    public function setMoreDetails($moreDetails): void
+    public function setMoreDetails($moreDetails): static
     {
         $this->moreDetails = $moreDetails;
+
+        return $this;
     }
 }

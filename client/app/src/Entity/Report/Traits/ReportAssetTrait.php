@@ -27,7 +27,7 @@ trait ReportAssetTrait
      * @var Asset[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Asset>')]
-    private $assets = [];
+    private array $assets = [];
 
     /**
      * @var float
@@ -36,11 +36,9 @@ trait ReportAssetTrait
     private $assetsTotalValue;
 
     /**
-     * @param array $assets
-     *
-     * @return Report
+     * @param Asset[] $assets
      */
-    public function setAssets($assets)
+    public function setAssets(array $assets): static
     {
         $this->assets = $assets;
 
@@ -50,7 +48,7 @@ trait ReportAssetTrait
     /**
      * @return Asset[]
      */
-    public function getAssets()
+    public function getAssets(): array
     {
         return $this->assets;
     }
@@ -133,19 +131,8 @@ trait ReportAssetTrait
         return $ret;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return bool
-     */
-    public function hasAssetWithId($id): bool
+    public function hasAssetWithId(int $id): bool
     {
-        foreach ($this->getAssets() as $asset) {
-            if ($asset->getId() == $id) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->getAssets(), fn ($asset) => $asset->getId() == $id);
     }
 }

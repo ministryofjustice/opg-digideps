@@ -327,6 +327,6 @@ trait ReportProfDeputyCostsTrait
 
     public function hasProfDeputyOtherCosts(): bool
     {
-        return (bool) count($this->getProfDeputyOtherCosts() ? $this->getProfDeputyOtherCosts() : []) > 0;
+        return count($this->getProfDeputyOtherCosts() ?: []) > 0;
     }
 }

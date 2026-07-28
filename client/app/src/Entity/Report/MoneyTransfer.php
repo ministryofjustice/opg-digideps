@@ -19,10 +19,10 @@ class MoneyTransfer
     /**
      * @var string
      */
-    #[Assert\NotBlank(message: 'transfer.amount.notBlank', groups: ['money-transfer-amount'])]
-    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'transfer.amount.notInRangeMessage', groups: ['money-transfer-amount'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['money-transfer'])]
+    #[Assert\NotBlank(message: 'transfer.amount.notBlank', groups: ['money-transfer-amount'])]
+    #[Assert\Range(notInRangeMessage: 'transfer.amount.notInRangeMessage', min: 0, max: 100000000000, groups: ['money-transfer-amount'])]
     private $amount;
 
     /**
@@ -71,10 +71,8 @@ class MoneyTransfer
      * Set amount.
      *
      * @param string $amount
-     *
-     * @return MoneyTransfer
      */
-    public function setAmount($amount)
+    public function setAmount($amount): static
     {
         $this->amount = $amount;
 
@@ -109,10 +107,8 @@ class MoneyTransfer
 
     /**
      * @param BankAccount $from
-     *
-     * @return MoneyTransfer
      */
-    public function setAccountFrom($from)
+    public function setAccountFrom($from): static
     {
         $this->accountFrom = $from;
 
@@ -121,10 +117,8 @@ class MoneyTransfer
 
     /**
      * @param BankAccount $to
-     *
-     * @return MoneyTransfer
      */
-    public function setAccountTo($to)
+    public function setAccountTo($to): static
     {
         $this->accountTo = $to;
 
@@ -142,9 +136,11 @@ class MoneyTransfer
     /**
      * @param mixed $accountFromId
      */
-    public function setAccountFromId($accountFromId): void
+    public function setAccountFromId($accountFromId): static
     {
         $this->accountFromId = $accountFromId;
+
+        return $this;
     }
 
     /**
@@ -158,9 +154,11 @@ class MoneyTransfer
     /**
      * @param mixed $accountToId
      */
-    public function setAccountToId($accountToId): void
+    public function setAccountToId($accountToId): static
     {
         $this->accountToId = $accountToId;
+
+        return $this;
     }
 
     /**
@@ -171,10 +169,7 @@ class MoneyTransfer
         return $this->description;
     }
 
-    /**
-     * @return MoneyTransfer
-     */
-    public function setDescription($description)
+    public function setDescription($description): static
     {
         $this->description = $description;
 

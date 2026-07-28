@@ -12,94 +12,83 @@ class AssetProperty extends Asset
     public const string OWNED_PARTLY = 'partly';
 
     /**
-     *
      * @var string
      */
+    #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'asset.property.address.notBlank', groups: ['property-address'])]
     #[Assert\Length(max: 200, maxMessage: 'asset.property.address.maxMessage', groups: ['property-address'])]
-    #[JMS\Type('string')]
     private $address;
 
     /**
-     *
      * @var string
      */
-    #[Assert\Length(max: 200, maxMessage: 'asset.property.address.maxMessage', groups: ['property-address'])]
     #[JMS\Type('string')]
+    #[Assert\Length(max: 200, maxMessage: 'asset.property.address.maxMessage', groups: ['property-address'])]
     private $address2;
 
     /**
-     *
      * @var string
      */
-    #[Assert\Length(max: 75, maxMessage: 'asset.property.county.maxMessage', groups: ['property-address'])]
     #[JMS\Type('string')]
+    #[Assert\Length(max: 75, maxMessage: 'asset.property.county.maxMessage', groups: ['property-address'])]
     private $county;
 
     /**
-     *
      * @var string
      */
+    #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'asset.property.postcode.notBlank', groups: ['property-address'])]
     #[Assert\Length(max: 10, maxMessage: 'asset.property.postcode.maxMessage', groups: ['property-address'])]
-    #[JMS\Type('string')]
     private $postcode;
 
     /**
      * @var string
-     *
      */
+    #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'asset.property.occupants.notBlank', groups: ['property-occupants'])]
     #[Assert\Length(max: 550, maxMessage: 'asset.property.occupants.maxMessage', groups: ['property-occupants'])]
-    #[JMS\Type('string')]
     private $occupants;
 
     /**
      * @var string fully/partly
-     *
      */
-    #[Assert\NotBlank(message: 'asset.property.owned.notBlank', groups: ['property-owned'])]
     #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'asset.property.owned.notBlank', groups: ['property-owned'])]
     private $owned;
 
     /**
      * @var float 0-100
-     *
-     *
      */
+    #[JMS\Type('float')]
     #[Assert\NotBlank(message: 'asset.property.ownedPercentage.notBlank', groups: ['property-owned-partly'])]
     #[Assert\Range(min: 1, max: 100, notInRangeMessage: 'asset.property.ownedPercentage.type', groups: ['property-owned-partly'])]
-    #[JMS\Type('float')]
     private $ownedPercentage;
 
-    #[Assert\NotBlank(message: 'asset.property.isSubjectToEquityRelease.notBlank', groups: ['property-subject-equity-release'])]
     #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'asset.property.isSubjectToEquityRelease.notBlank', groups: ['property-subject-equity-release'])]
     private $isSubjectToEquityRelease;
 
     /**
      * @var string
      */
-    #[Assert\NotBlank(message: 'asset.property.hasMortgage.notBlank', groups: ['property-mortgage'])]
     #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'asset.property.hasMortgage.notBlank', groups: ['property-mortgage'])]
     private $hasMortgage;
 
     /**
-     *
      * @var string
      */
+    #[JMS\Type('integer')]
     #[Assert\NotBlank(message: 'asset.property.mortgageOutstandingAmount.notBlank', groups: ['property-mortgage-outstanding-amount'])]
     #[Assert\Type(type: 'numeric', message: 'asset.property.mortgageOutstandingAmount.type', groups: ['property-mortgage-outstanding-amount'])]
     #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'asset.property.mortgageOutstandingAmount.outOfRange', groups: ['property-mortgage-outstanding-amount'])]
-    #[JMS\Type('integer')]
     private $mortgageOutstandingAmount;
 
     /**
-     *
      * @var string
-     *
      */
-    #[Assert\NotBlank(message: 'asset.property.hasCharges.notBlank', groups: ['property-has-charges'])]
     #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'asset.property.hasCharges.notBlank', groups: ['property-has-charges'])]
     private $hasCharges;
 
     /**
@@ -107,25 +96,24 @@ class AssetProperty extends Asset
      * @var string
      *
      */
-    #[Assert\NotBlank(message: 'asset.property.isRentedOut.notBlank', groups: ['property-rented-out'])]
     #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'asset.property.isRentedOut.notBlank', groups: ['property-rented-out'])]
     private $isRentedOut;
 
     /**
      * @var \DateTime
      */
-    #[Assert\NotBlank(message: 'asset.property.rentAgreementEndDate.notBlank', groups: ['property-rent-agree-date'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[Assert\NotBlank(message: 'asset.property.rentAgreementEndDate.notBlank', groups: ['property-rent-agree-date'])]
     private $rentAgreementEndDate;
 
     /**
-     *
      * @var float
      */
+    #[JMS\Type('float')]
     #[Assert\NotBlank(message: 'asset.property.rentIncomeMonth.notBlank', groups: ['property-rent-income-month'])]
     #[Assert\Type(type: 'numeric', message: 'asset.property.rentIncomeMonth.type', groups: ['property-rent-income-month'])]
     #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'asset.property.rentIncomeMonth.outOfRange', groups: ['property-rent-income-month'])]
-    #[JMS\Type('float')]
     private $rentIncomeMonth;
 
     /**
@@ -133,7 +121,7 @@ class AssetProperty extends Asset
      *
      * @param string $address
      */
-    public function setAddress($address)
+    public function setAddress($address): static
     {
         $this->address = $address;
 
@@ -153,7 +141,7 @@ class AssetProperty extends Asset
      *
      * @param string $postcode
      */
-    public function setPostcode($postcode)
+    public function setPostcode($postcode): static
     {
         $this->postcode = $postcode;
 
@@ -175,7 +163,7 @@ class AssetProperty extends Asset
      *
      * @param string $county
      */
-    public function setCounty($county)
+    public function setCounty($county): static
     {
         $this->county = $county;
 
@@ -205,7 +193,7 @@ class AssetProperty extends Asset
      *
      * @param string $address2
      */
-    public function setAddress2($address2)
+    public function setAddress2($address2): static
     {
         $this->address2 = $address2;
 
@@ -271,14 +259,14 @@ class AssetProperty extends Asset
         return $this->rentIncomeMonth;
     }
 
-    public function setOccupants($occupants)
+    public function setOccupants($occupants): static
     {
         $this->occupants = $occupants;
 
         return $this;
     }
 
-    public function setOwned($owned)
+    public function setOwned($owned): static
     {
         if (!in_array($owned, [self::OWNED_FULLY, self::OWNED_PARTLY])) {
             throw new \InvalidArgumentException(__METHOD__ . "Invalid owned type [$owned]");
@@ -289,35 +277,35 @@ class AssetProperty extends Asset
         return $this;
     }
 
-    public function setOwnedPercentage($ownedPercentage)
+    public function setOwnedPercentage($ownedPercentage): static
     {
         $this->ownedPercentage = $ownedPercentage;
 
         return $this;
     }
 
-    public function setIsSubjectToEquityRelease($isSubjectToEquityRelease)
+    public function setIsSubjectToEquityRelease($isSubjectToEquityRelease): static
     {
         $this->isSubjectToEquityRelease = $isSubjectToEquityRelease;
 
         return $this;
     }
 
-    public function setHasMortgage($hasMortgage)
+    public function setHasMortgage($hasMortgage): static
     {
         $this->hasMortgage = $hasMortgage;
 
         return $this;
     }
 
-    public function setMortgageOutstandingAmount($mortgageOutstandingAmount)
+    public function setMortgageOutstandingAmount($mortgageOutstandingAmount): static
     {
         $this->mortgageOutstandingAmount = $mortgageOutstandingAmount;
 
         return $this;
     }
 
-    public function setHasCharges($hasCharges)
+    public function setHasCharges($hasCharges): static
     {
         $this->hasCharges = $hasCharges;
 
@@ -331,14 +319,14 @@ class AssetProperty extends Asset
         return $this;
     }
 
-    public function setRentAgreementEndDate($rentAgreementEndDate)
+    public function setRentAgreementEndDate($rentAgreementEndDate): static
     {
         $this->rentAgreementEndDate = $rentAgreementEndDate;
 
         return $this;
     }
 
-    public function setRentIncomeMonth($rentIncomeMonth)
+    public function setRentIncomeMonth($rentIncomeMonth): static
     {
         $this->rentIncomeMonth = $rentIncomeMonth;
 

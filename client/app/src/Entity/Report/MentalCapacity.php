@@ -13,10 +13,7 @@ class MentalCapacity
     public const string CAPACITY_CHANGED = 'changed';
     public const string CAPACITY_STAYED_SAME = 'stayedSame';
 
-
-
     /**
-     *
      * @var int
      */
     #[JMS\Type('integer')]
@@ -53,14 +50,14 @@ class MentalCapacity
         return $this->hasCapacityChangedDetails;
     }
 
-    public function setHasCapacityChanged($hasCapacityChanged)
+    public function setHasCapacityChanged($hasCapacityChanged): static
     {
         $this->hasCapacityChanged = $hasCapacityChanged;
 
         return $this;
     }
 
-    public function setHasCapacityChangedDetails($hasCapacityChangedDetails)
+    public function setHasCapacityChangedDetails($hasCapacityChangedDetails): static
     {
         $this->hasCapacityChangedDetails = $hasCapacityChangedDetails;
 
@@ -72,7 +69,7 @@ class MentalCapacity
         return $this->mentalAssessmentDate;
     }
 
-    public function setMentalAssessmentDate($mentalAssessmentDate)
+    public function setMentalAssessmentDate($mentalAssessmentDate): static
     {
         $this->mentalAssessmentDate = $mentalAssessmentDate;
 

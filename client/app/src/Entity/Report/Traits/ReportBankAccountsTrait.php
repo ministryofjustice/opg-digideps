@@ -12,7 +12,7 @@ trait ReportBankAccountsTrait
      * @var BankAccount[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\BankAccount>')]
-    private $bankAccounts = [];
+    private array $bankAccounts = [];
 
     /**
      * @var float
@@ -27,12 +27,7 @@ trait ReportBankAccountsTrait
     #[JMS\Type('double')]
     private $accountsOpeningBalanceTotal;
 
-    /**
-     * @param array $bankAccounts
-     *
-     * @return Report
-     */
-    public function setBankAccounts($bankAccounts)
+    public function setBankAccounts(array $bankAccounts): static
     {
         foreach ($bankAccounts as $account) {
             $account->setReport($this);
@@ -46,7 +41,7 @@ trait ReportBankAccountsTrait
     /**
      * @return BankAccount[]
      */
-    public function getBankAccounts()
+    public function getBankAccounts(): array
     {
         return $this->bankAccounts;
     }
@@ -61,10 +56,7 @@ trait ReportBankAccountsTrait
         });
     }
 
-    /**
-     * @return BankAccount
-     */
-    public function getBankAccountById($id)
+    public function getBankAccountById(int $id): BankAccount
     {
         foreach ($this->bankAccounts as $account) {
             if ($account->getId() == $id) {
@@ -83,10 +75,8 @@ trait ReportBankAccountsTrait
 
     /**
      * @param float $accountsClosingBalanceTotal
-     *
-     * @return Report
      */
-    public function setAccountsClosingBalanceTotal($accountsClosingBalanceTotal)
+    public function setAccountsClosingBalanceTotal($accountsClosingBalanceTotal): static
     {
         $this->accountsClosingBalanceTotal = $accountsClosingBalanceTotal;
 
@@ -128,9 +118,9 @@ trait ReportBankAccountsTrait
     /**
      * Returns a formatted list of bank accounts associated with this report
      *
-     * @return array
+     * @return array<string, int>
      */
-    public function getBankAccountOptions()
+    public function getBankAccountOptions(): array
     {
         $banksList = [];
         $banks = $this->getBankAccounts();

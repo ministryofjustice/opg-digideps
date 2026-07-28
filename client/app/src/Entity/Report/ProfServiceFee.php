@@ -19,7 +19,6 @@ abstract class ProfServiceFee
     public const string TYPE_ESTIMATED_FEE = 'estimated';
 
     /**
-     *
      * @var int
      */
     #[JMS\Type('integer')]
@@ -32,9 +31,9 @@ abstract class ProfServiceFee
      * If the order or any key is added, update the ReportControllerTest, hardcoded on position and number
      *  in order to keep it simple
      *
-     * @var array
+     * @var String[]
      */
-    public static $serviceTypeIds = [
+    public static array $serviceTypeIds = [
         'annual-report' => false,
         'annual-management-interim' => false,
         'annual-management-final' => false,
@@ -46,9 +45,7 @@ abstract class ProfServiceFee
     ];
 
     /**
-     *
      * @var string fixed|assessed
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-service-fees'])]
@@ -64,13 +61,11 @@ abstract class ProfServiceFee
     private $otherFeeDetails;
 
     /**
-     *
      * @var string a value in self:$serviceTypeIds
-     *
      */
     #[JMS\Type('string')]
-    #[Assert\NotBlank(message: 'profServiceFee.serviceType.notBlank', groups: ['prof-service-fee-type'])]
     #[JMS\Groups(['prof-service-fees', 'prof-service-fee-serviceType'])]
+    #[Assert\NotBlank(message: 'profServiceFee.serviceType.notBlank', groups: ['prof-service-fee-type'])]
     private $serviceTypeId;
 
     /**
@@ -79,7 +74,7 @@ abstract class ProfServiceFee
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-service-fees'])]
     #[Assert\NotBlank(message: 'profServiceFee.amountCharged.notBlank', groups: ['prof-service-fee-details-type'])]
-    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'fee.amount.notInRangeMessage', groups: ['prof-service-fee-details-type'])]
+    #[Assert\Range(notInRangeMessage: 'fee.amount.notInRangeMessage', min: 0, max: 100000000000, groups: ['prof-service-fee-details-type'])]
     private $amountCharged;
 
     /**
@@ -96,11 +91,10 @@ abstract class ProfServiceFee
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-service-fees'])]
     #[Assert\NotBlank(message: 'profServiceFee.amountReceived.notBlank', groups: ['prof-service-fee-details-type-payment-received'])]
-    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'fee.amount.notInRangeMessage', groups: ['prof-service-fee-details-type-payment-received'])]
+    #[Assert\Range(notInRangeMessage: 'fee.amount.notInRangeMessage', min: 0, max: 100000000000, groups: ['prof-service-fee-details-type-payment-received'])]
     private $amountReceived;
 
     /**
-     *
      * @var \DateTime
      */
     #[JMS\Type("DateTime<'Y-m-d'>")]
@@ -121,9 +115,11 @@ abstract class ProfServiceFee
     /**
      * @param mixed $id
      */
-    public function setId($id): void
+    public function setId($id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -137,9 +133,11 @@ abstract class ProfServiceFee
     /**
      * @param string $assessedOrFixed
      */
-    public function setAssessedOrFixed($assessedOrFixed): void
+    public function setAssessedOrFixed($assessedOrFixed): static
     {
         $this->assessedOrFixed = $assessedOrFixed;
+
+        return $this;
     }
 
     /**
@@ -158,9 +156,11 @@ abstract class ProfServiceFee
     /**
      * @param mixed $otherFeeDetails
      */
-    public function setOtherFeeDetails($otherFeeDetails): void
+    public function setOtherFeeDetails($otherFeeDetails): static
     {
         $this->otherFeeDetails = $otherFeeDetails;
+
+        return $this;
     }
 
     /**
@@ -174,9 +174,11 @@ abstract class ProfServiceFee
     /**
      * @param float $amountCharged
      */
-    public function setAmountCharged($amountCharged): void
+    public function setAmountCharged($amountCharged): static
     {
         $this->amountCharged = $amountCharged;
+
+        return $this;
     }
 
     /**
@@ -190,9 +192,11 @@ abstract class ProfServiceFee
     /**
      * @param float $amountReceived
      */
-    public function setAmountReceived($amountReceived): void
+    public function setAmountReceived($amountReceived): static
     {
         $this->amountReceived = $amountReceived;
+
+        return $this;
     }
 
     /**
@@ -206,9 +210,11 @@ abstract class ProfServiceFee
     /**
      * @param mixed $paymentReceivedDate
      */
-    public function setPaymentReceivedDate($paymentReceivedDate): void
+    public function setPaymentReceivedDate($paymentReceivedDate): static
     {
         $this->paymentReceivedDate = $paymentReceivedDate;
+
+        return $this;
     }
 
     /**
@@ -222,9 +228,11 @@ abstract class ProfServiceFee
     /**
      * @param string $paymentReceived
      */
-    public function setPaymentReceived($paymentReceived): void
+    public function setPaymentReceived($paymentReceived): static
     {
         $this->paymentReceived = $paymentReceived;
+
+        return $this;
     }
 
     /**
@@ -238,37 +246,24 @@ abstract class ProfServiceFee
     /**
      * @param string $serviceTypeId
      */
-    public function setServiceTypeId($serviceTypeId): void
+    public function setServiceTypeId($serviceTypeId): static
     {
         $this->serviceTypeId = $serviceTypeId;
+
+        return $this;
     }
 
-    /**
-     * Is a current Fee?
-     *
-     * @return bool
-     */
-    public function isCurrentFee()
+    public function isCurrentFee(): bool
     {
         return $this->getFeeTypeId() == self::TYPE_CURRENT_FEE;
     }
 
-    /**
-     * Is a previous Fee?
-     *
-     * @return bool
-     */
-    public function isPreviousFee()
+    public function isPreviousFee(): bool
     {
         return $this->getFeeTypeId() == self::TYPE_PREVIOUS_FEE;
     }
 
-    /**
-     * Is a estimated Fee?
-     *
-     * @return bool
-     */
-    public function isEstimatedFee()
+    public function isEstimatedFee(): bool
     {
         return $this->getFeeTypeId() == self::TYPE_ESTIMATED_FEE;
     }

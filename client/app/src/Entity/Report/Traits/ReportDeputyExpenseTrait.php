@@ -14,7 +14,6 @@ trait ReportDeputyExpenseTrait
     private ?string $paidForAnything;
 
     /**
-     *
      * @var Expense[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Expense>')]
@@ -64,8 +63,10 @@ trait ReportDeputyExpenseTrait
         return $this->expensesTotal;
     }
 
-    public function setExpensesTotal(string $expensesTotal): void
+    public function setExpensesTotal(string $expensesTotal): static
     {
         $this->expensesTotal = $expensesTotal;
+
+        return $this;
     }
 }

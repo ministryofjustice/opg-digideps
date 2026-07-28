@@ -41,7 +41,7 @@ class UserResearchResponse
         return $this->deputyshipLength;
     }
 
-    public function setDeputyshipLength(string $deputyshipLength): UserResearchResponse
+    public function setDeputyshipLength(string $deputyshipLength): static
     {
         $this->deputyshipLength = $deputyshipLength;
 
@@ -53,7 +53,7 @@ class UserResearchResponse
         return $this->hasAccessToVideoCallDevice;
     }
 
-    public function setHasAccessToVideoCallDevice(bool $hasAccessToVideoCallDevice): UserResearchResponse
+    public function setHasAccessToVideoCallDevice(bool $hasAccessToVideoCallDevice): static
     {
         $this->hasAccessToVideoCallDevice = $hasAccessToVideoCallDevice;
 
@@ -65,7 +65,7 @@ class UserResearchResponse
         return $this->id;
     }
 
-    public function setId(int $id): UserResearchResponse
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -77,7 +77,7 @@ class UserResearchResponse
         return $this->user;
     }
 
-    public function setUser(?User $user): UserResearchResponse
+    public function setUser(?User $user): static
     {
         $this->user = $user;
 
@@ -89,7 +89,7 @@ class UserResearchResponse
         return $this->created;
     }
 
-    public function setCreated(?\DateTime $created): UserResearchResponse
+    public function setCreated(?\DateTime $created): static
     {
         $this->created = $created;
 
@@ -101,7 +101,7 @@ class UserResearchResponse
         return $this->researchType;
     }
 
-    public function setResearchType(ResearchType $researchType): UserResearchResponse
+    public function setResearchType(ResearchType $researchType): static
     {
         $this->researchType = $researchType;
 
@@ -113,7 +113,7 @@ class UserResearchResponse
         return $this->satisfaction;
     }
 
-    public function setSatisfaction(Satisfaction $satisfaction): UserResearchResponse
+    public function setSatisfaction(Satisfaction $satisfaction): static
     {
         $this->satisfaction = $satisfaction;
 
