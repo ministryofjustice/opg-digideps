@@ -63,7 +63,6 @@ class Document implements DocumentInterface, SynchronisableInterface
      * // add more validators here if needed
      * http://symfony.com/doc/current/reference/constraints/File.html.
      *
-     *
      * @var UploadedFile
      */
     #[Assert\NotBlank(message: 'Please choose a file', groups: ['document'])]
@@ -71,7 +70,6 @@ class Document implements DocumentInterface, SynchronisableInterface
     private $file;
 
     /**
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -79,7 +77,6 @@ class Document implements DocumentInterface, SynchronisableInterface
     private $fileName;
 
     /**
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -93,12 +90,9 @@ class Document implements DocumentInterface, SynchronisableInterface
     #[JMS\Groups(['document'])]
     private $isReportPdf;
 
-    /**
-     * @var ReportSubmission
-     */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\ReportSubmission')]
     #[JMS\Groups(['document-report-subnmission'])]
-    private $reportSubmission;
+    private ReportSubmission $reportSubmission;
 
     /**
      * @return int
@@ -110,10 +104,8 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * @param int $id
-     *
-     * @return Document
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -130,10 +122,8 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * @param string $fileName
-     *
-     * @return Document
      */
-    public function setFileName($fileName)
+    public function setFileName($fileName): static
     {
         $this->fileName = $fileName;
 
@@ -150,10 +140,8 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * @param string $storageReference
-     *
-     * @return Document
      */
-    public function setStorageReference($storageReference)
+    public function setStorageReference($storageReference): static
     {
         $this->storageReference = $storageReference;
 
@@ -170,10 +158,8 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * @param UploadedFile $file
-     *
-     * @return Document
      */
-    public function setFile($file)
+    public function setFile($file): static
     {
         $this->file = $file;
 
@@ -190,28 +176,20 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * @param bool $isReportPdf
-     *
-     * @return $this
      */
-    public function setIsReportPdf($isReportPdf)
+    public function setIsReportPdf($isReportPdf): static
     {
         $this->isReportPdf = $isReportPdf;
 
         return $this;
     }
 
-    /**
-     * @return ReportSubmission
-     */
-    public function getReportSubmission()
+    public function getReportSubmission(): ReportSubmission
     {
         return $this->reportSubmission;
     }
 
-    /**
-     * @return Document
-     */
-    public function setReportSubmission(ReportSubmission $repostSubmission)
+    public function setReportSubmission(ReportSubmission $repostSubmission): static
     {
         $this->reportSubmission = $repostSubmission;
 
@@ -230,11 +208,9 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * Is document a list of transaction document (admin only).
-     *
-     * @return bool|int
      */
-    private function isTransactionDocument()
+    private function isTransactionDocument(): bool
     {
-        return strpos($this->getFileName(), 'DigiRepTransactions') !== false;
+        return str_contains($this->getFileName(), 'DigiRepTransactions');
     }
 }

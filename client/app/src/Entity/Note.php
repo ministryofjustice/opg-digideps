@@ -90,10 +90,8 @@ class Note
 
     /**
      * @param int $id
-     *
-     * @return $this
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -110,10 +108,8 @@ class Note
 
     /**
      * @param string $category
-     *
-     * @return $this
      */
-    public function setCategory($category)
+    public function setCategory($category): static
     {
         $this->category = $category;
 
@@ -130,10 +126,8 @@ class Note
 
     /**
      * @param string $title
-     *
-     * @return $this
      */
-    public function setTitle($title)
+    public function setTitle($title): static
     {
         $this->title = $title;
 
@@ -150,10 +144,8 @@ class Note
 
     /**
      * @param string $content
-     *
-     * @return $this
      */
-    public function setContent($content)
+    public function setContent($content): static
     {
         $this->content = $content;
 
@@ -168,10 +160,7 @@ class Note
         return $this->client;
     }
 
-    /**
-     * @return $this
-     */
-    public function setClient(Client $client)
+    public function setClient(Client $client): static
     {
         $this->client = $client;
 

@@ -33,12 +33,7 @@ trait IsSoftDeleteableEntity
         return $this->deletedAt;
     }
 
-    /**
-     * Is deleted?
-     *
-     * @return bool
-     */
-    public function isDeleted()
+    public function isDeleted(): bool
     {
         return $this->deletedAt !== null;
     }

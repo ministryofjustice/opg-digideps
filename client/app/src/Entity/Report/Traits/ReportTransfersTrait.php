@@ -11,7 +11,7 @@ trait ReportTransfersTrait
      * @var MoneyTransfer[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransfer>')]
-    private $moneyTransfers = [];
+    private array $moneyTransfers = [];
 
     /**
      *
@@ -24,27 +24,18 @@ trait ReportTransfersTrait
     /**
      * @return MoneyTransfer[]
      */
-    public function getMoneyTransfers()
+    public function getMoneyTransfers(): array
     {
         return $this->moneyTransfers;
     }
 
-    /**
-     * @return MoneyTransfer|null
-     */
-    public function getMoneyTransferWithId($id)
+    public function getMoneyTransferWithId($id): ?MoneyTransfer
     {
-        foreach ($this->moneyTransfers as $t) {
-            if ($t->getId() == $id) {
-                return $t;
-            }
-        }
-
-        return null;
+        return array_find($this->moneyTransfers, fn ($t) => $t->getId() == $id);
     }
 
     /**
-     * @return $this
+     * @param MoneyTransfer[] $transfers
      */
     public function setMoneyTransfers(array $transfers)
     {
@@ -66,17 +57,14 @@ trait ReportTransfersTrait
      *
      * @return $this
      */
-    public function setNoTransfersToAdd($noTransfersToAdd)
+    public function setNoTransfersToAdd($noTransfersToAdd): static
     {
         $this->noTransfersToAdd = $noTransfersToAdd;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function enoughBankAccountForTransfers()
+    public function enoughBankAccountForTransfers(): bool
     {
         return count($this->getBankAccounts()) >= 2;
     }

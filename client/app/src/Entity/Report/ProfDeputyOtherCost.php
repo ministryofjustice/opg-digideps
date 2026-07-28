@@ -19,21 +19,21 @@ class ProfDeputyOtherCost
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-other-costs'])]
     #[Assert\Type(type: 'numeric', message: 'profDeputyOtherCost.amount.notNumeric', groups: ['prof-deputy-other-costs'])]
-    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'profDeputyOtherCost.amount.notInRangeMessage', groups: ['prof-deputy-other-costs'])]
+    #[Assert\Range(notInRangeMessage: 'profDeputyOtherCost.amount.notInRangeMessage', min: 0, max: 100000000000, groups: ['prof-deputy-other-costs'])]
     private ?string $amount;
 
     /**
      * @var bool
      */
-    #[JMS\Groups(['prof-deputy-other-costs'])]
     #[JMS\Type('boolean')]
+    #[JMS\Groups(['prof-deputy-other-costs'])]
     private bool $hasMoreDetails;
 
     /**
      * @var string|null
      */
-    #[JMS\Groups(['prof-deputy-other-costs'])]
     #[JMS\Type('string')]
+    #[JMS\Groups(['prof-deputy-other-costs'])]
     private ?string $moreDetails;
 
     /**
@@ -63,9 +63,11 @@ class ProfDeputyOtherCost
     /**
      * @param $profDeputyOtherCostTypeId
      */
-    public function setProfDeputyOtherCostTypeId($profDeputyOtherCostTypeId): void
+    public function setProfDeputyOtherCostTypeId($profDeputyOtherCostTypeId): static
     {
         $this->profDeputyOtherCostTypeId = $profDeputyOtherCostTypeId;
+
+        return $this;
     }
 
     /**
@@ -79,9 +81,11 @@ class ProfDeputyOtherCost
     /**
      * @param string $amount decimal
      */
-    public function setAmount(?string $amount): void
+    public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
+
+        return $this;
     }
 
     /**
@@ -95,9 +99,11 @@ class ProfDeputyOtherCost
     /**
      * @param bool $hasMoreDetails
      */
-    public function setHasMoreDetails(bool $hasMoreDetails): void
+    public function setHasMoreDetails(bool $hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
+
+        return $this;
     }
 
     /**
@@ -111,9 +117,11 @@ class ProfDeputyOtherCost
     /**
      * @param string $moreDetails
      */
-    public function setMoreDetails(?string $moreDetails): void
+    public function setMoreDetails(?string $moreDetails): static
     {
         $this->moreDetails = $moreDetails;
+
+        return $this;
     }
 
     public function moreDetailsValidate(ExecutionContextInterface $context): void

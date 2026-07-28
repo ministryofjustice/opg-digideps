@@ -13,6 +13,7 @@ class Fee
     #[JMS\Type('string')]
     #[JMS\Groups(['fee'])]
     private $feeTypeId;
+
     /**
      * @var string decimal
      */
@@ -31,7 +32,6 @@ class Fee
 
     /**
      * @var string
-     *
      */
     #[JMS\Groups(['fee'])]
     #[JMS\Type('string')]
@@ -56,9 +56,11 @@ class Fee
     /**
      * @param mixed $id
      */
-    public function setId($id): void
+    public function setId($id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -72,9 +74,11 @@ class Fee
     /**
      * @param mixed $feeTypeId
      */
-    public function setFeeTypeId($feeTypeId): void
+    public function setFeeTypeId($feeTypeId): static
     {
         $this->feeTypeId = $feeTypeId;
+
+        return $this;
     }
 
     /**
@@ -88,9 +92,11 @@ class Fee
     /**
      * @param string $amount decimal
      */
-    public function setAmount($amount): void
+    public function setAmount($amount): static
     {
         $this->amount = $amount;
+
+        return $this;
     }
 
     /**
@@ -104,9 +110,11 @@ class Fee
     /**
      * @param string $hasMoreDetails
      */
-    public function setHasMoreDetails($hasMoreDetails): void
+    public function setHasMoreDetails($hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
+
+        return $this;
     }
 
     /**
@@ -120,8 +128,10 @@ class Fee
     /**
      * @param string $moreDetails
      */
-    public function setMoreDetails($moreDetails): void
+    public function setMoreDetails($moreDetails): static
     {
         $this->moreDetails = $moreDetails;
+
+        return $this;
     }
 }

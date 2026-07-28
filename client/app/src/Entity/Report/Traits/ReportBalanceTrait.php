@@ -100,8 +100,10 @@ trait ReportBalanceTrait
     /**
      * @param bool $totalsMatch
      */
-    public function setTotalsMatch($totalsMatch): void
+    public function setTotalsMatch($totalsMatch): static
     {
         $this->totalsMatch = $totalsMatch;
+
+        return $this;
     }
 }

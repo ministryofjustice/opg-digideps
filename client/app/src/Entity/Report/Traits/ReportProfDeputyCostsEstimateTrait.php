@@ -9,29 +9,24 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportProfDeputyCostsEstimateTrait
 {
-    #[Assert\NotBlank(message: 'profDeputyEstimateCost.profDeputyCostsEstimateHowCharged.notBlank', groups: ['prof-deputy-costs-estimate-how-charged'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['deputyCostsEstimateHowCharged'])]
+    #[Assert\NotBlank(message: 'profDeputyEstimateCost.profDeputyCostsEstimateHowCharged.notBlank', groups: ['prof-deputy-costs-estimate-how-charged'])]
     private ?string $profDeputyCostsEstimateHowCharged = null;
 
     /**
      * @var ProfDeputyEstimateCost[]
-     *
-     *
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyEstimateCost>')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
-    private $profDeputyEstimateCosts = [];
+    private array $profDeputyEstimateCosts = [];
 
     #[JMS\Type('array')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
-    private $profDeputyEstimateCostTypeIds = [];
+    private array $profDeputyEstimateCostTypeIds = [];
 
     /**
      * @var float
-     *
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-estimate-management-costs'])]
@@ -40,13 +35,10 @@ trait ReportProfDeputyCostsEstimateTrait
 
     #[JMS\Type('array')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
-    private $profDeputyManagementCostTypeIds = [];
+    private array $profDeputyManagementCostTypeIds = [];
 
     /**
      * @var string yes/no
-     *
-     *
-     *
      */
     #[Assert\NotBlank(message: 'common.yesnochoice.notBlank', groups: ['prof-deputy-costs-estimate-more-info'])]
     #[JMS\Type('string')]
@@ -61,15 +53,12 @@ trait ReportProfDeputyCostsEstimateTrait
     /**
      * @return array
      */
-    public function getProfDeputyEstimateCostTypeIds()
+    public function getProfDeputyEstimateCostTypeIds(): array
     {
         return $this->profDeputyEstimateCostTypeIds;
     }
 
-    /**
-     * @return $this
-     */
-    public function setProfDeputyEstimateCostTypeIds($profDeputyEstimateCostTypeIds)
+    public function setProfDeputyEstimateCostTypeIds($profDeputyEstimateCostTypeIds): static
     {
         $this->profDeputyEstimateCostTypeIds = $profDeputyEstimateCostTypeIds;
 
@@ -83,10 +72,8 @@ trait ReportProfDeputyCostsEstimateTrait
 
     /**
      * @param string $profDeputyCostsEstimateHowCharged
-     *
-     * @return $this
      */
-    public function setProfDeputyCostsEstimateHowCharged($profDeputyCostsEstimateHowCharged)
+    public function setProfDeputyCostsEstimateHowCharged($profDeputyCostsEstimateHowCharged): static
     {
         $this->profDeputyCostsEstimateHowCharged = $profDeputyCostsEstimateHowCharged;
 
@@ -95,10 +82,8 @@ trait ReportProfDeputyCostsEstimateTrait
 
     /**
      * return true if only fixed is true.
-     *
-     * @return bool
      */
-    public function hasProfDeputyCostsEstimateHowChargedFixedOnly()
+    public function hasProfDeputyCostsEstimateHowChargedFixedOnly(): bool
     {
         $getProfDeputyCostsEstimateHowChargedLower = is_null($this->getProfDeputyCostsEstimateHowCharged()) ? '' : strtolower($this->getProfDeputyCostsEstimateHowCharged());
 
@@ -108,17 +93,15 @@ trait ReportProfDeputyCostsEstimateTrait
     /**
      * @return ProfDeputyEstimateCost[]
      */
-    public function getProfDeputyEstimateCosts()
+    public function getProfDeputyEstimateCosts(): array
     {
         return $this->profDeputyEstimateCosts;
     }
 
     /**
      * @param ProfDeputyEstimateCost[] $profDeputyEstimateCosts
-     *
-     * @return $this
      */
-    public function setProfDeputyEstimateCosts($profDeputyEstimateCosts)
+    public function setProfDeputyEstimateCosts(array $profDeputyEstimateCosts): static
     {
         $this->profDeputyEstimateCosts = $profDeputyEstimateCosts;
 
@@ -127,16 +110,16 @@ trait ReportProfDeputyCostsEstimateTrait
 
     /**
      * @param string $typeId
-     *
-     * @return ProfDeputyEstimateCost
      */
-    protected function getProfDeputyEstimateCostByTypeId($typeId)
+    protected function getProfDeputyEstimateCostByTypeId($typeId): ?ProfDeputyEstimateCost
     {
         foreach ($this->getProfDeputyEstimateCosts() as $submittedCost) {
             if ($typeId == $submittedCost->getProfDeputyEstimateCostTypeId()) {
                 return $submittedCost;
             }
         }
+
+        return null;
     }
 
     /**
@@ -149,10 +132,8 @@ trait ReportProfDeputyCostsEstimateTrait
 
     /**
      * @param string $profDeputyCostsEstimateHasMoreInfo
-     *
-     * @return ReportProfDeputyCostsEstimateTrait
      */
-    public function setProfDeputyCostsEstimateHasMoreInfo($profDeputyCostsEstimateHasMoreInfo)
+    public function setProfDeputyCostsEstimateHasMoreInfo($profDeputyCostsEstimateHasMoreInfo): static
     {
         $this->profDeputyCostsEstimateHasMoreInfo = $profDeputyCostsEstimateHasMoreInfo;
 
@@ -164,10 +145,7 @@ trait ReportProfDeputyCostsEstimateTrait
         return $this->profDeputyCostsEstimateMoreInfoDetails;
     }
 
-    /**
-     * @return ReportProfDeputyCostsEstimateTrait
-     */
-    public function setProfDeputyCostsEstimateMoreInfoDetails($profDeputyCostsEstimateMoreInfoDetails)
+    public function setProfDeputyCostsEstimateMoreInfoDetails($profDeputyCostsEstimateMoreInfoDetails): static
     {
         $this->profDeputyCostsEstimateMoreInfoDetails = $profDeputyCostsEstimateMoreInfoDetails;
 
@@ -179,7 +157,7 @@ trait ReportProfDeputyCostsEstimateTrait
      *
      * @return array
      */
-    public function generateActualSubmittedEstimateCosts()
+    public function generateActualSubmittedEstimateCosts(): array
     {
         $defaultEstimateCosts = $this->getProfDeputyEstimateCostTypeIds();
         $submittedCosts = [];
@@ -204,10 +182,8 @@ trait ReportProfDeputyCostsEstimateTrait
 
     /**
      * @param float $profDeputyManagementCostAmount
-     *
-     * @return ReportProfDeputyCostsEstimateTrait
      */
-    public function setProfDeputyManagementCostAmount($profDeputyManagementCostAmount)
+    public function setProfDeputyManagementCostAmount($profDeputyManagementCostAmount): static
     {
         $this->profDeputyManagementCostAmount = $profDeputyManagementCostAmount;
 
@@ -217,17 +193,15 @@ trait ReportProfDeputyCostsEstimateTrait
     /**
      * @return array
      */
-    public function getProfDeputyManagementCostTypeIds()
+    public function getProfDeputyManagementCostTypeIds(): array
     {
         return $this->profDeputyManagementCostTypeIds;
     }
 
     /**
      * @param array $profDeputyManagementCostTypeIds
-     *
-     * @return ReportProfDeputyCostsEstimateTrait
      */
-    public function setProfDeputyManagementCostTypeIds($profDeputyManagementCostTypeIds)
+    public function setProfDeputyManagementCostTypeIds($profDeputyManagementCostTypeIds): static
     {
         $this->profDeputyManagementCostTypeIds = $profDeputyManagementCostTypeIds;
 

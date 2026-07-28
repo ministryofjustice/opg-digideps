@@ -12,8 +12,6 @@ trait ModifyAudit
 {
     /**
      * Last modified by.
-     *
-     *
      * @var User
      */
     #[JMS\Groups(['last-modified'])]
@@ -22,8 +20,6 @@ trait ModifyAudit
 
     /**
      * Last modified on.
-     *
-     *
      * @var \DateTime
      */
     #[JMS\Groups(['last-modified'])]
@@ -38,10 +34,7 @@ trait ModifyAudit
         return $this->lastModifiedBy;
     }
 
-    /**
-     * @return $this
-     */
-    public function setLastModifiedBy(User $lastModifiedBy)
+    public function setLastModifiedBy(User $lastModifiedBy): static
     {
         $this->lastModifiedBy = $lastModifiedBy;
 
@@ -56,10 +49,7 @@ trait ModifyAudit
         return $this->lastModifiedOn;
     }
 
-    /**
-     * @return $this
-     */
-    public function setLastModifiedOn(\DateTime $lastModifiedOn)
+    public function setLastModifiedOn(\DateTime $lastModifiedOn): static
     {
         $this->lastModifiedOn = $lastModifiedOn;
 

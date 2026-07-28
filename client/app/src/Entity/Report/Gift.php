@@ -13,7 +13,6 @@ class Gift
     use HasBankAccountTrait;
 
     /**
-     *
      * @var int
      */
     #[JMS\Type('integer')]
@@ -22,8 +21,6 @@ class Gift
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['gift'])]
@@ -32,9 +29,6 @@ class Gift
 
     /**
      * @var float
-     *
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -55,9 +49,11 @@ class Gift
     /**
      * @param mixed $id
      */
-    public function setId($id): void
+    public function setId($id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**

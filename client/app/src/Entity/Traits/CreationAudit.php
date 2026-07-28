@@ -12,8 +12,6 @@ trait CreationAudit
 {
     /**
      * Created by.
-     *
-     *
      * @var User
      */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
@@ -21,8 +19,6 @@ trait CreationAudit
 
     /**
      * Created on.
-     *
-     *
      * @var \DateTime
      */
     #[JMS\Type('DateTime')]
@@ -36,10 +32,7 @@ trait CreationAudit
         return $this->createdBy;
     }
 
-    /**
-     * @return $this
-     */
-    public function setCreatedBy(User $createdBy)
+    public function setCreatedBy(User $createdBy): static
     {
         $this->createdBy = $createdBy;
 
@@ -54,10 +47,7 @@ trait CreationAudit
         return $this->createdOn;
     }
 
-    /**
-     * @return $this
-     */
-    public function setCreatedOn(\DateTime $createdOn)
+    public function setCreatedOn(\DateTime $createdOn): static
     {
         $this->createdOn = $createdOn;
 
