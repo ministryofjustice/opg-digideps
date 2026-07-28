@@ -32,7 +32,7 @@ locals {
 resource "aws_lambda_function" "custom_sql_tool" {
   function_name = "${local.lambda_custom_sql_name_tool}-${var.account.name}"
   description   = "Function to run custom sql queries"
-  image_uri     = "${data.aws_ecr_repository.custom_sql_query.repository_url}:latest"
+  image_uri     = "${data.aws_ecr_repository.custom_sql_query.repository_url}:${var.docker_tag}"
   package_type  = "Image"
   role          = aws_iam_role.custom_sql_query_task_role.arn
   timeout       = 600
