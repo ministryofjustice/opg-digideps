@@ -9,12 +9,9 @@ use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\OrganisationRepository;
 use Tests\OPG\Digideps\Backend\Integration\Fixtures;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 class OrganisationRepositoryIntegrationTest extends ApiIntegrationTestCase
 {
-    use ProphecyTrait;
-
     private static Fixtures $fixtures;
     private static OrganisationRepository $sut;
 

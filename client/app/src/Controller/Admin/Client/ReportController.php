@@ -25,6 +25,7 @@ use OPG\Digideps\Frontend\Service\ReportSubmissionService;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -97,6 +98,7 @@ class ReportController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
+        private readonly FormFactoryInterface $formFactory
     ) {
     }
 
@@ -316,7 +318,7 @@ class ReportController extends AbstractController
         $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
 
         $formClass = ($report->isSubmitted()) ? ManageSubmittedReportType::class : ManageActiveReportType::class;
-        $form = $this->createForm($formClass, $report);
+        $form = $this->formFactory->createNamed('manage_report', $formClass, $report, ['translation_domain' => 'admin-clients']);
 
         if (is_array($request->get('data'))) {
             $this->prepopulateWithPreviousChoices($request->get('data'), $form);
@@ -410,6 +412,15 @@ class ReportController extends AbstractController
 
             if (!is_null($dueDateCustom)) {
                 $newDueDate = $dueDateCustom;
+            }
+        }
+
+        if ($dueDateChoice === null && $newDueDate < $report->getEndDate()) {
+            $newDueDate = clone $report->getEndDate();
+            if ($report->isLayReport()) {
+                $newDueDate = $newDueDate->add(new \DateInterval('P21D'));
+            } else {
+                $newDueDate = $newDueDate->add(new \DateInterval('P56D'));
             }
         }
 

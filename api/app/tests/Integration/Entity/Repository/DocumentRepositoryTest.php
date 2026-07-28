@@ -255,64 +255,97 @@ class DocumentRepositoryTest extends KernelTestCase
 
     public function testGetResubmittableErrorDocumentsAndSetToQueued(): void
     {
-        [$_, $_, $reportPdfDocValid, $supportingDocValid, $_] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
-        [$_, $_, $reportPdfDocNotValid, $supportingDocNotValid, $_] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
-        [$_, $_, $reportPdfDocInProgressNow, $supportingDocInProgressNow, $reportSubmissionNow] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
-        [$_, $_, $reportPdfDocInProgressOld, $supportingDocInProgressOld, $reportSubmissionOld] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
-
-        $reportPdfDocValid->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
-        $reportPdfDocValid->setSynchronisationError('Document failed to sync after 4 attempts');
-        $supportingDocValid->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
-        $supportingDocValid->setSynchronisationError('Report PDF failed to sync');
-
-        $reportPdfDocNotValid->setSynchronisationStatus(Document::SYNC_STATUS_SUCCESS);
-        $supportingDocNotValid->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
-        $supportingDocNotValid->setSynchronisationError('Some non resubmittable error message');
-
-        $reportPdfDocInProgressNow->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
-        $supportingDocInProgressNow->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
         $currentDateTime = new \DateTime('now');
-        $reportSubmissionNow->setCreatedOn($currentDateTime);
-
-        $reportPdfDocInProgressOld->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
-        $supportingDocInProgressOld->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
+        $twoDaysAgoDateTime = new \DateTime('now - 2 days');
         $lastYearDateTime = new \DateTime('now -1 year');
-        $reportSubmissionOld->setCreatedOn($lastYearDateTime);
 
-        self::$entityManager->persist($reportPdfDocValid);
-        self::$entityManager->persist($supportingDocValid);
-        self::$entityManager->persist($reportPdfDocNotValid);
-        self::$entityManager->persist($supportingDocNotValid);
-        self::$entityManager->persist($reportPdfDocInProgressNow);
-        self::$entityManager->persist($supportingDocInProgressNow);
-        self::$entityManager->persist($reportPdfDocInProgressOld);
-        self::$entityManager->persist($supportingDocInProgressOld);
-        self::$entityManager->persist($reportSubmissionNow);
-        self::$entityManager->persist($reportSubmissionOld);
+        // -- documents with recognised permanent errors which will be queued
+        [$_, $_, $willQueue1, $willQueue2, $_] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
+
+        $willQueue1->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+        $willQueue1->setSynchronisationError('Document failed to sync after 4 attempts');
+
+        $willQueue2->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+        $willQueue2->setSynchronisationError('Report PDF failed to sync');
+
+        // --- documents are marked as sync in progress, but submission is really old, so will be queued anyway
+        [$_, $_, $willQueue3, $willQueue4, $reportSub1] = $this->createAndSubmitReportWithSupportingDoc($lastYearDateTime);
+        $willQueue3->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
+        $willQueue4->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
+
+        // --- document with unrecognised permanent errors where submission is < 3 days ago
+        // report PDF has permanent error status and the error message doesn't match any in the SQL query;
+        // it is still retried because the submission was less than 3 days ago
+        [$_, $_, $willQueue5, $willQueue6, $reportSub2] = $this->createAndSubmitReportWithSupportingDoc($twoDaysAgoDateTime);
+        $willQueue5->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+        $willQueue6->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+
+        // --- documents which will not be queued because they already have been sync'ed, or submission is too old
+        [$_, $_, $willNotQueue1, $willNotQueue2, $reportSub3] = $this->createAndSubmitReportWithSupportingDoc($lastYearDateTime);
+
+        // sync already succeeded so will not be queued
+        $willNotQueue1->setSynchronisationStatus(Document::SYNC_STATUS_SUCCESS);
+
+        // will not queue as error message is not recognised AND submission is too old
+        $willNotQueue2->setSynchronisationStatus(Document::SYNC_STATUS_PERMANENT_ERROR);
+        $willNotQueue2->setSynchronisationError('Unrecognised error');
+
+        // --- documents will not queue as sync already in progress
+        [$_, $_, $willNotQueue3, $willNotQueue4, $reportSub4] = $this->createAndSubmitReportWithSupportingDoc($currentDateTime);
+        $willNotQueue3->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
+        $willNotQueue4->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
+
+        self::$entityManager->persist($willQueue1);
+        self::$entityManager->persist($willQueue2);
+        self::$entityManager->persist($willQueue3);
+        self::$entityManager->persist($willQueue4);
+        self::$entityManager->persist($willQueue5);
+        self::$entityManager->persist($willQueue6);
+        self::$entityManager->persist($willNotQueue1);
+        self::$entityManager->persist($willNotQueue2);
+        self::$entityManager->persist($willNotQueue3);
+        self::$entityManager->persist($willNotQueue4);
+
+        self::$entityManager->persist($reportSub1);
+        self::$entityManager->persist($reportSub2);
+        self::$entityManager->persist($reportSub3);
+        self::$entityManager->persist($reportSub4);
+
         self::$entityManager->flush();
-        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $reportPdfDocValid->getSynchronisationStatus());
-        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDocValid->getSynchronisationStatus());
-        self::assertEquals(Document::SYNC_STATUS_SUCCESS, $reportPdfDocNotValid->getSynchronisationStatus());
-        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDocNotValid->getSynchronisationStatus());
-        self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $supportingDocInProgressNow->getSynchronisationStatus());
-        self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $supportingDocInProgressOld->getSynchronisationStatus());
 
         $documents = self::$sut->getResubmittableErrorDocumentsAndSetToQueued('100');
-        self::$entityManager->refresh($reportPdfDocValid);
-        self::$entityManager->refresh($supportingDocValid);
-        self::$entityManager->refresh($reportPdfDocNotValid);
-        self::$entityManager->refresh($supportingDocNotValid);
-        self::$entityManager->refresh($supportingDocInProgressNow);
-        self::$entityManager->refresh($supportingDocInProgressOld);
 
-        // 2 permanent error docs and 2 of the in progress docs
-        self::assertEquals(4, count($documents));
-        self::assertEquals(Document::SYNC_STATUS_QUEUED, $reportPdfDocValid->getSynchronisationStatus());
-        self::assertEquals(Document::SYNC_STATUS_QUEUED, $supportingDocValid->getSynchronisationStatus());
-        self::assertEquals(Document::SYNC_STATUS_SUCCESS, $reportPdfDocNotValid->getSynchronisationStatus());
-        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $supportingDocNotValid->getSynchronisationStatus());
-        self::assertEquals(Document::SYNC_STATUS_QUEUED, $supportingDocInProgressOld->getSynchronisationStatus());
-        self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $supportingDocInProgressNow->getSynchronisationStatus());
+        self::$entityManager->refresh($willQueue1);
+        self::assertEquals(Document::SYNC_STATUS_QUEUED, $willQueue1->getSynchronisationStatus());
+
+        self::$entityManager->refresh($willQueue2);
+        self::assertEquals(Document::SYNC_STATUS_QUEUED, $willQueue2->getSynchronisationStatus());
+
+        self::$entityManager->refresh($willQueue3);
+        self::assertEquals(Document::SYNC_STATUS_QUEUED, $willQueue3->getSynchronisationStatus());
+
+        self::$entityManager->refresh($willQueue4);
+        self::assertEquals(Document::SYNC_STATUS_QUEUED, $willQueue4->getSynchronisationStatus());
+
+        self::$entityManager->refresh($willQueue5);
+        self::assertEquals(Document::SYNC_STATUS_QUEUED, $willQueue5->getSynchronisationStatus());
+
+        self::$entityManager->refresh($willQueue6);
+        self::assertEquals(Document::SYNC_STATUS_QUEUED, $willQueue6->getSynchronisationStatus());
+
+        self::$entityManager->refresh($willNotQueue1);
+        self::assertEquals(Document::SYNC_STATUS_SUCCESS, $willNotQueue1->getSynchronisationStatus());
+
+        self::$entityManager->refresh($willNotQueue2);
+        self::assertEquals(Document::SYNC_STATUS_PERMANENT_ERROR, $willNotQueue2->getSynchronisationStatus());
+
+        self::$entityManager->refresh($willNotQueue3);
+        self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $willNotQueue3->getSynchronisationStatus());
+
+        self::$entityManager->refresh($willNotQueue4);
+        self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $willNotQueue4->getSynchronisationStatus());
+
+        self::assertEquals(6, count($documents));
     }
 
     public function testLogFailedDocuments(): void
