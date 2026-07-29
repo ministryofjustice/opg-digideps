@@ -359,10 +359,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Set firstname.
      *
      * @param string $firstname
-     *
-     * @return User
      */
-    public function setFirstname($firstname)
+    public function setFirstname($firstname): static
     {
         $this->firstname = $firstname;
 
@@ -397,10 +395,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Set email.
      *
      * @param string $email
-     *
-     * @return User
      */
-    public function setEmail($email)
+    public function setEmail($email): static
     {
         $this->email = strtolower($email);
 
@@ -517,10 +513,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Set lastname.
      *
      * @param string $lastname
-     *
-     * @return User
      */
-    public function setLastname($lastname)
+    public function setLastname($lastname): static
     {
         $this->lastname = $lastname;
 

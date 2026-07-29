@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\OPG\Digideps\Backend\Fixture;
+namespace OPG\Digideps\Backend\Fixture;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
@@ -254,7 +254,7 @@ final class FixtureService
 
         return $this->persist(new CourtOrder()
             ->setId($this->counter->nextInt())
-            ->setCourtOrderUid($this->counter->nextString(8, prefix: 'C', postfix: 'C'))
+            ->setCourtOrderUid($this->counter->nextString(8))
             ->setClient($client)
             ->setOrderType($type)
             ->setOrderKind($descriptor->single ? CourtOrderKind::Single : ($descriptor->siblingDeputySet !== null ? CourtOrderKind::Hybrid : CourtOrderKind::Dual))
@@ -280,7 +280,7 @@ final class FixtureService
             ->setAddress3('')
             ->setAddress4('')
             ->setAddress5('')
-            ->setAddressCountry(null)
+            ->setAddressCountry('GB')
             ->setAddressPostcode($this->faker->postcode())
             ->setPhoneMain($this->faker->phoneNumber())
             ->setPhoneAlternative($this->faker->phoneNumber());
@@ -325,7 +325,7 @@ final class FixtureService
             ->setAddress3($deputy?->getAddress3() ?? '')
             ->setAddress4($deputy?->getAddress4() ?? '')
             ->setAddress5($deputy?->getAddress5() ?? '')
-            ->setAddressCountry(null)
+            ->setAddressCountry($deputy?->getAddressCountry() ?? 'GB')
             ->setAddressPostcode($deputy?->getAddressPostcode() ?? $this->faker->postcode())
             ->setPhoneMain($deputy?->getPhoneMain() ?? $this->faker->phoneNumber())
             ->setRoleName(match ($descriptor->userType) {
