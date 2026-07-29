@@ -19,6 +19,7 @@ use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
@@ -39,11 +40,16 @@ final class FixtureService
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
+        ParameterBagInterface $parameters,
         private readonly int $flushAfter = 64,
     ) {
         $this->persistCounter = new Counter();
         $this->faker = Factory::create('en_GB');
-        $this->password = $passwordHasher->hashPassword(new User(), 'DigidepsPass1234');
+        $plain = ((array)$parameters->get('fixtures'))['account_password'] ?? null;
+        if (!is_string($plain)) {
+            throw new \DomainException("Fixtures password must be configured and be a string");
+        }
+        $this->password = $passwordHasher->hashPassword(new User(), $plain);
         $this->refreshCounter();
     }
 
@@ -257,7 +263,7 @@ final class FixtureService
             ->setCourtOrderUid($this->counter->nextString(8))
             ->setClient($client)
             ->setOrderType($type)
-            ->setOrderKind($descriptor->single ? CourtOrderKind::Single : ($descriptor->siblingDeputySet !== null ? CourtOrderKind::Hybrid : CourtOrderKind::Dual))
+            ->setOrderKind($descriptor->single ? CourtOrderKind::Single : ($descriptor->siblingDeputySet === null ? CourtOrderKind::Hybrid : CourtOrderKind::Dual))
             ->setOrderReportType($descriptor->single || $type !== CourtOrderType::HW ? $descriptor->reportType : CourtOrderReportType::OPG104)
             ->setSibling(null)
             ->setOrderMadeDate($madeDate)

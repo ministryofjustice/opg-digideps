@@ -61,6 +61,12 @@ parameters:
 			path: api/app/src/Command/ApiComparison.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\IngestDeputyshipsCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: api/app/src/Command/IngestDeputyshipsCSVCommand.php
+
+		-
 			message: '#^Cannot call method warning\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -205,14 +211,14 @@ parameters:
 			path: api/app/src/Command/ReportStatusUpdaterCommand.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\ResyncResubmittableErrorChecklists\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Command/ResyncResubmittableErrorChecklists.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:deleteInactivateUsers\(\) should return int but returns mixed\.$#'
 			identifier: return.type
+			count: 1
+			path: api/app/src/Command/UserCleanupCommand.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
 			count: 1
 			path: api/app/src/Command/UserCleanupCommand.php
 
@@ -1919,384 +1925,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: api/app/src/DBAL/ConnectionWrapper.php
-
-		-
-			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\DataFixtures\\AdminUserFixtures\:\:addUser\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/AdminUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$email of method OPG\\Digideps\\Backend\\Entity\\User\:\:setEmail\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/AdminUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\User\:\:setFirstname\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/AdminUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$lastname of method OPG\\Digideps\\Backend\\Entity\\User\:\:setLastname\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/AdminUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$roleName of method OPG\\Digideps\\Backend\\Entity\\User\:\:setRoleName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/AdminUserFixtures.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''\-User\-'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''count'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Cannot call method format\(\) on DateTime\|null\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Cannot call method setDate\(\) on DateTime\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$coDeputyClientConfirmed of method OPG\\Digideps\\Backend\\Entity\\User\:\:setCoDeputyClientConfirmed\(\) expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$courtDate of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setCourtDate\(\) expects DateTime\|null, DateTime\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\DataFixtures\\LayUserFixtures\:\:addUser\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\User\:\:setFirstname\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$haystack of function str_contains expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$haystack of function str_ends_with expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$reportType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$string of function strtolower expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 6
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$string of function substr_replace expects array\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 9
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderReportType\:\:from\(\) expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$value of static method OPG\\Digideps\\Common\\CourtOrder\\CourtOrderType\:\:from\(\) expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#2 \$orderType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#2 \$replace of function substr_replace expects array\|string, int given\.$#'
-			identifier: argument.type
-			count: 6
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#3 \$firstname of class OPG\\Digideps\\Backend\\Entity\\Deputy constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#3 \$startDate of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects DateTime, DateTime\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Parameter \#4 \$endDate of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects DateTime, DateTime\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Variable \$duplicateUser might not be defined\.$#'
-			identifier: variable.undefined
-			count: 4
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 2
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''\-'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 3
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Binary operation "\." between mixed and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''deputyUid'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''email'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot call method addClient\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$courtDate of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setCourtDate\(\) expects DateTime\|null, DateTime\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$deputyUid of class OPG\\Digideps\\Backend\\Entity\\Deputy constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$name of method OPG\\Digideps\\Backend\\Factory\\OrganisationFactory\:\:createFromFullEmail\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$reportType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$roleName of method OPG\\Digideps\\Backend\\Entity\\User\:\:setRoleName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$string of function strtolower expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$string of function substr_replace expects array\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#2 \$orderType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#3 \$firstname of class OPG\\Digideps\\Backend\\Entity\\Deputy constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 2
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''\-'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 3
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Binary operation "\." between mixed and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''deputyUid'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''email'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot call method addClient\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$courtDate of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setCourtDate\(\) expects DateTime\|null, DateTime\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$deputyUid of class OPG\\Digideps\\Backend\\Entity\\Deputy constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$name of method OPG\\Digideps\\Backend\\Factory\\OrganisationFactory\:\:createFromFullEmail\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$reportType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$roleName of method OPG\\Digideps\\Backend\\Entity\\User\:\:setRoleName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$string of function strtolower expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$string of function substr_replace expects array\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#2 \$orderType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#3 \$firstname of class OPG\\Digideps\\Backend\\Entity\\Deputy constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
 
 		-
 			message: '#^Binary operation "\." between mixed and ''@example\.org'' results in an error\.$#'
@@ -19093,12 +18721,6 @@ parameters:
 			path: api/app/tests/Integration/Controller/AbstractTestController.php
 
 		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:\$fixtureService \(Tests\\OPG\\Digideps\\Backend\\Fixture\\FixtureService\) does not accept object\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/tests/Integration/Controller/AbstractTestController.php
-
-		-
 			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:\$jwtService \(OPG\\Digideps\\Backend\\Service\\JWT\\JWTService\|null\) does not accept object\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -24493,13 +24115,13 @@ parameters:
 			path: api/app/tests/Unit/Command/ProcessLayCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/ProcessOrgCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/UserRetentionPolicyCommandTest.php
@@ -25665,6 +25287,12 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$array of function array_column expects array, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: client/app/src/Command/CheckCSVUploadedCommand.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
 			count: 1
 			path: client/app/src/Command/CheckCSVUploadedCommand.php
 
@@ -41587,6 +41215,12 @@ parameters:
 			path: client/app/tests/Unit/Service/StringUtilsTest.php
 
 		-
+			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\ChecklistSyncCommand\:\:getDefaultName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
+
+		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Command\\ChecklistSyncCommandTest\:\:doesNotSyncIfFeatureIsNotEnabled\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -41605,7 +41239,7 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
