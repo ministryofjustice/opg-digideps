@@ -19,6 +19,7 @@ use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
@@ -39,11 +40,16 @@ final class FixtureService
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
+        ParameterBagInterface $parameters,
         private readonly int $flushAfter = 64,
     ) {
         $this->persistCounter = new Counter();
         $this->faker = Factory::create('en_GB');
-        $this->password = $passwordHasher->hashPassword(new User(), 'DigidepsPass1234');
+        $plain = ((array)$parameters->get('fixtures'))['account_password'] ?? null;
+        if (!is_string($plain)) {
+            throw new \DomainException("Fixtures password must be configured and be a string");
+        }
+        $this->password = $passwordHasher->hashPassword(new User(), $plain);
         $this->refreshCounter();
     }
 
@@ -159,29 +165,30 @@ final class FixtureService
             $organisation = $persons['organisations'][$deputyDescriptor->emailDomain] ?? null;
 
             if ($deputyDescriptor->type !== DeputyType::LAY) {
-                $organisation ??= $this->makeOrganisation($deputyDescriptor, $client);
+                $organisation ??= $this->makeOrganisation($deputyDescriptor);
             }
 
             if ($deputyDescriptor->userType !== UserType::Deputy) {
                 $user ??= $this->makeUser($deputyDescriptor, organisation: $organisation);
             } else {
-                $deputy ??= $this->makeDeputy($deputyDescriptor, $client, $organisation);
+                $deputy ??= $this->makeDeputy($deputyDescriptor, $organisation);
             }
 
             if ($deputy !== null) {
                 $persons['deputies'][$deputyDescriptor->deputyReference] = $deputy;
                 $deputy->associateWithCourtOrder($courtOrder);
+                $this->persist($client->setDeputy($deputy));
                 $user = $deputy->getUser();
                 $this->persist($deputy);
             }
             if ($organisation !== null) {
                 $persons['organisations'][$deputyDescriptor->emailDomain] = $organisation;
+                $this->persist($client->setOrganisation($organisation));
                 $this->persist($organisation);
             }
             if ($user !== null) {
                 $persons['users'][$deputyDescriptor->deputyReference] = $user;
-                $user->addClient($client);
-                $this->persist($user);
+                $this->persist($user->addClient($client));
                 if ($user->getIsPrimary()) {
                     $primary ??= $user;
                 }
@@ -226,15 +233,16 @@ final class FixtureService
 
     private function makeClient(): Client
     {
+        $address = explode("\n", $this->faker->streetAddress());
         return new Client()
             ->setCaseNumber($this->counter->nextString(size: 8, postfix: 'T'))
             ->setFirstname($this->faker->firstName())
             ->setLastname($this->faker->lastName())
-            ->setAddress($this->faker->streetAddress())
-            ->setAddress2('')
-            ->setAddress3('')
-            ->setAddress4('')
-            ->setAddress5('')
+            ->setAddress($address[0])
+            ->setAddress2($address[1] ?? '')
+            ->setAddress3($address[2] ?? '')
+            ->setAddress4($address[3] ?? '')
+            ->setAddress5($address[4] ?? '')
             ->setPostcode($this->faker->postcode())
             ->setEmail(null)
             ->setOrganisation(null)
@@ -257,7 +265,7 @@ final class FixtureService
             ->setCourtOrderUid($this->counter->nextString(8))
             ->setClient($client)
             ->setOrderType($type)
-            ->setOrderKind($descriptor->single ? CourtOrderKind::Single : ($descriptor->siblingDeputySet !== null ? CourtOrderKind::Hybrid : CourtOrderKind::Dual))
+            ->setOrderKind($descriptor->single ? CourtOrderKind::Single : ($descriptor->siblingDeputySet === null ? CourtOrderKind::Hybrid : CourtOrderKind::Dual))
             ->setOrderReportType($descriptor->single || $type !== CourtOrderType::HW ? $descriptor->reportType : CourtOrderReportType::OPG104)
             ->setSibling(null)
             ->setOrderMadeDate($madeDate)
@@ -266,8 +274,9 @@ final class FixtureService
             ->setUpdatedAt(null));
     }
 
-    private function makeDeputy(DeputyDescriptor $descriptor, Client $client, ?Organisation $organisation): Deputy
+    private function makeDeputy(DeputyDescriptor $descriptor, ?Organisation $organisation): Deputy
     {
+        $address = explode("\n", $this->faker->streetAddress());
         $deputy = new Deputy(
             $this->counter->nextString(8, '9'),
             $descriptor->type,
@@ -275,11 +284,11 @@ final class FixtureService
             $this->faker->lastName()
         )
             ->setId($this->counter->nextInt())
-            ->setAddress1($this->faker->streetAddress())
-            ->setAddress2('')
-            ->setAddress3('')
-            ->setAddress4('')
-            ->setAddress5('')
+            ->setAddress1($address[0])
+            ->setAddress2($address[1] ?? '')
+            ->setAddress3($address[2] ?? '')
+            ->setAddress4($address[3] ?? '')
+            ->setAddress5($address[4] ?? '')
             ->setAddressCountry('GB')
             ->setAddressPostcode($this->faker->postcode())
             ->setPhoneMain($this->faker->phoneNumber())
@@ -288,17 +297,15 @@ final class FixtureService
         if ($descriptor->hasLogin) {
             $user = $this->makeUser($descriptor, $deputy, $organisation);
             $deputy->setUser($user);
-            $client->getUsers()->add($user);
         } elseif ($organisation !== null) {
             $deputy->setOrganisation($organisation);
             $deputy->setEmail1("{$deputy->getFirstname()}.{$deputy->getLastname()}{$organisation->getEmailIdentifier()}");
         }
-        $client->setDeputy($deputy);
 
         return $this->persist($deputy);
     }
 
-    private function makeOrganisation(DeputyDescriptor $descriptor, Client $client): Organisation
+    private function makeOrganisation(DeputyDescriptor $descriptor): Organisation
     {
         $organisation = new Organisation()
             ->setId($this->counter->nextInt())
@@ -307,24 +314,23 @@ final class FixtureService
             ->setName($descriptor->organisation);
         $organisation->setEmailIdentifier("@{$organisation->getId()}.{$descriptor->emailDomain}");
 
-        $organisation->getClients()->add($client);
-
         return $this->persist($organisation);
     }
 
     private function makeUser(DeputyDescriptor $descriptor, ?Deputy $deputy = null, ?Organisation $organisation = null): User
     {
+        $address = explode("\n", $this->faker->streetAddress());
         $user = new User()
             ->setId($this->counter->nextInt())
             ->setDeputy($deputy)
             ->setDeputyUid((int)$deputy?->getDeputyUid() ?: null)
             ->setFirstname($deputy?->getFirstname() ?? $this->faker->firstName())
             ->setLastname($deputy?->getLastname() ?? $this->faker->lastName())
-            ->setAddress1($deputy?->getAddress1() ?? $this->faker->streetAddress())
-            ->setAddress2($deputy?->getAddress2() ?? '')
-            ->setAddress3($deputy?->getAddress3() ?? '')
-            ->setAddress4($deputy?->getAddress4() ?? '')
-            ->setAddress5($deputy?->getAddress5() ?? '')
+            ->setAddress1($deputy?->getAddress1() ?? $address[0])
+            ->setAddress2($deputy?->getAddress2() ?? $address[1] ?? '')
+            ->setAddress3($deputy?->getAddress3() ?? $address[2] ?? '')
+            ->setAddress4($deputy?->getAddress4() ?? $address[3] ?? '')
+            ->setAddress5($deputy?->getAddress5() ?? $address[4] ?? '')
             ->setAddressCountry($deputy?->getAddressCountry() ?? 'GB')
             ->setAddressPostcode($deputy?->getAddressPostcode() ?? $this->faker->postcode())
             ->setPhoneMain($deputy?->getPhoneMain() ?? $this->faker->phoneNumber())
@@ -351,6 +357,7 @@ final class FixtureService
             ->setActive($descriptor->isLoginActive)
             ->setIsPrimary($descriptor->isPrimary)
             ->setAgreeTermsUse(true)
+            ->setCoDeputyClientConfirmed(true)
             ->setPassword($this->password)
             ->setRegistrationDate(new \DateTime()->sub(new \DateInterval('P1Y')))
         ;
