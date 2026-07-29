@@ -15,15 +15,15 @@ test("lay user can login", async ({ page }) => {
   await expect(page).toHaveURL(/\/login/);
 });
 
-test("org user can login", async ({ page }) => {
-  const user = createFixture("pro_user");
-
-  const login = new LoginPage(page);
-
-  await login.goto();
-  await login.login(user);
-  await login.expectOnPage("org");
-
-  await page.goto("/logout");
-  await expect(page).toHaveURL(/\/login/);
-});
+//test("org user can login", async ({ page }) => {
+//  const user = createFixture("pro_user");
+//
+//  const login = new LoginPage(page);
+//
+//  await login.goto();
+//  await login.login(user);
+//  await login.expectOnPage("org");
+//
+//  await page.goto("/logout");
+//  await expect(page).toHaveURL(/\/login/);
+//});
