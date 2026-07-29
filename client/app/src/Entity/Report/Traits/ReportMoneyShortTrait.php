@@ -126,7 +126,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @return mixed
+     * @return MoneyTransactionShort[]
      */
     public function getMoneyTransactionsShortOut()
     {
@@ -134,7 +134,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @param mixed $moneyTransactionsShortOut
+     * @param MoneyTransactionShort[] $moneyTransactionsShortOut
      */
     public function setMoneyTransactionsShortOut(array $moneyTransactionsShortOut): static
     {

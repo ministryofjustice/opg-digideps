@@ -55,7 +55,7 @@ trait ReportDebtsTrait
         return $ret;
     }
 
-    public function getDebtById($debtId): ?Debt
+    public function getDebtById(string $debtId): ?Debt
     {
         return array_find($this->getDebts(), fn ($debt) => $debt->getDebtTypeId() == $debtId);
     }
