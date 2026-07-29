@@ -19,84 +19,78 @@ class Status
     }
 
     #[JMS\Type('array')]
-    private array $decisionsState = [];
+    private array $decisionsState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $contactsState = [];
+    private array $contactsState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $visitsCareState = [];
+    private array $visitsCareState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $clientBenefitsCheckState = [];
+    private array $clientBenefitsCheckState = ['state' => self::STATE_NOT_STARTED];
     #[JMS\Type('array')]
-    private array $bankAccountsState = [];
+    private array $bankAccountsState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $moneyTransferState = [];
+    private array $moneyTransferState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $moneyInState = [];
+    private array $moneyInState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $moneyOutState = [];
+    private array $moneyOutState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $moneyInShortState = [];
+    private array $moneyInShortState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $moneyOutShortState = [];
+    private array $moneyOutShortState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $balanceState = [];
+    private array $balanceState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $assetsState = [];
+    private array $assetsState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $debtsState = [];
+    private array $debtsState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $paFeesExpensesState = [];
+    private array $paFeesExpensesState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $actionsState = [];
+    private array $actionsState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $otherInfoState = [];
+    private array $otherInfoState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $expensesState = [];
+    private array $expensesState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $giftsState = [];
+    private array $giftsState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $documentsState = [];
+    private array $documentsState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $lifestyleState = [];
+    private array $lifestyleState = ['state' => self::STATE_NOT_STARTED];
 
-    /**
-     * @var array
-     */
     #[JMS\Type('boolean')]
-    private $isReadyToSubmit;
+    private bool $isReadyToSubmit = false;
 
-    /**
-     * @var array
-     */
     #[JMS\Type('string')]
-    private $status;
+    private string $status = self::STATE_NOT_STARTED;
 
     #[JMS\Type('array')]
-    private array $profCurrentFeesState = [];
+    private array $profCurrentFeesState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $profDeputyCostsState = [];
+    private array $profDeputyCostsState = ['state' => self::STATE_NOT_STARTED];
 
     #[JMS\Type('array')]
-    private array $profDeputyCostsEstimateState = [];
+    private array $profDeputyCostsEstimateState = ['state' => self::STATE_NOT_STARTED];
     public function getDecisionsState(): array
     {
         return $this->decisionsState;
@@ -186,7 +180,7 @@ class Status
         return $this->moneyInShortState;
     }
 
-    public function setMoneyInShortState($moneyInShortState): static
+    public function setMoneyInShortState(array $moneyInShortState): static
     {
         $this->moneyInShortState = $moneyInShortState;
 
@@ -270,10 +264,7 @@ class Status
         return $this->otherInfoState;
     }
 
-    /**
-     * @param mixed $otherInfoState
-     */
-    public function setOtherInfoState($otherInfoState): static
+    public function setOtherInfoState(array $otherInfoState): static
     {
         $this->otherInfoState = $otherInfoState;
 
@@ -304,41 +295,29 @@ class Status
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function isReadyToSubmit()
+    public function isReadyToSubmit(): bool
     {
         return $this->isReadyToSubmit;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getIsReadyToSubmit()
+    public function getIsReadyToSubmit(): bool
     {
         return $this->isReadyToSubmit;
     }
 
-    public function setIsReadyToSubmit(array $isReadyToSubmit): static
+    public function setIsReadyToSubmit(bool $isReadyToSubmit): static
     {
         $this->isReadyToSubmit = $isReadyToSubmit;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * @param mixed $status
-     */
-    public function setStatus($status): static
+    public function setStatus(string $status): static
     {
         $this->status = $status;
 

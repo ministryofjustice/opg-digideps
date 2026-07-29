@@ -633,17 +633,15 @@ class Client
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getAge()
+    public function getAge(): ?int
     {
-        if (!$this->dateOfBirth) {
-            return;
-        }
-        $to = new \DateTime('today');
+        if ($this->dateOfBirth) {
+            $to = new \DateTime('today');
 
-        return $this->dateOfBirth->diff($to)->y;
+            return $this->dateOfBirth->diff($to)->y;
+        }
+
+        return null;
     }
 
     /**
@@ -872,7 +870,7 @@ class Client
     public function getCoDeputies(): array
     {
         $coDeps = [];
-        if (is_array($this->users) && count($this->users) > 0) {
+        if (count($this->users) > 0) {
             foreach ($this->users as $user) {
                 if (!$user->getFirstname()) {
                     $matches = [];
