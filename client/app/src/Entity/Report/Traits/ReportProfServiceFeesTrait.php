@@ -238,8 +238,6 @@ trait ReportProfServiceFeesTrait
 
     /**
      * Calculate total Received Fees.
-     *
-     * @param ProfServiceFee[] $profFees
      */
     private function getTotalReceivedFees(array $profFees): float
     {
@@ -254,8 +252,6 @@ trait ReportProfServiceFeesTrait
 
     /**
      * Calculate total Charged Fees.
-     *
-     * @param ProfServiceFee[] $profFees
      */
     private function getTotalChargedFees(array $profFees): float
     {

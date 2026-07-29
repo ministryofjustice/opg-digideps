@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportMoneyTransactionTrait
@@ -38,7 +37,6 @@ trait ReportMoneyTransactionTrait
 
     /**
      * @param  MoneyTransaction[] $moneyTransactionsIn
-     * @return Report
      */
     public function setMoneyTransactionsIn(array $moneyTransactionsIn): static
     {
@@ -57,7 +55,6 @@ trait ReportMoneyTransactionTrait
 
     /**
      * @param  MoneyTransaction[] $moneyTransactionsOut
-     * @return Report
      */
     public function setMoneyTransactionsOut(array $moneyTransactionsOut): static
     {

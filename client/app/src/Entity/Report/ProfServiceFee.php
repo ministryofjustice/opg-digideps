@@ -31,7 +31,7 @@ abstract class ProfServiceFee
      * If the order or any key is added, update the ReportControllerTest, hardcoded on position and number
      *  in order to keep it simple
      *
-     * @var String[]
+     * @var array<string, bool>
      */
     public static array $serviceTypeIds = [
         'annual-report' => false,

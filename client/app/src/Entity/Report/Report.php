@@ -991,7 +991,7 @@ class Report implements StartEndDateComparableInterface
      */
     public function getDeputyDocuments(): array
     {
-        if (is_array($this->documents)) {
+        if (count($this->documents) > 0) {
             return array_filter($this->documents, function (Document $document): bool {
                 /* @var $document Document */
                 return !($document->isAdminDocument() || $document->isReportPdf());

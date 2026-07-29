@@ -37,7 +37,7 @@ trait ReportTransfersTrait
     /**
      * @param MoneyTransfer[] $transfers
      */
-    public function setMoneyTransfers(array $transfers)
+    public function setMoneyTransfers(array $transfers): static
     {
         $this->moneyTransfers = $transfers;
 
