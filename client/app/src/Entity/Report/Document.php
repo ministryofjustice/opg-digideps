@@ -92,7 +92,7 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\ReportSubmission')]
     #[JMS\Groups(['document-report-subnmission'])]
-    private ReportSubmission $reportSubmission;
+    private ?ReportSubmission $reportSubmission = null;
 
     /**
      * @return int
@@ -184,12 +184,12 @@ class Document implements DocumentInterface, SynchronisableInterface
         return $this;
     }
 
-    public function getReportSubmission(): ReportSubmission
+    public function getReportSubmission(): ?ReportSubmission
     {
         return $this->reportSubmission;
     }
 
-    public function setReportSubmission(ReportSubmission $repostSubmission): static
+    public function setReportSubmission(?ReportSubmission $repostSubmission): static
     {
         $this->reportSubmission = $repostSubmission;
 
