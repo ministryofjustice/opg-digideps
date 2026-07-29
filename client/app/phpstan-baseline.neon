@@ -3019,12 +3019,6 @@ parameters:
 			path: src/Entity/Report/AssetProperty.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:getAddressValidLines\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:getHasCharges\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
