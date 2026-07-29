@@ -58,7 +58,7 @@ trait ReportProfDeputyCostsEstimateTrait
         return $this->profDeputyEstimateCostTypeIds;
     }
 
-    public function setProfDeputyEstimateCostTypeIds($profDeputyEstimateCostTypeIds): static
+    public function setProfDeputyEstimateCostTypeIds(array $profDeputyEstimateCostTypeIds): static
     {
         $this->profDeputyEstimateCostTypeIds = $profDeputyEstimateCostTypeIds;
 
