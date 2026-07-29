@@ -199,7 +199,7 @@ class Organisation
 
     public function hasUser(User $user): bool
     {
-        return array_any($this->users->toArray() ?: [], fn ($currentUser) =>
+        return array_any($this->users?->toArray() ?: [], fn ($currentUser) =>
             $user->getId()
             && $currentUser instanceof User
             && $currentUser->getId()
@@ -208,7 +208,7 @@ class Organisation
 
     public function getUserById(int $userId): ?User
     {
-        return array_find($this->users->toArray(), fn ($user) => $user->getId() === $userId);
+        return array_find($this->users?->toArray(), fn ($user) => $user->getId() === $userId);
 
     }
 
