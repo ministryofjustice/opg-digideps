@@ -2,9 +2,10 @@
 
 namespace OPG\Digideps\Backend\DataFixtures;
 
-use OPG\Digideps\Backend\Entity\User;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Fixture\FixtureService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -14,9 +15,10 @@ class UserPasswordFixtures extends AbstractDataFixture implements OrderedFixture
     public function __construct(
         public readonly KernelInterface $kernel,
         private readonly ParameterBagInterface $params,
-        private readonly UserPasswordHasherInterface $passwordHasher
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        FixtureService $fixtureService
     ) {
-        parent::__construct($kernel);
+        parent::__construct($kernel, $fixtureService);
     }
 
     public function doLoad(ObjectManager $manager): void
