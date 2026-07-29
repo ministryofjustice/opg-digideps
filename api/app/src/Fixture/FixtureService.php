@@ -361,7 +361,7 @@ final class FixtureService
             ->setAgreeTermsUse(true)
             ->setCoDeputyClientConfirmed($client !== null)
             ->setPassword($this->password)
-            ->setRegistrationDate(new \DateTime()->sub(new \DateInterval('P1Y')))
+            ->setRegistrationDate(new \DateTime())
         ;
 
         if ($organisation !== null) {
