@@ -51,7 +51,7 @@ jobs:
       account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
       task_name: "reset_database"
-      timeout: "500"
+      timeout: "50000"
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
