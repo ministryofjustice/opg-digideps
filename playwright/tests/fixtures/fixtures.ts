@@ -16,7 +16,7 @@ const fixtureUsers: Record<UserType, FixtureUser> = {
     email: "lay-opg104-user-5@publicguardian.gov.uk",
   },
   pro_user: {
-    email: "prof-103-member-1@prof103s.gov.uk",
+    email: "pro-opg103-member-1@pro103s.gov.uk",
   },
 };
 
