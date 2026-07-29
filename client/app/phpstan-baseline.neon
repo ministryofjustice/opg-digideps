@@ -1555,6 +1555,42 @@ parameters:
 			path: src/Controller/Report/BankAccountController.php
 
 		-
+			message: '#^Cannot call method getAccountNumber\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Report/BankAccountController.php
+
+		-
+			message: '#^Cannot call method getAccountTypeText\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Report/BankAccountController.php
+
+		-
+			message: '#^Cannot call method getBank\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Report/BankAccountController.php
+
+		-
+			message: '#^Cannot call method getDisplaySortCode\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Report/BankAccountController.php
+
+		-
+			message: '#^Cannot call method requiresBankName\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Report/BankAccountController.php
+
+		-
+			message: '#^Cannot call method requiresSortCode\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Report/BankAccountController.php
+
+		-
 			message: '#^Parameter \#1 \$accountType of method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setAccountType\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1659,12 +1695,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\Report\\DecisionController\:\:updateReport\(\) has parameter \$report with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Controller/Report/DecisionController.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/DecisionController.php
 
@@ -2095,6 +2125,24 @@ parameters:
 			path: src/Controller/Report/MoneyOutShortController.php
 
 		-
+			message: '#^Parameter \#1 \$from of method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransfer\:\:setAccountFrom\(\) expects OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount, OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/MoneyTransferController.php
+
+		-
+			message: '#^Parameter \#1 \$id of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getBankAccountById\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Controller/Report/MoneyTransferController.php
+
+		-
+			message: '#^Parameter \#1 \$to of method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransfer\:\:setAccountTo\(\) expects OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount, OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/MoneyTransferController.php
+
+		-
 			message: '#^Call to an undefined method Symfony\\Component\\Form\\FormInterface\:\:isClicked\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -2415,24 +2463,12 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 5
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:addUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
+			count: 2
 			path: src/Entity/Client.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:addUser\(\) has parameter \$user with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:getAge\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Client.php
 
@@ -2443,44 +2479,8 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:getDeletedAt\(\) should return DateTime but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:getNotes\(\) return type with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:getReportById\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:getReports\(\) should return array\<OPG\\Digideps\\Frontend\\Entity\\Report\\Report\> but returns array\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:hasDetails\(\) should return bool but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:hasReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:removeReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Client.php
 
@@ -2491,20 +2491,8 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:setClientContacts\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:setClientContacts\(\) has parameter \$clientContacts with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:setCourtDateWithoutTime\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Client.php
 
@@ -2521,38 +2509,14 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:setNotes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:setNotes\(\) has parameter \$notes with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
 			count: 1
 			path: src/Entity/Client.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:setTotalReportCount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:setUsers\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:setUsers\(\) has parameter \$users with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:userBelongsToClientsOrganisation\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Client.php
 
@@ -2593,12 +2557,6 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Client\:\:\$deletedAt has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Client\:\:\$notes with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
 			count: 1
@@ -2617,66 +2575,6 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:setAddress1\(\) should return string but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\ClientContact\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:setAddress2\(\) should return string but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\ClientContact\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:setAddress3\(\) should return string but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\ClientContact\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:setAddressCountry\(\) should return string but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\ClientContact\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:setAddressPostcode\(\) should return string but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\ClientContact\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:setFirstName\(\) should return string but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\ClientContact\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:setJobTitle\(\) should return string but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\ClientContact\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:setLastName\(\) should return string but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\ClientContact\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:setOrgName\(\) should return string but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\ClientContact\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:setPhone\(\) should return string but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\ClientContact\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
 			message: '#^Parameter \#1 \$client of method OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:setClient\(\) expects string, OPG\\Digideps\\Frontend\\Entity\\Client given\.$#'
 			identifier: argument.type
 			count: 1
@@ -2693,18 +2591,6 @@ parameters:
 			identifier: property.onlyRead
 			count: 1
 			path: src/Entity/CourtOrder.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Deputy\:\:getEmail\(\) should return \$this\(OPG\\Digideps\\Frontend\\Entity\\Deputy\) but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Deputy.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Deputy\:\:getEmail1\(\) should return \$this\(OPG\\Digideps\\Frontend\\Entity\\Deputy\) but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Deputy.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\DeputyInterface\:\:getAddressNotEmptyParts\(\) has no return type specified\.$#'
@@ -2827,24 +2713,6 @@ parameters:
 			path: src/Entity/Organisation.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:setTotalClientCount\(\) has parameter \$count with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Organisation.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:setTotalUserCount\(\) has parameter \$count with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Organisation.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(int\)\: Unexpected token "\\n     \*", expected variable at offset 21 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 2
-			path: src/Entity/Organisation.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:\$clients \(Doctrine\\Common\\Collections\\ArrayCollection\) does not accept array\<OPG\\Digideps\\Frontend\\Entity\\Client\>\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -2863,18 +2731,6 @@ parameters:
 			path: src/Entity/Organisation.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:\$totalClientCount \(int\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Organisation.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:\$totalUserCount \(int\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Organisation.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:\$users \(Doctrine\\Common\\Collections\\ArrayCollection\) does not accept array\<OPG\\Digideps\\Frontend\\Entity\\User\>\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -2885,18 +2741,6 @@ parameters:
 			identifier: missingType.generics
 			count: 1
 			path: src/Entity/Organisation.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\PreRegistration\:\:getOrderType\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/PreRegistration.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\PreRegistration\:\:getTypeOfReport\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/PreRegistration.php
 
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\PreRegistration\:\:\$caseNumber is never written, only read\.$#'
@@ -2935,32 +2779,14 @@ parameters:
 			path: src/Entity/PreRegistration.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\PreRegistration\:\:\$orderType has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/PreRegistration.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\PreRegistration\:\:\$orderType is never written, only read\.$#'
 			identifier: property.onlyRead
 			count: 1
 			path: src/Entity/PreRegistration.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\PreRegistration\:\:\$otherColumns has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/PreRegistration.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\PreRegistration\:\:\$otherColumns is unused\.$#'
 			identifier: property.unused
-			count: 1
-			path: src/Entity/PreRegistration.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\PreRegistration\:\:\$typeOfReport has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: src/Entity/PreRegistration.php
 
@@ -3109,44 +2935,8 @@ parameters:
 			path: src/Entity/Report/AssetProperty.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:getType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setAddress\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setAddress2\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setCounty\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setHasCharges\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setHasCharges\(\) has parameter \$hasCharges with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setHasMortgage\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/AssetProperty.php
 
@@ -3169,20 +2959,8 @@ parameters:
 			path: src/Entity/Report/AssetProperty.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setIsSubjectToEquityRelease\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setIsSubjectToEquityRelease\(\) has parameter \$isSubjectToEquityRelease with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setMortgageOutstandingAmount\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/AssetProperty.php
 
@@ -3193,20 +2971,8 @@ parameters:
 			path: src/Entity/Report/AssetProperty.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setOccupants\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setOccupants\(\) has parameter \$occupants with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setOwned\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/AssetProperty.php
 
@@ -3217,38 +2983,14 @@ parameters:
 			path: src/Entity/Report/AssetProperty.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setOwnedPercentage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setOwnedPercentage\(\) has parameter \$ownedPercentage with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Entity/Report/AssetProperty.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setPostcode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setRentAgreementEndDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setRentAgreementEndDate\(\) has parameter \$rentAgreementEndDate with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\AssetProperty\:\:setRentIncomeMonth\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/AssetProperty.php
 
@@ -3379,12 +3121,6 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:getDisplayName\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:getDisplaySortCode\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -3439,26 +3175,8 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setAccountNumber\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setAccountNumber\(\) has parameter \$accountNumber with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setAccountType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setBank\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/BankAccount.php
 
@@ -3469,20 +3187,8 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setId\(\) has parameter \$id with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setIsClosed\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/BankAccount.php
 
@@ -3493,20 +3199,8 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setIsJointAccount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setIsJointAccount\(\) has parameter \$isJointAccount with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setMeta\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/BankAccount.php
 
@@ -3517,20 +3211,8 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setOpeningBalance\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setOpeningBalance\(\) has parameter \$openingBalance with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setSortCode\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/BankAccount.php
 
@@ -3550,12 +3232,6 @@ parameters:
 			message: '#^Parameter \#1 \$string of function strlen expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Entity/Report/BankAccount.php
 
 		-
@@ -3603,18 +3279,6 @@ parameters:
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:\$sortCode \(string\) does not accept mixed\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:\$typesNotRequiringBankName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:\$typesNotRequiringSortCode has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: src/Entity/Report/BankAccount.php
 
@@ -3703,20 +3367,8 @@ parameters:
 			path: src/Entity/Report/Contact.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setAddress\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Contact.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setAddress\(\) has parameter \$address with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Contact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setAddress2\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Contact.php
 
@@ -3727,20 +3379,8 @@ parameters:
 			path: src/Entity/Report/Contact.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setContactName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Contact.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setContactName\(\) has parameter \$contactName with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Contact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setCountry\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Contact.php
 
@@ -3751,20 +3391,8 @@ parameters:
 			path: src/Entity/Report/Contact.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setCounty\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Contact.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setCounty\(\) has parameter \$county with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Contact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setExplanation\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Contact.php
 
@@ -3787,32 +3415,14 @@ parameters:
 			path: src/Entity/Report/Contact.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setPhone\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Contact.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setPhone\(\) has parameter \$phone with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Entity/Report/Contact.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setPostcode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Contact.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setPostcode\(\) has parameter \$postcode with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Contact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setRelationship\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Contact.php
 
@@ -3889,30 +3499,6 @@ parameters:
 			path: src/Entity/Report/Debt.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Debt\:\:setAmount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Debt.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Debt\:\:setDebtTypeId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Debt.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Debt\:\:setHasMoreDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Debt.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Debt\:\:setMoreDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Debt.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Debt\:\:\$debtTypeId has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -3921,12 +3507,6 @@ parameters:
 		-
 			message: '#^Cannot call method getDocuments\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: src/Entity/Report/Document.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Document\:\:isTransactionDocument\(\) never returns int so it can be removed from the return type\.$#'
-			identifier: return.unusedType
 			count: 1
 			path: src/Entity/Report/Document.php
 
@@ -3945,12 +3525,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Expense\:\:setBankAccountId\(\) has parameter \$bankAccountId with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Expense.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Expense\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Expense.php
 
@@ -3985,36 +3559,6 @@ parameters:
 			path: src/Entity/Report/Expense.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Fee\:\:setAmount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Fee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Fee\:\:setFeeTypeId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Fee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Fee\:\:setHasMoreDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Fee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Fee\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Fee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Fee\:\:setMoreDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Fee.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Fee\:\:\$feeTypeId has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -4041,12 +3585,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Gift\:\:setBankAccountId\(\) has parameter \$bankAccountId with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Gift.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Gift\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Gift.php
 
@@ -4079,36 +3617,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/Gift.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:setActivityDetailsNo\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Lifestyle.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:setActivityDetailsYes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Lifestyle.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:setCareAppointments\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Lifestyle.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:setDoesClientUndertakeSocialActivities\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Lifestyle.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Lifestyle.php
 
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:\$activityDetailsNo has no type specified\.$#'
@@ -4159,32 +3667,14 @@ parameters:
 			path: src/Entity/Report/MentalCapacity.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:setHasCapacityChanged\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:setHasCapacityChanged\(\) has parameter \$hasCapacityChanged with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Entity/Report/MentalCapacity.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:setHasCapacityChangedDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:setHasCapacityChangedDetails\(\) has parameter \$hasCapacityChangedDetails with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:setMentalAssessmentDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/MentalCapacity.php
 
@@ -4255,18 +3745,6 @@ parameters:
 			path: src/Entity/Report/MoneyTransaction.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:setGroup\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
 			message: '#^Parameter \#1 \$category of static method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:isValidCategory\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -4321,24 +3799,6 @@ parameters:
 			path: src/Entity/Report/MoneyTransaction.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransactionShort\:\:setType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MoneyTransactionShort.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransfer\:\:setAccountFromId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MoneyTransfer.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransfer\:\:setAccountToId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MoneyTransfer.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransfer\:\:setDescription\(\) has parameter \$description with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -4375,36 +3835,6 @@ parameters:
 			path: src/Entity/Report/ProfDeputyEstimateCost.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyEstimateCost\:\:moreDetailsValidate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyEstimateCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyEstimateCost\:\:setAmount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyEstimateCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyEstimateCost\:\:setHasMoreDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyEstimateCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyEstimateCost\:\:setMoreDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyEstimateCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyEstimateCost\:\:setProfDeputyEstimateCostTypeId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyEstimateCost.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyEstimateCost\:\:setProfDeputyEstimateCostTypeId\(\) has parameter \$profDeputyEstimateCostTypeId with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -4417,56 +3847,8 @@ parameters:
 			path: src/Entity/Report/ProfDeputyEstimateCost.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyInterimCost\:\:setAmount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyInterimCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyInterimCost\:\:setDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyInterimCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyInterimCost\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyInterimCost.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost\:\:__construct\(\) has parameter \$profDeputyOtherCostTypeId with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost\:\:moreDetailsValidate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost\:\:setAmount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost\:\:setHasMoreDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost\:\:setMoreDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost\:\:setProfDeputyOtherCostTypeId\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/ProfDeputyOtherCost.php
 
@@ -4481,60 +3863,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: src/Entity/Report/ProfDeputyOtherCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyPreviousCost\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfDeputyPreviousCost.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:setAmountCharged\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:setAmountReceived\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:setAssessedOrFixed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:setOtherFeeDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:setPaymentReceived\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:setPaymentReceivedDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:setServiceTypeId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ProfServiceFee.php
 
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:\$feeTypeId has no type specified\.$#'
@@ -4633,56 +3961,14 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:debtsValid\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:determineReportType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:feesValid\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getAssetsTotalsSummaryPage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getBankAccountById\(\) has parameter \$id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getBankAccountById\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getDebtById\(\) has parameter \$debtId with no type specified\.$#'
-			identifier: missingType.parameter
+			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getBankAccountOptions\(\) should return array\<string, int\> but returns array\<string, mixed\>\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Entity/Report/Report.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getDebtsTotalValue\(\) should return float but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getDecisions\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4729,30 +4015,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getProfDeputyEstimateCostByTypeId\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyEstimateCost but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getProfDeputyEstimateCostTypeIds\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getProfDeputyManagementCostTypeIds\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getReasonForNoMoneyIn\(\) should return string\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getSignificantDecisionsMade\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -4789,18 +4051,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setAccountsOpeningBalanceTotal\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setAgree\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setAgreedBehalfDeputy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -4813,50 +4063,8 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setBalanceMismatchExplanation\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setCurrentProfPaymentsReceived\(\) has parameter \$currentProfPaymentsReceived with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setDebtsTotalAmount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setDocuments\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setFees\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setFeesTotal\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setGiftsExist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setHas106flag\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4891,13 +4099,7 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setHasFees\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setLifestyle\(\) has no return type specified\.$#'
+			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setId\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4909,116 +4111,8 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setMoneyShortCategoriesIn\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setMoneyShortCategoriesOut\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setMoneyTransactionsShortIn\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setMoneyTransactionsShortInExist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setMoneyTransactionsShortOut\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setMoneyTransactionsShortOutExist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyCostsEstimateHasMoreInfo\(\) has invalid return type OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\ReportProfDeputyCostsEstimateTrait\.$#'
-			identifier: return.trait
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyCostsEstimateHasMoreInfo\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\ReportProfDeputyCostsEstimateTrait but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyCostsEstimateMoreInfoDetails\(\) has invalid return type OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\ReportProfDeputyCostsEstimateTrait\.$#'
-			identifier: return.trait
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyCostsEstimateMoreInfoDetails\(\) has parameter \$profDeputyCostsEstimateMoreInfoDetails with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyCostsEstimateMoreInfoDetails\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\ReportProfDeputyCostsEstimateTrait but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyEstimateCostTypeIds\(\) has parameter \$profDeputyEstimateCostTypeIds with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyManagementCostAmount\(\) has invalid return type OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\ReportProfDeputyCostsEstimateTrait\.$#'
-			identifier: return.trait
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyManagementCostAmount\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\ReportProfDeputyCostsEstimateTrait but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyManagementCostTypeIds\(\) has invalid return type OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\ReportProfDeputyCostsEstimateTrait\.$#'
-			identifier: return.trait
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfDeputyManagementCostTypeIds\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\ReportProfDeputyCostsEstimateTrait but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setProfServiceFees\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setReasonForNoFees\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setReviewChecklist\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -5035,38 +4129,8 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setStatus\(\) has no return type specified\.$#'
+			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setStartDate\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setTotalsMatch\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setUnsubmittedSection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setVisitsCare\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:unsubmittedSectionAtLeastOnce\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^PHPDoc tag @var above a method has no effect\.$#'
-			identifier: varTag.misplaced
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -5102,12 +4166,6 @@ parameters:
 
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$actionMoreInfoDetails \(string\|null\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$assets \(array\<OPG\\Digideps\\Frontend\\Entity\\Report\\Asset\>\) does not accept array\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -5155,12 +4213,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$gifts \(array\<OPG\\Digideps\\Frontend\\Entity\\Report\\Gift\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$hasDebts \(string\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -5185,37 +4237,7 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$moneyTransactionsShortOut \(array\<OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransactionShort\>\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$moneyTransfers \(array\<OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransfer\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$profDeputyCostsEstimateMoreInfoDetails has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$profDeputyEstimateCostTypeIds has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$profDeputyManagementCostTypeIds has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$reasonForNoMoneyIn has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -5235,12 +4257,6 @@ parameters:
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$submittedBy \(OPG\\Digideps\\Frontend\\Entity\\User\) does not accept OPG\\Digideps\\Frontend\\Entity\\User\|null\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Variable \$submittedCost in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -5293,278 +4309,14 @@ parameters:
 			path: src/Entity/Report/ReviewChecklist.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:getState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setActionsState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setAssetsState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setBalanceState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setBankAccountsState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setContactsState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setDebtsState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setDecisionsState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setDocumentsState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setExpensesState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setGiftsState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setIsReadyToSubmit\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setLifestyleState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setMoneyInShortState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setMoneyInState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setMoneyOutShortState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setMoneyOutState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setMoneyTransferState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setOtherInfoState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setPaFeesExpensesState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setProfCurrentFeesState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setProfDeputyCostsEstimateState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setProfDeputyCostsState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setStatus\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:setVisitsCareState\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$actionsState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$assetsState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$balanceState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$bankAccountsState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$contactsState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$debtsState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$decisionsState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$expensesState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$giftsState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$isReadyToSubmit \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$moneyInShortState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$moneyInState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$moneyOutShortState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$moneyOutState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$moneyTransferState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$otherInfoState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$report is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Entity/Report/Status.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$status \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:\$visitsCareState \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Status.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\UnsubmittedSection\:\:getId\(\) should return int but returns string\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Entity/Report/UnsubmittedSection.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\UnsubmittedSection\:\:setPresent\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/UnsubmittedSection.php
 
@@ -5601,12 +4353,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\VisitsCare\:\:getWhoIsDoingTheCaring\(\) should return string but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\VisitsCare\:\:setHowOftenDoYouContactClient\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/VisitsCare.php
 
@@ -5667,12 +4413,6 @@ parameters:
 		-
 			message: '#^Cannot call method isActivated\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:getActiveReportId\(\) should return int but returns int\|null\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Entity/User.php
 
@@ -5743,12 +4483,6 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:getNumberOfReports\(\) should return int but returns int\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:getOrganisations\(\) return type with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
 			count: 1
@@ -5791,61 +4525,13 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:hasReports\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:isAccountNonExpired\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:isAccountNonLocked\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:isAdManaged\(\) should return bool but returns bool\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Entity/User.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:isCredentialsNonExpired\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:isEnabled\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setActiveReportId\(\) has invalid return type OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\HasReportTrait\.$#'
-			identifier: return.trait
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setActiveReportId\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\HasReportTrait but returns \$this\(OPG\\Digideps\\Frontend\\Entity\\User\)\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setAdManaged\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setAddress1\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Entity/User.php
@@ -5857,20 +4543,8 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setAddress2\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setAddress2\(\) has parameter \$address2 with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setAddress3\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/User.php
 
@@ -5899,26 +4573,8 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setAddressPostcode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setAddressPostcode\(\) has parameter \$addressPostcode with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setClients\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setLastLoggedIn\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/User.php
 
@@ -5929,20 +4585,8 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setPhoneAlternative\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setPhoneAlternative\(\) has parameter \$phoneAlternative with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setPhoneMain\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/User.php
 
@@ -5959,20 +4603,8 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setSalt\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setSalt\(\) has parameter \$salt with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^PHPDoc tag @return with type OPG\\Digideps\\Frontend\\Entity\\User is not subtype of native type static\(OPG\\Digideps\\Frontend\\Entity\\User\)\.$#'
-			identifier: return.phpDocType
 			count: 1
 			path: src/Entity/User.php
 
@@ -6091,26 +4723,8 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\UserResearch\\ResearchType\:\:getCommaSeparatedTypesAgreed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/UserResearch/ResearchType.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\UserResearch\\ResearchType\:\:getId\(\) should return Ramsey\\Uuid\\UuidInterface but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/UserResearch/ResearchType.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\UserResearch\\ResearchType\:\:getUserResearchResponse\(\) should return OPG\\Digideps\\Frontend\\Entity\\UserResearch\\UserResearchResponse but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Entity/UserResearch/ResearchType.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\UserResearch\\ResearchType\:\:\$id has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: src/Entity/UserResearch/ResearchType.php
 
@@ -10849,12 +9463,6 @@ parameters:
 			path: src/Sync/Service/ChecklistSyncService.php
 
 		-
-			message: '#^Parameter \#1 \$reportType of method OPG\\Digideps\\Frontend\\Sync\\Model\\Sirius\\QueuedChecklistData\:\:setReportType\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sync/Service/ChecklistSyncService.php
-
-		-
 			message: '#^Call to function method_exists\(\) with Throwable and ''getCode'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -10885,10 +9493,46 @@ parameters:
 			path: src/Sync/Service/SiriusApiErrorTranslator.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\ClientHelpers\:\:createClientWithUsers\(\) should return OPG\\Digideps\\Frontend\\Entity\\Client but returns mixed\.$#'
+			message: '#^Cannot call method setChecklist\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/TestHelpers/ChecklistTestHelper.php
+
+		-
+			message: '#^Cannot call method setClient\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/TestHelpers/ChecklistTestHelper.php
+
+		-
+			message: '#^Cannot call method setEndDate\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/TestHelpers/ChecklistTestHelper.php
+
+		-
+			message: '#^Cannot call method setReportSubmissions\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/TestHelpers/ChecklistTestHelper.php
+
+		-
+			message: '#^Cannot call method setType\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/TestHelpers/ChecklistTestHelper.php
+
+		-
+			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\ChecklistTestHelper\:\:buildPfaHighReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
 			identifier: return.type
 			count: 1
-			path: src/TestHelpers/ClientHelpers.php
+			path: src/TestHelpers/ChecklistTestHelper.php
+
+		-
+			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist constructor expects OPG\\Digideps\\Frontend\\Entity\\Report\\Report, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/TestHelpers/ChecklistTestHelper.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\ClientHelpers\:\:createValidCaseNumber\(\) has no return type specified\.$#'
@@ -10951,12 +9595,6 @@ parameters:
 			path: src/TestHelpers/OrganisationHelpers.php
 
 		-
-			message: '#^Parameter \#1 \$clients of method OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:setClients\(\) expects array\<OPG\\Digideps\\Frontend\\Entity\\Client\>, array\<int, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/TestHelpers/OrganisationHelpers.php
-
-		-
 			message: '#^Parameter \#1 \$isActivated of method OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:setIsActivated\(\) expects string, false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -10973,6 +9611,30 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/TestHelpers/OrganisationHelpers.php
+
+		-
+			message: '#^Cannot call method setDueDate\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/TestHelpers/ReportHelpers.php
+
+		-
+			message: '#^Cannot call method setEndDate\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/TestHelpers/ReportHelpers.php
+
+		-
+			message: '#^Cannot call method setStartDate\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/TestHelpers/ReportHelpers.php
+
+		-
+			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\ReportHelpers\:\:createReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/TestHelpers/ReportHelpers.php
 
 		-
 			message: '#^Parameter \#1 \$submittedBy of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setSubmittedBy\(\) expects OPG\\Digideps\\Frontend\\Entity\\User\|null, array\|object given\.$#'
@@ -12931,61 +11593,13 @@ parameters:
 			path: tests/Unit/EventSubscriber/UserPasswordResetSubscriberTest.php
 
 		-
-			message: '#^Call to an undefined method object\:\:setAddress1\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setAddress2\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setAddress3\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setAddressCountry\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setAddressPostcode\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
 			message: '#^Call to an undefined method object\:\:setEmail\(\)\.$#'
 			identifier: method.notFound
-			count: 2
+			count: 1
 			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
 
 		-
 			message: '#^Call to an undefined method object\:\:setFirstname\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setLastname\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setPhoneAlternative\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setPhoneMain\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
@@ -13027,30 +11641,6 @@ parameters:
 			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
 
 		-
-			message: '#^Cannot call method setAddress2\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method setAddress3\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method setAddressCountry\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method setAddressPostcode\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
 			message: '#^Cannot call method setEmail\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -13063,27 +11653,9 @@ parameters:
 			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
 
 		-
-			message: '#^Cannot call method setPhoneAlternative\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method setPhoneMain\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
 			message: '#^Cannot clone non\-object variable \$preUpdateUser of type array\|object\.$#'
 			identifier: clone.nonObject
 			count: 4
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot clone non\-object variable \$preUpdateUser of type mixed\.$#'
-			identifier: clone.nonObject
-			count: 10
 			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
 
 		-
@@ -13529,12 +12101,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: tests/Unit/Security/DocumentVoterTest.php
-
-		-
-			message: '#^Cannot call method setId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/Security/UserVoterTest.php
 
 		-
 			message: '#^Class OPG\\Digideps\\Frontend\\Security\\UserVoter does not have a constructor and must be instantiated without any parameters\.$#'
@@ -15229,45 +13795,9 @@ parameters:
 			path: tests/Unit/Service/Mailer/MailFactoryTest.php
 
 		-
-			message: '#^Cannot call method setAddress1\(\) on mixed\.$#'
+			message: '#^Cannot call method setEndDate\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Cannot call method setAddress2\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Cannot call method setAddress3\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Cannot call method setAddressCountry\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Cannot call method setAddressPostcode\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Cannot call method setPhoneAlternative\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Cannot call method setRoleName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
+			count: 2
 			path: tests/Unit/Service/Mailer/MailFactoryTest.php
 
 		-
@@ -15279,12 +13809,6 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:generateUser\(\) has parameter \$role with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:generateUser\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: tests/Unit/Service/Mailer/MailFactoryTest.php
 
@@ -15339,6 +13863,18 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$type of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setType\(\) expects string, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: tests/Unit/Service/Mailer/MailFactoryTest.php
+
+		-
+			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:\$newReport \(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/Unit/Service/Mailer/MailFactoryTest.php
+
+		-
+			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:\$submittedReport \(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\) does not accept mixed\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: tests/Unit/Service/Mailer/MailFactoryTest.php
 
