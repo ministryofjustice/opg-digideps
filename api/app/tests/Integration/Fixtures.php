@@ -3,8 +3,6 @@
 namespace Tests\OPG\Digideps\Backend\Integration;
 
 use Doctrine\ORM\EntityRepository;
-use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
-use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
@@ -662,27 +660,5 @@ class Fixtures
         }
 
         return new PreRegistration($data);
-    }
-
-    public function createSelectedCandidate(
-        DeputyshipCandidateAction $action,
-        string $orderUid,
-        CourtOrderKind $courtOrderKind = CourtOrderKind::Single,
-        CourtOrderType $orderType = CourtOrderType::PFA,
-        string $reportType = Report::LAY_PFA_LOW_ASSETS_TYPE,
-        ?string $status = null,
-        ?int $clientId = null,
-        ?\DateTime $orderMadeDate = null
-    ): StagingSelectedCandidate {
-        $candidate = new StagingSelectedCandidate($action, $orderUid);
-        $candidate->courtOrderKind = $courtOrderKind->value;
-        $candidate->orderType = $orderType->value;
-        $candidate->reportType = $reportType;
-        $candidate->status = $status;
-        $candidate->clientId = $clientId;
-        $candidate->orderMadeDate = ($orderMadeDate ?: new \DateTime('now'))->format('Y-m-d');
-        $this->em->persist($candidate);
-        $this->em->flush();
-        return $candidate;
     }
 }
