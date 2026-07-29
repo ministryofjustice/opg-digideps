@@ -317,7 +317,7 @@ jobs:
       account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
       task_name: "reset_database"
-      timeout: "500"
+      timeout: "50000"
       retry_on_fail: true
 
   smoke_tests:
