@@ -317,7 +317,7 @@ jobs:
       account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
       task_name: "reset_database"
-      timeout: "500"
+      timeout: "50000"
       retry_on_fail: true
 
   smoke_tests:
@@ -482,7 +482,7 @@ jobs:
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
-      workspace: "training"
+      workspace: "${{ needs.workflow_variables.outputs.build_identifier }}"
       account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
       task_name: "reset_database"
