@@ -13,7 +13,7 @@ const testPassword = "DigidepsPass1234";
 
 const fixtureUsers: Record<UserType, FixtureUser> = {
   lay_user: {
-    email: "lay-opg104-user-5@publicguardian.gov.uk",
+    email: "smoketestuser@smoketest.com",
   },
   pro_user: {
     email: "pro-opg103-member-1@pro103s.gov.uk",
