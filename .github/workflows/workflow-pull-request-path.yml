@@ -474,6 +474,21 @@ jobs:
       account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
 
+  cleanup_database:
+    name: cleanup database
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - scale_services_down
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+    with:
+      workspace: "training"
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
+      task_name: "reset_database"
+      timeout: "50000"
+      retry_on_fail: true
+
   workflow_summary:
     name: workflow summary
     runs-on: ubuntu-latest
