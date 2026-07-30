@@ -317,7 +317,7 @@ jobs:
       account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
       task_name: "reset_database"
-      timeout: "500"
+      timeout: "50000"
       retry_on_fail: true
 
   smoke_tests:
@@ -468,11 +468,33 @@ jobs:
       - end_to_end_tests_admin
       - end_to_end_tests_1
       - end_to_end_tests_2
+      - cleanup_database
     with:
       replicas: 1
       acu: 4
       account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+
+  cleanup_database:
+    name: cleanup database
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - end_to_end_tests_sequential_1
+      - end_to_end_tests_sequential_2
+      - end_to_end_tests_sequential_3
+      - end_to_end_tests_admin
+      - end_to_end_tests_1
+      - end_to_end_tests_2
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+    with:
+      workspace: "${{ needs.workflow_variables.outputs.build_identifier }}"
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
+      task_name: "reset_database"
+      timeout: "50000"
+      retry_on_fail: true
 
   workflow_summary:
     name: workflow summary
