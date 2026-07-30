@@ -479,6 +479,7 @@ jobs:
     name: cleanup database
     uses: ./.github/workflows/_run-task.yml
     needs:
+      - workflow_variables
       - end_to_end_tests_sequential_1
       - end_to_end_tests_sequential_2
       - end_to_end_tests_sequential_3
