@@ -19,7 +19,6 @@ use OPG\Digideps\Backend\FixtureFactory\PreRegistrationFactory;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\CourtOrderTestHelper;
 use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
-use OPG\Digideps\Backend\TestHelpers\OrganisationTestHelper;
 use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
@@ -33,7 +32,6 @@ class FixtureHelper
     private UserTestHelper $userTestHelper;
     private ReportTestHelper $reportTestHelper;
     private ClientTestHelper $clientTestHelper;
-    private OrganisationTestHelper $organisationTestHelper;
     private DeputyTestHelper $deputyTestHelper;
     private CourtOrderTestHelper $courtOrderTestHelper;
 
@@ -52,7 +50,6 @@ class FixtureHelper
         $this->userTestHelper = UserTestHelper::create();
         $this->reportTestHelper = ReportTestHelper::create();
         $this->clientTestHelper = ClientTestHelper::create();
-        $this->organisationTestHelper = new OrganisationTestHelper();
         $this->deputyTestHelper = new DeputyTestHelper();
         $this->courtOrderTestHelper = new CourtOrderTestHelper();
     }
@@ -173,12 +170,10 @@ class FixtureHelper
     {
         $submitDate = clone $report->getStartDate();
         $submitDate->modify('+1 year');
-        $satisfaction = new Satisfaction();
-        $satisfaction->setScore($satisfactionScore);
-        $satisfaction->setComments('random comment');
+        $satisfaction = new Satisfaction($satisfactionScore, 'random comment');
         $satisfaction->setReport($report);
-        $satisfaction->setReporttype($report->getType());
-        $satisfaction->setDeputyrole($user->getRoleName());
+        $satisfaction->setReportType($report->getType());
+        $satisfaction->setDeputyRole($user->getRoleName());
         $satisfaction->setCreated($submitDate);
 
         return $satisfaction;
@@ -993,7 +988,7 @@ class FixtureHelper
 
         $orgName = sprintf('prof-%s-%s', $this->orgName, $testRunId);
 
-        $organisation = $this->organisationTestHelper->createOrganisation($orgName, $emailIdentifier);
+        $organisation = new Organisation($orgName, $emailIdentifier, true);
         $this->em->persist($organisation);
 
         return $organisation;
@@ -1205,10 +1200,7 @@ class FixtureHelper
 
     public function createAndPersistOrganisation(string $name, string $emailIdentifier, bool $isActivated = true): Organisation
     {
-        $organisation = new Organisation();
-        $organisation->setName($name);
-        $organisation->setEmailIdentifier($emailIdentifier);
-        $organisation->setIsActivated($isActivated);
+        $organisation = new Organisation($name, $emailIdentifier, $isActivated);
         $this->em->persist($organisation);
         $this->em->flush();
 
@@ -1219,9 +1211,8 @@ class FixtureHelper
     {
         $report = $this->em->getRepository(Report::class)->find($reportId);
 
-        $expense = new Expense($report);
+        $expense = new Expense($report, $explanation);
         $expense->setAmount($amount);
-        $expense->setExplanation($explanation);
 
         $report->addExpense($expense);
         $report->setPaidForAnything('yes');

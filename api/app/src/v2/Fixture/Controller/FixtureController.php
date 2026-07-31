@@ -76,7 +76,7 @@ class FixtureController extends AbstractController
             /** @var Client $client */
             $client = $org->getClients()->first();
         }
-        $user = new User();
+        $user = new User('', '', '');
 
         $multiClientDeputy = [];
         if (!$fromRequest['multiClientEnabled']) {
@@ -325,42 +325,46 @@ class FixtureController extends AbstractController
 
     private function generateCourtOrder(Client $client, string $reportType): CourtOrder
     {
-        $courtOrder = new CourtOrder();
+
 
         switch ($reportType) {
             case '104':
-                $courtOrder->setOrderType(CourtOrderType::HW);
-                $courtOrder->setOrderReportType(CourtOrderReportType::OPG104);
-                $courtOrder->setOrderKind(CourtOrderKind::Single);
+                $orderType = CourtOrderType::HW;
+                $orderReportType = CourtOrderReportType::OPG104;
+                $orderKind = CourtOrderKind::Single;
                 break;
             case '102':
-                $courtOrder->setOrderType(CourtOrderType::PFA);
-                $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
-                $courtOrder->setOrderKind(CourtOrderKind::Single);
+                $orderType = CourtOrderType::PFA;
+                $orderReportType = CourtOrderReportType::OPG102;
+                $orderKind = CourtOrderKind::Single;
                 break;
             case '102-4':
-                $courtOrder->setOrderType(CourtOrderType::PFA);
-                $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
-                $courtOrder->setOrderKind(CourtOrderKind::Hybrid);
+                $orderType = CourtOrderType::PFA;
+                $orderReportType = CourtOrderReportType::OPG102;
+                $orderKind = CourtOrderKind::Hybrid;
                 break;
             case '103':
-                $courtOrder->setOrderType(CourtOrderType::PFA);
-                $courtOrder->setOrderReportType(CourtOrderReportType::OPG103);
-                $courtOrder->setOrderKind(CourtOrderKind::Single);
+                $orderType = CourtOrderType::PFA;
+                $orderReportType = CourtOrderReportType::OPG103;
+                $orderKind = CourtOrderKind::Single;
                 break;
             case '103-4':
-                $courtOrder->setOrderType(CourtOrderType::PFA);
-                $courtOrder->setOrderReportType(CourtOrderReportType::OPG103);
-                $courtOrder->setOrderKind(CourtOrderKind::Hybrid);
+                $orderType = CourtOrderType::PFA;
+                $orderReportType = CourtOrderReportType::OPG103;
+                $orderKind = CourtOrderKind::Hybrid;
                 break;
             default:
                 throw new \InvalidArgumentException('Invalid report type provided: ' . $reportType);
         }
 
-        $courtOrder->setCourtOrderUid(strval(rand(100000000000, 999999999999)));
-        $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
-        $courtOrder->setClient($client);
+        $courtOrder = new CourtOrder(
+            strval(rand(100000000000, 999999999999)),
+            $orderType,
+            $orderReportType,
+            $orderKind,
+            new \DateTime('2020-06-14'),
+            $client
+        );
         $courtOrder->setCreatedAt(new \DateTime());
         $courtOrder->setUpdatedAt(new \DateTime());
 

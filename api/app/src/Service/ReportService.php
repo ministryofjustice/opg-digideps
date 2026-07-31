@@ -26,6 +26,7 @@ class ReportService
         private readonly EntityManagerInterface $em,
         private readonly ReportFactory $reportFactory,
         private readonly LoggerInterface $logger,
+        private readonly \DateTimeImmutable $now = new \DateTimeImmutable()
     ) {
         /** @var PreRegistrationRepository $preRegistrationRepository */
         $preRegistrationRepository = $em->getRepository(PreRegistration::class);
@@ -62,8 +63,7 @@ class ReportService
 
         $this->em->persist($submission);
 
-        /** @var CourtOrder[] $courtOrders */
-        $courtOrders = $currentReport->getCourtOrders()->toArray();
+        $courtOrders = $currentReport->getCourtOrders();
         $client = $currentReport->getClient();
         $clientId = $client->getId();
         $now = new \DateTime()->format('Y-m-d H:i:s');
@@ -93,7 +93,7 @@ class ReportService
 
             $newYearReport = $this->createNextYearReport($currentReport);
 
-            foreach ($courtOrders as $courtOrder) {
+            foreach ($currentReport->getCourtOrders() as $courtOrder) {
                 if ($courtOrder->getStatus() === 'ACTIVE') {
                     $courtOrder->addReport($newYearReport);
                     $this->em->persist($courtOrder);
@@ -119,9 +119,7 @@ class ReportService
             $assetExists = $this->checkAssetExists($toReport, $asset);
 
             if (!$assetExists) {
-                $newAsset = $this->cloneAsset($asset);
-                $newAsset->setReport($toReport);
-
+                $newAsset = $this->cloneAsset($asset, $toReport);
                 $toReport->addAsset($newAsset);
                 $this->em->detach($newAsset);
                 $this->em->persist($newAsset);
@@ -134,7 +132,7 @@ class ReportService
             $accountExists = $this->checkBankAccountExists($toReport, $account);
 
             if (!$accountExists) {
-                $newAccount = $this->cloneBankAccount($account);
+                $newAccount = $this->cloneBankAccount($account, $toReport);
                 $newAccount->setReport($toReport);
                 $toReport->addAccount($newAccount);
                 $this->em->persist($newAccount);
@@ -147,10 +145,8 @@ class ReportService
         $toAssets = $toReport->getAssets();
 
         foreach ($toAssets as $toAsset) {
-            if ($toAsset->getType() === $asset->getType()) {
-                if ($asset->isEqual($toAsset)) {
-                    return true;
-                }
+            if ($asset->isEqual($toAsset)) {
+                return true;
             }
         }
 
@@ -160,10 +156,10 @@ class ReportService
     /**
      * Convert asset into Report Asset.
      */
-    private function cloneAsset(Asset $asset): Asset
+    private function cloneAsset(Asset $asset, Report $toReport): Asset
     {
         if ($asset instanceof AssetProperty) {
-            $newAsset = new AssetProperty();
+            $newAsset = new AssetProperty($toReport);
 
             $newAsset->setAddress($asset->getAddress());
             $newAsset->setAddress2($asset->getAddress2());
@@ -180,7 +176,7 @@ class ReportService
             $newAsset->setRentAgreementEndDate($asset->getRentAgreementEndDate());
             $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
         } elseif ($asset instanceof AssetOther) {
-            $newAsset = new AssetOther();
+            $newAsset = new AssetOther($toReport);
             $newAsset->setTitle($asset->getTitle());
             $newAsset->setDescription($asset->getDescription());
             $newAsset->setValuationDate($asset->getValuationDate());
@@ -193,9 +189,6 @@ class ReportService
         return $newAsset;
     }
 
-    /**
-     * @return bool
-     */
     private function checkBankAccountExists(Report $toReport, BankAccount $account): bool
     {
         foreach ($toReport->getBankAccounts() as $toAccount) {
@@ -216,9 +209,9 @@ class ReportService
     /**
      * Clones instance of Report and returns new Report Bank Account.
      */
-    private function cloneBankAccount(BankAccount $account): BankAccount
+    private function cloneBankAccount(BankAccount $account, Report $toReport): BankAccount
     {
-        $newAccount = new BankAccount();
+        $newAccount = new BankAccount($toReport);
 
         $newAccount->setBank($account->getBank());
         $newAccount->setAccountType($account->getAccountType());
@@ -348,11 +341,9 @@ class ReportService
 
     /**
      * If the report is ready to submit, but is not yet due, return notFinished instead
-     * In all the the cases, return original $status.
+     * In all the cases, return original $status.
      *
      * @param string $status
-     *
-     * @return string
      */
     public function adjustReportStatus($status, \DateTime $endDate): string
     {
@@ -430,5 +421,38 @@ class ReportService
         }
 
         return $required;
+    }
+
+    public function createReportFromOrder(CourtOrder $courtOrder): Report
+    {
+        $startDate = $this->determineStartDateOfFirstReport($courtOrder);
+
+        $newReport = new Report(
+            client: $courtOrder->getClient(),
+            type: "{$courtOrder->getDesiredReportType()}",
+            startDate: \DateTime::createFromImmutable($startDate),
+            endDate: \DateTime::createFromImmutable($startDate)->modify('+12 months -1 day'),
+            dateChecks: false,
+        );
+
+        $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
+
+        return $newReport;
+    }
+
+    public function determineStartDateOfFirstReport(CourtOrder $courtOrder): \DateTimeImmutable
+    {
+        $startDate = \DateTimeImmutable::createFromMutable($courtOrder->getOrderMadeDate())->setTime(0, 0);
+        if ($this->now < $startDate) {
+            throw new \DomainException("Encountered a court order with uid {$courtOrder->getCourtOrderUid()} before this court order's made date.");
+        }
+
+        $aYear = new \DateInterval('P1Y');
+
+        $latestStartDate = $this->now->setTime(0, 0)->sub($aYear);
+        while ($startDate <= $latestStartDate) {
+            $startDate = $startDate->add($aYear);
+        }
+        return $startDate;
     }
 }

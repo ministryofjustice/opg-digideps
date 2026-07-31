@@ -64,10 +64,11 @@ class AdminUserFixtures extends AbstractDataFixture
 
     private function addUser(array $data, ObjectManager $manager): void
     {
-        $user = new User()
-            ->setFirstname($data['firstName'])
-            ->setLastname($data['lastName'])
-            ->setEmail($data['email'])
+        $user = new User(
+            $data['firstName'],
+            $data['lastName'],
+            $data['email']
+        )
             ->setActive(true)
             ->setRoleName($data['roleType']);
 

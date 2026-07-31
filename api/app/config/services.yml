@@ -451,16 +451,13 @@ services:
     OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderService:
         public: true
 
-    OPG\Digideps\Backend\Service\LayRegistrationService:
-        public: true
-
     OPG\Digideps\Backend\Service\DeputyService:
         public: true
 
     OPG\Digideps\Backend\Service\UserDeputyService:
         public: true
 
-    OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory:
+    OPG\Digideps\Backend\Factory\UpdateReportTypeDataFactory:
         public: true
 
     preCSVDataFactory:
@@ -506,11 +503,11 @@ services:
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\RequiredReport\RequiredReportDataFactory',
-                      "dry-run-only",
+                      "active",
                   ]
                 - [
-                      '@OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory',
-                      "dry-run-only",
+                      '@OPG\Digideps\Backend\Factory\UpdateReportTypeDataFactory',
+                      "active",
                   ]
 
     OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
@@ -518,3 +515,6 @@ services:
         arguments:
             $preCSVDataFactory: "@preCSVDataFactory"
             $postCSVDataFactory: "@postCSVDataFactory"
+
+    OPG\Digideps\Backend\Domain\Report\ReportTransitionService:
+        public: true

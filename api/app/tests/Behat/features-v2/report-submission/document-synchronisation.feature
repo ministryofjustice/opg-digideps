@@ -1,4 +1,4 @@
-@v2 @v2_sequential_2 @report-submissions @document-sync
+@v2 @v2_sequential_2 @report-submissions @document-sync @document-synchronisation
 Feature: Synchronising Documents with Sirius
 
     @super-admin @lay-pfa-high-completed
@@ -12,7 +12,7 @@ Feature: Synchronising Documents with Sirius
         Then my report should be submitted
         And a super admin user accesses the admin app
         And I visit the admin submissions page
-        And I search for submissions using the court order number of the client I am interacting with and check the 'Pending' column
+        And I search for submissions using the case number of the deputy I am interacting with and check the 'Pending' column
         Then I should see the case number of the user I'm interacting with
         And the report PDF document should be queued
         And the document "test_image.png" should be queued
@@ -24,7 +24,7 @@ Feature: Synchronising Documents with Sirius
         And I send the documents to complete the upload process on the "submitted" report
         And a super admin user accesses the admin app
         And I visit the admin submissions page
-        And I search for submissions using the court order number of the client I am interacting with and check the 'Pending' column
+        And I search for submissions using the case number of the deputy I am interacting with and check the 'Pending' column
         Then I should see the case number of the user I'm interacting with
         And the document "testimage2.png" should be queued
 
@@ -37,11 +37,11 @@ Feature: Synchronising Documents with Sirius
         And the document sync enabled flag is set to '1'
         And I run the document-sync command
         And I visit the admin submissions page
-        And I search for submissions using the court order number of the client I am interacting with and check the 'Pending' column
+        And I search for submissions using the case number of the deputy I am interacting with and check the 'Pending' column
         Then I should see the case number of the user I'm interacting with
         And the report PDF document should be synced
         And the document "testimage3.png" should be queued
         And I run the document-sync command
         And I visit the admin submissions page
-        And I search for submissions using the court order number of the client I am interacting with and check the 'Synchronised' column
+        And I search for submissions using the case number of the deputy I am interacting with and check the 'Synchronised' column
         And the document "testimage3.png" should be synced

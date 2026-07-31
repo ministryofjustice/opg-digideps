@@ -49,12 +49,6 @@ parameters:
 			path: src/Command/CheckCSVUploadedCommand.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\DocumentRecoverCommand\:\:execute\(\) should return int but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Command/DocumentRecoverCommand.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_filter expects array, list\<string\>\|false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -69,6 +63,12 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$shortcut of method Symfony\\Component\\Console\\Command\\Command\:\:addOption\(\) expects array\|string\|null, int given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Command/DocumentRecoverCommand.php
+
+		-
+			message: '#^Return type \(void\) of method OPG\\Digideps\\Frontend\\Command\\DocumentRecoverCommand\:\:execute\(\) should be compatible with return type \(int\) of method Symfony\\Component\\Console\\Command\\Command\:\:execute\(\)$#'
+			identifier: method.childReturnType
 			count: 1
 			path: src/Command/DocumentRecoverCommand.php
 
@@ -369,7 +369,7 @@ parameters:
 		-
 			message: '#^Cannot call method getData\(\) on Symfony\\Component\\Form\\FormInterface\|null\.$#'
 			identifier: method.nonObject
-			count: 10
+			count: 9
 			path: src/Controller/Admin/Client/ReportController.php
 
 		-
@@ -9421,7 +9421,7 @@ parameters:
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
 
 		-
-			message: '#^Cannot access offset ''deputyrole'' on mixed\.$#'
+			message: '#^Cannot access offset ''deputyRole'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
@@ -9451,7 +9451,7 @@ parameters:
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
 
 		-
-			message: '#^Cannot access offset ''reporttype'' on mixed\.$#'
+			message: '#^Cannot access offset ''reportType'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
@@ -9489,12 +9489,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Csv\\UserResearchResponseCsvGenerator\:\:transformDeputyshipLength\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(\[\]UserResearchResponse \$userResearchResponses\)\: Unexpected token "\[", expected type at offset 18 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
 
@@ -10957,7 +10951,7 @@ parameters:
 			path: src/TestHelpers/ReportHelpers.php
 
 		-
-			message: '#^Parameter \#1 \$deputyrole of method OPG\\Digideps\\Frontend\\Entity\\Report\\Satisfaction\:\:setDeputyrole\(\) expects string, int\|string\|null given\.$#'
+			message: '#^Parameter \#1 \$deputyRole of method OPG\\Digideps\\Frontend\\Entity\\Report\\Satisfaction\:\:setDeputyRole\(\) expects string, int\|string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/TestHelpers/SatisfactionHelpers.php

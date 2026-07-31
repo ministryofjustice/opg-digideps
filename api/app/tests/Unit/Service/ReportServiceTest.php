@@ -7,6 +7,7 @@ namespace Tests\OPG\Digideps\Backend\Unit\Service;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
@@ -22,12 +23,11 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 final class ReportServiceTest extends TestCase
 {
     private User $user;
-    private BankAccount $bank1;
-    private AssetProperty $asset1;
     private Report $report;
     private Document $document1;
     private EntityManager&MockObject $em;
@@ -38,24 +38,23 @@ final class ReportServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->user = new User();
+        $this->user = new User('', '', '');
         $client = new Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
         $client->setCourtDate(new \DateTime('2014-06-06'));
 
-        $this->bank1 = new BankAccount()->setAccountNumber('1234');
-        $this->asset1 = new AssetProperty()
-            ->setAddress('SW1')
-            ->setOwned(AssetProperty::OWNED_FULLY);
-
         $this->report = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
         $this->report->setNoAssetToAdd(false)
-            ->addAsset($this->asset1)
-            ->addAccount($this->bank1)
+            ->addAsset(
+                new AssetProperty($this->report)
+                    ->setAddress('SW1')
+                    ->setOwned(AssetProperty::OWNED_FULLY)
+            )
+            ->addAccount(new BankAccount($this->report)->setAccountNumber('1234'))
             ->setSubmittedBy($this->user);
 
-        $this->document1 = new Document($this->report)->setFileName('file1.pdf');
+        $this->document1 = new Document($this->report, 'file1.pdf');
         $this->report->addDocument($this->document1);
 
         $this->em = self::createMock(EntityManager::class);
@@ -242,9 +241,9 @@ final class ReportServiceTest extends TestCase
 
     public static function getReportTypeBasedOnSiriusProvider(): array
     {
-        $lay = new User()->setRoleName(User::ROLE_LAY_DEPUTY);
-        $prof = new User()->setRoleName(User::ROLE_PROF_ADMIN);
-        $pa = new User()->setRoleName(User::ROLE_PA_ADMIN);
+        $lay = new User('', '', '')->setRoleName(User::ROLE_LAY_DEPUTY);
+        $prof = new User('', '', '')->setRoleName(User::ROLE_PROF_ADMIN);
+        $pa = new User('', '', '')->setRoleName(User::ROLE_PA_ADMIN);
 
         $layClient = new Client()
             ->addUser($lay)
@@ -377,5 +376,57 @@ final class ReportServiceTest extends TestCase
         self::assertEquals($expectedReportTypes, array_map(function (Report $report) {
             return $report->getType();
         }, $reports));
+    }
+
+    #[DataProvider('provideForDetermineStartDateOfFirstReport')]
+    public function testDetermineStartDateOfFirstReport(\DateTimeImmutable $now, \DateTimeImmutable $madeDate, ?\DateTimeImmutable $expectedStartDate): void
+    {
+        $em = $this->createStub(EntityManagerInterface::class);
+        $em->method('getRepository')->willReturn($this->createStub(PreRegistrationRepository::class));
+
+        $reportService = new ReportService(
+            $em,
+            new ReportFactory(),
+            new NullLogger(),
+            $now
+        );
+        $courtOrder = $this->createStub(CourtOrder::class);
+        $courtOrder->method('getOrderMadeDate')->willReturn(\DateTime::createFromImmutable($madeDate));
+
+        if ($expectedStartDate === null) {
+            $this->expectException(\DomainException::class);
+        }
+        $startDate = $reportService->determineStartDateOfFirstReport($courtOrder);
+        if ($expectedStartDate !== null) {
+            $this->assertSame($expectedStartDate->format('Y-m-d H:i:s'), $startDate->format('Y-m-d H:i:s'));
+        }
+    }
+
+    public static function provideForDetermineStartDateOfFirstReport(): array
+    {
+        return array_map(
+            fn (array $scenario) => array_map(fn (?string $date): ?\DateTimeImmutable => $date ? \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $date) ?: null: null, $scenario),
+            [
+                ['2023-03-15 00:00:00', '2023-06-15 00:00:00', null],
+                ['2023-06-14 23:59:59', '2023-06-15 00:00:00', null],
+                ['2023-06-15 00:00:00', '2023-06-15 00:00:00', '2023-06-15 00:00:00'],
+                ['2023-09-15 00:00:00', '2023-06-15 00:00:00', '2023-06-15 00:00:00'],
+
+                ['2024-03-15 00:00:00', '2023-06-15 00:00:00', '2023-06-15 00:00:00'],
+                ['2024-06-14 23:59:59', '2023-06-15 00:00:00', '2023-06-15 00:00:00'],
+                ['2024-06-15 00:00:00', '2023-06-15 00:00:00', '2024-06-15 00:00:00'],
+                ['2024-09-15 00:00:00', '2023-06-15 00:00:00', '2024-06-15 00:00:00'],
+
+                ['2025-03-15 00:00:00', '2023-06-15 00:00:00', '2024-06-15 00:00:00'],
+                ['2025-06-14 23:59:59', '2023-06-15 00:00:00', '2024-06-15 00:00:00'],
+                ['2025-06-15 00:00:00', '2023-06-15 00:00:00', '2025-06-15 00:00:00'],
+                ['2025-09-15 00:00:00', '2023-06-15 00:00:00', '2025-06-15 00:00:00'],
+
+                ['2026-03-15 00:00:00', '2023-06-15 00:00:00', '2025-06-15 00:00:00'],
+                ['2026-06-14 23:59:59', '2023-06-15 00:00:00', '2025-06-15 00:00:00'],
+                ['2026-06-15 00:00:00', '2023-06-15 00:00:00', '2026-06-15 00:00:00'],
+                ['2026-09-15 00:00:00', '2023-06-15 00:00:00', '2026-06-15 00:00:00'],
+            ]
+        );
     }
 }
