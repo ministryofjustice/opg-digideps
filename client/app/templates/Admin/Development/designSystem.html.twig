@@ -1,0 +1,13 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% trans_default_domain "admin-fixtures" %}
+
+{% set navSection = 'fixtures' %}
+
+{% block htmlTitle %}Design System{% endblock %}
+{% block pageTitle %}Design System{% endblock %}
+{% block supportTitleTop %}Overview{% endblock %}
+
+{% block content %}
+    <twig:DOC:Overview/>
+{% endblock %}

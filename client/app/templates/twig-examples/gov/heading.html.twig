@@ -1,0 +1,14 @@
+{% set size="m" %}{% set h=3 %}{% set text='Hello World' %}
+
+<twig:GOV:Heading size="xl" h="1">
+    {{ text }}
+</twig:GOV:Heading>
+<twig:GOV:Heading size="l" h="2">
+    {{ text }}
+</twig:GOV:Heading>
+<twig:GOV:Heading size="{{ size }}" h="{{ h }}">
+    {{ text }}
+</twig:GOV:Heading>
+<twig:GOV:Heading size="s" h="4">
+    {{ text }}
+</twig:GOV:Heading>
