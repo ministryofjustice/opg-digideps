@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260722162425 extends AbstractMigration
+final class Version320 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -28,22 +28,26 @@ final class Version20260722162425 extends AbstractMigration
         $this->addSql('ALTER TABLE report ADD CONSTRAINT FK_C42F77844E0A74D0 FOREIGN KEY (hwCourtOrder_id) REFERENCES court_order (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
 
         $this->addSql("
-            UPDATE report SET pfaCourtOrder_id = MAX(cor.court_order_id)
-            FROM court_order_report cor
-            JOIN court_order co
-                ON cor.court_order_id = co.id
-            WHERE
-                cor.report_id = id
-                AND co.order_type = 'pfa'
+            UPDATE report r SET pfaCourtOrder_id = (
+                SELECT MAX(cor.court_order_id)
+                FROM court_order_report cor
+                JOIN court_order co
+                    ON cor.court_order_id = co.id
+                WHERE
+                    cor.report_id = r.id
+                    AND co.order_type = 'pfa'
+            )
         ");
         $this->addSql("
-            UPDATE report SET hwCourtOrder_id = MAX(cor.court_order_id)
-            FROM court_order_report cor
-            JOIN court_order co
-                ON cor.court_order_id = co.id
-            WHERE
-                cor.report_id = id
-                AND co.order_type = 'hw'
+            UPDATE report r SET hwCourtOrder_id = (
+                SELECT MAX(cor.court_order_id)
+                FROM court_order_report cor
+                JOIN court_order co
+                    ON cor.court_order_id = co.id
+                WHERE
+                    cor.report_id = r.id
+                    AND co.order_type = 'hw'
+            )
         ");
 
         $this->addSql('CREATE INDEX IDX_C42F7784D907E0D4 ON report (pfaCourtOrder_id)');
