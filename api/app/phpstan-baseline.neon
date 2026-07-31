@@ -1,6 +1,18 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: config/bootstrap.php
+
+		-
+			message: '#^Parameter \#1 \$envKey of class Symfony\\Component\\Dotenv\\Dotenv constructor expects string, false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: config/bootstrap.php
+
+		-
 			message: '#^Binary operation "\." between ''\<comment\>Comparison…'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1

@@ -1,0 +1,6 @@
+{% props h="1" %}
+{% set h_tag = "h" ~ h %}
+
+<{{ h_tag }} {{ attributes.defaults({class: 'govuk-summary-card__title'}) }}">
+    {% block content %}{% endblock %}
+</{{ h_tag }}>

@@ -1,0 +1,13 @@
+{% props href, noVisitedState=false, inverse=false, inNewTab=false %}
+
+{% set className = "govuk-link" %}
+{% if noVisitedState %}
+    {% set className = className ~ ' govuk-link--no-visited-state' %}
+{% endif %}
+{% if inverse %}
+    {% set className = className ~ ' govuk-link--inverse' %}
+{% endif %}
+
+<a href="{{ href }}" class="{{ className }}"{% if inNewTab %} rel="noreferrer noopener" target="_blank"{% endif %}>
+    {% block content %}{% endblock %}
+</a>
