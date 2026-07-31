@@ -211,14 +211,14 @@ parameters:
 			path: api/app/src/Command/ReportStatusUpdaterCommand.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:deleteInactivateUsers\(\) should return int but returns mixed\.$#'
-			identifier: return.type
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\ResyncResubmittableErrorChecklists\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
 			count: 1
-			path: api/app/src/Command/UserCleanupCommand.php
+			path: api/app/src/Command/ResyncResubmittableErrorChecklists.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Method OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:deleteInactivateUsers\(\) should return int but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: api/app/src/Command/UserCleanupCommand.php
 
@@ -1961,18 +1961,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: api/app/src/DataFixtures/TestUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''account_password'' on array\|bool\|float\|int\|string\|UnitEnum\|null\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/UserPasswordFixtures.php
-
-		-
-			message: '#^Parameter \#2 \$plainPassword of method Symfony\\Component\\PasswordHasher\\Hasher\\UserPasswordHasherInterface\:\:hashPassword\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/UserPasswordFixtures.php
 
 		-
 			message: '#^Cannot access offset ''report_status_cached'' on mixed\.$#'
@@ -18505,7 +18493,7 @@ parameters:
 			path: api/app/tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
@@ -20653,7 +20641,7 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/AccountControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: api/app/tests/Integration/ControllerReport/AccountControllerTest.php
@@ -21097,7 +21085,7 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 3
 			path: api/app/tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
@@ -21181,7 +21169,7 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: api/app/tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
@@ -21625,7 +21613,7 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 7
 			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
@@ -21901,7 +21889,7 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
@@ -22069,7 +22057,7 @@ parameters:
 			path: api/app/tests/Integration/Entity/DeputyIntegrationTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Entity/DeputyIntegrationTest.php
@@ -22831,7 +22819,7 @@ parameters:
 			path: api/app/tests/Integration/Service/CourtOrderServiceIntegrationTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of static method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of static method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Service/CourtOrderServiceIntegrationTest.php
@@ -22891,7 +22879,7 @@ parameters:
 			path: api/app/tests/Integration/Service/DeputyServiceIntegrationTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of static method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of static method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 3
 			path: api/app/tests/Integration/Service/DeputyServiceIntegrationTest.php
@@ -23005,7 +22993,7 @@ parameters:
 			path: api/app/tests/Integration/Stats/Query/QueryIntegrationTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: api/app/tests/Integration/Stats/Query/QueryIntegrationTest.php
@@ -23731,7 +23719,7 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: api/app/tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
@@ -24109,7 +24097,7 @@ parameters:
 			path: api/app/tests/Integration/v2/Service/CourtOrderServiceIntegrationTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/ProcessLayCSVCommandTest.php
@@ -24211,7 +24199,7 @@ parameters:
 			path: api/app/tests/Unit/Entity/Report/ReportTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 3
 			path: api/app/tests/Unit/Entity/Report/ReportTest.php
@@ -24361,7 +24349,7 @@ parameters:
 			path: api/app/tests/Unit/Repository/SatisfactionRepositoryTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), covariant mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Repository/SatisfactionRepositoryTest.php
@@ -25510,6 +25498,12 @@ parameters:
 			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, array\|bool\|float\|int\|string\|UnitEnum\|null given\.$#'
 			identifier: argument.type
 			count: 2
+			path: client/app/src/Command/ProcessOrgCSVCommand.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Command\\ProcessOrgCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
 			path: client/app/src/Command/ProcessOrgCSVCommand.php
 
 		-

@@ -1969,18 +1969,6 @@ parameters:
 			path: src/DataFixtures/TestUserFixtures.php
 
 		-
-			message: '#^Cannot access offset ''account_password'' on array\|bool\|float\|int\|string\|UnitEnum\|null\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/DataFixtures/UserPasswordFixtures.php
-
-		-
-			message: '#^Parameter \#2 \$plainPassword of method Symfony\\Component\\PasswordHasher\\Hasher\\UserPasswordHasherInterface\:\:hashPassword\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/DataFixtures/UserPasswordFixtures.php
-
-		-
 			message: '#^Cannot access offset ''report_status_cached'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1

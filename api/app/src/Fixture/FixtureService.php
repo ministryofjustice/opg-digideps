@@ -41,7 +41,7 @@ final class FixtureService
         private readonly EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
         ParameterBagInterface $parameters,
-        private readonly int $flushAfter = 64,
+        private readonly int $flushAfter = 256,
     ) {
         $this->persistCounter = new Counter();
         $this->faker = Factory::create('en_GB');
@@ -86,15 +86,16 @@ final class FixtureService
         $this->persistCounter->reset();
     }
 
-    public function instantiateOnlyUser(UserType $userType, DeputyType $deputyType, ?string $emailDomain = null, ?Deputy $deputy = null, ?Organisation $organisation = null): User
+    public function instantiateOnlyUser(UserType $userType, DeputyType $deputyType, ?string $emailDomain = null, ?Deputy $deputy = null, ?Organisation $organisation = null, bool $flush = true): User
     {
         $this->refreshCounter();
-        $user = $this->persist($this->makeUser(new DeputyDescriptor('', $deputyType, $userType, emailDomain: $emailDomain), $deputy, $organisation));
+        $user = $this->makeUser(new DeputyDescriptor('', $deputyType, $userType, emailDomain: $emailDomain), $deputy, $organisation);
         if ($userType === UserType::Deputy && $deputy === null) {
             $user->setDeputyUid((int)$this->counter->nextString(8, '9'));
-            $this->persist($user);
         }
-        $this->flush();
+        if ($flush) {
+            $this->flush();
+        }
         return $user;
     }
 
@@ -108,11 +109,12 @@ final class FixtureService
             'users' => [],
             'deputies' => [],
             'organisations' => [],
-        ]
+        ],
+        bool $flush = true
     ): array {
         $this->refreshCounter();
 
-        $client = $this->persist($this->makeClient());
+        $client = $this->makeClient();
         /**
          * @var array<OrderPair> $orders
          */
@@ -131,7 +133,9 @@ final class FixtureService
             $current = $current->previous;
             $first = false;
         }
-        $this->flush();
+        if ($flush) {
+            $this->flush();
+        }
 
         return [
             'client' => $client,
@@ -153,7 +157,7 @@ final class FixtureService
         }
         $deputySet = $sibling === null ? $descriptor->deputySet : $descriptor->siblingDeputySet ?? $scenario->courtOrderDescriptor->deputySet;
 
-        $courtOrder = $this->persist($this->makeCourtOrder($descriptor, $client, $type));
+        $courtOrder = $this->makeCourtOrder($descriptor, $client, $type);
         /**
          * @var null|User $primary;
          */
@@ -177,28 +181,25 @@ final class FixtureService
             if ($deputy !== null) {
                 $persons['deputies'][$deputyDescriptor->deputyReference] = $deputy;
                 $deputy->associateWithCourtOrder($courtOrder);
-                $this->persist($client->setDeputy($deputy));
+                $client->setDeputy($deputy);
                 if ($organisation !== null) {
                     $deputy->setOrganisation($organisation);
                 }
                 $user = $deputy->getUser();
-                $this->persist($deputy);
             }
             if ($organisation !== null) {
                 $persons['organisations'][$deputyDescriptor->emailDomain] = $organisation;
-                $this->persist($client->setOrganisation($organisation));
-                $this->persist($organisation);
+                $client->setOrganisation($organisation);
             }
             if ($user !== null) {
                 $persons['users'][$deputyDescriptor->deputyReference] = $user;
-                $this->persist($user->addClient($client));
+                $user->addClient($client);
                 if ($user->getIsPrimary()) {
                     $primary ??= $user;
                 }
             }
         }
-        $this->persist($client);
-        $this->persist($courtOrder);
+
         $this->flush();
         $this->entityManager->refresh($courtOrder);
 
@@ -210,7 +211,6 @@ final class FixtureService
         if ($sibling !== null) {
             $sibling['order']->setSibling($courtOrder);
             $courtOrder->setSibling($sibling['order']);
-            $this->persist($courtOrder);
             if ($courtOrder->getOrderKind() === CourtOrderKind::Hybrid) {
                 $reports = $sibling['reports'];
             }
@@ -220,7 +220,7 @@ final class FixtureService
             $reports = [];
             if (!$descriptor->noReports) {
                 for ($i = 0; $i <= $descriptor->submittedReports; $i++) {
-                    $reports[] = $this->persist($this->makeReport($courtOrder, $reports[$i - 1] ?? null, $primary));
+                    $reports[] = $this->makeReport($courtOrder, $reports[$i - 1] ?? null, $primary);
                 }
                 if (!$first) {
                     $this->makeReportSubmitted($reports[count($reports) - 1], $primary);
@@ -229,7 +229,7 @@ final class FixtureService
         }
 
         return [
-            'order' => $this->persist($courtOrder),
+            'order' => $courtOrder,
             'reports' => $reports,
         ];
     }
@@ -237,7 +237,7 @@ final class FixtureService
     private function makeClient(): Client
     {
         $address = explode("\n", $this->faker->streetAddress());
-        return new Client()
+        return $this->persist(new Client())
             ->setCaseNumber($this->counter->nextString(size: 8, postfix: 'T'))
             ->setFirstname($this->faker->firstName())
             ->setLastname($this->faker->lastName())

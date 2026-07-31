@@ -11,17 +11,14 @@ class SmokeTestUserFixtures extends AbstractDataFixture
 {
     public function doLoad(FixtureService $fixtureService): void
     {
-        $adminUser = $fixtureService->instantiateOnlyUser(UserType::Admin, DeputyType::LAY)
+        $fixtureService->instantiateOnlyUser(UserType::Admin, DeputyType::LAY, flush: false)
             ->setEmail('smoketestadmin@smoketest.com')
             ->setFirstname('SmokeyJoe')
             ->setLastname('SmokeTest');
-        ['client' => $client, 'persons' => ['users' => ['lay1' => $deputyUser]]] = $fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+        ['client' => $client, 'persons' => ['users' => ['lay1' => $deputyUser]]] = $fixtureService->instantiateScenario(Scenario::newSimpleLayScenario(), flush: false);
         $client->setCaseNumber('9999999t');
         $deputyUser->setEmail('smoketestuser@smoketest.com')->setRegistrationDate(new \DateTime());
 
-        $fixtureService->persist($adminUser);
-        $fixtureService->persist($client);
-        $fixtureService->persist($deputyUser);
         $fixtureService->flush();
     }
 

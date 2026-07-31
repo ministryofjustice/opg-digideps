@@ -62,7 +62,7 @@ abstract class AbstractDataFixture implements FixtureInterface
         ];
 
         for ($ci = 0; $ci < $clientCount; ++$ci) {
-            ['persons' => $persons] = $this->fixtureService->instantiateScenario($scenario, $persons);
+            ['persons' => $persons] = $this->fixtureService->instantiateScenario($scenario, $persons, false);
         }
 
         foreach ($persons['users'] as $id => $user) {

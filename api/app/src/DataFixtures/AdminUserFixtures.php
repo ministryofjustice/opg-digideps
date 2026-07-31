@@ -68,11 +68,10 @@ class AdminUserFixtures extends AbstractDataFixture
      */
     private function addUser(FixtureService $fixtureService, array $data): void
     {
-        $user = $fixtureService->instantiateOnlyUser($data['roleType'], DeputyType::LAY)
+        $fixtureService->instantiateOnlyUser($data['roleType'], DeputyType::LAY, flush: false)
             ->setFirstname($data['firstName'])
             ->setLastname($data['lastName'])
             ->setEmail($data['email']);
-        $fixtureService->persist($user);
     }
 
     protected function shouldLoad(string $workspace, string $environment): bool
