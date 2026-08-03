@@ -5,8 +5,6 @@ namespace OPG\Digideps\Frontend\Entity;
 use OPG\Digideps\Frontend\Entity\Traits\LoginInfoTrait;
 use OPG\Digideps\Frontend\Validator\Constraints\CommonPassword;
 use OPG\Digideps\Frontend\Validator\Constraints\EmailSameDomain;
-use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -392,9 +390,9 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @JMS\Groups({"user_organisations"})
      *
-     * @var ArrayCollection
+     * @var array<Organisation>|null
      */
-    private $organisations;
+    private ?array $organisations = null;
 
     /**
      * @JMS\Type("int")
@@ -468,7 +466,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     public function __construct()
     {
-        $this->organisations = new ArrayCollection();
     }
 
     /**
@@ -1244,17 +1241,17 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @return ArrayCollection
+     * @return array<Organisation>|null
      */
-    public function getOrganisations()
+    public function getOrganisations(): ?array
     {
         return $this->organisations;
     }
 
     /**
-     * @param ArrayCollection $organisations
+     * @param array<Organisation>|null $organisations
      */
-    public function setOrganisations($organisations): self
+    public function setOrganisations(array $organisations): self
     {
         $this->organisations = $organisations;
 
