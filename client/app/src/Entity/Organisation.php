@@ -2,7 +2,6 @@
 
 namespace OPG\Digideps\Frontend\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -43,18 +42,18 @@ class Organisation
     private $isActivated;
 
     /**
-     * @var ArrayCollection
+     * @var array<User>
      *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\User>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\User>")
      */
-    private $users;
+    private array $users;
 
     /**
-     * @var ArrayCollection
+     * @var array<Client>
      *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\Client>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Client>")
      */
-    private $clients;
+    private array $clients;
 
     /**
      * @var int
@@ -212,15 +211,16 @@ class Organisation
     /**
      * @return User[]
      */
-    public function getUsers()
+    public function getUsers(): array
     {
         return $this->users;
     }
 
     /**
+     * @param User $user
      * @return bool
      */
-    public function hasUser(User $user)
+    public function hasUser(User $user): bool
     {
         foreach ($this->users ?: [] as $currentUser) {
             if (
@@ -236,9 +236,10 @@ class Organisation
     }
 
     /**
+     * @param int $userId
      * @return User|null
      */
-    public function getUserById(int $userId)
+    public function getUserById(int $userId): ?User
     {
         foreach ($this->users as $user) {
             if ($user->getId() === $userId) {
@@ -254,7 +255,7 @@ class Organisation
      *
      * @return $this
      */
-    public function setUsers($users)
+    public function setUsers(array $users): static
     {
         $this->users = $users;
 
@@ -266,7 +267,7 @@ class Organisation
      *
      * @return $this
      */
-    public function addUser($user)
+    public function addUser(User $user): static
     {
         $this->users[] = $user;
 
