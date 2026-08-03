@@ -40,7 +40,7 @@ class RedisStorage extends TokenStorage
         });
     }
 
-    private function executeWithRetry(callable $operation, int $maxRetries = 3, int $retryDelay = 1000)
+    private function executeWithRetry(callable $operation, int $maxRetries = 3)
     {
         $attempt = 0;
 
@@ -54,7 +54,7 @@ class RedisStorage extends TokenStorage
                     throw new \RuntimeException("Operation failed after {$maxRetries} retries.", 0, $e);
                 }
 
-                usleep($retryDelay * 1000); // Delay in milliseconds
+                usleep(1000 * 1000); // Delay in microseconds
             }
         }
     }
