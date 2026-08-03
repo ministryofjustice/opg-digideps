@@ -73,6 +73,12 @@ parameters:
 			path: api/app/src/Command/ApiComparison.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\IngestDeputyshipsCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: api/app/src/Command/IngestDeputyshipsCSVCommand.php
+
+		-
 			message: '#^Cannot call method warning\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -217,12 +223,6 @@ parameters:
 			path: api/app/src/Command/ReportStatusUpdaterCommand.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\ResyncResubmittableErrorDocuments\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Command/ResyncResubmittableErrorDocuments.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:deleteInactivateUsers\(\) should return int but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -237,12 +237,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$user of method OPG\\Digideps\\Backend\\Command\\UserRetentionPolicyCommand\:\:storeUserIdForDeletion\(\) expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: api/app/src/Command/UserRetentionPolicyCommand.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\UserRetentionPolicyCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: api/app/src/Command/UserRetentionPolicyCommand.php
 
@@ -18535,7 +18529,7 @@ parameters:
 			path: api/app/tests/Integration/Command/SatisfactionPerformanceStatsCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Command/SatisfactionPerformanceStatsCommandTest.php
@@ -24109,7 +24103,7 @@ parameters:
 			path: api/app/tests/Integration/v2/Service/CourtOrderServiceIntegrationTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/ProcessLayCSVCommandTest.php
