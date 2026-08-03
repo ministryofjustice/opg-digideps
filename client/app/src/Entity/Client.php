@@ -6,7 +6,6 @@ use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Traits\ActiveAudit;
 use OPG\Digideps\Frontend\Entity\Traits\IsSoftDeleteableEntity;
 use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -237,22 +236,22 @@ class Client
     private $dateOfBirth;
 
     /**
-     * @var ArrayCollection
+     * @var array<Note>|null
      *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\Note>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Note>")
      *
      * @JMS\Groups({"notes"})
      */
-    private $notes;
+    private ?array $notes = null;
 
     /**
-     * @var ArrayCollection
+     * @var array<ClientContact>|null
      *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\ClientContact>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\ClientContact>")
      *
      * @JMS\Groups({"clientcontacts"})
      */
-    private $clientContacts;
+    private ?array $clientContacts;
 
     /**
      * @var int
@@ -774,33 +773,33 @@ class Client
     }
 
     /**
-     * @return ArrayCollection
+     * @return array<Note>|null
      */
-    public function getNotes()
+    public function getNotes(): ?array
     {
         return $this->notes;
     }
 
     /**
-     * @param ArrayCollection $notes
+     * @param array<Note>|null $notes
      */
-    public function setNotes($notes)
+    public function setNotes(?array $notes)
     {
         $this->notes = $notes;
     }
 
     /**
-     * @return ArrayCollection
+     * @return array<ClientContact>|null
      */
-    public function getClientContacts()
+    public function getClientContacts(): ?array
     {
         return $this->clientContacts;
     }
 
     /**
-     * @param ArrayCollection $clientContacts
+     * @param array<ClientContact>|null $clientContacts
      */
-    public function setClientContacts($clientContacts)
+    public function setClientContacts(?array $clientContacts): void
     {
         $this->clientContacts = $clientContacts;
     }
@@ -944,9 +943,9 @@ class Client
         $this->organisation = $organisation;
     }
 
-    public function userBelongsToClientsOrganisation(User $user)
+    public function userBelongsToClientsOrganisation(User $user): bool
     {
-        if ($this->getOrganisation() instanceof Organisation && $this->getOrganisation()->isActivated()) {
+        if ($this->getOrganisation() instanceof Organisation && $this->getOrganisation()->isActivated() && !is_null($user->getOrganisations())) {
             foreach ($user->getOrganisations() as $organisation) {
                 if ($organisation->getId() === $this->getOrganisation()->getId()) {
                     return true;

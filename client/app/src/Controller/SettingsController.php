@@ -36,7 +36,7 @@ class SettingsController extends AbstractController
             $user = $this->userApi->getUserWithData(['user-organisations', 'organisation']);
 
             return [
-                'hasOrganisations' => count($user->getOrganisations()),
+                'hasOrganisations' => count($user->getOrganisations() ?? []),
             ];
         }
 

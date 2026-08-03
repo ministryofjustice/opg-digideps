@@ -1251,7 +1251,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @param array<Organisation>|null $organisations
      */
-    public function setOrganisations(array $organisations): self
+    public function setOrganisations(?array $organisations): self
     {
         $this->organisations = $organisations;
 
@@ -1264,9 +1264,11 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
             return false;
         }
 
-        foreach ($this->getOrganisations() as $organisation) {
-            if ($organisation->isActivated()) {
-                return true;
+        if ($this->getOrganisations() !== null) {
+            foreach ($this->getOrganisations() as $organisation) {
+                if ($organisation->isActivated()) {
+                    return true;
+                }
             }
         }
 
