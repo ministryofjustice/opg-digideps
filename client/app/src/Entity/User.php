@@ -392,7 +392,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @var array<Organisation>
      */
-    private array $organisations;
+    private array $organisations = [];
 
     /**
      * @JMS\Type("int")
