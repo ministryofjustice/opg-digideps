@@ -242,7 +242,7 @@ class Client
      *
      * @JMS\Groups({"notes"})
      */
-    private array $notes;
+    private array $notes = [];
 
     /**
      * @var array<ClientContact>
@@ -251,7 +251,7 @@ class Client
      *
      * @JMS\Groups({"clientcontacts"})
      */
-    private array $clientContacts;
+    private array $clientContacts = [];
 
     /**
      * @var int
@@ -303,8 +303,6 @@ class Client
 
     public function __construct()
     {
-        $this->users = [];
-        $this->reports = [];
     }
 
     /**

@@ -53,7 +53,7 @@ class Organisation
      *
      * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Client>")
      */
-    private array $clients;
+    private array $clients = [];
 
     /**
      * @var int
