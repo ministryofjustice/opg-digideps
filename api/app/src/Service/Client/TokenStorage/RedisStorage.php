@@ -54,7 +54,7 @@ class RedisStorage extends TokenStorage
                     throw new \RuntimeException("Operation failed after {$maxRetries} retries.", 0, $e);
                 }
 
-                usleep(1000000); // Delay in microseconds
+                usleep(500000); // Delay in microseconds
             }
         }
     }
