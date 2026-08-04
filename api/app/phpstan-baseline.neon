@@ -6157,20 +6157,8 @@ parameters:
 			path: src/Service/Client/TokenStorage/RedisStorage.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Service\\Client\\TokenStorage\\RedisStorage\:\:executeWithRetry\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Service/Client/TokenStorage/RedisStorage.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Service\\Client\\TokenStorage\\RedisStorage\:\:get\(\) has parameter \$id with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Service/Client/TokenStorage/RedisStorage.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Service\\Client\\TokenStorage\\RedisStorage\:\:get\(\) should return string\|null but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Service/Client/TokenStorage/RedisStorage.php
 

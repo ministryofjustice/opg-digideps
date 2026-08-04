@@ -22,7 +22,7 @@ class RedisStorage extends TokenStorage
     ) {
     }
 
-    public function get($id): ?string
+    public function get($id): mixed
     {
         return $this->executeWithRetry(fn () => $this->redis->get($this->sessionPrefix . $id));
     }
@@ -40,7 +40,7 @@ class RedisStorage extends TokenStorage
         });
     }
 
-    private function executeWithRetry(callable $operation, int $maxRetries = 3)
+    private function executeWithRetry(callable $operation, int $maxRetries = 3): mixed
     {
         $attempt = 0;
 
@@ -57,5 +57,6 @@ class RedisStorage extends TokenStorage
                 usleep(500000); // Delay in microseconds
             }
         }
+        return null;
     }
 }
