@@ -35,9 +35,7 @@
     {% endif %}
 
     {% if report.hasSection('clientBenefitsCheck') %}
-        {% include '@App/Report/Rendered/_client_benefits_check.html.twig' with {
-            'view': review.getClientBenefitsCheckReviewView
-        } %}
+        <twig:OPG:Review:ClientBenefitsCheck report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('bankAccounts')%}
@@ -72,9 +70,7 @@
     {% endif %}
 
     {% if report.hasSection('moneyInShort') %}
-        {% include '@App/Report/Rendered/_money_in_low_asset.html.twig' with {
-            'view': review.getMoneyInShortReviewView
-        } %}
+        <twig:OPG:Review:MoneyInShort report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('moneyIn') %}
@@ -101,32 +97,22 @@
     {% endif %}
 
     {% if report.hasSection('assets') %}
-        {% include '@App/Report/Rendered/_assets.html.twig' with {
-            'view': review.getAssetsReviewView,
-        } %}
+        <twig:OPG:Review:Assets report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('debts') %}
-        {% include '@App/Report/Rendered/_debts.html.twig' with {
-            'view': review.getDebtsReviewView
-        } %}
+        <twig:OPG:Review:Debts report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('actions') %}
-        {% include '@App/Report/Rendered/_actions.html.twig' with {
-            'view': review.getActionsReviewView
-        } %}
+        <twig:OPG:Review:Actions report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('otherInfo') %}
-        {% include '@App/Report/Rendered/_other_info.html.twig' with {
-            'view': review.getOtherInfoReviewView
-        } %}
+        <twig:OPG:Review:OtherInfo report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('documents') %}
-        {% include '@App/Report/Rendered/_documents.html.twig' with {
-            'view': review.getDocumentsReviewView
-        } %}
+        <twig:OPG:Review:Documents report="{{ report }}"/>
     {% endif %}
 </div>

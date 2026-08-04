@@ -8,6 +8,11 @@ variable "default_tags" {
   type        = any
 }
 
+variable "docker_tag" {
+  type        = string
+  description = "The docker_tag"
+}
+
 data "aws_region" "current" {}
 
 data "aws_caller_identity" "current" {}

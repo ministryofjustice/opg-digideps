@@ -3,7 +3,10 @@
 namespace OPG\Digideps\Backend\DataFixtures;
 
 use OPG\Digideps\Backend\Entity\User;
-use Doctrine\Persistence\ObjectManager;
+use OPG\Digideps\Backend\Fixture\FixtureService;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class TestUserFixtures extends AbstractDataFixture
 {
@@ -63,18 +66,32 @@ class TestUserFixtures extends AbstractDataFixture
         ],
     ];
 
-    public function doLoad(ObjectManager $manager): void
+    public function __construct(
+        public readonly KernelInterface $kernel,
+        private readonly ParameterBagInterface $params,
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        FixtureService $fixtureService
+    ) {
+        parent::__construct($kernel, $this->params, $fixtureService);
+    }
+
+    public function doLoad(FixtureService $fixtureService): void
     {
         // Add users from array
         foreach ($this->userData as $data) {
-            $this->addUser($data, $manager);
+            $this->addUser($data, $fixtureService);
         }
 
-        $manager->flush();
+        $fixtureService->flush();
     }
 
-    private function addUser(array $data, ObjectManager $manager): void
+    private function addUser(array $data, FixtureService $fixtureService): void
     {
+        $plain = ((array)$this->params->get('fixtures'))['account_password'] ?? null;
+        if (!is_string($plain)) {
+            throw new \DomainException("Fixtures password must be configured and be a string");
+        }
+
         // Create user
         $user = new User()
             ->setFirstname('test')
@@ -90,13 +107,13 @@ class TestUserFixtures extends AbstractDataFixture
             ->setDeputyUid($data['deputyUid'] ?? null)
             ->setCoDeputyClientConfirmed($data['co-deputy'] ?? false)
             ->setIsPrimary($data['isPrimary'] ?? false);
+        $user->setPassword($this->passwordHasher->hashPassword($user, $plain));
 
-        $manager->persist($user);
+        $fixtureService->persist($user);
     }
 
-    /** @return String[] */
-    protected function getEnvironments(): array
+    protected function shouldLoad(string $workspace, string $environment): bool
     {
-        return ['test'];
+        return !in_array($workspace, ['production', 'preproduction']) && $environment === 'test';
     }
 }

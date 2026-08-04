@@ -1,0 +1,11 @@
+{% props self %}
+
+{% if self is iterable %}
+    {% for inner in self %}
+        <twig:Render self="{{ inner }}"/>
+    {%  endfor %}
+{% elseif not self.componentName or not self.props %}
+    {{ self }}
+{% else %}
+    {{ component(self.componentName, {...self.props}) }}
+{% endif %}

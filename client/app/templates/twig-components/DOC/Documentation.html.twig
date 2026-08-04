@@ -1,0 +1,35 @@
+<twig:GOV:Layout:Row>
+    <twig:GOV:Layout:Column d="3">
+        <twig:GOV:Heading size="l" caption="{{ path }}">
+            {% if link is not null %}
+                <twig:GOV:Link href="{{ link }}">{{ name }}</twig:GOV:Link>
+            {% else %}
+                {{ name }}
+            {% endif %}
+        </twig:GOV:Heading>
+        <twig:GOV:Paragraph>{{ info }}</twig:GOV:Paragraph>
+    </twig:GOV:Layout:Column>
+    <twig:GOV:Layout:Column n="2" d="3">
+        {% if warning is not null %}
+            <twig:GOV:Warning>{{ warning }}</twig:GOV:Warning>
+        {% endif %}
+        {% if props is not null %}
+            <twig:GOV:Table table="{{ props }}"/>
+        {% endif %}
+    </twig:GOV:Layout:Column>
+</twig:GOV:Layout:Row>
+{% for example in examples %}
+    <twig:GOV:Layout:Row>
+        <twig:GOV:Layout:Column d="3">
+            <div class="govuk-!-margin-top-6 govuk-!-margin-bottom-6">
+                {% include example.template with example.props only %}
+            </div>
+        </twig:GOV:Layout:Column>
+        <twig:GOV:Layout:Column n="2" d="3">
+            <twig:GOV:InsetText>
+                <pre>{{ example.code }}</pre>
+            </twig:GOV:InsetText>
+        </twig:GOV:Layout:Column>
+    </twig:GOV:Layout:Row>
+{% endfor %}
+<twig:GOV:SectionBreak size="xl" visible/>

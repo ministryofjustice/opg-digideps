@@ -1,0 +1,18 @@
+{
+    "link": "https://design-system.service.gov.uk/styles/layout/",
+    "props": [
+        {
+            "name": "n",
+            "type": "1 | 2 | 3 | 4",
+            "default": "1",
+            "info": "Numerator"
+        },
+        {
+            "name": "d",
+            "type": "1 | 2 | 3 | 4",
+            "default": "1",
+            "info": "Denominator"
+        }
+    ],
+    "examples": ["layout-grid"]
+}

@@ -74,7 +74,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     OPG\Digideps\Backend\:
         resource: "../src/*"
-        exclude: "../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}"
+        exclude: "../src/{DependencyInjection,Entity,Fixture,Migrations,Tests,Kernel.php}"
 
     OPG\Digideps\Backend\Controller\:
         resource: "../src/Controller/"
@@ -518,3 +518,6 @@ services:
         arguments:
             $preCSVDataFactory: "@preCSVDataFactory"
             $postCSVDataFactory: "@postCSVDataFactory"
+
+    OPG\Digideps\Backend\Fixture\FixtureService:
+        public: true
