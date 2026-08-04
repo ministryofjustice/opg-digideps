@@ -46,7 +46,7 @@ class Organisation
      *
      * @JMS\Type("array<OPG\Digideps\Frontend\Entity\User>")
      */
-    private array $users;
+    private array $users = [];
 
     /**
      * @var array<Client>
