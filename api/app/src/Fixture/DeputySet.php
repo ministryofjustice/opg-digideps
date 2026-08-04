@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\OPG\Digideps\Backend\Fixture;
+namespace OPG\Digideps\Backend\Fixture;
 
 use OPG\Digideps\Common\Deputy\DeputyType;
 
@@ -21,6 +21,11 @@ final readonly class DeputySet
     public static function oneLay(string $deputyReference = 'lay1'): DeputySet
     {
         return new DeputySet(new DeputyDescriptor($deputyReference, DeputyType::LAY));
+    }
+
+    public static function manyLay(string ...$deputyReferences): DeputySet
+    {
+        return new DeputySet(...array_map(fn (string $deputyReference) => new DeputyDescriptor($deputyReference, DeputyType::LAY), $deputyReferences));
     }
 
     public static function oneNamedPro(string $deputyReference = 'pro1'): DeputySet
