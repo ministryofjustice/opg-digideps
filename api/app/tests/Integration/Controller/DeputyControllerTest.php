@@ -2,10 +2,10 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Fixture\Scenario;
 use OPG\Digideps\Backend\Fixture\UserType;
+use OPG\Digideps\Common\Deputy\DeputyType;
 
 class DeputyControllerTest extends AbstractTestController
 {

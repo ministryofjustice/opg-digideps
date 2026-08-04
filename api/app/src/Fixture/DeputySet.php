@@ -23,6 +23,11 @@ final readonly class DeputySet
         return new DeputySet(new DeputyDescriptor($deputyReference, DeputyType::LAY));
     }
 
+    public static function manyLay(string ...$deputyReferences): DeputySet
+    {
+        return new DeputySet(...array_map(fn (string $deputyReference) => new DeputyDescriptor($deputyReference, DeputyType::LAY), $deputyReferences));
+    }
+
     public static function oneNamedPro(string $deputyReference = 'pro1'): DeputySet
     {
         return new DeputySet(new DeputyDescriptor($deputyReference, DeputyType::PRO));

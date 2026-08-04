@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\Service\Client\TokenStorage;
 
 use Predis\ClientInterface as PredisClientInterface;
+use Predis\Connection\ConnectionException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
@@ -23,17 +24,43 @@ class RedisStorage extends TokenStorage
 
     public function get($id): ?string
     {
-        return $this->redis->get($this->sessionPrefix . $id);
+        $value = $this->executeWithRetry(fn () => $this->redis->get($this->sessionPrefix . $id));
+        if ($value !== null && !is_string($value)) {
+            throw new \RuntimeException("Value is not of the correct type", 0);
+        }
+        return $value;
     }
 
     public function set($id, $value): void
     {
-        $this->redis->set($this->sessionPrefix . $id, $value);
+        $this->executeWithRetry(fn () => $this->redis->set($this->sessionPrefix . $id, $value));
     }
 
     public function remove($id): void
     {
-        $this->redis->set($this->sessionPrefix . $id, null);
-        $this->redis->expire($this->sessionPrefix . $id, 0);
+        $this->executeWithRetry(function () use ($id) {
+            $this->redis->set($this->sessionPrefix . $id, null);
+            $this->redis->expire($this->sessionPrefix . $id, 0);
+        });
+    }
+
+    private function executeWithRetry(callable $operation, int $maxRetries = 3): mixed
+    {
+        $attempt = 0;
+
+        while ($attempt < $maxRetries) {
+            try {
+                return $operation();
+            } catch (ConnectionException $e) {
+                $attempt++;
+
+                if ($attempt >= $maxRetries) {
+                    throw new \RuntimeException("Operation failed after {$maxRetries} retries.", 0, $e);
+                }
+
+                usleep(500000); // Delay in microseconds
+            }
+        }
+        return null;
     }
 }
