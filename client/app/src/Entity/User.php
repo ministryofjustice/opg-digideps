@@ -390,9 +390,9 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      *
      * @JMS\Groups({"user_organisations"})
      *
-     * @var array<Organisation>|null
+     * @var array<Organisation>
      */
-    private ?array $organisations = null;
+    private array $organisations;
 
     /**
      * @JMS\Type("int")
@@ -1241,17 +1241,17 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @return array<Organisation>|null
+     * @return array<Organisation>
      */
-    public function getOrganisations(): ?array
+    public function getOrganisations(): array
     {
         return $this->organisations;
     }
 
     /**
-     * @param array<Organisation>|null $organisations
+     * @param array<Organisation> $organisations
      */
-    public function setOrganisations(?array $organisations): self
+    public function setOrganisations(array $organisations): self
     {
         $this->organisations = $organisations;
 
@@ -1264,11 +1264,9 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
             return false;
         }
 
-        if ($this->getOrganisations() !== null) {
-            foreach ($this->getOrganisations() as $organisation) {
-                if ($organisation->isActivated()) {
-                    return true;
-                }
+        foreach ($this->getOrganisations() as $organisation) {
+            if ($organisation->isActivated()) {
+                return true;
             }
         }
 

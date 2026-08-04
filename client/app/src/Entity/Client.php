@@ -236,22 +236,22 @@ class Client
     private $dateOfBirth;
 
     /**
-     * @var array<Note>|null
+     * @var array<Note>
      *
      * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Note>")
      *
      * @JMS\Groups({"notes"})
      */
-    private ?array $notes = null;
+    private array $notes;
 
     /**
-     * @var array<ClientContact>|null
+     * @var array<ClientContact>
      *
      * @JMS\Type("array<OPG\Digideps\Frontend\Entity\ClientContact>")
      *
      * @JMS\Groups({"clientcontacts"})
      */
-    private ?array $clientContacts;
+    private array $clientContacts;
 
     /**
      * @var int
@@ -773,33 +773,33 @@ class Client
     }
 
     /**
-     * @return array<Note>|null
+     * @return array<Note>
      */
-    public function getNotes(): ?array
+    public function getNotes(): array
     {
         return $this->notes;
     }
 
     /**
-     * @param array<Note>|null $notes
+     * @param array<Note>$notes
      */
-    public function setNotes(?array $notes)
+    public function setNotes(array $notes): void
     {
         $this->notes = $notes;
     }
 
     /**
-     * @return array<ClientContact>|null
+     * @return array<ClientContact>
      */
-    public function getClientContacts(): ?array
+    public function getClientContacts(): array
     {
         return $this->clientContacts;
     }
 
     /**
-     * @param array<ClientContact>|null $clientContacts
+     * @param array<ClientContact> $clientContacts
      */
-    public function setClientContacts(?array $clientContacts): void
+    public function setClientContacts(array $clientContacts): void
     {
         $this->clientContacts = $clientContacts;
     }
@@ -945,7 +945,7 @@ class Client
 
     public function userBelongsToClientsOrganisation(User $user): bool
     {
-        if ($this->getOrganisation() instanceof Organisation && $this->getOrganisation()->isActivated() && !is_null($user->getOrganisations())) {
+        if ($this->getOrganisation() instanceof Organisation && $this->getOrganisation()->isActivated()) {
             foreach ($user->getOrganisations() as $organisation) {
                 if ($organisation->getId() === $this->getOrganisation()->getId()) {
                     return true;
