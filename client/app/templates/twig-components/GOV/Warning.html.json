@@ -1,0 +1,13 @@
+{
+    "link": "https://design-system.service.gov.uk/components/warning-text/",
+    "props": [
+        { "name": "icon", "type": "string", "default": "'!'" },
+        {
+            "name": "aria",
+            "type": "string",
+            "default": "'Warning'",
+            "info": "Accessibility text for the icon"
+        }
+    ],
+    "examples": ["warning"]
+}

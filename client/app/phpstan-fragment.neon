@@ -4,6 +4,7 @@ parameters:
   paths:
     - src
     - tests
+    - config
   level: max
   treatPhpDocTypesAsCertain: false
   ignoreErrors:

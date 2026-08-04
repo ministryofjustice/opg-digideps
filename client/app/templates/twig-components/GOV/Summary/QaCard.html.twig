@@ -1,0 +1,28 @@
+{% props
+    h='1',
+    list=null,
+    questionLabel="Question",
+    answerLabel="Answer"
+%}
+
+{% set class = "govuk-heading-" ~ size %}
+{% set h_tag = "h" ~ h %}
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <twig:GOV:Summary:Header h="{{ h }}" class="govuk-!-width-one-half">
+            {{ questionLabel }}
+        </twig:GOV:Summary:Header>
+        <twig:GOV:Summary:Header h="{{ h }}" class="govuk-!-width-one-half">
+            {{ answerLabel }}
+        </twig:GOV:Summary:Header>
+    </div>
+    <div class="govuk-summary-card__content">
+        {% if list is not null %}
+            <twig:GOV:Summary:List list="{{ list }}"/>
+        {% endif %}
+        {% with outerScope %}
+            <twig:block name="content"></twig:block>
+        {% endwith %}
+    </div>
+</div>

@@ -1,6 +1,18 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: config/bootstrap.php
+
+		-
+			message: '#^Parameter \#1 \$envKey of class Symfony\\Component\\Dotenv\\Dotenv constructor expects string, false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: config/bootstrap.php
+
+		-
 			message: '#^Binary operation "\." between ''\<comment\>Comparison…'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -23039,108 +23051,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/Integration/Fixtures.php
-
-		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Backend\\Integration\\JWTServiceTest\:\:\$sut\.$#'
-			identifier: property.notFound
-			count: 6
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Lcobucci\\JWT\\Token\:\:claims\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Cannot access offset ''key'' on array\|false\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Cannot call method createNewJWT\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Cannot call method verify\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\JWTServiceTest\:\:createNewJWT\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\JWTServiceTest\:\:verifyWithAValidJWT\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\JWTServiceTest\:\:verifyWithIncorrectAudienceFails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\JWTServiceTest\:\:verifyWithIncorrectIssuerFails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\JWTServiceTest\:\:verifyWithMissingAlgorithmFails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$contents of static method Lcobucci\\JWT\\Signer\\Key\\InMemory\:\:plainText\(\) expects non\-empty\-string, string given\.$#'
-			identifier: argument.type
-			count: 4
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$jwt of method Lcobucci\\JWT\\Parser\:\:parse\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$key of function openssl_pkey_export expects array\|OpenSSLAsymmetricKey\|OpenSSLCertificate\|string, OpenSSLAsymmetricKey\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$key of function openssl_pkey_get_details expects OpenSSLAsymmetricKey, OpenSSLAsymmetricKey\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\JWTServiceTest\:\:\$privateKeyPem \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: tests/Integration/JWTServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\JWTServiceTest\:\:\$publicKeyPem \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: tests/Integration/JWTServiceTest.php
 
 		-
 			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertNotFalse\(\) with OPG\\Digideps\\Backend\\Entity\\CourtOrder and ''court order was not…'' will always evaluate to true\.$#'
