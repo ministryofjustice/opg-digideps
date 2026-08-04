@@ -372,4 +372,16 @@ trait ReportSubmissionTrait
 
         return $caseNumber;
     }
+
+    #[Then('document sync is enabled')]
+    public function superAdminEnablesDocumentSync(): void
+    {
+        $this->visitAdminPath('/admin/behat/enable-document-sync');
+    }
+
+    #[Then('document sync is disabled')]
+    public function superAdminDisablesDocumentSync(): void
+    {
+        $this->visitAdminPath('/admin/behat/disable-document-sync');
+    }
 }

@@ -23,6 +23,28 @@ class BehatController extends AbstractController
     ) {
     }
 
+    #[Route(path: '/admin/behat/enable-document-sync', name: 'behat_admin_enable_document_sync', methods: ['GET'])]
+    public function enableDocumentSync(): Response
+    {
+        if (!$this->fixturesEnabled) {
+            throw $this->createNotFoundException();
+        }
+
+        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, '1');
+        return new Response('document sync is on');
+    }
+
+    #[Route(path: '/admin/behat/disable-document-sync', name: 'behat_admin_disable_document_sync', methods: ['GET'])]
+    public function disableDocumentSync(): Response
+    {
+        if (!$this->fixturesEnabled) {
+            throw $this->createNotFoundException();
+        }
+
+        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, '0');
+        return new Response('document sync is off');
+    }
+
     /**
      * @throws \Exception
      */
@@ -33,7 +55,7 @@ class BehatController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, '1');
+        $this->enableDocumentSync();
 
         $application = new Application($this->kernel);
         $application->setAutoExit(false);
@@ -42,7 +64,7 @@ class BehatController extends AbstractController
 
         $application->run($input);
 
-        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, '0');
+        $this->disableDocumentSync();
 
         return new Response('sync done');
     }

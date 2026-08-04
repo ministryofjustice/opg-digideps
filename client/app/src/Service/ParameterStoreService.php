@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service;
 
+use Aws\Result;
 use Aws\Ssm\SsmClient;
 
 class ParameterStoreService
@@ -40,9 +41,9 @@ class ParameterStoreService
         return $flag['Parameter']['Value'];
     }
 
-    public function putFeatureFlag(string $flagName, string $flagValue): void
+    public function putFeatureFlag(string $flagName, string $flagValue): Result
     {
         $flagName = $this->flagPrefix . $flagName;
-        $this->ssmClient->putParameter(['Name' => $flagName, 'Value' => $flagValue, 'Overwrite' => true]);
+        return $this->ssmClient->putParameter(['Name' => $flagName, 'Value' => $flagValue, 'Overwrite' => true]);
     }
 }
