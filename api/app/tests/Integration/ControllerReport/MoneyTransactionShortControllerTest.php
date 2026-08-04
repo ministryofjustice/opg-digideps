@@ -6,7 +6,7 @@ use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortIn;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortOut;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use Tests\OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class MoneyTransactionShortControllerTest extends AbstractTestController
