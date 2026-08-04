@@ -22,9 +22,13 @@ class RedisStorage extends TokenStorage
     ) {
     }
 
-    public function get($id): mixed
+    public function get($id): ?string
     {
-        return $this->executeWithRetry(fn () => $this->redis->get($this->sessionPrefix . $id));
+        $value = $this->executeWithRetry(fn () => $this->redis->get($this->sessionPrefix . $id));
+        if ($value !== null && !is_string($value)) {
+            throw new \RuntimeException("Value is not of the correct type", 0);
+        }
+        return $value;
     }
 
     public function set($id, $value): void
