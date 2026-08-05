@@ -100,6 +100,7 @@ class Contact
     /**
      * @JMS\Type("DateTime")
      * @JMS\Groups({"created-at"})
+     * @phpstan-ignore property.unusedType
      */
     private ?\DateTime $createdAt = null;
 
