@@ -1,7 +1,6 @@
 parameters:
     fixtures:
         account_password: "%env(FIXTURES_ACCOUNTPASSWORD)%"
-        legacy_password_hash: "%env(FIXTURES_LEGACYPASSWORDHASH)%"
 
     # To avoid undefined variable errors at build time during clear-cache, we can define default values for env vars
     # At runtime Symfony will fetch the actual value from the environment
