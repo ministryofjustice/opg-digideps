@@ -157,9 +157,6 @@ class ReportSubmissionController extends RestController
         return true;
     }
 
-    /**
-     * @throws \Exception
-     */
     #[Route(path: '/pre-registration-data', name: 'pre_registration_data', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
     public function getPreRegistrationData(Request $request): array

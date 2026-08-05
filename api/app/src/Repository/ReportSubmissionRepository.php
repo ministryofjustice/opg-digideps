@@ -12,9 +12,14 @@ use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
 class ReportSubmissionRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(private ManagerRegistry $registry)
     {
-        parent::__construct($registry, ReportSubmission::class);
+        parent::__construct($this->registry, ReportSubmission::class);
+    }
+
+    public function clear(): void
+    {
+        $this->registry->getManager()->clear();
     }
 
     /**
@@ -189,6 +194,9 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         return $reportSubmissionsDetails;
     }
 
+    /**
+     * @return array<ReportSubmission>
+     */
     public function findAllReportSubmissions(
         ?\DateTime $fromDate = null,
         ?\DateTime $toDate = null,
@@ -219,7 +227,11 @@ class ReportSubmissionRepository extends ServiceEntityRepository
 
         $this->getEntityManager()->getFilters()->enable('softdeleteable');
 
-        return $qbSelect->getQuery()->getResult();
+        /**
+         * @var array<ReportSubmission> $result;
+         */
+        $result =  $qbSelect->getQuery()->getResult();
+        return $result;
     }
 
     /**
@@ -237,18 +249,20 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         return ($date instanceof \DateTime) ? $date : new \DateTime();
     }
 
-    public function findOneByIdUnfiltered($id): ?object
+    public function findOneByIdUnfiltered($id): ?ReportSubmission
     {
         $this->getEntityManager()->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); // disable softdelete for createdBy, needed from admin area
+        /**
+         * @var null|ReportSubmission $reportSubmission
+         */
         $reportSubmission = $this->find($id);
         $this->getEntityManager()->getFilters()->enable('softdeleteable');
-
         return $reportSubmission;
     }
 
     public function updateArchivedStatus(ReportSubmission $reportSubmission): void
     {
-        if ($reportSubmission->getDocuments() && !$reportSubmission->getArchived()) {
+        if (!$reportSubmission->getDocuments()->isEmpty() && !$reportSubmission->getArchived()) {
             $allSynced = true;
 
             foreach ($reportSubmission->getDocuments() as $document) {

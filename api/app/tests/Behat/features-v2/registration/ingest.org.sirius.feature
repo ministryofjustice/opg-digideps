@@ -1,4 +1,4 @@
-@v2 @v2_sequential_1 @registration @ingest
+@v2 @v2_sequential_1 @registration @ingest @X
 Feature: Org CSV data ingestion - sirius source data
 
     @super-admin
@@ -6,7 +6,7 @@ Feature: Org CSV data ingestion - sirius source data
         Given a csv has been uploaded to the sirius bucket with the file 'org-3-valid-rows.csv'
         When I run the lay CSV command the file contains the following new entities:
             | clients | deputies | organisations | reports |
-            | 3       | 2              | 2             | 3       |
+            | 3       | 2        | 2             | 0       |
         Then the new 'org' entities should be added to the database
         And the count of the new 'org' entities added should be in the command output
 

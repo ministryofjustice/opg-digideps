@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\Controller;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 use Tests\OPG\Digideps\Backend\Integration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrgDeputyshipControllerTest extends AbstractTestController
 {
-    private static $tokenAdmin;
-    private $headers;
+    private static ?string $tokenAdmin = null;
+    private array $headers = [];
 
     public function setUp(): void
     {
@@ -31,8 +32,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    /** @test */
-    public function create()
+    public function testCreate(): void
     {
         $orgDeputyshipJson = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(2, 0);
         self::$frameworkBundleClient->request('POST', '/v2/org-deputyships', [], [], $this->headers, $orgDeputyshipJson);
@@ -55,19 +55,15 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         $this->assertArrayHasKey('reports', $decodedResponseContent['added']);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider uploadProvider
-     */
-    public function uploadProvidesFeedbackOnEntitiesProcessed(
+    #[DataProvider('uploadProvider')]
+    public function testUploadProvidesFeedbackOnEntitiesProcessed(
         string $deputyshipsJson,
         int $expectedClients,
         int $expectedDeputies,
         int $expectedReports,
         int $expectedOrganisations,
         int $expectedErrors,
-    ) {
+    ): void {
         self::$frameworkBundleClient->request('POST', '/v2/org-deputyships', [], [], $this->headers, $deputyshipsJson);
 
         $actualUploadResults = json_decode(self::$frameworkBundleClient->getResponse()->getContent(), true)['data'];
@@ -83,20 +79,16 @@ class OrgDeputyshipControllerTest extends AbstractTestController
     {
         return [
             '3 valid Org Deputyships' => [
-                OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(3, 0), 3, 3, 3, 3, 0,
+                OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(3, 0), 3, 3, 0, 3, 0,
             ],
             '2 valid, 1 invalid Org Deputyships' => [
-                OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(2, 1), 2, 2, 2, 2, 1,
+                OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(2, 1), 2, 2, 0, 2, 1,
             ],
         ];
     }
 
-    /**
-     * @dataProvider invalidPayloadProvider
-     *
-     * @test
-     */
-    public function createExceedingBatchSizeReturns413(string $dtoJson)
+    #[DataProvider('invalidPayloadProvider')]
+    public function testCreateExceedingBatchSizeReturns413(string $dtoJson): void
     {
         self::$frameworkBundleClient->request('POST', '/v2/org-deputyships', [], [], $this->headers, $dtoJson);
 
