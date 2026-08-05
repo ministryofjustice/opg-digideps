@@ -68,6 +68,9 @@ class Contact
     #[Assert\Length(max: 20, maxMessage: 'contact.phone.maxMessage')]
     private $phone;
 
+    /**
+     * @phpstan-ignore property.unusedType
+     */
     #[JMS\Type('DateTime')]
     #[JMS\Groups(['created-at'])]
     private ?\DateTime $createdAt = null;
