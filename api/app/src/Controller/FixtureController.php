@@ -143,26 +143,11 @@ class FixtureController extends AbstractController
                     ),
                     $reportType,
                     latestReportReadyToSubmit: true,
-                    madeDate: new \DateTime()->sub(new \DateInterval('P1Y'))
+                    madeDate: new \DateTime()->sub(new \DateInterval('P1Y')),
+                    supportingDocumentsWithoutS3Objects: $supportingDocumentNames,
                 )
             )
         );
-
-        // TODO refactor into a ReportsSet on a court order
-        // for each report on each court order, add all uploaded files to it, none with a backing S3 object
-        foreach ($details['orders'] as $orderPair) {
-            foreach (['pfa', 'hw'] as $orderType) {
-                $order = $orderPair[$orderType] ?? null;
-
-                if ($order !== null) {
-                    foreach ($order['reports'] as $report) {
-                        foreach ($supportingDocumentNames as $uploadedFile) {
-                            $this->fixtureService->addSupportingDocumentWithoutS3Object($report, $uploadedFile);
-                        }
-                    }
-                }
-            }
-        }
 
         return $this->jsonifyScenario($details);
     }

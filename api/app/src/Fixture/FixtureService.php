@@ -117,7 +117,7 @@ final class FixtureService
             'deputies' => [],
             'organisations' => [],
         ],
-        bool $flush = true
+        bool $flush = true,
     ): array {
         $this->refreshCounter();
 
@@ -131,6 +131,7 @@ final class FixtureService
         $first = true;
         while ($current !== null) {
             $latestReportReadyToSubmit = $scenario->courtOrderDescriptor->latestReportReadyToSubmit;
+            $supportingDocumentsWithoutS3Objects = $scenario->courtOrderDescriptor->supportingDocumentsWithoutS3Objects;
 
             $pfa = $this->instantiateCourtOrder(
                 $client,
@@ -138,7 +139,8 @@ final class FixtureService
                 $first,
                 CourtOrderType::PFA,
                 $persons,
-                latestReportReadyToSubmit: $latestReportReadyToSubmit
+                latestReportReadyToSubmit: $latestReportReadyToSubmit,
+                supportingDocumentsWithoutS3Objects: $supportingDocumentsWithoutS3Objects,
             );
 
             $hw = $this->instantiateCourtOrder(
@@ -148,7 +150,8 @@ final class FixtureService
                 CourtOrderType::HW,
                 $persons,
                 $pfa,
-                latestReportReadyToSubmit: $latestReportReadyToSubmit
+                latestReportReadyToSubmit: $latestReportReadyToSubmit,
+                supportingDocumentsWithoutS3Objects: $supportingDocumentsWithoutS3Objects,
             );
 
             $orders[] = array_filter([
@@ -169,26 +172,10 @@ final class FixtureService
         ];
     }
 
-    public function addSupportingDocumentWithoutS3Object(Report $report, string $filename): Document
-    {
-        // required so that the system recognises the report has documents
-        $report->setWishToProvideDocumentation('yes');
-        $this->persist($report);
-
-        $document = new Document($report);
-        $document->setIsReportPdf(false);
-        $document->setCreatedBy($report->getSubmittedBy());
-        $document->setStorageReference("dd_doc_{$report->getId()}_" . time());
-        $document->setFileName($filename);
-        $this->persist($document);
-        $this->flush();
-
-        return $document;
-    }
-
     /**
      * @param Persons $persons
      * @param Order|null $sibling
+     * @param string[] $supportingDocumentsWithoutS3Objects
      * @return Order|null
      */
     private function instantiateCourtOrder(
@@ -198,7 +185,8 @@ final class FixtureService
         CourtOrderType $type,
         array &$persons,
         ?array $sibling = null,
-        bool $latestReportReadyToSubmit = false
+        bool $latestReportReadyToSubmit = false,
+        array $supportingDocumentsWithoutS3Objects = [],
     ): ?array {
         $descriptor = $scenario->courtOrderDescriptor;
         if ($descriptor->single && (($type === CourtOrderType::HW && $descriptor->reportType !== CourtOrderReportType::OPG104) || ($type === CourtOrderType::PFA && $descriptor->reportType === CourtOrderReportType::OPG104))) {
@@ -282,6 +270,13 @@ final class FixtureService
                 } else {
                     $this->makeReportSubmitted($reports[count($reports) - 1], $primary);
                 }
+            }
+        }
+
+        // for each report on each court order, add uploaded files to it without backing S3 objects
+        foreach ($reports as $report) {
+            foreach ($supportingDocumentsWithoutS3Objects as $uploadedFile) {
+                $this->addSupportingDocumentWithoutS3Object($report, $uploadedFile);
             }
         }
 
@@ -577,5 +572,20 @@ final class FixtureService
         }
         $this->entityManager->persist($counter);
         $this->counter = $counter;
+    }
+
+    private function addSupportingDocumentWithoutS3Object(Report $report, string $filename): void
+    {
+        // required so that the system recognises the report has documents
+        $report->setWishToProvideDocumentation('yes');
+        $this->persist($report);
+
+        $document = new Document($report);
+        $document->setIsReportPdf(false);
+        $document->setCreatedBy($report->getSubmittedBy());
+        $document->setStorageReference("dd_doc_{$report->getId()}_" . time());
+        $document->setFileName($filename);
+        $this->persist($document);
+        $this->flush();
     }
 }
