@@ -11,7 +11,6 @@ use OPG\Digideps\Frontend\Service\Client\Internal\OrganisationApi;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\TestHelpers\OrganisationHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
-use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -35,7 +34,7 @@ class OrganisationApiTest extends TestCase
     public function addUserToOrganisation()
     {
         $organisation = OrganisationHelpers::createActivatedOrganisation();
-        $userToAdd = (UserHelpers::createUser())->setOrganisations(new ArrayCollection([$organisation]));
+        $userToAdd = (UserHelpers::createUser())->setOrganisations([$organisation]);
         $currentUser = UserHelpers::createUser();
         $trigger = 'A_TRIGGER';
 
@@ -61,7 +60,7 @@ class OrganisationApiTest extends TestCase
     public function removeUserFromOrganisation()
     {
         $organisation = OrganisationHelpers::createActivatedOrganisation();
-        $userToRemove = (UserHelpers::createUser())->setOrganisations(new ArrayCollection([$organisation]));
+        $userToRemove = (UserHelpers::createUser())->setOrganisations([$organisation]);
         $currentUser = UserHelpers::createUser();
         $trigger = 'A_TRIGGER';
 

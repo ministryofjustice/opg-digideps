@@ -9,7 +9,6 @@ use OPG\Digideps\Frontend\Entity\Organisation;
 use OPG\Digideps\Frontend\Entity\Report\Document;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use OPG\Digideps\Frontend\Security\DocumentVoter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -191,7 +190,7 @@ class DocumentVoterTest extends TestCase
 
     private function ensureClientAndDeputyBelongToSameOrganisation()
     {
-        $this->deputy->setOrganisations(new ArrayCollection([$this->organisation]));
+        $this->deputy->setOrganisations([$this->organisation]);
         $this->client->setOrganisation($this->organisation);
 
         return $this;
@@ -200,7 +199,7 @@ class DocumentVoterTest extends TestCase
     private function ensureClientAndDeputyBelongToDifferentOrganisation()
     {
         $deputyOrg = new Organisation()->setId(72)->setIsActivated(true);
-        $this->deputy->setOrganisations(new ArrayCollection([$deputyOrg]));
+        $this->deputy->setOrganisations([$deputyOrg]);
         $this->client->setOrganisation($this->organisation);
 
         return $this;
