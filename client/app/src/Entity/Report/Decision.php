@@ -44,6 +44,12 @@ class Decision
     private $clientInvolvedDetails;
 
     /**
+     * @JMS\Type("DateTime")
+     * @JMS\Groups({"decision"})
+     */
+    private ?\DateTime $createdAt = null;
+
+    /**
      * @return int
      */
     public function getId()
@@ -113,5 +119,10 @@ class Decision
         $this->clientInvolvedDetails = $clientInvolvedDetails;
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
     }
 }
