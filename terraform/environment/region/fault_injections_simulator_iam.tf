@@ -1,5 +1,6 @@
 # Create role for running experiments
 resource "aws_iam_role" "fault_injection_simulator" {
+  count                = var.account.environment.fault_injection_experiments_enabled ? 1 : 0
   name                 = "fault-injection-simulator-${local.environment}"
   permissions_boundary = data.aws_iam_policy.default_boundary.arn
   assume_role_policy   = data.aws_iam_policy_document.fault_injection_simulator_assume.json
@@ -18,23 +19,27 @@ data "aws_iam_policy_document" "fault_injection_simulator_assume" {
 
 # Add permissions for FIS to run experiments (ECS, Logging, SSM)
 resource "aws_iam_role_policy_attachment" "fault_injection_simulator_ecs_access" {
-  role       = aws_iam_role.fault_injection_simulator.name
+  count      = var.account.environment.fault_injection_experiments_enabled ? 1 : 0
+  role       = aws_iam_role.fault_injection_simulator[0].name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSFaultInjectionSimulatorECSAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "fault_injection_simulator_ssm_access" {
-  role       = aws_iam_role.fault_injection_simulator.name
+  count      = var.account.environment.fault_injection_experiments_enabled ? 1 : 0
+  role       = aws_iam_role.fault_injection_simulator[0].name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSFaultInjectionSimulatorSSMAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "cloudwatch_logs_full_access" {
-  role       = aws_iam_role.fault_injection_simulator.name
+  count      = var.account.environment.fault_injection_experiments_enabled ? 1 : 0
+  role       = aws_iam_role.fault_injection_simulator[0].name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
 }
 
 resource "aws_iam_role_policy" "fault_injection_simulator_create_fis_service_linked_role" {
+  count  = var.account.environment.fault_injection_experiments_enabled ? 1 : 0
   name   = "create-fis-service-linked-role-permissions"
-  role   = aws_iam_role.fault_injection_simulator.name
+  role   = aws_iam_role.fault_injection_simulator[0].name
   policy = data.aws_iam_policy_document.fault_injection_simulator_create_fis_service_linked_role.json
 }
 
@@ -67,6 +72,7 @@ data "aws_iam_policy_document" "fault_injection_simulator_create_fis_service_lin
 
 # Create role for registering instance
 resource "aws_iam_role" "ssm_register_instance" {
+  count                = var.account.environment.fault_injection_experiments_enabled ? 1 : 0
   name                 = "ssm-register-instance-${local.environment}"
   permissions_boundary = data.aws_iam_policy.default_boundary.arn
   assume_role_policy   = data.aws_iam_policy_document.ssm_register_instance_assume.json
@@ -84,8 +90,9 @@ data "aws_iam_policy_document" "ssm_register_instance_assume" {
 }
 
 resource "aws_iam_role_policy" "ssm_register_instance_permissions" {
+  count  = var.account.environment.fault_injection_experiments_enabled ? 1 : 0
   name   = "ssm-register-instance-permissions"
-  role   = aws_iam_role.fault_injection_simulator.name
+  role   = aws_iam_role.fault_injection_simulator[0].name
   policy = data.aws_iam_policy_document.ssm_register_instance_permissions.json
 }
 
