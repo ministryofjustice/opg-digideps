@@ -93,9 +93,15 @@ class Contact
      * @JMS\Type("string")
      * @JMS\Groups({"contact"})
      *
-     * @Assert\Length( max=20, maxMessage="contact.phone.maxMessage")
+     * @Assert\Length(max=20, maxMessage="contact.phone.maxMessage")
      */
     private $phone;
+
+    /**
+     * @JMS\Type("DateTime")
+     * @JMS\Groups({"created-at"})
+     */
+    private ?\DateTime $createdAt = null;
 
     public function getId()
     {
@@ -215,5 +221,10 @@ class Contact
         $this->phone = $phone;
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
     }
 }
