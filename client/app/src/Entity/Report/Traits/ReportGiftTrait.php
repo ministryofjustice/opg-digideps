@@ -43,11 +43,16 @@ trait ReportGiftTrait
     }
 
     /**
+     * Return gifts ordered by createdAt in ascending order.
+     * Does not change the order of the underling $this->gifts property.
+     *
      * @return Gift[]
      */
     public function getGifts(): array
     {
-        return $this->gifts;
+        $gifts = [] + $this->gifts;
+        uasort($gifts, fn ($gift1, $gift2) => $gift1 <=> $gift2);
+        return $gifts;
     }
 
     /**
