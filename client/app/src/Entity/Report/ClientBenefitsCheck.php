@@ -7,8 +7,6 @@ namespace OPG\Digideps\Frontend\Entity\Report;
 use OPG\Digideps\Frontend\Entity\ClientBenefitsCheckInterface;
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
-use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -69,13 +67,15 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     private ?string $dontKnowMoneyExplanation = null;
 
     /**
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf>")
      * @JMS\Groups({"report", "client-benefits-check"})
+     *
+     * @var MoneyReceivedOnClientsBehalf[]|null
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      * @Assert\Valid(groups={"client-benefits-check"})
      */
-    private ?ArrayCollection $typesOfMoneyReceivedOnClientsBehalf = null;
+    private ?array $typesOfMoneyReceivedOnClientsBehalf = null;
 
     public function getWhenLastCheckedEntitlement(): ?string
     {
@@ -162,14 +162,17 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     }
 
     /**
-     * @return ArrayCollection<MoneyReceivedOnClientsBehalf>|null
+     * @return array<MoneyReceivedOnClientsBehalf>|null
      */
-    public function getTypesOfMoneyReceivedOnClientsBehalf(): ?ArrayCollection
+    public function getTypesOfMoneyReceivedOnClientsBehalf(): ?array
     {
         return $this->typesOfMoneyReceivedOnClientsBehalf;
     }
 
-    public function setTypesOfMoneyReceivedOnClientsBehalf(?ArrayCollection $typesOfMoneyReceivedOnClientsBehalf): ClientBenefitsCheck
+    /**
+     * @param array<MoneyReceivedOnClientsBehalf>|null $typesOfMoneyReceivedOnClientsBehalf
+     */
+    public function setTypesOfMoneyReceivedOnClientsBehalf(?array $typesOfMoneyReceivedOnClientsBehalf): ClientBenefitsCheck
     {
         $this->typesOfMoneyReceivedOnClientsBehalf = $typesOfMoneyReceivedOnClientsBehalf;
 
@@ -178,7 +181,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 
     public function addTypeOfMoneyReceivedOnClientsBehalf(MoneyReceivedOnClientsBehalf $moneyReceivedOnClientsBehalf): ClientBenefitsCheck
     {
-        $this->typesOfMoneyReceivedOnClientsBehalf->add($moneyReceivedOnClientsBehalf);
+        $this->typesOfMoneyReceivedOnClientsBehalf[] = $moneyReceivedOnClientsBehalf;
 
         return $this;
     }

@@ -7,7 +7,6 @@ namespace Tests\OPG\Digideps\Frontend\Unit\Entity\Report;
 use OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck;
 use OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf;
 use OPG\Digideps\Frontend\TestHelpers\ReportHelpers;
-use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 
@@ -17,6 +16,7 @@ class ClientBenefitsCheckTest extends TestCase
      * @test
      *
      * @dataProvider invalidDataProvider
+     * @param array<MoneyReceivedOnClientsBehalf>|null $moneyTypes
      */
     public function validation(
         ?string $whenLastChecked,
@@ -24,7 +24,7 @@ class ClientBenefitsCheckTest extends TestCase
         ?string $neverCheckedExplanation,
         ?string $doOthersReceiveMoney,
         ?string $moneyExplanation,
-        ?ArrayCollection $moneyTypes,
+        ?array $moneyTypes,
         int $expectedValidationErrorsCount
     ) {
         $report = ReportHelpers::createReport();
@@ -53,8 +53,7 @@ class ClientBenefitsCheckTest extends TestCase
         $moneyType = new MoneyReceivedOnClientsBehalf()
         ->setAmountDontKnow(false);
 
-        $moneyTypes = new ArrayCollection();
-        $moneyTypes->add($moneyType);
+        $moneyTypes[] = $moneyType;
 
         return [
             "Fails when \$whenLastCheckedEntitlement is 'haveChecked' and \$dateLastCheckedEntitlement is null" => [
