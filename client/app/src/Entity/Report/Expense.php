@@ -47,6 +47,7 @@ class Expense
     /**
      * @JMS\Type("DateTime")
      * @JMS\Groups({"expenses"})
+     * @phpstan-ignore property.unusedType
      */
     private ?\DateTime $createdAt = null;
 

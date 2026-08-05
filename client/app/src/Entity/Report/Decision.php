@@ -53,6 +53,7 @@ class Decision
     /**
      * @JMS\Type("DateTime")
      * @JMS\Groups({"decision"})
+     * @phpstan-ignore property.unusedType
      */
     private ?\DateTime $createdAt = null;
 
