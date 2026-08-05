@@ -1,10 +1,10 @@
 import path from "path";
 import { test } from "@playwright/test";
 import {
-  createScenarioViaApi,
-  getUserFixture,
+  createFixtureViaApi,
+  getAdminUserFixture,
   Scenario,
-  setupScenario,
+  setupFixture,
   testPassword,
 } from "./fixtures/fixtures";
 import AdminLoginPage from "./pages/AdminLoginPage";
@@ -40,7 +40,7 @@ test("document-sync command updates document statuses", async ({ page }) => {
 
     // check pending tab has two documents (report pdf and testimage.png)
     const adminPage = new AdminLoginPage(page);
-    await adminPage.loginAdmin(getUserFixture("admin_user"));
+    await adminPage.loginAdmin(getAdminUserFixture());
 
     const adminDocumentsListPage = new AdminDocumentsListPage(page);
     await adminDocumentsListPage.goto();
@@ -73,9 +73,9 @@ test("document-sync command updates document statuses", async ({ page }) => {
     await page.locator("body").waitFor({ state: "visible" });
   };
 
-  await setupScenario(
-    createScenarioViaApi("/fixtures/scenarios/laysimple", {
+  await setupFixture(
+    createFixtureViaApi("/fixtures/scenarios/laysimple", {
       deputyReference: deputyReference,
     }),
-  ).then(runTest);
+  ).then((fixture) => runTest(fixture.data as Scenario));
 });

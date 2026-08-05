@@ -409,6 +409,8 @@ final class FixtureService
                 UserType::Admin => User::ROLE_ADMIN,
                 UserType::AdminManager => User::ROLE_ADMIN_MANAGER,
                 UserType::SuperAdmin => User::ROLE_SUPER_ADMIN,
+                UserType::PaNamedUser => User::ROLE_PA_NAMED,
+                UserType::ProNamedUser => User::ROLE_PROF_NAMED,
             })
             ->setActive($descriptor->isLoginActive)
             ->setIsPrimary($descriptor->isPrimary)

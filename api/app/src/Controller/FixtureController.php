@@ -13,7 +13,9 @@ use OPG\Digideps\Backend\Fixture\DeputyDescriptor;
 use OPG\Digideps\Backend\Fixture\DeputySet;
 use OPG\Digideps\Backend\Fixture\FixtureService;
 use OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Backend\Fixture\UserType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Common\Validating\ValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,6 +31,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  * @phpstan-type Order array{order: CourtOrder, reports: array<Report>}
  * @phpstan-type OrderPair array<'pfa'|'hw', Order>
  * @phpstan-type FixtureJson array{users: array<string, FixtureUser>, orders: array<FixtureOrder>}
+ * @phpstan-type UserCreateSpec array{deputyType: string, userType: string}
+ * @phpstan-type UserCreatePayload array<UserCreateSpec>
  */
 class FixtureController extends AbstractController
 {
@@ -36,6 +40,41 @@ class FixtureController extends AbstractController
         private readonly FixtureService $fixtureService,
         private readonly string $workspace
     ) {
+    }
+
+    /**
+     * @return FixtureUser[]
+     * @throws ValidationException
+     */
+    #[Route('/fixtures/users', name: 'fixtures_users', methods: ['POST'])]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function users(Request $request): array
+    {
+        $this->checkIfAccessible();
+
+        /** @var UserCreatePayload $payload */
+        $payload = $request->getPayload()->all();
+
+        $users = [];
+
+        /** @var UserCreateSpec $userSpec */
+        foreach ($payload as $userSpec) {
+            $validatingSpec = new ValidatingArray($userSpec);
+
+            $userType = $validatingSpec->getStringOrThrow('userType');
+            $deputyType = $validatingSpec->getStringOrThrow('deputyType');
+
+            $user = $this->fixtureService->instantiateOnlyUser(
+                userType: UserType::from($userType),
+                deputyType: DeputyType::from($deputyType)
+            );
+
+            $users[] = [
+                'email' => $user->getEmail()
+            ];
+        }
+
+        return $users;
     }
 
     /**
@@ -80,7 +119,7 @@ class FixtureController extends AbstractController
      * Creates a lay deputy with user account and a complete but unsubmitted report
      *
      * @return FixtureJson
-     * @throws ValidationException
+     * @throws ValidationException|\DateInvalidOperationException
      */
     #[Route('/fixtures/scenarios/layreadytosubmit', name: 'fixtures_scenarios_layreadytosubmit', methods: ['POST'])]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]

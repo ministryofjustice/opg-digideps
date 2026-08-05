@@ -1,10 +1,13 @@
 const apiURL = process.env.API_URL ?? "";
 const clientSecret = process.env.ADMIN_API_CLIENT_SECRET ?? "";
 
-type UserType = "lay_user" | "pro_user" | "admin_user";
+type UserType = "ROLE_DEPUTY" | "ROLE_PROF_NAMED";
 
-interface FixtureUser {
-  email: string;
+type DeputyType = "LAY" | "PRO" | "PA";
+
+interface UserSpec {
+  userType: UserType;
+  deputyType: DeputyType;
 }
 
 interface TestUser {
@@ -31,36 +34,15 @@ export interface Scenario {
   orders: OrderDetails[];
 }
 
-interface ApiPayload {
-  data: Scenario;
+interface Fixture {
+  data: Scenario | UserDetails[];
 }
 
-interface ScenarioFunction {
-  (authToken: string): Promise<Scenario>;
+interface FixtureCallback {
+  (authToken: string): Promise<Fixture>;
 }
 
 export const testPassword = "DigidepsPass1234";
-
-const fixtureUsers: Record<UserType, FixtureUser> = {
-  lay_user: {
-    email: "smoketestuser@smoketest.com",
-  },
-  pro_user: {
-    email: "pro-opg103-member-1@pro103s.gov.uk",
-  },
-  admin_user: {
-    email: "super-admin@publicguardian.gov.uk",
-  },
-};
-
-export function getUserFixture(type: UserType): TestUser {
-  const user = fixtureUsers[type];
-
-  return {
-    email: user.email,
-    password: testPassword,
-  };
-}
 
 // login to the API and return the auth token from the response headers
 async function getAuthToken(user: TestUser): Promise<string | null> {
@@ -78,13 +60,13 @@ async function getAuthToken(user: TestUser): Promise<string | null> {
   return res.headers.get("authtoken");
 }
 
-// returns a closure which creates a scenario;
+// returns a closure which creates a fixture;
 // path should include leading "/"
-export function createScenarioViaApi(
+export function createFixtureViaApi(
   path: string,
-  body: { [key: string]: string | string[] },
-): ScenarioFunction {
-  return async (authToken: string): Promise<Scenario> => {
+  body: UserSpec[] | { [key: string]: string | string[] },
+): FixtureCallback {
+  return async (authToken: string): Promise<Fixture> => {
     const res = await fetch(
       new Request(apiURL + path, {
         method: "POST",
@@ -101,19 +83,40 @@ export function createScenarioViaApi(
     }
 
     const text = await res.text();
-    const payload = JSON.parse(text) as ApiPayload;
-    if (!payload.hasOwnProperty("data")) {
-      throw new Error("Could not create scenario via API");
-    }
-
-    return payload.data;
+    return JSON.parse(text) as Fixture;
   };
 }
 
-export async function setupScenario(
-  scenarioFn: ScenarioFunction,
-): Promise<Scenario> {
-  const user = getUserFixture("admin_user");
+// this creates a single user, even though the fixtures API can create multiples
+export async function getUserFixture(
+  userType: UserType,
+  deputyType: DeputyType = "LAY",
+): Promise<TestUser> {
+  const fixture = await setupFixture(
+    createFixtureViaApi("/fixtures/users", [
+      { userType: userType, deputyType: deputyType },
+    ]),
+  );
+
+  const users = fixture.data as UserDetails[];
+
+  return {
+    email: users[0].email,
+    password: testPassword,
+  };
+}
+
+export function getAdminUserFixture(): TestUser {
+  return {
+    email: "super-admin@publicguardian.gov.uk",
+    password: testPassword,
+  };
+}
+
+export async function setupFixture(
+  callback: FixtureCallback,
+): Promise<Fixture> {
+  const user = getAdminUserFixture();
 
   // set up scenario
   return await getAuthToken(user).then((authToken) => {
@@ -121,7 +124,7 @@ export async function setupScenario(
       throw new Error("No auth token");
     }
 
-    return scenarioFn(authToken);
+    return callback(authToken);
   });
 }
 

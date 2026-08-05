@@ -1,10 +1,10 @@
 import path from "path";
 import { test } from "@playwright/test";
 import {
-  createScenarioViaApi,
-  getUserFixture,
+  createFixtureViaApi,
+  getAdminUserFixture,
   Scenario,
-  setupScenario,
+  setupFixture,
   testPassword,
 } from "./fixtures/fixtures";
 import AdminDocumentsListPage from "./pages/AdminDocumentsListPage";
@@ -62,7 +62,7 @@ test("admin dashboard shows correct statuses for pending and synchronised docume
     await reportDeclarationPage.submitReport();
 
     // check documents in admin UI
-    const adminUser = getUserFixture("admin_user");
+    const adminUser = getAdminUserFixture();
     const adminLoginPage = new AdminLoginPage(page);
     await adminLoginPage.loginAdmin(adminUser);
 
@@ -96,9 +96,9 @@ test("admin dashboard shows correct statuses for pending and synchronised docume
   };
 
   // create a single unsubmitted, but ready to submit, report
-  await setupScenario(
-    createScenarioViaApi("/fixtures/scenarios/layreadytosubmit", {
+  await setupFixture(
+    createFixtureViaApi("/fixtures/scenarios/layreadytosubmit", {
       deputyReference: deputyReference,
     }),
-  ).then(runTest);
+  ).then((fixture) => runTest(fixture.data as Scenario));
 });

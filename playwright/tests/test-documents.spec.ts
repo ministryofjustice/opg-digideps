@@ -5,9 +5,9 @@ import { fail } from "assert";
 import { mkdtemp } from "fs/promises";
 import { Page, test } from "@playwright/test";
 import {
-  createScenarioViaApi,
+  createFixtureViaApi,
   Scenario,
-  setupScenario,
+  setupFixture,
   testPassword,
 } from "./fixtures/fixtures";
 import DocumentsFrontPage from "./pages/DocumentsFrontPage";
@@ -43,11 +43,11 @@ const startDocumentsSection = async (
 const setupScenarioAndRunTest = (
   runTest: (scenario: Scenario) => Promise<void>,
 ) => {
-  return setupScenario(
-    createScenarioViaApi("/fixtures/scenarios/laysimple", {
+  return setupFixture(
+    createFixtureViaApi("/fixtures/scenarios/laysimple", {
       deputyReference: deputyReference,
     }),
-  ).then(runTest);
+  ).then((fixture) => runTest(fixture.data as Scenario));
 };
 
 test("a user has no supporting documents to add", async ({ page }) => {

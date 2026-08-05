@@ -1,9 +1,9 @@
 import path from "path";
 import { test } from "@playwright/test";
 import {
-  createScenarioViaApi,
+  createFixtureViaApi,
   Scenario,
-  setupScenario,
+  setupFixture,
   testPassword,
 } from "./fixtures/fixtures";
 import LoginPage from "./pages/LoginPage";
@@ -55,13 +55,13 @@ test("if a document's S3 object is gone, user is redirected to re-upload it on s
 
   // create a single unsubmitted, but ready to submit, report, with a document
   // that doesn't have a corresponding S3 object
-  await setupScenario(
-    createScenarioViaApi(
+  await setupFixture(
+    createFixtureViaApi(
       "/fixtures/scenarios/layreadytosubmit/expireds3objects",
       {
         deputyReference: deputyReference,
         supportingDocumentNames: [supportingDocument],
       },
     ),
-  ).then(runTest);
+  ).then((fixture) => runTest(fixture.data as Scenario));
 });

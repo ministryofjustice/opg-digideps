@@ -1,10 +1,10 @@
 import path from "path";
 import { expect, test } from "@playwright/test";
 import {
-  createScenarioViaApi,
-  getUserFixture,
+  createFixtureViaApi,
+  getAdminUserFixture,
   Scenario,
-  setupScenario,
+  setupFixture,
   testPassword,
 } from "./fixtures/fixtures";
 import AdminLoginPage from "./pages/AdminLoginPage";
@@ -62,7 +62,7 @@ test("a user sends further documents", async ({ page }) => {
 
     // check that reports are shown in admin dashboard
     const adminPage = new AdminLoginPage(page);
-    await adminPage.loginAdmin(getUserFixture("admin_user"));
+    await adminPage.loginAdmin(getAdminUserFixture());
 
     // go to submissions tab, search for case, click on pending tab,
     // ensure there are two separate file submissions listed, one for each file
@@ -81,9 +81,9 @@ test("a user sends further documents", async ({ page }) => {
     ).toContainText(filesToUpload[1]);
   };
 
-  await setupScenario(
-    createScenarioViaApi("/fixtures/scenarios/laysimple", {
+  await setupFixture(
+    createFixtureViaApi("/fixtures/scenarios/laysimple", {
       deputyReference: deputyReference,
     }),
-  ).then(runTest);
+  ).then((fixture) => runTest(fixture.data as Scenario));
 });
