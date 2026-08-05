@@ -68,6 +68,10 @@ class Contact
     #[Assert\Length(max: 20, maxMessage: 'contact.phone.maxMessage')]
     private $phone;
 
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['created-at'])]
+    private ?\DateTime $createdAt = null;
+
     public function getId()
     {
         return $this->id;
@@ -186,5 +190,10 @@ class Contact
         $this->phone = $phone;
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
     }
 }
