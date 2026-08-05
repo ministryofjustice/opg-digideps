@@ -63,7 +63,7 @@ final class ClientBenefitsCheck
 
     private function makeTable(?ReportClientBenefitsCheck $clientBenefitsCheck): ?Table
     {
-        if ($clientBenefitsCheck === null || $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()?->isEmpty() ?? true) {
+        if ($clientBenefitsCheck === null || empty($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()) ?? true) {
             return null;
         }
         $total = 0.0;

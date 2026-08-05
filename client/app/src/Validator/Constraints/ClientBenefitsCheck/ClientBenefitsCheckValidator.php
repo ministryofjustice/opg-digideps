@@ -7,7 +7,6 @@ namespace OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck;
 use OPG\Digideps\Frontend\Entity\ClientBenefitsCheckInterface;
 use OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck;
 use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -140,10 +139,10 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function typesOfMoneyReceivedOnClientsBehalfValid(ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
+    private function typesOfMoneyReceivedOnClientsBehalfValid(ClientBenefitsCheck $object, ClientBenefitsCheckConstraint $constraint): void
     {
-        if ($object->getTypesOfMoneyReceivedOnClientsBehalf() instanceof ArrayCollection && $object->getTypesOfMoneyReceivedOnClientsBehalf()->count() === 1) {
-            $money = $object->getTypesOfMoneyReceivedOnClientsBehalf()->first();
+        if (is_array($object->getTypesOfMoneyReceivedOnClientsBehalf()) && count($object->getTypesOfMoneyReceivedOnClientsBehalf()) === 1) {
+            $money = $object->getTypesOfMoneyReceivedOnClientsBehalf()[0];
 
             if (is_null($money->getAmount()) && is_null($money->getMoneyType()) && $money->getAmountDontKnow() === false) {
                 $this->context
