@@ -42,10 +42,14 @@ trait ReportDeputyExpenseTrait
     }
 
     /**
+     * Returns expenses in ascending createdAt order. Does not change the order of the underlying $this->expenses.
+     *
      * @return Expense[]
      */
     public function getExpenses(): array
     {
+        $expenses = [] + $this->expenses;
+        uasort($expenses, fn ($exp1, $exp2) => $exp1 <=> $exp2);
         return $this->expenses;
     }
 
