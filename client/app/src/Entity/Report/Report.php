@@ -797,11 +797,15 @@ class Report implements StartEndDateComparableInterface
     }
 
     /**
-     * @var array
+     * Ordered by createdAt. Does not change the order of $this->decisions.
+     *
+     * @return Decision[]
      */
-    public function getDecisions()
+    public function getDecisions(): array
     {
-        return $this->decisions;
+        $decisions = [] + $this->decisions;
+        uasort($decisions, fn ($dec1, $dec2) => $dec1->getCreatedAt() <=> $dec2->getCreatedAt());
+        return $decisions;
     }
 
     /**
