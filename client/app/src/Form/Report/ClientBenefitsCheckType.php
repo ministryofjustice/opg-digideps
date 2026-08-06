@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Form\Report;
 
-use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck;
 use OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf;
 use OPG\Digideps\Frontend\Form\DateType;
@@ -82,22 +81,16 @@ class ClientBenefitsCheckType extends AbstractType
 
         $builder->add('save', SubmitType::class);
 
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
-            $eventData = $event->getData();
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $data = $event->getData();
 
-            if (is_array($eventData)) {
-                $data = new ValidatingArray($eventData);
-                $dateLastCheckedEntitlement = $data->getValidatingArrayOrNull('dateLastCheckedEntitlement');
-
-                if (
-                    $dateLastCheckedEntitlement !== null &&
-                    $dateLastCheckedEntitlement->getStringOrNull('month') !== null &&
-                    $dateLastCheckedEntitlement->getStringOrNull('year') !== null
-                ) {
-                    $eventData['day'] = '01';
-                    $event->setData($eventData);
+            if (is_array($data) && is_array($data['dateLastCheckedEntitlement'])) {
+                if (!empty($data['dateLastCheckedEntitlement']['month']) && !empty($data['dateLastCheckedEntitlement']['year'])) {
+                    $data['dateLastCheckedEntitlement']['day'] = '01';
                 }
             }
+
+            $event->setData($data);
         });
     }
 
