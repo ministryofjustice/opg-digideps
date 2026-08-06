@@ -29,7 +29,7 @@ trait ReportTransfersTrait
      */
     public function getMoneyTransfers(): array
     {
-        $moneyTransfers = [] + $this->moneyTransfers;
+        $moneyTransfers = [...$this->moneyTransfers];
         uasort($moneyTransfers, fn ($mt1, $mt2) => $mt1->getId() <=> $mt2->getId());
         return $moneyTransfers;
     }

@@ -50,7 +50,7 @@ trait ReportGiftTrait
      */
     public function getGifts(): array
     {
-        $gifts = [] + $this->gifts;
+        $gifts = [...$this->gifts];
         uasort($gifts, fn ($gift1, $gift2) => $gift1 <=> $gift2);
         return $gifts;
     }

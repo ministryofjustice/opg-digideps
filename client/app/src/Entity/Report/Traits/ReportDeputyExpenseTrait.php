@@ -43,7 +43,7 @@ trait ReportDeputyExpenseTrait
      */
     public function getExpenses(): array
     {
-        $expenses = [] + $this->expenses;
+        $expenses = [...$this->expenses];
         uasort($expenses, fn ($exp1, $exp2) => $exp1 <=> $exp2);
         return $this->expenses;
     }
