@@ -15,6 +15,12 @@ abstract class Asset
     protected $type;
 
     /**
+     * @JMS\Type("DateTime")
+     * @phpstan-ignore property.unusedType
+     */
+    private ?\DateTime $createdAt = null;
+
+    /**
      * @param string $type
      */
     public static function factory($type): Asset
@@ -131,4 +137,10 @@ abstract class Asset
      * @return string
      */
     abstract public function getBehatIdentifier();
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
+    }
+
 }
