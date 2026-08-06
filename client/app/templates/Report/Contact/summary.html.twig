@@ -24,6 +24,10 @@
             {# Check answers text #}
             <p class="govuk-body"><strong>{{ 'weHaveListed' | trans(transOptions, 'common') }}</strong></p>
             <p class="govuk-body">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+
+            {% if status.contactsState.state != 'done'%}
+                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
+            {% endif %}
         </div>
         <div class="govuk-grid-column-one-third">
             {{ macros.relatedSections(report, 'contacts') }}

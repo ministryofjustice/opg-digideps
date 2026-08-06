@@ -106,7 +106,11 @@
                         {{ contact.relationship }}
                 </td>
                 <td class="govuk-table__cell">
+                    {% if contact.explanation %}
                         {{ contact.explanation }}
+                    {% else %}
+                        <twig:GOV:ErrorMessage message="{{ 'summaryPage.reasonForContactRequired' | trans({}, 'report-contacts' ) }}"/>
+                    {% endif %}
                 </td>
                 {% if not hideEditLink  %}
                     <td class="govuk-table__cell govuk-table__cell--numeric">
