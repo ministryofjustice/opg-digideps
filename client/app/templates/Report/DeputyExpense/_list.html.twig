@@ -25,7 +25,7 @@
     </div>
 </dl>
 
-{% if report.expenses | length > 0 %}
+{% if expenses | length > 0 %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <h2 class="govuk-heading-m flush--ends">List of expenses</h2>
@@ -41,9 +41,7 @@
             </div>
         {% endif %}
     </div>
-{% endif %}
 
-{% if report.expenses | length > 0 %}
     <table class="govuk-table">
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
@@ -67,7 +65,7 @@
         </thead>
 
         <tbody class="govuk-table__body">
-            {% for expense in report.expenses %}
+            {% for expense in expenses %}
                 <tr class="govuk-table__row behat-region-expense-{{ expense.explanation | behat_namify }}">
                     <td class="govuk-table__cell">
                         {{ expense.explanation }}

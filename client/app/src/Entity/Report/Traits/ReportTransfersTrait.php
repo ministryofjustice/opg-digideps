@@ -23,11 +23,16 @@ trait ReportTransfersTrait
     private $noTransfersToAdd;
 
     /**
+     * Return list of money transfers by ID (as a proxy for creation date). Does not alter the ordering of the
+     * underlying $this->moneyTransfers property.
+     *
      * @return MoneyTransfer[]
      */
     public function getMoneyTransfers()
     {
-        return $this->moneyTransfers;
+        $moneyTransfers = [...$this->moneyTransfers];
+        uasort($moneyTransfers, fn ($mt1, $mt2) => $mt1->getId() <=> $mt2->getId());
+        return $moneyTransfers;
     }
 
     /**

@@ -348,7 +348,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function profDeputyCosts(array $mocks, string $state): void
     {
-        $report = $this->getReportMocked([] + $mocks);
+        $report = $this->getReportMocked([...$mocks]);
         $object = new ReportStatusService($report);
         $this->assertEquals($state, $object->getProfDeputyCostsState()['state']);
     }

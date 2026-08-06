@@ -217,7 +217,7 @@ class Report implements StartEndDateComparableInterface
      *
      * @var Contact[]
      */
-    private $contacts = [];
+    private array $contacts = [];
 
     /**
      * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Decision>")
@@ -777,11 +777,16 @@ class Report implements StartEndDateComparableInterface
     }
 
     /**
-     * @return array $contacts
+     * Get contacts for the report sorted in ascending createdAt order.
+     * Does not change the ordering of $this->contacts.
+     *
+     * @return Contact[]
      */
-    public function getContacts()
+    public function getContacts(): array
     {
-        return $this->contacts;
+        $contacts = [...$this->contacts];
+        uasort($contacts, fn ($con1, $con2) => $con1->getCreatedAt() <=> $con2->getCreatedAt());
+        return $contacts;
     }
 
     /**
@@ -797,11 +802,15 @@ class Report implements StartEndDateComparableInterface
     }
 
     /**
-     * @var array
+     * Ordered by createdAt. Does not change the order of $this->decisions.
+     *
+     * @return Decision[]
      */
-    public function getDecisions()
+    public function getDecisions(): array
     {
-        return $this->decisions;
+        $decisions = [...$this->decisions];
+        uasort($decisions, fn ($dec1, $dec2) => $dec1->getCreatedAt() <=> $dec2->getCreatedAt());
+        return $decisions;
     }
 
     /**
