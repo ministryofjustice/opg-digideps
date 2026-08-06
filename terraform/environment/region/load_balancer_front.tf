@@ -25,7 +25,7 @@ resource "aws_lb_listener" "front_https" {
   certificate_arn   = local.certificate_arn
 
   default_action {
-    target_group_arn = aws_lb_target_group.front.arn
+    target_group_arn = aws_lb_target_group.front_http.arn
     type             = "forward"
   }
 }
