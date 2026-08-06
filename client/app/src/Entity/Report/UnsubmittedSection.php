@@ -49,8 +49,10 @@ class UnsubmittedSection
     /**
      * @param bool $present
      */
-    public function setPresent($present)
+    public function setPresent($present): static
     {
         $this->present = $present;
+
+        return $this;
     }
 }
