@@ -38,6 +38,19 @@ data "aws_iam_policy_document" "admin_s3" {
       "${module.pa_uploads.arn}/*"
     ]
   }
+
+  statement {
+    sid    = "AllowPutSSMParameters"
+    effect = "Allow"
+    actions = [
+      "ssm:PutParameter",
+      "ssm:GetParameter",
+      "ssm:GetParameters"
+    ]
+    resources = [
+      aws_ssm_parameter.flag_document_sync.arn
+    ]
+  }
 }
 
 resource "aws_iam_role_policy" "admin_query_ssm" {
