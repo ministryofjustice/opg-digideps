@@ -251,8 +251,12 @@ class AssetController extends AbstractController
             return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));
         }
 
+        $assetsGroupedByTitle = $report->getAssetsGroupedByTitle();
+
         return [
             'report' => $report,
+            'hasAssets' => count($assetsGroupedByTitle) > 0,
+            'assetsGroupedByTitle' => $assetsGroupedByTitle,
         ];
     }
 
