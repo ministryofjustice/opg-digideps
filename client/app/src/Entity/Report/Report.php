@@ -784,7 +784,7 @@ class Report implements StartEndDateComparableInterface
      */
     public function getContacts(): array
     {
-        $contacts = [] + $this->contacts;
+        $contacts = [...$this->contacts];
         uasort($contacts, fn ($con1, $con2) => $con1->getCreatedAt() <=> $con2->getCreatedAt());
         return $contacts;
     }
@@ -808,7 +808,7 @@ class Report implements StartEndDateComparableInterface
      */
     public function getDecisions(): array
     {
-        $decisions = [] + $this->decisions;
+        $decisions = [...$this->decisions];
         uasort($decisions, fn ($dec1, $dec2) => $dec1->getCreatedAt() <=> $dec2->getCreatedAt());
         return $decisions;
     }
