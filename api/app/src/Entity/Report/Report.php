@@ -987,25 +987,27 @@ class Report
     #[JMS\Type('array')]
     public function getPreviousReportData(): array
     {
-        $values = $this->getClient()->getReports()->getValues();
+        $orderedSubmittedClientReports = $this->getClient()->getSubmittedReports();
 
-        // sort so highest ID is first in the list
-        uasort(
-            $values,
-            function ($a, $b): int {
-                return ($a->getId() > $b->getId()) ? -1 : 1;
-            }
-        );
+        $latestSubmissionDate = $this->getSubmitDate() ?? ($orderedSubmittedClientReports->first() instanceof Report ? $orderedSubmittedClientReports->first()->getSubmitDate() : null);
+        if ($latestSubmissionDate) {
+            $fifteenMonthsAgo = (clone $latestSubmissionDate)->modify('-15 months');
+            $filteredReports = $orderedSubmittedClientReports->filter(function ($clientReport) use ($fifteenMonthsAgo, $latestSubmissionDate): bool {
+                $submitDate = $clientReport->getSubmitDate();
+                return $submitDate >= $fifteenMonthsAgo && $submitDate <= $latestSubmissionDate;
+            });
 
-        $orderedClientReports = new ArrayCollection($values);
-
-        foreach ($orderedClientReports as $clientReport) {
-            if ($clientReport->getId() < $this->getId()) {
-                // if ID is lower, it implies that the report with a lower ID is before the current report
-                return [
-                    'report-summary' => $clientReport->getReportSummary(),
-                    'financial-summary' => $clientReport->getFinancialSummary(),
-                ];
+            foreach ($filteredReports as $clientReport) {
+                // Get the latest report that was submitted before the current report's submit date. If the current report has not been submitted, get the latest report that was submitted.
+                $isValidPreviousReport = $this->getSubmitDate() === null ? $clientReport->getSubmitDate() <= $latestSubmissionDate : $clientReport->getSubmitDate() < $latestSubmissionDate;
+                if ($isValidPreviousReport &&
+                    $clientReport->getClient()->getId() === $this->getClient()->getId() &&
+                    $clientReport->isPfa()) {
+                    return [
+                        'report-summary' => $clientReport->getReportSummary(),
+                        'financial-summary' => $clientReport->getFinancialSummary(),
+                    ];
+                }
             }
         }
 
@@ -1046,6 +1048,7 @@ class Report
     public function getReportSummary(): array
     {
         return [
+            'id' => $this->getId(),
             'type' => $this->getType(),
         ];
     }
