@@ -40,13 +40,13 @@ class Organisation
     /**
      * @var array<User>
      */
-    #[JMS\Type('ArrayCollection<OPG\Digideps\Frontend\Entity\User>')]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\User>')]
     private array $users = [];
 
     /**
      * @var array<Client>
      */
-    #[JMS\Type('ArrayCollection<OPG\Digideps\Frontend\Entity\Client>')]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Client>')]
     private array $clients = [];
 
     /**

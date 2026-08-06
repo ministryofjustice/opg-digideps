@@ -177,14 +177,14 @@ class Client
     /**
      * @var array<Note>
      */
-    #[JMS\Type('ArrayCollection<OPG\Digideps\Frontend\Entity\Note>')]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Note>')]
     #[JMS\Groups(['notes'])]
     private array $notes;
 
     /**
      * @var array<ClientContact>
      */
-    #[JMS\Type('ArrayCollection<OPG\Digideps\Frontend\Entity\ClientContact>')]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\ClientContact>')]
     #[JMS\Groups(['clientcontacts'])]
     private array $clientContacts = [];
 
