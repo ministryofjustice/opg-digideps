@@ -25,7 +25,7 @@ resource "aws_lb_listener" "admin" {
   certificate_arn   = local.certificate_arn
 
   default_action {
-    target_group_arn = aws_lb_target_group.admin.arn
+    target_group_arn = aws_lb_target_group.admin_http.arn
     type             = "forward"
   }
 }
