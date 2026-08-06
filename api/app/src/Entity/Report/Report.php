@@ -994,6 +994,9 @@ class Report
             $fifteenMonthsAgo = (clone $latestSubmissionDate)->modify('-15 months');
             $filteredReports = $orderedSubmittedClientReports->filter(function ($clientReport) use ($fifteenMonthsAgo, $latestSubmissionDate): bool {
                 $submitDate = $clientReport->getSubmitDate();
+                return $submitDate >= $fifteenMonthsAgo && $submitDate <= $latestSubmissionDate && $clientReport->isPfa();
+            });
+                $submitDate = $clientReport->getSubmitDate();
                 return $submitDate >= $fifteenMonthsAgo && $submitDate <= $latestSubmissionDate;
             });
 
