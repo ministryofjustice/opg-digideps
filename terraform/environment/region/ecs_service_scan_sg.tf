@@ -9,7 +9,7 @@ locals {
       target      = "0.0.0.0/0"
     }
     db_local_clamav_net = {
-      port        = 80
+      port        = 8080
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"

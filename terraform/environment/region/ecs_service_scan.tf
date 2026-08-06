@@ -64,6 +64,7 @@ locals {
   file_scanner_rest_container = jsonencode(
     {
       name      = "rest",
+      user      = "clamav"
       essential = true,
       portMappings = [{
         name          = "scan-port",

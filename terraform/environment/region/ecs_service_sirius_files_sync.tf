@@ -89,7 +89,7 @@ locals {
       environment = [
         {
           name  = "API_URL",
-          value = "http://api"
+          value = "http://api:8080"
         },
         {
           name  = "ROLE",
@@ -158,7 +158,7 @@ locals {
     ecr_api = local.common_sg_rules.ecr_api
     secrets = local.common_sg_rules.secrets
     api = {
-      port        = 80
+      port        = 8080
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
