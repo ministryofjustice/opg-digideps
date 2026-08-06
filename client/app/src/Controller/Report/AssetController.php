@@ -28,6 +28,7 @@ class AssetController extends AbstractController
     private static array $jmsGroups = [
         'asset',
         'asset-state',
+        'created-at',
     ];
 
     public function __construct(

@@ -22,6 +22,12 @@ abstract class Asset
     protected $type;
 
     /**
+     * @JMS\Type("DateTime")
+     * @phpstan-ignore property.unusedType
+     */
+    private ?\DateTime $createdAt = null;
+
+    /**
      * @param string $type
      *
      * @return Asset instance
@@ -169,4 +175,10 @@ abstract class Asset
      * @return string
      */
     abstract public function getBehatIdentifier();
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
+    }
+
 }

@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use OPG\Digideps\Frontend\Entity\Report\Asset;
-use OPG\Digideps\Frontend\Entity\Report\AssetOther;
 use OPG\Digideps\Frontend\Entity\Report\AssetProperty;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
@@ -97,11 +96,11 @@ trait ReportAssetTrait
      * AssetProperty is considered having title "Property"
      * Artwork, Antiques, Jewellery are grouped into "Artwork, antiques and jewellery".
      *
-     * @return array $assets e.g. [Property => [asset1, asset2], Bonds=>[]...]
+     * @return array $assets e.g. ['Property' => ['items' => [asset1, asset2], 'total' => 422], 'Bonds' => [...], ...]
      */
-    public function getAssetsGroupedByTitle()
+    public function getAssetsGroupedByTitle(): array
     {
-        // those needs to be grouped together
+        // those should be grouped together
         $titleToGroupOverride = [
             'Artwork' => 'Artwork, antiques and jewellery',
             'Antiques' => 'Artwork, antiques and jewellery',
@@ -109,28 +108,35 @@ trait ReportAssetTrait
         ];
 
         $ret = [];
-        $title = '';
 
         foreach ($this->assets as $asset) {
             // select title
             if ($asset instanceof AssetProperty) {
                 $title = 'Property';
-            } elseif ($asset instanceof AssetOther) {
-                $title = $titleToGroupOverride[$asset->getTitle() ?? ''] ?? $asset->getTitle() ?? '';
+            } else {
+                $assetTitle = $asset->getTitle() ?? '';
+                $title = $titleToGroupOverride[$assetTitle] ?? $assetTitle;
             }
 
             // add asset into "items" and sum total
-            $ret[$title]['items'][$asset->getId()] = $asset;
-            $ret[$title]['total'] = isset($ret[$title]['total'])
-                ? $ret[$title]['total'] + $asset->getValueTotal()
-                : $asset->getValueTotal();
+            if (!array_key_exists($title, $ret)) {
+                $ret[$title] = ['items' => [], 'total' => 0];
+            }
+
+            $ret[$title]['items'][] = $asset;
+            $ret[$title]['total'] = $ret[$title]['total'] + ($asset->getValueTotal() ?? 0);
         }
 
         // order categories
         ksort($ret);
-        // foreach category, order assets by ID desc
-        foreach ($ret as &$row) {
-            krsort($row['items']);
+
+        // for each category, order assets by createdAt ascending
+        foreach ($ret as $title => $row) {
+            /** @var array<int, Asset> $assets */
+            $assets = $row['items'];
+
+            uasort($assets, fn ($asset1, $asset2) => $asset1->getCreatedAt() <=> $asset2->getCreatedAt());
+            $ret[$title]['items'] = $assets;
         }
 
         return $ret;
