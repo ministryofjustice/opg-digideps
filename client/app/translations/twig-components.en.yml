@@ -1,3 +1,4 @@
 gov:
   skipLink: Skip to main content
   backLink: Back
+  errorMessage.aria: Error

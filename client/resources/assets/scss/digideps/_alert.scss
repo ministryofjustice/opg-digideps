@@ -67,8 +67,8 @@
 
 .alert-error {
   @extend %alert-base;
-  border-color: $error-colour;
-  background-color: rgba($error-colour, 0.1);
+  border-color: $govuk-error-colour;
+  background-color: rgba($govuk-error-colour, 0.1);
 }
 
 .alert-info {
