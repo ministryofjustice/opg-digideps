@@ -18,7 +18,7 @@ locals {
     ecr_api = local.common_sg_rules.ecr_api
     secrets = local.common_sg_rules.secrets
     front_elb_http = {
-      port        = 80
+      port        = 8080
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
