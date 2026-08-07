@@ -313,21 +313,23 @@ final class ReportTest extends TestCase
 
         $client = new Client();
 
-        $reportTwoYearsAgo = new Report($client, Report::PROF_COMBINED_LOW_ASSETS_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
+        $reportTwoYearsAgo = new Report($client, Report::PROF_COMBINED_LOW_ASSETS_TYPE, new \DateTime('2023-01-01'), new \DateTime('2023-12-31'));
         $reportTwoYearsAgo->setId(8);
         $reportTwoYearsAgo->addAccount($bankAccount0);
         $reportTwoYearsAgo->setSubmitted(true);
-        $reportTwoYearsAgo->setSubmitDate(new \DateTime('2025-01-01'));
+        $reportTwoYearsAgo->setSubmitDate(new \DateTime('2024-01-01'));
 
-        $reportLastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
+        $reportLastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
         $reportLastYear->setId(9);
         $reportLastYear->addAccount($bankAccount1);
         $reportLastYear->addAccount($bankAccount2);
         $reportLastYear->setSubmitted(true);
-        $reportLastYear->setSubmitDate(new \DateTime('2026-01-01'));
+        $reportLastYear->setSubmitDate(new \DateTime('2025-01-01'));
 
-        $reportLatest = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2026-01-01'), new \DateTime('2026-12-31'));
+        $reportLatest = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
         $reportLatest->setId(10);
+        $reportLatest->setSubmitted(true);
+        $reportLatest->setSubmitDate(new \DateTime('2026-01-01'));
 
         $client->addReport($reportTwoYearsAgo);
         $client->addReport($reportLastYear);
@@ -414,29 +416,32 @@ final class ReportTest extends TestCase
     public function testPreviousReportDataReturnedFromOldPfaReport(): void
     {
         $client = new Client();
-        $reportTwoYearsAgo = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
-        $reportTwoYearsAgo->setId(8);
-        $reportTwoYearsAgo->setSubmitted(true);
-        $reportTwoYearsAgo->setSubmitDate(new \DateTime('2025-01-01'));
+        $reportPFALastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
+        $reportPFALastYear->setId(8);
+        $reportPFALastYear->setSubmitted(true);
+        $reportPFALastYear->setSubmitDate(new \DateTime('2025-01-01'));
 
-        $reportLastYear = new Report($client, Report::LAY_HW_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
-        $reportLastYear->setId(9);
-        $reportLastYear->setSubmitted(true);
-        $reportLastYear->setSubmitDate(new \DateTime('2026-01-01'));
+        $reportHWLastYear = new Report($client, Report::LAY_HW_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
+        $reportHWLastYear->setId(9);
+        $reportHWLastYear->setSubmitted(true);
+        $reportHWLastYear->setSubmitDate(new \DateTime('2025-01-01'));
 
-        $reportLatest = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2026-01-01'), new \DateTime('2026-12-31'));
+        $reportLatest = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
+        $reportLatest->setId(10);
+        $reportLatest->setSubmitted(true);
+        $reportLatest->setSubmitDate(new \DateTime('2026-01-01'));
 
-        $client->addReport($reportTwoYearsAgo);
-        $client->addReport($reportLastYear);
+        $client->addReport($reportPFALastYear);
+        $client->addReport($reportHWLastYear);
         $client->addReport($reportLatest);
 
-        // assert that last year's report is a HW report, so two years ago report is the previous report for the current report
+        // when there is a HW and PFA report last year, the previous report data should be returned from the last PFA report
         $currentReportPreviousData = $reportLatest->getPreviousReportData();
         $this->assertArrayHasKey('financial-summary', $currentReportPreviousData);
         $this->assertArrayHasKey('report-summary', $currentReportPreviousData);
         $this->assertIsArray($currentReportPreviousData['report-summary']);
         $this->assertArrayHasKey('id', $currentReportPreviousData['report-summary']);
-        $this->assertEquals($reportTwoYearsAgo->getId(), $currentReportPreviousData['report-summary']['id']);
+        $this->assertEquals($reportPFALastYear->getId(), $currentReportPreviousData['report-summary']['id']);
     }
 
     public static function reportTypeTranslationKeyProvider(): array

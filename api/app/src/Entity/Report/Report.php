@@ -989,28 +989,18 @@ class Report
     {
         $orderedSubmittedClientReports = $this->getClient()->getSubmittedReports();
 
-        $latestSubmissionDate = $this->getSubmitDate() ?? ($orderedSubmittedClientReports->first() instanceof Report ? $orderedSubmittedClientReports->first()->getSubmitDate() : null);
-        if ($latestSubmissionDate) {
+        $latestSubmissionDate = $this->getSubmitDate();
+        if ($latestSubmissionDate instanceof \DateTime) {
             $fifteenMonthsAgo = (clone $latestSubmissionDate)->modify('-15 months');
             $filteredReports = $orderedSubmittedClientReports->filter(function ($clientReport) use ($fifteenMonthsAgo, $latestSubmissionDate): bool {
                 $submitDate = $clientReport->getSubmitDate();
-                return $submitDate >= $fifteenMonthsAgo && $submitDate <= $latestSubmissionDate && $clientReport->isPfa();
+                return $submitDate >= $fifteenMonthsAgo && $submitDate < $latestSubmissionDate && $clientReport->isPfa();
             });
-                $submitDate = $clientReport->getSubmitDate();
-                return $submitDate >= $fifteenMonthsAgo && $submitDate <= $latestSubmissionDate;
-            });
-
-            foreach ($filteredReports as $clientReport) {
-                // Get the latest report that was submitted before the current report's submit date. If the current report has not been submitted, get the latest report that was submitted.
-                $isValidPreviousReport = $this->getSubmitDate() === null ? $clientReport->getSubmitDate() <= $latestSubmissionDate : $clientReport->getSubmitDate() < $latestSubmissionDate;
-                if ($isValidPreviousReport &&
-                    $clientReport->getClient()->getId() === $this->getClient()->getId() &&
-                    $clientReport->isPfa()) {
-                    return [
-                        'report-summary' => $clientReport->getReportSummary(),
-                        'financial-summary' => $clientReport->getFinancialSummary(),
-                    ];
-                }
+            if ($filteredReports->count() > 0) {
+                return [
+                    'report-summary' => $filteredReports->first() instanceof Report ? $filteredReports->first()->getReportSummary() : null,
+                    'financial-summary' => $filteredReports->first() instanceof Report ? $filteredReports->first()->getFinancialSummary() : null,
+                ];
             }
         }
 
