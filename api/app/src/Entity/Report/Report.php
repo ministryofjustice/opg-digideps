@@ -987,24 +987,19 @@ class Report
     #[JMS\Type('array')]
     public function getPreviousReportData(): array
     {
-        $values = $this->getClient()->getReports()->getValues();
+        $orderedSubmittedClientReports = $this->getClient()->getSubmittedReports();
 
-        // sort so highest ID is first in the list
-        uasort(
-            $values,
-            function ($a, $b): int {
-                return ($a->getId() > $b->getId()) ? -1 : 1;
-            }
-        );
-
-        $orderedClientReports = new ArrayCollection($values);
-
-        foreach ($orderedClientReports as $clientReport) {
-            if ($clientReport->getId() < $this->getId()) {
-                // if ID is lower, it implies that the report with a lower ID is before the current report
+        $latestSubmissionDate = $this->getSubmitDate();
+        if ($latestSubmissionDate instanceof \DateTime) {
+            $fifteenMonthsAgo = (clone $latestSubmissionDate)->modify('-15 months');
+            $filteredReports = $orderedSubmittedClientReports->filter(function ($clientReport) use ($fifteenMonthsAgo, $latestSubmissionDate): bool {
+                $submitDate = $clientReport->getSubmitDate();
+                return $submitDate >= $fifteenMonthsAgo && $submitDate < $latestSubmissionDate && $clientReport->isPfa();
+            });
+            if ($filteredReports->count() > 0) {
                 return [
-                    'report-summary' => $clientReport->getReportSummary(),
-                    'financial-summary' => $clientReport->getFinancialSummary(),
+                    'report-summary' => $filteredReports->first() instanceof Report ? $filteredReports->first()->getReportSummary() : null,
+                    'financial-summary' => $filteredReports->first() instanceof Report ? $filteredReports->first()->getFinancialSummary() : null,
                 ];
             }
         }
@@ -1046,6 +1041,7 @@ class Report
     public function getReportSummary(): array
     {
         return [
+            'id' => $this->getId(),
             'type' => $this->getType(),
         ];
     }
