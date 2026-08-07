@@ -4,6 +4,7 @@ namespace OPG\Digideps\Backend\Controller;
 
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Exception\ValidationError;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
@@ -49,7 +50,7 @@ class SelfRegisterController extends RestController
         $errors = $this->validator->validate($selfRegisterData, null, 'self_registration');
 
         if (count($errors) > 0) {
-            throw new \RuntimeException('Invalid registration data: ' . $errors);
+            throw new ValidationError("Invalid registration data: {$errors}");
         }
 
         try {
@@ -87,7 +88,7 @@ class SelfRegisterController extends RestController
         $errors = $this->validator->validate($selfRegisterData, null, ['verify_codeputy']);
 
         if (count($errors) > 0) {
-            throw new \RuntimeException('Invalid registration data: ' . $errors);
+            throw new ValidationError("Invalid registration data: {$errors}");
         }
 
         try {
