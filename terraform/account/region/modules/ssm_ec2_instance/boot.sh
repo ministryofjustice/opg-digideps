@@ -60,6 +60,11 @@ connect_to_database() {
 
   if [[ "$access" == "edit" ]]; then
     user="digidepsmaster"
+    if [[ "$environment" == *"preproduction"* ]]; then
+      environment="preproduction"
+    elif [[ "$environment" == *"production"* ]]; then
+      environment="production"
+    fi
     secret_name="${environment}/database-password"
 
     if ! secret_exists "$secret_name"; then
