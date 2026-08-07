@@ -512,11 +512,14 @@ final class ReportStatusServiceTest extends TestCase
     public static function contactsProvider(): array
     {
         $contact = self::createStub(Contact::class);
+        $contact->method('getExplanation')->willReturn('X');
+        $badContact = self::createStub(Contact::class);
 
         return [
             [[], ReportStatusService::STATE_NOT_STARTED, false],
             // done
             [['getContacts' => new ArrayCollection([$contact])], ReportStatusService::STATE_DONE, true],
+            [['getContacts' => new ArrayCollection([$badContact])], ReportStatusService::STATE_INCOMPLETE, true],
             [['getReasonForNoContacts' => 'x'], ReportStatusService::STATE_DONE, true],
         ];
     }

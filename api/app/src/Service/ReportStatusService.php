@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\Service;
 
 use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
@@ -74,7 +75,7 @@ class ReportStatusService
         if (!$hasContacts && empty($this->report->getReasonForNoContacts())) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         } else {
-            return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getContacts())];
+            return ['state' => $this->report->getContacts()->exists(fn (int $_, Contact $contact) => empty($contact->getExplanation())) ? self::STATE_INCOMPLETE : self::STATE_DONE, 'nOfRecords' => count($this->report->getContacts())];
         }
     }
 

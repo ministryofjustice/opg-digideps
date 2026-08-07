@@ -3,18 +3,18 @@ env:
   contexts:
     - name: "Digideps"
       urls:
-        - "http://frontend-webserver"
+        - "http://frontend-webserver:8080"
       includePaths:
-        - "http://frontend-webserver/login"
-        - "http://frontend-webserver.*"
+        - "http://frontend-webserver:8080/login"
+        - "http://frontend-webserver:8080.*"
       excludePaths:
-        - "http://frontend-webserver/logout"
+        - "http://frontend-webserver:8080/logout"
       authentication:
         method: "script"
         parameters:
           script: "/zap/wrk/auth-digi.js"
           scriptEngine: "ECMAScript : Oracle Nashorn"
-          Login_URL: "http://frontend-webserver/login"
+          Login_URL: "http://frontend-webserver:8080/login"
           CSRF_Field: "login[_token]"
           POST_Data: "login[email]={%username%}&login[password]={%password%}&login[_token]={%login[_token]%}"
         verification:
@@ -69,7 +69,7 @@ jobs:
     parameters:
       context: "Digideps"
       user: "admin"
-      url: "http://frontend-webserver"
+      url: "http://frontend-webserver:8080"
       maxDepth: 10
       maxParseSizeBytes: 26214400
 

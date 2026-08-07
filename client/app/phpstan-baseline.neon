@@ -79,12 +79,6 @@ parameters:
 			path: src/Command/DocumentRecoverCommand.php
 
 		-
-			message: '#^Return type \(void\) of method OPG\\Digideps\\Frontend\\Command\\DocumentRecoverCommand\:\:execute\(\) should be compatible with return type \(int\) of method Symfony\\Component\\Console\\Command\\Command\:\:execute\(\)$#'
-			identifier: method.childReturnType
-			count: 1
-			path: src/Command/DocumentRecoverCommand.php
-
-		-
 			message: '#^Binary operation "\+\=" between mixed and int\<0, max\> results in an error\.$#'
 			identifier: assignOp.invalid
 			count: 1
