@@ -6,21 +6,21 @@ namespace OPG\Digideps\Backend\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use OPG\Digideps\Backend\Entity\BankAccountInterface;
 use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 
 #[ORM\Table(name: 'account')]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
-class BankAccount implements BankAccountInterface
+class BankAccount
 {
     use CreateUpdateTimestamps;
 
     /**
      * Keep in sync with client.
+     * @var array<string, string> $types
      */
     #[JMS\Exclude]
-    public static $types = [
+    public static array $types = [
         'current' => 'Current account',
         'savings' => 'Savings account',
         'isa' => 'ISA',
@@ -32,9 +32,10 @@ class BankAccount implements BankAccountInterface
 
     /**
      * Keep in sync with client.
+     * @var array<string> $typesNotRequiringSortCode
      */
     #[JMS\Exclude]
-    private static $typesNotRequiringSortCode = [
+    private static array $typesNotRequiringSortCode = [
         'postoffice',
         'cfo',
         'other_no_sortcode',
@@ -42,89 +43,63 @@ class BankAccount implements BankAccountInterface
 
     /**
      * Keep in sync with client.
+     * @var array<string> $typesNotRequiringBankName
      */
     #[JMS\Exclude]
-    private static $typesNotRequiringBankName = [
+    private static array $typesNotRequiringBankName = [
         'postoffice',
         'cfo',
     ];
 
-    /**
-     * @var int
-     */
     #[JMS\Groups(['account'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'account_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['account'])]
     #[ORM\Column(name: 'bank_name', type: 'string', length: 500, nullable: true)]
-    private $bank;
+    private ?string $bank = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['account'])]
     #[ORM\Column(name: 'account_type', type: 'string', length: 125, nullable: true)]
-    private $accountType;
+    private ?string $accountType = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['account'])]
     #[ORM\Column(name: 'sort_code', type: 'string', length: 6, nullable: true)]
-    private $sortCode;
+    private ?string $sortCode = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['account'])]
     #[ORM\Column(name: 'account_number', type: 'string', length: 4, nullable: true)]
-    private $accountNumber;
+    private ?string $accountNumber = null;
 
-    /**
-     * @var float
-     */
     #[JMS\Groups(['account'])]
     #[JMS\Type('string')]
     #[ORM\Column(name: 'opening_balance', type: 'decimal', precision: 14, scale: 2, nullable: true)]
-    private $openingBalance;
+    private ?string $openingBalance = null;
 
-    /**
-     * @var float
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['account'])]
     #[ORM\Column(name: 'closing_balance', type: 'decimal', precision: 14, scale: 2, nullable: true)]
-    private $closingBalance;
+    private ?string $closingBalance = null;
 
-    /**
-     * @var bool
-     */
     #[JMS\Groups(['account'])]
     #[JMS\Type('boolean')]
-    #[ORM\Column(name: 'is_closed', type: 'boolean', options: ['default' => false], nullable: true)]
-    private $isClosed;
+    #[ORM\Column(name: 'is_closed', type: 'boolean', nullable: true, options: ['default' => false])]
+    private ?bool $isClosed;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'bankAccounts')]
-    private $report;
+    private Report $report;
 
     /**
-     * @var string yes|no|null
+     * yes|no|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['account'])]
     #[ORM\Column(name: 'is_joint_account', type: 'string', length: 3, nullable: true)]
-    private $isJointAccount;
+    private ?string $isJointAccount = null;
 
     /**
      * @deprecated hold information about previous data migration
@@ -132,272 +107,161 @@ class BankAccount implements BankAccountInterface
     #[JMS\Type('string')]
     #[JMS\Groups(['account'])]
     #[ORM\Column(name: 'meta', type: 'text', nullable: true)]
-    private $meta;
+    private ?string $meta = null;
 
-    public function __construct()
+    public function __construct(Report $report)
     {
+        $this->report = $report;
         $this->createdAt = new \DateTime();
         $this->isClosed = false;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * Set id.
-     *
-     * @return int
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
-        $this->id = $id;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
     }
 
-    /**
-     * Set bank.
-     *
-     * @param string $bank
-     *
-     * @return BankAccount
-     */
-    public function setBank($bank)
+    public function setBank(?string $bank): static
     {
         $this->bank = $bank;
 
         return $this;
     }
 
-    /**
-     * Get bank.
-     *
-     * @return string
-     */
-    public function getBank()
+    public function getBank(): ?string
     {
         return $this->bank;
     }
 
-    /**
-     * @return string
-     */
-    public function getAccountType()
+    public function getAccountType(): ?string
     {
         return $this->accountType;
     }
 
-    /**
-     * @return string
-     */
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('account_type_text')]
     #[JMS\Groups(['account'])]
-    public function getAccountTypeText()
+    public function getAccountTypeText(): ?string
     {
-        $type = $this->getAccountType();
-
-        return isset(self::$types[$type]) ? self::$types[$type] : null;
+        return self::$types[$this->getAccountType() ?? ''] ?? null;
     }
 
-    /**
-     * @param string $accountType
-     */
-    public function setAccountType($accountType)
+    public function setAccountType(?string $accountType): static
     {
         $this->accountType = $accountType;
+
+        return $this;
     }
 
-    /**
-     * Set sortCode.
-     *
-     * @param string $sortCode
-     *
-     * @return BankAccount
-     */
-    public function setSortCode($sortCode)
+    public function setSortCode(?string $sortCode): static
     {
         $this->sortCode = $sortCode;
 
         return $this;
     }
 
-    /**
-     * Get sortCode.
-     *
-     * @return string
-     */
-    public function getSortCode()
+    public function getSortCode(): ?string
     {
-        return $this->sortCode;
+        return $this->sortCode ?? '';
     }
 
-    /**
-     * Set accountNumber.
-     *
-     * @param string $accountNumber
-     *
-     * @return BankAccount
-     */
-    public function setAccountNumber($accountNumber)
+    public function setAccountNumber(?string $accountNumber): static
     {
         $this->accountNumber = $accountNumber;
 
         return $this;
     }
 
-    /**
-     * Get accountNumber.
-     *
-     * @return string
-     */
-    public function getAccountNumber()
+    public function getAccountNumber(): string
     {
-        return $this->accountNumber;
+        return $this->accountNumber ?? '';
     }
 
-    /**
-     * Set openingBalance.
-     *
-     * @param string $openingBalance
-     *
-     * @return BankAccount
-     */
-    public function setOpeningBalance($openingBalance)
+    public function setOpeningBalance(null|string|int|float $openingBalance): static
     {
-        $this->openingBalance = $openingBalance;
+        $this->openingBalance = $openingBalance !== null ? (string)$openingBalance : null;
 
         return $this;
     }
 
-    /**
-     * Get openingBalance.
-     *
-     * @return string
-     */
-    public function getOpeningBalance()
+
+    public function getOpeningBalance(): ?string
     {
         return $this->openingBalance;
     }
 
-    /**
-     * Set closingBalance.
-     *
-     * @param string $closingBalance
-     *
-     * @return BankAccount
-     */
-    public function setClosingBalance($closingBalance)
+    public function setClosingBalance(null|string|int|float $closingBalance): static
     {
-        $this->closingBalance = $closingBalance;
+        $this->closingBalance = $closingBalance !== null ? (string)$closingBalance : null;
 
         return $this;
     }
 
-    /**
-     * Get closingBalance.
-     *
-     * @return string
-     */
-    public function getClosingBalance()
+    public function getClosingBalance(): ?string
     {
         return $this->closingBalance;
     }
 
-    /**
-     * @return bool
-     */
-    public function getIsClosed()
+    public function getIsClosed(): bool
     {
-        return $this->isClosed;
+        return $this->isClosed ?? false;
     }
 
-    /**
-     * @param bool $isClosed
-     *
-     * @return BankAccount
-     */
-    public function setIsClosed($isClosed)
+    public function setIsClosed(bool $isClosed): static
     {
         $this->isClosed = $isClosed;
 
         return $this;
     }
 
-    /**
-     * Set report.
-     *
-     * @return BankAccount
-     */
-    public function setReport(?Report $report = null)
+    public function setReport(Report $report): static
     {
         $this->report = $report;
 
         return $this;
     }
 
-    /**
-     * Get report.
-     *
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    /**
-     * Bank name required.
-     *
-     * @return bool
-     */
-    public function requiresBankName()
+    public function requiresBankName(): bool
     {
         return !in_array($this->getAccountType(), self::$typesNotRequiringBankName);
     }
 
-    /**
-     * Sort code required.
-     *
-     * @return bool
-     */
-    public function requiresSortCode()
+    public function requiresSortCode(): bool
     {
         return !in_array($this->getAccountType(), self::$typesNotRequiringSortCode);
     }
 
-    public function getIsJointAccount()
+    public function getIsJointAccount(): ?string
     {
         return $this->isJointAccount;
     }
 
     /**
-     * @param string $isJointAccount yes/no/null
-     *
-     * @return BankAccount
+     * yes/no/null
      */
-    public function setIsJointAccount($isJointAccount)
+    public function setIsJointAccount(?string $isJointAccount): static
     {
         if (!is_null($isJointAccount)) {
             $this->isJointAccount = trim(strtolower($isJointAccount));
         }
-
-        return $this;
-    }
-
-    public function getMeta()
-    {
-        return $this->meta;
-    }
-
-    public function setMeta($meta)
-    {
-        $this->meta = $meta;
 
         return $this;
     }
@@ -414,7 +278,7 @@ class BankAccount implements BankAccountInterface
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('name_one_line')]
     #[JMS\Groups(['account'])]
-    public function getNameOneLine()
+    public function getNameOneLine(): string
     {
         return (!empty($this->getBank()) ? $this->getBank() . ' - ' : '')
             . $this->getAccountTypeText()

@@ -30,11 +30,6 @@ class AuthController extends RestController
         parent::__construct($em);
     }
 
-    /**
-     * @return User
-     *
-     * @throws \Throwable
-     */
     #[Route(path: '/login', name: 'api_login', methods: ['POST'])]
     public function login(
         RestInputOutputFormatter $restInputOutputFormatter,
