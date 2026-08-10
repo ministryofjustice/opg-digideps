@@ -12,63 +12,55 @@ class Organisation
 {
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
      */
+    #[JMS\Type('integer')]
     private $id;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="organisation.name.notBlank")
-     * @Assert\Length(max=256, maxMessage="organisation.name.maxLength")
      */
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'organisation.name.notBlank')]
+    #[Assert\Length(max: 256, maxMessage: 'organisation.name.maxLength')]
     private $name;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     private $emailIdentifier;
 
     /**
      * @var bool
-     *
-     * @JMS\Type("boolean")
-     * @Assert\NotNull(message="organisation.isActivated.notBlank")
      */
+    #[JMS\Type('boolean')]
+    #[Assert\NotNull(message: 'organisation.isActivated.notBlank')]
     private $isActivated;
 
     /**
      * @var array<User>
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\User>")
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\User>')]
     private array $users = [];
 
     /**
      * @var array<Client>
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Client>")
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Client>')]
     private array $clients = [];
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     * @JMS\Groups({"total-user-count"})
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['total-user-count'])]
     private $totalUserCount;
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     * @JMS\Groups({"total-client-count"})
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['total-client-count'])]
     private $totalClientCount;
 
     /**
@@ -81,10 +73,8 @@ class Organisation
 
     /**
      * @param int $id
-     *
-     * @return $this
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -101,10 +91,8 @@ class Organisation
 
     /**
      * @param string $name
-     *
-     * @return $this
      */
-    public function setName($name)
+    public function setName($name): static
     {
         $this->name = $name;
 
@@ -130,10 +118,8 @@ class Organisation
 
     /**
      * @param string $emailIdentifier
-     *
-     * @return $this
      */
-    public function setEmailIdentifier($emailIdentifier)
+    public function setEmailIdentifier($emailIdentifier): static
     {
         $this->emailIdentifier = $emailIdentifier;
 
@@ -158,10 +144,8 @@ class Organisation
 
     /**
      * @param string $emailIdentifier
-     *
-     * @return $this
      */
-    public function setEmailAddress($emailIdentifier)
+    public function setEmailAddress($emailIdentifier): static
     {
         $this->emailIdentifier = $emailIdentifier;
 
@@ -178,10 +162,8 @@ class Organisation
 
     /**
      * @param string $emailIdentifier
-     *
-     * @return $this
      */
-    public function setEmailDomain($emailIdentifier)
+    public function setEmailDomain($emailIdentifier): static
     {
         $this->emailIdentifier = $emailIdentifier;
 
@@ -198,10 +180,8 @@ class Organisation
 
     /**
      * @param string $isActivated
-     *
-     * @return $this
      */
-    public function setIsActivated($isActivated)
+    public function setIsActivated($isActivated): static
     {
         $this->isActivated = $isActivated;
 
@@ -216,44 +196,22 @@ class Organisation
         return $this->users;
     }
 
-    /**
-     * @param User $user
-     * @return bool
-     */
     public function hasUser(User $user): bool
     {
-        foreach ($this->users ?: [] as $currentUser) {
-            if (
-                $user->getId()
-                && $currentUser instanceof User && $currentUser->getId()
-                && $user->getId() == $currentUser->getId()
-            ) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->users, fn ($currentUser) =>
+            $user->getId()
+            && $currentUser instanceof User
+            && $currentUser->getId()
+            && $user->getId() == $currentUser->getId());
     }
 
-    /**
-     * @param int $userId
-     * @return User|null
-     */
     public function getUserById(int $userId): ?User
     {
-        foreach ($this->users as $user) {
-            if ($user->getId() === $userId) {
-                return $user;
-            }
-        }
-
-        return null;
+        return array_find($this->users, fn ($user) => $user->getId() === $userId);
     }
 
     /**
      * @param User[] $users
-     *
-     * @return $this
      */
     public function setUsers(array $users): static
     {
@@ -264,8 +222,6 @@ class Organisation
 
     /**
      * @param User $user
-     *
-     * @return $this
      */
     public function addUser(User $user): static
     {
@@ -284,10 +240,8 @@ class Organisation
 
     /**
      * @param Client[] $clients
-     *
-     * @return $this
      */
-    public function setClients($clients)
+    public function setClients($clients): static
     {
         $this->clients = $clients;
 
@@ -303,11 +257,9 @@ class Organisation
     }
 
     /**
-     * @param int
-     *
-     * @return $this
+     * @param int $count
      */
-    public function setTotalUserCount($count)
+    public function setTotalUserCount($count): static
     {
         $this->totalUserCount = $count;
 
@@ -323,11 +275,9 @@ class Organisation
     }
 
     /**
-     * @param int
-     *
-     * @return $this
+     * @param int $count
      */
-    public function setTotalClientCount($count)
+    public function setTotalClientCount($count): static
     {
         $this->totalClientCount = $count;
 

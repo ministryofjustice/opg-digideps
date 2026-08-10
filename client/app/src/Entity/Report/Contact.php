@@ -11,90 +11,61 @@ class Contact
     use HasReportTrait;
 
     /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"contact"})
-     *
      * @var int
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['contact'])]
     private $id;
 
     /**
-     * @Assert\NotBlank( message="contact.name.notBlank" )
-     * @Assert\Length( min=2, minMessage="contact.name.minMessage", max=255, maxMessage="contact.name.maxMessage")
-     *
-     * @JMS\SerializedName("contact_name")
-     * @JMS\Type("string")
-     * @JMS\Groups({"contact"})
-     *
      * @var string
      */
+    #[JMS\SerializedName('contact_name')]
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[Assert\NotBlank(message: 'contact.name.notBlank')]
+    #[Assert\Length(min: 2, minMessage: 'contact.name.minMessage', max: 255, maxMessage: 'contact.name.maxMessage')]
     private $contactName;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"contact"})
-     *
-     * @Assert\Length( max=200, maxMessage="contact.address.maxMessage")
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[Assert\Length(max: 200, maxMessage: 'contact.address.maxMessage')]
     private $address;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"contact"})
-     *
-     * @Assert\Length( max=200, maxMessage="contact.address.maxMessage")
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[Assert\Length(max: 200, maxMessage: 'contact.address.maxMessage')]
     private $address2;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"contact"})
-     * @Assert\Length( max=200, maxMessage="contact.address.maxMessage")
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[Assert\Length(max: 200, maxMessage: 'contact.address.maxMessage')]
     private $county;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"contact"})
-     *
-     * @Assert\Length( max=10, maxMessage="contact.postcode.maxMessage")
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[Assert\Length(max: 10, maxMessage: 'contact.postcode.maxMessage')]
     private $postcode;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"contact"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
     private $country;
 
-    /**
-     * Reason for contact.
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"contact"})
-     *
-     * @Assert\notBlank( message="contact.explanation.notBlank" )
-     * @Assert\Length( min=6, minMessage="contact.explanation.length")
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[Assert\Length(min: 6, minMessage: 'contact.explanation.length')]
+    #[Assert\NotBlank(message: 'contact.explanation.notBlank')]
     private $explanation;
 
-    /**
-     * Relationship to the client.
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"contact"})
-     *
-     * @Assert\NotBlank( message="contact.relationship.notBlank" )
-     * @Assert\Length( min = 2, minMessage="contact.relationship.minMessage", max=100, maxMessage="contact.relationship.maxMessage")
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[Assert\NotBlank(message: 'contact.relationship.notBlank')]
+    #[Assert\Length(min: 2, minMessage: 'contact.relationship.minMessage', max: 100, maxMessage: 'contact.relationship.maxMessage')]
     private $relationship;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"contact"})
-     *
-     * @Assert\Length( max=20, maxMessage="contact.phone.maxMessage")
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[Assert\Length(max: 20, maxMessage: 'contact.phone.maxMessage')]
     private $phone;
 
     public function getId()
@@ -114,7 +85,7 @@ class Contact
         return $this->contactName;
     }
 
-    public function setContactName($contactName)
+    public function setContactName($contactName): static
     {
         $this->contactName = $contactName;
 
@@ -126,7 +97,7 @@ class Contact
         return $this->address;
     }
 
-    public function setAddress($address)
+    public function setAddress($address): static
     {
         $this->address = $address;
 
@@ -138,7 +109,7 @@ class Contact
         return $this->address2;
     }
 
-    public function setAddress2($address2)
+    public function setAddress2($address2): static
     {
         $this->address2 = $address2;
 
@@ -150,7 +121,7 @@ class Contact
         return $this->county;
     }
 
-    public function setCounty($county)
+    public function setCounty($county): static
     {
         $this->county = $county;
 
@@ -162,7 +133,7 @@ class Contact
         return $this->postcode;
     }
 
-    public function setPostcode($postcode)
+    public function setPostcode($postcode): static
     {
         $this->postcode = $postcode;
 
@@ -174,7 +145,7 @@ class Contact
         return $this->country;
     }
 
-    public function setCountry($country)
+    public function setCountry($country): static
     {
         $this->country = $country;
 
@@ -186,7 +157,7 @@ class Contact
         return $this->explanation;
     }
 
-    public function setExplanation($explanation)
+    public function setExplanation($explanation): static
     {
         $this->explanation = $explanation;
 
@@ -198,7 +169,7 @@ class Contact
         return $this->relationship;
     }
 
-    public function setRelationship($relationship)
+    public function setRelationship($relationship): static
     {
         $this->relationship = $relationship;
 
@@ -210,7 +181,7 @@ class Contact
         return $this->phone;
     }
 
-    public function setPhone($phone)
+    public function setPhone($phone): static
     {
         $this->phone = $phone;
 
