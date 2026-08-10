@@ -13,37 +13,26 @@ class MentalCapacity
     public const string CAPACITY_CHANGED = 'changed';
     public const string CAPACITY_STAYED_SAME = 'stayedSame';
 
-
-
     /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"mental-capacity"})
-     *
      * @var int
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['mental-capacity'])]
     private $id;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"mental-capacity"})
-     * @Assert\NotBlank(message="mentalCapacity.hasCapacityChanged.notBlank", groups={"capacity"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['mental-capacity'])]
+    #[Assert\NotBlank(message: 'mentalCapacity.hasCapacityChanged.notBlank', groups: ['capacity'])]
     private $hasCapacityChanged;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"mental-capacity"})
-     *
-     * @Assert\NotBlank(message="mentalCapacity.hasCapacityChangedDetails.notBlank", groups={"has-capacity-changed-yes"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['mental-capacity'])]
+    #[Assert\NotBlank(message: 'mentalCapacity.hasCapacityChangedDetails.notBlank', groups: ['has-capacity-changed-yes'])]
     private $hasCapacityChangedDetails;
 
-    /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"mental-assessment-date"})
-     *
-     * @Assert\NotBlank(message="mentalCapacity.mentalAssessmentDate.notBlank", groups={"mental-assessment-date"})
-     */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['mental-assessment-date'])]
+    #[Assert\NotBlank(message: 'mentalCapacity.mentalAssessmentDate.notBlank', groups: ['mental-assessment-date'])]
     private $mentalAssessmentDate;
 
     public function getId()
@@ -61,14 +50,14 @@ class MentalCapacity
         return $this->hasCapacityChangedDetails;
     }
 
-    public function setHasCapacityChanged($hasCapacityChanged)
+    public function setHasCapacityChanged($hasCapacityChanged): static
     {
         $this->hasCapacityChanged = $hasCapacityChanged;
 
         return $this;
     }
 
-    public function setHasCapacityChangedDetails($hasCapacityChangedDetails)
+    public function setHasCapacityChangedDetails($hasCapacityChangedDetails): static
     {
         $this->hasCapacityChangedDetails = $hasCapacityChangedDetails;
 
@@ -80,7 +69,7 @@ class MentalCapacity
         return $this->mentalAssessmentDate;
     }
 
-    public function setMentalAssessmentDate($mentalAssessmentDate)
+    public function setMentalAssessmentDate($mentalAssessmentDate): static
     {
         $this->mentalAssessmentDate = $mentalAssessmentDate;
 

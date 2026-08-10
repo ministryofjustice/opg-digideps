@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use OPG\Digideps\Frontend\Entity\Report\Debt;
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -11,39 +10,34 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 trait ReportDebtsTrait
 {
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Debt>")
-     * @JMS\Groups({"debt"})
-     *
      * @var Debt[]
      */
-    private $debts = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Debt>')]
+    #[JMS\Groups(['debt'])]
+    private array $debts = [];
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt"})
-     *
-     * @Assert\NotBlank(message="report.hasDebts.notBlank", groups={"debts"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['debt'])]
+    #[Assert\NotBlank(message: 'report.hasDebts.notBlank', groups: ['debts'])]
     private $hasDebts;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt-management"})
-     *
-     * @Assert\NotBlank(message="report.debts-management.notBlank", groups={"debt-management"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['debt-management'])]
+    #[Assert\NotBlank(message: 'report.debts-management.notBlank', groups: ['debt-management'])]
     private $debtManagement;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt"})
      *
      * @var string $debtsTotalAmount
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['debt'])]
     private $debtsTotalAmount;
 
     /**
@@ -61,36 +55,23 @@ trait ReportDebtsTrait
         return $ret;
     }
 
-    /**
-     * @param $debtId
-     *
-     * @return Debt|null
-     */
-    public function getDebtById($debtId)
+    public function getDebtById(string $debtId): ?Debt
     {
-        foreach ($this->getDebts() as $debt) {
-            if ($debt->getDebtTypeId() == $debtId) {
-                return $debt;
-            }
-        }
-
-        return null;
+        return array_find($this->getDebts(), fn ($debt) => $debt->getDebtTypeId() == $debtId);
     }
 
     /**
      * @return Debt[]
      */
-    public function getDebts()
+    public function getDebts(): array
     {
         return $this->debts;
     }
 
     /**
      * @param Debt[] $debts
-     *
-     * @return Report
      */
-    public function setDebts($debts)
+    public function setDebts(array $debts): static
     {
         $this->debts = $debts;
 
@@ -108,7 +89,7 @@ trait ReportDebtsTrait
     /**
      * @param string $debtsTotalAmount
      */
-    public function setDebtsTotalAmount($debtsTotalAmount)
+    public function setDebtsTotalAmount($debtsTotalAmount): static
     {
         $this->debtsTotalAmount = $debtsTotalAmount;
 
@@ -125,10 +106,8 @@ trait ReportDebtsTrait
 
     /**
      * @param $hasDebts bool
-     *
-     * @return Report
      */
-    public function setHasDebts($hasDebts)
+    public function setHasDebts($hasDebts): static
     {
         $this->hasDebts = $hasDebts;
 
@@ -149,17 +128,15 @@ trait ReportDebtsTrait
      * Set debt management text.
      *
      * @param string $debtManagement
-     *
-     * @return $this
      */
-    public function setDebtManagement($debtManagement)
+    public function setDebtManagement($debtManagement): static
     {
         $this->debtManagement = $debtManagement;
 
         return $this;
     }
 
-    public function debtsValid(ExecutionContextInterface $context)
+    public function debtsValid(ExecutionContextInterface $context): void
     {
         if ($this->getHasDebts() == 'yes' && count($this->getDebtsWithValidAmount()) === 0) {
             $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
@@ -169,12 +146,10 @@ trait ReportDebtsTrait
     /**
      * @return Debt[]
      */
-    public function getDebtsWithValidAmount()
+    public function getDebtsWithValidAmount(): array
     {
-        $debtsWithAValidAmount = array_filter($this->debts, function ($debt) {
+        return array_filter($this->debts, function ($debt): bool {
             return !empty($debt->getAmount());
         });
-
-        return $debtsWithAValidAmount;
     }
 }
