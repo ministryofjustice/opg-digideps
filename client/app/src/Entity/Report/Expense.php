@@ -39,6 +39,13 @@ class Expense
     private $amount;
 
     /**
+     * @JMS\Type("DateTime")
+     * @JMS\Groups({"expenses"})
+     * @phpstan-ignore property.unusedType
+     */
+    private ?\DateTime $createdAt = null;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -90,5 +97,10 @@ class Expense
         $this->amount = $amount;
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
     }
 }

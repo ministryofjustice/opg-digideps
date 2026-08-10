@@ -28,7 +28,7 @@
 </dl>
 
 {# display title if assets are present #}
-{% if report.assets %}
+{% if hasAssets %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <h2 class="govuk-heading-l">{{ (page ~ '.listOfAssets') | trans }}</h2>
@@ -45,16 +45,23 @@
 {% endif %}
 
 {# display assets in groups #}
-{% for groupId, assetsInGroup in report.assetsGroupedByTitle %}
+{% for groupId, assetsInGroup in assetsGroupedByTitle %}
     {% if (groupId | lower) == 'property' %}
-        {% include '@App/Report/Asset/Property/_list_item.html.twig' %}
+        {% include '@App/Report/Asset/Property/_list_item.html.twig' with {
+            'assetsInGroup': assetsInGroup,
+            'reportId': report.id,
+            'clientFirstName': report.client.firstname
+        } %}
     {% else %}
-        {% include '@App/Report/Asset/Other/_list_item.html.twig' %}
+        {% include '@App/Report/Asset/Other/_list_item.html.twig' with {
+            'assetsInGroup': assetsInGroup,
+            'reportId': report.id
+        } %}
     {% endif %}
 {% endfor %}
 
 {# Total #}
-{% if report.assets %}
+{% if hasAssets %}
     <div class="govuk-heading-m text--right behat-region-asset-total">
         {{ (page ~ '.totalValueOfAssets') | trans }}: £{{ report.assetsTotalValue | money_format }}
     </div>
