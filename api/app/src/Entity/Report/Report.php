@@ -996,10 +996,12 @@ class Report
                 $submitDate = $clientReport->getSubmitDate();
                 return $submitDate >= $fifteenMonthsAgo && $submitDate < $latestSubmissionDate && $clientReport->isPfa();
             });
-            if ($filteredReports->count() > 0) {
+
+            $report = $filteredReports->first() ?: null;
+            if ($report !== null) {
                 return [
-                    'report-summary' => $filteredReports->first() instanceof Report ? $filteredReports->first()->getReportSummary() : null,
-                    'financial-summary' => $filteredReports->first() instanceof Report ? $filteredReports->first()->getFinancialSummary() : null,
+                    'report-summary' => $report->getReportSummary(),
+                    'financial-summary' => $report->getFinancialSummary(),
                 ];
             }
         }
