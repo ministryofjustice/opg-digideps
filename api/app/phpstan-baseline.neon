@@ -217,12 +217,6 @@ parameters:
 			path: src/Command/ReportStatusUpdaterCommand.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:deleteInactivateUsers\(\) should return int but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Command/UserCleanupCommand.php
-
-		-
 			message: '#^Parameter \#1 \$messages of method Symfony\\Component\\Console\\Output\\OutputInterface\:\:writeln\(\) expects iterable\|string, Exception given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1399,32 +1393,8 @@ parameters:
 			path: src/Controller/Report/ReportSubmissionController.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission\>\:\:findDownloadableOlderThan\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission\>\:\:findOneByIdUnfiltered\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: '#^Cannot call method getDocuments\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: '#^Cannot call method setDownloadable\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\Report\\ReportSubmissionController\:\:getOld\(\) should return array but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Controller/Report/ReportSubmissionController.php
 
@@ -1965,13 +1935,13 @@ parameters:
 		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 4
 			path: src/Domain/Deputyship/DeputyshipProcessingRawDbAccess.php
 
 		-
 			message: '#^Parameter \#4 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: src/Domain/Deputyship/DeputyshipProcessingRawDbAccess.php
 
 		-
@@ -3073,12 +3043,6 @@ parameters:
 			path: src/Repository/PreRegistrationRepository.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\ReportRepository\:\:findAllActiveReportsByCaseNumbersAndRole\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Repository/ReportRepository.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Repository\\ReportRepository\:\:getAllReportedImbalanceMetrics\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -3231,18 +3195,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:findByFiltersWithCounts\(\) has parameter \$q with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Repository/UserRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:findInactive\(\) has parameter \$role with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Repository/UserRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:findInactive\(\) should return array\<int\> but returns list\<mixed\>\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Repository/UserRepository.php
 
@@ -5917,12 +5869,6 @@ parameters:
 			path: src/v2/Registration/DeputyshipProcessing/CSVDeputyshipProcessing.php
 
 		-
-			message: '#^Binary operation "\." between '''' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: src/v2/Registration/DeputyshipProcessing/CourtOrderReportCandidatesFactory.php
-
-		-
 			message: '#^Parameter \#2 \$candidatesList of static method OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipCandidatesGroup\:\:create\(\) expects array\<array\<string, mixed\>\>, array given\.$#'
 			identifier: argument.type
 			count: 1
@@ -6031,30 +5977,6 @@ parameters:
 			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
 
 		-
-			message: '#^Cannot call method addReport\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: '#^Cannot call method getCaseNumber\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: '#^Cannot call method getCurrentReport\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: '#^Cannot call method getDeputy\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
 			message: '#^Cannot call method getDeputyUid\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -6082,12 +6004,6 @@ parameters:
 			message: '#^Parameter \#1 \$array of function array_unique expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 8
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: '#^Parameter \#1 \$client of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
 
 		-
@@ -7831,12 +7747,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
 
 		-
-			message: '#^Cannot call method getCurrentReport\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
-
-		-
 			message: '#^Cannot call method getDeputyUid\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -7849,12 +7759,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
 
 		-
-			message: '#^Cannot call method getFirstName\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
-
-		-
 			message: '#^Cannot call method getFirstname\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -7862,12 +7766,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\CourtOrder\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
-
-		-
-			message: '#^Cannot call method getLastName\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
@@ -7897,12 +7795,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
 
 		-
-			message: '#^Cannot call method getUser\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
-
-		-
 			message: '#^Cannot call method getUserEmail\(\) on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -7928,12 +7820,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method setIsActive\(\) on OPG\\Digideps\\Backend\\Entity\\CourtOrderDeputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
-
-		-
-			message: '#^Cannot call method setUser\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
@@ -8041,12 +7927,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$string of function strtolower expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -8073,7 +7953,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 3
 			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
 
 		-
@@ -10471,21 +10351,9 @@ parameters:
 			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
 		-
-			message: '#^Cannot call method getCurrentReport\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
-
-		-
 			message: '#^Cannot call method getDeputyUid\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
-
-		-
-			message: '#^Cannot call method getFirstName\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
 		-
@@ -10507,12 +10375,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
 		-
-			message: '#^Cannot call method getLastName\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
-
-		-
 			message: '#^Cannot call method getReports\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -10522,12 +10384,6 @@ parameters:
 			message: '#^Cannot call method getText\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 4
-			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
-
-		-
-			message: '#^Cannot call method getUser\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
 		-
@@ -10550,12 +10406,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method setIsActive\(\) on OPG\\Digideps\\Backend\\Entity\\CourtOrderDeputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
-
-		-
-			message: '#^Cannot call method setUser\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
@@ -10903,12 +10753,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -10947,7 +10791,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 3
 			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
 		-
@@ -12381,7 +12225,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''expected'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 59
+			count: 56
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
@@ -12393,7 +12237,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''found'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 8
+			count: 7
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
@@ -12549,7 +12393,7 @@ parameters:
 		-
 			message: '#^Cannot call method getCurrentReport\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
 			identifier: method.nonObject
-			count: 3
+			count: 1
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
@@ -12597,7 +12441,7 @@ parameters:
 		-
 			message: '#^Cannot call method getFirstName\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
@@ -12633,7 +12477,7 @@ parameters:
 		-
 			message: '#^Cannot call method getLastName\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
@@ -12658,12 +12502,6 @@ parameters:
 			message: '#^Cannot call method getType\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 3
-			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Cannot call method getUser\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
@@ -12716,12 +12554,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method setIsActive\(\) on OPG\\Digideps\\Backend\\Entity\\CourtOrderDeputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Cannot call method setUser\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
@@ -12999,7 +12831,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$expected of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:assertIntEqualsInt\(\) expects int, mixed given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 4
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
@@ -13034,12 +12866,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\CourtOrderDeputy\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
@@ -13107,7 +12933,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 3
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
@@ -13119,7 +12945,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$found of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:assertIntEqualsInt\(\) expects int, mixed given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 4
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
@@ -13143,7 +12969,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 21
+			count: 19
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
@@ -13327,12 +13153,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
-			message: '#^Cannot call method getCurrentReport\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
-
-		-
 			message: '#^Cannot call method getCurrentReportDueDate\(\) on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -13369,12 +13189,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
-			message: '#^Cannot call method getFirstName\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
-
-		-
 			message: '#^Cannot call method getHtml\(\) on Behat\\Mink\\Element\\NodeElement\|null\.$#'
 			identifier: method.nonObject
 			count: 6
@@ -13388,12 +13202,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\CourtOrder\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
-
-		-
-			message: '#^Cannot call method getLastName\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
@@ -13438,12 +13246,6 @@ parameters:
 			message: '#^Cannot call method getText\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 4
-			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
-
-		-
-			message: '#^Cannot call method getUser\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
@@ -13496,12 +13298,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method setReport\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\ClientBenefitsCheck\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
-
-		-
-			message: '#^Cannot call method setUser\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
@@ -13591,12 +13387,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\Report\\ClientBenefitsCheck\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -13623,7 +13413,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 3
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
@@ -13711,12 +13501,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Cannot call method getCurrentReport\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Cannot call method getCurrentReportId\(\) on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: method.nonObject
 			count: 3
@@ -13726,12 +13510,6 @@ parameters:
 			message: '#^Cannot call method getDeputyUid\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Cannot call method getFirstName\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
@@ -13748,12 +13526,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\CourtOrder\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Cannot call method getLastName\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
@@ -13777,12 +13549,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Cannot call method getUser\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Cannot call method getUserEmail\(\) on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -13796,12 +13562,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method setIsActive\(\) on OPG\\Digideps\\Backend\\Entity\\CourtOrderDeputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Cannot call method setUser\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
@@ -13873,12 +13633,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$reportId of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:getReportOverviewUrl\(\) expects int, int\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -13905,7 +13659,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 3
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
@@ -16099,12 +15853,6 @@ parameters:
 			path: tests/Integration/Command/SatisfactionPerformanceStatsCommandTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Command\\UserCleanupCommandTest\:\:testExecute\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Command/UserCleanupCommandTest.php
-
-		-
 			message: '#^Cannot access offset ''code'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -16375,31 +16123,7 @@ parameters:
 			path: tests/Integration/Controller/ChecklistControllerTest.php
 
 		-
-			message: '#^Call to an undefined method object\:\:flush\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:persist\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''report_id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''types_of_income_received_on_clients_behalf'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
@@ -16423,99 +16147,9 @@ parameters:
 			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientBenefitsCheckControllerTest\:\:createHasSuitablePermissionsAllowed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientBenefitsCheckControllerTest\:\:createHasSuitablePermissionsNotAllowed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientBenefitsCheckControllerTest\:\:readHasSuitablePermissionsAllowed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientBenefitsCheckControllerTest\:\:readHasSuitablePermissionsNotAllowed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientBenefitsCheckControllerTest\:\:updateHasSuitablePermissionsAllowed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientBenefitsCheckControllerTest\:\:updateHasSuitablePermissionsNotAllowed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ClientTestHelper\:\:generateClient\(\) expects Doctrine\\ORM\\EntityManagerInterface, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects Doctrine\\ORM\\EntityManagerInterface, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientBenefitsCheckControllerTest\:\:\$okayData has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientBenefitsCheckControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientBenefitsCheckControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientBenefitsCheckControllerTest\:\:\$tokenPa has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientBenefitsCheckControllerTest\:\:\$tokenProf has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Binary operation "\+" between array\{id\: mixed\} and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Binary operation "\+" between array\{users\: array\{mixed\}\} and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
 			message: '#^Binary operation "\." between ''/client/'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 10
+			count: 8
 			path: tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -16527,7 +16161,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
 			identifier: method.notFound
-			count: 6
+			count: 5
 			path: tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -16569,7 +16203,7 @@ parameters:
 		-
 			message: '#^Cannot call method format\(\) on DateTime\|null\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -16635,7 +16269,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 17
+			count: 11
 			path: tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -16671,7 +16305,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 4
 			path: tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -16693,12 +16327,6 @@ parameters:
 			path: tests/Integration/Controller/ClientControllerTest.php
 
 		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$client2 has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -16706,12 +16334,6 @@ parameters:
 
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$coDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$deputy1 has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: tests/Integration/Controller/ClientControllerTest.php
@@ -16814,18 +16436,6 @@ parameters:
 
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$tokenProf has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$updateDataLay has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$updateDataPa has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: tests/Integration/Controller/ClientControllerTest.php
@@ -17125,18 +16735,6 @@ parameters:
 			path: tests/Integration/Controller/JsonHttpTestClient.php
 
 		-
-			message: '#^Call to an undefined method object\:\:flush\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/Controller/MoneyReceivedOnOthersBehalfControllerTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:persist\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/Integration/Controller/MoneyReceivedOnOthersBehalfControllerTest.php
-
-		-
 			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MoneyReceivedOnClientsBehalf\|false\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -17146,18 +16744,6 @@ parameters:
 			message: '#^Cannot call method getTypesOfMoneyReceivedOnClientsBehalf\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\ClientBenefitsCheck\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: tests/Integration/Controller/MoneyReceivedOnOthersBehalfControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ClientTestHelper\:\:generateClient\(\) expects Doctrine\\ORM\\EntityManagerInterface, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/MoneyReceivedOnOthersBehalfControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects Doctrine\\ORM\\EntityManagerInterface, object given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Integration/Controller/MoneyReceivedOnOthersBehalfControllerTest.php
 
 		-
@@ -17497,18 +17083,6 @@ parameters:
 			path: tests/Integration/Controller/PreRegistrationControllerTest.php
 
 		-
-			message: '#^Call to an undefined method object\:\:flush\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/Controller/SatisfactionControllerTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:persist\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/Integration/Controller/SatisfactionControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''reportId'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -17611,44 +17185,8 @@ parameters:
 			path: tests/Integration/Controller/SatisfactionControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ClientTestHelper\:\:generateClient\(\) expects Doctrine\\ORM\\EntityManagerInterface, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/SatisfactionControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects Doctrine\\ORM\\EntityManagerInterface, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/SatisfactionControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/SatisfactionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\SatisfactionControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/SatisfactionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\SatisfactionControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/SatisfactionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\SatisfactionControllerTest\:\:\$tokenPa has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/SatisfactionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\SatisfactionControllerTest\:\:\$tokenProf has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: tests/Integration/Controller/SatisfactionControllerTest.php
 
@@ -18103,32 +17641,8 @@ parameters:
 			path: tests/Integration/Controller/UserControllerTest.php
 
 		-
-			message: '#^Call to an undefined method object\:\:flush\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/Controller/UserResearchControllerTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:persist\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: tests/Integration/Controller/UserResearchControllerTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\UserResearchControllerTest\:\:testUserResearchFailsOnInvalidData\(\) has parameter \$data with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: tests/Integration/Controller/UserResearchControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ClientTestHelper\:\:generateClient\(\) expects Doctrine\\ORM\\EntityManagerInterface, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/UserResearchControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects Doctrine\\ORM\\EntityManagerInterface, object given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/Integration/Controller/UserResearchControllerTest.php
 
@@ -19143,7 +18657,7 @@ parameters:
 		-
 			message: '#^Binary operation "\." between ''/report\-submission/'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 2
+			count: 3
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
@@ -19153,9 +18667,9 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 3
+			message: '#^Call to method generateAndPersistReportSubmission\(\) on an unknown class Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportSubmissionHelper\.$#'
+			identifier: class.notFound
+			count: 1
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
@@ -19267,6 +18781,12 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
+			message: '#^Cannot call method getId\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
+
+		-
 			message: '#^Cannot call method getSynchronisationStatus\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Document\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -19281,6 +18801,12 @@ parameters:
 		-
 			message: '#^Constant API_TOKEN_DEPUTY not found\.$#'
 			identifier: constant.notFound
+			count: 1
+			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
+
+		-
+			message: '#^Instantiated class Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportSubmissionHelper not found\.$#'
+			identifier: class.notFound
 			count: 1
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
@@ -19357,6 +18883,12 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
+			message: '#^Parameter \#1 \$courtOrder of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createReport\(\) expects OPG\\Digideps\\Backend\\Entity\\CourtOrder, OPG\\Digideps\\Backend\\Entity\\Client given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
+
+		-
 			message: '#^Parameter \#1 \$data of method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportSubmissionControllerTest\:\:assertResponseIncludesReportWithCaseNumber\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -19370,12 +18902,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$submissions of method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportSubmissionControllerTest\:\:getSubmissionByCaseNumber\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
@@ -19399,15 +18925,15 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$createdBy of class OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission constructor expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 6
+			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
@@ -19443,6 +18969,48 @@ parameters:
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportSubmissionControllerTest\:\:\$tokenSuperAdmin has no type specified\.$#'
 			identifier: missingType.property
+			count: 1
+			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
+
+		-
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportSubmissionControllerTest\:\:\$deputy1 is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
+
+		-
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportSubmissionControllerTest\:\:\$pa1 is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
+
+		-
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportSubmissionControllerTest\:\:\$pa2 is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
+
+		-
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportSubmissionControllerTest\:\:\$tokenAdmin is never written, only read\.$#'
+			identifier: property.onlyRead
+			count: 1
+			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
+
+		-
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportSubmissionControllerTest\:\:\$tokenDeputy is never written, only read\.$#'
+			identifier: property.onlyRead
+			count: 1
+			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
+
+		-
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportSubmissionControllerTest\:\:\$tokenSuperAdmin is never written, only read\.$#'
+			identifier: property.onlyRead
+			count: 1
+			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
 			count: 1
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
@@ -19627,42 +19195,6 @@ parameters:
 			path: tests/Integration/Entity/Repository/ClientRepositoryIntegrationTest.php
 
 		-
-			message: '#^Cannot access offset ''courtOrderUid'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: tests/Integration/Entity/Repository/CourtOrderRepositoryTest.php
-
-		-
-			message: '#^Offset 0 might not exist on array\|null\.$#'
-			identifier: offsetAccess.notFound
-			count: 4
-			path: tests/Integration/Entity/Repository/CourtOrderRepositoryTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, array\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Entity/Repository/CourtOrderRepositoryTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: tests/Integration/Entity/Repository/CourtOrderRepositoryTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertStringNotContainsString\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Entity/Repository/CourtOrderRepositoryTest.php
-
-		-
-			message: '#^Binary operation "\." between ''abc\-123\-'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
 			message: '#^Call to an undefined method object\:\:getManager\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -19725,12 +19257,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''storage_reference'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Instanceof between OPG\\Digideps\\Backend\\Entity\\Report\\Report and OPG\\Digideps\\Backend\\Entity\\Report\\Report will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
 			count: 1
 			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
@@ -19831,12 +19357,6 @@ parameters:
 			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
 			message: '#^Cannot access offset 1 on array\|OPG\\Digideps\\Backend\\Entity\\Report\\Checklist\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -19849,10 +19369,10 @@ parameters:
 			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
-			message: '#^Cannot call method getRoleName\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
+			message: '#^Access to an undefined static property Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\ReportSubmissionRepositoryIntegrationTest\:\:\$reportSubmissionHelper\.$#'
+			identifier: staticProperty.notFound
+			count: 6
+			path: tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -19863,6 +19383,42 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
+
+		-
+			message: '#^Cannot call method addDocument\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
+
+		-
+			message: '#^Cannot call method generateAndPersistReportSubmission\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
+
+		-
+			message: '#^Cannot call method generateAndPersistSubmittedReportSubmission\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 5
+			path: tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
+
+		-
+			message: '#^Cannot call method getArchived\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
+
+		-
+			message: '#^Cannot call method getId\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
+
+		-
+			message: '#^Cannot call method setArchived\(\) on mixed\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
 
@@ -19921,8 +19477,32 @@ parameters:
 			path: tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
 
 		-
+			message: '#^Parameter \#1 \$courtOrder of method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects OPG\\Digideps\\Backend\\Entity\\CourtOrder, Doctrine\\ORM\\EntityManager given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
+
+		-
+			message: '#^Parameter \#1 \$object of method Doctrine\\ORM\\EntityManager\:\:persist\(\) expects object, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
+
+		-
+			message: '#^Parameter \#1 \$reportSubmission of method OPG\\Digideps\\Backend\\Repository\\ReportSubmissionRepository\:\:updateArchivedStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
+
+		-
 			message: '#^Parameter \#1 \$status of method OPG\\Digideps\\Backend\\Entity\\Report\\Document\:\:setSynchronisationStatus\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
+
+		-
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\ReportSubmissionRepositoryIntegrationTest\:\:\$sut is never written, only read\.$#'
+			identifier: property.onlyRead
 			count: 1
 			path: tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
 
@@ -19935,12 +19515,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/Entity/Repository/UserRepositoryTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\UserRepositoryTest\:\:testCountsInactiveUsers\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: tests/Integration/Entity/Repository/UserRepositoryTest.php
 
@@ -20209,25 +19783,7 @@ parameters:
 			path: tests/Integration/Security/ClientVoterTest.php
 
 		-
-			message: '#^Call to an undefined method object\:\:flush\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/Security/UserVoterTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:persist\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/Integration/Security/UserVoterTest.php
-
-		-
 			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ClientTestHelper\:\:generateClient\(\) expects Doctrine\\ORM\\EntityManagerInterface, object given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Security/UserVoterTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects Doctrine\\ORM\\EntityManagerInterface, object given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Integration/Security/UserVoterTest.php
@@ -20235,7 +19791,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\UserTestHelper\:\:createAndPersistUser\(\) expects Doctrine\\ORM\\EntityManagerInterface, object given\.$#'
 			identifier: argument.type
-			count: 49
+			count: 48
 			path: tests/Integration/Security/UserVoterTest.php
 
 		-
@@ -20362,18 +19918,6 @@ parameters:
 			message: '#^Cannot access offset ''reportType'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: tests/Integration/Stats/Query/ClientsQueryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$type of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Stats/Query/ClientsQueryIntegrationTest.php
-
-		-
-			message: '#^Unsafe call to private method Tests\\OPG\\Digideps\\Backend\\Integration\\Stats\\Query\\ClientsQueryIntegrationTest\:\:givenClientWithReportsOfType\(\) through static\:\:\.$#'
-			identifier: staticClassAccess.privateMethod
-			count: 10
 			path: tests/Integration/Stats/Query/ClientsQueryIntegrationTest.php
 
 		-
@@ -21133,8 +20677,26 @@ parameters:
 			path: tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
 
 		-
+			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Registration\\Controller\\OrgDeputyshipControllerTest\:\:\$headers is never written, only read\.$#'
+			identifier: property.onlyRead
+			count: 1
+			path: tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
+
+		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Registration\\Controller\\OrgDeputyshipControllerTest\:\:\$tokenAdmin has no type specified\.$#'
 			identifier: missingType.property
+			count: 1
+			path: tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
+
+		-
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Registration\\Controller\\OrgDeputyshipControllerTest\:\:\$tokenAdmin is unused\.$#'
+			identifier: property.unused
+			count: 1
+			path: tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
 			count: 1
 			path: tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
 
@@ -21385,12 +20947,6 @@ parameters:
 			path: tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Registration\\Uploader\\OrgDeputyshipUploaderTest\:\:testUploadReportsAreCreatedForNewClients\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Registration\\Uploader\\OrgDeputyshipUploaderTest\:\:testUploadRowsWithArchivedClientsAreSkipped\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -21501,13 +21057,13 @@ parameters:
 		-
 			message: '#^Cannot access offset ''accounts'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 4
 			path: tests/Unit/Entity/Report/ReportTest.php
 
 		-
 			message: '#^Cannot access offset ''bank'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: tests/Unit/Entity/Report/ReportTest.php
 
 		-
@@ -21517,15 +21073,15 @@ parameters:
 			path: tests/Unit/Entity/Report/ReportTest.php
 
 		-
-			message: '#^Cannot access offset ''type'' on mixed\.$#'
+			message: '#^Cannot access offset int on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 3
 			path: tests/Unit/Entity/Report/ReportTest.php
 
 		-
-			message: '#^Cannot access offset int on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			message: '#^Parameter \#1 \$courtOrder of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects OPG\\Digideps\\Backend\\Entity\\CourtOrder, OPG\\Digideps\\Backend\\Entity\\Client given\.$#'
+			identifier: argument.type
+			count: 10
 			path: tests/Unit/Entity/Report/ReportTest.php
 
 		-
@@ -21543,7 +21099,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: tests/Unit/Entity/Report/ReportTest.php
 
 		-
@@ -21562,12 +21118,6 @@ parameters:
 			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
-
-		-
-			message: '#^Instanceof between Ramsey\\Uuid\\UuidInterface and Ramsey\\Uuid\\UuidInterface will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
 			path: tests/Unit/Factory/ClientBenefitsCheckFactoryTest.php
 
 		-
@@ -22079,36 +21629,6 @@ parameters:
 			identifier: method.nonObject
 			count: 23
 			path: tests/Unit/v2/Registration/DeputyshipProcessing/CourtOrderAndDeputyCandidatesFactoryTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\DBAL\\Connection\:\:method\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/v2/Registration/DeputyshipProcessing/CourtOrderReportCandidatesFactoryTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Factory\\StagingSelectedCandidateFactory\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/v2/Registration/DeputyshipProcessing/CourtOrderReportCandidatesFactoryTest.php
-
-		-
-			message: '#^Cannot call method method\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/DeputyshipProcessing/CourtOrderReportCandidatesFactoryTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/DeputyshipProcessing/CourtOrderReportCandidatesFactoryTest.php
-
-		-
-			message: '#^Cannot call method willReturnOnConsecutiveCalls\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/DeputyshipProcessing/CourtOrderReportCandidatesFactoryTest.php
 
 		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Domain\\Deputyship\\DeputyshipCandidatesConverter\:\:expects\(\)\.$#'

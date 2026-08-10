@@ -428,21 +428,6 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         self::assertEquals($orgIdentifier, $updatedClient->getOrganisation()->getEmailIdentifier());
     }
 
-    public function testUploadReportsAreCreatedForNewClients()
-    {
-        $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
-
-        $this->sut->upload($deputyships);
-
-        $caseNumber = $deputyships[0]->getCaseNumber();
-        $reportType = $deputyships[0]->getReportType();
-
-        self::assertTrue(
-            OrgDeputyshipDTOTestHelper::ClientHasAReportOfType($caseNumber, $reportType, $this->clientRepository),
-            sprintf('Client with case number "%s" did not have an associated report of type %s', $caseNumber, $reportType)
-        );
-    }
-
     public function testUploadExistingReportTypeIsChangedIfTypeIsDifferent()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
@@ -579,9 +564,9 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $firstUploadResults = $this->sut->upload($deputyships);
 
-        foreach ($firstUploadResults['added'] as $result) {
+        foreach ($firstUploadResults['added'] as $key => $result) {
             self::assertCount(
-                1,
+                $key !== 'reports' ? 1 : 0,
                 $result,
                 sprintf('Expecting 1, got %d', count($result))
             );

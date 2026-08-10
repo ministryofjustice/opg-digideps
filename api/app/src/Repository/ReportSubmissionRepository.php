@@ -106,11 +106,9 @@ class ReportSubmissionRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param int $limit
-     *
      * @return ReportSubmission[]
      */
-    public function findDownloadableOlderThan(\DateTime $olderThan, $limit): array
+    public function findDownloadableOlderThan(\DateTime $olderThan, int $limit): array
     {
         $qb = $this->createQueryBuilder('rs');
         $qb
@@ -191,12 +189,6 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         return $reportSubmissionsDetails;
     }
 
-    /**
-     * @param string $orderBy default createdOn
-     * @param string $order   default ASC
-     *
-     * @return array
-     */
     public function findAllReportSubmissions(
         ?\DateTime $fromDate = null,
         ?\DateTime $toDate = null,
@@ -232,8 +224,6 @@ class ReportSubmissionRepository extends ServiceEntityRepository
 
     /**
      * Calculate FromDate for ReportSubmissions. Used for CSV generation to include weekends reports on Monday.
-     *
-     * @return \DateTime
      */
     private function determineCreatedFromDate(?\DateTime $date = null): \DateTime
     {
@@ -242,9 +232,6 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         return ($date instanceof \DateTime) ? $date : new \DateTime($dateFormat);
     }
 
-    /**
-     * @return \DateTime
-     */
     private function determineCreatedToDate(?\DateTime $date = null): \DateTime
     {
         return ($date instanceof \DateTime) ? $date : new \DateTime();

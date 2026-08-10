@@ -259,7 +259,7 @@ abstract class AbstractTestController extends WebTestCase
         // clean up vars
         $reflectionObject = new \ReflectionObject($this);
         foreach ($reflectionObject->getProperties() as $property) {
-            if (!$property->isStatic() && !str_starts_with($property->getDeclaringClass()->getName(), 'PHPUnit_')) {
+            if (!$property->isStatic() && !str_starts_with($property->getDeclaringClass()->getName(), 'PHPUnit_') && ($property->getType()?->allowsNull() ?? true)) {
                 $property->setValue($this, null);
             }
         }

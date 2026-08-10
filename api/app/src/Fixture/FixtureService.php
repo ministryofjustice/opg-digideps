@@ -180,7 +180,7 @@ final class FixtureService
 
             if ($deputy !== null) {
                 $persons['deputies'][$deputyDescriptor->deputyReference] = $deputy;
-                $deputy->associateWithCourtOrder($courtOrder);
+                $deputy->associateWithCourtOrder($courtOrder, $deputyDescriptor->isActive);
                 if ($organisation !== null) {
                     $deputy->setOrganisation($organisation);
                 } else {
@@ -216,6 +216,9 @@ final class FixtureService
             $courtOrder->setSibling($sibling['order']);
             if ($courtOrder->getOrderKind() === CourtOrderKind::Hybrid) {
                 $reports = $sibling['reports'];
+                foreach ($reports as $report) {
+                    $report->setCourtOrder($courtOrder);
+                }
             }
         }
 
@@ -372,6 +375,7 @@ final class FixtureService
             ->setCoDeputyClientConfirmed(true)
             ->setPassword($this->password)
             ->setRegistrationDate(new \DateTime()->sub(new \DateInterval('P1Y')))
+            ->setLastLoggedIn(new \DateTime())
         ;
 
         $organisation?->addUser($user);
@@ -390,7 +394,7 @@ final class FixtureService
         $endDate = (clone $startDate)->add(new \DateInterval('P12M'))->sub(new \DateInterval('P1D'));
         $dueDate = (clone $endDate)->add(new \DateInterval('P1M'));
         $reportType = $order->getDesiredReportType();
-        $report = new Report($order->getClient(), "{$reportType}", $startDate, $endDate, false)
+        $report = new Report($order, "{$reportType}", $startDate, $endDate, false)
             ->setId($this->counter->nextInt())
             ->setDueDate($dueDate)
             ->setSubmitted(false)

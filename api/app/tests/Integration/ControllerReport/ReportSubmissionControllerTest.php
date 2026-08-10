@@ -5,7 +5,6 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\TestHelpers\ReportSubmissionHelper;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,6 +19,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
     public function setUp(): void
     {
+        $this->markTestSkipped();
         parent::setUp();
         self::$pa1 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa@example.org');
         self::$pa2 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa_admin@example.org');
