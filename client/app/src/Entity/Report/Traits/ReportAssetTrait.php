@@ -13,9 +13,8 @@ trait ReportAssetTrait
     /**
      * Titles matching this will be included in the count for "Cash" in summary page
      * Note: it relies on the translation (see report-assets.en.yml form.choices) for historical reasons
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     private static $cashAssetTitles = [
         'Unit trusts',
         'National Savings certificates',
@@ -25,25 +24,21 @@ trait ReportAssetTrait
 
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Asset>")
-     *
      * @var Asset[]
      */
-    private $assets = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Asset>')]
+    private array $assets = [];
 
     /**
-     * @JMS\Type("double")
-     *
      * @var float
      */
+    #[JMS\Type('double')]
     private $assetsTotalValue;
 
     /**
-     * @param array $assets
-     *
-     * @return Report
+     * @param Asset[] $assets
      */
-    public function setAssets($assets)
+    public function setAssets(array $assets): static
     {
         $this->assets = $assets;
 
@@ -53,7 +48,7 @@ trait ReportAssetTrait
     /**
      * @return Asset[]
      */
-    public function getAssets()
+    public function getAssets(): array
     {
         return $this->assets;
     }
@@ -71,7 +66,7 @@ trait ReportAssetTrait
     /**
      * @param string $type property|cash|other
      */
-    public function getAssetsTotalsSummaryPage($type)
+    public function getAssetsTotalsSummaryPage($type): float|int
     {
         $ret = 0;
 
@@ -136,19 +131,8 @@ trait ReportAssetTrait
         return $ret;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return bool
-     */
-    public function hasAssetWithId($id)
+    public function hasAssetWithId(int $id): bool
     {
-        foreach ($this->getAssets() as $asset) {
-            if ($asset->getId() == $id) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->getAssets(), fn ($asset) => $asset->getId() == $id);
     }
 }
