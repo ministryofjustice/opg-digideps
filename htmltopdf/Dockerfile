@@ -1,5 +1,5 @@
 # Manually check PDFs generate when updating this
-FROM python:3.13.13-alpine3.23@sha256:420cd0bf0f3998275875e02ecd5808168cf0843cbb4d3c536432f729247b2acc
+FROM python:3.13.15-alpine3.24@sha256:540c7d91f98ff6880174c40e99067bf5941eb54d818a7a5e094d188b196a934d
 
 WORKDIR /
 ENV PYTHONUNBUFFERED=1
@@ -8,8 +8,15 @@ ENV PYTHONUNBUFFERED=1
 RUN addgroup -S htmltopdf && adduser -S htmltopdf -G htmltopdf
 
 # Install runtime dependencies
-RUN apk --update --upgrade --no-cache add \
-    cairo-dev pango-dev gdk-pixbuf bash jpeg-dev curl libwebp tiff libcrypto3 libssl3 ncurses-libs ncurses-terminfo-base libwebp
+RUN apk add --no-cache \
+    cairo \
+    pango \
+    gdk-pixbuf \
+    jpeg \
+    libwebp \
+    tiff \
+    libcrypto3 \
+    libssl3
 
 # Fonts
 RUN apk --update --upgrade --no-cache add fontconfig ttf-freefont font-noto terminus-font \
@@ -40,7 +47,7 @@ COPY client/resources/public/assets/*/stylesheets/formatted-report.css ./tmp/
 COPY client/resources/public/assets/*/stylesheets/fonts.css ./tmp/
 
 # Check processes script
-COPY --chown=clamav:clamav scripts/process_checks/check_processes.sh /check_processes.sh
+COPY --chown=htmltopdf:htmltopdf scripts/process_checks/check_processes.sh /check_processes.sh
 
 EXPOSE 80
 
