@@ -53,7 +53,10 @@ summaryPage:
   listOfAssets: List of assets
   property: Property
   addButton: Add an asset
-  totalValueOfAssets: Total value of assets
+  totalValueOfPreviousAssets: Total value of assets %previousStartDate% to %previousEndDate%
+  totalValueOfAssets: Total value of assets %startDate% to %endDate%
+  prevNoAssetToAdd:
+    label: Does %client% own any assets in %previousStartDate% to %previousEndDate%?
 
 deletePage:
   htmlTitle: "Remove asset - Complete the deputy report | GOV.UK"
