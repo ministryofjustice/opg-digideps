@@ -47,3 +47,9 @@ services:
     build:
       context: ./orchestration
       target: tests
+
+  zizmor:
+    build:
+      context: ./scripts/github_linting
+    volumes:
+      - ./.github:/github:ro
