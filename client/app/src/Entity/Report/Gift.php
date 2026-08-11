@@ -13,36 +13,37 @@ class Gift
     use HasBankAccountTrait;
 
     /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"gift"})
-     *
      * @var int
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['gift'])]
     private $id;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"gift"})
-     *
-     * @Assert\NotBlank(message="gifts.explanation.notBlank", groups={"gift"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['gift'])]
+    #[Assert\NotBlank(message: 'gifts.explanation.notBlank', groups: ['gift'])]
     private $explanation;
 
     /**
      * @var float
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"gift"})
-     *
-     * @Assert\NotBlank(message="gifts.amount.notBlank", groups={"gift"})
-     * @Assert\Type(type="numeric", message="gifts.amount.type", groups={"gift"})
-     * @Assert\Range(min=0.01, max=100000000000, notInRangeMessage = "gifts.amount.notInRangeMessage", groups={"gift"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['gift'])]
+    #[Assert\NotBlank(message: 'gifts.amount.notBlank', groups: ['gift'])]
+    #[Assert\Type(type: 'numeric', message: 'gifts.amount.type', groups: ['gift'])]
+    #[Assert\Range(min: 0.01, max: 100000000000, notInRangeMessage: 'gifts.amount.notInRangeMessage', groups: ['gift'])]
     private $amount;
+
+    /**
+     * @JMS\Type("DateTime")
+     * @JMS\Groups({"gift"})
+     * @phpstan-ignore property.unusedType
+     */
+    private ?\DateTime $createdAt = null;
 
     /**
      * @return mixed
@@ -55,9 +56,11 @@ class Gift
     /**
      * @param mixed $id
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -94,5 +97,10 @@ class Gift
         $this->amount = $amount;
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTime
+    {
+        return $this->createdAt;
     }
 }

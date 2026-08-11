@@ -20,17 +20,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DocumentRecoverCommand extends Command
 {
-    /** @var S3Client */
-    private $s3;
-
-    /** @var string */
-    private $s3BucketName;
-
-    public function __construct(S3Client $s3, string $s3BucketName)
+    public function __construct(private readonly S3Client $s3, private readonly string $s3BucketName)
     {
-        $this->s3 = $s3;
-        $this->s3BucketName = $s3BucketName;
-
         parent::__construct();
     }
 
@@ -43,7 +34,7 @@ class DocumentRecoverCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $refs = array_map('trim', array_filter(file($input->getArgument('file'))));
 
@@ -64,5 +55,6 @@ class DocumentRecoverCommand extends Command
         }
 
         $output->writeln("ok $ok - denied $denied");
+        return 0;
     }
 }

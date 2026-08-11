@@ -312,19 +312,24 @@ final class ReportTest extends TestCase
         $bankAccount2->setClosingBalance('500');
 
         $client = new Client();
-        $now = new \DateTime();
 
-        $reportTwoYearsAgo = new Report($client, Report::PROF_COMBINED_LOW_ASSETS_TYPE, $now, $now);
+        $reportTwoYearsAgo = new Report($client, Report::PROF_COMBINED_LOW_ASSETS_TYPE, new \DateTime('2023-01-01'), new \DateTime('2023-12-31'));
         $reportTwoYearsAgo->setId(8);
         $reportTwoYearsAgo->addAccount($bankAccount0);
+        $reportTwoYearsAgo->setSubmitted(true);
+        $reportTwoYearsAgo->setSubmitDate(new \DateTime('2024-01-01'));
 
-        $reportLastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $now, $now);
+        $reportLastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
         $reportLastYear->setId(9);
         $reportLastYear->addAccount($bankAccount1);
         $reportLastYear->addAccount($bankAccount2);
+        $reportLastYear->setSubmitted(true);
+        $reportLastYear->setSubmitDate(new \DateTime('2025-01-01'));
 
-        $reportLatest = new Report($client, Report::LAY_PFA_LOW_ASSETS_TYPE, $now, $now);
+        $reportLatest = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
         $reportLatest->setId(10);
+        $reportLatest->setSubmitted(true);
+        $reportLatest->setSubmitDate(new \DateTime('2026-01-01'));
 
         $client->addReport($reportTwoYearsAgo);
         $client->addReport($reportLastYear);
@@ -333,35 +338,19 @@ final class ReportTest extends TestCase
         // assert empty as no report prior to the first report, completed two years ago
         $this->assertEmpty($reportTwoYearsAgo->getPreviousReportData());
 
-        // this should be the report from two years ago
+        // report returned from two years ago
         $report1PreviousData = $reportLastYear->getPreviousReportData();
-
         $this->assertArrayHasKey('financial-summary', $report1PreviousData);
         $this->assertArrayHasKey('report-summary', $report1PreviousData);
-        self::assertEquals(
-            Report::PROF_COMBINED_LOW_ASSETS_TYPE,
-            $report1PreviousData['report-summary']['type']
-        );
+        $this->assertArrayHasKey('id', $report1PreviousData['report-summary']);
+        $this->assertEquals($reportTwoYearsAgo->getId(), $report1PreviousData['report-summary']['id']);
 
-        $this->assertCount(1, $report1PreviousData['financial-summary']['accounts']);
-        $this->assertArrayHasKey('opening-balance-total', $report1PreviousData['financial-summary']);
-        $this->assertArrayHasKey('closing-balance-total', $report1PreviousData['financial-summary']);
-        self::assertEquals(
-            $report1PreviousData['financial-summary']['opening-balance-total'],
-            $report1PreviousData['financial-summary']['closing-balance-total']
-        );
-
-        self::assertEquals(
-            'bank0',
-            $report1PreviousData['financial-summary']['accounts'][$bankAccount0->getId()]['bank']
-        );
-        $this->assertArrayHasKey('nameOneLine', $report1PreviousData['financial-summary']['accounts'][$bankAccount0->getId()]);
-        self::assertEquals($report1PreviousData['financial-summary']['closing-balance-total'], $bankAccount0->getClosingBalance());
-
-        // assert current report contains report1 data
+        // assert current report contains last year's data
         $currentReportPreviousData = $reportLatest->getPreviousReportData();
         $this->assertArrayHasKey('financial-summary', $currentReportPreviousData);
-        $this->assertArrayHasKey('report-summary', $report1PreviousData);
+        $this->assertArrayHasKey('report-summary', $currentReportPreviousData);
+        $this->assertArrayHasKey('id', $currentReportPreviousData['report-summary']);
+        $this->assertEquals($reportLastYear->getId(), $currentReportPreviousData['report-summary']['id']);
 
         $this->assertCount(2, $currentReportPreviousData['financial-summary']['accounts']);
         self::assertEquals(
@@ -381,6 +370,78 @@ final class ReportTest extends TestCase
             $currentReportPreviousData['financial-summary']['closing-balance-total'],
             (float)$bankAccount1->getClosingBalance() + (float)$bankAccount2->getClosingBalance()
         );
+    }
+
+    public function testNoPreviousReportDataReturnedOutside15Months(): void
+    {
+        $client = new Client();
+        $reportTwoYearsAgo = new Report($client, Report::PROF_COMBINED_LOW_ASSETS_TYPE, new \DateTime('2023-01-01'), new \DateTime('2023-12-31'));
+        $reportTwoYearsAgo->setId(8);
+        $reportTwoYearsAgo->setSubmitted(true);
+        $reportTwoYearsAgo->setSubmitDate(new \DateTime('2024-01-01'));
+
+        $reportLastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
+        $reportLastYear->setId(9);
+        $reportLastYear->setSubmitted(true);
+        $reportLastYear->setSubmitDate(new \DateTime('2026-01-01'));
+
+        $client->addReport($reportTwoYearsAgo);
+        $client->addReport($reportLastYear);
+
+        // assert two years ago report is outside the 15-month window, so no previous report data should be returned
+        $this->assertEmpty($reportLastYear->getPreviousReportData());
+
+    }
+
+    public function testNoPreviousReportDataReturnedWithin15MonthsForHWReports(): void
+    {
+        $client = new Client();
+        $reportTwoYearsAgo = new Report($client, Report::LAY_HW_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
+        $reportTwoYearsAgo->setId(8);
+        $reportTwoYearsAgo->setSubmitted(true);
+        $reportTwoYearsAgo->setSubmitDate(new \DateTime('2025-01-01'));
+
+        $reportLastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
+        $reportLastYear->setId(9);
+        $reportLastYear->setSubmitted(true);
+        $reportLastYear->setSubmitDate(new \DateTime('2026-01-01'));
+
+        $client->addReport($reportTwoYearsAgo);
+        $client->addReport($reportLastYear);
+
+        // assert two years ago report is a HW report, so no previous report data should be returned
+        $this->assertEmpty($reportLastYear->getPreviousReportData());
+    }
+
+    public function testPreviousReportDataReturnedFromOldPfaReport(): void
+    {
+        $client = new Client();
+        $reportPFALastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
+        $reportPFALastYear->setId(8);
+        $reportPFALastYear->setSubmitted(true);
+        $reportPFALastYear->setSubmitDate(new \DateTime('2025-01-01'));
+
+        $reportHWLastYear = new Report($client, Report::LAY_HW_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
+        $reportHWLastYear->setId(9);
+        $reportHWLastYear->setSubmitted(true);
+        $reportHWLastYear->setSubmitDate(new \DateTime('2025-01-01'));
+
+        $reportLatest = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
+        $reportLatest->setId(10);
+        $reportLatest->setSubmitted(true);
+        $reportLatest->setSubmitDate(new \DateTime('2026-01-01'));
+
+        $client->addReport($reportPFALastYear);
+        $client->addReport($reportHWLastYear);
+        $client->addReport($reportLatest);
+
+        // when there is a HW and PFA report last year, the previous report data should be returned from the last PFA report
+        $currentReportPreviousData = $reportLatest->getPreviousReportData();
+        $this->assertArrayHasKey('financial-summary', $currentReportPreviousData);
+        $this->assertArrayHasKey('report-summary', $currentReportPreviousData);
+        $this->assertIsArray($currentReportPreviousData['report-summary']);
+        $this->assertArrayHasKey('id', $currentReportPreviousData['report-summary']);
+        $this->assertEquals($reportPFALastYear->getId(), $currentReportPreviousData['report-summary']['id']);
     }
 
     public static function reportTypeTranslationKeyProvider(): array
