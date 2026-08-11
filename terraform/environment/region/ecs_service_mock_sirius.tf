@@ -71,7 +71,7 @@ locals {
         options = {
           awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
           awslogs-region        = "eu-west-1",
-          awslogs-stream-prefix = aws_iam_role.mock_sirius_integration.name
+          awslogs-stream-prefix = "mock_sirius_integration.${local.environment}"
         }
       },
       environment = [

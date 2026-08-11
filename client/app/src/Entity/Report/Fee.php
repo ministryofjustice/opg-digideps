@@ -10,42 +10,39 @@ class Fee
 {
     use HasReportTrait;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"fee"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['fee'])]
     private $feeTypeId;
+
     /**
      * @var string decimal
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"fee"})
-     * @Assert\Type(type="numeric", message="fee.amount.notNumeric", groups={"fees"})
-     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "fee.amount.notInRangeMessage", groups={"fees"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['fee'])]
+    #[Assert\Type(type: 'numeric', message: 'fee.amount.notNumeric', groups: ['fees'])]
+    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'fee.amount.notInRangeMessage', groups: ['fees'])]
     private $amount;
 
     /**
      * @var string
-     * @JMS\Groups({"fee"})
-     * @JMS\Type("boolean")
      */
+    #[JMS\Groups(['fee'])]
+    #[JMS\Type('boolean')]
     private $hasMoreDetails;
 
     /**
      * @var string
-     * @JMS\Groups({"fee"})
-     * @JMS\Type("string")
-     *
-     * @Assert\NotBlank(message="fee.moreDetails.notEmpty", groups={"fees-more-details"})
      */
+    #[JMS\Groups(['fee'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'fee.moreDetails.notEmpty', groups: ['fees-more-details'])]
     private $moreDetails;
 
     /**
      * @var int
-     * @JMS\Groups({"fee"})
-     * @JMS\Type("int")
      */
+    #[JMS\Groups(['fee'])]
+    #[JMS\Type('int')]
     private $id;
 
     /**
@@ -59,9 +56,11 @@ class Fee
     /**
      * @param mixed $id
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -75,9 +74,11 @@ class Fee
     /**
      * @param mixed $feeTypeId
      */
-    public function setFeeTypeId($feeTypeId)
+    public function setFeeTypeId($feeTypeId): static
     {
         $this->feeTypeId = $feeTypeId;
+
+        return $this;
     }
 
     /**
@@ -91,9 +92,11 @@ class Fee
     /**
      * @param string $amount decimal
      */
-    public function setAmount($amount)
+    public function setAmount($amount): static
     {
         $this->amount = $amount;
+
+        return $this;
     }
 
     /**
@@ -107,9 +110,11 @@ class Fee
     /**
      * @param string $hasMoreDetails
      */
-    public function setHasMoreDetails($hasMoreDetails)
+    public function setHasMoreDetails($hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
+
+        return $this;
     }
 
     /**
@@ -123,8 +128,10 @@ class Fee
     /**
      * @param string $moreDetails
      */
-    public function setMoreDetails($moreDetails)
+    public function setMoreDetails($moreDetails): static
     {
         $this->moreDetails = $moreDetails;
+
+        return $this;
     }
 }

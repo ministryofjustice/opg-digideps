@@ -43,7 +43,7 @@
     {% endif %}
 </dl>
 
-{% if report.contacts | length > 0 %}
+{% if contacts | length > 0 %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <h2 class="govuk-heading-m">{{ (page ~ '.listOfContacts') | trans }}</h2>
@@ -59,9 +59,7 @@
             {% endif %}
         </div>
     </div>
-{% endif %}
 
-{% if report.contacts | length > 0 %}
     <table class="govuk-table">
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
@@ -82,7 +80,7 @@
             </tr>
         </thead>
         <tbody class="govuk-table__body">
-        {% for contact in report.contacts %}
+        {% for contact in contacts %}
             <tr class="govuk-table__row behat-region-contact-{{ contact.postcode | behat_namify }}">
                 <td class="govuk-table__cell">
                     <p class="govuk-!-margin-0 govuk-!-font-size-18">{{ contact.contactName }}</p>
@@ -106,7 +104,11 @@
                         {{ contact.relationship }}
                 </td>
                 <td class="govuk-table__cell">
+                    {% if contact.explanation %}
                         {{ contact.explanation }}
+                    {% else %}
+                        <twig:GOV:ErrorMessage message="{{ 'summaryPage.reasonForContactRequired' | trans({}, 'report-contacts' ) }}"/>
+                    {% endif %}
                 </td>
                 {% if not hideEditLink  %}
                     <td class="govuk-table__cell govuk-table__cell--numeric">
