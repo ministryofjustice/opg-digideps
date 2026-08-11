@@ -15,7 +15,7 @@
                 {{ 'incomplete.backToEditingReport' | trans() }}
             </a>
 
-            <a class="govuk-button" data-module="govuk-button"
+            <a class="govuk-button" data-module="govuk-button" data-role="confirm-contact-details-button"
                href="{{ path("report_confirm_details" , {'reportId': report.id }) }}">
                 {{ 'review.continueToConfirmDetailsButton' | trans() }}
             </a>
