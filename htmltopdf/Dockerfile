@@ -7,7 +7,9 @@ ENV PYTHONUNBUFFERED=1
 RUN addgroup -S htmltopdf \
  && adduser -S htmltopdf -G htmltopdf
 
+# Install curl for healthcheck, requirements for pdf generation and fonts
 RUN apk add --no-cache \
+    curl \
     cairo \
     pango \
     gdk-pixbuf \
