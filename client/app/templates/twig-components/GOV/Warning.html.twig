@@ -1,0 +1,9 @@
+{% props icon="!", aria="Warning" %}
+
+<div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">{{ icon }}</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-visually-hidden">{{ aria }}</span>
+        {% block content %}{% endblock %}
+    </strong>
+</div>

@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use OPG\Digideps\Frontend\Entity\Report\Gift;
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -11,20 +10,19 @@ trait ReportGiftTrait
 {
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"gifts-exist"})
-     * @Assert\NotBlank(message="gifts.giftsExist.notBlank", groups={"gifts-exist"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['gifts-exist'])]
+    #[Assert\NotBlank(message: 'gifts.giftsExist.notBlank', groups: ['gifts-exist'])]
     private $giftsExist;
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Gift>")
-     * @JMS\Groups({"gifts"})
      *
      * @var Gift[]
      */
-    private $gifts = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Gift>')]
+    #[JMS\Groups(['gifts'])]
+    private array $gifts = [];
 
     /**
      * @return string
@@ -37,25 +35,30 @@ trait ReportGiftTrait
     /**
      * @param string $giftsExist
      */
-    public function setGiftsExist($giftsExist)
+    public function setGiftsExist($giftsExist): static
     {
         $this->giftsExist = $giftsExist;
+
+        return $this;
     }
 
     /**
+     * Return gifts ordered by createdAt in ascending order.
+     * Does not change the order of the underling $this->gifts property.
+     *
      * @return Gift[]
      */
-    public function getGifts()
+    public function getGifts(): array
     {
-        return $this->gifts;
+        $gifts = [...$this->gifts];
+        uasort($gifts, fn ($gift1, $gift2) => $gift1 <=> $gift2);
+        return $gifts;
     }
 
     /**
-     * @param array $gifts
-     *
-     * @return Report
+     * @param Gift[] $gifts
      */
-    public function setGifts($gifts)
+    public function setGifts(array $gifts): static
     {
         $this->gifts = $gifts;
 

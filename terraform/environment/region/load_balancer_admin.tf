@@ -25,7 +25,7 @@ resource "aws_lb_listener" "admin" {
   certificate_arn   = local.certificate_arn
 
   default_action {
-    target_group_arn = aws_lb_target_group.admin.arn
+    target_group_arn = aws_lb_target_group.admin_http.arn
     type             = "forward"
   }
 }
@@ -87,9 +87,9 @@ resource "aws_lb_listener" "admin_http" {
   }
 }
 
-resource "aws_lb_target_group" "admin" {
-  name                 = "admin-tg-${local.environment}"
-  port                 = 80
+resource "aws_lb_target_group" "admin_http" {
+  name                 = "admin-target-${local.environment}"
+  port                 = 8080
   protocol             = "HTTP"
   target_type          = "ip"
   vpc_id               = data.aws_vpc.main.id

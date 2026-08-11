@@ -9,7 +9,6 @@ use OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf;
 use OPG\Digideps\Frontend\TestHelpers\ReportHelpers;
 use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
 use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheckValidator;
-use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -37,7 +36,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
         $report = ReportHelpers::createReport();
         $this->reportClientBenefitsCheck = new ClientBenefitsCheck()
             ->setReport($report)
-            ->setTypesOfMoneyReceivedOnClientsBehalf(new ArrayCollection());
+            ->setTypesOfMoneyReceivedOnClientsBehalf([]);
 
         $this->reportContext = $this->createMock(ExecutionContextInterface::class);
         $this->reportContext

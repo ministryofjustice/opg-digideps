@@ -10,6 +10,12 @@ variable "MANAGEMENT_ROLE" {
   default     = "digideps-ci"
 }
 
+variable "OPG_DOCKER_TAG" {
+  description = "docker tag to deploy"
+  type        = string
+  default     = "latest"
+}
+
 variable "accounts" {
   type = map(
     object({

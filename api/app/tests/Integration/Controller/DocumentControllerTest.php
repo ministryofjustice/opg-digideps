@@ -8,11 +8,11 @@ use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputyDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputySet;
+use OPG\Digideps\Backend\Fixture\Scenario;
 use OPG\Digideps\Backend\Repository\DocumentRepository;
-use Tests\OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
-use Tests\OPG\Digideps\Backend\Fixture\DeputyDescriptor;
-use Tests\OPG\Digideps\Backend\Fixture\DeputySet;
-use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 
 class DocumentControllerTest extends AbstractTestController
 {

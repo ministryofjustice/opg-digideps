@@ -1,0 +1,9 @@
+{% props size="m" %}
+{% set className = "govuk-body" %}
+{% if size != "m" %}
+    {% set className = className ~ '-' ~ size %}
+{% endif %}
+
+<p {{ attributes.defaults({class: className}) }}>
+    {% block content %}{% endblock %}
+</p>

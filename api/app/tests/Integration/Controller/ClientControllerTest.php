@@ -6,7 +6,7 @@ use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
 use Ramsey\Uuid\Uuid;
-use Tests\OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Backend\Fixture\Scenario;
 
 class ClientControllerTest extends AbstractTestController
 {

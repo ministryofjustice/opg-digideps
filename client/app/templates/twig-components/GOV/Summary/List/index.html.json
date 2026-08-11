@@ -1,0 +1,11 @@
+{
+    "link": "https://design-system.service.gov.uk/components/summary-list/",
+    "props": [
+        {
+            "name": "list",
+            "type": "SummaryList",
+            "info": "Build it inside PHP with SummaryListBuilder"
+        }
+    ],
+    "examples": ["summary-list"]
+}

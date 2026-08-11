@@ -6,7 +6,6 @@ use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Traits\ActiveAudit;
 use OPG\Digideps\Frontend\Entity\Traits\IsSoftDeleteableEntity;
 use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -19,293 +18,217 @@ class Client
     use ActiveAudit;
 
     /**
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"edit", "pa-edit", "client-id"})
-     *
      * @var int
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['edit', 'pa-edit', 'client-id'])]
     private $id;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"edit", "pa-edit"})
-     *
-     * @Assert\NotBlank( message="client.firstname.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit", "pa-client"})
-     *
-     * @Assert\Length(min=2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage", groups={"lay-deputy-client", "pa-client"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\NotBlank(message: 'client.firstname.notBlank', groups: ['lay-deputy-client', 'lay-deputy-client-edit', 'pa-client'])]
+    #[Assert\Length(min: 2, minMessage: 'client.firstname.minMessage', max: 50, maxMessage: 'client.firstname.maxMessage', groups: ['lay-deputy-client', 'pa-client'])]
     private $firstname;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"edit", "pa-edit"})
-     *
-     * @Assert\NotBlank( message="client.lastname.notBlank", groups={"lay-deputy-client", "verify-codeputy", "lay-deputy-client-edit", "pa-client"})
-     *
-     * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage", groups={"lay-deputy-client", "verify-codeputy", "pa-client"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\NotBlank(message: 'client.lastname.notBlank', groups: ['lay-deputy-client', 'verify-codeputy', 'lay-deputy-client-edit', 'pa-client'])]
+    #[Assert\Length(min: 2, minMessage: 'client.lastname.minMessage', max: 50, maxMessage: 'client.lastname.maxMessage', groups: ['lay-deputy-client', 'verify-codeputy', 'pa-client'])]
     private $lastname;
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\User>")
-     *
      * @var User[]
      */
-    private $users = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\User>')]
+    private array $users = [];
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Deputy")
-     *
      * @var Deputy|null
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Deputy')]
     private $deputy;
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Report>")
-     *
-     * @var array
+     * @var Report[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Report>')]
     private array $reports = [];
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Report")
-     *
      * @var Report
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Report')]
     private $currentReport;
 
     /**
-     * @JMS\Exclude()
-     *
      * @var string
      */
+    #[JMS\Exclude]
     private $fullname;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"edit", "client-case-number"})
-     *
-     * @Assert\NotBlank( message="client.caseNumber.notBlank", groups={"lay-deputy-client", "verify-codeputy"})
-     *
-     * @Assert\Regex(
-     *       pattern="/^.{8}$|^.{10}$/",
-     *       message="client.caseNumber.exactMessage",
-     *       groups={"lay-deputy-client", "verify-codeputy"}
-     *   )
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'client-case-number'])]
+    #[Assert\NotBlank(message: 'client.caseNumber.notBlank', groups: ['lay-deputy-client', 'verify-codeputy'])]
+    #[Assert\Regex(pattern: '/^.{8}$|^.{10}$/', message: 'client.caseNumber.exactMessage', groups: ['lay-deputy-client', 'verify-codeputy'])]
     private $caseNumber;
 
     /**
-     * @JMS\Accessor(setter="setCourtDateWithoutTime")
-     *
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @JMS\Groups({"edit", "client-court-date", "checklist-information"})
-     *
-     * @Assert\NotBlank( message="client.courtDate.notBlank", groups={"lay-deputy-client"})
-     *
-     * @Assert\Type(type="DateTimeInterface", message="client.courtDate.message", groups={"lay-deputy-client"})
-     *
-     * @Assert\LessThan("today", groups={"pa-client"}, message="client.courtDate.lessThan", groups={"lay-deputy-client"})
-     *
      * @var \DateTime|null
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['edit', 'client-court-date', 'checklist-information'])]
+    #[JMS\Accessor(setter: 'setCourtDateWithoutTime')]
+    #[Assert\NotBlank(message: 'client.courtDate.notBlank', groups: ['lay-deputy-client'])]
+    #[Assert\Type(type: 'DateTimeInterface', message: 'client.courtDate.message', groups: ['lay-deputy-client'])]
+    #[Assert\LessThan('today', groups: ['lay-deputy-client'], message: 'client.courtDate.lessThan')]
     private $courtDate;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"edit", "pa-edit"})
-     *
-     * @Assert\NotBlank( message="client.address.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
-     *
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\NotBlank(message: 'client.address.notBlank', groups: ['lay-deputy-client', 'lay-deputy-client-edit'])]
+    #[Assert\Length(max: 200, maxMessage: 'client.address.maxMessage', groups: ['lay-deputy-client', 'pa-client'])]
     private $address;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"edit", "pa-edit"})
-     *
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\Length(max: 200, maxMessage: 'client.address.maxMessage', groups: ['lay-deputy-client', 'pa-client', 'lay-deputy-client-edit'])]
     private $address2;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"edit", "pa-edit"})
-     *
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\Length(max: 200, maxMessage: 'client.address.maxMessage', groups: ['lay-deputy-client', 'pa-client', 'lay-deputy-client-edit'])]
     private $address3;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"edit", "pa-edit"})
-     *
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\Length(max: 200, maxMessage: 'client.address.maxMessage', groups: ['lay-deputy-client', 'pa-client', 'lay-deputy-client-edit'])]
     private $address4;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"edit", "pa-edit"})
-     *
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\Length(max: 200, maxMessage: 'client.address.maxMessage', groups: ['lay-deputy-client', 'pa-client', 'lay-deputy-client-edit'])]
     private $address5;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"edit", "pa-edit"})
-     *
-     * @Assert\NotBlank( message="client.postcode.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
-     *
-     * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\NotBlank(message: 'client.postcode.notBlank', groups: ['lay-deputy-client', 'lay-deputy-client-edit'])]
+    #[Assert\Length(max: 10, maxMessage: 'client.postcode.maxMessage', groups: ['lay-deputy-client', 'pa-client', 'lay-deputy-client-edit'])]
     private $postcode;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"edit"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit'])]
     private $country;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"edit", "pa-edit"})
-     *
-     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['edit', 'pa-edit'])]
+    #[Assert\Length(min: 10, max: 20, minMessage: 'common.genericPhone.minLength', maxMessage: 'common.genericPhone.maxLength', groups: ['lay-deputy-client', 'pa-client', 'lay-deputy-client-edit'])]
     private $phone;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"pa-edit", "client-email"})
-     *
-     * @Assert\Email( message="client.email.invalid", groups={"pa-client"})
-     *
-     * @Assert\Length(max=60, maxMessage="client.email.maxLength", groups={"pa-client"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['pa-edit', 'client-email'])]
+    #[Assert\Email(message: 'client.email.invalid', groups: ['pa-client'])]
+    #[Assert\Length(max: 60, maxMessage: 'client.email.maxLength', groups: ['pa-client'])]
     private $email;
 
     /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @JMS\Groups({"pa-edit"})
-     *
-     * @Assert\LessThan("today", groups={"pa-client"}, message="client.dateOfBirth.lessThan")
-     *
      * @var \DateTime|null
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['pa-edit'])]
+    #[Assert\LessThan('today', message: 'client.dateOfBirth.lessThan', groups: ['pa-client'])]
     private $dateOfBirth;
 
     /**
-     * @var ArrayCollection
-     *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\Note>")
-     *
-     * @JMS\Groups({"notes"})
+     * @var array<Note>
      */
-    private $notes;
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Note>')]
+    #[JMS\Groups(['notes'])]
+    private array $notes;
 
     /**
-     * @var ArrayCollection
-     *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\ClientContact>")
-     *
-     * @JMS\Groups({"clientcontacts"})
+     * @var array<ClientContact>
      */
-    private $clientContacts;
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\ClientContact>')]
+    #[JMS\Groups(['clientcontacts'])]
+    private array $clientContacts = [];
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"total-report-count"})
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['total-report-count'])]
     private $totalReportCount;
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Organisation")
-     *
      * @var Organisation
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Organisation')]
     private $organisation;
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
      */
+    #[JMS\Type('integer')]
     private $unsubmittedReportsCount;
 
     /**
      * @var \DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @JMS\Groups({"checklist-information"})
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['checklist-information'])]
     private $expectedReportStartDate;
 
     /**
      * @var \DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @JMS\Groups({"checklist-information"})
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['checklist-information'])]
     private $expectedReportEndDate;
 
     /**
      * @var \DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     private $archivedAt;
 
     public function __construct()
     {
-        $this->users = [];
-        $this->reports = [];
     }
 
     /**
@@ -316,7 +239,7 @@ class Client
         return $this->users;
     }
 
-    public function setDeputy(Deputy $deputy): self
+    public function setDeputy(Deputy $deputy): static
     {
         $this->deputy = $deputy;
 
@@ -328,32 +251,24 @@ class Client
      * Return false if any of the user is not an instance of the User class or the ID is not present.
      *
      * Mainly used from voters
-     *
-     * @return bool
      */
-    public function hasUser(User $user)
+    public function hasUser(User $user): bool
     {
-        foreach ($this->users ?: [] as $currentUser) {
-            if (
-                $user->getId()
-                && $currentUser instanceof User && $currentUser->getId()
-                && $user->getId() == $currentUser->getId()
-            ) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->users ?: [], fn ($currentUser) =>
+            $user->getId()
+            && $currentUser instanceof User
+            && $currentUser->getId()
+            && $user->getId() == $currentUser->getId());
     }
 
-    public function setUsers($users)
+    public function setUsers($users): static
     {
         $this->users = $users;
 
         return $this;
     }
 
-    public function addUser($user)
+    public function addUser($user): static
     {
         $this->users[] = $user;
 
@@ -371,35 +286,25 @@ class Client
     /**
      * @return array $reports
      */
-    public function getReportsSubmittedAtLeastOnce()
+    public function getReportsSubmittedAtLeastOnce(): array
     {
-        return array_filter($this->getReports() ?: [], function (Report $report) {
+        return array_filter($this->getReports() ?: [], function (Report $report): bool {
             return $report->getSubmitted() || $report->getUnSubmitDate();
         });
     }
 
     /**
      * @param int $id report ID
-     *
-     * @return Report|null
      */
-    public function getReportById($id)
+    public function getReportById($id): ?Report
     {
-        foreach ($this->reports as $report) {
-            if ($report->getId() == $id) {
-                return $report;
-            }
-        }
-
-        return null;
+        return array_find($this->reports, fn ($report) => $report->getId() == $id);
     }
 
     /**
      * @param Report $report
-     *
-     * @return Client
      */
-    public function addReport($report)
+    public function addReport($report): static
     {
         $this->reports[] = $report;
 
@@ -408,10 +313,8 @@ class Client
 
     /**
      * @param Report[] $reports
-     *
-     * @return Client
      */
-    public function setReports($reports)
+    public function setReports(array $reports): static
     {
         $this->reports = $reports;
 
@@ -429,14 +332,14 @@ class Client
     /**
      * @param Report $currentReport
      */
-    public function setCurrentReport($currentReport): self
+    public function setCurrentReport($currentReport): static
     {
         $this->currentReport = $currentReport;
 
         return $this;
     }
 
-    public function removeReport($report)
+    public function removeReport($report): static
     {
         if (!empty($this->reports)) {
             foreach ($this->reports as $key => $reportObj) {
@@ -451,23 +354,14 @@ class Client
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasDetails()
+    public function hasDetails(): bool
     {
-        if (!empty($this->getAddress())) {
-            return true;
-        }
+        return !empty($this->getAddress());
     }
 
-    public function hasReport()
+    public function hasReport(): bool
     {
-        if (!empty($this->reports)) {
-            return true;
-        }
-
-        return false;
+        return !empty($this->reports);
     }
 
     public function getFullname(): string
@@ -477,7 +371,7 @@ class Client
         return $this->fullname;
     }
 
-    public function setCourtDateWithoutTime($courtDate = null)
+    public function setCourtDateWithoutTime($courtDate = null): void
     {
         $this->courtDate = ($courtDate instanceof \DateTime) ?
                 new \DateTime($courtDate->format('Y-m-d')) : null;
@@ -493,10 +387,8 @@ class Client
 
     /**
      * @param int $id
-     *
-     * @return Client
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -513,10 +405,8 @@ class Client
 
     /**
      * @param string $firstname
-     *
-     * @return Client
      */
-    public function setFirstname($firstname)
+    public function setFirstname($firstname): static
     {
         $this->firstname = $firstname;
 
@@ -533,10 +423,8 @@ class Client
 
     /**
      * @param string $lastname
-     *
-     * @return Client
      */
-    public function setLastname($lastname)
+    public function setLastname($lastname): static
     {
         $this->lastname = $lastname;
 
@@ -553,10 +441,8 @@ class Client
 
     /**
      * @param string $caseNumber
-     *
-     * @return Client
      */
-    public function setCaseNumber($caseNumber)
+    public function setCaseNumber($caseNumber): static
     {
         $this->caseNumber = $caseNumber;
 
@@ -573,10 +459,8 @@ class Client
 
     /**
      * @param \DateTime|null $courtDate
-     *
-     * @return Client
      */
-    public function setCourtDate($courtDate)
+    public function setCourtDate($courtDate): static
     {
         $this->courtDate = $courtDate;
 
@@ -594,7 +478,7 @@ class Client
     /**
      * @param string $address
      */
-    public function setAddress($address): self
+    public function setAddress($address): static
     {
         $this->address = $address;
 
@@ -606,7 +490,7 @@ class Client
         return $this->address2;
     }
 
-    public function setAddress2(?string $address2): self
+    public function setAddress2(?string $address2): static
     {
         $this->address2 = $address2;
 
@@ -618,7 +502,7 @@ class Client
         return $this->address3;
     }
 
-    public function setAddress3(?string $address3): self
+    public function setAddress3(?string $address3): static
     {
         $this->address3 = $address3;
 
@@ -630,7 +514,7 @@ class Client
         return $this->address4;
     }
 
-    public function setAddress4(?string $address4): self
+    public function setAddress4(?string $address4): static
     {
         $this->address4 = $address4;
 
@@ -642,7 +526,7 @@ class Client
         return $this->address5;
     }
 
-    public function setAddress5(?string $address5): self
+    public function setAddress5(?string $address5): static
     {
         $this->address5 = $address5;
 
@@ -659,10 +543,8 @@ class Client
 
     /**
      * @param string $postcode
-     *
-     * @return Client
      */
-    public function setPostcode($postcode)
+    public function setPostcode($postcode): static
     {
         $this->postcode = $postcode;
 
@@ -679,10 +561,8 @@ class Client
 
     /**
      * @param string $country
-     *
-     * @return Client
      */
-    public function setCountry($country)
+    public function setCountry($country): static
     {
         $this->country = $country;
 
@@ -692,7 +572,7 @@ class Client
     /**
      * @return array
      */
-    public function getAddressNotEmptyParts()
+    public function getAddressNotEmptyParts(): array
     {
         return array_filter([
             $this->address,
@@ -712,10 +592,8 @@ class Client
 
     /**
      * @param string $phone
-     *
-     * @return Client
      */
-    public function setPhone($phone)
+    public function setPhone($phone): static
     {
         $this->phone = $phone;
 
@@ -732,10 +610,8 @@ class Client
 
     /**
      * @param string $email
-     *
-     * @return Client
      */
-    public function setEmail($email)
+    public function setEmail($email): static
     {
         $this->email = $email;
 
@@ -750,59 +626,58 @@ class Client
         return $this->dateOfBirth;
     }
 
-    /**
-     * @return Client
-     */
-    public function setDateOfBirth(?\DateTime $dateOfBirth = null)
+    public function setDateOfBirth(?\DateTime $dateOfBirth = null): static
     {
         $this->dateOfBirth = $dateOfBirth;
 
         return $this;
     }
 
-    /*
-     * @return int
-     */
-    public function getAge()
+    public function getAge(): ?int
     {
-        if (!$this->dateOfBirth) {
-            return;
-        }
-        $to = new \DateTime('today');
+        if ($this->dateOfBirth) {
+            $to = new \DateTime('today');
 
-        return $this->dateOfBirth->diff($to)->y;
+            return $this->dateOfBirth->diff($to)->y;
+        }
+
+        return null;
     }
 
     /**
-     * @return ArrayCollection
+     * @return array<Note>
      */
-    public function getNotes()
+    public function getNotes(): array
     {
         return $this->notes;
     }
 
     /**
-     * @param ArrayCollection $notes
+     * @param array<Note>$notes
      */
-    public function setNotes($notes)
+    public function setNotes(array $notes): static
     {
         $this->notes = $notes;
+
+        return $this;
     }
 
     /**
-     * @return ArrayCollection
+     * @return array<ClientContact>
      */
-    public function getClientContacts()
+    public function getClientContacts(): array
     {
         return $this->clientContacts;
     }
 
     /**
-     * @param ArrayCollection $clientContacts
+     * @param array<ClientContact> $clientContacts
      */
-    public function setClientContacts($clientContacts)
+    public function setClientContacts(array $clientContacts): static
     {
         $this->clientContacts = $clientContacts;
+
+        return $this;
     }
 
     /**
@@ -824,13 +699,7 @@ class Client
      */
     public function getUnsubmittedReport()
     {
-        foreach ($this->getReports() as $report) {
-            if (!$report->isSubmitted() && $report->getUnSubmitDate()) {
-                return $report;
-            }
-        }
-
-        return null;
+        return array_find($this->getReports(), fn ($report) => !$report->isSubmitted() && $report->getUnSubmitDate());
     }
 
     /**
@@ -844,9 +713,11 @@ class Client
     /**
      * @param int $totalReportCount
      */
-    public function setTotalReportCount($totalReportCount)
+    public function setTotalReportCount($totalReportCount): static
     {
         $this->totalReportCount = $totalReportCount;
+
+        return $this;
     }
 
     /**
@@ -859,10 +730,8 @@ class Client
 
     /**
      * @param int $unsubmittedReportsCount
-     *
-     * @return Client
      */
-    public function setUnsubmittedReportsCount($unsubmittedReportsCount)
+    public function setUnsubmittedReportsCount($unsubmittedReportsCount): static
     {
         $this->unsubmittedReportsCount = $unsubmittedReportsCount;
 
@@ -897,10 +766,8 @@ class Client
 
     /**
      * @param \DateTime $expectedReportEndDate
-     *
-     * @return $this
      */
-    public function setExpectedReportEndDate($expectedReportEndDate)
+    public function setExpectedReportEndDate($expectedReportEndDate): static
     {
         $this->expectedReportEndDate = $expectedReportEndDate;
 
@@ -939,12 +806,14 @@ class Client
         return $this->organisation;
     }
 
-    public function setOrganisation(Organisation $organisation): void
+    public function setOrganisation(Organisation $organisation): static
     {
         $this->organisation = $organisation;
+
+        return $this;
     }
 
-    public function userBelongsToClientsOrganisation(User $user)
+    public function userBelongsToClientsOrganisation(User $user): bool
     {
         if ($this->getOrganisation() instanceof Organisation && $this->getOrganisation()->isActivated()) {
             foreach ($user->getOrganisations() as $organisation) {
@@ -998,10 +867,10 @@ class Client
     /**
      * @return array $coDeps an array of users sorted by firstname, or email if no firstname
      */
-    public function getCoDeputies()
+    public function getCoDeputies(): array
     {
         $coDeps = [];
-        if (is_array($this->users) && count($this->users) > 0) {
+        if (count($this->users) > 0) {
             foreach ($this->users as $user) {
                 if (!$user->getFirstname()) {
                     $matches = [];

@@ -25,8 +25,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class MoneyTransferController extends AbstractController
 {
     private static array $jmsGroups = [
-        'money-transfer',
         'account',
+        'money-transfer',
         'money-transfer-state',
     ];
 
@@ -212,6 +212,7 @@ class MoneyTransferController extends AbstractController
 
         return [
             'report' => $report,
+            'moneyTransfers' => $report->getMoneyTransfers()
         ];
     }
 

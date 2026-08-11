@@ -5,8 +5,6 @@ namespace OPG\Digideps\Frontend\Entity;
 use OPG\Digideps\Frontend\Entity\Traits\LoginInfoTrait;
 use OPG\Digideps\Frontend\Validator\Constraints\CommonPassword;
 use OPG\Digideps\Frontend\Validator\Constraints\EmailSameDomain;
-use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -55,9 +53,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         self::ROLE_ADMIN_MANAGER,
     ];
 
-    /**
-     * @JMS\Exclude
-     */
+    #[JMS\Exclude]
     private static $allowedRoles = [
         self::ROLE_ADMIN => 'Admin',
         self::ROLE_ADMIN_MANAGER => 'Admin Manager',
@@ -83,392 +79,289 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public const string UNKNOWN_REGISTRATION_ROUTE = 'UNKNOWN';
 
     /**
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user"})
-     *
      * @var int
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['user_details_full', 'user_details_basic', 'admin_add_user'])]
     private $id;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_org", "org_team_add", "admin_add_user", "ad_add_user", "admin_edit_user", "codeputy", "codeputy_invite"})
-     *
-     * @Assert\NotBlank( message="user.firstname.notBlankOtherUser",
-     *     groups={"org_team_add", "user_details_org", "admin_add_user", "ad_add_user", "user_details_basic", "codeputy",
-     *     "user_details_full", "verify-codeputy", "admin_edit_user", "codeputy_invite"
-     * } )
-     *
-     * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength",
-     * groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_org",
-     * "org_team_add", "verify-codeputy", "admin_edit_user", "codeputy_invite"} )
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user_details_full', 'user_details_basic', 'user_details_org', 'org_team_add', 'admin_add_user', 'ad_add_user', 'admin_edit_user', 'codeputy', 'codeputy_invite'])]
+    #[Assert\NotBlank(message: 'user.firstname.notBlankOtherUser', groups: ['org_team_add', 'user_details_org', 'admin_add_user', 'ad_add_user', 'user_details_basic', 'codeputy', 'user_details_full', 'verify-codeputy', 'admin_edit_user', 'codeputy_invite'])]
+    #[Assert\Length(min: 2, max: 50, minMessage: 'user.firstname.minLength', maxMessage: 'user.firstname.maxLength', groups: ['admin_add_user', 'ad_add_user', 'user_details_basic', 'user_details_full', 'user_details_org', 'org_team_add', 'verify-codeputy', 'admin_edit_user', 'codeputy_invite'])]
     private $firstname;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_full", "user_details_basic", "user_details_org", "org_team_add", "admin_add_user", "ad_add_user", "admin_edit_user", "codeputy", "codeputy_invite"})
-     *
-     * @Assert\NotBlank(message="user.lastname.notBlankOtherUser",
-     *     groups={"admin_add_user","ad_add_user","user_details_basic","user_details_full","org_team_add",
-     *     "user_details_org", "verify-codeputy", "admin_edit_user", "codeputy_invite"
-     * } )
-     *
-     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "ad_add_user", "user_details_basic", "user_details_full", "user_details_org", "verify-codeputy", "admin_edit_user", "codeputy_invite"} )
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user_details_full', 'user_details_basic', 'user_details_org', 'org_team_add', 'admin_add_user', 'ad_add_user', 'admin_edit_user', 'codeputy', 'codeputy_invite'])]
+    #[Assert\NotBlank(message: 'user.lastname.notBlankOtherUser', groups: ['admin_add_user', 'ad_add_user', 'user_details_basic', 'user_details_full', 'org_team_add', 'user_details_org', 'verify-codeputy', 'admin_edit_user', 'codeputy_invite'])]
+    #[Assert\Length(min: 2, max: 50, minMessage: 'user.lastname.minLength', maxMessage: 'user.lastname.maxLength', groups: ['admin_add_user', 'ad_add_user', 'user_details_basic', 'user_details_full', 'user_details_org', 'verify-codeputy', 'admin_edit_user', 'codeputy_invite'])]
     private $lastname;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"admin_add_user", "ad_add_user", "org_team_add", "user_details_full", "user_details_org", "codeputy", "admin_edit_user"})
-     *
-     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "user_details_full", "user_details_org", "org_team_add", "password_reset", "codeputy_invite", "verify-codeputy", "admin_edit_user", "user_change_email"} )
-     *
-     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_org", "org_team_add", "codeputy_invite", "verify-codeputy", "admin_edit_user", "user_change_email"},   )
-     *
-     * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_org", "org_team_add", "codeputy_invite", "verify-codeputy", "admin_edit_user", "user_change_email"} )
-     *
      * @EmailSameDomain( message="user.email.invalidDomain", groups={"email_same_domain"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['admin_add_user', 'ad_add_user', 'org_team_add', 'user_details_full', 'user_details_org', 'codeputy', 'admin_edit_user'])]
+    #[Assert\NotBlank(message: 'user.email.notBlank', groups: ['admin_add_user', 'user_details_full', 'user_details_org', 'org_team_add', 'password_reset', 'codeputy_invite', 'verify-codeputy', 'admin_edit_user', 'user_change_email'])]
+    #[Assert\Email(message: 'user.email.invalid', groups: ['admin_add_user', 'password_reset', 'user_details_full', 'user_details_org', 'org_team_add', 'codeputy_invite', 'verify-codeputy', 'admin_edit_user', 'user_change_email'])]
+    #[Assert\Length(max: 60, maxMessage: 'user.email.maxLength', groups: ['admin_add_user', 'password_reset', 'user_details_full', 'user_details_org', 'org_team_add', 'codeputy_invite', 'verify-codeputy', 'admin_edit_user', 'user_change_email'])]
     private $email;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @Assert\NotBlank( message="user.password.notBlank", groups={"user_set_password", "user_change_password"} )
-     *
-     * @Assert\Length( min=14, max=50, minMessage="user.password.minLength", maxMessage="user.password.maxLength", groups={"user_set_password", "user_change_password"} )
-     *
-     * @Assert\Regex( pattern="/[a-z]/" , message="user.password.noLowerCaseChars", groups={"user_set_password", "user_change_password" } )
-     * @Assert\Regex( pattern="/[A-Z]/" , message="user.password.noUpperCaseChars", groups={"user_set_password", "user_change_password" } )
-     * @Assert\Regex( pattern="/[0-9]/", message="user.password.noNumber", groups={"user_set_password", "user_change_password"} )
-     *
      * @CommonPassword(message="user.password.notCommonPassword", groups={"user_set_password", "user_change_password"})
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'user.password.notBlank', groups: ['user_set_password', 'user_change_password'])]
+    #[Assert\Length(min: 14, max: 50, minMessage: 'user.password.minLength', maxMessage: 'user.password.maxLength', groups: ['user_set_password', 'user_change_password'])]
+    #[Assert\Regex(pattern: '/[a-z]/', message: 'user.password.noLowerCaseChars', groups: ['user_set_password', 'user_change_password'])]
+    #[Assert\Regex(pattern: '/[A-Z]/', message: 'user.password.noUpperCaseChars', groups: ['user_set_password', 'user_change_password'])]
+    #[Assert\Regex(pattern: '/[0-9]/', message: 'user.password.noNumber', groups: ['user_set_password', 'user_change_password'])]
     private $password;
 
     /**
-     * @JMS\Type("string")
-     *
      * @var string|null
      */
+    #[JMS\Type('string')]
     private $salt;
 
     /**
-     * @JMS\Type("boolean")
-     *
      * @var bool
      */
+    #[JMS\Type('boolean')]
     private $active;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"admin_add_user", "ad_add_user", "org_team_add", "user_details_org"})
-     *
-     * @Assert\NotBlank( message="user.role.notBlank", groups={"admin_add_user", "ad_add_user"} )
-     * @Assert\NotBlank( message="user.role.notBlankPa", groups={"org_team_role_name"} )
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['admin_add_user', 'ad_add_user', 'org_team_add', 'user_details_org'])]
+    #[Assert\NotBlank(message: 'user.role.notBlank', groups: ['admin_add_user', 'ad_add_user'])]
+    #[Assert\NotBlank(message: 'user.role.notBlankPa', groups: ['org_team_role_name'])]
     private $roleName;
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Client>")
-     *
      * @var Client[]
      */
-    private $clients = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Client>')]
+    private array $clients = [];
 
     /**
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @var \DateTime|null
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    #[JMS\Groups(['user'])]
     private $registrationDate;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"registrationToken"})
-     *
      * @var string|null
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['registrationToken'])]
     private $registrationToken;
 
     /**
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @JMS\Groups({"registrationToken"})
-     *
      * @var \DateTime|null
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    #[JMS\Groups(['registrationToken'])]
     private $tokenDate;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_full", "profile_org"})
-     *
-     * @Assert\NotBlank( message="user.address1.notBlank", groups={"user_details_full", "verify-codeputy"} )
-     *
-     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "verify-codeputy"} )
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user_details_full', 'profile_org'])]
+    #[Assert\NotBlank(message: 'user.address1.notBlank', groups: ['user_details_full', 'verify-codeputy'])]
+    #[Assert\Length(max: 200, maxMessage: 'user.address1.maxMessage', groups: ['user_details_full', 'verify-codeputy'])]
     private $address1;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_full", "profile_org"})
-     *
-     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
-     *
      * @var string|null
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user_details_full', 'profile_org'])]
+    #[Assert\Length(max: 200, maxMessage: 'user.address1.maxMessage', groups: ['user_details_full', 'profile_org'])]
     private $address2;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_full", "profile_org"})
-     *
-     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
-     *
      * @var string|null
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user_details_full', 'profile_org'])]
+    #[Assert\Length(max: 200, maxMessage: 'user.address1.maxMessage', groups: ['user_details_full', 'profile_org'])]
     private $address3;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_full", "profile_org"})
-     *
-     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
-     *
      * @var string|null
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user_details_full', 'profile_org'])]
+    #[Assert\Length(max: 200, maxMessage: 'user.address1.maxMessage', groups: ['user_details_full', 'profile_org'])]
     private $address4;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_full", "profile_org"})
-     *
-     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
-     *
      * @var string|null
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user_details_full', 'profile_org'])]
+    #[Assert\Length(max: 200, maxMessage: 'user.address1.maxMessage', groups: ['user_details_full', 'profile_org'])]
     private $address5;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_full", "profile_org", "admin_add_user", "ad_add_user", "admin_edit_user"})
-     *
-     * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full", "verify-codeputy", "admin_edit_user"} )
-     *
-     * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full", "profile_org", "verify-codeputy", "admin_edit_user", "admin_add_user"} )
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user_details_full', 'profile_org', 'admin_add_user', 'ad_add_user', 'admin_edit_user'])]
+    #[Assert\NotBlank(message: 'user.addressPostcode.notBlank', groups: ['user_details_full', 'verify-codeputy', 'admin_edit_user'])]
+    #[Assert\Length(min: 2, max: 10, minMessage: 'user.addressPostcode.minLength', maxMessage: 'user.addressPostcode.maxLength', groups: ['user_details_full', 'profile_org', 'verify-codeputy', 'admin_edit_user', 'admin_add_user'])]
     private $addressPostcode;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_full", "profile_org"})
-     *
-     * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details_full", "verify-codeputy"} )
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user_details_full', 'profile_org'])]
+    #[Assert\NotBlank(message: 'user.addressCountry.notBlank', groups: ['user_details_full', 'verify-codeputy'])]
     private $addressCountry;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_full", "user_details_org", "org_team_add"})
-     *
-     * @Assert\NotBlank( message="user.phoneMain.notBlank", groups={"user_details_full", "verify-codeputy"} )
-     *
-     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full", "user_details_org", "org_team_add", "verify-codeputy"} )
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user_details_full', 'user_details_org', 'org_team_add'])]
+    #[Assert\NotBlank(message: 'user.phoneMain.notBlank', groups: ['user_details_full', 'verify-codeputy'])]
+    #[Assert\Length(min: 10, max: 20, minMessage: 'common.genericPhone.minLength', maxMessage: 'common.genericPhone.maxLength', groups: ['user_details_full', 'user_details_org', 'org_team_add', 'verify-codeputy'])]
     private $phoneMain;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_full", "profile_org"})
-     *
-     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full"} )
-     *
      * @var string|null
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user_details_full', 'profile_org'])]
+    #[Assert\Length(min: 10, max: 20, minMessage: 'common.genericPhone.minLength', maxMessage: 'common.genericPhone.maxLength', groups: ['user_details_full'])]
     private $phoneAlternative;
 
     /**
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @JMS\Groups({"lastLoggedIn"})
-     *
      * @var \DateTime|null
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    #[JMS\Groups(['lastLoggedIn'])]
     private $lastLoggedIn;
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"user"})
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['user'])]
     private $deputyUid;
 
     /**
      * @var bool|null
-     *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"ad_managed", "ad_add_user"})
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['ad_managed', 'ad_add_user'])]
     private $adManaged;
 
     /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_org", "org_team_add"})
-     *
-     * @Assert\Length(max=150, maxMessage="user.jobTitle.maxMessage", groups={"user_details_org"} )
-     *
      * @var string|null
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user_details_org', 'org_team_add'])]
+    #[Assert\Length(max: 150, maxMessage: 'user.jobTitle.maxMessage', groups: ['user_details_org'])]
     private $jobTitle;
 
     /**
      * @var bool
-     *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"agree_terms_use", "update_terms_use"})
-     *
-     * @Assert\NotBlank( message="user.agreeTermsUse.notBlank", groups={"agree-terms-use"} )
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['agree_terms_use', 'update_terms_use'])]
+    #[Assert\NotBlank(message: 'user.agreeTermsUse.notBlank', groups: ['agree-terms-use'])]
     private $agreeTermsUse;
 
     /**
-     * @JMS\Type("boolean")
-     *
      * @var bool|null
      */
+    #[JMS\Type('boolean')]
     private $isCoDeputy;
 
     /**
-     * @JMS\Type("boolean")
-     *
      * @var bool
      */
+    #[JMS\Type('boolean')]
     private $coDeputyClientConfirmed;
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Organisation>")
-     *
-     * @JMS\Groups({"user_organisations"})
-     *
-     * @var ArrayCollection
+     * @var array<Organisation>
      */
-    private $organisations;
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Organisation>')]
+    #[JMS\Groups(['user_organisations'])]
+    private array $organisations = [];
 
     /**
-     * @JMS\Type("int")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @var int
      */
+    #[JMS\Type('int')]
+    #[JMS\Groups(['user'])]
     private $numberOfSubmittedReports;
 
-    /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user"})
-     **/
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user_details_full', 'user_details_basic', 'admin_add_user'])]
     private ?string $authToken = null;
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @var User
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
+    #[JMS\Groups(['user'])]
     private $createdBy;
 
     /**
-     * @JMS\Type("bool")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @var bool
      */
+    #[JMS\Type('bool')]
+    #[JMS\Groups(['user'])]
     private $isCaseManager;
 
     /**
-     * @JMS\Type("bool")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @var bool
      */
+    #[JMS\Type('bool')]
+    #[JMS\Groups(['user'])]
     private $createdByCaseManager;
 
     /**
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @JMS\Groups({"user"})
-     *
      * @var \DateTime|null
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    #[JMS\Groups(['user'])]
     private $preRegisterValidatedDate;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user'])]
     private $registrationRoute;
 
     /**
      * @var bool
-     *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"user"})
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user'])]
     private $isPrimary;
 
     public function __construct()
     {
-        $this->organisations = new ArrayCollection();
     }
 
     /**
@@ -481,10 +374,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @param int $id
-     *
-     * @return User
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -501,10 +392,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @param string $firstname
-     *
-     * @return User
      */
-    public function setFirstname($firstname)
+    public function setFirstname($firstname): static
     {
         $this->firstname = $firstname;
 
@@ -521,10 +410,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @param string $lastname
-     *
-     * @return User
      */
-    public function setLastname($lastname)
+    public function setLastname($lastname): static
     {
         $this->lastname = $lastname;
 
@@ -542,7 +429,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @return string $email
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return is_null($this->email) ? '' : strtolower($this->email);
     }
@@ -567,10 +454,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @param string $password
-     *
-     * @return User
      */
-    public function setPassword($password)
+    public function setPassword($password): static
     {
         $this->password = $password;
 
@@ -582,7 +467,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return null;
     }
 
-    public function setSalt($salt)
+    public function setSalt($salt): static
     {
         $this->salt = $salt;
 
@@ -599,17 +484,15 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @param bool $active
-     *
-     * @return User
      */
-    public function setActive($active)
+    public function setActive($active): static
     {
         $this->active = $active;
 
         return $this;
     }
 
-    public function setClients(array $clients)
+    public function setClients(array $clients): static
     {
         $this->clients = $clients;
 
@@ -629,10 +512,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this->registrationDate;
     }
 
-    /**
-     * @return User
-     */
-    public function setRegistrationDate(?\DateTime $registrationDate = null)
+    public function setRegistrationDate(?\DateTime $registrationDate = null): static
     {
         $this->registrationDate = $registrationDate;
 
@@ -649,10 +529,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @param string $registrationToken
-     *
-     * @return User
      */
-    public function setRegistrationToken($registrationToken)
+    public function setRegistrationToken($registrationToken): static
     {
         $this->registrationToken = $registrationToken;
 
@@ -669,10 +547,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @param \DateTime $tokenDate
-     *
-     * @return User
      */
-    public function setTokenDate($tokenDate)
+    public function setTokenDate($tokenDate): static
     {
         $this->tokenDate = $tokenDate;
 
@@ -690,7 +566,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @param bool $isCoDeputy
      */
-    public function setIsCoDeputy($isCoDeputy): self
+    public function setIsCoDeputy($isCoDeputy): static
     {
         $this->isCoDeputy = $isCoDeputy;
 
@@ -708,7 +584,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @param bool $isCoDeputyClientConfirmed
      */
-    public function setCoDeputyClientConfirmed($isCoDeputyClientConfirmed): self
+    public function setCoDeputyClientConfirmed($isCoDeputyClientConfirmed): static
     {
         $this->coDeputyClientConfirmed = $isCoDeputyClientConfirmed;
 
@@ -719,17 +595,17 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     {
     }
 
-    public function isAccountNonExpired()
+    public function isAccountNonExpired(): bool
     {
         return true;
     }
 
-    public function isAccountNonLocked()
+    public function isAccountNonLocked(): bool
     {
         return true;
     }
 
-    public function isCredentialsNonExpired()
+    public function isCredentialsNonExpired(): bool
     {
         return true;
     }
@@ -749,10 +625,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @param int $hoursExpires e.g 48 if the token expires after 48h
-     *
-     * @return bool
      */
-    public function isTokenSentInTheLastHours($hoursExpires)
+    public function isTokenSentInTheLastHours($hoursExpires): bool
     {
         $expiresSeconds = $hoursExpires * 3600;
 
@@ -821,28 +695,28 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this->phoneAlternative;
     }
 
-    public function setAddress1($address1)
+    public function setAddress1($address1): static
     {
         $this->address1 = $address1;
 
         return $this;
     }
 
-    public function setAddress2($address2)
+    public function setAddress2($address2): static
     {
         $this->address2 = $address2;
 
         return $this;
     }
 
-    public function setAddress3($address3)
+    public function setAddress3($address3): static
     {
         $this->address3 = $address3;
 
         return $this;
     }
 
-    public function setAddressPostcode($addressPostcode)
+    public function setAddressPostcode($addressPostcode): static
     {
         $this->addressPostcode = $addressPostcode;
 
@@ -856,14 +730,14 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    public function setPhoneMain($phoneMain)
+    public function setPhoneMain($phoneMain): static
     {
         $this->phoneMain = $phoneMain;
 
         return $this;
     }
 
-    public function setPhoneAlternative($phoneAlternative)
+    public function setPhoneAlternative($phoneAlternative): static
     {
         $this->phoneAlternative = $phoneAlternative;
 
@@ -878,9 +752,11 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this->lastLoggedIn;
     }
 
-    public function setLastLoggedIn(?\DateTime $lastLoggedIn = null)
+    public function setLastLoggedIn(?\DateTime $lastLoggedIn = null): static
     {
         $this->lastLoggedIn = $lastLoggedIn;
+
+        return $this;
     }
 
     public function getDeputyUid(): ?int
@@ -888,7 +764,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this->deputyUid;
     }
 
-    public function setDeputyUid(?int $deputyUid): User
+    public function setDeputyUid(?int $deputyUid): static
     {
         $this->deputyUid = $deputyUid;
 
@@ -909,7 +785,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @return bool
      */
-    public function hasClients()
+    public function hasClients(): bool
     {
         if (!empty($this->clients)) {
             return true;
@@ -918,7 +794,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return false;
     }
 
-    public function hasReports()
+    public function hasReports(): bool
     {
         if (count($this->clients) === 0) {
             return false;
@@ -944,7 +820,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @param bool $adManaged
      */
-    public function setAdManaged($adManaged)
+    public function setAdManaged($adManaged): void
     {
         $this->adManaged = $adManaged;
     }
@@ -959,10 +835,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @param string $jobTitle
-     *
-     * @return User
      */
-    public function setJobTitle($jobTitle)
+    public function setJobTitle($jobTitle): static
     {
         $this->jobTitle = $jobTitle;
 
@@ -979,42 +853,25 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * @param bool $agreeTermsUse
-     *
-     * @return User
      */
-    public function setAgreeTermsUse($agreeTermsUse)
+    public function setAgreeTermsUse($agreeTermsUse): static
     {
         $this->agreeTermsUse = $agreeTermsUse;
 
         return $this;
     }
 
-    /**
-     * Is user a Team Member?
-     *
-     * @return bool
-     */
-    public function isPaTeamMember()
+    public function isPaTeamMember(): bool
     {
         return $this->roleName === self::ROLE_PA_TEAM_MEMBER;
     }
 
-    /**
-     * Is user a Professional Team Member?
-     *
-     * @return bool
-     */
-    public function isProfTeamMember()
+    public function isProfTeamMember(): bool
     {
         return $this->roleName === self::ROLE_PROF_TEAM_MEMBER;
     }
 
-    /**
-     * Is user an organisation Team Member?
-     *
-     * @return bool
-     */
-    public function isOrgTeamMember()
+    public function isOrgTeamMember(): bool
     {
         return in_array($this->roleName, [
             self::ROLE_PA_TEAM_MEMBER,
@@ -1022,12 +879,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         ]);
     }
 
-    /**
-     * Is user a PA Depu ty?
-     *
-     * @return bool
-     */
-    public function isDeputyPa()
+    public function isDeputyPa(): bool
     {
         return in_array($this->roleName, [
             self::ROLE_PA,
@@ -1037,12 +889,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         ]);
     }
 
-    /**
-     * Is user a PA Deputy?
-     *
-     * @return bool
-     */
-    public function isDeputyProf()
+    public function isDeputyProf(): bool
     {
         return in_array($this->roleName, [
             self::ROLE_PROF,
@@ -1052,100 +899,52 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         ]);
     }
 
-    /**
-     * Is user a PA Administrator?
-     *
-     * @return bool
-     */
-    public function isPaAdministrator()
+    public function isPaAdministrator(): bool
     {
         return in_array($this->roleName, [self::ROLE_PA_ADMIN]);
     }
 
-    /**
-     * Is user a PROF Administrator?
-     *
-     * @return bool
-     */
-    public function isProfAdministrator()
+    public function isProfAdministrator(): bool
     {
         return in_array($this->roleName, [self::ROLE_PROF_ADMIN]);
     }
 
-    /**
-     * Is user a Organisation Administrator?
-     *
-     * @return bool
-     */
-    public function isOrgAdministrator()
+    public function isOrgAdministrator(): bool
     {
         return in_array($this->roleName, [self::ROLE_PA_ADMIN, self::ROLE_PROF_ADMIN]);
     }
 
-    /**
-     * Is Organisation Named deputy?
-     *
-     * @return bool
-     */
-    public function isOrgNamedDeputy()
+    public function isOrgNamedDeputy(): bool
     {
         return in_array($this->roleName, [self::ROLE_PA_NAMED, self::ROLE_PROF_NAMED]);
     }
 
-    /**
-     * Is user a PA Named Deputy?
-     *
-     * @return bool
-     */
-    public function isPaNamedDeputy()
+    public function isPaNamedDeputy(): bool
     {
         return in_array($this->roleName, [self::ROLE_PA_NAMED]);
     }
 
-    /**
-     * Is user a Prof Named Deputy?
-     *
-     * @return bool
-     */
-    public function isProfNamedDeputy()
+    public function isProfNamedDeputy(): bool
     {
         return in_array($this->roleName, [self::ROLE_PROF_NAMED]);
     }
 
-    /**
-     * Is user a Prof Named or Admin Deputy?
-     *
-     * @return bool
-     */
-    public function isProfNamedOrAdmin()
+    public function isProfNamedOrAdmin(): bool
     {
         return in_array($this->roleName, [self::ROLE_PROF_NAMED, self::ROLE_PROF_ADMIN]);
     }
 
-    /**
-     * @return bool true if user role is LAY
-     */
-    public function isLayDeputy()
+    public function isLayDeputy(): bool
     {
         return $this->roleName === self::ROLE_LAY_DEPUTY;
     }
 
-    /**
-     * Is User a Deputy Either PA or Lay?
-     *
-     * @return bool true if user role is LAY or PA
-     */
-    public function isDeputy()
+    public function isDeputy(): bool
     {
         return $this->isLayDeputy() || $this->isDeputyOrg();
     }
 
-    /**
-     * Is user a PA or Prof Deputy?
-     *
-     * @return bool
-     */
-    public function isDeputyOrg()
+    public function isDeputyOrg(): bool
     {
         return in_array($this->roleName, [
             self::ROLE_PA_NAMED,
@@ -1157,38 +956,22 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         ]);
     }
 
-    /**
-     * Is user a PA named or a Prof named ?
-     *
-     * @return bool
-     */
-    public function hasRoleOrgNamed()
+    public function hasRoleOrgNamed(): bool
     {
         return in_array($this->roleName, [User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED]);
     }
 
-    /**
-     * Is user a PA admin or a Prof admin ?
-     *
-     * @return bool
-     */
-    public function hasRoleOrgAdmin()
+    public function hasRoleOrgAdmin(): bool
     {
         return in_array($this->roleName, [User::ROLE_PA_ADMIN, User::ROLE_PROF_ADMIN]);
     }
 
-    /**
-     * @return bool
-     */
-    public function isPaTopRole()
+    public function isPaTopRole(): bool
     {
         return $this->getRoleName() === self::ROLE_PA;
     }
 
-    /**
-     * @return bool
-     */
-    public function isProfTopRole()
+    public function isProfTopRole(): bool
     {
         return $this->getRoleName() === self::ROLE_PROF;
     }
@@ -1215,10 +998,8 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     /**
      * Get a generic role output to append to translation keys (ie transkey-PROF).
-     *
-     * @return string
      */
-    public function getRoleForTrans()
+    public function getRoleForTrans(): string
     {
         if ($this->isDeputyProf()) {
             return '-PROF';
@@ -1230,9 +1011,9 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @return array
+     * @return String[]
      */
-    public function getAddressNotEmptyParts()
+    public function getAddressNotEmptyParts(): array
     {
         return array_filter([
             $this->address1,
@@ -1244,17 +1025,17 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @return ArrayCollection
+     * @return array<Organisation>
      */
-    public function getOrganisations()
+    public function getOrganisations(): array
     {
         return $this->organisations;
     }
 
     /**
-     * @param ArrayCollection $organisations
+     * @param array<Organisation> $organisations
      */
-    public function setOrganisations($organisations): self
+    public function setOrganisations(array $organisations): static
     {
         $this->organisations = $organisations;
 
@@ -1286,10 +1067,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this->numberOfSubmittedReports;
     }
 
-    /**
-     * @return User
-     */
-    public function setNumberOfSubmittedReports(int $numberOfSubmittedReports)
+    public function setNumberOfSubmittedReports(int $numberOfSubmittedReports): static
     {
         $this->numberOfSubmittedReports = $numberOfSubmittedReports;
 
@@ -1309,7 +1087,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this->address4;
     }
 
-    public function setAddress4($address4): User
+    public function setAddress4($address4): static
     {
         $this->address4 = $address4;
 
@@ -1321,7 +1099,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this->address5;
     }
 
-    public function setAddress5($address5): User
+    public function setAddress5($address5): static
     {
         $this->address5 = $address5;
 
@@ -1333,7 +1111,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this->createdBy;
     }
 
-    public function setCreatedBy(?User $createdBy): User
+    public function setCreatedBy(?User $createdBy): static
     {
         $this->createdBy = $createdBy;
 
@@ -1345,7 +1123,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this->isCaseManager;
     }
 
-    public function setIsCaseManager(bool $isCaseManager): User
+    public function setIsCaseManager(bool $isCaseManager): static
     {
         $this->isCaseManager = $isCaseManager;
 
@@ -1357,7 +1135,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this->createdByCaseManager;
     }
 
-    public function setCreatedByCaseManager(bool $createdByCaseManager): User
+    public function setCreatedByCaseManager(bool $createdByCaseManager): static
     {
         $this->createdByCaseManager = $createdByCaseManager;
 
@@ -1374,7 +1152,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this->authToken;
     }
 
-    public function setAuthToken(?string $authToken): User
+    public function setAuthToken(?string $authToken): static
     {
         $this->authToken = $authToken;
 
@@ -1396,10 +1174,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $standardsLink;
     }
 
-    /**
-     * @return User
-     */
-    public function setPreRegisterValidatedDate(?\DateTime $preRegisterValidatedDate = null)
+    public function setPreRegisterValidatedDate(?\DateTime $preRegisterValidatedDate = null): static
     {
         $this->preRegisterValidatedDate = $preRegisterValidatedDate;
 
@@ -1422,16 +1197,13 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @param string $registrationRoute
      */
-    public function setRegistrationRoute($registrationRoute): User
+    public function setRegistrationRoute($registrationRoute): static
     {
         $this->registrationRoute = $registrationRoute;
 
         return $this;
     }
 
-    /**
-     * @return User
-     */
     public function setIsPrimary(bool $primary = false): static
     {
         $this->isPrimary = $primary;

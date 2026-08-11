@@ -24,11 +24,17 @@ class DeputyService
     /**
      * Adds a new deputy to the database if it doesn't already exist, or retrieve any existing one.
      * $userForDeputy becomes the user associated with the deputy if there is no existing deputy.
+     * Or if there is an existing deputy, and it has no user, then $userForDeputy will be set as the user for the existing deputy.
      */
     public function getOrAddDeputy(Deputy $deputyToAdd, User $userForDeputy): Deputy
     {
         $existingDeputy = $this->deputyRepository->findOneBy(['deputyUid' => $deputyToAdd->getDeputyUid()]);
         if ($existingDeputy) {
+            if ($existingDeputy->getUser() === null) {
+                $existingDeputy->setUser($userForDeputy);
+                $this->em->persist($existingDeputy);
+                $this->em->flush();
+            }
             return $existingDeputy;
         }
 
