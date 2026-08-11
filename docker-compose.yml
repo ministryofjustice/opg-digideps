@@ -399,6 +399,9 @@ services:
       context: ./playwright
     environment:
       FRONT_URL: http://frontend-webserver:8080
+      ADMIN_URL: http://admin-webserver
+      API_URL: http://api-webserver
+      ADMIN_API_CLIENT_SECRET: "api-admin-key"
     image: playwright-check
     container_name: playwright-report
     restart: "no"
