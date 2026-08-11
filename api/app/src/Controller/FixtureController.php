@@ -12,6 +12,8 @@ use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
 use OPG\Digideps\Backend\Fixture\DeputyDescriptor;
 use OPG\Digideps\Backend\Fixture\DeputySet;
 use OPG\Digideps\Backend\Fixture\FixtureService;
+use OPG\Digideps\Backend\Fixture\ReportDescriptor;
+use OPG\Digideps\Backend\Fixture\ReportList;
 use OPG\Digideps\Backend\Fixture\Scenario;
 use OPG\Digideps\Backend\Fixture\UserType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
@@ -107,7 +109,7 @@ class FixtureController extends AbstractController
                         new DeputyDescriptor($deputyReference)
                     ),
                     $reportType,
-                    submittedReports: 1
+                    reportList: ReportList::manyReports()
                 )
             )
         );
@@ -135,6 +137,7 @@ class FixtureController extends AbstractController
 
         // we set the madeDate to one year ago, so that submission of the report is permitted
         // (otherwise the report submission is blocked because it's not close enough to the due date)
+        $madeDate = new \DateTimeImmutable()->sub(new \DateInterval('P1Y'));
         $details = $this->fixtureService->instantiateScenario(
             new Scenario(
                 new CourtOrderDescriptor(
@@ -142,8 +145,8 @@ class FixtureController extends AbstractController
                         new DeputyDescriptor($deputyReference)
                     ),
                     $reportType,
-                    latestReportReadyToSubmit: true,
-                    madeDate: new \DateTime()->sub(new \DateInterval('P1Y'))
+                    $madeDate,
+                    reportList: ReportList::oneUnsubmittedReport($madeDate, true)
                 )
             )
         );
@@ -173,6 +176,7 @@ class FixtureController extends AbstractController
         $supportingDocumentNames = $payload->getArrayOrDefault('supportingDocumentNames', ['receipt1.pdf', 'receipt2.pdf']);
 
         $reportType = CourtOrderReportType::tryFrom($reportTypeStr) ?? CourtOrderReportType::OPG102;
+        $madeDate = new \DateTimeImmutable()->sub(new \DateInterval('P1Y'));
 
         $details = $this->fixtureService->instantiateScenario(
             new Scenario(
@@ -181,9 +185,8 @@ class FixtureController extends AbstractController
                         new DeputyDescriptor($deputyReference)
                     ),
                     $reportType,
-                    latestReportReadyToSubmit: true,
-                    madeDate: new \DateTime()->sub(new \DateInterval('P1Y')),
-                    supportingDocumentsWithoutS3Objects: $supportingDocumentNames,
+                    $madeDate,
+                    reportList: new ReportList(true, new ReportDescriptor($madeDate, supportingDocumentsWithoutS3Objects: $supportingDocumentNames)),
                 )
             )
         );
