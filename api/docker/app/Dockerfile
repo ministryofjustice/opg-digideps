@@ -123,7 +123,6 @@ CMD ["sh", "-c", "/var/www/check_processes.sh & \
     /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
-    && ./scripts/setup_readonly_sql_query.sh \
     && echo 'Image Target: runtime' \
     && exec php-fpm"]
 
@@ -165,7 +164,6 @@ CMD ["sh", "-c", "/var/www/check_processes.sh & \
     /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
-    && ./scripts/setup_readonly_sql_query.sh \
     && echo 'Image Target: devtools' \
     && exec php-fpm"]
 
@@ -180,6 +178,5 @@ CMD ["sh", "-c", "/var/www/check_processes.sh & \
     /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
-    && ./scripts/setup_readonly_sql_query.sh \
     && echo 'Image Target: devtools-admin' \
     && exec php-fpm"]
