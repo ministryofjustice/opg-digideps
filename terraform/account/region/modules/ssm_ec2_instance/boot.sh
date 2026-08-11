@@ -37,9 +37,10 @@ list_databases() {
 connect_to_database() {
   input="$1"
   access="$2"
+  provided_password="${3:-}"
 
   if [[ -z "$input" || -z "$access" ]]; then
-    echo "Usage: database connect <environment|database> <read|edit>"
+    echo "Usage: database connect <environment|database> <read|edit> [password]"
     exit 1
   fi
 
@@ -60,22 +61,46 @@ connect_to_database() {
 
   if [[ "$access" == "edit" ]]; then
     user="digidepsmaster"
-    secret_name="${environment}/database-password"
 
-    if ! secret_exists "$secret_name"; then
-      fallback="default/database-password"
-      if secret_exists "$fallback"; then
-        secret_name="$fallback"
-      else
-        echo "Access Denied"
-        exit 1
-      fi
+    if [[ "$environment" == *"preproduction"* ]]; then
+      secret_environment="preproduction"
+    elif [[ "$environment" == *"production"* ]]; then
+      secret_environment="production"
+    else
+      secret_environment="$environment"
     fi
 
-    password=$(get_secret_value "$secret_name")
-    if [[ -z "$password" ]]; then
-      echo "Failed to retrieve password"
-      exit 1
+    if [[ "$secret_environment" == "production" ]]; then
+      if [[ -z "$provided_password" ]]; then
+        echo "If you need access to edit production, please get the secret from:"
+        echo "https://eu-west-1.console.aws.amazon.com/secretsmanager/secret?name=production%2Fdatabase-password&region=eu-west-1"
+        echo
+        echo "Then run:"
+        echo "database connect $input edit '{PASSWORD}'"
+        exit 1
+      fi
+
+      password="$provided_password"
+    else
+      secret_name="${secret_environment}/database-password"
+
+      if ! secret_exists "$secret_name"; then
+        fallback="default/database-password"
+
+        if secret_exists "$fallback"; then
+          secret_name="$fallback"
+        else
+          echo "Access Denied"
+          exit 1
+        fi
+      fi
+
+      password=$(get_secret_value "$secret_name")
+
+      if [[ -z "$password" ]]; then
+        echo "Failed to retrieve password"
+        exit 1
+      fi
     fi
 
     HOST=$(aws rds describe-db-instances --region eu-west-1 --db-instance-identifier "${database}-0" --query 'DBInstances[0].Endpoint.Address' --output text)
@@ -110,7 +135,7 @@ connect_to_database() {
 
     curl -s https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -o /tmp/rds-combined-ca-bundle.pem
 
-    TOKEN=$(aws rds generate-db-auth-token --hostname "$HOST" --port 5432 --username readonly-db-iam-${environment} --region eu-west-1)
+    TOKEN=$(aws rds generate-db-auth-token --hostname "$HOST" --port 5432 --username "readonly-db-iam-${environment}" --region eu-west-1)
 
     echo "Connecting to $HOST as readonly-db-iam-${environment}"
     PGPASSWORD="$TOKEN" psql "host=$HOST port=5432 dbname=api user=readonly-db-iam-${environment} sslmode=require sslrootcert=/tmp/rds-combined-ca-bundle.pem"
@@ -126,7 +151,7 @@ case "$command" in
     list_databases
     ;;
   connect)
-    connect_to_database "$2" "$3"
+    connect_to_database "$2" "$3" "$4"
     ;;
   *)
     echo "Usage:"
