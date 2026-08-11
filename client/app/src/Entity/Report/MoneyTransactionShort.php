@@ -9,59 +9,50 @@ class MoneyTransactionShort
 {
     /**
      * @var int
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"moneyTransactionShort"})
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['moneyTransactionShort'])]
     private $id;
 
     /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Report")
-     *
      * @var Report
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Report')]
     private $report;
 
     /**
      * @var float
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"moneyTransactionShort"})
-     *
-     * @Assert\NotBlank(message="moneyTransactionShort.amount.notBlank", groups={"money-transaction-short"})
-     * @Assert\Type(type="numeric", message="moneyTransactionShort.amount.type", groups={"money-transaction-short"})
-     * @Assert\Range(min=1000, max=10000000, notInRangeMessage = "moneyTransactionShort.amount.notInRangeMessage", groups={"money-transaction-short"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['moneyTransactionShort'])]
+    #[Assert\NotBlank(message: 'moneyTransactionShort.amount.notBlank', groups: ['money-transaction-short'])]
+    #[Assert\Type(type: 'numeric', message: 'moneyTransactionShort.amount.type', groups: ['money-transaction-short'])]
+    #[Assert\Range(notInRangeMessage: 'moneyTransactionShort.amount.notInRangeMessage', min: 1000, max: 10000000, groups: ['money-transaction-short'])]
     private $amount;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"moneyTransactionShort"})
-     *
-     * @Assert\NotBlank(message="moneyTransactionShort.description.notBlank", groups={"money-transaction-short"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['moneyTransactionShort'])]
+    #[Assert\NotBlank(message: 'moneyTransactionShort.description.notBlank', groups: ['money-transaction-short'])]
     private $description;
 
     /**
      * @var \DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"moneyTransactionShort"})
-     *
-     * @Assert\Type(type="DateTimeInterface", message="moneyTransactionShort.date.notValid", groups={"money-transaction-short"})
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['moneyTransactionShort'])]
+    #[Assert\Type(type: 'DateTimeInterface', message: 'moneyTransactionShort.date.notValid', groups: ['money-transaction-short'])]
     private $date;
 
     /**
      * Discriminator field.
      *
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"moneyTransactionShort"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['moneyTransactionShort'])]
     private $type;
 
     /**
@@ -84,10 +75,8 @@ class MoneyTransactionShort
 
     /**
      * @param int $id
-     *
-     * @return MoneyTransactionShort
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -104,10 +93,8 @@ class MoneyTransactionShort
 
     /**
      * @param Report $report
-     *
-     * @return MoneyTransactionShort
      */
-    public function setReport($report)
+    public function setReport($report): static
     {
         $this->report = $report;
 
@@ -124,10 +111,8 @@ class MoneyTransactionShort
 
     /**
      * @param float $amount
-     *
-     * @return MoneyTransactionShort
      */
-    public function setAmount($amount)
+    public function setAmount($amount): static
     {
         $this->amount = $amount;
 
@@ -144,10 +129,8 @@ class MoneyTransactionShort
 
     /**
      * @param string $description
-     *
-     * @return MoneyTransactionShort
      */
-    public function setDescription($description)
+    public function setDescription($description): static
     {
         $this->description = $description;
 
@@ -164,10 +147,8 @@ class MoneyTransactionShort
 
     /**
      * @param \DateTime $date
-     *
-     * @return MoneyTransactionShort
      */
-    public function setDate($date)
+    public function setDate($date): static
     {
         $this->date = $date;
 
@@ -185,7 +166,7 @@ class MoneyTransactionShort
     /**
      * @param string $type
      */
-    public function setType($type)
+    public function setType($type): void
     {
         $this->type = $type;
     }

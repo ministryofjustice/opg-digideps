@@ -129,7 +129,7 @@ class MoneyOutShortController extends AbstractController
             $answer = $validatingForm->getStringOrNull('reasonForNoMoneyOut');
 
             $report->setReasonForNoMoneyOut($answer);
-            $report->getStatus()->setMoneyOutState(Status::STATE_DONE);
+            $report->getStatus()->setMoneyOutState(['state' => Status::STATE_DONE]);
 
             $this->restClient->put('report/' . $reportId, $report, ['reasonForNoMoneyOut']);
 

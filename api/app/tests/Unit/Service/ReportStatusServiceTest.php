@@ -348,7 +348,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function profDeputyCosts(array $mocks, string $state): void
     {
-        $report = $this->getReportMocked([] + $mocks);
+        $report = $this->getReportMocked([...$mocks]);
         $object = new ReportStatusService($report);
         $this->assertEquals($state, $object->getProfDeputyCostsState()['state']);
     }
@@ -530,11 +530,14 @@ final class ReportStatusServiceTest extends TestCase
     public static function contactsProvider(): array
     {
         $contact = self::createStub(Contact::class);
+        $contact->method('getExplanation')->willReturn('X');
+        $badContact = self::createStub(Contact::class);
 
         return [
             [[], ReportStatusService::STATE_NOT_STARTED, false],
             // done
             [['getContacts' => new ArrayCollection([$contact])], ReportStatusService::STATE_DONE, true],
+            [['getContacts' => new ArrayCollection([$badContact])], ReportStatusService::STATE_INCOMPLETE, true],
             [['getReasonForNoContacts' => 'x'], ReportStatusService::STATE_DONE, true],
         ];
     }

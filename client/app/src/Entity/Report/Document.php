@@ -13,9 +13,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-/**
- * @Assert\Callback(callback="isValidForReport", groups={"document"})
- */
+#[Assert\Callback(callback: 'isValidForReport', groups: ['document'])]
 class Document implements DocumentInterface, SynchronisableInterface
 {
     use CreationAudit;
@@ -56,60 +54,45 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     * @JMS\Groups({"document"})
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['document'])]
     private $id;
 
     /**
      * // add more validators here if needed
      * http://symfony.com/doc/current/reference/constraints/File.html.
      *
-     * @Assert\NotBlank(message="Please choose a file", groups={"document"})
-     * @Assert\File(
-     *     maxSize = "15M",
-     *     maxSizeMessage = "document.file.errors.maxSizeMessage",
-     *     mimeTypes = {"application/pdf", "application/x-pdf", "image/png", "image/jpeg", "image/heif"},
-     *     mimeTypesMessage = "document.file.errors.mimeTypesMessage",
-     *     groups={"document"}
-     * )
-     *
      * @var UploadedFile
      */
+    #[Assert\NotBlank(message: 'Please choose a file', groups: ['document'])]
+    #[Assert\File(maxSize: '15M', maxSizeMessage: 'document.file.errors.maxSizeMessage', mimeTypes: ['application/pdf', 'application/x-pdf', 'image/png', 'image/jpeg', 'image/heif'], mimeTypesMessage: 'document.file.errors.mimeTypesMessage', groups: ['document'])]
     private $file;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"document"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['document'])]
     private $fileName;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"document"})
-     *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['document'])]
     private $storageReference;
 
     /**
      * @var bool
-     *
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"document"})
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['document'])]
     private $isReportPdf;
 
-    /**
-     * @var ReportSubmission
-     *
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\ReportSubmission")
-     * @JMS\Groups({"document-report-subnmission"})
-     */
-    private $reportSubmission;
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\ReportSubmission')]
+    #[JMS\Groups(['document-report-subnmission'])]
+    private ?ReportSubmission $reportSubmission = null;
 
     /**
      * @return int
@@ -121,10 +104,8 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * @param int $id
-     *
-     * @return Document
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -141,10 +122,8 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * @param string $fileName
-     *
-     * @return Document
      */
-    public function setFileName($fileName)
+    public function setFileName($fileName): static
     {
         $this->fileName = $fileName;
 
@@ -161,10 +140,8 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * @param string $storageReference
-     *
-     * @return Document
      */
-    public function setStorageReference($storageReference)
+    public function setStorageReference($storageReference): static
     {
         $this->storageReference = $storageReference;
 
@@ -181,10 +158,8 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * @param UploadedFile $file
-     *
-     * @return Document
      */
-    public function setFile($file)
+    public function setFile($file): static
     {
         $this->file = $file;
 
@@ -201,28 +176,20 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * @param bool $isReportPdf
-     *
-     * @return $this
      */
-    public function setIsReportPdf($isReportPdf)
+    public function setIsReportPdf($isReportPdf): static
     {
         $this->isReportPdf = $isReportPdf;
 
         return $this;
     }
 
-    /**
-     * @return ReportSubmission
-     */
-    public function getReportSubmission()
+    public function getReportSubmission(): ?ReportSubmission
     {
         return $this->reportSubmission;
     }
 
-    /**
-     * @return Document
-     */
-    public function setReportSubmission(ReportSubmission $repostSubmission)
+    public function setReportSubmission(?ReportSubmission $repostSubmission): static
     {
         $this->reportSubmission = $repostSubmission;
 
@@ -241,11 +208,9 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     /**
      * Is document a list of transaction document (admin only).
-     *
-     * @return bool|int
      */
-    private function isTransactionDocument()
+    private function isTransactionDocument(): bool
     {
-        return strpos($this->getFileName(), 'DigiRepTransactions') !== false;
+        return str_contains($this->getFileName(), 'DigiRepTransactions');
     }
 }
