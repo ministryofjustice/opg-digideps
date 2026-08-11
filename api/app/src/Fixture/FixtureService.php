@@ -130,17 +130,12 @@ final class FixtureService
         $current = $scenario;
         $first = true;
         while ($current !== null) {
-            $latestReportReadyToSubmit = $scenario->courtOrderDescriptor->latestReportReadyToSubmit;
-            $supportingDocumentsWithoutS3Objects = $scenario->courtOrderDescriptor->supportingDocumentsWithoutS3Objects;
-
             $pfa = $this->instantiateCourtOrder(
                 $client,
                 $current,
                 $first,
                 CourtOrderType::PFA,
-                $persons,
-                latestReportReadyToSubmit: $latestReportReadyToSubmit,
-                supportingDocumentsWithoutS3Objects: $supportingDocumentsWithoutS3Objects,
+                $persons
             );
 
             $hw = $this->instantiateCourtOrder(
@@ -150,8 +145,6 @@ final class FixtureService
                 CourtOrderType::HW,
                 $persons,
                 $pfa,
-                latestReportReadyToSubmit: $latestReportReadyToSubmit,
-                supportingDocumentsWithoutS3Objects: $supportingDocumentsWithoutS3Objects,
             );
 
             $orders[] = array_filter([
@@ -175,7 +168,6 @@ final class FixtureService
     /**
      * @param Persons $persons
      * @param Order|null $sibling
-     * @param string[] $supportingDocumentsWithoutS3Objects
      * @return Order|null
      */
     private function instantiateCourtOrder(
@@ -185,8 +177,6 @@ final class FixtureService
         CourtOrderType $type,
         array &$persons,
         ?array $sibling = null,
-        bool $latestReportReadyToSubmit = false,
-        array $supportingDocumentsWithoutS3Objects = [],
     ): ?array {
         $descriptor = $scenario->courtOrderDescriptor;
         if ($descriptor->single && (($type === CourtOrderType::HW && $descriptor->reportType !== CourtOrderReportType::OPG104) || ($type === CourtOrderType::PFA && $descriptor->reportType === CourtOrderReportType::OPG104))) {
@@ -259,24 +249,14 @@ final class FixtureService
         if ($reports === null) {
             /** @var array<Report> $reports */
             $reports = [];
-            if (!$descriptor->noReports) {
-                for ($i = 0; $i <= $descriptor->submittedReports; $i++) {
-                    $reports[] = $this->makeReport($courtOrder, $reports[$i - 1] ?? null, $primary);
-                }
-                if ($first) {
-                    if ($latestReportReadyToSubmit) {
-                        $this->makeReportSubmittable($reports[count($reports) - 1]);
-                    }
-                } else {
+            $count = count($descriptor->reportList->reportDescriptors);
+            foreach ($descriptor->reportList->reportDescriptors as $reportDescriptor) {
+                $reports[] = $this->makeReport($courtOrder, $reportDescriptor);
+                if (count($reports) !== $count || !$first) {
                     $this->makeReportSubmitted($reports[count($reports) - 1], $primary);
+                } elseif ($descriptor->reportList->currentIsSubmittable) {
+                    $this->makeReportSubmittable($reports[count($reports) - 1]);
                 }
-            }
-        }
-
-        // for each report on each court order, add uploaded files to it without backing S3 objects
-        foreach ($reports as $report) {
-            foreach ($supportingDocumentsWithoutS3Objects as $uploadedFile) {
-                $this->addSupportingDocumentWithoutS3Object($report, $uploadedFile);
             }
         }
 
@@ -311,8 +291,8 @@ final class FixtureService
 
     private function makeCourtOrder(CourtOrderDescriptor $descriptor, Client $client, CourtOrderType $type): CourtOrder
     {
-        $madeDate = $descriptor->madeDate ??
-            new \DateTime()->sub(new \DateInterval('P6M'))->sub(new \DateInterval("P{$descriptor->submittedReports}Y"));
+        $periods = max(0, count($descriptor->reportList->reportDescriptors) - 1);
+        $madeDate = \DateTime::createFromImmutable($descriptor->madeDate ?? new \DateTimeImmutable()->sub(new \DateInterval('P6M'))->sub(new \DateInterval("P{$periods}Y")));
 
         $client->setCourtDate($madeDate);
 
@@ -409,8 +389,6 @@ final class FixtureService
                 UserType::Admin => User::ROLE_ADMIN,
                 UserType::AdminManager => User::ROLE_ADMIN_MANAGER,
                 UserType::SuperAdmin => User::ROLE_SUPER_ADMIN,
-                UserType::PaNamedUser => User::ROLE_PA_NAMED,
-                UserType::ProNamedUser => User::ROLE_PROF_NAMED,
             })
             ->setActive($descriptor->isLoginActive)
             ->setIsPrimary($descriptor->isPrimary)
@@ -433,22 +411,24 @@ final class FixtureService
         return $this->persist($user);
     }
 
-    private function makeReport(CourtOrder $order, ?Report $previous, ?User $submitter): Report
+    private function makeReport(CourtOrder $order, ReportDescriptor $reportDescriptor): Report
     {
-        $startDate = clone $order->getOrderMadeDate();
-        if ($previous !== null) {
-            $startDate = (clone $previous->getEndDate())->add(new \DateInterval('P1D'));
-            $this->makeReportSubmitted($previous, $submitter);
-        }
-        $endDate = (clone $startDate)->add(new \DateInterval('P12M'))->sub(new \DateInterval('P1D'));
-        $dueDate = (clone $endDate)->add(new \DateInterval('P1M'));
         $reportType = $order->getDesiredReportType();
-        $report = new Report($order->getClient(), "{$reportType}", $startDate, $endDate, false)
+        $report = new Report(
+            $order->getClient(),
+            "{$reportType}",
+            \DateTime::createFromImmutable($reportDescriptor->startDate),
+            \DateTime::createFromImmutable($reportDescriptor->endDate),
+            false
+        )
             ->setId($this->counter->nextInt())
-            ->setDueDate($dueDate)
+            ->setDueDate(\DateTime::createFromImmutable($reportDescriptor->dueDate))
             ->setSubmitted(false)
             ->setSubmitDate(null);
         $order->addReport($report);
+        foreach ($reportDescriptor->supportingDocumentsWithoutS3Objects as $supportingDocumentWithoutS3Object) {
+            $this->addSupportingDocumentWithoutS3Object($report, $supportingDocumentWithoutS3Object);
+        }
         return $report;
     }
 
