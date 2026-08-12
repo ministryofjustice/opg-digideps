@@ -21,7 +21,7 @@
             {{ report.noAssetToAdd ? 'No' : 'Yes' }}
         </dd>
     </div>
-    {% if report.noAssetToAdd  %}
+    {% if report.noAssetToAdd and report.previousReportData['assets-summary']['noAssetsToAdd'] is defined %}
         <div class="govuk-summary-list__row behat-region-has-assets">
             <dt class="govuk-summary-list__key">
                 {{ (page ~ '.prevNoAssetToAdd.label') | trans(transOptions)  }}
