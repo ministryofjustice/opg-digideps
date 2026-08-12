@@ -25,7 +25,7 @@
     </div>
 </dl>
 
-{% if gifts | length > 0 %}
+{% if report.gifts | length > 0 %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <h2 class="govuk-heading-m">{{ 'summaryPage.listOfGifts' | trans }}</h2>
@@ -65,7 +65,7 @@
         </thead>
 
         <tbody>
-        {% for gift in gifts %}
+        {% for gift in report.gifts %}
             <tr class="govuk-summary-list__row behat-region-gift-{{ gift.explanation | behat_namify }}">
                 <td class="govuk-table__cell">
                     {{ gift.explanation }}
