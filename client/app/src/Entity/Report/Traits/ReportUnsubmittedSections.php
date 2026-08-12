@@ -34,7 +34,7 @@ trait ReportUnsubmittedSections
      *
      * @return UnsubmittedSection[]
      */
-    public function getUnsubmittedSection(): array
+    public function getUnsubmittedSections(): array
     {
         // init with available section if empty
         if (empty($this->unsubmittedSection)) {
@@ -73,7 +73,7 @@ trait ReportUnsubmittedSections
     {
         return array_filter(array_map(function ($us) {
             return $us->isPresent() ? $us->getId() : null;
-        }, $this->getUnsubmittedSection()));
+        }, $this->getUnsubmittedSections()));
     }
 
     public function unsubmittedSectionAtLeastOnce(ExecutionContextInterface $context): void
@@ -81,7 +81,7 @@ trait ReportUnsubmittedSections
         if (empty($this->getUnsubmittedSectionsIds())) {
             // add error to all the sections
             $context->buildViolation('report.unsubmissionSections.atLeastOnce')->atPath('unsubmittedSection[0].present')->addViolation();
-            for ($i = 1, $count = count($this->getUnsubmittedSection()); $i < $count; ++$i) {
+            for ($i = 1, $count = count($this->getUnsubmittedSections()); $i < $count; ++$i) {
                 $context->buildViolation('')->atPath("unsubmittedSection[$i].present")->addViolation();
             }
         }
