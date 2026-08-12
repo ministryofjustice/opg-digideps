@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 trait CreateUpdateTimestamps
 {
+    #[JMS\Groups(['created-at'])]
     #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
 
+    #[JMS\Groups(['updated-at'])]
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
