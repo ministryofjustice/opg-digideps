@@ -11,11 +11,8 @@
 } %}
 {% set page = 'summaryPage' %}
 
-{% set hideEditLink = hideEditLink | default(false) %}
-
 {# "client own assets" question #}
 <dl class="govuk-summary-list">
-    {{ macros.summaryListHeaderQA(hideEditLink) }}
     <div class="govuk-summary-list__row behat-region-has-assets">
         <dt class="govuk-summary-list__key">
             {{ 'existPage.form.noAssetToAdd.label' | trans(transOptions)  }}
@@ -23,30 +20,14 @@
         <dd class="govuk-summary-list__value">
             {{ report.noAssetToAdd ? 'No' : 'Yes' }}
         </dd>
-        <dd class="govuk-summary-list__actions">
-            {% if not hideEditLink  %}
-                <a class="govuk-link behat-link-edit" href="{{ url('assets_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
-                    {{ 'edit' | trans({}, 'common') }}
-                    <span class="govuk-visually-hidden">{{ 'existPage.form.noAssetToAdd.label' | trans(transOptions)  }}</span>
-                </a>
-            {% endif %}
-        </dd>
     </div>
-    {% if report.previousReportData['assets-summary']['noAssetsToAdd'] is not defined %}
+    {% if report.noAssetToAdd  %}
         <div class="govuk-summary-list__row behat-region-has-assets">
             <dt class="govuk-summary-list__key">
                 {{ (page ~ '.prevNoAssetToAdd.label') | trans(transOptions)  }}
             </dt>
             <dd class="govuk-summary-list__value">
                 {{ report.previousReportData['assets-summary']['noAssetsToAdd'] ? 'No' : 'Yes' }}
-            </dd>
-            <dd class="govuk-summary-list__actions">
-                {% if not hideEditLink  %}
-                    <a class="govuk-link behat-link-edit" href="{{ url('assets_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
-                        {{ 'edit' | trans({}, 'common') }}
-                        <span class="govuk-visually-hidden">{{ 'existPage.form.noAssetToAdd.label' | trans(transOptions)  }}</span>
-                    </a>
-                {% endif %}
             </dd>
         </div>
     {% endif %}
@@ -57,14 +38,6 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <h2 class="govuk-heading-l">{{ (page ~ '.listOfAssets') | trans }}</h2>
-        </div>
-        <div class="govuk-grid-column-one-half text--right">
-            {% if not hideEditLink  %}
-                <a href="{{ path('assets_type', { 'reportId': report.id}) }}" class="govuk-!-font-size-19 govuk-!-font-weight-bold move-quarter--up action-link behat-link-add">
-                    <span class="icon icon-plus"></span>
-                    {{ (page ~ '.addButton') | trans }}
-                </a>
-            {% endif %}
         </div>
     </div>
 {% endif %}
@@ -81,11 +54,16 @@
 {# Total #}
 {% if report.assets %}
     <div class="govuk-heading-m text--right behat-region-asset-total">
-        {{ (page ~ '.totalValueOfAssets') | trans(transOptions, translationDomain) }}: £{{ report.assetsTotalValue | money_format }}
+        {{ (page ~ '.totalValueOfAssetsWithDates') | trans(transOptions, translationDomain) }}: £{{ report.assetsTotalValue | money_format }}
     </div>
 
-    <div class="govuk-heading-m text--right behat-region-asset-total">
-        {{ (page ~ '.totalValueOfPreviousAssets') | trans(transOptions, translationDomain) }}: £{{ report.previousReportData['assets-summary']['assetsTotal'] | money_format }}
-    </div>
-
+    {% if report.previousReportData['assets-summary'] is defined %}
+        <div class="govuk-heading-m text--right behat-region-asset-total">
+            {{ (page ~ '.totalValueOfPreviousAssets') | trans(transOptions, translationDomain) }}: £{{ report.previousReportData['assets-summary']['assetsTotal'] | money_format }}
+        </div>
+    {% else %}
+        <div class="govuk-heading-m text--right behat-region-asset-total">
+            {{ (page ~ '.assetsPrevReportMissing') | trans(transOptions, translationDomain) }}
+        </div>
+    {% endif %}
 {% endif %}
