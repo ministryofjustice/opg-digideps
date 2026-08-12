@@ -3,7 +3,7 @@ import { getUserFixture } from "./fixtures/fixtures";
 import LoginPage from "./pages/LoginPage";
 
 test("lay user can login", async ({ page }) => {
-  const user = await getUserFixture("ROLE_DEPUTY");
+  const user = await getUserFixture("Deputy");
 
   const login = new LoginPage(page);
 
@@ -16,7 +16,7 @@ test("lay user can login", async ({ page }) => {
 });
 
 test("org user can login", async ({ page }) => {
-  const user = await getUserFixture("ROLE_PROF_NAMED");
+  const user = await getUserFixture("Deputy", "PA");
 
   const login = new LoginPage(page);
 

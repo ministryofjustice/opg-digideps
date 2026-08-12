@@ -1,7 +1,7 @@
 const apiURL = process.env.API_URL ?? "";
 const clientSecret = process.env.ADMIN_API_CLIENT_SECRET ?? "";
 
-type UserType = "ROLE_DEPUTY" | "ROLE_PROF_NAMED";
+type UserType = "Deputy";
 
 type DeputyType = "LAY" | "PRO" | "PA";
 
