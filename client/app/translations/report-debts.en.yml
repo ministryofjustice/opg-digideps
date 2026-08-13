@@ -77,8 +77,6 @@ review:
   notEntered: Not entered
 
 checklist:
-  weAskAbout: |
-    In this section, we ask you about %client%'s debts, for example, overdue care fees, credit cards or loans.
   moreAbout: "%client%'s other debts of £%amount%"
   totalValueOfPreviousDebts: Total amount %previousStartDate% to %previousEndDate%
   totalValueOfDebtsWithDates: Total amount %startDate% to %endDate%
