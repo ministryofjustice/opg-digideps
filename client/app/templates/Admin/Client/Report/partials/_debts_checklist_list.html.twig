@@ -1,0 +1,110 @@
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-debts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {
+    '%client%': report.client.firstname | striptags,
+    '%startDate%': report.startDate | date("j M Y"),
+    '%endDate%': report.endDate | date("j M Y"),
+    '%previousStartDate%': report.previousReportData['debts-summary']['startDate'] | date("j M Y"),
+    '%previousEndDate%': report.previousReportData['debts-summary']['endDate'] | date("j M Y")
+} %}
+
+{% set page = 'summaryPage' %}
+
+{# Questions and answers table #}
+<dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row behat-region-has-debts">
+        <dt class="govuk-summary-list__key">
+            {{ 'existPage.form.exist.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ report.hasDebts == 'yes' ? 'Yes': 'No' }}
+        </dd>
+    </div>
+    {% if report.hasDebts == 'no' and report.previousReportData['debts-summary']['hasDebts'] is defined %}
+        <div class="govuk-summary-list__row behat-region-has-debts">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.prevNoDebtToAdd.label') | trans(transOptions)  }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.previousReportData['debts-summary']['hasDebts'] == 'yes' ? 'Yes' : 'No' }}
+            </dd>
+        </div>
+    {% endif %}
+</dl>
+
+{% if report.hasDebts == 'yes' %}
+
+    {# Items list heading #}
+    <div class="govuk-grid-row behat-region-debts-list">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m flush--ends">List of debts</h2>
+        </div>
+    </div>
+
+    {# Items list table #}
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Description
+            </dt>
+            <dd class="govuk-summary-list__key">
+                Amount
+            </dd>
+        </div>
+
+        {% for debt in report.debts %}
+        <div class="govuk-summary-list__row behat-region-debt-{{ debt.debtTypeId | behat_namify }}">
+            <dd class="govuk-summary-list__value">
+                {{ ('form.entries.' ~ debt.debtTypeId ~ '.label') | trans(transOptions) }}
+            </dd>
+            <dd class="govuk-summary-list__value">
+                £{{ debt.amount | money_format }}
+            </dd>
+        </div>
+        {% endfor %}
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Total amount
+            </dt>
+            <dd class="govuk-summary-list__key">
+                £{{ report.debtsTotalAmount | money_format }}
+            </dd>
+        </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+        {% set debtOther = report.getDebtById('other') %}
+        {% if debtOther is not null and debtOther.moreDetails %}
+            <div class="govuk-summary-list__row behat-region-debt-other-more-details">
+                <dt class="govuk-summary-list__key">
+                    {{ 'summaryPage.moreAbout' | trans(transOptions | merge({'%amount%': debtOther.amount })) }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ debtOther.moreDetails | nl2br }}
+                </dd>
+            </div>
+        {% endif %}
+        <div class="govuk-summary-list__row behat-region-debt-management-details">
+            {% if report.debtManagement %}
+                <dt class="govuk-summary-list__key">
+                    {{ 'managementPage.form.debtManagement.label' | trans }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ report.debtManagement | nl2br }}
+                </dd>
+            {% else %}
+                <dt class="govuk-summary-list__key">
+                    <span class="error">
+                        {{ 'managementPage.form.debtManagement.label' | trans }}
+                    </span>
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    <twig:GOV:ErrorMessage message="{{ 'pleaseAnswer' | trans({}, 'common' ) }}"/>
+                </dd>
+            {% endif %}
+        </div>
+    </dl>
+{% endif %}

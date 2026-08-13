@@ -1003,6 +1003,7 @@ class Report
                     'report-summary' => $report->getReportSummary(),
                     'financial-summary' => $report->getFinancialSummary(),
                     'assets-summary' => $report->getAssetsSummary(),
+                    'debts-summary' => $report->getDebtsSummary(),
                 ];
             }
         }
@@ -1056,6 +1057,16 @@ class Report
             'startDate' => $this->getStartDate(),
             'endDate' => $this->getEndDate(),
             'noAssetsToAdd' => $this->getNoAssetToAdd(),
+        ];
+    }
+
+    public function getDebtsSummary(): array
+    {
+        return [
+            'debtsTotal' => $this->getDebtsTotalAmount(),
+            'startDate' => $this->getStartDate(),
+            'endDate' => $this->getEndDate(),
+            'hasDebts' => $this->getHasDebts(),
         ];
     }
 

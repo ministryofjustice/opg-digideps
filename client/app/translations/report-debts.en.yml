@@ -35,6 +35,9 @@ summaryPage:
   weAskAbout: |
     In this section, we ask you about %client%'s debts, for example, overdue care fees, credit cards or loans.
   moreAbout: "%client%'s other debts of £%amount%"
+  prevNoDebtToAdd:
+    label: Did %client% have any debts in %previousStartDate% to %previousEndDate%?
+  debtsPrevReportMissing: No previous reports on record to show previous debts balance
 
 form:
   clientsDebts.label: "%client%'s debts"

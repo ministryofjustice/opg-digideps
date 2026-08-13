@@ -10,6 +10,7 @@ use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\Debt;
 use OPG\Digideps\Backend\Entity\Report\Expense;
 use OPG\Digideps\Backend\Entity\Report\Fee;
 use OPG\Digideps\Backend\Entity\Report\Gift;
@@ -456,6 +457,20 @@ final class ReportTest extends TestCase
         self::assertArrayHasKey('endDate', $summary);
         self::assertArrayHasKey('noAssetsToAdd', $summary);
         self::assertEquals(500, $summary['assetsTotal']);
+    }
+
+    public function getDebtsSummaryReturnsCorrectStructure(): void
+    {
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
+        $report->addDebt(new Debt($report, '1', false, '500'));
+
+        $summary = $report->getDebtsSummary();
+
+        self::assertArrayHasKey('debtsTotal', $summary);
+        self::assertArrayHasKey('startDate', $summary);
+        self::assertArrayHasKey('endDate', $summary);
+        self::assertArrayHasKey('noDebtsToAdd', $summary);
+        self::assertEquals(500, $summary['debtsTotal']);
     }
 
     public static function reportTypeTranslationKeyProvider(): array
