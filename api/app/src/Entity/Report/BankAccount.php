@@ -208,9 +208,10 @@ class BankAccount implements BankAccountInterface
     /**
      * @param string $accountType
      */
-    public function setAccountType($accountType)
+    public function setAccountType($accountType): static
     {
         $this->accountType = $accountType;
+        return $this;
     }
 
     /**

@@ -5,8 +5,8 @@ namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
-use Ramsey\Uuid\Uuid;
 use OPG\Digideps\Backend\Fixture\Scenario;
+use Ramsey\Uuid\Uuid;
 
 class ClientControllerTest extends AbstractTestController
 {

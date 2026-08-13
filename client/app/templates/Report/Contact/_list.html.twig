@@ -43,7 +43,7 @@
     {% endif %}
 </dl>
 
-{% if contacts | length > 0 %}
+{% if report.contacts | length > 0 %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <h2 class="govuk-heading-m">{{ (page ~ '.listOfContacts') | trans }}</h2>
@@ -80,7 +80,7 @@
             </tr>
         </thead>
         <tbody class="govuk-table__body">
-        {% for contact in contacts %}
+        {% for contact in report.contacts %}
             <tr class="govuk-table__row behat-region-contact-{{ contact.postcode | behat_namify }}">
                 <td class="govuk-table__cell">
                     <p class="govuk-!-margin-0 govuk-!-font-size-18">{{ contact.contactName }}</p>

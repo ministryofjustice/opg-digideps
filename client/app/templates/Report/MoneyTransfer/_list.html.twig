@@ -39,7 +39,7 @@
     </div>
 </dl>
 
-{% if moneyTransfers | length > 0 %}
+{% if report.moneyTransfers | length > 0 %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <h2 class="govuk-heading-m">List of money transfers</h2>
@@ -81,7 +81,7 @@
         </thead>
 
         <tbody class="govuk-table__body">
-            {% for transfer in moneyTransfers %}
+            {% for transfer in report.moneyTransfers|sort((a, b) => a.accountFrom.bank <=> b.accountFrom.bank) %}
                 <tr class="govuk-table__row behat-region-transfer-{{ transfer.accountFrom.accountNumber }}-{{ transfer.accountTo.accountNumber }}-{{ transfer.amount | behat_namify }}">
                     <td class="govuk-table__cell">
                         {{ _self.accountDetails(transfer.accountFrom) }}

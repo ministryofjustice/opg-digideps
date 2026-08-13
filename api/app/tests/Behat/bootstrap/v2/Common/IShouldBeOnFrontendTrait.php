@@ -152,14 +152,6 @@ trait IShouldBeOnFrontendTrait
     }
 
     /**
-     * @Then I should be on the documents summary page
-     */
-    public function iAmOnDocumentsSummaryPage(): bool
-    {
-        return $this->iAmOnPage('/report\/.*\/documents\/summary/');
-    }
-
-    /**
      * @Then I should be on the gifts exist page
      */
     public function iAmOnGiftsExistPage(): bool
