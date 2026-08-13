@@ -30,10 +30,10 @@
 }
 
 .button-warning {
-  @include button($red);
+  @include button(govuk-colour("red"));
 
   &[disabled="disabled"] {
-    background: $red;
+    background: govuk-colour("red");
   }
 }
 

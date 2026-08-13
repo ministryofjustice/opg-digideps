@@ -114,7 +114,7 @@ locals {
         },
         {
           name  = "API_URL",
-          value = "http://api:8080"
+          value = local.api_url
         },
         {
           name  = "APP_ENV",

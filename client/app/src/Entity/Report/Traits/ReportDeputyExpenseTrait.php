@@ -8,25 +8,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportDeputyExpenseTrait
 {
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"expenses-paid-anything"})
-     * @Assert\NotBlank(message="expenses.paidForAnything.notBlank", groups={"expenses-paid-anything"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['expenses-paid-anything'])]
+    #[Assert\NotBlank(message: 'expenses.paidForAnything.notBlank', groups: ['expenses-paid-anything'])]
     private ?string $paidForAnything;
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Expense>")
-     * @JMS\Groups({"expenses"})
-     *
      * @var Expense[]
      */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Expense>')]
+    #[JMS\Groups(['expenses'])]
     private array $expenses = [];
 
-    /**
-     * @JMS\Type("double")
-     * @JMS\Groups({"expenses-total"})
-     */
+    #[JMS\Type('double')]
+    #[JMS\Groups(['expenses-total'])]
     private $expensesTotal;
 
     public function getPaidForAnything(): ?string
@@ -42,10 +37,14 @@ trait ReportDeputyExpenseTrait
     }
 
     /**
+     * Returns expenses in ascending createdAt order. Does not change the order of the underlying $this->expenses.
+     *
      * @return Expense[]
      */
     public function getExpenses(): array
     {
+        $expenses = [...$this->expenses];
+        uasort($expenses, fn ($exp1, $exp2) => $exp1 <=> $exp2);
         return $this->expenses;
     }
 
@@ -68,8 +67,10 @@ trait ReportDeputyExpenseTrait
         return $this->expensesTotal;
     }
 
-    public function setExpensesTotal(string $expensesTotal): void
+    public function setExpensesTotal(string $expensesTotal): static
     {
         $this->expensesTotal = $expensesTotal;
+
+        return $this;
     }
 }

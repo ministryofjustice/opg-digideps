@@ -4,6 +4,7 @@
   "description": "End-to-end tests for Digideps: Managed by opg-org-infra &amp; Terraform",
   "scripts": {
     "lint": "eslint .",
+    "lint-fix": "eslint --fix .",
     "typecheck": "tsc --noEmit",
     "check-format": "prettier --check .",
     "format": "prettier --write .",

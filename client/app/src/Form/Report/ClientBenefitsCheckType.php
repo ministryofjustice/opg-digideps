@@ -84,7 +84,7 @@ class ClientBenefitsCheckType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
 
-            if (is_array($data) && is_array($data['dateLastCheckedEntitlement'])) {
+            if (is_array($data) && is_array($data['dateLastCheckedEntitlement'] ?? null)) {
                 if (!empty($data['dateLastCheckedEntitlement']['month']) && !empty($data['dateLastCheckedEntitlement']['year'])) {
                     $data['dateLastCheckedEntitlement']['day'] = '01';
                 }

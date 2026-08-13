@@ -141,7 +141,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
 
     private function typesOfMoneyReceivedOnClientsBehalfValid(ClientBenefitsCheck $object, ClientBenefitsCheckConstraint $constraint): void
     {
-        if (is_array($object->getTypesOfMoneyReceivedOnClientsBehalf()) && count($object->getTypesOfMoneyReceivedOnClientsBehalf()) === 1) {
+        if (!is_null($object->getTypesOfMoneyReceivedOnClientsBehalf()) && count($object->getTypesOfMoneyReceivedOnClientsBehalf()) === 1) {
             $money = $object->getTypesOfMoneyReceivedOnClientsBehalf()[0];
 
             if (is_null($money->getAmount()) && is_null($money->getMoneyType()) && $money->getAmountDontKnow() === false) {

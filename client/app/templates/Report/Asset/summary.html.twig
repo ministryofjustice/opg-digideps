@@ -34,7 +34,11 @@
     </div>
 
     {# Items list #}
-    {% include '@App/Report/Asset/_list.html.twig' %}
+    {% include '@App/Report/Asset/_list.html.twig' with {
+        'report': report,
+        'hasAssets': hasAssets,
+        'assetsGroupedByTitle': assetsGroupedByTitle
+    } %}
 
     {# Pagination #}
     {% include '@App/Report/_nextprevious.html.twig' with {
