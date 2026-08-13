@@ -444,6 +444,20 @@ final class ReportTest extends TestCase
         $this->assertEquals($reportPFALastYear->getId(), $currentReportPreviousData['report-summary']['id']);
     }
 
+    public function getAssetsSummaryReturnsCorrectStructure(): void
+    {
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
+        $report->addAsset(new AssetOther()->setValue('500'));
+
+        $summary = $report->getAssetsSummary();
+
+        self::assertArrayHasKey('assetsTotal', $summary);
+        self::assertArrayHasKey('startDate', $summary);
+        self::assertArrayHasKey('endDate', $summary);
+        self::assertArrayHasKey('noAssetsToAdd', $summary);
+        self::assertEquals(500, $summary['assetsTotal']);
+    }
+
     public static function reportTypeTranslationKeyProvider(): array
     {
         return [
