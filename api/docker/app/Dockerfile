@@ -47,30 +47,31 @@ EXPOSE 443
 
 ENV TIMEOUT=20
 
+COPY --from=ghcr.io/php/pie:bin@sha256:65d91cecb73cb1fd03ae2a892d8ec76b25d34468532c0c2032afa9c412cf8b43 /pie /usr/bin/pie
+
 RUN apk --no-cache add \
     postgresql-dev \
     postgresql-client \
     openssl \
     su-exec \
-    php83-pecl-igbinary  \
-    php83-pecl-redis \
+    php84-pecl-igbinary  \
+    php84-pecl-redis \
     wget
-
-RUN docker-php-ext-install pdo pdo_pgsql opcache \
- && docker-php-ext-enable opcache
 
 RUN apk update && apk upgrade
 # Install necessary PHP extensions
 RUN docker-php-ext-install pdo pdo_pgsql opcache
 RUN docker-php-ext-enable opcache
+
 # Install pcov for faster coverage tooling
-RUN apk add --no-cache autoconf build-base
-RUN pecl install pcov && docker-php-ext-enable pcov
+RUN apk add --no-cache autoconf build-base libtool
+RUN pie install pecl/pcov:^1.0.12 && docker-php-ext-enable pcov
+
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=0
 RUN if [ "$REQUIRE_XDEBUG" = "1" ]; then \
     apk add --update linux-headers && \
-    pecl install xdebug && \
+    pie install xdebug/xdebug:^3.4 && \
     docker-php-ext-enable xdebug && \
     apk del linux-headers; \
   fi

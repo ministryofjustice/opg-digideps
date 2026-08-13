@@ -44,21 +44,40 @@ ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 WORKDIR /var/www
 ENV TIMEOUT=60
 
-# Dependencies
-RUN apk update && apk upgrade && apk add --no-cache \
-    su-exec libzip-dev unzip \
-    php84-pecl-igbinary php84-pecl-redis php84-pecl-imagick \
-    gmp gmp-dev libheif libde265 ffmpeg \
-    autoconf build-base wget \
- && docker-php-ext-install pcntl zip opcache gmp \
- && docker-php-ext-enable opcache \
- && pecl install pcov && docker-php-ext-enable pcov
+COPY --from=ghcr.io/php/pie:bin@sha256:65d91cecb73cb1fd03ae2a892d8ec76b25d34468532c0c2032afa9c412cf8b43 /pie /usr/bin/pie
 
+# Dependencies
+RUN apk update \
+    && apk upgrade \
+    && apk add --no-cache \
+    su-exec \
+    libzip-dev \
+    unzip \
+    php84-pecl-igbinary \
+    php84-pecl-redis \
+    php84-pecl-imagick \
+    gmp \
+    gmp-dev \
+    libheif \
+    libde265 \
+    ffmpeg \
+    autoconf \
+    build-base \
+    wget
+
+RUN docker-php-ext-install pcntl zip opcache gmp \
+ && docker-php-ext-enable opcache \
+
+# Install pcov for faster coverage tooling
+RUN apk add --no-cache autoconf build-base libtool
+RUN pie install pecl/pcov:^1.0.12 && docker-php-ext-enable pcov
+
+# Insta
 # Optional Xdebug
 ARG REQUIRE_XDEBUG=0
 RUN if [ "$REQUIRE_XDEBUG" = "1" ]; then \
       apk add --update linux-headers && \
-      pecl install xdebug && \
+      pie install xdebug/xdebug && \
       docker-php-ext-enable xdebug && \
       apk del linux-headers; \
     fi
