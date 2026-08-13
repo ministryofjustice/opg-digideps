@@ -2,8 +2,11 @@ FROM python:3.13.15-alpine3.24@sha256:540c7d91f98ff6880174c40e99067bf5941eb54d81
 
 # Copy source files
 COPY requirements.txt /requirements.txt
+COPY check_actions.sh /check_actions.sh
 
-# Install dependencies into the function dir
+# Install all needed packages
 RUN pip install -r /requirements.txt
+RUN apk add actionlint
+RUN chmod +x /check_actions.sh
 
-CMD ["zizmor", "--collect", "all"]
+CMD ["/check_actions.sh"]

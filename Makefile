@@ -308,3 +308,7 @@ playwright-format: ##@playwright Formats the tests.
 playwright-typecheck: ##@playwright Typechecks the tests.
 	docker compose build playwright-tests
 	docker compose run --rm playwright-tests typecheck
+
+audit-ga: ##@github_actions Audit github actions
+	docker compose -f docker-compose.commands.yml build audit-ga
+	docker compose -f docker-compose.commands.yml up audit-ga

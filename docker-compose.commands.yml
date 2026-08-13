@@ -48,8 +48,8 @@ services:
       context: ./orchestration
       target: tests
 
-  zizmor:
+  audit-ga:
     build:
-      context: ./scripts/github_linting
+      context: ./scripts/github_actions_audit
     volumes:
       - ./.github:/github:ro
