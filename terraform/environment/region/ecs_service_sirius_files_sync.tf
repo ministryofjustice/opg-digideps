@@ -89,7 +89,7 @@ locals {
       environment = [
         {
           name  = "API_URL",
-          value = "http://api"
+          value = local.api_url
         },
         {
           name  = "ROLE",

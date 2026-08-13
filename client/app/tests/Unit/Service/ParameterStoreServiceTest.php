@@ -2,6 +2,7 @@
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service;
 
+use Aws\Result;
 use Aws\Ssm\SsmClient;
 use OPG\Digideps\Frontend\Service\ParameterStoreService;
 use PHPUnit\Framework\TestCase;
@@ -32,37 +33,11 @@ class ParameterStoreServiceTest extends TestCase
         $ssmClient
             ->getParameter(['Name' => '/param-prefix/test-flag'])
             ->shouldBeCalled()
-            ->willReturn(['Parameter' => ['Value' => 'result']]);
+            ->willReturn(new Result(['Parameter' => ['Value' => 'result']]));
 
         $sut = new ParameterStoreService($ssmClient->reveal(), '/param-prefix/', '/flag-prefix/');
 
         self::assertEquals('result', $sut->getParameter('test-flag'));
-    }
-
-    /**
-     * @dataProvider parameterDataProvider
-     * @test
-     */
-    public function putParameter($parameterName, $parameterValue)
-    {
-        $ssmClient = self::prophesize(SsmClient::class);
-        $parameterPrefix = '/param-prefix/';
-        $ssmClient
-            ->putParameter(
-                ['Name' => $parameterPrefix . $parameterName,
-                'Value' => $parameterValue,
-                'Overwrite' => true,
-                ]
-            )
-            ->shouldBeCalled()
-            ->willReturn([
-                'Tier' => 'Standard',
-                'Version' => 10,
-            ]);
-
-        $sut = new ParameterStoreService($ssmClient->reveal(), $parameterPrefix, '/flag-prefix/');
-
-        $sut->putParameter($parameterName, $parameterValue);
     }
 
     /**
@@ -81,10 +56,10 @@ class ParameterStoreServiceTest extends TestCase
                 ]
             )
             ->shouldBeCalled()
-            ->willReturn([
+            ->willReturn(new Result([
                 'Tier' => 'Standard',
                 'Version' => 10,
-            ]);
+            ]));
 
         $sut = new ParameterStoreService($ssmClient->reveal(), '/param-prefix/', '/flag-prefix/');
 
