@@ -3,46 +3,42 @@
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportMoneyTransactionTrait
 {
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>")
-     * @JMS\Groups({"transactionsIn"})
      *
      * @var MoneyTransaction[]
      */
-    private $moneyTransactionsIn = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>')]
+    #[JMS\Groups(['transactionsIn'])]
+    private array $moneyTransactionsIn = [];
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>")
-     * @JMS\Groups({"transactionsOut"})
      *
      * @var MoneyTransaction[]
      */
-    private $moneyTransactionsOut = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>')]
+    #[JMS\Groups(['transactionsOut'])]
+    private array $moneyTransactionsOut = [];
 
     /**
-     * @JMS\Type("double")
-     *
      * @var float
      */
+    #[JMS\Type('double')]
     private $moneyInTotal;
 
     /**
-     * @JMS\Type("double")
-     *
      * @var float
      */
+    #[JMS\Type('double')]
     private $moneyOutTotal;
 
     /**
      * @param  MoneyTransaction[] $moneyTransactionsIn
-     * @return Report
      */
-    public function setMoneyTransactionsIn($moneyTransactionsIn)
+    public function setMoneyTransactionsIn(array $moneyTransactionsIn): static
     {
         $this->moneyTransactionsIn = $moneyTransactionsIn;
 
@@ -52,16 +48,15 @@ trait ReportMoneyTransactionTrait
     /**
      * @return MoneyTransaction[]
      */
-    public function getMoneyTransactionsIn()
+    public function getMoneyTransactionsIn(): array
     {
         return $this->moneyTransactionsIn;
     }
 
     /**
      * @param  MoneyTransaction[] $moneyTransactionsOut
-     * @return Report
      */
-    public function setMoneyTransactionsOut($moneyTransactionsOut)
+    public function setMoneyTransactionsOut(array $moneyTransactionsOut): static
     {
         $this->moneyTransactionsOut = $moneyTransactionsOut;
 
@@ -71,7 +66,7 @@ trait ReportMoneyTransactionTrait
     /**
      * @return MoneyTransaction[]
      */
-    public function getMoneyTransactionsOut()
+    public function getMoneyTransactionsOut(): array
     {
         return $this->moneyTransactionsOut;
     }
@@ -109,10 +104,8 @@ trait ReportMoneyTransactionTrait
 
     /**
      * @param float $moneyInTotal
-     *
-     * @return Report
      */
-    public function setMoneyInTotal($moneyInTotal)
+    public function setMoneyInTotal($moneyInTotal): static
     {
         $this->moneyInTotal = $moneyInTotal;
 
@@ -129,10 +122,8 @@ trait ReportMoneyTransactionTrait
 
     /**
      * @param float $moneyOutTotal
-     *
-     * @return Report
      */
-    public function setMoneyOutTotal($moneyOutTotal)
+    public function setMoneyOutTotal($moneyOutTotal): static
     {
         $this->moneyOutTotal = $moneyOutTotal;
 

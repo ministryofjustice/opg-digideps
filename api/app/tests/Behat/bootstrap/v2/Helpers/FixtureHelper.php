@@ -1059,7 +1059,7 @@ class FixtureHelper
 
         $this->addClientsAndReportsToLayDeputy($user, $completed, $submitted, $reportType, $startDate, $satisfactionScore, $caseNumber);
 
-        $this->setPassword($user, $legacyPasswordHash);
+        $this->setPassword($user);
 
         return $user;
     }
@@ -1124,13 +1124,9 @@ class FixtureHelper
         return $user;
     }
 
-    public function setPassword($user, $legacyPasswordHash = false): void
+    public function setPassword($user): void
     {
-        if ($legacyPasswordHash) {
-            $user->setPassword($this->fixtureParams['legacy_password_hash']);
-        } else {
-            $user->setPassword($this->hasher->hashPassword($user, $this->fixtureParams['account_password']));
-        }
+        $user->setPassword($this->hasher->hashPassword($user, $this->fixtureParams['account_password']));
 
         $this->em->persist($user);
         $this->em->flush();
@@ -1158,11 +1154,6 @@ class FixtureHelper
         $this->em->flush();
 
         return $preRegistration;
-    }
-
-    public function getLegacyPasswordHash(): string
-    {
-        return $this->fixtureParams['legacy_password_hash'];
     }
 
     public function createAndPersistCourtOrder(CourtOrderType $orderType, Client $client, ?Deputy $deputy = null, ?Report $report = null, ?string $courtOrderUid = null): CourtOrder

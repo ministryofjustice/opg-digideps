@@ -33,7 +33,7 @@
                 </span>
             </dt>
             <dd class="govuk-summary-list__value">
-                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                <twig:GOV:ErrorMessage message="{{ 'pleaseAnswer' | trans({}, 'common' ) }}"/>
             </dd>
         {% endif %}
         {% if not hideEditLink  %}
@@ -84,7 +84,7 @@
                 </span>
             </dt>
             <dd class="govuk-summary-list__value">
-                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                <twig:GOV:ErrorMessage message="{{ 'pleaseAnswer' | trans({}, 'common' ) }}"/>
             </dd>
         {% endif %}
         {% if not hideEditLink  %}
@@ -106,7 +106,7 @@
                 </span>
             </dt>
             <dd class="govuk-summary-list__value">
-                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                <<twig:GOV:ErrorMessage message="{{ 'pleaseAnswer' | trans({}, 'common' ) }}"/>
             </dd>
         {% else %}
             <dt class="govuk-summary-list__key">
@@ -163,9 +163,7 @@
             {% endif %}
         </div>
     </div>
-{% endif %}
 
-{% if report.decisions | length > 0 %}
     <dl class="govuk-summary-list behat-region-decisions">
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">

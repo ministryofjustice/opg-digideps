@@ -6,39 +6,25 @@ use JMS\Serializer\Annotation as JMS;
 
 class ReportSubmissionSummary
 {
-    /**
-     * @JMS\Type("integer")
-     */
+    #[JMS\Type('integer')]
     private $id;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     private $caseNumber;
 
-    /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
     private $dateReceived;
 
-    /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
     private $scanDate;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     private $formType;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     private $documentType;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     private $documentId;
 
     /**
@@ -51,9 +37,8 @@ class ReportSubmissionSummary
 
     /**
      * @param mixed $id
-     * @return ReportSubmissionSummary
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -70,9 +55,8 @@ class ReportSubmissionSummary
 
     /**
      * @param mixed $caseNumber
-     * @return ReportSubmissionSummary
      */
-    public function setCaseNumber($caseNumber)
+    public function setCaseNumber($caseNumber): static
     {
         $this->caseNumber = $caseNumber;
 
@@ -89,9 +73,8 @@ class ReportSubmissionSummary
 
     /**
      * @param mixed $dateReceived
-     * @return ReportSubmissionSummary
      */
-    public function setDateReceived($dateReceived)
+    public function setDateReceived($dateReceived): static
     {
         $this->dateReceived = $dateReceived;
 
@@ -108,9 +91,8 @@ class ReportSubmissionSummary
 
     /**
      * @param mixed $scanDate
-     * @return ReportSubmissionSummary
      */
-    public function setScanDate($scanDate)
+    public function setScanDate($scanDate): static
     {
         $this->scanDate = $scanDate;
 
@@ -127,9 +109,8 @@ class ReportSubmissionSummary
 
     /**
      * @param mixed $formType
-     * @return ReportSubmissionSummary
      */
-    public function setFormType($formType)
+    public function setFormType($formType): static
     {
         $this->formType = $formType;
 
@@ -146,9 +127,8 @@ class ReportSubmissionSummary
 
     /**
      * @param mixed $documentType
-     * @return ReportSubmissionSummary
      */
-    public function setDocumentType($documentType)
+    public function setDocumentType($documentType): static
     {
         $this->documentType = $documentType;
 
@@ -165,9 +145,8 @@ class ReportSubmissionSummary
 
     /**
      * @param mixed $documentId
-     * @return ReportSubmissionSummary
      */
-    public function setDocumentId($documentId)
+    public function setDocumentId($documentId): static
     {
         $this->documentId = $documentId;
 
