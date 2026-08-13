@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\v2\Controller;
 
+use OPG\Digideps\Backend\Fixture\ReportList;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\PreRegistration;
@@ -79,7 +80,7 @@ class CourtOrderControllerTest extends AbstractTestController
     public function testGetByUidActionSuccess(): void
     {
         ['persons' => ['users' => ['lay1' => $user]], 'orders' => [['hw' => ['order' => $courtOrder, 'reports' => [$submitted, $open]]]]] = self::$fixtureService->instantiateScenario(
-            new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), CourtOrderReportType::OPG104, 1))
+            new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), CourtOrderReportType::OPG104, reportList: ReportList::manyReports()))
         );
 
         // login to get the token for API calls

@@ -1002,6 +1002,7 @@ class Report
                 return [
                     'report-summary' => $report->getReportSummary(),
                     'financial-summary' => $report->getFinancialSummary(),
+                    'assets-summary' => $report->getAssetsSummary(),
                 ];
             }
         }
@@ -1045,6 +1046,16 @@ class Report
         return [
             'id' => $this->getId(),
             'type' => $this->getType(),
+        ];
+    }
+
+    public function getAssetsSummary(): array
+    {
+        return [
+            'assetsTotal' => $this->getAssetsTotalValue(),
+            'startDate' => $this->getStartDate(),
+            'endDate' => $this->getEndDate(),
+            'noAssetsToAdd' => $this->getNoAssetToAdd(),
         ];
     }
 

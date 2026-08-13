@@ -147,7 +147,7 @@
 
 </dl>
 
-{% if decisions | length > 0 %}
+{% if report.decisions | length > 0 %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <h2 class="govuk-heading-m">{{ (page ~ '.listOfDecisions') | trans }}</h2>
@@ -182,7 +182,7 @@
             {% endif %}
         </div>
 
-        {% for decision in decisions %}
+        {% for decision in report.decisions %}
             <div class="govuk-summary-list__row behat-region-decision-{{ loop.index }}">
                 <dt class="govuk-summary-list__value">
                     {{ decision.description | nl2br }}

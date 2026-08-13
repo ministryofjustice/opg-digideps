@@ -34,6 +34,13 @@ locals {
       target_type = "security_group_id"
       target      = module.front_service_security_group.id
     }
+    playwright = {
+      port        = 80
+      type        = "ingress"
+      protocol    = "tcp"
+      target_type = "security_group_id"
+      target      = module.end_to_end_tests_security_group.id
+    }
     sirius_file_sync = {
       port        = 80
       type        = "ingress"
