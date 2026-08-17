@@ -19,5 +19,7 @@ runs:
 
     - name: Install requirements
       shell: bash
-      run: uv pip install --system -r "${{ inputs.requirements_file }}"
+      env:
+        REQUIREMENTS_FILE: ${{ inputs.requirements_file }}
+      run: uv pip install --system -r "${REQUIREMENTS_FILE}"
       working-directory: ${{ inputs.working_directory }}

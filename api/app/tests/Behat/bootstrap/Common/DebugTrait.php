@@ -3,7 +3,6 @@
 namespace Tests\OPG\Digideps\Backend\Behat\Common;
 
 use Behat\Behat\Hook\Scope\AfterStepScope;
-use Behat\Behat\Tester\Result\ExecutedStepResult;
 
 trait DebugTrait
 {
@@ -70,7 +69,7 @@ trait DebugTrait
     {
         $result = $scope->getTestResult();
 
-        if ($result instanceof ExecutedStepResult && $result->hasException()) {
+        if (!$result->isPassed()) {
             $feature = basename($scope->getFeature()->getFile());
             $this->debug($feature);
         }

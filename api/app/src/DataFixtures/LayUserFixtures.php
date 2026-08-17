@@ -39,7 +39,7 @@ class LayUserFixtures extends AbstractDataFixture
             $deputySet,
             $type,
             single: $kind === CourtOrderKind::Single,
-            siblingDeputySet: $siblingSet,
+            siblingDeputySet: $siblingSet
         ));
     }
 

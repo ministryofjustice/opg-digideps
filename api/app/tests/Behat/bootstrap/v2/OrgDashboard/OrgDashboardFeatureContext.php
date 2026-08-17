@@ -10,10 +10,12 @@ use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\OrganisationRepository;
 use Tests\OPG\Digideps\Backend\Behat\v2\ClientManagement\ClientManagementTrait;
 use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
+use Tests\OPG\Digideps\Backend\Behat\v2\ReportSubmission\ReportSubmissionTrait;
 
 class OrgDashboardFeatureContext extends BaseFeatureContext
 {
     use ClientManagementTrait;
+    use ReportSubmissionTrait;
 
     // map from org names to the Organisation instances
     /** @var array<string, Organisation> */

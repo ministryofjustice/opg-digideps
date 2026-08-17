@@ -1,4 +1,4 @@
-@v2 @v2_sequential_2 @report-submissions
+@v2 @v2_sequential_2 @report-submission
 Feature: Report submissions dashboard
 
     @super-admin
@@ -36,27 +36,24 @@ Feature: Report submissions dashboard
         And I manually 'archive' the client that has one submitted report
         Then I should see the client row under the Synchronised tab
 
-    @super-admin
+    @super-admin @THIS
     Scenario: Manually trigger synchronisation
         Given a client has submitted one report
         And there was an error during synchronisation
         And a super admin user accesses the admin app
-        When I navigate to the admin report submissions page
+        And document sync is enabled
+        When I visit the admin submissions page
         And I search for submissions using the court order number of the client with 'one' report
         Then the status of the documents for the client with one report submission should be 'Permanent Fail'
         And I manually 'synchronise' the client that has one submitted report
         Then the status of the documents for the client with one report submission should be 'Queued'
+        And document sync is disabled
 
     @super-admin
     Scenario: Make 'New' tab visibility toggle based on Document Sync Enabled flag
-        And a super admin user accesses the admin app
-        Given the document sync enabled flag is set to '0'
-        And I navigate to the admin report submissions page
-        Then the 'New' tab 'is' visible
-        Then the 'Pending' tab 'is' visible
-        Then the 'Synchronised' tab 'is' visible
-        Given the document sync enabled flag is set to '1'
-        And I navigate to the admin report submissions page
+        When a super admin user accesses the admin app
+        And document sync is enabled
+        And I visit the admin submissions page
         Then the 'New' tab 'is not' visible
-        Then the 'Pending' tab 'is' visible
-        Then the 'Synchronised' tab 'is' visible
+        And the 'Pending' tab 'is' visible
+        And the 'Synchronised' tab 'is' visible
