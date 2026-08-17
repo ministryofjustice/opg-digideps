@@ -24,9 +24,7 @@ humanfriendly==10.0
 markupsafe==3.0.3
     # via werkzeug
 packaging==26.2
-    # via
-    #   gunicorn
-    #   wheel
+    # via gunicorn
 pillow==12.3.0
     # via weasyprint
 property-manager==3.0
@@ -37,8 +35,6 @@ pydyf==0.12.1
     # via weasyprint
 pyphen==0.17.2
     # via weasyprint
-setuptools==83.0.0
-    # via -r requirements.in
 six==1.17.0
     # via executor
 tinycss2==1.5.1
@@ -57,8 +53,6 @@ webencodings==0.5.1
     #   tinycss2
     #   tinyhtml5
 werkzeug==3.1.8
-    # via -r requirements.in
-wheel==0.47.0
     # via -r requirements.in
 zopfli==0.4.3
     # via fonttools

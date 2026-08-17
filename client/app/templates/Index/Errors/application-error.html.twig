@@ -1,0 +1,44 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% block htmlTitle %}Service Error Page{% endblock %}
+
+{% block pageContent %}
+    <div class="govuk-width-container">
+        <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-l">We're sorry, something went wrong.</h1>
+                    <p class="govuk-body-l">If the issue persists please contact us:</p>
+                    <p class="govuk-body">
+                        {{ 'emailTitle' | trans({}, 'common') }}:<br>
+                        <strong class="govuk-!-font-weight-bold">{{ emailTranslation | trans({}, 'common') }}</strong>
+                    </p>
+                    <p class="govuk-body">
+                        {{ 'helplineTitle' | trans({}, 'common') }}:<br>
+                        <strong class="govuk-!-font-weight-bold">{{ 'helpline' | trans({}, 'common') }}</strong>
+                    </p>
+                    <p class="govuk-body">
+                        {{ 'accessHelplineTitle' | trans({}, 'common') }}:<br>
+                        <strong class="govuk-!-font-weight-bold">{{ 'accessHelpline' | trans({}, 'common') }}</strong>
+                    </p>
+                    <p class="govuk-body">
+                        {{ 'openingHoursTitle' | trans({}, 'common') }}:<br>
+                        <strong class="govuk-!-font-weight-bold">{{ 'openingHoursText1' | trans({}, 'common') }}</strong>
+                        <br>
+                        <strong class="govuk-!-font-weight-bold">{{ 'openingHoursText2' | trans({}, 'common') }}</strong>
+                    </p>
+                    <p class="govuk-body">
+                        If you contact us, please provide the following information:
+                    </p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li><strong class="govuk-!-font-weight-bold">Request ID:</strong> {{ requestId }}</li>
+                        <li><strong class="govuk-!-font-weight-bold">Session ID:</strong> {{ sessionId }}</li>
+                    </ul>
+                    <p class="govuk-body">
+                        These details help us investigate the issue more quickly.
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

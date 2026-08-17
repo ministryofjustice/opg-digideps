@@ -75,3 +75,11 @@ review:
   answer: Answer
   list: List of debts
   notEntered: Not entered
+
+checklist:
+  moreAbout: "%client%'s other debts of £%amount%"
+  totalValueOfPreviousDebts: Total amount %previousStartDate% to %previousEndDate%
+  totalValueOfDebtsWithDates: Total amount %startDate% to %endDate%
+  prevNoDebtToAdd:
+    label: Did %client% have any debts in %previousStartDate% to %previousEndDate%?
+  debtsPrevReportMissing: No previous report

@@ -47,3 +47,9 @@ services:
     build:
       context: ./orchestration
       target: tests
+
+  audit-ga:
+    build:
+      context: ./scripts/github_actions_audit
+    volumes:
+      - ./.github:/github:ro
