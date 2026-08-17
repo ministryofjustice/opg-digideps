@@ -75,7 +75,7 @@ class OrgDeputyshipUploader
 
 
                 $this->handleClient($deputyshipDto);
-                $this->handleReport($deputyshipDto);
+                //$this->handleReport($deputyshipDto);
             } catch (ClientIsArchivedException) {
                 ++$uploadResults['skipped'];
                 continue;
