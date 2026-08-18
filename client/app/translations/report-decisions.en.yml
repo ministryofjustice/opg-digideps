@@ -129,3 +129,13 @@ form:
     hint: ""
   save:
     label: Save and continue
+
+review:
+  question: Question
+  answer: Answer
+  yes: Yes
+  no: No
+  notEntered: Not entered
+  listOfDecisions: List of significant decisions
+  capacityUnchanged: Stayed the same
+  capacityChanged: Changed
