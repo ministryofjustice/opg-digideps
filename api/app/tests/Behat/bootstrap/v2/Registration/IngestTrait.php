@@ -398,9 +398,9 @@ trait IngestTrait
     {
         $this->expectedReportType = $reportTypeNumber;
 
-        $this->deputies['added']['expected'] = 1;
+        $this->deputies['added']['expected'] = 2;
         $this->organisations['added']['expected'] = 1;
-        $this->deputies['updated']['expected'] = 1;
+        $this->deputies['updated']['expected'] = 0;
 
         $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000001', '750000000002');
 

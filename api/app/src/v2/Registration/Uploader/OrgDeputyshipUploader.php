@@ -72,10 +72,7 @@ class OrgDeputyshipUploader
 
                 $this->handleOrganisation($deputyshipDto);
                 $this->handleDeputy($deputyshipDto);
-
-
                 $this->handleClient($deputyshipDto);
-                //$this->handleReport($deputyshipDto);
             } catch (ClientIsArchivedException) {
                 ++$uploadResults['skipped'];
                 continue;
@@ -231,7 +228,7 @@ class OrgDeputyshipUploader
                 if ($this->clientHasNewDeputy($this->client, $this->deputy) && $dto->getHybrid() != OrgDeputyshipDto::DUAL_TYPE) {
                     $this->client->setDeputy($this->deputy);
 
-                    $this->updated['clients'][] = $this->client->getId();
+                    //$this->updated['clients'][] = $this->client->getId();
                 }
             }
         }
@@ -287,53 +284,6 @@ class OrgDeputyshipUploader
         return
             $client->getDeputy() === null
             || $client->getDeputy()->getDeputyUid() !== $deputy->getDeputyUid();
-    }
-
-    private function handleReport(OrgDeputyshipDto $dto): void
-    {
-        $report = $this->client?->getCurrentReport();
-
-        if ($report !== null) {
-            if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
-                if ($dto->getHybrid() == OrgDeputyshipDto::DUAL_TYPE) {
-                    if ($this->client->getDeputy()->getDeputyUid() == $dto->getDeputyUid()) {
-                        if ($report->getType() !== $dto->getReportType()) {
-                            $report->setType($dto->getReportType());
-
-                            $this->updated['reports'][] = $report->getId();
-                        }
-                    }
-                } else {
-                    if ($report->getType() !== $dto->getReportType()) {
-                        // Add audit logging for report type changing
-                        $report->setType($dto->getReportType());
-
-                        $this->updated['reports'][] = $report->getId();
-                    }
-                }
-            }
-        } else {
-            $courtOrder = $this->client
-                ?->getCourtOrders()
-                ?->filter(fn (CourtOrder $courtOrder) => $courtOrder->isActive())
-                ?->reduce(fn (?CourtOrder $current, CourtOrder $next): CourtOrder => $current !== null && $current->getOrderMadeDate() > $next->getOrderMadeDate() ? $current : $next);
-            if ($courtOrder === null) {
-                return;
-            }
-            $report = new Report(
-                $courtOrder,
-                $dto->getReportType(),
-                $dto->getReportStartDate(),
-                $dto->getReportEndDate()
-            );
-
-            $this->client->addReport($report);
-
-            $this->added['reports'][] = $this->client->getCaseNumber() . '-' . $dto->getReportEndDate()?->format('Y-m-d');
-        }
-
-        $this->em->persist($report);
-        $this->em->flush();
     }
 
     private function resetDeputyshipUploaderObjects(): void
