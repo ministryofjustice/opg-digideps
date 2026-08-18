@@ -23,11 +23,11 @@
       "minimumReleaseAge": "7 days"
     },
     {
-      "matchPackagePatterns": ["*"],
       "isVulnerabilityAlert": true,
       "labels": ["dependencies", "renovate", "security"],
       "prPriority": 10,
-      "prCreation": "immediate"
+      "prCreation": "immediate",
+      "matchPackageNames": ["*"]
     },
     {
       "description": ["Docker Minor Dependency Exclusions - PHP"],
