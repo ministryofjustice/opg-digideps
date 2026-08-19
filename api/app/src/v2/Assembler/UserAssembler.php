@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Backend\v2\Assembler;
 
 use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\v2\DTO\ClientDto;
 use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
 use OPG\Digideps\Backend\v2\DTO\UserDto;
 
@@ -14,9 +15,6 @@ class UserAssembler
     {
     }
 
-    /**
-     * @return UserDto
-     */
     public function assembleFromArray(array $data): UserDto
     {
         $dto = new UserDto();
@@ -30,9 +28,6 @@ class UserAssembler
         return $dto;
     }
 
-    /**
-     * @return UserDto
-     */
     public function assembleFromEntity(User $user): UserDto
     {
         $dto = new UserDto();
@@ -51,7 +46,7 @@ class UserAssembler
     }
 
     /**
-     * @return array
+     * @return array<ClientDto>
      */
     private function assembleUserClients(array $clients): array
     {

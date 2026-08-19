@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Domain\Report;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
@@ -15,6 +14,7 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\CourtOrderRepository;
 use OPG\Digideps\Backend\Service\ReportService;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipChange;
+use OPG\Digideps\Common\Report\ReportType;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -38,15 +38,16 @@ final class ReportTransitionServiceTest extends TestCase
     {
         $startDate = new \DateTime();
         $endDate = $startDate->add(new \DateInterval('P364D'));
+        $reportType = ReportType::from($type);
 
-        $client = new Client();
-        $report = new Report($client, $type, $startDate, $endDate, false);
-
-        $idProp = new \ReflectionProperty(Report::class, 'id');
-        $idProp->setValue($report, $id);
-
-        $courtOrdersProp = new \ReflectionProperty(Report::class, 'courtOrders');
-        $courtOrdersProp->setValue($report, new ArrayCollection($courtOrders));
+        $report = new Report(new CourtOrder(
+            '',
+            $reportType->courtOrderType,
+            $reportType->courtOrderReportType,
+            $reportType->courtOrderKind,
+            new \DateTime(),
+            new Client()
+        ), $type, $startDate, $endDate, false)->setId($id);
 
         foreach ($courtOrders as $courtOrder) {
             $courtOrder->addReport($report);

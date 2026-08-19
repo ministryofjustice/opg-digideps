@@ -3,39 +3,18 @@
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
 use OPG\Digideps\Backend\Entity\Satisfaction;
-use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
-use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputyDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputySet;
+use OPG\Digideps\Backend\Fixture\Scenario;
 use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Common\Deputy\DeputyType;
 
 class SatisfactionControllerTest extends AbstractTestController
 {
-    private static $tokenAdmin;
-    private static $tokenDeputy;
-    private static $tokenProf;
-    private static $tokenPa;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        if (self::$tokenAdmin === null) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-            self::$tokenProf = $this->loginAsProf();
-            self::$tokenPa = $this->loginAsPa();
-        }
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        self::fixtures()->clear();
-    }
-
     public function testSatisfactionHasSuitablePermissionsAllowedDeputy()
     {
-        $report = $this->prepareReport();
+        [$report, $email] = $this->prepareReport(DeputyType::LAY);
 
         $url = '/satisfaction';
         $okayData = [
@@ -45,12 +24,12 @@ class SatisfactionControllerTest extends AbstractTestController
             'reportId' => $report->getId(),
         ];
 
-        $this->assertEndpointAllowedFor('POST', $url, self::$tokenDeputy, $okayData);
+        $this->assertEndpointAllowedFor('POST', $url, $this->loginAsDeputy($email), $okayData);
     }
 
     public function testSatisfactionHasSuitablePermissionsAllowedProf()
     {
-        $report = $this->prepareReport();
+        [$report, $email] = $this->prepareReport(DeputyType::PRO);
 
         $url = '/satisfaction';
         $okayData = [
@@ -60,12 +39,12 @@ class SatisfactionControllerTest extends AbstractTestController
             'reportId' => $report->getId(),
         ];
 
-        $this->assertEndpointAllowedFor('POST', $url, self::$tokenProf, $okayData);
+        $this->assertEndpointAllowedFor('POST', $url, $this->loginAsDeputy($email), $okayData);
     }
 
     public function testSatisfactionHasSuitablePermissionsAllowedPa()
     {
-        $report = $this->prepareReport();
+        [$report, $email] = $this->prepareReport(DeputyType::PA);
 
         $url = '/satisfaction';
         $okayData = [
@@ -75,12 +54,12 @@ class SatisfactionControllerTest extends AbstractTestController
             'reportId' => $report->getId(),
         ];
 
-        $this->assertEndpointAllowedFor('POST', $url, self::$tokenPa, $okayData);
+        $this->assertEndpointAllowedFor('POST', $url, $this->loginAsDeputy($email), $okayData);
     }
 
     public function testSatisfactionHasSuitablePermissionsNotAllowed()
     {
-        $report = $this->prepareReport();
+        [$report] = $this->prepareReport(DeputyType::LAY);
 
         $url = '/satisfaction';
         $okayData = [
@@ -90,24 +69,18 @@ class SatisfactionControllerTest extends AbstractTestController
             'reportId' => $report->getId(),
         ];
 
-        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin, $okayData);
+        $this->assertEndpointNotAllowedFor('POST', $url, $this->loginAsAdmin(), $okayData);
     }
 
-    private function prepareReport(): Report
+    /**
+     * @return array{Report, string}
+     */
+    private function prepareReport(DeputyType $deputyType): array
     {
-        $reportTestHelper = ReportTestHelper::create();
-        $em = static::getContainer()->get('em');
-
-        $report = $reportTestHelper->generateReport($em);
-        $client = (ClientTestHelper::create())->generateClient($em);
-
-        $report->setClient($client);
-
-        $em->persist($client);
-        $em->persist($report);
-        $em->flush();
-
-        return $report;
+        ['persons' => ['users' => ['deputy' => $user]], 'orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(
+            new Scenario(new CourtOrderDescriptor(new DeputySet(new DeputyDescriptor('deputy', $deputyType))))
+        );
+        return [$report, $user->getEmail()];
     }
 
     public function testSatisfactionHasSuitablePermissionsNoToken()
@@ -135,7 +108,7 @@ class SatisfactionControllerTest extends AbstractTestController
     {
         $this->assertJsonRequest('POST', $url, [
             'mustFail' => true,
-            'AuthToken' => self::$tokenDeputy,
+            'AuthToken' => $this->loginAsDeputy(),
             'data' => $data,
         ]);
     }
@@ -154,12 +127,12 @@ class SatisfactionControllerTest extends AbstractTestController
      */
     public function testSatisfactionAcceptsValidData($url, $data)
     {
-        $report = $this->prepareReport();
+        [$report, $email] = $this->prepareReport(DeputyType::LAY);
         $data['reportId'] = $report->getId();
 
         $response = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
+            'AuthToken' => $this->loginAsDeputy($email),
             'data' => $data,
         ]);
 
