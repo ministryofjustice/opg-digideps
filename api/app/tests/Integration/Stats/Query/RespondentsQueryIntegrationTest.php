@@ -2,9 +2,10 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Stats\Query;
 
+use OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Common\Deputy\DeputyType;
+use OPG\Digideps\Common\Report\ReportType;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
-use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Satisfaction;
 use OPG\Digideps\Backend\Service\Stats\Query\RespondentsQuery;
 use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
@@ -42,16 +43,13 @@ class RespondentsQueryIntegrationTest extends ApiIntegrationTestCase
         $satisfaction = new Satisfaction($score);
 
         if (isset($reportType)) {
-            $client = new Client();
-
-            $report = new Report(
-                $client,
-                $reportType,
-                new \DateTime('2019-08-01'),
-                new \DateTime('2020-08-01')
-            );
-            self::$entityManager->persist($client);
-            self::$entityManager->persist($report);
+            $type = ReportType::from($reportType);
+            ['orders' => [$pair]] = self::$fixtureService->instantiateScenario(match ($type->deputyType) {
+                DeputyType::LAY => Scenario::newSimpleLayScenario(reportType: $type->courtOrderReportType),
+                DeputyType::PA => Scenario::newSimplePaScenario(reportType: $type->courtOrderReportType),
+                DeputyType::PRO => Scenario::newSimpleProScenario(reportType: $type->courtOrderReportType),
+            });
+            $report = $pair[$type->courtOrderType->value]['reports'][0];
 
             $satisfaction->setReportType($reportType);
             $satisfaction->setReport($report);

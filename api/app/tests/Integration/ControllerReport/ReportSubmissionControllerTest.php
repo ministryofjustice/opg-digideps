@@ -4,93 +4,69 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
-use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\TestHelpers\ReportSubmissionHelper;
+use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputySet;
+use OPG\Digideps\Backend\Fixture\ReportList;
+use OPG\Digideps\Backend\Fixture\Scenario;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 use Symfony\Component\HttpFoundation\Response;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 class ReportSubmissionControllerTest extends AbstractTestController
 {
-    private static $pa1;
-    private static $pa2;
-    private static $deputy1;
-    private static $tokenSuperAdmin;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        self::$pa1 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa@example.org');
-        self::$pa2 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa_admin@example.org');
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-
-        // create 5 submitted reports
-        for ($i = 0; $i < 5; ++$i) {
-            $client = self::fixtures()->createClient(
-                self::$pa1,
-                ['setFirstname' => "c{$i}", 'setLastname' => "l{$i}", 'setCaseNumber' => "100000{$i}"]
-            );
-            $report = self::fixtures()->createReport($client, [
-                'setStartDate' => new \DateTime('2014-01-01'),
-                'setEndDate' => new \DateTime('2014-12-31'),
-                'setSubmitted' => true,
-                'setSubmittedBy' => self::$pa1, // irrelevant for assertions
-                'setSubmitDate' => new \DateTime('2015-01-01'),
-            ]);
-            // create submission
-            $submission = new ReportSubmission($report, ($i < 3) ? self::$pa2 : self::$deputy1);
-            // add documents, needed for future tests
-            $document = new Document($report, 'file1.pdf')
-                ->setStorageReference('storageref1')
-                ->setReportSubmission($submission);
-
-            if ($i === 2) {
-                $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
-            }
-
-            self::fixtures()->persist($document, $submission);
-        }
-
-        self::fixtures()->flush()->clear();
-
-        if (self::$tokenAdmin === null) {
-            self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        self::fixtures()->clear();
-    }
-
     public function testGetAllWithFiltersGetOneArchive()
     {
-        $reportsGetAllRequest = function (array $params = []): array {
+        self::$em->clear();
+        Fixtures::deleteReportsData();
+        ['orders' => [['pfa' => ['reports' => [$report0]]]], 'persons' => $persons] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(DeputySet::oneNamedPa(), reportList: ReportList::manyReports())));
+        $report0->getReportSubmissions()->first() ?: throw new \LogicException("This must exist");
+        $caseNumber0 = $report0->getClient()->getCaseNumber() ?? '';
+        ['orders' => [['pfa' => ['reports' => [$report1]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(DeputySet::oneNamedPa(), reportList: ReportList::manyReports())), $persons);
+        $report1->getReportSubmissions()->first() ?: throw new \LogicException("This must exist");
+        $caseNumber1 = $report1->getClient()->getCaseNumber() ?? '';
+        ['orders' => [['pfa' => ['reports' => [$report2]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(DeputySet::oneNamedPa(), reportList: ReportList::manyReports())), $persons);
+        $submission2 = $report2->getReportSubmissions()->first() ?: throw new \LogicException("This must exist");
+        $caseNumber2 = $report2->getClient()->getCaseNumber() ?? '';
+        self::$fixtureService->persist(new Document($report2, 'file1.pdf')
+            ->setStorageReference('storageref1')
+            ->setReportSubmission($submission2)
+            ->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED));
+        ['orders' => [['pfa' => ['reports' => [$report3]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), reportList: ReportList::manyReports())), $persons);
+        $report3->getReportSubmissions()->first() ?: throw new \LogicException("This must exist");
+        $caseNumber3 = $report3->getClient()->getCaseNumber() ?? '';
+        ['orders' => [['pfa' => ['reports' => [$report4]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), reportList: ReportList::manyReports())), $persons);
+        $caseNumber4 = $report4->getClient()->getCaseNumber() ?? '';
+        $submission4 = $report4->getReportSubmissions()->first() ?: throw new \LogicException("This must exist");
+        self::$fixtureService->persist(new Document($report4, 'file1.pdf')
+            ->setStorageReference('storageref1')
+            ->setReportSubmission($submission4));
+        $deputyUserName = $persons['users']['lay1']->getLastName();
+        $persons['users']['pa1']->setLastName($deputyUserName);
+        self::$fixtureService->flush();
+
+        $tokenAdmin = $this->loginAsAdmin();
+        $reportsGetAllRequest = function (array $params = []) use ($tokenAdmin): array {
             $url = '/report-submission?' . http_build_query($params);
 
             /**
-             * @var array $data
+             * @var array<array<array>> $data
              */
             $data = $this->assertJsonRequest('GET', $url, [
                 'mustSucceed' => true,
-                'AuthToken' => self::$tokenAdmin,
+                'AuthToken' => $tokenAdmin,
             ])['data'];
             return $data;
         };
 
         $this->assertEndpointNeedsAuth('GET', '/report-submission');
-        $this->assertEndpointNotAllowedFor('GET', '/report-submission', self::$tokenDeputy);
+        $this->assertEndpointNotAllowedFor('GET', '/report-submission', $this->loginAsDeputy());
 
         // assert submission (only one expected)
         $data = $reportsGetAllRequest(['status' => 'new']);
         $this->assertEquals(['new' => 4, 'pending' => 1, 'archived' => 0], $data['counts']);
 
-        $submission4 = $this->getSubmissionByCaseNumber($data['records'], '1000004');
+        $submission4 = $this->getSubmissionByCaseNumber($data['records'], $caseNumber4);
         $this->assertNotEmpty($submission4['id']);
         $this->assertNotEmpty($submission4['report']['type']);
         $this->assertNotEmpty($submission4['report']['start_date']);
@@ -108,7 +84,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         // test getOne endpoint
         $data = $this->assertJsonRequest('GET', '/report-submission/' . $submission4['id'], [
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenAdmin,
+            'AuthToken' => $tokenAdmin,
         ])['data'];
         $this->assertEquals($submission4['id'], $data['id']);
         $this->assertEquals('storageref1', $data['documents'][0]['storage_reference']);
@@ -116,7 +92,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         // archive 1st submission
         $data = $this->assertJsonRequest('PUT', '/report-submission/' . $submission4['id'], [
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenAdmin,
+            'AuthToken' => $tokenAdmin,
             'data' => ['archive' => true],
         ])['data'];
         $this->assertEquals($submission4['id'], $data);
@@ -127,39 +103,39 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $this->assertCount(5, $data['records']);
 
         // check filters and counts
-        $data = $reportsGetAllRequest(['q' => '1000000']);
+        $data = $reportsGetAllRequest(['q' => $caseNumber1]);
         $this->assertEquals(['new' => 1, 'pending' => 0, 'archived' => 0], $data['counts']);
         $this->assertCount(1, $data['records']);
 
-        $data = $reportsGetAllRequest(['q' => '1000000', 'status' => 'new']);
+        $data = $reportsGetAllRequest(['q' => $caseNumber1, 'status' => 'new']);
         $this->assertEquals(['new' => 1, 'pending' => 0, 'archived' => 0], $data['counts']);
         $this->assertCount(1, $data['records']);
 
-        $data = $reportsGetAllRequest(['q' => '1000002', 'status' => 'new']);
+        $data = $reportsGetAllRequest(['q' => $caseNumber2, 'status' => 'new']);
         $this->assertEquals(['new' => 0, 'pending' => 1, 'archived' => 0], $data['counts']);
         $this->assertCount(0, $data['records']);
 
-        $data = $reportsGetAllRequest(['q' => '1000002', 'status' => 'pending']);
+        $data = $reportsGetAllRequest(['q' => $caseNumber2, 'status' => 'pending']);
         $this->assertEquals(['new' => 0, 'pending' => 1, 'archived' => 0], $data['counts']);
         $this->assertCount(1, $data['records']);
 
-        $this->assertEquals(['new' => 1, 'pending' => 0, 'archived' => 0], $reportsGetAllRequest(['status' => 'new', 'q' => 'c0'])['counts']); // client name
-        $this->assertEquals(['new' => 1, 'pending' => 0, 'archived' => 0], $reportsGetAllRequest(['status' => 'new', 'q' => 'l0'])['counts']); // client surname
-        $this->assertEquals(['new' => 3, 'pending' => 1, 'archived' => 1], $reportsGetAllRequest(['status' => 'new', 'q' => 'test'])['counts']); // deputy name
+        $this->assertEquals(['new' => 1, 'pending' => 0, 'archived' => 0], $reportsGetAllRequest(['status' => 'new', 'q' => $report0->getClient()->getFirstName()])['counts']); // client name
+        $this->assertEquals(['new' => 1, 'pending' => 0, 'archived' => 0], $reportsGetAllRequest(['status' => 'new', 'q' => $report0->getClient()->getLastName()])['counts']); // client surname
+        $this->assertEquals(['new' => 3, 'pending' => 1, 'archived' => 1], $reportsGetAllRequest(['status' => 'new', 'q' => $deputyUserName])['counts']); // deputy name
         $this->assertEquals(['new' => 1, 'pending' => 0, 'archived' => 1], $reportsGetAllRequest(['created_by_role' => 'ROLE_LAY_DEPUTY'])['counts']);
         // since this filter works with the role being a prefix, ROLE_PA would include all the ROLE_PA* ones
         // a better version would calculate all the inheritance
         $this->assertEquals(['new' => 2, 'pending' => 1, 'archived' => 0], $reportsGetAllRequest(['created_by_role' => 'ROLE_PA'])['counts']);
 
         // check pagination and limit
-        $submissions = $reportsGetAllRequest(['status' => 'new', 'q' => 'test'])['records'];
-        $this->assertEquals(['1000000', '1000001', '1000003'], $this->getOrderedCaseNumbersFromSubmissions($submissions));
+        $submissions = $reportsGetAllRequest(['status' => 'new', 'q' => $deputyUserName])['records'];
+        $this->assertEquals([$caseNumber0, $caseNumber1, $caseNumber3], $this->getOrderedCaseNumbersFromSubmissions($submissions));
 
-        $submissions = $reportsGetAllRequest(['status' => 'new', 'q' => 'test', 'orderBy' => 'id', 'limit' => 2, 'offset' => 1])['records'];
-        $this->assertEquals(['1000000', '1000001'], $this->getOrderedCaseNumbersFromSubmissions($submissions));
+        $submissions = $reportsGetAllRequest(['status' => 'new', 'q' => $deputyUserName, 'orderBy' => 'id', 'limit' => 2, 'offset' => 1])['records'];
+        $this->assertEquals([$caseNumber0, $caseNumber1], $this->getOrderedCaseNumbersFromSubmissions($submissions));
     }
 
-    private function getOrderedCaseNumbersFromSubmissions($submissions)
+    private function getOrderedCaseNumbersFromSubmissions($submissions): array
     {
         $ret = array_map(function ($submission) {
             return $submission['report']['client']['case_number'];
@@ -170,33 +146,47 @@ class ReportSubmissionControllerTest extends AbstractTestController
         return $ret;
     }
 
-    private function getSubmissionByCaseNumber(array $submissions, $caseNumber)
+    /**
+     * @param array<array> $submissions
+     */
+    private function getSubmissionByCaseNumber(array $submissions, string $caseNumber): array
     {
-        $ret = array_filter($submissions, function ($submission) use ($caseNumber) {
-            return $submission['report']['client']['case_number'] == $caseNumber;
+        $ret = array_filter($submissions, function (array $submission) use ($caseNumber) {
+            return $submission['report']['client']['case_number'] === $caseNumber;
         });
 
-        return array_shift($ret);
+        return array_shift($ret) ?? throw new \LogicException("This cannot be nothing");
     }
 
-    /**
-     * @dataProvider getDateRangeThresholds
-     */
+    #[DataProvider('getDateRangeThresholds')]
     public function testGetCaserecDataRetrievesWithinGivenDateRangesInclusive(string $fromDate, string $toDate, array $expectedOutcomes)
     {
-        $this->updateReportSubmissionByIdWithNewDateTime(1, '2018-01-01 12:00:00');
-        $this->updateReportSubmissionByIdWithNewDateTime(2, '2018-01-31 12:00:00');
-        self::fixtures()->flush();
+        self::$em->clear();
+        Fixtures::deleteReportsData();
+        ['client' => $client1, 'persons' => ['users' => ['lay1' => $user1]], 'orders' => [['pfa' => ['reports' => [$report1]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), reportList: ReportList::oneUnsubmittedReport())));
+        self::$fixtureService->persist(new ReportSubmission($report1, $user1))->setCreatedOn(new \DateTime('2018-01-01 12:00:00'));
+        $report1->setSubmitted(true);
+        $report1->setSubmitDate(new \DateTime('2018-01-01 00:00:00'));
+        ['client' => $client2, 'persons' => ['users' => ['lay1' => $user2]], 'orders' => [['pfa' => ['reports' => [$report2]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), reportList: ReportList::oneUnsubmittedReport())));
+        self::$fixtureService->persist(new ReportSubmission($report2, $user2))->setCreatedOn(new \DateTime('2018-01-31 12:00:00'));
+        $report2->setSubmitted(true);
+        $report2->setSubmitDate(new \DateTime('2018-01-31 00:00:00'));
+        self::$fixtureService->flush();
 
         $data = $this->makeRequestAndReturnResults(
             '/report-submission/pre-registration-data',
             ['fromDate' => $fromDate, 'toDate' => $toDate]
         );
 
+        $caseNumbers = [$client1->getCaseNumber() ?? '', $client2->getCaseNumber() ?? ''];
+
         $this->assertCount($expectedOutcomes['count'], $data);
 
+        /**
+         * @var string $expectedCaseNumber
+         */
         foreach ($expectedOutcomes['caseNumbers'] as $expectedCaseNumber) {
-            $this->assertResponseIncludesReportWithCaseNumber($data, $expectedCaseNumber);
+            $this->assertResponseIncludesReportWithCaseNumber($data, $caseNumbers[$expectedCaseNumber]);
         }
     }
 
@@ -208,7 +198,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 'toDate' => '2018-01-31',
                 'expectedOutcomes' => [
                     'count' => 2,
-                    'caseNumbers' => ['1000000', '1000001'],
+                    'caseNumbers' => [0, 1],
                 ],
             ],
             [
@@ -216,7 +206,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 'toDate' => '2018-02-01',
                 'expectedOutcomes' => [
                     'count' => 2,
-                    'caseNumbers' => ['1000000', '1000001'],
+                    'caseNumbers' => [0, 1],
                 ],
             ],
             [
@@ -224,7 +214,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 'toDate' => '2018-01-31',
                 'expectedOutcomes' => [
                     'count' => 1,
-                    'caseNumbers' => ['1000001'],
+                    'caseNumbers' => [1],
                 ],
             ],
             [
@@ -232,7 +222,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 'toDate' => '2018-01-30',
                 'expectedOutcomes' => [
                     'count' => 1,
-                    'caseNumbers' => ['1000000'],
+                    'caseNumbers' => [0],
                 ],
             ],
         ];
@@ -240,20 +230,19 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
     public function testGetCaserecDataRetrievesUpToNowIfNotGivenToDate()
     {
-        $reportId = 1;
-        $this->updateReportSubmissionByIdWithNewDateTime($reportId, 'today');
-        self::fixtures()->flush();
+        ['client' => $client, 'orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), reportList: ReportList::manyReports())));
+        $reportSubmission = self::$fixtureService->persist($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"));
+        $reportSubmission->setCreatedOn(new \DateTime('today'));
+        self::$fixtureService->flush();
 
         $result = $this->makeRequestAndReturnResults('/report-submission/pre-registration-data', []);
-        $this->assertResponseIncludesReportWithCaseNumber($result, '1000000');
+        $this->assertResponseIncludesReportWithCaseNumber($result, $client->getCaseNumber() ?? '');
     }
 
-    /**
-     * @test
-     */
-    public function updatePersistsUuidWhenProvided()
+    public function testUpdatePersistsUuidWhenProvided(): void
     {
-        $reportSubmission = new ReportSubmissionHelper(self::fixtures()->getEntityManager())->generateAndPersistReportSubmission();
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), reportList: ReportList::manyReports())));
+        $reportSubmission = $report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist");
 
         $uuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
 
@@ -271,27 +260,16 @@ class ReportSubmissionControllerTest extends AbstractTestController
         self::assertEquals($uuid, $updatedSubmission['uuid']);
     }
 
-    /**
-     * @throws \Exception
-     */
-    private function updateReportSubmissionByIdWithNewDateTime(int $id, string $date): void
-    {
-        /**
-         * @var ReportSubmission $entity
-         */
-        $entity = self::fixtures()->getRepo(ReportSubmission::class)->findOneById($id);
-        $entity->setCreatedOn(new \DateTime($date));
-
-        self::fixtures()->persist($entity);
-    }
-
-    private function makeRequestAndReturnResults(string $endpoint, array $params)
+    private function makeRequestAndReturnResults(string $endpoint, array $params): array
     {
         $url = sprintf('%s?%s', $endpoint, http_build_query($params));
 
+        /**
+         * @var array{data: array} $response
+         */
         $response = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenAdmin,
+            'AuthToken' => $this->loginAsAdmin(),
         ]);
 
         return $response['data'];
@@ -312,13 +290,15 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
     public function testQueueDocumentsHasSuitablePermissions()
     {
-        $url = '/report-submission/1/queue-documents';
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), reportList: ReportList::manyReports())));
+        $reportSubmission = $report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist");
+        $url = "/report-submission/{$reportSubmission->getId()}/queue-documents";
 
         // assert Auth
         $this->assertEndpointNeedsAuth('PUT', $url);
-        $this->assertEndpointAllowedFor('PUT', $url, self::$tokenSuperAdmin);
-        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
-        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy);
+        $this->assertEndpointAllowedFor('PUT', $url, $this->loginAsSuperAdmin());
+        $this->assertEndpointNotAllowedFor('PUT', $url, $this->loginAsAdmin());
+        $this->assertEndpointNotAllowedFor('PUT', $url, $this->loginAsDeputy());
     }
 
     public function testQueueDocumentsQueuesValidRecords()
@@ -332,11 +312,8 @@ class ReportSubmissionControllerTest extends AbstractTestController
             ['PERMANENT_ERROR.pdf', Document::SYNC_STATUS_PERMANENT_ERROR, true],
         ];
 
-        $user = self::fixtures()->createUser();
-        $client = self::fixtures()->createClient($user);
-        $report = self::fixtures()->createReport($client);
-        $reportSubmission = new ReportSubmission($report, $user);
-        self::fixtures()->persist($reportSubmission);
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), reportList: ReportList::manyReports())));
+        $reportSubmission = $report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist");
 
         foreach ($documents as $document) {
             $record = self::fixtures()->createDocument($report, $document[0]);
@@ -347,12 +324,12 @@ class ReportSubmissionControllerTest extends AbstractTestController
             }
         }
 
-        self::fixtures()->flush();
-        self::fixtures()->clear();
+        self::$fixtureService->flush();
+        self::$em->clear();
 
         $this->assertJsonRequest('PUT', '/report-submission/' . $reportSubmission->getId() . '/queue-documents', [
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenSuperAdmin,
+            'AuthToken' => $this->loginAsSuperAdmin(),
             'data' => [],
         ]);
 
@@ -371,19 +348,15 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
     public function testCannotQueueArchivedSubmissions()
     {
-        $user = self::fixtures()->createUser();
-        $client = self::fixtures()->createClient($user);
-        $report = self::fixtures()->createReport($client);
-        $reportSubmission = new ReportSubmission($report, $user);
-        $reportSubmission->setArchived(true);
-        self::fixtures()->persist($reportSubmission);
-
-        self::fixtures()->flush();
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), reportList: ReportList::manyReports())));
+        $reportSubmission = $report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist");
+        self::$fixtureService->persist($reportSubmission->setArchived(true));
+        self::$fixtureService->flush();
 
         $this->assertJsonRequest('PUT', '/report-submission/' . $reportSubmission->getId() . '/queue-documents', [
             'mustFail' => true,
             'assertResponseCode' => Response::HTTP_BAD_REQUEST,
-            'AuthToken' => self::$tokenSuperAdmin,
+            'AuthToken' => $this->loginAsSuperAdmin(),
             'data' => [],
         ]);
     }

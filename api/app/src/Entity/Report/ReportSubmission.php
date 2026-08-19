@@ -13,7 +13,7 @@ use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
 
 #[ORM\Table(name: 'report_submission')]
-#[ORM\Index(columns: ['created_on'], name: 'rs_created_on_idx')]
+#[ORM\Index(name: 'rs_created_on_idx', columns: ['created_on'])]
 #[ORM\Entity(repositoryClass: ReportSubmissionRepository::class)]
 class ReportSubmission
 {
@@ -33,7 +33,7 @@ class ReportSubmission
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[JMS\Groups(['report-submission'])]
-    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, cascade: ['persist'], inversedBy: 'reportSubmissions')]
     private Report $report;
 
@@ -43,7 +43,7 @@ class ReportSubmission
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Document>')]
     #[JMS\Groups(['report-submission', 'report-submission-documents'])]
     #[ORM\JoinColumn(name: 'report_submission_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\OneToMany(mappedBy: 'reportSubmission', targetEntity: Document::class, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'reportSubmission', cascade: ['persist'])]
     #[ORM\OrderBy(['createdBy' => 'ASC'])]
     private Collection $documents;
 
@@ -96,7 +96,7 @@ class ReportSubmission
         return $this;
     }
 
-    public function getReport(): ?Report
+    public function getReport(): Report
     {
         return $this->report;
     }
