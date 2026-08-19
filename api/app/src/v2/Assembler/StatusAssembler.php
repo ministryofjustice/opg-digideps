@@ -12,9 +12,6 @@ class StatusAssembler
     {
     }
 
-    /**
-     * @return StatusDto
-     */
     public function assembleFromReport(Report $report): StatusDto
     {
         $statusService = $this->statusServiceFactory->create($report);

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\CourtOrder;
 
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Client;
@@ -13,6 +15,8 @@ use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
+use OPG\Digideps\Common\Deputy\DeputyType;
+use OPG\Digideps\Common\Report\ReportType;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 use function PHPUnit\Framework\assertCount;
@@ -25,7 +29,7 @@ trait CourtOrderTrait
     private Deputy $coDeputy;
     private array $invitedDeputy = [];
 
-    private function getDeputyForLoggedInUser(): ?Deputy
+    private function getDeputyForLoggedInUser(): Deputy
     {
         // get the deputy for the logged-in user
         $user = $this->em
@@ -34,11 +38,9 @@ trait CourtOrderTrait
 
         $deputyUid = $user->getDeputyUid();
 
-        $deputy = $this->em
+        return $this->em
             ->getRepository(Deputy::class)
-            ->findOneBy(['deputyUid' => $deputyUid]);
-
-        return $deputy;
+            ->findOneBy(['deputyUid' => $deputyUid]) ?? throw new \LogicException("Deputy with uid {$deputyUid} must already exist");
     }
 
     /**
@@ -55,7 +57,12 @@ trait CourtOrderTrait
             $user = $this->em->getRepository(User::class)->find($data['userId']);
             $deputy = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
 
-            $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(CourtOrderType::PFA, $client, $deputy);
+            $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(new ReportType(
+                CourtOrderReportType::OPG102,
+                CourtOrderType::PFA,
+                CourtOrderKind::Single,
+                $deputy?->getDeputyType() ?? DeputyType::LAY
+            ), $client, $deputy);
         }
 
         $this->visitFrontendPath('/courtorder/' . $this->courtOrder->getCourtOrderUid());
@@ -71,38 +78,49 @@ trait CourtOrderTrait
     {
         $orderType = CourtOrderType::from($orderType);
         $deputy = $this->getDeputyForLoggedInUser();
+        $this->em->flush();
 
         for ($i = 0; $i < $numOfCourtOrders; $i++) {
             if ($i === 0) {
                 // use the user's existing client
                 $client = $this->em->getRepository(Client::class)->find(['id' => $this->loggedInUserDetails->getClientId()]);
-                $report = $client->getCurrentReport();
             } else {
                 // create new clients for subsequent court orders
                 $client = $this->fixtureHelper->generateClient($deputy->getUser());
                 $this->em->persist($client);
                 $this->em->flush();
-
-                // create a new report
-                $type = Report::TYPE_HEALTH_WELFARE;
-                if ($orderType === CourtOrderType::PFA) {
-                    $type = Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS;
-                }
-
-                $now = new \DateTime();
-                $report = new Report($client, $type, $now, $now, false);
-                $report->setClient($client);
-
-                $this->em->persist($report);
-                $this->em->flush();
             }
 
-            $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder(
-                $orderType,
+            if ($client === null) {
+                throw new \LogicException("Client must not be null at this point.");
+            }
+
+            $courtOrder = $client->getCourtOrders()->last() ?: $this->fixtureHelper->createAndPersistCourtOrder(
+                new ReportType(
+                    $orderType === CourtOrderType::HW ? CourtOrderReportType::OPG104 : CourtOrderReportType::OPG102,
+                    $orderType,
+                    CourtOrderKind::Single,
+                    $deputy->getDeputyType()
+                ),
                 $client,
                 $deputy,
-                $report,
             );
+
+            // create a new report
+            $type = Report::TYPE_HEALTH_WELFARE;
+            if ($orderType === CourtOrderType::PFA) {
+                $type = Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS;
+            }
+
+            $now = new \DateTime();
+            $report = new Report($courtOrder, $type, $now, $now, false);
+            $report->setClient($client);
+
+            $this->em->persist($report);
+            $this->em->flush();
+
+
+            $this->courtOrders[] = $courtOrder;
         }
 
         $this->courtOrder = $this->courtOrders[0];
@@ -131,10 +149,14 @@ trait CourtOrderTrait
             ->find(['id' => $clientId]);
 
         $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
-            $orderType,
+            new ReportType(
+                $orderType === CourtOrderType::HW ? CourtOrderReportType::OPG104 : CourtOrderReportType::OPG102,
+                $orderType,
+                CourtOrderKind::Single,
+                $deputy->getDeputyType()
+            ),
             $client,
-            $deputy,
-            $client->getCurrentReport(),
+            $deputy
         );
 
         // associate all of the client's reports with the court order
@@ -163,8 +185,16 @@ trait CourtOrderTrait
             $this->em->persist($deputy);
             $this->em->flush();
 
-            $courtOrderUid = $this->fixtureHelper->createAndPersistCourtOrder(CourtOrderType::PFA, $client, $deputy, $client->getCurrentReport())
-                ->getCourtOrderUid();
+            $courtOrderUid = $this->fixtureHelper->createAndPersistCourtOrder(
+                new ReportType(
+                    CourtOrderReportType::OPG102,
+                    CourtOrderType::PFA,
+                    CourtOrderKind::Single,
+                    $deputy->getDeputyType()
+                ),
+                $client,
+                $deputy,
+            )->getCourtOrderUid();
 
             $this->visitFrontendPath(sprintf('/courtorder/%s', $courtOrderUid));
         }
@@ -383,7 +413,12 @@ trait CourtOrderTrait
         $courtOrder = $this->em->getRepository(CourtOrder::class)->findOneBy(['courtOrderUid' => $courtOrderUid]);
         if (is_null($courtOrder)) {
             $courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
-                orderType: $orderType,
+                new ReportType(
+                    $orderType === CourtOrderType::HW ? CourtOrderReportType::OPG104 : CourtOrderReportType::OPG102,
+                    $orderType,
+                    CourtOrderKind::Single,
+                    $users[0]->getDeputy()?->getDeputyType() ?? DeputyType::LAY
+                ),
                 client: $client,
                 deputy: $users[0]->getDeputy(),
                 courtOrderUid: $courtOrderUid
@@ -421,7 +456,12 @@ trait CourtOrderTrait
         // create a court order if necessary
         if (is_null($this->courtOrder)) {
             $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
-                $orderType,
+                new ReportType(
+                    $orderType === CourtOrderType::HW ? CourtOrderReportType::OPG104 : CourtOrderReportType::OPG102,
+                    $orderType,
+                    CourtOrderKind::Single,
+                    $deputy->getDeputyType()
+                ),
                 $client,
                 $deputy,
             );
@@ -458,7 +498,7 @@ trait CourtOrderTrait
             Report::TYPE_HEALTH_WELFARE;
 
         $now = new \DateTime();
-        $report = new Report($client, $type, $now, $now, false);
+        $report = new Report($courtOrder, $type, $now, $now, false);
         $report->setClient($client);
 
         $courtOrder->addReport($report);

@@ -10,8 +10,6 @@ use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\CourtOrderDeputy;
 use OPG\Digideps\Backend\Entity\Note;
 use OPG\Digideps\Backend\Entity\Report\Asset;
-use OPG\Digideps\Backend\Entity\Report\AssetOther;
-use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Decision;
@@ -170,7 +168,7 @@ class Fixtures
     /**
      * @throws ORMException
      */
-    public function createReportSubmission(?Report $report = null, ?User $user = null): ReportSubmission
+    public function createReportSubmission(Report $report, ?User $user = null): ReportSubmission
     {
         if (is_null($user)) {
             $user = $this->createUser(
@@ -178,26 +176,6 @@ class Fixtures
                 registrationDate: new \DateTime(),
                 phoneMain: '01211234567'
             );
-        }
-
-        if (is_null($report)) {
-            $client = $this->createClient($user);
-
-            $report = $this->createReport($client);
-
-            $other = new AssetOther($report)
-                ->setValue((string)rand(1, 10000));
-
-            $property = new AssetProperty($report)
-                ->setValue((string)rand(1, 10000))
-                ->setOwnedPercentage(rand(1, 100) / 100);
-
-            $bankAccount = new BankAccount($report)
-                ->setClosingBalance(floatval(rand(10, 1000000) / 10));
-
-            $report->addAsset($other);
-            $report->addAsset($property);
-            $report->addAccount($bankAccount);
         }
 
         $submission = new ReportSubmission($report, $user);
@@ -210,23 +188,20 @@ class Fixtures
     }
 
     public function createReport(
-        Client $client,
+        CourtOrder $courtOrder,
         array $settersMap = [],
-        ?CourtOrder $courtOrder = null
     ): Report {
         $validatedSettersMap = new ValidatingArray($settersMap);
         // should be created via ReportService, but this is a fixture, so better to keep it simple
         $report = new Report(
-            $client,
+            $courtOrder,
             $validatedSettersMap->getStringOrDefault('setType', Report::LAY_PFA_HIGH_ASSETS_TYPE),
             $validatedSettersMap->getObjectOrNull('setStartDate', \DateTime::class) ?? new \DateTime('now'),
             $validatedSettersMap->getObjectOrNull('setEndDate', \DateTime::class) ?? new \DateTime('+12 months -1 day'),
         );
 
-        if ($courtOrder !== null) {
-            $courtOrder->addReport($report);
-            $this->em->persist($courtOrder);
-        }
+        $courtOrder->addReport($report);
+        $this->em->persist($courtOrder);
 
         foreach ($settersMap as $k => $v) {
             $report->$k($v);

@@ -5,7 +5,7 @@ namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\User;
-use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\Depends;
 
 class SelfRegisterControllerTest extends AbstractTestController
 {
@@ -26,8 +26,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    #[Test]
-    public function failsWhenMissingData()
+    public function testFailsWhenMissingData(): void
     {
         $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -40,8 +39,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         ]);
     }
 
-    #[Test]
-    public function dontSaveInvalidUserToDB()
+    public function testDontSaveInvalidUserToDB(): void
     {
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
@@ -63,8 +61,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertNull($user);
     }
 
-    #[Test]
-    public function dontSaveUserToDBWithInvalidCaseNumber()
+    public function testDontSaveUserToDBWithInvalidCaseNumber(): void
     {
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
@@ -88,8 +85,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertNull($user);
     }
 
-    #[Test]
-    public function savesValidUserToDb()
+    public function testSavesValidUserToDb(): void
     {
         $preRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', '700000019957', 'Zac', 'Tolley');
 
@@ -129,8 +125,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals('12345678', $theClient->getCaseNumber());
     }
 
-    #[Test]
-    public function saveUserToDBWithTruncated10DigitCaseNumber()
+    public function testSaveUserToDBWithTruncated10DigitCaseNumber(): void
     {
         $preRegistration = $this->generatePreRegistration('12345677', 'Morrison', '700000019958', 'Zac', 'Tolley');
 
@@ -169,12 +164,8 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals('12345677', $theClient->getCaseNumber());
     }
 
-    /**
-     *
-     * @depends savesValidUserToDb
-     */
-    #[Test]
-    public function userNotFoundinPreRegistration()
+    #[Depends('testSavesValidUserToDb')]
+    public function testUserNotFoundInPreRegistration(): void
     {
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
@@ -206,12 +197,8 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertStringContainsString($expectedErrorJson, $responseArray['message']);
     }
 
-    /**
-     *
-     * @depends savesValidUserToDb
-     */
-    #[Test]
-    public function throwErrorForDuplicate()
+    #[Depends('testSavesValidUserToDb')]
+    public function testThrowErrorForDuplicate(): void
     {
         $preRegistration = $this->generatePreRegistration('12345678', 'Cross-Tolley', '700000019957', 'Zac', 'Tolley');
 
@@ -242,7 +229,6 @@ class SelfRegisterControllerTest extends AbstractTestController
             'AuthToken' => $token,
             'assertResponseCode' => 425,
             'assertCode' => 425,
-            'AuthToken' => $token,
             'data' => [
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
@@ -256,8 +242,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         ]);
     }
 
-    #[Test]
-    public function throwErrorForValidCaseNumberButDetailsNotMatching()
+    public function testThrowErrorForValidCaseNumberButDetailsNotMatching(): void
     {
         $now = new \DateTime();
 
@@ -293,7 +278,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             ],
             'case_number_matches' => [
                 [
-                    'id' => 1,
+                    'id' => $preRegistration->getId(),
                     'case_number' => '97643164',
                     'client_firstname' => null,
                     'client_lastname' => 'Douglas',
@@ -332,8 +317,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals($expectedErrorJson, json_decode($responseArray['message'], true));
     }
 
-    #[Test]
-    public function throwErrorForValidCaseNumberClientLastnameDeputyPostcodeButInvalidDeputyFirstname()
+    public function testThrowErrorForValidCaseNumberClientLastnameDeputyPostcodeButInvalidDeputyFirstname(): void
     {
         $now = new \DateTime();
 
@@ -369,7 +353,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             ],
             'case_number_matches' => [
                 [
-                    'id' => 1,
+                    'id' => $preRegistration->getId(),
                     'case_number' => '97643164',
                     'client_firstname' => null,
                     'client_lastname' => 'Douglas',
@@ -408,8 +392,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals($expectedErrorJson, json_decode($responseArray['message'], true));
     }
 
-    #[Test]
-    public function throwErrorForValidCaseNumberClientLastnameDeputyPostcodeButInvalidDeputyLastname()
+    public function testThrowErrorForValidCaseNumberClientLastnameDeputyPostcodeButInvalidDeputyLastname(): void
     {
         $now = new \DateTime();
 
@@ -445,7 +428,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             ],
             'case_number_matches' => [
                 [
-                    'id' => 1,
+                    'id' => $preRegistration->getId(),
                     'case_number' => '97643164',
                     'client_firstname' => null,
                     'client_lastname' => 'Douglas',
@@ -484,8 +467,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals($expectedErrorJson, json_decode($responseArray['message'], true));
     }
 
-    #[Test]
-    public function throwErrorForValidCaseNumberClientLastnameAndDeputyFirstAndLastnameButInvalidPostcode()
+    public function testThrowErrorForValidCaseNumberClientLastnameAndDeputyFirstAndLastnameButInvalidPostcode(): void
     {
         $now = new \DateTime();
 
@@ -521,7 +503,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             ],
             'case_number_matches' => [
                 [
-                    'id' => 1,
+                    'id' => $preRegistration->getId(),
                     'case_number' => '97643164',
                     'client_firstname' => null,
                     'client_lastname' => 'Douglas',
@@ -560,7 +542,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals($expectedErrorJson, json_decode($responseArray['message'], true));
     }
 
-    public function generatePreRegistration(string $caseNumber, string $clientSurname, string $deputyUid, string $deputyFirstname, string $deputySurname, ?\DateTime $createdAt = null): PreRegistration
+    public function generatePreRegistration(string $caseNumber, string $clientSurname, string $deputyUid, string $deputyFirstname, string $deputySurname): PreRegistration
     {
         return new PreRegistration([
             'Case' => $caseNumber,
@@ -576,8 +558,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         ]);
     }
 
-    #[Test]
-    public function testDeputiesNonPrimaryAccountSetToFalse()
+    public function testDeputiesNonPrimaryAccountSetToFalse(): void
     {
         $this->generateDeputyPrimaryAccount();
         $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
@@ -610,8 +591,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertFalse($user->getIsPrimary());
     }
 
-    #[Test]
-    public function testNoExistingAccountsAreIdentifiedForCoDeputyWithSingleAccount()
+    public function testNoExistingAccountsAreIdentifiedForCoDeputyWithSingleAccount(): void
     {
         $this->generateDeputyAndCoDeputyPreRegistration(null);
 
@@ -666,8 +646,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEmpty($existingDeputyAccounts);
     }
 
-    #[Test]
-    public function testExistingAccountsAreIdentifiedForCoDeputyWithASecondAccount()
+    public function testExistingAccountsAreIdentifiedForCoDeputyWithASecondAccount(): void
     {
         // first registered deputy account
         $deputyPrimaryAccountUid = $this->generateDeputyPrimaryAccount();
@@ -726,8 +705,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertNotEmpty($existingDeputyAccounts);
     }
 
-    #[Test]
-    public function testCoDeputyIsUpdatedWithVerificationData()
+    public function testCoDeputyIsUpdatedWithVerificationData(): void
     {
         $deputyPreRegistration = $this->generateDeputyAndCoDeputyPreRegistration(null);
 
@@ -785,7 +763,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertTrue($response['is_primary']);
     }
 
-    private function generateDeputyAndCoDeputyPreRegistration($deputyPrimaryUid): PreRegistration
+    private function generateDeputyAndCoDeputyPreRegistration(?string $deputyPrimaryUid): PreRegistration
     {
         $deputyUid = intval('7' . str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
 
@@ -807,10 +785,10 @@ class SelfRegisterControllerTest extends AbstractTestController
         return $deputyPreRegistration;
     }
 
-    private function generateDeputyPrimaryAccount()
+    private function generateDeputyPrimaryAccount(): string
     {
-        $casenumber = strval(mt_rand(10000000, 99999999));
-        $preRegistration = $this->generatePreRegistration($casenumber, 'Smith', '700000019965', 'Sue', 'Jones');
+        $caseNumber = strval(mt_rand(10000000, 99999999));
+        $preRegistration = $this->generatePreRegistration($caseNumber, 'Smith', '700000019965', 'Sue', 'Jones');
 
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush($preRegistration);
@@ -823,15 +801,19 @@ class SelfRegisterControllerTest extends AbstractTestController
             'data' => [
                 'firstname' => 'Sue',
                 'lastname' => 'Jones',
-                'email' => sprintf('firstdeputy%s@example.com', $casenumber),
+                'email' => sprintf('firstdeputy%s@example.com', $caseNumber),
                 'postcode' => 'SW1',
                 'client_firstname' => 'John',
                 'client_lastname' => 'Smith',
-                'case_number' => $casenumber,
+                'case_number' => $caseNumber,
             ],
             'ClientSecret' => self::$deputySecret,
         ]);
 
-        return $responseArray['data']['deputy_uid'];
+        /**
+         * @var string|int $uid
+         */
+        $uid = $responseArray['data']['deputy_uid'];
+        return "{$uid}";
     }
 }

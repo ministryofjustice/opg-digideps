@@ -23,10 +23,9 @@ final readonly class RequiredReportFinder
             $this->entityManager->getConnection()->executeQuery("
             SELECT DISTINCT co.id
             FROM court_order co
-            LEFT JOIN court_order_report cor
-                ON co.id = cor.court_order_id
             LEFT JOIN report r
-                ON r.id = cor.report_id
+                ON (co.id = r.pfa_court_order_id AND co.order_type = 'pfa'
+                OR co.id = r.hw_court_order_id AND co.order_type = 'hw')
                 AND COALESCE(r.submitted, 'f') = 'f'
             GROUP BY co.id
             HAVING COUNT(r.id) = 0
