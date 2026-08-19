@@ -119,11 +119,6 @@ trait IngestTrait
                 $this->organisations['added']['found'],
                 'Count of entities based on UIDs - organisations'
             );
-            $this->assertIntEqualsInt(
-                $this->reports['added']['expected'],
-                $this->reports['added']['found'],
-                'Count of entities based on UIDs - reports'
-            );
         } else {
             $this->assertIntEqualsInt(
                 $this->preRegistration['expected'],
@@ -169,16 +164,6 @@ trait IngestTrait
                     'updated' => [
                         'dataType' => sprintf('organisations updated: %u', $this->organisations['updated']['expected']),
                         'message' => 'Asserting Organisations updated on the Command output is incorrect',
-                    ],
-                ],
-                [
-                    'added' => [
-                        'dataType' => sprintf('reports added: %u', $this->reports['added']['expected']),
-                        'message' => 'Asserting Reports added on the Command output is incorrect',
-                    ],
-                    'updated' => [
-                        'dataType' => sprintf('reports updated: %u', $this->reports['updated']['expected']),
-                        'message' => 'Asserting Reports updated on the Command output is incorrect',
                     ],
                 ],
             ];
@@ -413,9 +398,9 @@ trait IngestTrait
     {
         $this->expectedReportType = $reportTypeNumber;
 
-        $this->deputies['added']['expected'] = 1;
+        $this->deputies['added']['expected'] = 2;
         $this->organisations['added']['expected'] = 1;
-        $this->deputies['updated']['expected'] = 1;
+        $this->deputies['updated']['expected'] = 0;
 
         $this->createProfAdminNotStarted(null, 'fuzzy.lumpkins@jojo6.com', '60000001', '750000000002');
 

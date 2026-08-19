@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Helpers;
 
-use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Common\Report\ReportType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
@@ -94,7 +93,7 @@ class FixtureHelper
     }
 
     // also associates Deputy with the provided User
-    private function getOrAddDeputy(User $user): void
+    private function getOrAddDeputy(User $user): Deputy
     {
         $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
 
@@ -105,43 +104,62 @@ class FixtureHelper
         $deputyObject->setUser($user);
         $this->em->persist($deputyObject);
         $this->em->flush();
+        return $deputyObject;
     }
 
     private function addClientsAndReportsToLayDeputy(
         User $user,
+        string $type,
         bool $completed = false,
         bool $submitted = false,
-        ?string $type = null,
         ?\DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
+        bool $withOrder = true,
     ): void {
         $client = $this->clientTestHelper->generateClient($this->em, $user, null, $caseNumber);
-        $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
 
-        $this->getOrAddDeputy($user);
-
-        $client->addReport($report);
-        $report->setClient($client);
+        if ($withOrder) {
+            $reportType = ReportType::from($type);
+            $courtOrder = new CourtOrder(
+                '' . mt_rand(10000000, 99999999),
+                $reportType->courtOrderType,
+                $reportType->courtOrderReportType,
+                $reportType->courtOrderKind,
+                $startDate ?? new \DateTime(),
+                $client
+            );
+            $this->em->persist($client);
+            $this->em->persist($courtOrder);
+            $report = $this->reportTestHelper->generateReport($courtOrder, $startDate);
+        }
+        $deputy = $this->getOrAddDeputy($user);
+        if ($withOrder) {
+            $deputy->associateWithCourtOrder($courtOrder);
+            $client->addReport($report);
+            $report->setClient($client);
+        }
         $user->addClient($client);
         $user->setRegistrationDate($startDate);
 
-        if ($completed) {
-            $this->reportTestHelper->completeReport($report, $this->em);
-        }
+        if ($withOrder) {
+            if ($completed) {
+                $this->reportTestHelper->completeReport($report, $this->em);
+            }
 
-        if ($submitted) {
-            $this->storeFileInS3(getenv(FixtureHelperBuilder::S3_BUCKETNAME), 'dd_doc_1234_9876543219876');
-            $this->storeFileInS3(getenv(FixtureHelperBuilder::S3_BUCKETNAME), 'dd_doc_1234_123456789123456');
-            $this->reportTestHelper->submitReport($report, $this->em);
-        }
+            if ($submitted) {
+                $this->storeFileInS3(getenv(FixtureHelperBuilder::S3_BUCKETNAME), 'dd_doc_1234_9876543219876');
+                $this->storeFileInS3(getenv(FixtureHelperBuilder::S3_BUCKETNAME), 'dd_doc_1234_123456789123456');
+                $this->reportTestHelper->submitReport($report, $this->em);
+            }
 
-        $this->em->persist($client);
-        $this->em->persist($report);
+            $this->em->persist($client);
+            $this->em->persist($report);
 
-        if ($submitted and isset($satisfactionScore)) {
-            $satisfaction = $this->setSatisfaction($report, $user, $satisfactionScore);
-            $this->em->persist($satisfaction);
+            if ($submitted and isset($satisfactionScore)) {
+                $satisfaction = $this->setSatisfaction($report, $user, $satisfactionScore);
+                $this->em->persist($satisfaction);
+            }
         }
 
         $this->em->flush();
@@ -191,21 +209,46 @@ class FixtureHelper
         ?string $caseNumber = null,
         ?string $deputyUid = null,
     ): void {
+        $structuredReportType = ReportType::from($reportType);
         $client = $this->clientTestHelper->generateClient($this->em, $user, $organisation, $caseNumber);
-        $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
-        $deputy = $this->deputyTestHelper->generateDeputy($deputyEmail, $deputyUid, em: $this->em);
-
-        $client->addReport($report);
+        $deputy = $this->deputyTestHelper->generateDeputy($deputyEmail, $deputyUid, $user, $this->em);
+        $deputy->setDeputyType($structuredReportType->deputyType);
         $client->setOrganisation($organisation);
         $client->setDeputy($deputy);
 
         $organisation->addClient($client);
         $organisation->addUser($user);
 
-        $report->setClient($client);
-
         $user->addOrganisation($organisation);
         $user->setRegistrationDate($startDate);
+
+        // additional deputy <-> court order <-> report set up;
+        // required to enable admin users to see reports in the dashboard etc.
+        $deputy->setOrganisation($organisation);
+        $this->em->persist($deputy);
+
+        $courtOrderUid = '' . mt_rand(10000000, 99999999);
+        $structuredReportType = ReportType::from($reportType);
+
+        $this->em->persist($deputy);
+        $this->em->persist($client);
+        $this->em->flush();
+
+        $courtOrder = $this->courtOrderTestHelper->generateCourtOrder(
+            em: $this->em,
+            client: $client,
+            courtOrderUid: $courtOrderUid,
+            reportType: $structuredReportType,
+            deputy: $deputy,
+        );
+        $deputy->associateWithCourtOrder($courtOrder);
+        $this->em->persist($courtOrder);
+        $this->em->flush();
+        $this->em->refresh($courtOrder);
+
+        $report = $this->reportTestHelper->generateReport($courtOrder, $startDate);
+        $client->addReport($report);
+        $report->setClient($client);
 
         if ($completed) {
             $this->reportTestHelper->completeReport($report, $this->em);
@@ -214,38 +257,14 @@ class FixtureHelper
         $currentReport = $submitted ? $this->reportTestHelper->submitReport($report, $this->em) : null;
 
         $this->em->persist($report);
+        $this->em->persist($user);
 
-        // additional deputy <-> court order <-> report set up;
-        // required to enable admin users to see reports in the dashboard etc.
-        $deputy->setOrganisation($organisation);
-        $this->em->persist($deputy);
-
-        $courtOrderUid = '' . mt_rand(10000000, 99999999);
-        $structuredReportType = ReportType::tryFrom($reportType);
-        $courtOrderType = $structuredReportType?->courtOrderType;
-
-        if ($courtOrderType === null) {
-            throw new \LogicException("invalid report type: $reportType");
-        }
-
-        $courtOrder = $this->courtOrderTestHelper->generateCourtOrder(
-            em: $this->em,
-            client: $client,
-            courtOrderUid: $courtOrderUid,
-            type: $courtOrderType,
-            report: $report,
-            deputy: $deputy
-        );
 
         if ($currentReport !== null) {
             $courtOrder->addReport($currentReport);
-            $this->em->persist($courtOrder);
             $this->em->persist($currentReport);
         }
 
-        $this->em->persist($deputy);
-        $this->em->persist($user);
-        $this->em->persist($client);
         $this->em->persist($report);
         $this->em->persist($organisation);
 
@@ -294,7 +313,7 @@ class FixtureHelper
         return $client;
     }
 
-    public function createLayPfaHighAssetsNotStarted(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null): array
+    public function createLayPfaHighAssetsNotStarted(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null, bool $withOrder = true): array
     {
         $user = $this->createDeputyClientAndReport(
             $testRunId,
@@ -308,7 +327,8 @@ class FixtureHelper
             $caseNumber,
             false,
             true,
-            $deputyUid
+            $deputyUid,
+            $withOrder
         );
 
         return FixtureHelperBuilder::buildUserDetails($user);
@@ -1036,6 +1056,7 @@ class FixtureHelper
         bool $legacyPasswordHash = false,
         bool $isPrimary = true,
         ?int $deputyUid = null,
+        bool $withOrder = true,
     ): User {
         if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -1052,7 +1073,7 @@ class FixtureHelper
             $isPrimary
         );
 
-        $this->addClientsAndReportsToLayDeputy($user, $completed, $submitted, $reportType, $startDate, $satisfactionScore, $caseNumber);
+        $this->addClientsAndReportsToLayDeputy($user, $reportType, $completed, $submitted, $startDate, $satisfactionScore, $caseNumber, $withOrder);
 
         $this->setPassword($user);
 
@@ -1151,14 +1172,22 @@ class FixtureHelper
         return $preRegistration;
     }
 
-    public function createAndPersistCourtOrder(CourtOrderType $orderType, Client $client, ?Deputy $deputy = null, ?Report $report = null, ?string $courtOrderUid = null): CourtOrder
+    public function createAndPersistCourtOrder(ReportType $reportType, Client $client, ?Deputy $deputy = null, ?string $courtOrderUid = null): CourtOrder
     {
         $faker = Factory::create('en_GB');
         if (is_null($courtOrderUid)) {
             $courtOrderUid = '7' . $faker->randomNumber(9);
         }
+        $this->em->flush();
+        $this->em->refresh($client);
 
-        return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, $courtOrderUid, 'ACTIVE', $orderType, $report, $deputy);
+        return $client->getCourtOrders()->last() ?: $this->courtOrderTestHelper::generateCourtOrder(
+            em: $this->em,
+            client: $client,
+            courtOrderUid: $courtOrderUid,
+            reportType: $reportType,
+            deputy: $deputy
+        );
     }
 
     public function createDeputyOnOrder(CourtOrder $courtOrder, ?\DateTime $lastLoggedIn = null): Deputy

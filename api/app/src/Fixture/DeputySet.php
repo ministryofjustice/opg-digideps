@@ -37,4 +37,19 @@ final readonly class DeputySet
     {
         return new DeputySet(new DeputyDescriptor($deputyReference, DeputyType::PA));
     }
+
+    public static function oneTeam(DeputyType $type, string $prefix, int $teamAdmins, int $teamMembers, bool $namedHasLogin = false): DeputySet
+    {
+        if ($type === DeputyType::LAY) {
+            throw new \DomainException("There are no lay teams");
+        }
+        $descriptors = [new DeputyDescriptor("{$prefix}-named", $type, hasLogin: $namedHasLogin)];
+        for ($i = 1; $i <= $teamAdmins; ++$i) {
+            $descriptors[] = new DeputyDescriptor("{$prefix}-admin-{$i}", $type, UserType::OrgAdmin);
+        }
+        for ($i = 1; $i <= $teamMembers; ++$i) {
+            $descriptors[] = new DeputyDescriptor("{$prefix}-member-{$i}", $type, UserType::OrgTeamMember);
+        }
+        return new DeputySet(...$descriptors);
+    }
 }
