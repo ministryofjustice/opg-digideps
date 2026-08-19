@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\UserRepository;
@@ -16,6 +17,9 @@ use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use OPG\Digideps\Backend\v2\Registration\Uploader\ClientMatch;
 use OPG\Digideps\Backend\v2\Registration\Uploader\LayClientMatcher;
 use OPG\Digideps\Backend\v2\Registration\Uploader\LayDeputyshipProcessor;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -93,7 +97,14 @@ final class LayDeputyshipProcessorTest extends TestCase
         $existingClient = $this->createMock(Client::class);
 
         $mockReportClass = $this->createPartialMock(Report::class, methods: ['getId']);
-        $existingReport = new $mockReportClass($existingClient, '102', new \DateTime(), new \DateTime(), false);
+        $existingReport = new $mockReportClass(new CourtOrder(
+            '',
+            CourtOrderType::PFA,
+            CourtOrderReportType::OPG102,
+            CourtOrderKind::Single,
+            new \DateTime(),
+            $existingClient
+        ), '102', new \DateTime(), new \DateTime(), false);
         $existingReport->expects($this->once())->method('getId')->willReturn(1);
 
         $clientMatch = new ClientMatch(

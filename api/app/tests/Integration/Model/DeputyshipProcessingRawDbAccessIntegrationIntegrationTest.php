@@ -117,43 +117,6 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
     /**
      * @throws Exception
      */
-    public function testInsertOrderReport(): void
-    {
-        // insert report and court order (client is needed by the report)
-        $client = self::$fixtures->createClient();
-        $report = self::$fixtures->createReport($client);
-
-        $courtOrderUid = uniqid();
-        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
-
-        self::$fixtures->persist($client, $report, $courtOrder)->flush();
-
-        // use SUT to add association
-        /** @var int $courtOrderId */
-        $courtOrderId = self::$sut->findOrderId($courtOrderUid)->data;
-
-        self::$sut->beginTransaction();
-        $result = self::$sut->insertOrderReport($courtOrderId, ['reportId' => $report->getId()]);
-        self::$sut->endTransaction();
-
-        self::assertTrue($result->success);
-
-        // check association exists
-        $association = $this->getQueryBuilder()
-            ->select('*')
-            ->from('court_order_report')
-            ->where('report_id = ?')
-            ->andWhere('court_order_id = ?')
-            ->setParameter(0, $report->getId())
-            ->setParameter(1, $courtOrderId)
-            ->fetchAssociative();
-
-        self::assertNotFalse($association, 'court order report association was not found');
-    }
-
-    /**
-     * @throws Exception
-     */
     public function testUpdateOrderStatus(): void
     {
         $courtOrderUid = uniqid();

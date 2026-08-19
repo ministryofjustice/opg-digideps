@@ -42,10 +42,10 @@ use OPG\Digideps\Common\Report\Section\ReportSection;
 use OPG\Digideps\Common\Report\Section\Sections;
 
 #[ORM\Table(name: 'report')]
-#[ORM\Index(columns: ['end_date'], name: 'end_date_idx')]
-#[ORM\Index(columns: ['submit_date'], name: 'submit_date_idx')]
-#[ORM\Index(columns: ['submitted'], name: 'submitted_idx')]
-#[ORM\Index(columns: ['report_status_cached'], name: 'report_status_cached_idx')]
+#[ORM\Index(name: 'end_date_idx', columns: ['end_date'])]
+#[ORM\Index(name: 'submit_date_idx', columns: ['submit_date'])]
+#[ORM\Index(name: 'submitted_idx', columns: ['submitted'])]
+#[ORM\Index(name: 'report_status_cached_idx', columns: ['report_status_cached'])]
 #[ORM\Entity(repositoryClass: ReportRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Report
@@ -223,27 +223,27 @@ class Report
 
     #[JMS\Groups(['visits-care'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\VisitsCare')]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: VisitsCare::class, cascade: ['persist', 'remove'], fetch: 'LAZY')]
+    #[ORM\OneToOne(targetEntity: VisitsCare::class, mappedBy: 'report', cascade: ['persist', 'remove'], fetch: 'LAZY')]
     private ?VisitsCare $visitsCare = null;
 
     #[JMS\Groups(['lifestyle'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Lifestyle')]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: Lifestyle::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Lifestyle::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?Lifestyle $lifestyle = null;
 
     #[JMS\Groups(['action'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Action')]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: Action::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Action::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?Action $action = null;
 
     #[JMS\Groups(['mental-capacity'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\MentalCapacity')]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: MentalCapacity::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: MentalCapacity::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?MentalCapacity $mentalCapacity = null;
 
     #[JMS\Groups(['client-benefits-check'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck')]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: ClientBenefitsCheck::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: ClientBenefitsCheck::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?ClientBenefitsCheck $clientBenefitsCheck = null;
 
     #[JMS\Groups(['report', 'report-period','startEndDates'])]
@@ -314,7 +314,7 @@ class Report
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Document>')]
     #[JMS\Groups(['report-documents'])]
-    #[ORM\OneToMany(mappedBy: 'report', targetEntity: Document::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'report', cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
     #[ORM\OrderBy(['createdOn' => 'DESC', 'fileName' => 'ASC'])]
     private Collection $documents;
 
@@ -323,7 +323,7 @@ class Report
      */
     #[JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\ReportSubmission>")]
     #[JMS\Groups(['document-sync'])]
-    #[ORM\OneToMany(mappedBy: 'report', targetEntity: ReportSubmission::class, fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(targetEntity: ReportSubmission::class, mappedBy: 'report', fetch: 'EXTRA_LAZY')]
     private Collection $reportSubmissions;
 
     #[JMS\Groups(['report', 'wish-to-provide-documentation'])]
@@ -367,17 +367,17 @@ class Report
 
     #[JMS\Groups(['report', 'report-checklist'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Checklist')]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: Checklist::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Checklist::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?Checklist $checklist = null;
 
     #[JMS\Groups(['report', 'report-checklist'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\ReviewChecklist')]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: ReviewChecklist::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: ReviewChecklist::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?ReviewChecklist $reviewChecklist = null;
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\Satisfaction')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: Satisfaction::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Satisfaction::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?Satisfaction $satisfaction = null;
 
     /**
@@ -412,13 +412,13 @@ class Report
     #[ORM\Column(name: 'reason_for_no_money_out', type: 'text', nullable: true)]
     private ?string $reasonForNoMoneyOut = null;
 
-    /**
-     * @var Collection<int, CourtOrder> $courtOrders
-     */
-    #[JMS\Groups(['report-with-court-orders'])]
-    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrder>')]
-    #[ORM\ManyToMany(targetEntity: CourtOrder::class, mappedBy: 'reports', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
-    private Collection $courtOrders;
+    #[ORM\ManyToOne(targetEntity: CourtOrder::class, cascade: ['persist'], fetch: 'EXTRA_LAZY', inversedBy: 'pfaReports')]
+    #[ORM\JoinColumn(name: 'pfa_court_order_id', nullable: true)]
+    private ?CourtOrder $pfaCourtOrder = null;
+
+    #[ORM\ManyToOne(targetEntity: CourtOrder::class, cascade: ['persist'], fetch: 'EXTRA_LAZY', inversedBy: 'hwReports')]
+    #[ORM\JoinColumn(name: 'hw_court_order_id', nullable: true)]
+    private ?CourtOrder $hwCourtOrder = null;
 
     private ReportType $reportType;
     private Sections $sections;
@@ -429,8 +429,9 @@ class Report
      *
      * @param bool $dateChecks if true, perform checks around multiple reports and dates. Useful for PA upload
      */
-    public function __construct(Client $client, string $type, \DateTime $startDate, \DateTime $endDate, bool $dateChecks = true)
+    public function __construct(CourtOrder $courtOrder, string $type, \DateTime $startDate, \DateTime $endDate, bool $dateChecks = true)
     {
+        $this->setCourtOrder($courtOrder);
         $reportType = ReportType::tryFrom($type);
         if ($reportType === null) {
             throw new \InvalidArgumentException("$type not a valid report type");
@@ -438,20 +439,20 @@ class Report
         $this->reportType = $reportType;
         $this->sections = Sections::new($this->reportType);
         $this->type = $type;
-        $this->client = $client;
+        $this->client = $this->getCourtOrder()->getClient();
         $this->startDate = new \DateTime($startDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
         $this->endDate = new \DateTime($endDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
         $this->updateDueDateBasedOnEndDate();
 
-        if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
-            throw new \RuntimeException('Client ' . $client->getId() . ' already has an unsubmitted report. Cannot create another one');
+        if ($dateChecks && count($this->client->getUnsubmittedReports()) > 0) {
+            throw new \RuntimeException('Client ' . $this->client->getId() . ' already has an unsubmitted report. Cannot create another one');
         }
 
         // check date interval overlapping other reports
-        if ($dateChecks && count($client->getSubmittedReports())) {
+        if ($dateChecks && count($this->client->getSubmittedReports())) {
             $unsubmittedEndDates = array_map(function ($report) {
                 return $report->getEndDate();
-            }, $client->getSubmittedReports()->toArray());
+            }, $this->client->getSubmittedReports()->toArray());
             rsort($unsubmittedEndDates); // order by last first
             $endDateLastReport = $unsubmittedEndDates[0];
             $expectedStartDate = clone $endDateLastReport;
@@ -485,7 +486,6 @@ class Report
         $this->profDeputyPreviousCosts = new ArrayCollection();
         $this->profDeputyInterimCosts = new ArrayCollection();
         $this->profDeputyEstimateCosts = new ArrayCollection();
-        $this->courtOrders = new ArrayCollection();
         $this->profDeputyOtherCosts = new ArrayCollection();
 
         // set sections as notStarted when a new report is created
@@ -1201,11 +1201,30 @@ class Report
     }
 
     /**
-     * @return Collection<int, CourtOrder>
+     * @return array<CourtOrder>
      */
-    public function getCourtOrders(): Collection
+    #[JMS\VirtualProperty(name: 'courtOrders')]
+    #[JMS\Groups(['report-with-court-orders'])]
+    #[JMS\Type('array')]
+    public function getCourtOrders(): array
     {
-        return $this->courtOrders;
+        $courtOrders = [];
+        if ($this->pfaCourtOrder !== null) {
+            $courtOrders[] = $this->pfaCourtOrder;
+        }
+        if ($this->hwCourtOrder !== null) {
+            $courtOrders[] = $this->hwCourtOrder;
+        }
+
+        return $courtOrders;
+    }
+
+    /**
+     * Return whichever court order is set or the pfa order if both arte set (hybrid case)
+     */
+    public function getCourtOrder(): CourtOrder
+    {
+        return $this->pfaCourtOrder ?? $this->hwCourtOrder ?? throw new \LogicException("Report without court order. The database does not allow this.");
     }
 
     /**
@@ -1213,15 +1232,22 @@ class Report
      */
     public function getActiveCourtOrders(): array
     {
-        $active = [];
-
-        foreach ($this->courtOrders as $courtOrder) {
-            if ($courtOrder->getStatus() === 'ACTIVE') {
-                $active[] = $courtOrder;
-            }
+        $courtOrders = [];
+        if ($this->pfaCourtOrder?->isActive() ?? false) {
+            $courtOrders[] = $this->pfaCourtOrder;
+        }
+        if ($this->hwCourtOrder?->isActive() ?? false) {
+            $courtOrders[] = $this->hwCourtOrder;
         }
 
-        return $active;
+        return $courtOrders;
+    }
+
+    public function setCourtOrder(CourtOrder $courtOrder): static
+    {
+        $this->pfaCourtOrder = $courtOrder->getOrderType() === CourtOrderType::HW ? $courtOrder->isHybrid() ? $courtOrder->getSibling() : null : $courtOrder;
+        $this->hwCourtOrder = $courtOrder->getOrderType() === CourtOrderType::PFA ? $courtOrder->isHybrid() ? $courtOrder->getSibling() : null : $courtOrder;
+        return $this;
     }
 
     #[ORM\PrePersist]

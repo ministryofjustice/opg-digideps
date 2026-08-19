@@ -416,9 +416,6 @@ services:
     OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector:
         public: true
 
-    OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory:
-        public: true
-
     OPG\Digideps\Backend\Domain\Deputyship\DeputyshipProcessingRawDbAccess:
         arguments:
             $ingestWriterEm: "@doctrine.orm.ingestwriter_entity_manager"
@@ -456,6 +453,10 @@ services:
             $dataFactories:
                 - [
                       '@OPG\Digideps\Backend\Factory\LayPaProCsvUploadDataFactory',
+                      "active",
+                  ]
+                - [
+                      '@OPG\Digideps\Backend\Factory\ImportOrganisationDataFactory',
                       "active",
                   ]
                 - [

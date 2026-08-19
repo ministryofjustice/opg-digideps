@@ -4,32 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputySet;
+use OPG\Digideps\Backend\Fixture\ReportDescriptor;
+use OPG\Digideps\Backend\Fixture\ReportList;
+use OPG\Digideps\Backend\Fixture\Scenario;
 use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
-use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
-use OPG\Digideps\Backend\TestHelpers\ReportSubmissionHelper;
-use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
 {
-    private static ReportSubmissionHelper $reportSubmissionHelper;
-    private static ReportSubmissionRepository $sut;
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        self::$reportSubmissionHelper = new ReportSubmissionHelper(self::$entityManager);
-
-        /** @var ReportSubmissionRepository $sut */
-        $sut = self::$entityManager->getRepository(ReportSubmission::class);
-
-        self::$sut = $sut;
-    }
-
     public static function updateArchivedStatusDataProvider(): array
     {
         return [
@@ -43,126 +30,146 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
     /**
      * @dataProvider updateArchivedStatusDataProvider
      */
-    public function testUpdateArchivedStatus($isArchived, $docStatuses, $shouldArchive)
+    public function testUpdateArchivedStatus(bool $isArchived, array $docStatuses, bool $shouldArchive)
     {
-        $client = new Client();
-        $report = (ReportTestHelper::create())->generateReport(self::$entityManager);
-        $user = (UserTestHelper::create())->createAndPersistUser(self::$entityManager, $client);
-
-        $submission = new ReportSubmission($report, $user);
-        $submission->setArchived($isArchived);
-        self::$entityManager->persist($submission);
-
+        self::$entityManager->clear();
+        Fixtures::deleteReportsData();
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), reportList: ReportList::manyReports())));
+        $submission = $report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist");
+        self::$fixtureService->persist($submission->setArchived($isArchived));
         foreach ($docStatuses as $docStatus) {
             $doc = new Document($report, 'a file.pdf');
             $doc->setSynchronisationStatus($docStatus);
-            self::$entityManager->persist($doc);
-
-            $submission->addDocument($doc);
+            $doc->setReportSubmission($submission);
+            self::$fixtureService->persist($doc);
         }
+        self::$fixtureService->flush();
 
-        self::$entityManager->persist($submission);
-
-        self::$entityManager->flush();
-
-        self::$sut->updateArchivedStatus($submission);
-
-        self::assertEquals($shouldArchive, $submission->getArchived());
+        /** @var ReportSubmissionRepository $sut */
+        $sut = self::$entityManager->getRepository(ReportSubmission::class);
+        $sut->clear();
+        $submission = $sut->findOneByIdUnfiltered($submission->getId()) ?? throw new \LogicException('This must exist');
+        $sut->updateArchivedStatus($submission);
+        self::assertSame($shouldArchive, $submission->getArchived());
     }
 
     public function testUpdateArchivedStatusManuallyArchived()
     {
-        $submission = self::$reportSubmissionHelper->generateAndPersistReportSubmission();
-        $submission->setArchived(false);
+        self::$entityManager->clear();
+        Fixtures::deleteReportsData();
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), reportList: ReportList::manyReports())));
+        $submission = $report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist");
+        self::$fixtureService->persist($submission->setArchived(false));
 
-        $reportHelper = ReportTestHelper::create();
-
-        for ($i = 0; $i < 2; $i++) {
-            $report = $reportHelper->generateReport(self::$entityManager);
-            self::$entityManager->persist($report);
-            self::$entityManager->persist($report->getClient());
-
-            $doc = new Document($report, 'a file.pdf');
-            self::$entityManager->persist($doc);
-
-            $submission->addDocument($doc);
-        }
-
-        self::$entityManager->persist($submission);
+        $doc = new Document($report, 'a file.pdf');
+        $doc->setReportSubmission($submission);
+        self::$fixtureService->persist($doc);
         self::$entityManager->flush();
 
-        self::$sut->updateArchivedStatus($submission);
+        /** @var ReportSubmissionRepository $sut */
+        $sut = self::$entityManager->getRepository(ReportSubmission::class);
+        $sut->clear();
+        $submission = $sut->findOneByIdUnfiltered($submission->getId()) ?? throw new \LogicException('This must exist');
+        $sut->updateArchivedStatus($submission);
 
-        self::assertEquals(false, $submission->getArchived());
+        self::assertFalse($submission->getArchived());
     }
 
     public function testFindAllReportSubmissions()
     {
         $today = new \DateTime();
-        $yesterday = new \DateTime('-1 day');
+        $yesterday = new \DateTimeImmutable('-1 day');
+        $madeDate = new \DateTimeImmutable('-2 year');
 
-        $createdReportSubmissions = [];
-        for ($i = 1; $i <= 3; $i++) {
-            $createdReportSubmissions[] = self::$reportSubmissionHelper
-                ->generateAndPersistSubmittedReportSubmission($yesterday);
-        }
+        self::$entityManager->clear();
+        Fixtures::deleteReportsData();
 
-        $reportSubmissions = self::$sut->findAllReportSubmissions($yesterday, $today);
+        /** @var ReportSubmissionRepository $sut */
+        $sut = self::$entityManager->getRepository(ReportSubmission::class);
+        $reportSubmissions = $sut->findAllReportSubmissions(\DateTime::createFromImmutable($yesterday), $today);
+        $this->assertEmpty($reportSubmissions);
 
-        $this->assertEqualsCanonicalizing($createdReportSubmissions, $reportSubmissions);
+        $reportSubmissionIds = [];
+        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $yesterday), new ReportDescriptor($madeDate))));
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $reportSubmissionIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $reportSubmissionIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $reportSubmissionIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
+
+        $foundReportSubmissionIds = array_map(fn (ReportSubmission $submission) => $submission->getId(), $sut->findAllReportSubmissions(\DateTime::createFromImmutable($yesterday), $today));
+
+        $this->assertEqualsCanonicalizing($reportSubmissionIds, $foundReportSubmissionIds);
     }
 
     public function testFindAllReportSubmissionsOnlyReturnsSubmissionsWithPeriodProvided()
     {
-        $today = new \DateTime();
+        $today = new \DateTimeImmutable();
         $todayOneHourAgo = new \DateTime('-1 hour');
-        $yesterday = new \DateTime('-1 day');
+        $yesterday = new \DateTimeImmutable('-1 day');
+        $madeDate = new \DateTimeImmutable('-2 year');
 
-        $todaysReportSubmissions = [];
-        for ($i = 0; $i < 3; $i++) {
-            $todaysReportSubmissions[] = self::$reportSubmissionHelper
-                ->generateAndPersistSubmittedReportSubmission($today);
+        $todaysReportSubmissionIds = [];
+        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $today), new ReportDescriptor($madeDate))));
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $todaysReportSubmissionIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $todaysReportSubmissionIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $todaysReportSubmissionIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
+
+        $yesterdaysReportSubmissionIds = [];
+        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $yesterday), new ReportDescriptor($madeDate))));
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $yesterdaysReportSubmissionIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $yesterdaysReportSubmissionIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $yesterdaysReportSubmissionIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
+
+        /** @var ReportSubmissionRepository $sut */
+        $sut = self::$entityManager->getRepository(ReportSubmission::class);
+        $reportSubmissionsIds = array_map(fn (ReportSubmission $submission) => $submission->getId(), $sut->findAllReportSubmissions(\DateTime::createFromImmutable($yesterday), $todayOneHourAgo));
+
+        foreach ($yesterdaysReportSubmissionIds as $rs) {
+            self::assertContains($rs, $reportSubmissionsIds);
         }
 
-        $yesterdaysReportSubmissions = [];
-        for ($i = 0; $i < 3; $i++) {
-            $yesterdaysReportSubmissions[] = self::$reportSubmissionHelper
-                ->generateAndPersistSubmittedReportSubmission($yesterday);
-        }
-
-        $reportSubmissions = self::$sut->findAllReportSubmissions($yesterday, $todayOneHourAgo);
-
-        foreach ($yesterdaysReportSubmissions as $rs) {
-            self::assertContains($rs, $reportSubmissions);
-        }
-
-        foreach ($todaysReportSubmissions as $rs) {
-            self::assertNotContains($rs, $reportSubmissions);
+        foreach ($todaysReportSubmissionIds as $rs) {
+            self::assertNotContains($rs, $reportSubmissionsIds);
         }
     }
 
     public function testFindAllReportSubmissionsRawSqlWithPeriodProvided()
     {
         $today = new \DateTime();
-        $yesterday = new \DateTime('-1 day');
+        $yesterday = new \DateTimeImmutable('-1 day');
         $threeDaysAgo = new \DateTime('-3 days');
-        $lastWeek = new \DateTime('-7 days');
+        $lastWeek = new \DateTimeImmutable('-7 days');
+        $madeDate = new \DateTimeImmutable('-2 year');
 
         $yesterdaysReportSubmissionsIds = [];
-        for ($i = 0; $i < 3; $i++) {
-            $reportSubmission = self::$reportSubmissionHelper
-                ->generateAndPersistSubmittedReportSubmission($yesterday);
-            $yesterdaysReportSubmissionsIds[] = $reportSubmission->getId();
-        }
+        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $yesterday), new ReportDescriptor($madeDate))));
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $yesterdaysReportSubmissionsIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $yesterdaysReportSubmissionsIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $yesterdaysReportSubmissionsIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
 
         $lastWeekReportSubmissionsIds = [];
-        for ($i = 0; $i < 3; $i++) {
-            $reportSubmission = self::$reportSubmissionHelper
-                ->generateAndPersistSubmittedReportSubmission($lastWeek);
-            $lastWeekReportSubmissionsIds[] = $reportSubmission->getId();
-        }
+        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $lastWeek), new ReportDescriptor($madeDate))));
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $lastWeekReportSubmissionsIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $lastWeekReportSubmissionsIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
+        $lastWeekReportSubmissionsIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
 
-        $reportSubmissions = self::$sut->findAllReportSubmissionsRawSql($threeDaysAgo, $today);
+        /** @var ReportSubmissionRepository $sut */
+        $sut = self::$entityManager->getRepository(ReportSubmission::class);
+        $reportSubmissions = $sut->findAllReportSubmissionsRawSql($threeDaysAgo, $today);
 
         $actualReportSubmissionIds = [];
         foreach ($reportSubmissions as $reportSubmission) {

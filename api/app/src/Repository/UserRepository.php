@@ -7,7 +7,6 @@ use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Utility\Query\QueryPager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
@@ -158,51 +157,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->qb->setParameter('othername', '%' . strtolower($otherName . '%'));
 
         $this->qb->andWhere($nameBasedQuery);
-    }
-
-    /**
-     * @return int[]
-     *
-     * @throws Exception
-     */
-    public function findInactive($role = User::ROLE_LAY_DEPUTY): array
-    {
-        $conn = $this->getEntityManager()->getConnection();
-
-        $sql = <<<SQL
-        SELECT u.id
-        FROM dd_user u
-        LEFT JOIN deputy_case dc ON dc.user_id = u.id
-        LEFT JOIN client c ON c.id = dc.client_id AND (c.deleted_at IS NULL)
-        WHERE (
-            -- Abandoned Registration process, password set
-            u.registration_token IS NOT NULL
-            AND u.token_date < date_trunc('day', CURRENT_DATE - INTERVAL '60' day)
-            AND u.last_logged_in < date_trunc('day', CURRENT_DATE - INTERVAL '60' day)
-            AND u.registration_date IS NULL
-            -- Abandoned Registration process, no password set
-            OR u.registration_token IS NOT NULL
-            AND u.token_date < date_trunc('day', CURRENT_DATE - INTERVAL '30' day)
-            AND u.last_logged_in IS NULL
-            -- Standard no activity within N days
-            OR u.registration_date < date_trunc('day', CURRENT_DATE - INTERVAL '30' day)
-        )
-        AND u.role_name = :role
-        AND NOT EXISTS (
-            SELECT TRUE FROM user_research_response urr WHERE urr.user_id = u.id
-        ) AND NOT EXISTS (
-            SELECT TRUE FROM report r WHERE r.client_id = c.id
-        ) AND NOT EXISTS (
-            SELECT TRUE FROM dd_user du WHERE du.created_by_id = u.id
-        ) AND NOT EXISTS (
-            SELECT TRUE FROM deputy d WHERE d.user_id = u.id
-        )
-        SQL;
-
-        $stmt = $conn->prepare($sql);
-        $result = $stmt->executeQuery(['role' => $role]);
-
-        return $result->fetchFirstColumn();
     }
 
     public function findActiveLaysInLastYear(): array
