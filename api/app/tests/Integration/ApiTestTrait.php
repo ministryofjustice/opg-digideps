@@ -6,6 +6,7 @@ namespace Tests\OPG\Digideps\Backend\Integration;
 
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
+use OPG\Digideps\Backend\Fixture\FixtureService;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -23,6 +24,7 @@ trait ApiTestTrait
 {
     protected static EntityManager $entityManager;
     protected static ContainerInterface $container;
+    protected static FixtureService $fixtureService;
 
     // should be called in the setUp() or setUpBeforeClass() method of the KernelTestCase subclass using this trait
     public static function configureTest(): void
@@ -30,6 +32,11 @@ trait ApiTestTrait
         self::bootKernel(['environment' => 'test']);
         self::$container = self::$kernel->getContainer();
         self::$entityManager = self::$container->get('doctrine')->getManager();
+        /**
+         * @var FixtureService $fixtureService
+         */
+        $fixtureService = self::$container->get(FixtureService::class);
+        self::$fixtureService = $fixtureService;
     }
 
     protected function tearDown(): void
@@ -49,6 +56,7 @@ trait ApiTestTrait
         self::$entityManager->close();
         self::$entityManager = new \ReflectionClass(EntityManager::class)->newLazyGhost(fn () => throw new \LogicException("Please reinitialise your test correctly."));
         self::$container = new \ReflectionClass(Container::class)->newLazyGhost(fn () => throw new \LogicException("Please reinitialise your test correctly."));
+        self::$fixtureService = new \ReflectionClass(FixtureService::class)->newLazyGhost(fn () => throw new \LogicException("Please reinitialise your test correctly."));
     }
 
     /**
