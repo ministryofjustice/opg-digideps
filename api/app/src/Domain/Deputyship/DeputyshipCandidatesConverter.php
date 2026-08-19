@@ -71,8 +71,6 @@ class DeputyshipCandidatesConverter
 
             if ($action === DeputyshipCandidateAction::InsertOrderDeputy) {
                 $result = $this->dbAccess->insertOrderDeputy($courtOrderId, $candidate);
-            } elseif ($action === DeputyshipCandidateAction::InsertOrderReport) {
-                $result = $this->dbAccess->insertOrderReport($courtOrderId, $candidate);
             } elseif ($action === DeputyshipCandidateAction::UpdateOrderStatus) {
                 $result = $this->dbAccess->updateOrderStatus($courtOrderId, $candidate);
             } elseif ($action === DeputyshipCandidateAction::UpdateDeputyStatus) {
