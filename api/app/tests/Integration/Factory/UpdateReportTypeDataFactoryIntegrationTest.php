@@ -14,7 +14,6 @@ use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
 {
-    private static UpdateReportTypeDataFactory $sut;
     private static Fixtures $fixtures;
 
     private static int $count = 0;
@@ -24,10 +23,6 @@ class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
         parent::setUpBeforeClass();
 
         self::$fixtures = new Fixtures(self::$entityManager);
-
-        /** @var UpdateReportTypeDataFactory $sut */
-        $sut = self::$container->get(UpdateReportTypeDataFactory::class);
-        self::$sut = $sut;
 
         self::purgeDatabase();
     }
@@ -136,7 +131,7 @@ class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
             client: $client,
         );
 
-        $report = self::$fixtures->createReport($client, ['setType' => $data['existingReportType']], $courtOrder);
+        $report = self::$fixtures->createReport($courtOrder, ['setType' => $data['existingReportType']]);
 
         self::$fixtures->persist($courtOrder, $client, $report, $deputy);
         self::$fixtures->flush();
@@ -150,7 +145,10 @@ class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
     {
         $reportId = $this->setUpTestData($data);
 
-        $dataFactoryResult = self::$sut->run(false);
+        /** @var UpdateReportTypeDataFactory $sut */
+        $sut = self::$container->get(UpdateReportTypeDataFactory::class);
+
+        $dataFactoryResult = $sut->run(false);
 
         /** @var string $expectedReportType */
         $expectedReportType = $data['expectedReportType'];
@@ -187,7 +185,9 @@ class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
     {
         $reportId = $this->setUpTestData($data);
 
-        $dataFactoryResult = self::$sut->run(true);
+        /** @var UpdateReportTypeDataFactory $sut */
+        $sut = self::$container->get(UpdateReportTypeDataFactory::class);
+        $dataFactoryResult = $sut->run(true);
 
         /** @var string $expectedReportType */
         $expectedReportType = $data['existingReportType'];
