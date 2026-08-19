@@ -33,7 +33,7 @@ jobs:
       build_identifier: "main"
       version_tag: ${{ steps.semver_tag.outputs.tag }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           fetch-depth: 0
 
@@ -56,7 +56,7 @@ jobs:
 
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/actions/semver@3a15a16fcc221821c2869eecd8822c5d62af2984 # v4.7.0
+        uses: ministryofjustice/opg-github-actions/actions/semver@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
         with:
           prerelease: false
           default_bump: ${{ steps.semver_bump.outputs.default_bump }}

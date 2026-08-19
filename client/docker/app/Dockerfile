@@ -44,6 +44,8 @@ ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 WORKDIR /var/www
 ENV TIMEOUT=60
 
+COPY --from=ghcr.io/php/pie:bin@sha256:65d91cecb73cb1fd03ae2a892d8ec76b25d34468532c0c2032afa9c412cf8b43 /pie /usr/bin/pie
+
 # Dependencies
 RUN apk update && apk upgrade && apk add --no-cache \
     su-exec libzip-dev unzip \
@@ -52,13 +54,13 @@ RUN apk update && apk upgrade && apk add --no-cache \
     autoconf build-base wget \
  && docker-php-ext-install pcntl zip opcache gmp \
  && docker-php-ext-enable opcache \
- && pecl install pcov && docker-php-ext-enable pcov
+ && pie install pecl/pcov:^1.0.12 && docker-php-ext-enable pcov
 
 # Optional Xdebug
 ARG REQUIRE_XDEBUG=0
 RUN if [ "$REQUIRE_XDEBUG" = "1" ]; then \
       apk add --update linux-headers && \
-      pecl install xdebug && \
+      pie install xdebug/xdebug:^3.4 && \
       docker-php-ext-enable xdebug && \
       apk del linux-headers; \
     fi
