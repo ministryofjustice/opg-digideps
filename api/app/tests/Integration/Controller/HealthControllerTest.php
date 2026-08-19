@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
 use Doctrine\DBAL\Connection;
+use Osteel\OpenApi\Testing\ValidatorBuilder;
+use Osteel\OpenApi\Testing\ValidatorInterface;
 
 class HealthControllerTest extends AbstractTestController
 {
+    private ?ValidatorInterface $openapiValidator = null;
+
     public static function setUpBeforeClass(): void
     {
         // This is here to override to prevent the default setup until tests that fail with it are altered
@@ -67,5 +71,20 @@ class HealthControllerTest extends AbstractTestController
         $ref = new \ReflectionObject($connection);
         $prop = $ref->getProperty('_conn');
         $prop->setValue($connection, $mockConnection);
+    }
+
+    private function getOpenApiSpecification(): ValidatorInterface
+    {
+        if ($this->openapiValidator === null) {
+            $this->openapiValidator = ValidatorBuilder::fromYamlFile(__DIR__ . '/../../../openapi/specification.yaml')->getValidator();
+        }
+
+        return $this->openapiValidator;
+    }
+
+    private function validateResponseAgainstOpenApiSpecification(string $path, string $method): void
+    {
+        $validator = $this->getOpenApiSpecification();
+        $this->assertTrue($validator->validate(self::$frameworkBundleClient->getResponse(), $path, $method));
     }
 }

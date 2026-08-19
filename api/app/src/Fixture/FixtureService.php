@@ -207,13 +207,14 @@ final class FixtureService
 
             if ($deputy !== null) {
                 $persons['deputies'][$deputyDescriptor->deputyReference] = $deputy;
-                $deputy->associateWithCourtOrder($courtOrder);
+                $deputy->associateWithCourtOrder($courtOrder, $deputyDescriptor->isActive);
                 if ($organisation !== null) {
                     $deputy->setOrganisation($organisation);
                 } else {
                     $client->setDeputy($deputy);
                 }
                 $user = $deputy->getUser();
+                $this->persist($deputy);
             }
             if ($organisation !== null) {
                 $persons['organisations'][$deputyDescriptor->emailDomain] = $organisation;
@@ -230,6 +231,7 @@ final class FixtureService
             }
         }
 
+        $this->persist($courtOrder);
         $this->flush();
         $this->entityManager->refresh($courtOrder);
 
@@ -243,6 +245,9 @@ final class FixtureService
             $courtOrder->setSibling($sibling['order']);
             if ($courtOrder->getOrderKind() === CourtOrderKind::Hybrid) {
                 $reports = $sibling['reports'];
+                foreach ($reports as $report) {
+                    $report->setCourtOrder($courtOrder);
+                }
             }
         }
 
@@ -253,7 +258,7 @@ final class FixtureService
             foreach ($descriptor->reportList->reportDescriptors as $reportDescriptor) {
                 $reports[] = $this->makeReport($courtOrder, $reportDescriptor);
                 if (count($reports) !== $count || !$first) {
-                    $this->makeReportSubmitted($reports[count($reports) - 1], $primary);
+                    $this->makeReportSubmitted($reports[count($reports) - 1], $reportDescriptor, $primary);
                 } elseif ($descriptor->reportList->currentIsSubmittable) {
                     $this->makeReportSubmittable($reports[count($reports) - 1]);
                 }
@@ -269,7 +274,7 @@ final class FixtureService
     private function makeClient(): Client
     {
         $address = explode("\n", $this->faker->streetAddress());
-        return $this->persist(new Client())
+        $client = new Client()
             ->setCaseNumber($this->counter->nextString(size: 8, postfix: 'T'))
             ->setFirstname($this->faker->firstName())
             ->setLastname($this->faker->lastName())
@@ -287,6 +292,8 @@ final class FixtureService
             ->setDeletedAt(null)
             ->setArchivedAt(null)
             ->setCreatedAt(null);
+
+        return $this->persist($client);
     }
 
     private function makeCourtOrder(CourtOrderDescriptor $descriptor, Client $client, CourtOrderType $type): CourtOrder
@@ -296,7 +303,7 @@ final class FixtureService
 
         $client->setCourtDate($madeDate);
 
-        return $this->persist(new CourtOrder(
+        $courtOrder = new CourtOrder(
             $this->counter->nextString(8),
             $type,
             $descriptor->single || $type !== CourtOrderType::HW ? $descriptor->reportType : CourtOrderReportType::OPG104,
@@ -304,7 +311,9 @@ final class FixtureService
             $madeDate,
             $client,
             $descriptor->active ? 'ACTIVE' : 'CLOSED'
-        )->setId($this->counter->nextInt()));
+        )->setId($this->counter->nextInt());
+
+        return $this->persist($courtOrder);
     }
 
     private function makeDeputy(DeputyDescriptor $descriptor, ?Organisation $organisation): Deputy
@@ -402,6 +411,7 @@ final class FixtureService
             ->setCoDeputyClientConfirmed(true)
             ->setPassword($this->password)
             ->setRegistrationDate(new \DateTime()->sub(new \DateInterval('P1Y')))
+            ->setLastLoggedIn(new \DateTime())
             ->setRegistrationRoute(User::SELF_REGISTER)
         ;
 
@@ -415,7 +425,7 @@ final class FixtureService
     {
         $reportType = $order->getDesiredReportType();
         $report = new Report(
-            $order->getClient(),
+            $order,
             "{$reportType}",
             \DateTime::createFromImmutable($reportDescriptor->startDate),
             \DateTime::createFromImmutable($reportDescriptor->endDate),
@@ -429,13 +439,15 @@ final class FixtureService
         foreach ($reportDescriptor->supportingDocumentsWithoutS3Objects as $supportingDocumentWithoutS3Object) {
             $this->addSupportingDocumentWithoutS3Object($report, $supportingDocumentWithoutS3Object);
         }
-        return $report;
+
+        return $this->persist($report);
     }
 
-    private function makeReportSubmitted(Report $report, ?User $submitter): void
+    private function makeReportSubmitted(Report $report, ReportDescriptor $reportDescriptor, ?User $submitter): void
     {
+        $date = $reportDescriptor->submitDate ?? \DateTimeImmutable::createFromMutable($report->getEndDate())->add(new \DateInterval('P15D'));
         $report->setSubmitted(true);
-        $report->setSubmitDate((clone $report->getEndDate())->add(new \DateInterval('P15D')));
+        $report->setSubmitDate(\DateTime::createFromImmutable($date));
         $report->setSubmittedBy($submitter);
 
         $document = new Document($report, "DigiRep-{$this->counter->nextString(8)}.pdf");
@@ -446,9 +458,8 @@ final class FixtureService
 
         $reportSubmission = new ReportSubmission($report, $submitter);
         $reportSubmission->setUuid($this->counter->nextString(20));
+        $reportSubmission->setCreatedOn(\DateTime::createFromImmutable($date));
         $this->persist($reportSubmission);
-
-        $this->persist($report);
     }
 
     // this may be incomplete for making a HW report or a PFA 103 submittable,
@@ -459,34 +470,34 @@ final class FixtureService
         $report->setSignificantDecisionsMade('No')
             ->setReasonForNoDecisions('Nothing to be decided');
 
-        $mentalCapacity = new MentalCapacity($report)
+        $this->persist(new MentalCapacity($report)
             ->setMentalAssessmentDate(new \DateTime())
-            ->setHasCapacityChanged(MentalCapacity::CAPACITY_STAYED_SAME);
+            ->setHasCapacityChanged(MentalCapacity::CAPACITY_STAYED_SAME));
 
         // contacts
         $report->setReasonForNoContacts('No contacts necessary');
 
         // visits and care
-        $visitsCare = new VisitsCare($report)
+        $this->persist(new VisitsCare($report)
             ->setDoYouLiveWithClient('yes')
             ->setDoesClientReceivePaidCare('no')
             ->setWhoIsDoingTheCaring('family')
-            ->setDoesClientHaveACarePlan('no');
+            ->setDoesClientHaveACarePlan('no'));
 
         // benefits check
-        $benefitsCheck = new ClientBenefitsCheck()
+        $this->persist(new ClientBenefitsCheck()
             ->setReport($report)
             ->setWhenLastCheckedEntitlement(ClientBenefitsCheckInterface::WHEN_CHECKED_IM_CURRENTLY_CHECKING)
-            ->setDoOthersReceiveMoneyOnClientsBehalf('no');
+            ->setDoOthersReceiveMoneyOnClientsBehalf('no'));
 
         // accounts
-        $account = new BankAccount($report)
+        $this->persist(new BankAccount($report)
             ->setBank('Test Account')
             ->setAccountType('current')
             ->setAccountNumber('0011')
             ->setOpeningBalance('100.00')
             ->setClosingBalance('100.00')
-            ->setIsJointAccount('no');
+            ->setIsJointAccount('no'));
 
         // deputy expenses
         $report->setPaidForAnything('no');
@@ -509,9 +520,9 @@ final class FixtureService
         $report->setHasDebts('no');
 
         // actions
-        $action = new Action($report)
+        $this->persist(new Action($report)
             ->setDoYouExpectFinancialDecisions('no')
-            ->setDoYouHaveConcerns('no');
+            ->setDoYouHaveConcerns('no'));
 
         // any other information
         $report->setActionMoreInfo('no');
@@ -519,18 +530,9 @@ final class FixtureService
         // supporting documents
         $report->setWishToProvideDocumentation('no');
 
-        $this->persist($action);
-        $this->persist($account);
-        $this->persist($benefitsCheck);
-        $this->persist($visitsCare);
-        $this->persist($mentalCapacity);
-        $this->persist($report);
         $this->flush();
-
         $this->entityManager->refresh($report);
-
         $report->updateSectionsStatusCache();
-        $this->persist($report);
     }
 
     private function refreshCounter(): void
@@ -557,13 +559,11 @@ final class FixtureService
     {
         // required so that the system recognises the report has documents
         $report->setWishToProvideDocumentation('yes');
-        $this->persist($report);
 
         $document = new Document($report, $filename);
         $document->setIsReportPdf(false);
         $document->setCreatedBy($report->getSubmittedBy());
         $document->setStorageReference("dd_doc_{$report->getId()}_" . time());
         $this->persist($document);
-        $this->flush();
     }
 }

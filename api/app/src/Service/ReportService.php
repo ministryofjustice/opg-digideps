@@ -13,7 +13,6 @@ use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\Factory\ReportFactory;
 use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -24,7 +23,6 @@ class ReportService
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly ReportFactory $reportFactory,
         private readonly LoggerInterface $logger,
         private readonly \DateTimeImmutable $now = new \DateTimeImmutable()
     ) {
@@ -63,7 +61,6 @@ class ReportService
 
         $this->em->persist($submission);
 
-        $courtOrders = $currentReport->getCourtOrders()->toArray();
         $client = $currentReport->getClient();
         $clientId = $client->getId();
         $now = new \DateTime()->format('Y-m-d H:i:s');
@@ -93,11 +90,9 @@ class ReportService
 
             $newYearReport = $this->createNextYearReport($currentReport);
 
-            foreach ($courtOrders as $courtOrder) {
-                if ($courtOrder->getStatus() === 'ACTIVE') {
-                    $courtOrder->addReport($newYearReport);
-                    $this->em->persist($courtOrder);
-                }
+            foreach ($currentReport->getActiveCourtOrders() as $courtOrder) {
+                $courtOrder->addReport($newYearReport);
+                $this->em->persist($courtOrder);
             }
         }
 
@@ -241,7 +236,7 @@ class ReportService
         $endDate->modify('+12 months -1 day');
 
         $newReport = new Report(
-            $client,
+            $oldReport->getCourtOrder(),
             $newReportType, // report comes from casrec, or last year report, if not found
             $startDate,
             $endDate,
@@ -368,67 +363,12 @@ class ReportService
         return $endDate < $endOfToday;
     }
 
-    /**
-     * Work out which reports are required for the client by looking up related rows in the pre-reg table.
-     * Note that this only creates the report objects, but doesn't persist them.
-     * If a client is dual, we create both reports; if hybrid, we only create one.
-     *
-     * Note this doesn't check whether reports of the appropriate type already exist, and is intended for use
-     * with clients who have *no* reports.
-     *
-     * @return Report[]
-     */
-    public function createRequiredReports(Client $client): array
-    {
-        $preRegs = $this->preRegistrationRepository->findByCaseNumber($client->getCaseNumber());
-
-        if (count($preRegs) < 1) {
-            return [];
-        }
-
-        $pfa = null;
-        $hw = null;
-        $required = [];
-
-        foreach ($preRegs as $preReg) {
-            // verify that we have all the necessary data to make the report from the pre-reg row; if not, skip it
-            $typeOfReport = $preReg->getTypeOfReport();
-            $orderType = $preReg->getOrderType();
-            $orderDate = $preReg->getOrderDate();
-
-            if (is_null($typeOfReport) || is_null($orderType) || is_null($orderDate)) {
-                continue;
-            }
-
-            $report = $this->reportFactory->create($client, $typeOfReport, $orderType, $orderDate);
-
-            // if the report created for this pre-reg row is a hybrid, we just want this report and no others
-            if ($report->isHybrid()) {
-                return [$report];
-            }
-
-            // screen out duplicates if there are multiple rows for pfa and/or hw reports for this client,
-            // so we get 2 reports max. (one pfa, one hw)
-            if (is_null($pfa) && $report->isPfa()) {
-                $pfa = $report;
-                $required[] = $report;
-            }
-
-            if (is_null($hw) && $report->isHw()) {
-                $hw = $report;
-                $required[] = $report;
-            }
-        }
-
-        return $required;
-    }
-
     public function createReportFromOrder(CourtOrder $courtOrder): Report
     {
         $startDate = $this->determineStartDateOfFirstReport($courtOrder);
 
         $newReport = new Report(
-            client: $courtOrder->getClient(),
+            courtOrder: $courtOrder,
             type: "{$courtOrder->getDesiredReportType()}",
             startDate: \DateTime::createFromImmutable($startDate),
             endDate: \DateTime::createFromImmutable($startDate)->modify('+12 months -1 day'),

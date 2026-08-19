@@ -2,17 +2,15 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputySet;
+use OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Common\Deputy\DeputyType;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
-use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Checklist;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\SynchronisableInterface;
-use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\ReportRepository;
-use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
@@ -20,14 +18,11 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
     private array $queryResult;
     private Checklist|array $queuedChecklists = [];
     public const int QUERY_LIMIT = 2;
-    private static Fixtures $fixtures;
     private static ReportRepository $sut;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-
-        self::$fixtures = new Fixtures(self::$entityManager);
 
         /** @var ReportRepository $repo */
         $repo = self::$entityManager->getRepository(Report::class);
@@ -39,21 +34,14 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
         self::purgeDatabase();
     }
 
-    /**
-     * @throws \Exception
-     */
     private function ensureChecklistsExistInDatabase(): ReportRepositoryIntegrationTest
     {
-        $client = new Client()->setCaseNumber('49329657');
-        self::$entityManager->persist($client);
-
-        $this->queuedChecklists[] = $this->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_QUEUED);
-        $this->queuedChecklists[] = $this->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_QUEUED);
-        $this->queuedChecklists[] = $this->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_QUEUED);
-        $this->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_SUCCESS);
-        $this->buildChecklistWithStatus($client, null);
-
-        self::$entityManager->flush();
+        self::$fixtureService->flush();
+        $this->queuedChecklists[] = $this->buildChecklistWithStatus(SynchronisableInterface::SYNC_STATUS_QUEUED);
+        $this->queuedChecklists[] = $this->buildChecklistWithStatus(SynchronisableInterface::SYNC_STATUS_QUEUED);
+        $this->queuedChecklists[] = $this->buildChecklistWithStatus(SynchronisableInterface::SYNC_STATUS_QUEUED);
+        $this->buildChecklistWithStatus(SynchronisableInterface::SYNC_STATUS_SUCCESS);
+        $this->buildChecklistWithStatus(null);
 
         return $this;
     }
@@ -81,82 +69,37 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
         $this->assertEquals($this->queuedChecklists[1]->getId(), $result[1]->getId());
     }
 
-    /**
-     * @throws \Exception
-     */
-    private function buildChecklistWithStatus(Client $client, ?string $status): Checklist
+    private function buildChecklistWithStatus(?string $status): Checklist
     {
-        $report = $this->buildReport($client);
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
         $checklist = new Checklist($report);
 
         if ($status) {
             $checklist->setSynchronisationStatus($status);
         }
 
-        self::$entityManager->persist($checklist);
+        self::$fixtureService->persist($checklist);
+        self::$fixtureService->flush();
 
         return $checklist;
     }
 
-    /**
-     * @throws \Exception
-     */
-    private function buildReport(Client $client): Report
-    {
-        $startDate = new \DateTime('now', new \DateTimeZone('UTC'));
-        $endDate = $startDate->add(new \DateInterval('P1D'));
-        $report = new Report($client, Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS, $startDate, $endDate);
-
-        $user = new User('firstname', 'lastname', sprintf('email%s@test.com', rand(1, 100000)))
-            ->setPassword('password')
-            ->setRoleName('ROLE_LAY');
-
-        $client->addUser($user);
-
-        $reportSubmission = new ReportSubmission($report, $user);
-        $report->addReportSubmission($reportSubmission);
-
-        self::$entityManager->persist($report);
-        self::$entityManager->persist($reportSubmission);
-        self::$entityManager->persist($user);
-        self::$entityManager->persist($client);
-
-        return $report;
-    }
-
     public function testReportsAreSortedByDueDate(): void
     {
-        // create clients and add to org
-        $user = self::$fixtures->createUser(roleName: User::ROLE_PROF);
+        $team = DeputySet::oneTeam(DeputyType::PRO, 'pro', 0, 1);
+        ['persons' => $persons , 'orders' => [['pfa' => ['reports' => [$report1]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor($team)));
+        ['persons' => $persons , 'orders' => [['pfa' => ['reports' => [$report2]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor($team)), $persons);
+        ['persons' => $persons , 'orders' => [['pfa' => ['reports' => [$dualReport1]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor($team, single: false, siblingDeputySet: DeputySet::oneLay())), $persons);
+        ['persons' => $persons , 'orders' => [['pfa' => ['reports' => [$dualReport2]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor($team, single: false, siblingDeputySet: DeputySet::oneLay())), $persons);
 
-        // create organisation
-        $org = self::$fixtures->createOrganisations(1, $user)[0];
+        $report1->setDueDate(new \DateTime('2025-08-01'))->setEndDate(new \DateTime('2025-07-10'));
+        $report2->setDueDate(new \DateTime('2025-03-01'))->setEndDate(new \DateTime('2025-02-10'));
+        $dualReport1->setDueDate(new \DateTime('2025-02-01'))->setEndDate(new \DateTime('2025-01-10'));
+        $dualReport2->setDueDate(new \DateTime('2025-06-01'))->setEndDate(new \DateTime('2025-05-10'));
 
-        $deputy = self::$fixtures->createDeputy(user: $user);
+        self::$fixtureService->flush();
 
-        $client1 = self::$fixtures->createClient($user);
-        $client2 = self::$fixtures->createClient($user);
-        $clientDual = self::$fixtures->createClient($user);
-
-        self::$entityManager->flush();
-
-        self::$fixtures->addClientToOrganisation($client1->getId(), $org->getId());
-        self::$fixtures->addClientToOrganisation($client2->getId(), $org->getId());
-        self::$fixtures->addClientToOrganisation($clientDual->getId(), $org->getId());
-
-        $courtOrder1 = self::$fixtures->createCourtOrder('UID' . rand(1, 999999), CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE', deputy: $deputy, client: $client1);
-        $courtOrder2 = self::$fixtures->createCourtOrder('UID' . rand(1, 999999), CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE', deputy: $deputy, client: $client2);
-        // create reports for clients
-        $report1 = self::$fixtures->createReport($client1, courtOrder: $courtOrder1)->setDueDate(new \DateTime('2025-08-01'))->setEndDate(new \DateTime('2025-07-10'));
-        $report2 = self::$fixtures->createReport($client2, courtOrder: $courtOrder2)->setDueDate(new \DateTime('2025-03-01'))->setEndDate(new \DateTime('2025-02-10'));
-
-        $courtOrderDual = self::$fixtures->createCourtOrder('UID' . rand(1, 999999), CourtOrderType::PFA, CourtOrderKind::Dual, 'ACTIVE', deputy: $deputy, client: $clientDual);
-        $dualReport1 = self::$fixtures->createReport($clientDual, courtOrder: $courtOrderDual)->setDueDate(new \DateTime('2025-02-01'))->setEndDate(new \DateTime('2025-01-10'));
-        $dualReport2 = self::$fixtures->createReport($clientDual, courtOrder: $courtOrderDual)->setDueDate(new \DateTime('2025-06-01'))->setEndDate(new \DateTime('2025-05-10'));
-
-        self::$fixtures->flush();
-
-        $reports = self::$sut->getAllByUserId($user->getId(), new ParameterBag(), 'notStarted');
+        $reports = self::$sut->getAllByUserId($persons['users']['pro-member-1']->getId(), new ParameterBag(), 'notStarted');
 
         self::assertCount(4, $reports);
         self::assertEquals($reports[0]['id'], $dualReport1->getId());
@@ -176,22 +119,8 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
 
     public function testFindAllActiveReportsByCaseNumbersAndRoleIsCaseInsensitive(): void
     {
-        $client = new Client()->setCaseNumber('4932965t');
-        self::$entityManager->persist($client);
-
-        $existingReport = $this->buildReport($client);
-
-        self::$entityManager->flush();
-        self::$entityManager->refresh($existingReport);
-        self::$entityManager->refresh($client);
-        $firstClientUser = $client->getUsers()[0];
-        /** @var User $firstClientUser */
-        self::$entityManager->refresh($firstClientUser);
-
-        $roleName = $client->getUsers()[0]->getRoleName();
-        $this->assertNotNull($roleName);
-
-        $result = self::$sut->findAllActiveReportsByCaseNumbersAndRole(['4932965T'], $roleName);
-        self::assertEquals($existingReport, $result[0]);
+        ['client' => $client, 'persons' => ['users' => ['lay1' => $user]] , 'orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+        $result = self::$sut->findAllActiveReportsByCaseNumbersAndRole([$client->getCaseNumber()], $user->getRoleName());
+        self::assertSame($report->getId(), $result[0]->getId());
     }
 }

@@ -164,16 +164,16 @@ final readonly class ReportTransitionService
         $oldSibling->removeReport($persistingReport);
         $result->updatedCourtOrders[] = $oldSibling;
 
+        /**
+         * @var array<CourtOrder> $currentCourtOrders
+         */
         $currentCourtOrders = [$courtOrderPair->pfaCourtOrder, $courtOrderPair->hwCourtOrder];
 
         // remove the defunct report from both of the current court orders, and add the persisting report to both
         // (if not already present)
         foreach ($currentCourtOrders as $courtOrder) {
             $courtOrder->removeReport($defunctReport);
-
-            if (!$courtOrder->getReports()->contains($persistingReport)) {
-                $courtOrder->addReport($persistingReport);
-            }
+            $courtOrder->addReport($persistingReport);
 
             $result->updatedCourtOrders[] = $courtOrder;
         }
