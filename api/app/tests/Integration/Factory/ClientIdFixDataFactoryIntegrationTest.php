@@ -67,8 +67,7 @@ class ClientIdFixDataFactoryIntegrationTest extends ApiIntegrationTestCase
         $courtOrder->setClient($oldClient);
 
         // report also associated with old inactive client
-        $report = self::$fixtures->createReport($oldClient);
-        $courtOrder->addReport($report);
+        $report = self::$fixtures->createReport($courtOrder);
 
         self::$entityManager->persist($report);
         self::$entityManager->persist($courtOrder);
@@ -128,7 +127,7 @@ class ClientIdFixDataFactoryIntegrationTest extends ApiIntegrationTestCase
         $courtOrder->setClient($oldClient);
 
         // report also associated with old inactive client
-        $report = self::$fixtures->createReport($oldClient);
+        $report = self::$fixtures->createReport($courtOrder);
         $courtOrder->addReport($report);
 
         self::$entityManager->persist($report);

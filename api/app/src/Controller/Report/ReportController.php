@@ -611,7 +611,7 @@ class ReportController extends RestController
                     'lastname' => $reportDatum['client']['lastname'],
                     'case_number' => $reportDatum['client']['caseNumber'],
                     'organisation' => [
-                        'name' => $reportDatum['client']['organisation']['name'],
+                        'name' => $reportDatum['client']['organisation']['name'] ?? '',
                     ],
                 ],
             ];

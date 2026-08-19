@@ -7,9 +7,13 @@ namespace Tests\OPG\Digideps\Backend\Unit\Service\RestHandler\Report;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +28,14 @@ final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
     {
         $date = new \DateTime('now', new \DateTimeZone('Europe/London'));
         $this->report = $this->getMockBuilder(Report::class)
-            ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
+            ->setConstructorArgs([new CourtOrder(
+                '',
+                CourtOrderType::PFA,
+                CourtOrderReportType::OPG102,
+                CourtOrderKind::Single,
+                new \DateTime(),
+                new Client()
+            ), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
             ->onlyMethods(['updateSectionsStatusCache'])
             ->getMock();
 

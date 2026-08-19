@@ -103,7 +103,10 @@ class ReportRepository extends ServiceEntityRepository
         return $missingCategories;
     }
 
-    public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, string $role)
+    /**
+     * @return array<Report>
+     */
+    public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, string $role): array
     {
         $caseNumbers = array_map('strtolower', $caseNumbers);
 
@@ -114,7 +117,11 @@ class ReportRepository extends ServiceEntityRepository
             ->setParameter('caseNumbers', $caseNumbers, Connection::PARAM_STR_ARRAY)
             ->setParameter('roleName', $role);
 
-        return $qb->getQuery()->getResult();
+        /**
+         * @var array<Report>|never $result
+         */
+        $result = $qb->getQuery()->getResult();
+        return is_array($result) ? $result : [];
     }
 
     private function getAllByUserIdQuery(int $userId, ParameterBag $query, string $select, string $status): ?QueryBuilder
@@ -128,7 +135,6 @@ class ReportRepository extends ServiceEntityRepository
             ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c,o')
             ->leftJoin('r.client', 'c')
             ->leftJoin('c.organisation', 'o')
-            ->where('o.isActivated = true')
             ->andWhere('r.submitted = false OR r.submitted is null');
         $qb->andWhere($qb->expr()->in('r.id', $reportIds));
 
@@ -393,8 +399,9 @@ END deputy_type";
         SELECT DISTINCT r.*
         FROM court_order co
         INNER JOIN court_order_deputy cod ON cod.court_order_id = co.id
-        INNER JOIN court_order_report cor ON cor.court_order_id = co.id
-        INNER JOIN report r ON r.id = cor.report_id
+        INNER JOIN report r
+            ON co.id = r.pfa_court_order_id AND co.order_type = 'pfa'
+            OR co.id = r.hw_court_order_id AND co.order_type = 'hw'
         WHERE co.court_order_uid = :courtOrderUid
         AND cod.is_active = TRUE;
         SQL;
