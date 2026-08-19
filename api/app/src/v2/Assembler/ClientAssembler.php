@@ -117,7 +117,7 @@ class ClientAssembler
             ->setAddress4($dto->getClientAddress4() ?: null)
             ->setAddress5($dto->getClientAddress5() ?: null)
             ->setPostcode($dto->getClientPostcode() ?: null)
-            ->setCourtDate($dto->getOrderDate() ?: null);
+            ->setCourtDate($dto->getOrderDate());
 
         if (!empty($dto->getClientPostCode())) {
             $client->setPostcode($dto->getClientPostCode());

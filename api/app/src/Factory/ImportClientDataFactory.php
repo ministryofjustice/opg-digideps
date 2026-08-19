@@ -29,7 +29,7 @@ class ImportClientDataFactory implements DataFactoryInterface
         $created = $preLinked = $updated = $inserted = $postLinked = 0;
         if ($this->beginTransaction()) {
             try {
-                $this->execute('DELETE FROM staging.sirius_client ssd WHERE TRUE');
+                $this->execute('DELETE FROM staging.sirius_client ssc WHERE TRUE');
                 $created = $this->execute("
                     INSERT INTO staging.sirius_client (
                         case_number,
@@ -66,6 +66,21 @@ class ImportClientDataFactory implements DataFactoryInterface
                     WHERE c.case_number = ssc.case_number
                 ');
                 if (!$dryRun) {
+                    $updated = $this->execute("
+                        UPDATE client c
+                        SET
+                            firstname = COALESCE(ssc.client_first_name, c.firstname),
+                            lastname = COALESCE(ssc.client_last_name, c.lastname),
+                            address = COALESCE(ssc.client_address1, c.address),
+                            address2 = COALESCE(ssc.client_address2, c.address2),
+                            address3 = COALESCE(ssc.client_address3, c.address3),
+                            address4 = COALESCE(ssc.client_address4, c.address4),
+                            address5 = COALESCE(ssc.client_address5, c.address5),
+                            postcode = COALESCE(ssc.client_post_code, c.postcode),
+                            date_of_birth = COALESCE(ssc.client_date_of_birth, c.date_of_birth)
+                        FROM staging.sirius_client ssc
+                        WHERE c.id = ssc.local_id
+                    ");
                     $inserted = $this->execute("
                         INSERT INTO client (
                             case_number,
@@ -77,6 +92,7 @@ class ImportClientDataFactory implements DataFactoryInterface
                             address4,
                             address5,
                             postcode,
+                            date_of_birth,
                             created_at
                         )
                         SELECT
@@ -89,6 +105,7 @@ class ImportClientDataFactory implements DataFactoryInterface
                             ssc.client_address4,
                             ssc.client_address5,
                             ssc.client_post_code,
+                            ssc.client_date_of_birth,
                             now()
                         FROM staging.sirius_client ssc
                         WHERE ssc.local_id IS NULL
@@ -113,9 +130,9 @@ class ImportClientDataFactory implements DataFactoryInterface
             "Linked {$preLinked} existing entries in client.",
         ];
         if (!$dryRun) {
-            $messages[] = "Updated {$updated} existing entries in deputy.";
-            $messages[] = "Created {$inserted} entries in deputy.";
-            $messages[] = " Linked {$postLinked} new entries in deputy.";
+            $messages[] = "Updated {$updated} existing entries in client.";
+            $messages[] = "Created {$inserted} entries in client.";
+            $messages[] = " Linked {$postLinked} entries in client.";
         }
         return new DataFactoryResult([
             'counts' => $messages,
