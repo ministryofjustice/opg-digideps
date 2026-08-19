@@ -149,7 +149,7 @@ final readonly class ReportTransitionService
         try {
             $oldSibling = $this->getOldSibling($courtOrderPair, $oldSiblingId);
         } catch (\DomainException $exception) {
-            $result->errorMessages[] = 'Hybrid -> Dual: ' . $exception->getMessage();
+            $result->errorMessages[] = 'Dual -> Hybrid: ' . $exception->getMessage();
             return $result;
         }
 
@@ -157,7 +157,7 @@ final readonly class ReportTransitionService
         ['persistingReport' => $persistingReport, 'defunctReport' => $defunctReport] =
             $this->dualToHybridAssignReports($courtOrderPair, $courtOrderChange, $oldSibling);
         if ($persistingReport === null || $defunctReport === null) {
-            $result->errorMessages[] = 'Hybrid -> Dual: Persisting and/or defunct report unavailable';
+            $result->errorMessages[] = 'Dual -> Hybrid: Persisting and/or defunct report unavailable';
             return $result;
         }
 
