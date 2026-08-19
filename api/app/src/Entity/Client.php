@@ -16,8 +16,8 @@ use OPG\Digideps\Backend\Repository\ClientRepository;
 
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
 #[ORM\Table(name: 'client', options: ['collate' => 'utf8_general_ci', 'charset' => 'utf8'])]
-#[ORM\Index(columns: ['case_number'], name: 'case_number_idx')]
-#[ORM\Index(columns: ['archived_at'], name: 'archived_at_idx')]
+#[ORM\Index(name: 'case_number_idx', columns: ['case_number'])]
+#[ORM\Index(name: 'archived_at_idx', columns: ['archived_at'])]
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Client
@@ -49,7 +49,7 @@ class Client
      */
     #[JMS\Groups(['client-reports'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Report>')]
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Report::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Report::class, mappedBy: 'client', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['submitDate' => 'DESC'])]
     private Collection $reports;
 
@@ -706,6 +706,14 @@ class Client
 
     public function getOrganisation(): ?Organisation
     {
+        if ($this->organisation === null) {
+            foreach ($this->getActiveCourtOrders() as $courtOrder) {
+                $organisation = $courtOrder->getOrganisation();
+                if ($organisation !== null) {
+                    return $organisation;
+                }
+            }
+        }
         return $this->organisation;
     }
 
@@ -732,6 +740,14 @@ class Client
     public function getCourtOrders(): Collection
     {
         return $this->courtOrders;
+    }
+
+    /**
+     * @return Collection<int, CourtOrder>
+     */
+    public function getActiveCourtOrders(): Collection
+    {
+        return $this->courtOrders->filter(fn (CourtOrder $courtOrder) => $courtOrder->isActive());
     }
 
     /**
