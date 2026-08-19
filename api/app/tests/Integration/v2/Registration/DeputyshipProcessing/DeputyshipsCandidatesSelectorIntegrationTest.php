@@ -165,7 +165,9 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         self::$entityManager->persist($deputy);
 
         $client = ClientTestHelper::create()->generateClient(self::$entityManager, null, null, '61111002');
-        $report = ReportTestHelper::create()->generateReport(self::$entityManager, $client, '104', new \DateTime('2019-01-21'), new \DateTime('2020-01-21'));
+        $courtOrder = new CourtOrder('StuartOne7827', CourtOrderType::HW, CourtOrderReportType::OPG104, CourtOrderKind::Single, new \DateTime('2019-01-21'), $client);
+        self::$entityManager->persist($courtOrder);
+        $report = ReportTestHelper::create()->generateReport($courtOrder, new \DateTime('2019-01-21'), new \DateTime('2020-01-21'));
 
         $client->addReport($report);
         $report->setClient($client);

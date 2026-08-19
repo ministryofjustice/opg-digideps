@@ -3,11 +3,9 @@
 namespace OPG\Digideps\Backend\DataFixtures;
 
 use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
-use OPG\Digideps\Backend\Fixture\DeputyDescriptor;
 use OPG\Digideps\Backend\Fixture\DeputySet;
 use OPG\Digideps\Backend\Fixture\FixtureService;
 use OPG\Digideps\Backend\Fixture\Scenario;
-use OPG\Digideps\Backend\Fixture\UserType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\Deputy\DeputyType;
 
@@ -26,13 +24,7 @@ class OrgUserFixtures extends AbstractDataFixture
     {
         $deputyTypeLabel = strtolower($deputyType->value);
         $label = strtolower($type->value);
-        $team = new DeputySet(
-            new DeputyDescriptor("{$deputyTypeLabel}-{$label}-named", $deputyType),
-            new DeputyDescriptor("{$deputyTypeLabel}-{$label}-admin-1", $deputyType, UserType::OrgAdmin),
-            new DeputyDescriptor("{$deputyTypeLabel}-{$label}-admin-2", $deputyType, UserType::OrgAdmin),
-            new DeputyDescriptor("{$deputyTypeLabel}-{$label}-member-1", $deputyType, UserType::OrgTeamMember),
-            new DeputyDescriptor("{$deputyTypeLabel}-{$label}-member-2", $deputyType, UserType::OrgTeamMember),
-        );
+        $team = DeputySet::oneTeam($deputyType, "{$deputyTypeLabel}-{$label}", 2, 2, true);
         $scenario = new Scenario(new CourtOrderDescriptor($team, $type));
         $persons = null;
         $domain = "{$deputyTypeLabel}10{$type->getSuffix()}s.gov.uk";

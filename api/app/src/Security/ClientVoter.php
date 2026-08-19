@@ -3,6 +3,8 @@
 namespace OPG\Digideps\Backend\Security;
 
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -49,6 +51,14 @@ class ClientVoter extends Voter
     private function canManage(Client $client, User $user): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
+        if (!$client->getCourtOrders()
+            ->filter(fn (CourtOrder $courtOrder) => $courtOrder->isActive())
+            ->filter(fn (CourtOrder $courtOrder) => array_any($courtOrder->getActiveDeputies(), fn (Deputy $deputy) => $deputy->getUser()?->getId() === $user->getId()))
+            ->isEmpty()
+        ) {
             return true;
         }
 

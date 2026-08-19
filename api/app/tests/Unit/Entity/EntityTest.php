@@ -290,7 +290,7 @@ final class EntityTest extends TestCase
 
     private function makeReport(): Report
     {
-        return new Report(new Client(), '102', new \DateTime(), new \DateTime(), false);
+        return new Report($this->makeCourtOrder(), '102', new \DateTime(), new \DateTime(), false);
     }
 
     /**

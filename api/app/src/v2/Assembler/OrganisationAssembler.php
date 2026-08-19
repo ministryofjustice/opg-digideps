@@ -5,8 +5,10 @@ namespace OPG\Digideps\Backend\v2\Assembler;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\v2\DTO\ClientDto;
 use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
 use OPG\Digideps\Backend\v2\DTO\OrganisationDto;
+use OPG\Digideps\Backend\v2\DTO\UserDto;
 
 class OrganisationAssembler
 {
@@ -18,9 +20,6 @@ class OrganisationAssembler
     ) {
     }
 
-    /**
-     * @return OrganisationDto
-     */
     public function assembleFromArray(array $data): OrganisationDto
     {
         $dto = new OrganisationDto();
@@ -42,9 +41,6 @@ class OrganisationAssembler
         return $dto;
     }
 
-    /**
-     * @return OrganisationDto
-     */
     public function assembleFromEntity(Organisation $organisation): OrganisationDto
     {
         $dto = new OrganisationDto();
@@ -60,7 +56,7 @@ class OrganisationAssembler
     }
 
     /**
-     * @return array
+     * @return array<UserDto>
      */
     private function assembleOrganisationUsers(iterable $users): array
     {
@@ -78,9 +74,7 @@ class OrganisationAssembler
     }
 
     /**
-     * @param array $clients
-     *
-     * @return array
+     * @return array<ClientDto>
      */
     private function assembleOrganisationClients(iterable $clients): array
     {
