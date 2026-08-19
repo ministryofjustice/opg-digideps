@@ -2,7 +2,7 @@
 
 namespace OPG\Digideps\Backend\FixtureFactory;
 
-use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\v2\Fixture\ReportSection;
@@ -16,8 +16,9 @@ class ReportFactory
     /**
      * @throws \Exception
      */
-    public function create(array $data, Client $client): Report
+    public function create(array $data, CourtOrder $courtOrder): Report
     {
+        $client = $courtOrder->getClient();
         $type = '';
 
         if ($data['deputyType'] === User::TYPE_LAY) {
@@ -31,7 +32,7 @@ class ReportFactory
         $startDate = $client->getExpectedReportStartDate((int)$client->getCourtDate()->format('Y'));
         $endDate = $client->getExpectedReportEndDate((int)$client->getCourtDate()->format('Y'));
 
-        $report = new Report($client, $type, $startDate, $endDate);
+        $report = new Report($courtOrder, $type, $startDate, $endDate);
 
         if (isset($data['reportStatus']) && $data['reportStatus'] === Report::STATUS_READY_TO_SUBMIT) {
             $this->reportSection->completeReport($report);

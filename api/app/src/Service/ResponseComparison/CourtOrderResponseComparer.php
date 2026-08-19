@@ -20,7 +20,9 @@ class CourtOrderResponseComparer extends ResponseComparer
         INNER JOIN court_order co ON co.client_id = dc.client_id
         INNER JOIN deputy de on de.user_id = d.id
         INNER JOIN court_order_deputy cod ON cod.deputy_id = de.id AND cod.court_order_id = co.id
-        INNER JOIN court_order_report cor on cor.court_order_id = co.id
+        INNER JOIN report r
+            ON co.id = r.pfa_court_order_id AND co.order_type = 'pfa'
+            OR co.id = r.hw_court_order_id AND co.order_type = 'hw'
         WHERE d.deputy_uid IS NOT NULL
           AND d.deputy_uid != 0
           AND d.role_name = 'ROLE_LAY_DEPUTY'

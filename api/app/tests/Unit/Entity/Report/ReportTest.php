@@ -6,6 +6,7 @@ namespace Tests\OPG\Digideps\Backend\Unit\Entity\Report;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
@@ -21,6 +22,9 @@ use OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyPreviousCost;
 use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -28,7 +32,7 @@ final class ReportTest extends TestCase
 {
     public function testDueDate(): void
     {
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
+        $report = new Report($this->makeCourtOrder(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
         self::assertEquals('2019-01-21', $report->getDueDate()->format('Y-m-d'));
     }
 
@@ -41,11 +45,12 @@ final class ReportTest extends TestCase
         $this->expectExceptionMessage('already has an unsubmitted report');
 
         $client = new Client();
-        $report1 = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate);
+        $courtOrder = $this->makeCourtOrder($client);
+        $report1 = new Report($courtOrder, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate);
         $client->addReport($report1);
 
         // this throws the exception as the client already has an unsubmitted report
-        new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate);
+        new Report($courtOrder, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate);
     }
 
     public function testConstructorClientAlreadyHasReportCoveringPeriod(): void
@@ -59,18 +64,19 @@ final class ReportTest extends TestCase
         $this->expectExceptionMessage('Incorrect start date');
 
         $client = new Client();
-        $report1 = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate)
+        $courtOrder = $this->makeCourtOrder($client);
+        $report1 = new Report($courtOrder, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate)
             ->setSubmitted(true);
         $client->addReport($report1);
 
         // this throws the exception as the client already has a report whose reporting period overlaps the new report's
-        new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $badStartDate, $endDate);
+        new Report($courtOrder, Report::LAY_PFA_HIGH_ASSETS_TYPE, $badStartDate, $endDate);
     }
 
     public function testGetMoneyTotal(): void
     {
         // 102
-        $report1 = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
+        $report1 = new Report($this->makeCourtOrder(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
         self::assertEquals(0, $report1->getMoneyInTotal());
         self::assertEquals(0, $report1->getMoneyOutTotal());
         $report1->setMoneyTransactions(new ArrayCollection([
@@ -83,7 +89,7 @@ final class ReportTest extends TestCase
         self::assertEquals(3 + 4, $report1->getMoneyOutTotal());
 
         // 103
-        $report2 = new Report(new Client(), Report::LAY_PFA_LOW_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
+        $report2 = new Report($this->makeCourtOrder(), Report::LAY_PFA_LOW_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
         self::assertEquals(0, $report2->getMoneyInTotal());
         self::assertEquals(0, $report2->getMoneyOutTotal());
         $report2->getMoneyTransactionsShort()->clear();
@@ -97,7 +103,7 @@ final class ReportTest extends TestCase
 
     public function testGetAccountsOpeningBalanceTotal(): void
     {
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
+        $report = new Report($this->makeCourtOrder(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
         self::assertEquals(0, $report->getAccountsOpeningBalanceTotal());
 
         $report->addAccount(new BankAccount($report)->setBank('bank1')->setOpeningBalance('1'));
@@ -109,7 +115,7 @@ final class ReportTest extends TestCase
 
     public function testGetAccountsClosingBalanceTotal(): void
     {
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
+        $report = new Report($this->makeCourtOrder(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
 
         self::assertEquals(0, $report->getAccountsClosingBalanceTotal());
 
@@ -125,7 +131,7 @@ final class ReportTest extends TestCase
 
     public function testGetCalculatedBalance(): void
     {
-        $report = new Report(new Client(), Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
+        $report = new Report($this->makeCourtOrder(), Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
         self::assertFalse($report->has106Flag());
 
         self::assertEquals(0, $report->getCalculatedBalance());
@@ -154,7 +160,7 @@ final class ReportTest extends TestCase
 
     public function testGetCalculatedBalanceProfDeputy(): void
     {
-        $report = new Report(new Client(), Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
+        $report = new Report($this->makeCourtOrder(), Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
 
         self::assertEquals(0, $report->getCalculatedBalance());
 
@@ -185,11 +191,11 @@ final class ReportTest extends TestCase
 
     /**
      * //TODO consider rewriting, unit testing methods composing the total
-     * (see testgetExpensesTotal as an example) and using mocks here.
+     * (see testGetExpensesTotal as an example) and using mocks here.
      */
     public function testGetTotalsOffsetAndMatch(): void
     {
-        $report = new Report(new Client(), Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
+        $report = new Report($this->makeCourtOrder(), Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
 
         self::assertEquals(0, $report->getTotalsOffset());
         self::assertTrue($report->getTotalsMatch());
@@ -221,7 +227,7 @@ final class ReportTest extends TestCase
 
     public function testGetFeesTotal(): void
     {
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
+        $report = new Report($this->makeCourtOrder(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
         self::assertEquals(0, $report->getFeesTotal());
 
         $fee1 = new Fee($report, 'annual-management-fee')->setAmount('2');
@@ -235,7 +241,7 @@ final class ReportTest extends TestCase
 
     public function testGetExpensesTotal(): void
     {
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
+        $report = new Report($this->makeCourtOrder(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
         self::assertEquals(0, $report->getExpensesTotal());
 
         $expense1 = new Expense($report, 'car')->setAmount('1');
@@ -249,7 +255,7 @@ final class ReportTest extends TestCase
 
     public function testGetAssetsTotalValue(): void
     {
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
+        $report = new Report($this->makeCourtOrder(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
         self::assertEquals(0, $report->getAssetsTotalValue());
 
         $report->addAsset(new AssetOther($report)->setValue('1'));
@@ -273,7 +279,7 @@ final class ReportTest extends TestCase
     #[DataProvider('sectionsSettingsProvider')]
     public function testAvailableSectionsAndHasSection(string $type, array $expectedSections, array $unExpectedSections): void
     {
-        $report = new Report(new Client(), $type, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'))
+        $report = new Report($this->makeCourtOrder(), $type, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'))
             ->setBenefitsSectionReleaseDate(new \DateTime('2016-01-01'));
 
         foreach ($expectedSections as $section) {
@@ -289,17 +295,18 @@ final class ReportTest extends TestCase
     public function testGetPreviousReportData(): void
     {
         $client = new Client();
+        $courtOrder = $this->makeCourtOrder($client);
         $now = new \DateTime();
 
-        $reportTwoYearsAgo = new Report($client, Report::PROF_COMBINED_LOW_ASSETS_TYPE, $now, $now);
+        $reportTwoYearsAgo = new Report($courtOrder, Report::PROF_COMBINED_LOW_ASSETS_TYPE, $now, $now);
         $reportTwoYearsAgo->setId(8);
 
 
-        $reportLastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $now, $now);
+        $reportLastYear = new Report($courtOrder, Report::LAY_PFA_HIGH_ASSETS_TYPE, $now, $now);
         $reportLastYear->setId(9);
 
 
-        $reportLatest = new Report($client, Report::LAY_PFA_LOW_ASSETS_TYPE, $now, $now);
+        $reportLatest = new Report($courtOrder, Report::LAY_PFA_LOW_ASSETS_TYPE, $now, $now);
         $reportLatest->setId(10);
 
         $client->addReport($reportTwoYearsAgo);
@@ -334,20 +341,20 @@ final class ReportTest extends TestCase
 
         $client = new Client();
 
-        $reportTwoYearsAgo = new Report($client, Report::PROF_COMBINED_LOW_ASSETS_TYPE, new \DateTime('2023-01-01'), new \DateTime('2023-12-31'));
+        $reportTwoYearsAgo = new Report($this->makeCourtOrder($client), Report::PROF_COMBINED_LOW_ASSETS_TYPE, new \DateTime('2023-01-01'), new \DateTime('2023-12-31'));
         $reportTwoYearsAgo->setId(8);
         $reportTwoYearsAgo->addAccount($bankAccount0);
         $reportTwoYearsAgo->setSubmitted(true);
         $reportTwoYearsAgo->setSubmitDate(new \DateTime('2024-01-01'));
 
-        $reportLastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
+        $reportLastYear = new Report($this->makeCourtOrder($client), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
         $reportLastYear->setId(9);
         $reportLastYear->addAccount($bankAccount1);
         $reportLastYear->addAccount($bankAccount2);
         $reportLastYear->setSubmitted(true);
         $reportLastYear->setSubmitDate(new \DateTime('2025-01-01'));
 
-        $reportLatest = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
+        $reportLatest = new Report($this->makeCourtOrder($client), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
         $reportLatest->setId(10);
         $reportLatest->setSubmitted(true);
         $reportLatest->setSubmitDate(new \DateTime('2026-01-01'));
@@ -396,12 +403,12 @@ final class ReportTest extends TestCase
     public function testNoPreviousReportDataReturnedOutside15Months(): void
     {
         $client = new Client();
-        $reportTwoYearsAgo = new Report($client, Report::PROF_COMBINED_LOW_ASSETS_TYPE, new \DateTime('2023-01-01'), new \DateTime('2023-12-31'));
+        $reportTwoYearsAgo = new Report($this->makeCourtOrder($client), Report::PROF_COMBINED_LOW_ASSETS_TYPE, new \DateTime('2023-01-01'), new \DateTime('2023-12-31'));
         $reportTwoYearsAgo->setId(8);
         $reportTwoYearsAgo->setSubmitted(true);
         $reportTwoYearsAgo->setSubmitDate(new \DateTime('2024-01-01'));
 
-        $reportLastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
+        $reportLastYear = new Report($this->makeCourtOrder($client), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
         $reportLastYear->setId(9);
         $reportLastYear->setSubmitted(true);
         $reportLastYear->setSubmitDate(new \DateTime('2026-01-01'));
@@ -417,12 +424,12 @@ final class ReportTest extends TestCase
     public function testNoPreviousReportDataReturnedWithin15MonthsForHWReports(): void
     {
         $client = new Client();
-        $reportTwoYearsAgo = new Report($client, Report::LAY_HW_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
+        $reportTwoYearsAgo = new Report($this->makeCourtOrder($client), Report::LAY_HW_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
         $reportTwoYearsAgo->setId(8);
         $reportTwoYearsAgo->setSubmitted(true);
         $reportTwoYearsAgo->setSubmitDate(new \DateTime('2025-01-01'));
 
-        $reportLastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
+        $reportLastYear = new Report($this->makeCourtOrder($client), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
         $reportLastYear->setId(9);
         $reportLastYear->setSubmitted(true);
         $reportLastYear->setSubmitDate(new \DateTime('2026-01-01'));
@@ -437,17 +444,17 @@ final class ReportTest extends TestCase
     public function testPreviousReportDataReturnedFromOldPfaReport(): void
     {
         $client = new Client();
-        $reportPFALastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
+        $reportPFALastYear = new Report($this->makeCourtOrder($client), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
         $reportPFALastYear->setId(8);
         $reportPFALastYear->setSubmitted(true);
         $reportPFALastYear->setSubmitDate(new \DateTime('2025-01-01'));
 
-        $reportHWLastYear = new Report($client, Report::LAY_HW_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
+        $reportHWLastYear = new Report($this->makeCourtOrder($client), Report::LAY_HW_TYPE, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'));
         $reportHWLastYear->setId(9);
         $reportHWLastYear->setSubmitted(true);
         $reportHWLastYear->setSubmitDate(new \DateTime('2025-01-01'));
 
-        $reportLatest = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
+        $reportLatest = new Report($this->makeCourtOrder($client), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
         $reportLatest->setId(10);
         $reportLatest->setSubmitted(true);
         $reportLatest->setSubmitDate(new \DateTime('2026-01-01'));
@@ -467,7 +474,7 @@ final class ReportTest extends TestCase
 
     public function getAssetsSummaryReturnsCorrectStructure(): void
     {
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
+        $report = new Report($this->makeCourtOrder(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
         $report->addAsset(new AssetOther($report)->setValue('500'));
 
         $summary = $report->getAssetsSummary();
@@ -481,7 +488,7 @@ final class ReportTest extends TestCase
 
     public function getDebtsSummaryReturnsCorrectStructure(): void
     {
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
+        $report = new Report($this->makeCourtOrder(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
         $report->addDebt(new Debt($report, '1', false, '500'));
 
         $summary = $report->getDebtsSummary();
@@ -522,20 +529,20 @@ final class ReportTest extends TestCase
     #[DataProvider('reportTypeTranslationKeyProvider')]
     public function testGetReportTitle(string $reportType, string $expected): void
     {
-        $report = new Report(new Client(), $reportType, new \DateTime(), new \DateTime());
+        $report = new Report($this->makeCourtOrder(), $reportType, new \DateTime(), new \DateTime());
         self::assertEquals($expected, $report->getReportTitle());
     }
 
     public function testInvalidAgreedBehalfOption(): void
     {
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
+        $report = new Report($this->makeCourtOrder(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
         $this->expectException(\InvalidArgumentException::class);
         $report->setAgreedBehalfDeputy('BAD_VALUE');
     }
 
     public function testValidAgreedBehalfOptions(): void
     {
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
+        $report = new Report($this->makeCourtOrder(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
         $values = ['not_deputy', 'only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
         foreach ($values as $value) {
             $report->setAgreedBehalfDeputy($value);
@@ -580,24 +587,22 @@ final class ReportTest extends TestCase
     #[DataProvider('layReportTypesProvider')]
     public function testIsLayReport(string $type, bool $expectedResult): void
     {
-        $client = new Client();
         $endDate = new \DateTime();
         $startDate = clone $endDate;
         $startDate = $startDate->modify('-1 year');
 
-        $report = new Report($client, $type, $startDate, $endDate);
+        $report = new Report($this->makeCourtOrder(), $type, $startDate, $endDate);
         self::assertEquals($expectedResult, $report->isLayReport());
     }
 
     #[DataProvider('reportTypesWithEndDateProvider')]
     public function testUpdateDuetDateBasedOnEndDate(string $type, string $endDate, string $expectedDueDate): void
     {
-        $client = new Client();
         $endDate = new \DateTime($endDate);
         $startDate = clone $endDate;
         $startDate = $startDate->modify('-1 year');
 
-        $report = new Report($client, $type, $startDate, $endDate);
+        $report = new Report($this->makeCourtOrder(), $type, $startDate, $endDate);
 
         $report->updateDueDateBasedOnEndDate();
 
@@ -614,7 +619,7 @@ final class ReportTest extends TestCase
         ?\DateTime $unsubmitDate,
         bool $expectedResult
     ): void {
-        $report = new Report(new Client(), Report::LAY_PFA_LOW_ASSETS_TYPE, new \DateTime(), new \DateTime(), false)
+        $report = new Report($this->makeCourtOrder(), Report::LAY_PFA_LOW_ASSETS_TYPE, new \DateTime(), new \DateTime(), false)
             ->setDueDate($dueDate)
             ->setClientBenefitsCheck($clientBenefitSection)
             ->setUnSubmitDate($unsubmitDate)
@@ -675,5 +680,10 @@ final class ReportTest extends TestCase
                 true,
             ],
         ];
+    }
+
+    private function makeCourtOrder(?Client $client = null): CourtOrder
+    {
+        return new CourtOrder('', CourtOrderType::PFA, CourtOrderReportType::OPG102, CourtOrderKind::Single, new \DateTime(), $client ?? new Client());
     }
 }
