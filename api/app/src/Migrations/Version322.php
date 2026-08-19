@@ -25,8 +25,8 @@ final class Version322 extends AbstractMigration
 
         $this->addSql('ALTER TABLE report ADD pfa_court_order_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE report ADD hw_court_order_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE report ADD CONSTRAINT FK_C42F77844EF621E1 FOREIGN KEY (pfa_court_order_id) REFERENCES court_order (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE report ADD CONSTRAINT FK_C42F7784DDF824B5 FOREIGN KEY (hw_court_order_id) REFERENCES court_order (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE report ADD CONSTRAINT FK_C42F77844EF621E1 FOREIGN KEY (pfa_court_order_id) REFERENCES court_order (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE report ADD CONSTRAINT FK_C42F7784DDF824B5 FOREIGN KEY (hw_court_order_id) REFERENCES court_order (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE INDEX IDX_C42F77844EF621E1 ON report (pfa_court_order_id)');
         $this->addSql('CREATE INDEX IDX_C42F7784DDF824B5 ON report (hw_court_order_id)');
     }
