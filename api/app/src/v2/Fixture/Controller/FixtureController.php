@@ -130,7 +130,7 @@ class FixtureController extends AbstractController
             $deputy->associateWithCourtOrder($courtOrder);
             $this->em->persist($deputy);
 
-            $report = $this->generateReport($fromRequest, $orgClient);
+            $report = $this->generateReport($fromRequest, $courtOrder);
             $courtOrder->addReport($report);
             $this->em->persist($courtOrder);
             $this->em->persist($report);
@@ -171,6 +171,7 @@ class FixtureController extends AbstractController
         }
 
         $reportType = strtolower($fromRequest['reportType']);
+        $courtOrder = null;
 
         if ($fromRequest['deputyType'] === User::TYPE_LAY) {
             $deputy = $this->generateDeputy($user);
@@ -180,8 +181,8 @@ class FixtureController extends AbstractController
             $this->em->persist($deputy);
         }
 
-        if (!$this->reportRepository->findOneBy(['client' => $client])) {
-            $report = $this->generateReport($fromRequest, $client);
+        if (!$this->reportRepository->findOneBy(['client' => $client]) && $courtOrder !== null) {
+            $report = $this->generateReport($fromRequest, $courtOrder);
             $this->em->persist($report);
 
             if ($fromRequest['deputyType'] === User::TYPE_LAY) {
@@ -195,7 +196,7 @@ class FixtureController extends AbstractController
         if ($fromRequest['deputyType'] === User::TYPE_LAY) {
             $user->setIsPrimary(true);
             $user->addClient($client);
-        } else {
+        } elseif ($report !== null) {
             $this->createOrgAndAttachParticipants($fromRequest, $user, $client, $report);
         }
 
@@ -227,7 +228,7 @@ class FixtureController extends AbstractController
 
         $deputy->associateWithCourtOrder($courtOrder);
         $this->em->persist($deputy);
-        $report = $this->generateReport($fromRequest, $client);
+        $report = $this->generateReport($fromRequest, $courtOrder);
         $this->em->persist($report);
         $courtOrder->addReport($report);
         $this->em->persist($courtOrder);
@@ -251,7 +252,7 @@ class FixtureController extends AbstractController
         // Associate second deputy to original court order
         $deputy->associateWithCourtOrder($secondCourtOrder);
         $this->em->persist($deputy);
-        $secondReport = $this->generateReport($fromRequest, $secondClient);
+        $secondReport = $this->generateReport($fromRequest, $secondCourtOrder);
         $this->em->persist($secondReport);
         $secondCourtOrder->addReport($secondReport);
         $this->em->persist($secondCourtOrder);
@@ -396,7 +397,7 @@ class FixtureController extends AbstractController
     /**
      * @throws \Exception
      */
-    private function generateReport(mixed $fromRequest, Client $client): Report
+    private function generateReport(mixed $fromRequest, CourtOrder $courtOrder): Report
     {
         if (!is_array($fromRequest)) {
             throw new \InvalidArgumentException('Invalid request payload: expected array.');
@@ -405,7 +406,7 @@ class FixtureController extends AbstractController
             'deputyType' => $fromRequest['deputyType'],
             'reportType' => $fromRequest['reportType'],
             'reportStatus' => $fromRequest['reportStatus'],
-        ], $client);
+        ], $courtOrder);
     }
 
     private function createOrgAndAttachParticipants(array $fromRequest, User $user, Client $client, Report $report): void

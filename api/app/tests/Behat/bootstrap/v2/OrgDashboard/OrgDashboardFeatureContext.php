@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\OrgDashboard;
 
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\OrganisationRepository;
+use OPG\Digideps\Common\Deputy\DeputyType;
+use OPG\Digideps\Common\Report\ReportType;
 use Tests\OPG\Digideps\Backend\Behat\v2\ClientManagement\ClientManagementTrait;
 use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
 use Tests\OPG\Digideps\Backend\Behat\v2\ReportSubmission\ReportSubmissionTrait;
@@ -88,7 +92,12 @@ class OrgDashboardFeatureContext extends BaseFeatureContext
             $this->em->persist($client);
 
             // create court order on client
-            $courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(CourtOrderType::PFA, $client);
+            $courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(new ReportType(
+                CourtOrderReportType::OPG102,
+                CourtOrderType::PFA,
+                CourtOrderKind::Single,
+                DeputyType::PRO
+            ), $client);
 
             // create named deputy in org, associate with court order, and add to org
             // (NB we don't create a user for any of these deputies as they are named deputies)
@@ -99,7 +108,7 @@ class OrgDashboardFeatureContext extends BaseFeatureContext
             $this->em->persist($deputy);
 
             // create report on client
-            $report = $this->reportTestHelper->generateReport($this->em, $client, '102', dateChecks: false);
+            $report = $this->reportTestHelper->generateReport($courtOrder, dateChecks: false);
 
             if ($reportStatus === "notFinished") {
                 // complete one section so that the report status is "notFinished" and *not* "notStarted"

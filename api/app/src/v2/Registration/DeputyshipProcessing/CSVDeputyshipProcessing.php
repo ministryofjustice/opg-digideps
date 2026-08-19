@@ -4,28 +4,19 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing;
 
-use OPG\Digideps\Backend\Service\ReportUtils;
-use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
 use OPG\Digideps\Backend\v2\Registration\Uploader\LayDeputyshipUploader;
-use OPG\Digideps\Backend\v2\Registration\Uploader\OrgDeputyshipUploader;
 use Psr\Log\LoggerInterface;
 
-class CSVDeputyshipProcessing
+readonly class CSVDeputyshipProcessing
 {
-    protected const int MAX_UPLOAD_BATCH_SIZE = 10000;
-
     public function __construct(
-        private readonly LayDeputyshipDtoCollectionAssemblerFactory $layFactory,
-        private readonly LayDeputyshipUploader $layUploader,
-        private readonly OrgDeputyshipUploader $orgUploader,
-        private readonly LoggerInterface $verboseLogger,
+        private LayDeputyshipDtoCollectionAssemblerFactory $layFactory,
+        private LayDeputyshipUploader $layUploader,
+        private LoggerInterface $verboseLogger,
     ) {
     }
 
-    /**
-     * @return mixed[]
-     */
     public function layProcessing(array $data, ?int $chunkId): array
     {
         $assembler = $this->layFactory->create();
@@ -70,19 +61,7 @@ class CSVDeputyshipProcessing
     public function orgProcessing(array $data): array
     {
         $rowCount = count($data);
-
-        // Errors are only for the manual process, so we throw http error
-        if (!$rowCount) {
-            throw new \RuntimeException('No records received from the API');
-        }
-        if ($rowCount > self::MAX_UPLOAD_BATCH_SIZE) {
-            throw new \RuntimeException(sprintf('Max %s records allowed in a single bulk insert', self::MAX_UPLOAD_BATCH_SIZE));
-        }
-
-        $orgAssembler = new SiriusToOrgDeputyshipDtoAssembler(new ReportUtils());
-
-        $dtos = $orgAssembler->assembleMultipleDtosFromArray($data);
-
-        return $this->orgUploader->upload($dtos);
+        $this->verboseLogger->notice("Skipping org ingest. Received {$rowCount} rows.");
+        return [];
     }
 }

@@ -25,8 +25,7 @@ class DeputyTestHelper
         $firstname = is_null($user) ? $faker->firstName() : $user->getFirstName();
         $lastname = is_null($user) ? $faker->lastName() : $user->getLastName();
 
-
-        $deputy = ($deputy ?? new Deputy($deputyUid, DeputyType::LAY, $firstname, $lastname))
+        $deputy = ($deputy ?? new Deputy($deputyUid, $user?->deriveDeputyType() ?? DeputyType::LAY, $firstname, $lastname))
             ->setDeputyUid($deputyUid)
             ->setFirstname($firstname)
             ->setLastname($lastname)

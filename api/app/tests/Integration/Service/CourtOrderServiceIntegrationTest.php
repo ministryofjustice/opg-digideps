@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Integration\Service;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderService;
-use OPG\Digideps\Common\CourtOrder\CourtOrderType;
-use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
-use OPG\Digideps\Backend\TestHelpers\CourtOrderTestHelper;
-use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
-use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
-use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
+use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputyDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputySet;
+use OPG\Digideps\Backend\Fixture\ReportList;
+use OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 
 class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
@@ -28,35 +27,14 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
 
     public function testGetCourtOrderSingleReport(): void
     {
-        $uid = '700999999999';
-        $deputyUid = '700888888888';
-        $email = 'deputy12345@example.org';
-
-        $em = self::$entityManager;
-
-        // User who will be authorised and Deputy tied to the user
-        $user = (UserTestHelper::create())->createAndPersistUser($em, email: $email);
-        $deputy = DeputyTestHelper::generateDeputy($email, $deputyUid, $user);
-        $em->persist($deputy);
-
-        $client = (ClientTestHelper::create())->generateClient($em, $user);
-        $client->setFirstName('Alice');
-        $client->setLastName('Example');
-        $em->persist($client);
-
-        $report = (ReportTestHelper::create())->generateReport($em, $client);
-        $report->setStartDate(new \DateTime('2024-01-01'));
-        $report->setEndDate(new \DateTime('2024-12-31'));
-        $report->setSubmittedBy($user); // we set it to prove it changes to null
-        $em->persist($report);
-
-        $courtOrder = CourtOrderTestHelper::generateCourtOrder($em, $client, $uid, 'ACTIVE', CourtOrderType::PFA, $report, $deputy);
-        $em->persist($courtOrder);
-
-        $em->flush();
+        [
+            'client' => $client,
+            'persons' => ['users' => ['lay1' => $user], 'deputies' => ['lay1' => $deputy]],
+            'orders' => [['pfa' => ['order' => $courtOrder, 'reports' => [$report]]]]
+        ] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
         // --- Act ---
-        $result = self::$sut->getCourtOrderData($uid, $user);
+        $result = self::$sut->getCourtOrderData($courtOrder->getCourtOrderUid(), $user);
 
         // --- Assert ---
         self::assertNotNull($result, 'Expected court order view not to be null');
@@ -78,7 +56,7 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
         $deputyUserRow = $deputyRow['user'];
         self::assertIsArray($deputyUserRow);
         self::assertArrayHasKey('email', $deputyUserRow);
-        self::assertSame($email, $deputyUserRow['email'], 'Deputy embedded user email should match');
+        self::assertSame($deputy->getEmail1(), $deputyUserRow['email'], 'Deputy embedded user email should match');
 
         // Client
         $clientRow = $result['client'];
@@ -86,8 +64,8 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
         self::assertIsArray($clientRow);
         self::assertArrayHasKey('firstname', $clientRow);
         self::assertArrayHasKey('lastname', $clientRow);
-        self::assertSame('Alice', $clientRow['firstname']);
-        self::assertSame('Example', $clientRow['lastname']);
+        self::assertSame($client->getFirstname(), $clientRow['firstname']);
+        self::assertSame($client->getLastname(), $clientRow['lastname']);
 
         // Reports
         self::assertIsArray($result['reports']);
@@ -109,57 +87,29 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
         self::assertNull($reportRow['submitted_by']);
 
         if (isset($reportRow['start_date'])) {
-            self::assertSame('2024-01-01', $reportRow['start_date'], 'Start date should be transformed to Y-m-d');
+            self::assertSame($report->getStartDate()->format('Y-m-d'), $reportRow['start_date'], 'Start date should be transformed to Y-m-d');
         }
         if (isset($reportRow['end_date'])) {
-            self::assertSame('2024-12-31', $reportRow['end_date'], 'End date should be transformed to Y-m-d');
+            self::assertSame($report->getEndDate()->format('Y-m-d'), $reportRow['end_date'], 'End date should be transformed to Y-m-d');
         }
     }
 
     // Check that we get right number of reports and deputies for 3 reports and 2 active deputies and 1 inactive
     public function testGetCourtOrderMultiReportMultiDeputy(): void
     {
-        $uid = '700666666666';
-        $deputyUid1 = '700777777777';
-        $deputyUid2 = '700111111111';
-        $email1 = 'deputy00000@example.org';
-        $email2 = 'deputy11111@example.org';
+        [
+            'persons' => ['users' => ['lay1' => $user]],
+            'orders' => [['pfa' => ['order' => $courtOrder]]]
+        ] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(
+            new DeputySet(
+                new DeputyDescriptor('lay1'),
+                new DeputyDescriptor('lay2'),
+                new DeputyDescriptor('lay3', isActive: false),
+            ),
+            reportList: ReportList::manyReports(submittedReports: 2)
+        )));
 
-        $inactiveDeputyUid = '700000000000';
-        $inactiveEmail = 'inactivedeputy@example.org';
-
-        $em = self::$entityManager;
-        $user1 = (UserTestHelper::create())->createAndPersistUser($em);
-        $deputy1 = DeputyTestHelper::generateDeputy($email1, $deputyUid1, $user1);
-        $em->persist($deputy1);
-        $user2 = (UserTestHelper::create())->createAndPersistUser($em);
-        $deputy2 = DeputyTestHelper::generateDeputy($email2, $deputyUid2, $user2);
-        $em->persist($deputy2);
-        $inactiveUser = (UserTestHelper::create())->createAndPersistUser($em);
-        $inactiveDeputy = DeputyTestHelper::generateDeputy($inactiveEmail, $inactiveDeputyUid, $inactiveUser);
-        $em->persist($inactiveDeputy);
-
-        $client = (ClientTestHelper::create())->generateClient($em, $user1);
-        $client->addUser($user2);
-        $client->addUser($inactiveUser);
-        $em->persist($client);
-        $report1 = (ReportTestHelper::create())->generateReport($em, $client);
-        $report2 = (ReportTestHelper::create())->generateReport($em, $client);
-        $report3 = (ReportTestHelper::create())->generateReport($em, $client);
-        $em->persist($report1);
-        $em->persist($report2);
-        $em->persist($report3);
-        $courtOrder = CourtOrderTestHelper::generateCourtOrder($em, $client, $uid, 'ACTIVE', CourtOrderType::PFA, $report1, $deputy1);
-        $courtOrder->addReport($report2);
-        $courtOrder->addReport($report3);
-        $deputy2->associateWithCourtOrder($courtOrder);
-        $inactiveDeputy->associateWithCourtOrder($courtOrder, false); // isActive false
-        $em->persist($deputy2);
-        $em->persist($inactiveDeputy);
-        $em->persist($courtOrder);
-        $em->flush();
-
-        $result = self::$sut->getCourtOrderData($uid, $user1);
+        $result = self::$sut->getCourtOrderData($courtOrder->getCourtOrderUid(), $user);
 
         self::assertIsArray($result['reports']);
         self::assertCount(3, $result['reports'], 'Expect exactly 3 reports');
@@ -169,26 +119,10 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
 
     public function testGetCourtOrderDifferentUser(): void
     {
-        // Check authorisation works and doesn't bring back data if user not a deputy on case.
-        $uid = '700444444444';
-        $deputyUid = '700555555555';
-        $email = 'deputy67890@example.org';
+        ['orders' => [['pfa' => ['order' => $courtOrder]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+        ['persons' => ['users' => ['lay1' => $user]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        $em = self::$entityManager;
-
-        $userWhoIsDeputyOnReport = (UserTestHelper::create())->createAndPersistUser($em);
-        $userWhoIsNotDeputyOnReport = (UserTestHelper::create())->createAndPersistUser($em);
-        $deputy = DeputyTestHelper::generateDeputy($email, $deputyUid, $userWhoIsDeputyOnReport);
-        $em->persist($deputy);
-        $client = (ClientTestHelper::create())->generateClient($em, $userWhoIsDeputyOnReport);
-        $em->persist($client);
-        $report = (ReportTestHelper::create())->generateReport($em, $client);
-        $em->persist($report);
-        $courtOrder = CourtOrderTestHelper::generateCourtOrder($em, $client, $uid, 'ACTIVE', CourtOrderType::PFA, $report, $deputy);
-        $em->persist($courtOrder);
-        $em->flush();
-
-        $result = self::$sut->getCourtOrderData($uid, $userWhoIsNotDeputyOnReport);
+        $result = self::$sut->getCourtOrderData($courtOrder->getCourtOrderUid(), $user);
 
         self::assertNull($result, 'Expected court order view to be null');
     }

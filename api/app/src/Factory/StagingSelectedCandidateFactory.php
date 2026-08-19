@@ -65,13 +65,4 @@ class StagingSelectedCandidateFactory
 
         return $changes;
     }
-
-    public function createInsertOrderReportCandidate(string $orderUid, int $reportId): StagingSelectedCandidate
-    {
-        $changes = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderReport, $orderUid);
-
-        $changes->reportId = $reportId;
-
-        return $changes;
-    }
 }

@@ -6,11 +6,15 @@ namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Uploader;
 
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ClientRepository;
 use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use OPG\Digideps\Backend\v2\Registration\Uploader\ClientMatch;
 use OPG\Digideps\Backend\v2\Registration\Uploader\LayClientMatcher;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use PHPUnit\Framework\TestCase;
 
 final class LayClientMatcherTest extends TestCase
@@ -24,6 +28,11 @@ final class LayClientMatcherTest extends TestCase
         $this->sut = new LayClientMatcher($this->em);
     }
 
+    private function makeCourtOrder(Client $client): CourtOrder
+    {
+        return new CourtOrder('', CourtOrderType::PFA, CourtOrderReportType::OPG102, CourtOrderKind::Single, new \DateTime(), $client);
+    }
+
     public function testMatchDtoWithMatchingClientAndReport(): void
     {
         $dto = new LayDeputyshipDto();
@@ -33,7 +42,7 @@ final class LayClientMatcherTest extends TestCase
         $dto->setHybrid(null);
 
         $client = new Client();
-        $report = new Report($client, '102', new \DateTime(), new \DateTime(), false);
+        $report = new Report($this->makeCourtOrder($client), '102', new \DateTime(), new \DateTime(), false);
         $client->addReport($report);
 
         $clientRepository = $this->createMock(ClientRepository::class);
@@ -109,7 +118,7 @@ final class LayClientMatcherTest extends TestCase
         $dto->setHybrid(null);
 
         $client = new Client();
-        $report = new Report($client, '102', new \DateTime(), new \DateTime(), false);
+        $report = new Report($this->makeCourtOrder($client), '102', new \DateTime(), new \DateTime(), false);
         $client->addReport($report);
 
         $clientRepository = $this->createMock(ClientRepository::class);
@@ -138,7 +147,7 @@ final class LayClientMatcherTest extends TestCase
         $dto->setHybrid('HYBRID');
 
         $client = new Client();
-        $report = new Report($client, '102', new \DateTime(), new \DateTime(), false);
+        $report = new Report($this->makeCourtOrder($client), '102', new \DateTime(), new \DateTime(), false);
         $client->addReport($report);
 
         $clientRepository = $this->createMock(ClientRepository::class);

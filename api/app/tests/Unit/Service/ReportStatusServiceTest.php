@@ -6,6 +6,7 @@ namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Action;
 use OPG\Digideps\Backend\Entity\Report\Asset;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
@@ -21,6 +22,9 @@ use OPG\Digideps\Backend\Entity\Report\MoneyTransfer;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\VisitsCare;
 use OPG\Digideps\Backend\Service\ReportStatusService;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -380,7 +384,14 @@ final class ReportStatusServiceTest extends TestCase
     private function initReport(): static
     {
         $this->report = $this->getMockBuilder(Report::class)
-            ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime()])
+            ->setConstructorArgs([new CourtOrder(
+                '',
+                CourtOrderType::PFA,
+                CourtOrderReportType::OPG102,
+                CourtOrderKind::Single,
+                new \DateTime(),
+                new Client()
+            ), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime()])
             ->onlyMethods(['hasSection'])
             ->getMock();
 
