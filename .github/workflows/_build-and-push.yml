@@ -235,6 +235,10 @@ jobs:
         if: |
           (matrix.svc_name == 'client' || matrix.svc_name == 'client-webserver' || matrix.svc_name == 'htmltopdf')
 
+      - name: get local pwnedpasswords
+        if: (matrix.svc_name == 'client' || matrix.svc_name == 'client-devtools')
+        run: wget -q -O client/docker/app/extra/commonpasswords.txt "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt"
+
       - name: build docker image
         env:
           IMAGE_NAME: ${{ matrix.svc_name }}

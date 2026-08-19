@@ -60,7 +60,7 @@ COPY --chown=www-data:www-data client/docker/app/config/xdebug.ini /usr/local/et
 COPY --chown=www-data:www-data scripts/process_checks/check_processes.sh check_processes.sh
 
 ##############################
-# Stage 2: PHP build stage
+# Stage 2a: PHP build stage
 ##############################
 FROM base AS php-builder
 
@@ -73,7 +73,8 @@ RUN apk add --no-cache --virtual .build-deps \
     linux-headers \
     libzip-dev \
  && docker-php-ext-install pcntl zip opcache gmp \
- && pie install pecl/pcov:^1.0.12
+ && pie install pecl/pcov:^1.0.12 \
+ && docker-php-ext-enable pcov
 
 # Optional Xdebug
 ARG REQUIRE_XDEBUG=0
@@ -101,28 +102,24 @@ COPY --from=php-builder /usr/local/etc/php/conf.d \
 
 # Dependencies
 RUN apk add --no-cache \
-    gmp \
-    libzip \
-    su-exec \
-    unzip \
-    php84-pecl-igbinary \
-    php84-pecl-redis \
-    php84-pecl-imagick \
-    libheif \
-    libde265 \
-    ffmpeg \
-    wget
+    "gmp==6.3.0-r4" \
+    "libzip==1.11.4-r2" \
+    "su-exec==0.3-r0" \
+    "unzip==6.0-r16" \
+    "php84-pecl-igbinary==3.2.17_rc1-r0" \
+    "php84-pecl-redis==6.3.0-r0" \
+    "php84-pecl-imagick==3.8.1-r0" \
+    "libheif==1.23.0-r0" \
+    "libde265==1.0.18-r0" \
+    "ffmpeg==8.1.2-r0" \
+    "wget==1.25.0-r3"
 
 # Cache/log dirs
 RUN mkdir -p var/cache var/logs /var/log/app \
  && chown -R www-data var /var/log/app
 
 # Pwned Passwords
-COPY client/docker/app/extra/commonpasswords.txt /tmp/commonpasswords.txt
-RUN wget -q -O /tmp/commonpasswords.txt \
-    "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt" \
-    || echo "Using local copy" \
- && chown www-data /tmp/commonpasswords.txt
+COPY --chown=www-data:www-data client/docker/app/extra/commonpasswords.txt /tmp/commonpasswords.txt
 
 ##############################
 # Stage 3a: Runtime (production)
