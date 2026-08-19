@@ -12,9 +12,14 @@ use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
 class ReportSubmissionRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(private ManagerRegistry $registry)
     {
-        parent::__construct($registry, ReportSubmission::class);
+        parent::__construct($this->registry, ReportSubmission::class);
+    }
+
+    public function clear(): void
+    {
+        $this->registry->getManager()->clear();
     }
 
     /**
@@ -106,11 +111,9 @@ class ReportSubmissionRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param int $limit
-     *
      * @return ReportSubmission[]
      */
-    public function findDownloadableOlderThan(\DateTime $olderThan, $limit): array
+    public function findDownloadableOlderThan(\DateTime $olderThan, int $limit): array
     {
         $qb = $this->createQueryBuilder('rs');
         $qb
@@ -192,10 +195,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $orderBy default createdOn
-     * @param string $order   default ASC
-     *
-     * @return array
+     * @return array<ReportSubmission>
      */
     public function findAllReportSubmissions(
         ?\DateTime $fromDate = null,
@@ -227,13 +227,15 @@ class ReportSubmissionRepository extends ServiceEntityRepository
 
         $this->getEntityManager()->getFilters()->enable('softdeleteable');
 
-        return $qbSelect->getQuery()->getResult();
+        /**
+         * @var array<ReportSubmission> $result;
+         */
+        $result =  $qbSelect->getQuery()->getResult();
+        return $result;
     }
 
     /**
      * Calculate FromDate for ReportSubmissions. Used for CSV generation to include weekends reports on Monday.
-     *
-     * @return \DateTime
      */
     private function determineCreatedFromDate(?\DateTime $date = null): \DateTime
     {
@@ -242,26 +244,25 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         return ($date instanceof \DateTime) ? $date : new \DateTime($dateFormat);
     }
 
-    /**
-     * @return \DateTime
-     */
     private function determineCreatedToDate(?\DateTime $date = null): \DateTime
     {
         return ($date instanceof \DateTime) ? $date : new \DateTime();
     }
 
-    public function findOneByIdUnfiltered($id): ?object
+    public function findOneByIdUnfiltered($id): ?ReportSubmission
     {
         $this->getEntityManager()->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); // disable softdelete for createdBy, needed from admin area
+        /**
+         * @var null|ReportSubmission $reportSubmission
+         */
         $reportSubmission = $this->find($id);
         $this->getEntityManager()->getFilters()->enable('softdeleteable');
-
         return $reportSubmission;
     }
 
     public function updateArchivedStatus(ReportSubmission $reportSubmission): void
     {
-        if ($reportSubmission->getDocuments() && !$reportSubmission->getArchived()) {
+        if (!$reportSubmission->getDocuments()->isEmpty() && !$reportSubmission->getArchived()) {
             $allSynced = true;
 
             foreach ($reportSubmission->getDocuments() as $document) {

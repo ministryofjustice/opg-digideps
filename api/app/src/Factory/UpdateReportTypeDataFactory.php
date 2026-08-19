@@ -33,8 +33,9 @@ readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
     {
         $result = $this->entityManager->getConnection()->executeQuery(<<<SQL
             SELECT DISTINCT r.id FROM report r
-            INNER JOIN court_order_report cor ON cor.report_id = r.id
-            INNER JOIN court_order co ON co.id = cor.court_order_id
+            INNER JOIN court_order co
+                ON co.id = r.pfa_court_order_id AND co.order_type = 'pfa'
+                OR co.id = r.hw_court_order_id AND co.order_type = 'hw'
             WHERE co.status = 'ACTIVE'
         SQL);
 
