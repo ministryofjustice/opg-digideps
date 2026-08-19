@@ -42,18 +42,21 @@ FROM php:8.4.24-fpm-alpine3.24@sha256:5992f8b7433fe7fa96dfbf67746c86d6c41bc91e68
 WORKDIR /var/www
 
 # Shared app assets
+COPY --chown=www-data:www-data client/app/admin.env admin.env
+COPY --chown=www-data:www-data client/app/frontend.env frontend.env
 COPY --chown=www-data:www-data client/app/public public
-COPY --chown=www-data:www-data client/resources/public/ public/
 COPY --chown=www-data:www-data client/app/scripts scripts
 COPY --chown=www-data:www-data client/app/templates templates
-COPY --chown=www-data:www-data client/resources/assets assets
 COPY --chown=www-data:www-data client/app/translations translations
-COPY --chown=www-data:www-data client/app/frontend.env frontend.env
-COPY --chown=www-data:www-data client/app/admin.env admin.env
+
+COPY --chown=www-data:www-data client/resources/assets assets
+COPY --chown=www-data:www-data client/resources/public/ public/
+
 COPY --chown=www-data:www-data client/docker/app/config/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY --chown=www-data:www-data client/docker/app/config/meta.json.tmpl public/meta.json.tmpl
 COPY --chown=www-data:www-data client/docker/app/config/generate_parameters_yml.sh generate_parameters_yml.sh
 COPY --chown=www-data:www-data client/docker/app/config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
 COPY --chown=www-data:www-data scripts/process_checks/check_processes.sh check_processes.sh
 
 ##############################
@@ -89,7 +92,6 @@ FROM base AS application
 
 ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 
-WORKDIR /var/www
 ENV TIMEOUT=60
 
 COPY --from=php-builder /usr/local/lib/php/extensions \
@@ -106,8 +108,6 @@ RUN apk add --no-cache \
     php84-pecl-igbinary \
     php84-pecl-redis \
     php84-pecl-imagick \
-    libheif \
-    libde265 \
     ffmpeg \
     wget
 
@@ -159,6 +159,10 @@ COPY --chown=www-data:www-data client/app/tests tests
 COPY --chown=www-data:www-data client/app/phpstan.neon .
 COPY --chown=www-data:www-data api/app/phpstan-fragment.neon .
 COPY --chown=www-data:www-data client/app/phpstan-baseline.neon .
+
+RUN apk add --no-cache \
+    libheif \
+    libde265
 
 RUN sed "s|TAG|${TAG:-latest}|" public/meta.json.tmpl > public/meta.json \
  && ./generate_parameters_yml.sh \
