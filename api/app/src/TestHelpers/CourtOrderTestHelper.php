@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\TestHelpers;
 
-use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
-use OPG\Digideps\Backend\Entity\Report\Report;
 use Doctrine\ORM\EntityManagerInterface;
+use OPG\Digideps\Common\Report\ReportType;
 
 class CourtOrderTestHelper
 {
@@ -19,27 +16,21 @@ class CourtOrderTestHelper
         EntityManagerInterface $em,
         Client $client,
         string $courtOrderUid,
+        ReportType $reportType,
         string $status = 'ACTIVE',
-        CourtOrderType $type = CourtOrderType::PFA,
-        ?Report $report = null,
         ?Deputy $deputy = null,
         bool $deputyIsActive = true,
         \DateTime $orderDate = (new \DateTime()),
-        CourtOrderKind $courtOrderKind = CourtOrderKind::Single,
     ): CourtOrder {
         $courtOrder = new CourtOrder(
             $courtOrderUid,
-            $type,
-            $type === CourtOrderType::PFA || $courtOrderKind === CourtOrderKind::Hybrid ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104,
-            $courtOrderKind,
+            $reportType->courtOrderType,
+            $reportType->courtOrderReportType,
+            $reportType->courtOrderKind,
             $orderDate,
             $client,
             $status
         );
-
-        if (!is_null($report)) {
-            $courtOrder->addReport($report);
-        }
 
         if (!is_null($deputy)) {
             $deputy->associateWithCourtOrder($courtOrder, $deputyIsActive);

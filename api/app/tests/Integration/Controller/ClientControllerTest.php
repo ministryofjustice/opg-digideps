@@ -10,8 +10,8 @@ use Ramsey\Uuid\Uuid;
 
 class ClientControllerTest extends AbstractTestController
 {
-    private static $deputy1;
-    private static $client1;
+    private static User $deputy1;
+    private static Client $client1;
     private static $deputy2;
     private static $client2;
     private static $deputy3;
@@ -34,7 +34,7 @@ class ClientControllerTest extends AbstractTestController
     private static $pa1;
     private static $pa1Client1;
 
-    private $updateDataLay = [
+    private array $updateDataLay = [
         'firstname' => 'Firstname',
         'lastname' => 'Lastname',
         'case_number' => 'CaseNumber',
@@ -50,7 +50,7 @@ class ClientControllerTest extends AbstractTestController
         'court_date' => '2015-12-31',
     ];
 
-    private $updateDataPa = [
+    private array $updateDataPa = [
         'firstname' => 'f',
         'lastname' => 'l',
         'address' => 'a1',
@@ -87,10 +87,7 @@ class ClientControllerTest extends AbstractTestController
             self::$tokenProf = $this->loginAsProf();
         }
 
-        // deputy 1
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'deputy1Client1']);
-        self::fixtures()->createReport(self::$client1);
+        ['client' => self::$client1, 'persons' => ['users' => ['lay1' => self::$deputy1]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
@@ -115,7 +112,6 @@ class ClientControllerTest extends AbstractTestController
         // pa
         self::$pa1 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa@example.org');
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => 'pa000001']);
-        self::fixtures()->createReport(self::$pa1Client1);
 
         $org = self::fixtures()->createOrganisation('Example', '' . Uuid::uuid4() . '@example.org', true);
         self::fixtures()->flush();
@@ -151,7 +147,7 @@ class ClientControllerTest extends AbstractTestController
 
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
+            'AuthToken' => $this->loginAsDeputy(self::$deputy1->getEmail()),
             'data' => ['users' => [0 => self::$deputy1->getId()]] + $this->updateDataLay,
         ]);
         self::fixtures()->clear();
@@ -171,7 +167,7 @@ class ClientControllerTest extends AbstractTestController
         // Lay deputy
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
+            'AuthToken' => $this->loginAsDeputy(self::$deputy1->getEmail()),
             'data' => ['id' => self::$client1->getId()] + $this->updateDataLay,
         ]);
         self::fixtures()->clear();
@@ -185,8 +181,8 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals('Address4', $client->getAddress4());
         $this->assertEquals('Address5', $client->getAddress5());
         $this->assertEquals('Phone', $client->getPhone());
-        $this->assertEquals(null, $client->getDateOfBirth());
-        $this->assertEquals('2015-12-31', $client->getCourtDate()->format('Y-m-d'));
+        $this->assertEquals(self::$client1->getDateOfBirth()?->format('Y-m-d'), $client->getDateOfBirth()?->format('Y-m-d'));
+        $this->assertEquals('2015-12-31', $client->getCourtDate()?->format('Y-m-d'));
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
     }
 
@@ -304,7 +300,7 @@ class ClientControllerTest extends AbstractTestController
         $client = self::fixtures()->clear()->getRepo(Client::class)->find($return['data']['id']);
 
         $this->assertInstanceOf(Client::class, $client);
-        $this->assertEquals(1, count($client->getUsers()));
+        $this->assertCount(1, $client->getUsers());
         $this->assertInstanceOf(\DateTime::class, $client->getArchivedAt());
     }
 
@@ -327,7 +323,7 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
-        $this->assertEquals('deputy1Client1', $data['firstname']);
+        $this->assertEquals(self::$client1->getFirstName(), $data['firstname']);
         $this->assertCount(1, $data['users']);
         $this->assertCount(1, $data['reports']);
     }
