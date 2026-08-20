@@ -123,7 +123,6 @@ final readonly class ReportTransitionService
 
         // create a new report on the court order which is the other half of the dual
         $newReport = $this->reportService->createReportFromOrder($newReportCourtOrder);
-        $newReport->setCourtOrder($newReportCourtOrder);
 
         $result->transitioned = true;
         $result->updatedCourtOrders += [$persistingCourtOrder, $newReportCourtOrder];
@@ -214,7 +213,6 @@ final readonly class ReportTransitionService
             if ($latestReport === null) {
                 // court order doesn't have its own report yet
                 $newReport = $this->reportService->createReportFromOrder($courtOrder);
-                $newReport->setCourtOrder($courtOrder);
 
                 $result->updatedReports[] = $newReport;
 
