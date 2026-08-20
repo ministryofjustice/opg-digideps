@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Factory;
 
-use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\Report\ReportType;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ReportRepository;
@@ -49,7 +48,6 @@ readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
     public function run(bool $dryRun): DataFactoryResult
     {
         $indeterminate = [];
-        $dangerous = [];
         $count = 0;
 
         /** @var ReportRepository $repository */
@@ -78,18 +76,6 @@ readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
                 continue;
             }
 
-            // ignore hybrid <-> separate reports(s) transitions
-            if (
-                $currentReportType !== null &&
-                (
-                    $currentReportType->courtOrderKind === CourtOrderKind::Hybrid ||
-                    $possibleReportType->courtOrderKind === CourtOrderKind::Hybrid
-                )
-            ) {
-                $dangerous[] = $reportId;
-                continue;
-            }
-
             if (!$dryRun) {
                 $report->setType("{$possibleReportType}");
                 $this->entityManager->persist($report);
@@ -108,11 +94,6 @@ readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
         $numIndeterminate = count($indeterminate);
         if ($numIndeterminate > 0) {
             $messages['indeterminate'] = ["Unable to determine report type for $numIndeterminate report IDs: " . implode(', ', $indeterminate)];
-        }
-
-        $numDangerous = count($dangerous);
-        if ($numDangerous > 0) {
-            $messages['dangerous'] = ["Possible dangerous change of report type to/from hybrid for $numDangerous report IDs: " . implode(', ', $dangerous)];
         }
 
         return new DataFactoryResult(
