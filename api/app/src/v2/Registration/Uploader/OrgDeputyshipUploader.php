@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\v2\Registration\Uploader;
 
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
@@ -71,10 +72,7 @@ class OrgDeputyshipUploader
 
                 $this->handleOrganisation($deputyshipDto);
                 $this->handleDeputy($deputyshipDto);
-
-
                 $this->handleClient($deputyshipDto);
-                $this->handleReport($deputyshipDto);
             } catch (ClientIsArchivedException) {
                 ++$uploadResults['skipped'];
                 continue;
@@ -230,7 +228,7 @@ class OrgDeputyshipUploader
                 if ($this->clientHasNewDeputy($this->client, $this->deputy) && $dto->getHybrid() != OrgDeputyshipDto::DUAL_TYPE) {
                     $this->client->setDeputy($this->deputy);
 
-                    $this->updated['clients'][] = $this->client->getId();
+                    //$this->updated['clients'][] = $this->client->getId();
                 }
             }
         }
@@ -286,59 +284,6 @@ class OrgDeputyshipUploader
         return
             $client->getDeputy() === null
             || $client->getDeputy()->getDeputyUid() !== $deputy->getDeputyUid();
-    }
-
-    private function handleReport(OrgDeputyshipDto $dto): void
-    {
-        $report = $this->client->getCurrentReport();
-
-        if ($report) {
-            if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
-                if ($dto->getHybrid() == OrgDeputyshipDto::DUAL_TYPE) {
-                    if ($this->client->getDeputy()->getDeputyUid() == $dto->getDeputyUid()) {
-                        if ($report->getType() !== $dto->getReportType()) {
-                            $report->setType($dto->getReportType());
-
-                            $this->updated['reports'][] = $report->getId();
-                        }
-                    }
-                } else {
-                    if ($report->getType() !== $dto->getReportType()) {
-                        // Add audit logging for report type changing
-                        $report->setType($dto->getReportType());
-
-                        $this->updated['reports'][] = $report->getId();
-                    }
-                }
-            }
-
-            //            if ($this->clientHasNewOrgAndDeputy($this->client, $this->deputy)) {
-            //                $report = new Report(
-            //                    $this->client,
-            //                    $dto->getReportType(),
-            //                    $dto->getReportStartDate(),
-            //                    $dto->getReportEndDate()
-            //                );
-            //
-            //                $this->client->addReport($report);
-            //
-            //                $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
-            //            }
-        } else {
-            $report = new Report(
-                $this->client,
-                $dto->getReportType(),
-                $dto->getReportStartDate(),
-                $dto->getReportEndDate()
-            );
-
-            $this->client->addReport($report);
-
-            $this->added['reports'][] = $this->client->getCaseNumber() . '-' . $dto->getReportEndDate()?->format('Y-m-d');
-        }
-
-        $this->em->persist($report);
-        $this->em->flush();
     }
 
     private function resetDeputyshipUploaderObjects(): void

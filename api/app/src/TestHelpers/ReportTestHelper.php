@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\TestHelpers;
 
-use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Action;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
@@ -30,19 +30,15 @@ class ReportTestHelper
     }
 
     public static function generateReport(
-        EntityManagerInterface $em,
-        ?Client $client = null,
-        ?string $type = null,
+        CourtOrder $courtOrder,
         ?\DateTime $startDate = null,
         ?\DateTime $endDate = null,
         bool $dateChecks = true
     ): Report {
-        $client = $client ?: ClientTestHelper::generateClient($em);
-        $type = $type ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
         $startDate = $startDate ?: new \DateTime('2 years ago');
         $endDate = $endDate ?: (clone $startDate)->add(new \DateInterval('P1Y'));
 
-        $report = new Report($client, $type, $startDate, $endDate, dateChecks: $dateChecks);
+        $report = new Report($courtOrder, "{$courtOrder->getDesiredReportType()}", $startDate, $endDate, dateChecks: $dateChecks);
         self::completeBankAccounts($report);
 
         return $report;
@@ -90,8 +86,7 @@ class ReportTestHelper
             $submitDate->modify('+365 day');
         }
 
-        $reportPdf = new Document($report);
-        $reportPdf->setFileName('DigiRep-2020-2021-12-34_12345678.pdf');
+        $reportPdf = new Document($report, 'DigiRep-2020-2021-12-34_12345678.pdf');
         $reportPdf->setStorageReference('dd_doc_1234_9876543219876');
         $reportPdf->setIsReportPdf(true);
         $reportPdf->setCreatedOn(new \DateTime());
@@ -103,8 +98,7 @@ class ReportTestHelper
             ->setCreatedOn($submitDate)
             ->addDocument($reportPdf);
 
-        $supportingDocument = new Document($report);
-        $supportingDocument->setFileName('fake-file.pdf');
+        $supportingDocument = new Document($report, 'fake-file.pdf');
         $supportingDocument->setStorageReference('dd_doc_1234_123456789123456');
         $supportingDocument->setIsReportPdf(false);
         $supportingDocument->setCreatedOn(new \DateTime());
@@ -135,7 +129,7 @@ class ReportTestHelper
         $newReportEndDate->modify('+365 day');
 
         $client = $report->getClient();
-        $newReport = self::generateReport($em, $client, $report->getType(), $newReportStartDate, $newReportEndDate);
+        $newReport = self::generateReport($report->getCourtOrder(), $newReportStartDate, $newReportEndDate);
 
         $client->addReport($newReport);
         $newReport->setClient($client);
@@ -162,7 +156,7 @@ class ReportTestHelper
 
     private static function completeVisitsCare(Report $report): void
     {
-        $vc = new VisitsCare()->setReport($report);
+        $vc = new VisitsCare($report);
 
         $vc->setDoYouLiveWithClient('yes')
             ->setDoesClientReceivePaidCare('no')
@@ -187,7 +181,7 @@ class ReportTestHelper
 
     private static function completeLifestyle(Report $report): void
     {
-        $ls = new Lifestyle()->setReport($report);
+        $ls = new Lifestyle($report);
         $ls->setCareAppointments('no');
         $ls->setDoesClientUndertakeSocialActivities('no');
 
@@ -206,8 +200,7 @@ class ReportTestHelper
 
     private static function completeBankAccounts(Report $report): void
     {
-        $ba = new BankAccount()
-            ->setReport($report)
+        $ba = new BankAccount($report)
             ->setClosingBalance(1000)
             ->setAccountNumber('1234');
 
@@ -225,7 +218,7 @@ class ReportTestHelper
             $report->setMoneyInExists('Yes');
         }
 
-        $mt = new MoneyTransaction($report)->setCategory('salary-or-wages')->setAmount(200);
+        $mt = new MoneyTransaction($report, 'salary-or-wages')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
@@ -239,9 +232,9 @@ class ReportTestHelper
             $report->setMoneyOutExists('Yes');
         }
 
-        $mt = new MoneyTransaction($report)->setCategory('care-fees')->setAmount(200);
+        $mt = new MoneyTransaction($report, 'care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
-        $mt2 = new MoneyTransaction($report)->setCategory('electricity')->setAmount(100);
+        $mt2 = new MoneyTransaction($report, 'electricity')->setAmount(100);
         $report->addMoneyTransaction($mt2);
     }
 
@@ -258,7 +251,7 @@ class ReportTestHelper
             $report,
             'care-fees',
             false,
-            10.0
+            '10.0'
         );
 
         $report->setDebtManagement('Slowly paying it off');
@@ -304,7 +297,7 @@ class ReportTestHelper
                 ->setProfDeputyCostsHasPrevious('no')
                 ->setProfDeputyFixedCost(1000)
                 ->setProfDeputyOtherCosts(new ArrayCollection())
-                ->addProfDeputyOtherCost(new ProfDeputyOtherCost($report, '1', false, 500));
+                ->addProfDeputyOtherCost(new ProfDeputyOtherCost($report, '1', false, '500'));
 
             $report->setProfDeputyCostsEstimateHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED);
         }

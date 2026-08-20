@@ -10,19 +10,13 @@ use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\CourtOrderDeputy;
 use OPG\Digideps\Backend\Entity\Note;
 use OPG\Digideps\Backend\Entity\Report\Asset;
-use OPG\Digideps\Backend\Entity\Report\AssetOther;
-use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
-use OPG\Digideps\Backend\Entity\Report\Checklist;
 use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Decision;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Expense;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\VisitsCare;
-use OPG\Digideps\Backend\Entity\Satisfaction;
-use OPG\Digideps\Backend\Entity\UserResearch\ResearchType;
-use OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse;
 use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
@@ -40,16 +34,8 @@ use Doctrine\DBAL\Connection;
  */
 class Fixtures
 {
-    public const string PG_DUMP_PATH = '/tmp/dd_phpunit.pgdump';
-
-    /**
-     * @var EntityManager
-     */
-    private $em;
-
-    public function __construct(EntityManager $em)
+    public function __construct(private EntityManager $em)
     {
-        $this->em = $em;
     }
 
     public function getEntityManager(): EntityManager
@@ -57,14 +43,6 @@ class Fixtures
         return $this->em;
     }
 
-    public function getQueryResults($dql)
-    {
-        return $this->em->createQuery($dql)->getResult();
-    }
-
-    /**
-     * @return string
-     */
     private static function getPGExportCommand(): string
     {
         $pgHost = getenv('PGHOST') ?: 'postgres';
@@ -82,11 +60,12 @@ class Fixtures
         ?int $deputyUid = null,
         ?bool $isPrimary = null,
     ): User {
-        $user = new User();
-        $user->setEmail('temp' . microtime(true) . rand(100, 99999) . '@temp.com');
-        $user->setPassword('temp@temp.com');
-        $user->setFirstname('name' . time());
-        $user->setLastname('surname' . time());
+        $user = new User(
+            'name' . time(),
+            'surname' . time(),
+            'temp' . microtime(true) . rand(100, 99999) . '@temp.com'
+        )
+            ->setPassword('temp@temp.com');
 
         if ($email) {
             $user->setEmail($email);
@@ -155,9 +134,6 @@ class Fixtures
         return $deputy;
     }
 
-    /**
-     * @return Client
-     */
     public function createClient(?User $user = null, array $settersMap = []): Client
     {
         // add clent, cot, report, needed for assets
@@ -177,14 +153,11 @@ class Fixtures
     }
 
     /**
-     * @return Document
-     *
      * @throws ORMException
      */
     public function createDocument($report, string $filename, bool $isReportPdf = true): Document
     {
-        $doc = new Document($report);
-        $doc->setFileName($filename);
+        $doc = new Document($report, $filename);
         $doc->setIsReportPdf($isReportPdf);
 
         $this->em->persist($doc);
@@ -192,20 +165,10 @@ class Fixtures
         return $doc;
     }
 
-    public function createChecklist(Report $report): Checklist
-    {
-        $cl = new Checklist($report);
-        $this->em->persist($cl);
-
-        return $cl;
-    }
-
     /**
-     * @return ReportSubmission
-     *
      * @throws ORMException
      */
-    public function createReportSubmission(?Report $report = null, ?User $user = null): ReportSubmission
+    public function createReportSubmission(Report $report, ?User $user = null): ReportSubmission
     {
         if (is_null($user)) {
             $user = $this->createUser(
@@ -213,29 +176,6 @@ class Fixtures
                 registrationDate: new \DateTime(),
                 phoneMain: '01211234567'
             );
-        }
-
-        if (is_null($report)) {
-            $client = $this->createClient($user);
-
-            $report = $this->createReport($client);
-
-            $other = new AssetOther()
-                ->setValue((string)rand(1, 10000))
-                ->setReport($report);
-
-            $property = new AssetProperty()
-                ->setValue((string)rand(1, 10000))
-                ->setOwnedPercentage(rand(1, 100) / 100)
-                ->setReport($report);
-
-            $bankAccount = new BankAccount()
-                ->setClosingBalance(floatval(rand(10, 1000000) / 10))
-                ->setReport($report);
-
-            $report->addAsset($other);
-            $report->addAsset($property);
-            $report->addAccount($bankAccount);
         }
 
         $submission = new ReportSubmission($report, $user);
@@ -248,23 +188,20 @@ class Fixtures
     }
 
     public function createReport(
-        Client $client,
+        CourtOrder $courtOrder,
         array $settersMap = [],
-        ?CourtOrder $courtOrder = null
     ): Report {
         $validatedSettersMap = new ValidatingArray($settersMap);
         // should be created via ReportService, but this is a fixture, so better to keep it simple
         $report = new Report(
-            $client,
+            $courtOrder,
             $validatedSettersMap->getStringOrDefault('setType', Report::LAY_PFA_HIGH_ASSETS_TYPE),
             $validatedSettersMap->getObjectOrNull('setStartDate', \DateTime::class) ?? new \DateTime('now'),
             $validatedSettersMap->getObjectOrNull('setEndDate', \DateTime::class) ?? new \DateTime('+12 months -1 day'),
         );
 
-        if ($courtOrder !== null) {
-            $courtOrder->addReport($report);
-            $this->em->persist($courtOrder);
-        }
+        $courtOrder->addReport($report);
+        $this->em->persist($courtOrder);
 
         foreach ($settersMap as $k => $v) {
             $report->$k($v);
@@ -275,13 +212,9 @@ class Fixtures
         return $report;
     }
 
-    /**
-     * @return BankAccount
-     */
     public function createAccount(Report $report, array $settersMap = []): BankAccount
     {
-        $ret = new BankAccount();
-        $ret->setReport($report);
+        $ret = new BankAccount($report);
         $ret->setAccountNumber('1234')
             ->setBank('hsbc')
             ->setSortCode('101010');
@@ -308,13 +241,9 @@ class Fixtures
         return $contact;
     }
 
-    /**
-     * @return VisitsCare
-     */
     public function createVisitsCare(Report $report, array $settersMap = []): VisitsCare
     {
-        $sg = new VisitsCare();
-        $sg->setReport($report);
+        $sg = new VisitsCare($report);
         $sg->setDoYouLiveWithClient('yes');
 
         foreach ($settersMap as $k => $v) {
@@ -327,8 +256,7 @@ class Fixtures
 
     public function createAsset($type, Report $report, array $settersMap = []): Asset
     {
-        $asset = Asset::factory($type);
-        $asset->setReport($report);
+        $asset = Asset::factory($type, $report);
 
         foreach ($settersMap as $k => $v) {
             $asset->$k($v);
@@ -338,12 +266,9 @@ class Fixtures
         return $asset;
     }
 
-    /**
-     * @return Expense
-     */
     public function createReportExpense($type, Report $report, array $settersMap = []): Expense
     {
-        $record = new Expense($report);
+        $record = new Expense($report, '');
         foreach ($settersMap as $k => $v) {
             $record->$k($v);
         }
@@ -352,15 +277,9 @@ class Fixtures
         return $record;
     }
 
-    /**
-     * @return Decision
-     */
     public function createDecision(Report $report, array $settersMap = []): Decision
     {
-        $decision = new Decision();
-        $decision->setReport($report);
-        $decision->setClientInvolvedBoolean(true);
-        $decision->setDescription('description' . time());
+        $decision = new Decision($report, true, 'description' . time());
 
         foreach ($settersMap as $k => $v) {
             $decision->$k($v);
@@ -398,10 +317,7 @@ class Fixtures
      */
     public function createOrganisation(string $name, string $identifier, bool $isActive, User ...$users): Organisation
     {
-        $org = new Organisation();
-        $org->setName($name);
-        $org->setEmailIdentifier($identifier);
-        $org->setIsActivated($isActive);
+        $org = new Organisation($name, $identifier, $isActive);
 
         foreach ($users as $user) {
             $org->addUser($user);
@@ -507,28 +423,14 @@ class Fixtures
         return $this->getRepo(Report::class)->find($id);
     }
 
-    /**
-     * @return array
-     */
     public function getReportFreshSectionStatus(Report $report, string $section): array
     {
         return $this->getReportById($report->getId())->getStatus()->getSectionStateNotCached($section);
     }
 
-    /**
-     * @return User
-     */
     public function findUserByEmail(string $email): User
     {
         return $this->getRepo(User::class)->findOneBy(['email' => $email]);
-    }
-
-    /**
-     * @param string $deputyNo
-     */
-    public function findDeputyByNumber($deputyNo): ?Deputy
-    {
-        return $this->getRepo(Deputy::class)->findOneBy(['deputyNo' => $deputyNo]);
     }
 
     public function getConnection(): Connection
@@ -539,23 +441,6 @@ class Fixtures
     private static function pgCommand($cmd): void
     {
         exec(self::getPGExportCommand() . $cmd);
-    }
-
-    public static function initDb()
-    {
-    }
-
-    public static function backupDb(): void
-    {
-        self::pgCommand('pg_dump --clean > ' . self::PG_DUMP_PATH);
-    }
-
-    public static function restoreDb(): void
-    {
-        if (!file_exists(self::PG_DUMP_PATH)) {
-            throw new \RuntimeException(self::PG_DUMP_PATH . ' not found');
-        }
-        self::pgCommand('psql < ' . self::PG_DUMP_PATH);
     }
 
     public static function deleteReportsData($additionalTables = []): void
@@ -569,66 +454,25 @@ class Fixtures
         $this->em->refresh($entity);
     }
 
-    public function createUserResearchResponse(int $howMany): void
-    {
-        $range = range(1, $howMany);
-
-        foreach ($range as $i) {
-            $rs = $this->createReportSubmission();
-
-            $researchType = new ResearchType(['surveys']);
-
-            $userResearchResponse = new UserResearchResponse()
-                ->setCreated(new \DateTime())
-                ->setDeputyshipLength('oneToFive')
-                ->setUser($rs->getCreatedBy())
-                ->setHasAccessToVideoCallDevice(true)
-                ->setResearchType($researchType);
-
-            $satisfaction = new Satisfaction()
-                ->setReport($rs->getReport())
-                ->setDeputyrole(User::ROLE_LAY_DEPUTY)
-                ->setCreated(new \DateTime())
-                ->setComments(' Some comments')
-                ->setScore(rand(1, 5))
-                ->setReporttype(Report::LAY_COMBINED_LOW_ASSETS_TYPE)
-                ->setUserResearchResponse($userResearchResponse);
-
-            $userResearchResponse->setSatisfaction($satisfaction);
-
-            $this->em->persist($userResearchResponse);
-            $this->em->persist($satisfaction);
-            $this->em->persist($researchType);
-
-            if ($i === 100) {
-                $this->em->flush();
-                $this->em->clear();
-            }
-        }
-
-        $this->em->flush();
-        $this->em->clear();
-    }
-
     public function createCourtOrder(string $uid, CourtOrderType $type, CourtOrderKind $kind, string $status, \DateTime $madeDate = new \DateTime(), ?CourtOrderReportType $courtOrderReportType = null, ?Deputy $deputy = null, ?Client $client = null): CourtOrder
     {
-        $courtOrder = new CourtOrder();
-        $courtOrder->setCourtOrderUid($uid);
-        $courtOrder->setOrderType($type);
-        $courtOrder->setOrderKind($kind);
-        $courtOrder->setOrderReportType($courtOrderReportType ?? ($kind === CourtOrderKind::Hybrid || $type == CourtOrderType::PFA ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104));
-        $courtOrder->setStatus($status);
-        $courtOrder->setOrderMadeDate($madeDate);
+        $courtOrder = new CourtOrder(
+            $uid,
+            $type,
+            $courtOrderReportType ?? ($kind === CourtOrderKind::Hybrid || $type == CourtOrderType::PFA ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104),
+            $kind,
+            $madeDate,
+            $client ?? new Client(),
+            $status
+        );
 
         if ($deputy !== null) {
             $relationship = new CourtOrderDeputy()->setDeputy($deputy)->setCourtOrder($courtOrder)->setIsActive(true);
             $this->em->persist($relationship);
         }
-        if ($client !== null) {
-            $courtOrder->setClient($client);
-        }
 
         $this->em->persist($courtOrder);
+        $this->em->persist($courtOrder->getClient());
         return $courtOrder;
     }
 

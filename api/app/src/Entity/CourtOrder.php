@@ -17,9 +17,6 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use OPG\Digideps\Backend\Repository\CourtOrderRepository;
 
-/**
- * Court Orders for clients.
- */
 #[ORM\Table(name: 'court_order')]
 #[ORM\Entity(repositoryClass: CourtOrderRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -33,7 +30,7 @@ class CourtOrder
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'court_order_id_seq', allocationSize: 1, initialValue: 1)]
-    private int $id;
+    private ?int $id = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['court-order-basic', 'court-order-full', 'deputy-court-order-basic'])]
@@ -72,7 +69,7 @@ class CourtOrder
 
     #[ORM\JoinColumn(name: 'sibling_id', referencedColumnName: 'id')]
     #[ORM\OneToOne(targetEntity: CourtOrder::class)]
-    private ?CourtOrder $sibling;
+    private ?CourtOrder $sibling = null;
 
     /**
      * @see CourtOrderKind
@@ -81,26 +78,44 @@ class CourtOrder
     private string $orderKind;
 
     /**
-     * @var Collection<int, Report> $reports
+     * @var Collection<int, Report> $pfaReports
      */
-    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Report>')]
-    #[JMS\Groups(['court-order-full'])]
-    #[ORM\JoinTable(name: 'court_order_report')]
-    #[ORM\JoinColumn(name: 'court_order_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\InverseJoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToMany(targetEntity: Report::class, inversedBy: 'courtOrders', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
-    private Collection $reports;
+    #[ORM\OneToMany(mappedBy: 'pfaCourtOrder', targetEntity: Report::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+    private Collection $pfaReports;
+    /**
+     * @var Collection<int, Report> $hwReports
+     */
+    #[ORM\OneToMany(mappedBy: 'hwCourtOrder', targetEntity: Report::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+    private Collection $hwReports;
 
+    /**
+     * @var Collection<int, CourtOrderDeputy>
+     */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrderDeputy>')]
     #[ORM\OneToMany(mappedBy: 'courtOrder', targetEntity: CourtOrderDeputy::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private Collection $courtOrderDeputyRelationships;
 
     private ?ReportType $desiredReportType = null;
 
-    public function __construct()
-    {
+    public function __construct(
+        string $courtOrderUid,
+        CourtOrderType $orderType,
+        CourtOrderReportType $orderReportType,
+        CourtOrderKind $orderKind,
+        \DateTime $orderMadeDate,
+        Client $client,
+        string $status = 'ACTIVE'
+    ) {
         $this->courtOrderDeputyRelationships = new ArrayCollection();
-        $this->reports = new ArrayCollection();
+        $this->pfaReports = new ArrayCollection();
+        $this->hwReports = new ArrayCollection();
+        $this->courtOrderUid = $courtOrderUid;
+        $this->orderType = $orderType->value;
+        $this->orderReportType = $orderReportType->value;
+        $this->orderMadeDate = $orderMadeDate;
+        $this->client = $client;
+        $this->orderKind = $orderKind->value;
+        $this->status = $status;
     }
 
     /**
@@ -126,12 +141,18 @@ class CourtOrder
 
     public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    public function setId(int $id): CourtOrder
+    public function setId(int $id): static
     {
-        $this->id = $id;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
 
         return $this;
     }
@@ -141,19 +162,12 @@ class CourtOrder
         return $this->courtOrderUid;
     }
 
-    public function setCourtOrderUid(string $courtOrderUid): CourtOrder
-    {
-        $this->courtOrderUid = $courtOrderUid;
-
-        return $this;
-    }
-
     public function getOrderType(): CourtOrderType
     {
         return CourtOrderType::from($this->orderType);
     }
 
-    public function setOrderType(CourtOrderType $orderType): CourtOrder
+    public function setOrderType(CourtOrderType $orderType): static
     {
         $this->orderType = $orderType->value;
 
@@ -169,7 +183,7 @@ class CourtOrder
         return CourtOrderReportType::tryFrom(strtoupper($this->orderReportType)) ?? $fallBack;
     }
 
-    public function setOrderReportType(CourtOrderReportType $orderReportType): CourtOrder
+    public function setOrderReportType(CourtOrderReportType $orderReportType): static
     {
         $this->orderReportType = $orderReportType->value;
 
@@ -181,7 +195,7 @@ class CourtOrder
         return $this->status;
     }
 
-    public function setStatus(string $status): CourtOrder
+    public function setStatus(string $status): static
     {
         $this->status = $status;
 
@@ -193,7 +207,7 @@ class CourtOrder
         return $this->client;
     }
 
-    public function setClient(Client $client): CourtOrder
+    public function setClient(Client $client): static
     {
         $this->client = $client;
 
@@ -205,7 +219,7 @@ class CourtOrder
         return $this->orderMadeDate;
     }
 
-    public function setOrderMadeDate(\DateTime $orderMadeDate): CourtOrder
+    public function setOrderMadeDate(\DateTime $orderMadeDate): static
     {
         $this->orderMadeDate = $orderMadeDate;
 
@@ -217,7 +231,7 @@ class CourtOrder
         return $this->sibling;
     }
 
-    public function setSibling(?CourtOrder $sibling): CourtOrder
+    public function setSibling(?CourtOrder $sibling): static
     {
         $this->sibling = $sibling;
 
@@ -229,17 +243,26 @@ class CourtOrder
         return CourtOrderKind::from($this->orderKind);
     }
 
-    public function setOrderKind(CourtOrderKind $kind): CourtOrder
+    public function setOrderKind(CourtOrderKind $kind): static
     {
         $this->orderKind = $kind->value;
 
         return $this;
     }
 
-    public function addReport(Report $report): CourtOrder
+    public function addReport(Report $report): static
     {
-        $this->reports->add($report);
+        $reports = $this->getReports();
+        if (!$reports->contains($report)) {
+            $reports->add($report);
+        }
+        return $this;
+    }
 
+    public function removeReport(Report $report): static
+    {
+        $this->pfaReports->removeElement($report);
+        $this->hwReports->removeElement($report);
         return $this;
     }
 
@@ -254,9 +277,15 @@ class CourtOrder
     /**
      * @return Collection<int, Report>
      */
+    #[JMS\VirtualProperty(name: 'reports')]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['court-order-full'])]
     public function getReports(): Collection
     {
-        return $this->reports;
+        return match ($this->getOrderType()) {
+            CourtOrderType::PFA => $this->pfaReports,
+            CourtOrderType::HW => $this->hwReports,
+        };
     }
 
     /**
@@ -267,7 +296,7 @@ class CourtOrder
         /** @var ?Report $latest */
         $latest = null;
 
-        foreach ($this->reports as $report) {
+        foreach ($this->getReports() as $report) {
             if (is_null($latest) || $report->getStartDate() > $latest->getStartDate()) {
                 $latest = $report;
             }
@@ -291,6 +320,11 @@ class CourtOrder
         return $this->getOrderKind() === CourtOrderKind::Hybrid;
     }
 
+    public function isActive(): bool
+    {
+        return $this->status === 'ACTIVE';
+    }
+
     public function getDesiredReportType(): ReportType
     {
         if ($this->desiredReportType === null) {
@@ -303,13 +337,19 @@ class CourtOrder
                 }
             }
 
+            $courtOrderReportType = $this->getOrderReportType();
+            if ($this->getOrderKind() === CourtOrderKind::Hybrid && $courtOrderReportType === CourtOrderReportType::OPG104) {
+                $courtOrderReportType = $this->getSibling()?->getOrderReportType() ?? CourtOrderReportType::OPG103;
+            }
+
             $this->desiredReportType = new ReportType(
-                $this->getOrderReportType(),
+                $courtOrderReportType,
                 $this->getOrderType(),
                 $this->getOrderKind(),
                 $deputyType
             );
         }
+
         return $this->desiredReportType;
     }
 }

@@ -45,41 +45,36 @@ class RequiredReportFinderTest extends ApiIntegrationTestCase
         $metadata->setIdGenerator($this->oldGenerator);
     }
 
-    private function persistCourtOrder(int $id, Client $client, Report ...$reports): void
+    private function persistCourtOrder(int $id, Client $client): CourtOrder
     {
-        $courtOrder = new CourtOrder();
-        $courtOrder->setId($id);
-        $courtOrder->setClient($client);
-        $courtOrder->setCourtOrderUid("UID-{$id}");
-        $courtOrder->setOrderKind(CourtOrderKind::Single);
-        $courtOrder->setOrderType(CourtOrderType::PFA);
-        $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate(new \DateTime());
-        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
-        $courtOrder->setSibling(null);
-        foreach ($reports as $report) {
-            $courtOrder->addReport($report);
-        }
+        $courtOrder = new CourtOrder(
+            "UID-{$id}",
+            CourtOrderType::PFA,
+            CourtOrderReportType::OPG102,
+            CourtOrderKind::Single,
+            new \DateTime(),
+            $client
+        )->setId($id);
+
         self::$entityManager->persist($courtOrder);
+        return $courtOrder;
     }
 
-    private function persistReport(Client $client, ?bool $submitted): Report
+    private function persistReport(CourtOrder $courtOrder, ?bool $submitted): void
     {
-        $report = new Report($client, '102', new \DateTime(), new \DateTime(), false);
+        $report = new Report($courtOrder, '102', new \DateTime(), new \DateTime(), false);
         $report->setSubmitted($submitted);
         self::$entityManager->persist($report);
-        return $report;
     }
 
     private function persistTest(int $id, ?bool ...$submittedFlags): void
     {
         $client = new Client();
         self::$entityManager->persist($client);
-        $reports = [];
+        $courtOrder = $this->persistCourtOrder($id, $client);
         foreach ($submittedFlags as $submitted) {
-            $reports[] = $this->persistReport($client, $submitted);
+            $this->persistReport($courtOrder, $submitted);
         }
-        $this->persistCourtOrder($id, $client, ...$reports);
     }
 
     public function testFindCourtOrdersWithoutRequiredReports(): void

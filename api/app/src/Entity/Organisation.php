@@ -20,71 +20,68 @@ class Organisation
 {
     use IsSoftDeleteableEntity;
 
-    /**
-     * @var int
-     */
     #[JMS\Groups(['organisation', 'user-organisations', 'client-organisations', 'org-created-event'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'organisation_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var string
-     */
     #[Assert\NotBlank]
     #[JMS\Groups(['organisation', 'user-organisations', 'client-organisations', 'org-created-event'])]
     #[ORM\Column(name: 'name', type: 'string', length: 256, nullable: false)]
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
     #[Assert\NotBlank]
     #[JMS\Type('string')]
     #[JMS\Groups(['user-organisations', 'organisation', 'org-created-event'])]
     #[JMS\SerializedName('email_identifier')]
     #[ORM\Column(name: 'email_identifier', type: 'string', length: 256, unique: true, nullable: false)]
-    private $emailIdentifier;
+    private string $emailIdentifier;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['organisation', 'user-organisations', 'client-organisations', 'org-created-event'])]
     #[JMS\SerializedName('is_activated')]
     #[ORM\Column(name: 'is_activated', type: 'boolean', nullable: false, options: ['default' => false])]
-    private $isActivated;
+    private bool $isActivated;
 
     /**
      * @var Collection<int, User>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\User>')]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'organisations')]
-    private $users;
+    private Collection $users;
 
     /**
      * @var Collection<int, Client>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Clients>')]
     #[ORM\OneToMany(mappedBy: 'organisation', targetEntity: Client::class)]
-    private $clients;
+    private Collection $clients;
 
-    public function __construct()
+    public function __construct(string $name, string $emailIdentifier, bool $isActivated = false)
     {
         $this->users = new ArrayCollection();
         $this->clients = new ArrayCollection();
+        $this->name = $name;
+        $this->emailIdentifier = $emailIdentifier;
+        $this->isActivated = $isActivated;
     }
 
     public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    public function setId(int $id): Organisation
+    public function setId(int $id): static
     {
-        $this->id = $id;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
 
         return $this;
     }
@@ -94,7 +91,7 @@ class Organisation
         return $this->name;
     }
 
-    public function setName(string $name): Organisation
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -106,7 +103,7 @@ class Organisation
         return $this->emailIdentifier;
     }
 
-    public function setEmailIdentifier(string $emailIdentifier): Organisation
+    public function setEmailIdentifier(string $emailIdentifier): static
     {
         $this->emailIdentifier = $emailIdentifier;
 
@@ -118,19 +115,22 @@ class Organisation
         return $this->isActivated;
     }
 
-    public function setIsActivated(bool $isActivated): Organisation
+    public function setIsActivated(bool $isActivated): static
     {
         $this->isActivated = $isActivated;
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, User>
+     */
     public function getUsers(): Collection
     {
         return $this->users;
     }
 
-    public function addUser(User $user): Organisation
+    public function addUser(User $user): static
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
@@ -139,19 +139,22 @@ class Organisation
         return $this;
     }
 
-    public function removeUser(User $user): Organisation
+    public function removeUser(User $user): static
     {
         $this->users->removeElement($user);
 
         return $this;
     }
 
+    /**
+     * @return Collection<int, Client>
+     */
     public function getClients(): Collection
     {
         return $this->clients;
     }
 
-    public function addClient(Client $client): Organisation
+    public function addClient(Client $client): static
     {
         if (!$this->clients->contains($client)) {
             $this->clients->add($client);
@@ -160,42 +163,33 @@ class Organisation
         return $this;
     }
 
-    public function removeClient(Client $client): Organisation
+    public function removeClient(Client $client): static
     {
         $this->clients->removeElement($client);
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function containsUser(User $user)
+    public function containsUser(User $user): bool
     {
         return $this->users->contains($user);
     }
 
-    /**
-     * @return int
-     */
     #[JMS\VirtualProperty]
     #[JMS\Type('integer')]
     #[JMS\SerializedName('total-user-count')]
     #[JMS\Groups(['total-user-count'])]
-    public function getTotalUserCount()
+    public function getTotalUserCount(): int
     {
-        return count($this->getUsers());
+        return $this->getUsers()->count();
     }
 
-    /**
-     * @return int
-     */
     #[JMS\VirtualProperty]
     #[JMS\Type('integer')]
     #[JMS\SerializedName('total-client-count')]
     #[JMS\Groups(['total-client-count'])]
-    public function getTotalClientCount()
+    public function getTotalClientCount(): int
     {
-        return count($this->getClients());
+        return $this->getClients()->count();
     }
 }

@@ -1,22 +1,19 @@
 <?php
 
-namespace Tests\OPG\Digideps\Backend\Factory;
+namespace Tests\OPG\Digideps\Backend\Integration\Factory;
 
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
-use OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory;
-use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\Factory\UpdateReportTypeDataFactory;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
-class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
+class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
 {
-    private static ReportTypeUpdateFactory $sut;
     private static Fixtures $fixtures;
 
     private static int $count = 0;
@@ -27,9 +24,7 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
 
         self::$fixtures = new Fixtures(self::$entityManager);
 
-        /** @var ReportTypeUpdateFactory $sut */
-        $sut = self::$container->get(ReportTypeUpdateFactory::class);
-        self::$sut = $sut;
+        self::purgeDatabase();
     }
 
     public function tearDown(): void
@@ -45,7 +40,6 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'orderType' => CourtOrderType::PFA,
                 'orderKind' => CourtOrderKind::Single,
                 'reportType' => CourtOrderReportType::OPG103,
-                'action' => DeputyshipCandidateAction::InsertOrderDeputy,
                 'deputyType' => DeputyType::PRO,
                 'existingReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
                 'expectedReportType' => Report::PROF_PFA_LOW_ASSETS_TYPE,
@@ -56,7 +50,6 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'orderType' => CourtOrderType::PFA,
                 'orderKind' => CourtOrderKind::Single,
                 'reportType' => CourtOrderReportType::OPG102,
-                'action' => DeputyshipCandidateAction::InsertOrderReport,
                 'deputyType' => DeputyType::LAY,
                 'existingReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
                 'expectedReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
@@ -67,7 +60,6 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'orderType' => CourtOrderType::HW,
                 'orderKind' => CourtOrderKind::Single,
                 'reportType' => CourtOrderReportType::OPG104,
-                'action' => DeputyshipCandidateAction::InsertOrderReport,
                 'deputyType' => DeputyType::LAY,
                 'existingReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
                 'expectedReportType' => Report::LAY_HW_TYPE,
@@ -78,7 +70,6 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'orderType' => CourtOrderType::HW,
                 'orderKind' => CourtOrderKind::Hybrid,
                 'reportType' => CourtOrderReportType::OPG102,
-                'action' => DeputyshipCandidateAction::InsertOrderReport,
                 'deputyType' => DeputyType::LAY,
                 'existingReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
                 'expectedReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
@@ -89,7 +80,6 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'orderType' => CourtOrderType::PFA,
                 'orderKind' => CourtOrderKind::Dual,
                 'reportType' => CourtOrderReportType::OPG102,
-                'action' => DeputyshipCandidateAction::InsertOrderReport,
                 'deputyType' => DeputyType::LAY,
                 'existingReportType' => Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
                 'expectedReportType' => Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
@@ -100,7 +90,6 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'orderType' => CourtOrderType::PFA,
                 'orderKind' => CourtOrderKind::Single,
                 'reportType' => CourtOrderReportType::OPG103,
-                'action' => DeputyshipCandidateAction::UpdateDeputyStatus,
                 'deputyType' => DeputyType::LAY,
                 'existingReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
                 'expectedReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
@@ -110,7 +99,7 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
         ];
     }
 
-    private function setUpTestData(array $data): Report
+    private function setUpTestData(array $data): int
     {
         ++self::$count;
 
@@ -125,8 +114,12 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
         /** @var CourtOrderKind $courtOrderKind */
         $courtOrderKind = $data['orderKind'];
 
-        /** @var DeputyshipCandidateAction $action */
-        $action = $data['action'];
+        $client = self::$fixtures->createClient();
+
+        $deputy = self::$fixtures->createDeputy([
+            'setDeputyUid' => $uid,
+            'setDeputyType' => $data['deputyType'],
+        ]);
 
         $courtOrder = self::$fixtures->createCourtOrder(
             uid: $uid,
@@ -134,37 +127,28 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
             kind: $courtOrderKind,
             status: 'ACTIVE',
             courtOrderReportType: $courtOrderReportType,
+            deputy: $deputy,
+            client: $client,
         );
 
-        $deputy = self::$fixtures->createDeputy([
-            'setDeputyUid' => $uid,
-            'setDeputyType' => $data['deputyType'],
-        ]);
+        $report = self::$fixtures->createReport($courtOrder, ['setType' => $data['existingReportType']]);
 
-        $client = self::$fixtures->createClient();
-
-        $report = self::$fixtures->createReport($client, ['setType' => $data['existingReportType']]);
-
-        $candidate = new StagingSelectedCandidate($action, $uid);
-
-        self::$fixtures->persist($courtOrder, $deputy, $client, $report, $candidate);
-
-        $courtOrder->addReport($report);
-        $deputy->associateWithCourtOrder($courtOrder);
-
+        self::$fixtures->persist($courtOrder, $client, $report, $deputy);
         self::$fixtures->flush();
-        self::$fixtures->refresh($report);
-        self::$fixtures->refresh($courtOrder);
+        self::$fixtures->clear();
 
-        return $report;
+        return $report->getId();
     }
 
     #[DataProvider('reportTypeChanges')]
-    public function testProcessCandidates(array $data): void
+    public function testRun(array $data): void
     {
-        $report = $this->setUpTestData($data);
+        $reportId = $this->setUpTestData($data);
 
-        $dataFactoryResult = self::$sut->run(false);
+        /** @var UpdateReportTypeDataFactory $sut */
+        $sut = self::$container->get(UpdateReportTypeDataFactory::class);
+
+        $dataFactoryResult = $sut->run(false);
 
         /** @var string $expectedReportType */
         $expectedReportType = $data['expectedReportType'];
@@ -175,9 +159,9 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
         /** @var int $errorCount */
         $errorCount = $data['errorCount'];
 
-        $this->assertEquals(
+        $this->assertSame(
             $data['expectedReportType'],
-            $report->getType(),
+            self::$fixtures->getReportById($reportId)?->getType(),
             sprintf(
                 'ReportType differs from expected type "%s"',
                 $expectedReportType,
@@ -197,11 +181,13 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
     }
 
     #[DataProvider('reportTypeChanges')]
-    public function testProcessCandidatesDryRun(array $data): void
+    public function testDryRun(array $data): void
     {
-        $report = $this->setUpTestData($data);
+        $reportId = $this->setUpTestData($data);
 
-        $dataFactoryResult = self::$sut->run(true);
+        /** @var UpdateReportTypeDataFactory $sut */
+        $sut = self::$container->get(UpdateReportTypeDataFactory::class);
+        $dataFactoryResult = $sut->run(true);
 
         /** @var string $expectedReportType */
         $expectedReportType = $data['existingReportType'];
@@ -211,7 +197,7 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
 
         $this->assertEquals(
             $expectedReportType,
-            $report->getType(),
+            self::$fixtures->getReportById($reportId)?->getType(),
             sprintf(
                 'ReportType differs from expected type "%s"',
                 $existingReportType,

@@ -13,8 +13,8 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
-use OPG\Digideps\Backend\Entity\Report\Debt as ReportDebt;
-use OPG\Digideps\Backend\Entity\Report\Fee as ReportFee;
+use OPG\Digideps\Backend\Entity\Report\Debt;
+use OPG\Digideps\Backend\Entity\Report\Fee;
 use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\SynchronisableInterface;
@@ -27,11 +27,16 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class ReportRepository extends ServiceEntityRepository
 {
     public function __construct(
-        ManagerRegistry $registry,
+        private readonly ManagerRegistry $registry,
         private readonly ClientSearchFilter $filter,
         private readonly ReportAccessService $reportAccessService,
     ) {
-        parent::__construct($registry, Report::class);
+        parent::__construct($this->registry, Report::class);
+    }
+
+    public function clear(): void
+    {
+        $this->registry->getManager()->clear();
     }
 
     /**
@@ -47,8 +52,8 @@ class ReportRepository extends ServiceEntityRepository
             return $ret;
         }
 
-        foreach (ReportDebt::$debtTypeIds as $row) {
-            new ReportDebt($report, $row[0], $row[1], null);
+        foreach (Debt::$debtTypeIds as $row) {
+            new Debt($report, $row[0], $row[1], null);
             ++$ret;
         }
 
@@ -68,8 +73,8 @@ class ReportRepository extends ServiceEntityRepository
             return $ret;
         }
 
-        foreach (ReportFee::$feeTypeIds as $id => $row) {
-            new ReportFee($report, $id, null);
+        foreach (Fee::$feeTypeIds as $id => $row) {
+            new Fee($report, $id, null);
             ++$ret;
         }
 
@@ -98,7 +103,10 @@ class ReportRepository extends ServiceEntityRepository
         return $missingCategories;
     }
 
-    public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, string $role)
+    /**
+     * @return array<Report>
+     */
+    public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, string $role): array
     {
         $caseNumbers = array_map('strtolower', $caseNumbers);
 
@@ -109,7 +117,11 @@ class ReportRepository extends ServiceEntityRepository
             ->setParameter('caseNumbers', $caseNumbers, Connection::PARAM_STR_ARRAY)
             ->setParameter('roleName', $role);
 
-        return $qb->getQuery()->getResult();
+        /**
+         * @var array<Report>|never $result
+         */
+        $result = $qb->getQuery()->getResult();
+        return is_array($result) ? $result : [];
     }
 
     private function getAllByUserIdQuery(int $userId, ParameterBag $query, string $select, string $status): ?QueryBuilder
@@ -388,8 +400,9 @@ END deputy_type";
         SELECT DISTINCT r.*
         FROM court_order co
         INNER JOIN court_order_deputy cod ON cod.court_order_id = co.id
-        INNER JOIN court_order_report cor ON cor.court_order_id = co.id
-        INNER JOIN report r ON r.id = cor.report_id
+        INNER JOIN report r
+            ON co.id = r.pfa_court_order_id AND co.order_type = 'pfa'
+            OR co.id = r.hw_court_order_id AND co.order_type = 'hw'
         WHERE co.court_order_uid = :courtOrderUid
         AND cod.is_active = TRUE;
         SQL;

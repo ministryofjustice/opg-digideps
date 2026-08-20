@@ -7,22 +7,21 @@ namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
 use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
-use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\Fixture\Scenario;
 
 class ClientBenefitsCheckControllerTest extends AbstractTestController
 {
-    private static $tokenAdmin;
-    private static $tokenDeputy;
-    private static $tokenProf;
-    private static $tokenPa;
-    private $okayData;
+    private static string $tokenAdmin = '';
+    private static string $tokenDeputy = '';
+    private static string $tokenProf = '';
+    private static string $tokenPa = '';
+    private ?array $okayData = null;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        if (self::$tokenAdmin === null) {
+        if (self::$tokenAdmin === '') {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenProf = $this->loginAsProf();
@@ -58,8 +57,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    /** @test */
-    public function createHasSuitablePermissionsAllowed()
+    public function testCreateHasSuitablePermissionsAllowed(): void
     {
         $deputyTokens = [self::$tokenDeputy, self::$tokenPa, self::$tokenProf];
         $url = '/report/client-benefits-check';
@@ -72,8 +70,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         }
     }
 
-    /** @test */
-    public function createHasSuitablePermissionsNotAllowed()
+    public function testCreateHasSuitablePermissionsNotAllowed(): void
     {
         $url = '/report/client-benefits-check';
 
@@ -83,8 +80,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin, $this->okayData);
     }
 
-    /** @test */
-    public function readHasSuitablePermissionsAllowed()
+    public function testReadHasSuitablePermissionsAllowed(): void
     {
         $deputyTokens = [self::$tokenDeputy, self::$tokenPa, self::$tokenProf];
 
@@ -96,8 +92,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         }
     }
 
-    /** @test */
-    public function readHasSuitablePermissionsNotAllowed()
+    public function testReadHasSuitablePermissionsNotAllowed(): void
     {
         $report = $this->prepareReport(true);
 
@@ -105,8 +100,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
-    /** @test */
-    public function updateHasSuitablePermissionsAllowed()
+    public function testUpdateHasSuitablePermissionsAllowed(): void
     {
         $deputyTokens = [self::$tokenDeputy, self::$tokenPa, self::$tokenProf];
 
@@ -131,8 +125,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         }
     }
 
-    /** @test */
-    public function updateHasSuitablePermissionsNotAllowed()
+    public function testUpdateHasSuitablePermissionsNotAllowed(): void
     {
         $report = $this->prepareReport(true);
         $clientBenefitsCheck = $report->getClientBenefitsCheck();
@@ -155,13 +148,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
 
     private function prepareReport(bool $withClientBenefitsCheck = false): Report
     {
-        $reportTestHelper = ReportTestHelper::create();
-        $em = static::getContainer()->get('em');
-
-        $report = $reportTestHelper->generateReport($em);
-        $client = (ClientTestHelper::create())->generateClient($em);
-
-        $report->setClient($client);
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
         if ($withClientBenefitsCheck) {
             $typeOfIncome = new MoneyReceivedOnClientsBehalf();
@@ -182,11 +169,11 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
 
             $typeOfIncome->setClientBenefitsCheck($clientBenefitsCheck);
             $report->setClientBenefitsCheck($clientBenefitsCheck);
+            self::$fixtureService->persist($clientBenefitsCheck);
+            self::$fixtureService->persist($report);
         }
 
-        $em->persist($client);
-        $em->persist($report);
-        $em->flush();
+        self::$fixtureService->flush();
 
         return $report;
     }
