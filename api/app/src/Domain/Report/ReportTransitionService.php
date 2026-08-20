@@ -112,6 +112,7 @@ final readonly class ReportTransitionService
             return $result;
         }
 
+        $persistingReport->setCourtOrder($persistingCourtOrder);
         $persistingReport->setType("{$persistingCourtOrder->getDesiredReportType()}");
 
         // remove the persisting report from the old sibling if it is no longer in the current pair
@@ -121,10 +122,8 @@ final readonly class ReportTransitionService
         }
 
         // create a new report on the court order which is the other half of the dual
-        // and remove the persisting (was hybrid) report
         $newReport = $this->reportService->createReportFromOrder($newReportCourtOrder);
-        $newReportCourtOrder->removeReport($persistingReport);
-        $newReportCourtOrder->addReport($newReport);
+        $newReport->setCourtOrder($newReportCourtOrder);
 
         $result->transitioned = true;
         $result->updatedCourtOrders += [$persistingCourtOrder, $newReportCourtOrder];
@@ -205,7 +204,9 @@ final readonly class ReportTransitionService
         // (duals should not have a shared report); pfa always keeps the report if both have the same report
         $sharedReport = $courtOrderPair->getSharedLatestReport();
         if ($sharedReport !== null) {
-            $courtOrderPair->hwCourtOrder->removeReport($sharedReport);
+            $sharedReport->setCourtOrder($courtOrderPair->pfaCourtOrder);
+            $result->messages[] = "Single -> Dual: Removed report {$sharedReport->getId()} " .
+                "from court order {$courtOrderPair->hwCourtOrder->getCourtOrderUid()}";
         }
 
         foreach ($affectedCourtOrders as $courtOrder) {
@@ -213,14 +214,14 @@ final readonly class ReportTransitionService
             if ($latestReport === null) {
                 // court order doesn't have its own report yet
                 $newReport = $this->reportService->createReportFromOrder($courtOrder);
-                $courtOrder->addReport($newReport);
+                $newReport->setCourtOrder($courtOrder);
 
                 $result->updatedReports[] = $newReport;
 
                 $result->messages[] = fn () => "Single -> Dual: Added new {$newReport->getType()} report " .
                     "{$newReport->getId()} to court order {$courtOrder->getCourtOrderUid()}";
             } else {
-                // court order already has a report so just reset its type
+                $latestReport->setCourtOrder($courtOrder);
                 $latestReport->setType("{$courtOrder->getDesiredReportType()}");
 
                 $result->updatedReports[] = $latestReport;
@@ -232,8 +233,7 @@ final readonly class ReportTransitionService
 
         if (
             $courtOrderPair->pfaCourtOrder->getLatestReport() !== null &&
-            $courtOrderPair->hwCourtOrder->getLatestReport() !== null &&
-            $courtOrderPair->getSharedLatestReport() === null
+            $courtOrderPair->hwCourtOrder->getLatestReport() !== null
         ) {
             $result->transitioned = true;
             $result->updatedCourtOrders = $affectedCourtOrders;
