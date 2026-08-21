@@ -40,14 +40,20 @@ final class ReportTransitionServiceTest extends TestCase
         $endDate = $startDate->add(new \DateInterval('P364D'));
         $reportType = ReportType::from($type);
 
-        $report = new Report(new CourtOrder(
+        $mainCourtOrder = $courtOrders[0] ?? new CourtOrder(
             '',
             $reportType->courtOrderType,
             $reportType->courtOrderReportType,
             $reportType->courtOrderKind,
             new \DateTime(),
             new Client()
-        ), $type, $startDate, $endDate, false)->setId($id);
+        );
+
+        $siblingCourtOrder = $courtOrders[1] ?? null;
+        $report = new Report($mainCourtOrder, $type, $startDate, $endDate, false)->setId($id);
+        if ($siblingCourtOrder !== null) {
+            $report->setCourtOrder($siblingCourtOrder);
+        }
 
         foreach ($courtOrders as $courtOrder) {
             $courtOrder->addReport($report);
@@ -102,13 +108,14 @@ final class ReportTransitionServiceTest extends TestCase
         $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 10, CourtOrderKind::Dual);
         $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 11, CourtOrderKind::Dual);
         $pfaCourtOrder->setSibling($hwCourtOrder);
+        $hwCourtOrder->setSibling($pfaCourtOrder);
 
         $hybridReport = $this->makeReport(12, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder, $hwCourtOrder]);
 
         // find(courtOrderId=10), find(currentSiblingId=11) = 2 calls; oldSiblingId==currentSiblingId so no extra find
         $this->mockFind([10 => $pfaCourtOrder, 11 => $hwCourtOrder], 2);
 
-        $newHwReport = $this->makeReport(13, Report::LAY_HW_TYPE, []);
+        $newHwReport = $this->makeReport(13, Report::LAY_HW_TYPE, [$hwCourtOrder]);
 
         $this->mockReportService->expects(self::once())
             ->method('createReportFromOrder')
@@ -131,7 +138,8 @@ final class ReportTransitionServiceTest extends TestCase
         self::assertEquals($hybridReport, $pfaCourtOrder->getLatestReport());
         self::assertEquals(Report::LAY_PFA_HIGH_ASSETS_TYPE, $pfaCourtOrder->getLatestReport()?->getType());
 
-        self::assertEquals($newHwReport, $hwCourtOrder->getLatestReport());
+        $hwLatest = $hwCourtOrder->getLatestReport();
+        self::assertEquals($newHwReport, $hwLatest);
         self::assertEquals(Report::LAY_HW_TYPE, $hwCourtOrder->getLatestReport()?->getType());
 
         self::assertNotContains($hybridReport, $hwCourtOrder->getReports());
