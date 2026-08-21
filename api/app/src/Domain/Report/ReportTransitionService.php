@@ -113,16 +113,16 @@ final readonly class ReportTransitionService
         }
 
         $persistingReport->setCourtOrder($persistingCourtOrder);
+        $persistingCourtOrder->addReport($persistingReport);
         $persistingReport->setType("{$persistingCourtOrder->getDesiredReportType()}");
 
-        // remove the persisting report from the old sibling if it is no longer in the current pair
-        if ($oldSiblingId !== $persistingCourtOrder->getId() && $oldSiblingId !== $newReportCourtOrder->getId()) {
-            $oldSibling->removeReport($persistingReport);
-            $result->updatedCourtOrders[] = $oldSibling;
-        }
+        // remove the persisting report from the sibling
+        $oldSibling->removeReport($persistingReport);
+        $result->updatedCourtOrders[] = $oldSibling;
 
         // create a new report on the court order which is the other half of the dual
         $newReport = $this->reportService->createReportFromOrder($newReportCourtOrder);
+        $newReportCourtOrder->addReport($newReport);
 
         $result->transitioned = true;
         $result->updatedCourtOrders += [$persistingCourtOrder, $newReportCourtOrder];
@@ -213,6 +213,7 @@ final readonly class ReportTransitionService
             if ($latestReport === null) {
                 // court order doesn't have its own report yet
                 $newReport = $this->reportService->createReportFromOrder($courtOrder);
+                $courtOrder->addReport($newReport);
 
                 $result->updatedReports[] = $newReport;
 
@@ -224,8 +225,8 @@ final readonly class ReportTransitionService
 
                 $result->updatedReports[] = $latestReport;
 
-                $result->messages[] = 'Single -> Dual: Found latest report ' . $latestReport->getId() .
-                    ' on court order ' . $courtOrder->getCourtOrderUid();
+                $result->messages[] = 'Single -> Dual: Assigned latest report ' . $latestReport->getId() .
+                    ' to court order ' . $courtOrder->getCourtOrderUid();
             }
         }
 
