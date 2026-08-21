@@ -46,7 +46,7 @@ class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'updatedCount' => 1,
                 'errorCount' => 0,
             ]],
-            'PFA-low to PFA-high - baseReportChange' =>  [[
+            'PFA-low to PFA-high - baseReportChange' => [[
                 'orderType' => CourtOrderType::PFA,
                 'orderKind' => CourtOrderKind::Single,
                 'reportType' => CourtOrderReportType::OPG102,
@@ -56,7 +56,7 @@ class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'updatedCount' => 1,
                 'errorCount' => 0,
             ]],
-            'PFA to HW - baseReportChange' =>  [[
+            'PFA to HW - baseReportChange' => [[
                 'orderType' => CourtOrderType::HW,
                 'orderKind' => CourtOrderKind::Single,
                 'reportType' => CourtOrderReportType::OPG104,
@@ -66,24 +66,24 @@ class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'updatedCount' => 1,
                 'errorCount' => 0,
             ]],
-            'PFA to Hybrid - changedToHybrid' =>  [[
+            'PFA to Hybrid - changedToHybrid' => [[
                 'orderType' => CourtOrderType::HW,
                 'orderKind' => CourtOrderKind::Hybrid,
                 'reportType' => CourtOrderReportType::OPG102,
                 'deputyType' => DeputyType::LAY,
                 'existingReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
-                'expectedReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
-                'updatedCount' => 0,
+                'expectedReportType' => Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
+                'updatedCount' => 1,
                 'errorCount' => 0,
             ]],
-            'Hybrid to PFA - changedFromHybrid' =>  [[
+            'Hybrid to PFA - changedFromHybrid' => [[
                 'orderType' => CourtOrderType::PFA,
                 'orderKind' => CourtOrderKind::Dual,
                 'reportType' => CourtOrderReportType::OPG102,
                 'deputyType' => DeputyType::LAY,
                 'existingReportType' => Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
-                'expectedReportType' => Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
-                'updatedCount' => 0,
+                'expectedReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
+                'updatedCount' => 1,
                 'errorCount' => 0,
             ]],
             'No-change' => [[
