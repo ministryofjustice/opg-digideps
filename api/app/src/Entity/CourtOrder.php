@@ -296,7 +296,8 @@ class CourtOrder
         /** @var ?Report $latest */
         $latest = null;
 
-        foreach ($this->getReports() as $report) {
+        $reports = $this->getReports();
+        foreach ($reports as $report) {
             if (is_null($latest) || $report->getStartDate() > $latest->getStartDate()) {
                 $latest = $report;
             }
