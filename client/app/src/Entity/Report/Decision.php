@@ -26,22 +26,16 @@ class Decision
     #[Assert\Length(min: 2, minMessage: 'decision.description.length', groups: ['decision-description'])]
     private $description;
 
-    /**
-     * @var bool
-     */
     #[Assert\NotBlank(message: 'decision.clientInvolvedBoolean.notBlank', groups: ['decision-client-involved'])]
     #[JMS\Type('boolean')]
     #[JMS\Groups(['decision'])]
-    private $clientInvolvedBoolean;
+    private ?bool $clientInvolvedBoolean = null;
 
-    /**
-     * @var bool
-     */
     #[Assert\NotBlank(message: 'decision.clientInvolvedDetails.notBlank', groups: ['decision-client-involved-details'])]
     #[Assert\Length(min: 2, minMessage: 'decision.clientInvolvedDetails.length', groups: ['decision-client-involved-details'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['decision'])]
-    private $clientInvolvedDetails;
+    private ?string $clientInvolvedDetails = null;
 
     /**
      * @JMS\Type("DateTime")
@@ -86,28 +80,12 @@ class Decision
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isClientInvolvedBoolean()
+    public function isClientInvolvedBoolean(): bool
     {
         return $this->clientInvolvedBoolean;
     }
 
-    /**
-     * @param bool $clientInvolvedBoolean
-     */
-    public function setClientInvolvedBoolean($clientInvolvedBoolean): static
-    {
-        $this->clientInvolvedBoolean = $clientInvolvedBoolean;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isClientInvolvedDetails()
+    public function isClientInvolvedDetails(): ?string
     {
         return $this->clientInvolvedDetails;
     }

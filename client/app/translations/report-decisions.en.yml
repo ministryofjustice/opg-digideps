@@ -137,5 +137,5 @@ review:
   no: No
   notEntered: Not entered
   listOfDecisions: List of significant decisions
-  capacityUnchanged: Stayed the same
-  capacityChanged: Changed
+  stayedSame: Stayed the same
+  changed: Changed
