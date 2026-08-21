@@ -1220,7 +1220,7 @@ class Report
     }
 
     /**
-     * Return whichever court order is set or the pfa order if both arte set (hybrid case)
+     * Return whichever court order is set or the pfa order if both are set (hybrid case)
      */
     public function getCourtOrder(): CourtOrder
     {
