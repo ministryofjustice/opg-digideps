@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\Domain\CourtOrder;
 
 use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 
 /**
@@ -49,5 +50,21 @@ final class CourtOrderPair
             pfaCourtOrder: $pfaCourtOrder,
             hwCourtOrder: $hwCourtOrder
         );
+    }
+
+    public function getSharedLatestReport(): ?Report
+    {
+        $hwLatestReport = $this->hwCourtOrder->getLatestReport();
+        $pfaLatestReport = $this->pfaCourtOrder->getLatestReport();
+
+        if (
+            $hwLatestReport !== null &&
+            $pfaLatestReport !== null &&
+            $hwLatestReport->getId() === $pfaLatestReport->getId()
+        ) {
+            return $pfaLatestReport;
+        }
+
+        return null;
     }
 }
