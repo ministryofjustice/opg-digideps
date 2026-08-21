@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Factory;
 
-use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\Report\ReportType;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ReportRepository;
@@ -49,7 +48,6 @@ readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
     public function run(bool $dryRun): DataFactoryResult
     {
         $indeterminate = [];
-        $dangerous = [];
         $count = 0;
 
         /** @var ReportRepository $repository */
@@ -58,7 +56,7 @@ readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
         foreach ($this->getAllReportIdsOnActiveCourtOrders() as $reportId) {
             $this->entityManager->clear();
 
-            $report = $this->entityManager->getRepository(Report::class)->find($reportId) ?? throw new \LogicException("Report with id {$reportId} is proven to exist.");
+            $report = $repository->find($reportId) ?? throw new \LogicException("Report with id {$reportId} is proven to exist.");
 
             $courtOrders = $report->getActiveCourtOrders();
             $possibleReportType = ReportTypeService::determineReportType($courtOrders);
@@ -75,18 +73,6 @@ readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
             // ignore if we couldn't figure out a valid report type
             if ($possibleReportType === null) {
                 $indeterminate[] = $reportId;
-                continue;
-            }
-
-            // ignore hybrid <-> separate reports(s) transitions
-            if (
-                $currentReportType !== null &&
-                (
-                    $currentReportType->courtOrderKind === CourtOrderKind::Hybrid ||
-                    $possibleReportType->courtOrderKind === CourtOrderKind::Hybrid
-                )
-            ) {
-                $dangerous[] = $reportId;
                 continue;
             }
 
@@ -108,11 +94,6 @@ readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
         $numIndeterminate = count($indeterminate);
         if ($numIndeterminate > 0) {
             $messages['indeterminate'] = ["Unable to determine report type for $numIndeterminate report IDs: " . implode(', ', $indeterminate)];
-        }
-
-        $numDangerous = count($dangerous);
-        if ($numDangerous > 0) {
-            $messages['dangerous'] = ["Possible dangerous change of report type to/from hybrid for $numDangerous report IDs: " . implode(', ', $dangerous)];
         }
 
         return new DataFactoryResult(
