@@ -11,11 +11,7 @@
     {% include '@App/Report/Rendered/_client_and_deputy_information.html.twig' %}
 
     {% if report.hasSection('decisions')  %}
-        {% include '@App/Report/Rendered/_decisions.html.twig' with {
-            'report': report,
-            'transOptions': transOptions,
-            'transDomain': 'report-decisions'
-        } %}
+        <twig:OPG:Review:Decisions report="{{ report }}"/>
     {% endif %}
 
     {% if report.getContacts is not null and report.hasSection('contacts') %}

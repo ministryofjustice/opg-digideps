@@ -3385,6 +3385,12 @@ parameters:
 			path: src/Entity/Report/Debt.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Decision\:\:\$id is never written, only read\.$#'
+			identifier: property.onlyRead
+			count: 1
+			path: src/Entity/Report/Decision.php
+
+		-
 			message: '#^Cannot call method getDocuments\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -3523,68 +3529,8 @@ parameters:
 			path: src/Entity/Report/Lifestyle.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:getHasCapacityChanged\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:getHasCapacityChangedDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:getId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:getMentalAssessmentDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:setHasCapacityChanged\(\) has parameter \$hasCapacityChanged with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:setHasCapacityChangedDetails\(\) has parameter \$hasCapacityChangedDetails with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:setMentalAssessmentDate\(\) has parameter \$mentalAssessmentDate with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:\$hasCapacityChanged has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:\$hasCapacityChangedDetails has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:\$id is never written, only read\.$#'
 			identifier: property.onlyRead
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:\$mentalAssessmentDate has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: src/Entity/Report/MentalCapacity.php
 
@@ -3895,12 +3841,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getSignificantDecisionsMade\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getTotalValue\(\) should return int but returns float\|int\.$#'
 			identifier: return.type
 			count: 1
@@ -3979,12 +3919,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setMentalCapacity\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -4005,12 +3939,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setSignificantDecisionsMade\(\) has parameter \$significantDecisionsMade with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setStartDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4129,8 +4057,8 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$significantDecisionsMade has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$significantDecisionsMade \(string\|null\) does not accept mixed\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -9325,48 +9253,6 @@ parameters:
 			path: src/Sync/Service/SiriusApiErrorTranslator.php
 
 		-
-			message: '#^Cannot call method setChecklist\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Cannot call method setClient\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Cannot call method setEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Cannot call method setReportSubmissions\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Cannot call method setType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\ChecklistTestHelper\:\:buildPfaHighReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist constructor expects OPG\\Digideps\\Frontend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\ClientHelpers\:\:createValidCaseNumber\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -9443,30 +9329,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/TestHelpers/OrganisationHelpers.php
-
-		-
-			message: '#^Cannot call method setDueDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ReportHelpers.php
-
-		-
-			message: '#^Cannot call method setEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ReportHelpers.php
-
-		-
-			message: '#^Cannot call method setStartDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ReportHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\ReportHelpers\:\:createReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/ReportHelpers.php
 
 		-
 			message: '#^Parameter \#1 \$submittedBy of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setSubmittedBy\(\) expects OPG\\Digideps\\Frontend\\Entity\\User\|null, array\|object given\.$#'
@@ -13579,12 +13441,6 @@ parameters:
 			path: tests/Unit/Service/Mailer/MailFactoryTest.php
 
 		-
-			message: '#^Cannot call method setEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:assertStaticEmailProperties\(\) has parameter \$email with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -13647,18 +13503,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$type of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setType\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:\$newReport \(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:\$submittedReport \(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\) does not accept mixed\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: tests/Unit/Service/Mailer/MailFactoryTest.php
 
