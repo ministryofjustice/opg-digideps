@@ -26,13 +26,12 @@ class LifestyleController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function add(Request $request): array
     {
-        $lifestyle = new Lifestyle();
         $data = $this->formatter->deserializeBodyContent($request);
 
         $report = $this->findEntityBy(Report::class, $data['report_id']);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $lifestyle->setReport($report);
+        $lifestyle = new Lifestyle($report);
         $this->updateInfo($data, $lifestyle);
 
         $this->em->persist($lifestyle);

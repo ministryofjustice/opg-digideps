@@ -37,10 +37,12 @@ class DocumentRepository extends ServiceEntityRepository
             %s
         ) docs
         LEFT JOIN (
-            SELECT cor.report_id, STRING_AGG(co.court_order_uid, ',') AS court_order_uids
-            FROM court_order_report cor
-            INNER JOIN court_order co ON cor.court_order_id = co.id
-            GROUP BY cor.report_id
+            SELECT r.id AS report_id, STRING_AGG(co.court_order_uid, ',') AS court_order_uids
+            FROM report r
+            INNER JOIN court_order co
+                ON co.id = r.pfa_court_order_id AND co.order_type = 'pfa'
+                OR co.id = r.hw_court_order_id AND co.order_type = 'hw'
+            GROUP BY r.id
         ) court_orders
         ON docs.report_id = court_orders.report_id
         ORDER BY docs.is_report_pdf DESC, docs.report_submission_id ASC

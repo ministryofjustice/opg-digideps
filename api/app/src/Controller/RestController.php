@@ -19,6 +19,15 @@ abstract class RestController extends AbstractController
     {
     }
 
+    protected function getUser(): ?User
+    {
+        $user = parent::getUser();
+        if ($user instanceof User) {
+            return $user;
+        }
+        return null;
+    }
+
     /**
      * @template T of object
      * @param class-string<T> $entityClass

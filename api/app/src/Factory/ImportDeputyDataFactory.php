@@ -73,7 +73,15 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                     $updated = $this->execute("
                         UPDATE deputy d
                         SET
+                            firstname = COALESCE(ssd.deputy_first_name, d.firstname),
+                            lastname = COALESCE(ssd.deputy_last_name, d.lastname),
                             email1 = COALESCE(ssd.deputy_email, d.email1),
+                            address1 = COALESCE(ssd.deputy_address1, d.address1),
+                            address2 = COALESCE(ssd.deputy_address2, d.address2),
+                            address3 = COALESCE(ssd.deputy_address3, d.address3),
+                            address4 = COALESCE(ssd.deputy_address4, d.address4),
+                            address5 = COALESCE(ssd.deputy_address5, d.address5),
+                            address_postcode = COALESCE(ssd.deputy_post_code, d.address_postcode),
                             deputy_type = COALESCE(ssd.deputy_type, d.deputy_type),
                             organisation_id = CASE
                                 WHEN COALESCE(ssd.deputy_type, d.deputy_type) = 'LAY' THEN NULL
@@ -149,7 +157,7 @@ class ImportDeputyDataFactory implements DataFactoryInterface
         if (!$dryRun) {
             $messages[] = "Updated {$updated} existing entries in deputy.";
             $messages[] = "Created {$inserted} entries in deputy.";
-            $messages[] = " Linked {$postLinked} new entries in deputy.";
+            $messages[] = " Linked {$postLinked} entries in deputy.";
         }
         return new DataFactoryResult([
             'counts' => $messages,

@@ -13,7 +13,7 @@ use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
 
 #[ORM\Table(name: 'report_submission')]
-#[ORM\Index(columns: ['created_on'], name: 'rs_created_on_idx')]
+#[ORM\Index(name: 'rs_created_on_idx', columns: ['created_on'])]
 #[ORM\Entity(repositoryClass: ReportSubmissionRepository::class)]
 class ReportSubmission
 {
@@ -29,13 +29,13 @@ class ReportSubmission
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'report_submission_id_seq', allocationSize: 1, initialValue: 1)]
-    private int $id;
+    private ?int $id = null;
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[JMS\Groups(['report-submission'])]
-    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, cascade: ['persist'], inversedBy: 'reportSubmissions')]
-    private ?Report $report;
+    private Report $report;
 
     /**
      * @var Collection<int, Document>
@@ -43,7 +43,7 @@ class ReportSubmission
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Document>')]
     #[JMS\Groups(['report-submission', 'report-submission-documents'])]
     #[ORM\JoinColumn(name: 'report_submission_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\OneToMany(mappedBy: 'reportSubmission', targetEntity: Document::class, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'reportSubmission', cascade: ['persist'])]
     #[ORM\OrderBy(['createdBy' => 'ASC'])]
     private Collection $documents;
 
@@ -56,7 +56,7 @@ class ReportSubmission
     #[JMS\Groups(['report-submission'])]
     #[ORM\JoinColumn(name: 'archived_by', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
-    private ?User $archivedBy;
+    private ?User $archivedBy = null;
 
     #[JMS\Type('boolean')]
     #[JMS\Groups(['report-submission'])]
@@ -80,17 +80,23 @@ class ReportSubmission
 
     public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
     public function setId(int $id): static
     {
-        $this->id = $id;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
 
         return $this;
     }
 
-    public function getReport(): ?Report
+    public function getReport(): Report
     {
         return $this->report;
     }
