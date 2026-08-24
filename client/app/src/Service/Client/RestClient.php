@@ -542,7 +542,7 @@ class RestClient implements RestClientInterface
     /**
      * @param int $timeout in seconds
      */
-    public function setTimeout($timeout)
+    public function setTimeout(int $timeout): static
     {
         $this->timeout = $timeout;
 
