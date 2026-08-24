@@ -1,0 +1,16 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% block pageContent %}
+    <twig:GOV:Heading size="l">Report Cleanup</twig:GOV:Heading>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
+    {{ form_checkbox(form.notDryRun, 'form.notDryRun') }}
+    {{ form_input(form.caseNumber, 'form.caseNumber') }}
+    {{ form_checkbox(form.allowNotContinuous, 'form.allowNotContinuous') }}
+    {{ form_submit(form.submit, '', {
+        'labelText': 'submit',
+        'labelTranslationDomain': 'common',
+        'buttonClass': 'govuk-button',
+    }) }}
+    {{ form_end(form) }}
+{% endblock %}
