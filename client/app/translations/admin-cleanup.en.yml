@@ -1,0 +1,4 @@
+form:
+  caseNumber.label: Case numbers (comma separated) to run cleanup for. Leave blank for all.
+  allowNotContinuous.label: Allow cleanup despite overlapping reports.
+  notDryRun.label: Danger. If this is ticked changes will be made. By default only a dry run will be performed.
