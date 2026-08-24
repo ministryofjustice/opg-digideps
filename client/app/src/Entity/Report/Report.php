@@ -721,7 +721,7 @@ class Report implements StartEndDateComparableInterface
         return $this->isDue;
     }
 
-    public function hasContacts()
+    public function hasContacts(): ?string
     {
         if (empty($this->getContacts()) && $this->getReasonForNoContacts() === null) {
             return null;

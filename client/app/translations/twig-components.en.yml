@@ -2,3 +2,10 @@ gov:
   skipLink: Skip to main content
   backLink: Back
   errorMessage.aria: Error
+opg:
+  renderable:
+    bankAccount:
+      sortCode: Sort code
+      number: Account number
+      joint: Joint account
+      closed: Closed

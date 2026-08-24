@@ -14,12 +14,8 @@
         <twig:OPG:Review:Decisions report="{{ report }}"/>
     {% endif %}
 
-    {% if report.getContacts is not null and report.hasSection('contacts') %}
-        {% include '@App/Report/Rendered/_contacts.html.twig' with {
-            'report': report,
-            'transOptions': transOptions,
-            'transDomain': 'report-contacts'
-        } %}
+    {% if report.hasSection('contacts') %}
+        <twig:OPG:Review:Contacts report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('visitsCare') %}
@@ -35,10 +31,7 @@
     {% endif %}
 
     {% if report.hasSection('bankAccounts')%}
-        {% include '@App/Report/Rendered/_bankAccounts.html.twig' with {
-            'report': report,
-            'transDomain': 'report-bank-accounts'
-        } %}
+        <twig:OPG:Review:BankAccounts report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('deputyExpenses') %}
