@@ -1,0 +1,22 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% block pageContent %}
+    <twig:GOV:Heading size="l">Report Cleanup</twig:GOV:Heading>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
+    {{ form_checkbox(form.notDryRun, 'form.notDryRun') }}
+    {{ form_checkbox(form.allowNotContinuous, 'form.allowNotContinuous') }}
+    {{ form_input(form.caseNumber, 'form.caseNumber') }}
+    {{ form_submit(form.submit, '', {
+        'labelText': 'submit',
+        'labelTranslationDomain': 'common',
+        'buttonClass': 'govuk-button',
+    }) }}
+    {{ form_end(form) }}
+    <twig:GOV:InsetText>
+        <twig:GOV:Heading size="m">Downloads</twig:GOV:Heading>
+        <twig:GOV:Link href="{{ path('admin_cleanup_reports_download', {kind: 'actions'}) }}" noVisitedState>Planned actions</twig:GOV:Link>
+        <br>
+        <twig:GOV:Link href="{{ path('admin_cleanup_reports_download', {kind: 'problems'}) }}" noVisitedState>Problems found</twig:GOV:Link>
+    </twig:GOV:InsetText>
+{% endblock %}
