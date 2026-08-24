@@ -111,7 +111,7 @@ final class Debts
 
     private function formatMoney(float $value): string
     {
-        return '£ ' . number_format($value, 2);
+        return '£' . number_format($value, 2);
     }
 
     private function translate(string $id): string
