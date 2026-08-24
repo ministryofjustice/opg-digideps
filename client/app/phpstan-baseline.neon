@@ -313,6 +313,30 @@ parameters:
 			path: src/Components/OPG/Review/Assets.php
 
 		-
+			message: '#^Parameter \#1 \$type of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\BankAccount constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/BankAccounts.php
+
+		-
+			message: '#^Parameter \#2 \$number of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\BankAccount constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/BankAccounts.php
+
+		-
+			message: '#^Parameter \#4 \$bankName of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\BankAccount constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/BankAccounts.php
+
+		-
+			message: '#^Parameter \#6 \$closed of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\BankAccount constructor expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/BankAccounts.php
+
+		-
 			message: '#^Cannot call method getTypesOfMoneyReceivedOnClientsBehalf\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -323,6 +347,42 @@ parameters:
 			identifier: nullCoalesce.expr
 			count: 1
 			path: src/Components/OPG/Review/ClientBenefitsCheck.php
+
+		-
+			message: '#^Parameter \#1 \$name of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#2 \$address1 of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#3 \$address2 of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#4 \$county of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#5 \$postcode of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#6 \$country of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
@@ -1591,7 +1651,19 @@ parameters:
 			path: src/Controller/Report/BankAccountController.php
 
 		-
+			message: '#^Parameter \#1 \$closingBalance of method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setClosingBalance\(\) expects float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/BankAccountController.php
+
+		-
 			message: '#^Parameter \#1 \$id of method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:trans\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/BankAccountController.php
+
+		-
+			message: '#^Parameter \#1 \$openingBalance of method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setOpeningBalance\(\) expects float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/BankAccountController.php
@@ -3055,12 +3127,6 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:getOpeningBalance\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:getSortCode\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -3110,12 +3176,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setMeta\(\) has parameter \$meta with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setOpeningBalance\(\) has parameter \$openingBalance with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Entity/Report/BankAccount.php
@@ -3217,12 +3277,6 @@ parameters:
 			path: src/Entity/Report/Contact.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:getExplanation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Contact.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:getId\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -3236,12 +3290,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:getPostcode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Contact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:getRelationship\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Contact.php
@@ -3343,8 +3391,8 @@ parameters:
 			path: src/Entity/Report/Contact.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:\$explanation has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:\$explanation \(string\|null\) does not accept mixed\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/Contact.php
 
@@ -3367,8 +3415,8 @@ parameters:
 			path: src/Entity/Report/Contact.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:\$relationship has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:\$relationship \(string\|null\) does not accept mixed\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/Contact.php
 
@@ -3843,12 +3891,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getTotalValue\(\) should return int but returns float\|int\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:hasContacts\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
 
