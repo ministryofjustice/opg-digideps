@@ -49,7 +49,7 @@ class AjaxController extends AbstractController
 
         try {
             $compressedData = $redisClient->get($chunkId);
-            if ($compressedData) {
+            if (is_string($compressedData) && $compressedData !== '') {
                 $ret = $this->layDeputyshipApi->uploadLayDeputyShip($compressedData, $chunkId);
                 $this->verboseLogger->notice(sprintf('AJAX: Successfully processed chunkId: %s', $chunkId));
                 $redisClient->del($chunkId); // cleanup for next execution
