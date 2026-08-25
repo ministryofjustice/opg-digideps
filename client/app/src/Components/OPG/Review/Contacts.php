@@ -44,7 +44,7 @@ final class Contacts
         $builder = new SummaryListBuilder();
         $builder->addItem($this->text['hasContacts'], $this->text[$report->hasContacts() ?? 'notEntered']);
         if ($report->hasContacts() === 'no') {
-            $builder->addItem($this->text['noContactsReason'], $report->getReasonForNoContacts() ?? $this->text['notEntered']);
+            $builder->addItem($this->text['noContactReason'], $report->getReasonForNoContacts() ?? $this->text['notEntered']);
         }
 
         return $builder->makeList();
