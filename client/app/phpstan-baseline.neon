@@ -4087,6 +4087,12 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$primaryDeputy \(OPG\\Digideps\\Frontend\\Entity\\Deputy\|null\) is never assigned OPG\\Digideps\\Frontend\\Entity\\Deputy so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$profDeputyCostsEstimateMoreInfoDetails has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -4100,12 +4106,6 @@ parameters:
 
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$significantDecisionsMade \(string\|null\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$submittedBy \(OPG\\Digideps\\Frontend\\Entity\\User\) does not accept OPG\\Digideps\\Frontend\\Entity\\User\|null\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/Report.php

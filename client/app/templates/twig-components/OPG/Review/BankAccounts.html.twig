@@ -2,8 +2,10 @@
     {{ text.header }}
 </twig:GOV:Heading>
 
-{% if table is not null %}
-    <twig:GOV:Summary:Card h="3" header="{{ text.tableHeader }}">
+<twig:GOV:Summary:Card h="3" header="{{ text.tableHeader }}">
+    {% if table is not null %}
         <twig:GOV:Table table="{{ table }}"/>
-    </twig:GOV:Summary:Card>
-{% endif %}
+    {% else %}
+        {{ text.notEntered }}
+    {% endif %}
+</twig:GOV:Summary:Card>

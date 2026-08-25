@@ -38,8 +38,12 @@ final class BankAccounts
         $this->table = $this->makeTable($report);
     }
 
-    public function makeTable(Report $report): Table
+    public function makeTable(Report $report): ?Table
     {
+        if (empty($report->getBankAccounts())) {
+            return null;
+        }
+
         $builder = new TableBuilder()
             ->addColumns(1, 1, 1)
             ->addHeader($this->text['account'], $this->text['balanceOnStart'], $this->text['balanceOnEnd']);
