@@ -47,7 +47,8 @@ class VisitsCare
         $builder->addItem($this->text['careGiver'], $this->translate($visitsCare->getWhoIsDoingTheCaring() ?? $this->text['notEntered']));
         $builder->addItem($this->text['clientHasACarePlan'], $this->translate('review.' . ($visitsCare->getDoesClientHaveACarePlan() ?? 'notEntered')));
         if ($visitsCare->getDoesClientHaveACarePlan() === 'yes') {
-            $builder->addItem($this->text['lastTimeCarePlanReviewed'], $visitsCare->getWhenWasCarePlanLastReviewed()->format('F Y') ?? 'notEntered');
+            $date = $visitsCare->getWhenWasCarePlanLastReviewed();
+            $builder->addItem($this->text['lastTimeCarePlanReviewed'], $date?->format('F Y') ?? 'notEntered');
         }
 
         return $builder->makeList();
