@@ -2,5 +2,5 @@
 {% set h_tag = "h" ~ h %}
 
 <{{ h_tag }} {{ attributes.defaults({class: 'govuk-summary-card__title'}) }}">
-    {% block content %}{% endblock %}
+{% with outerScope %}{% block content %}{% endblock %}{% endwith %}
 </{{ h_tag }}>
