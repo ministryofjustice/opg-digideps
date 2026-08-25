@@ -6,9 +6,7 @@
 {% set deputy = submittedBy.isDeputyOrg and client.getDeputy ? client.getDeputy : submittedBy %}
 
 <div class="report-preview">
-    <h1 class="govuk-heading-l">Deputy report for {{ reportTypeHeading }} decisions</h1>
-
-    {% include '@App/Report/Rendered/_client_and_deputy_information.html.twig' %}
+    <twig:OPG:Review:ReportHeader report="{{ report }}"/>
 
     {% if report.hasSection('decisions')  %}
         <twig:OPG:Review:Decisions report="{{ report }}"/>

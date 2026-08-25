@@ -8,7 +8,5 @@
 {% endif %}
 
 <p {{ attributes.defaults({class: className}) }}>
-    {% with outerScope %}
-    {% block content %}{% endblock %}
-    {% endwith %}
+    {% with outerScope %}{% block content %}{% endblock %}{% endwith %}
 </p>

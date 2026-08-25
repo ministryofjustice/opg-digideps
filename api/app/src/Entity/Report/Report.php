@@ -6,6 +6,7 @@ namespace OPG\Digideps\Backend\Entity\Report;
 
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
+use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
@@ -1283,5 +1284,26 @@ class Report
     public function getReportType(): ReportType
     {
         return $this->reportType;
+    }
+
+    #[JMS\VirtualProperty]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Deputy')]
+    #[JMS\Groups(['deputy'])]
+    public function getPrimaryDeputy(): ?Deputy
+    {
+        $candidate = $this->submittedBy?->getDeputy();
+        if ($candidate !== null) {
+            return $candidate;
+        }
+
+        foreach ($this->getCourtOrders() as $courtOrder) {
+            foreach ($courtOrder->getActiveDeputies() as $deputy) {
+                $candidate ??= $deputy;
+                if ($candidate->getDeputyType() === DeputyType::LAY && $deputy->getDeputyType() !== DeputyType::LAY) {
+                    $candidate = $deputy;
+                }
+            }
+        }
+        return $candidate;
     }
 }
