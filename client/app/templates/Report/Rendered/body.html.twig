@@ -17,11 +17,7 @@
     {% endif %}
 
     {% if report.hasSection('visitsCare') %}
-        {% include '@App/Report/Rendered/_visits_care.html.twig' with {
-            'visitsCare': report.visitsCare,
-            'transOptions': transOptions,
-            'transDomain': 'report-visits-care'
-        } %}
+        <twig:OPG:Review:VisitsCare report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('clientBenefitsCheck') %}
