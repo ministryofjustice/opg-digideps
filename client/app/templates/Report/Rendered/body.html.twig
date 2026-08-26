@@ -29,11 +29,7 @@
     {% endif %}
 
     {% if report.hasSection('deputyExpenses') %}
-        {% include '@App/Report/Rendered/_deputy_expenses.html.twig' with {
-            'report': report,
-            'transOptions': transOptions,
-            'transDomain': 'report-deputy-expenses'
-        } %}
+        <twig:OPG:Review:DeputyExpenses report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('gifts') %}
