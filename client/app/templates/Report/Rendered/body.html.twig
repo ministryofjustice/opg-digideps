@@ -37,11 +37,7 @@
     {% endif %}
 
     {% if report.hasSection('gifts') %}
-        {% include '@App/Report/Rendered/_gifts.html.twig' with {
-          'report': report,
-          'transOptions': transOptions,
-          'transDomain': 'report-gifts'
-        } %}
+        <twig:OPG:Review:Gift report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('moneyTransfers') and (report.bankAccounts | length) > 1 %}
