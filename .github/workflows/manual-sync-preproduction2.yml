@@ -1,0 +1,45 @@
+name: "[Manual] Synchronise Preproduction2"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  backup_preproduction:
+    name: backup preproduction
+    uses: ./.github/workflows/_run-task.yml
+    with:
+      workspace: preproduction
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
+      account_name: preproduction
+      task_name: "backup"
+      timeout: "700"
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+
+  restore_to_preproduction2:
+    name: restore to preproduction2
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - backup_preproduction
+    with:
+      workspace: preproduction2
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
+      account_name: preproduction
+      task_name: "restore"
+      oidc_timeout: "7200"
+      timeout: "7200"
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
