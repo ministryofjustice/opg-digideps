@@ -56,6 +56,10 @@
         } %}
     {% endif %}
 
+    {% if report.hasSection('moneyIn') %}
+        <twig:OPG:Review:MoneyIn report="{{ report }}"/>
+    {% endif %}
+
     {% if report.hasSection('moneyOut')%}
         {% include '@App/Report/Rendered/_money_out_high_asset.html.twig' with {
             'report': report,
