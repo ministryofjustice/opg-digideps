@@ -108,6 +108,7 @@ class ImportClientDataFactory implements DataFactoryInterface
                             ssc.client_date_of_birth,
                             now()
                         FROM staging.sirius_client ssc
+                        JOIN staging.pa_pro_ingest ppi ON ppi.case_number = ssc.case_number -- Limit to org clients for now
                         WHERE ssc.local_id IS NULL
                     ");
                     $postLinked = $this->execute('
