@@ -60,11 +60,11 @@ jobs:
   run-task:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/actions/terraform-version@3a15a16fcc221821c2869eecd8822c5d62af2984 # v4.7.0
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
         with:
           terraform_directory: terraform/environment
 
@@ -75,7 +75,7 @@ jobs:
 
       - name: cache ecs-helper
         id: cache-ecs-helper
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
         with:
           path: ecs-helper
           key: ecs-helper-${{ env.HELPER_VERSION }}
@@ -89,7 +89,7 @@ jobs:
           chmod +x ecs-helper/ecs-runner
 
       - id: deploy-key
-        uses: "ministryofjustice/opg-github-actions/actions/github-deploy-key@83663a5235330cc2193319b25d559885610c6bd5" # v4.8.4
+        uses: "ministryofjustice/opg-github-actions/actions/github-deploy-key@f90a91695b7d02fe2b4133ba2f9ebc2c0f6b8f94" # v4.8.5
         with:
           deploy_key: ${{ secrets.ssh_private_key }}
 
