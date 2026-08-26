@@ -26,6 +26,10 @@ if [ "${DROP_PUBLIC}" == "yes" ]; then
 	psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -c "drop schema if exists audit cascade;"
 	echo "Dropping the staging schema"
 	psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -c "drop schema if exists staging cascade;"
+	echo "Dropping the anon schema"
+	psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -c "drop schema if exists anon cascade;"
+	echo "Dropping the processing schema"
+	psql $POSTGRES_HOST_OPTS -d $POSTGRES_DATABASE -c "drop schema if exists processing cascade;"
 fi
 
 echo "Restoring ${LATEST_BACKUP}"
