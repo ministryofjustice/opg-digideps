@@ -50,11 +50,15 @@ final class Version320 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_C42F7784D907E0D4 ON report (pfa_court_order_id)');
         $this->addSql('CREATE INDEX IDX_C42F77844E0A74D0 ON report (hw_court_order_id)');
 
+        $this->addSql('ALTER TABLE income_received_on_clients_behalf DROP CONSTRAINT fk_2f551ca35064a0ff');
+        $this->addSql('ALTER TABLE income_received_on_clients_behalf ADD CONSTRAINT fk_2f551ca35064a0ff FOREIGN KEY (client_benefits_check_id) REFERENCES client_benefits_check(id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE satisfaction DROP CONSTRAINT fk_8a8e0c134bd2a4c0');
         $this->addSql('ALTER TABLE satisfaction ADD CONSTRAINT fk_8a8e0c134bd2a4c0 FOREIGN KEY (report_id) REFERENCES report(id) ON DELETE SET NULL');
-        $this->addSql('DELETE FROM report WHERE COALESCE(pfa_court_order_id, 0) <> COALESCE(hw_court_order_id, 0)');
+        $this->addSql('DELETE FROM report WHERE COALESCE(pfa_court_order_id, 0) = COALESCE(hw_court_order_id, 0)');
         $this->addSql('ALTER TABLE satisfaction DROP CONSTRAINT fk_8a8e0c134bd2a4c0');
         $this->addSql('ALTER TABLE satisfaction ADD CONSTRAINT fk_8a8e0c134bd2a4c0 FOREIGN KEY (report_id) REFERENCES report(id)');
+        $this->addSql('ALTER TABLE income_received_on_clients_behalf DROP CONSTRAINT fk_2f551ca35064a0ff');
+        $this->addSql('ALTER TABLE income_received_on_clients_behalf ADD CONSTRAINT fk_2f551ca35064a0ff FOREIGN KEY (client_benefits_check_id) REFERENCES client_benefits_check(id)');
         //Ensure that there is at least one court_order per report and guard against putting one order in both slots by mistake.
         //Guarding against a hw order being put in the pfa slot and vice versa would require a trigger so it is only done in php for now.
         $this->addSql('ALTER TABLE report ADD CONSTRAINT report_court_order_pfa_hw_constraint CHECK ( COALESCE(pfa_court_order_id, 0) <> COALESCE(hw_court_order_id, 0))');
