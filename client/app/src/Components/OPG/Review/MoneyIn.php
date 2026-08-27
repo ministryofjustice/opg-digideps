@@ -9,6 +9,8 @@ use OPG\Digideps\Frontend\Components\GOV\Summary\SummaryListBuilder;
 use OPG\Digideps\Frontend\Components\GOV\Table\Cell;
 use OPG\Digideps\Frontend\Components\GOV\Table\Table;
 use OPG\Digideps\Frontend\Components\GOV\Table\TableBuilder;
+use OPG\Digideps\Frontend\Entity\Report\BankAccount;
+use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -63,23 +65,42 @@ final class MoneyIn
 
         $builder = new TableBuilder();
 
-        $builder->addHeader(
-            $this->text['type'],
-            $this->text['description'],
-            $this->text['bankAccount'],
-            $this->text['amount'],
-        );
-
-        foreach ($report->getMoneyTransactionsIn() as $entry) {
-            $builder->addRow(
-                $this->translate('form.category.entries.' . $entry->getCategory() . '.label'),
-                $entry->getDescription() ?? $this->text['notEntered'],
-                $entry->getBankAccount() ?? $this->text['notEntered'],
-                new Cell($this->formatMoney((float)($entry->getAmount() ?? 0)), self::NUMERIC_FORMAT)
+        foreach ($report->groupMoneyTransactionsByGroup($report->getMoneyTransactionsIn()) as $transaction) {
+            $subtotal = 0.0;
+            $builder->addHeader(
+                $this->text['type'],
+                $this->text['description'],
+                $this->text['bankAccount'],
+                $this->text['amount'],
             );
-            $total += $entry->getAmount() ?? 0.0;
+
+            $entries = (is_array($transaction) && isset($transaction['entries']) && is_array($transaction['entries'])) ? $transaction['entries'] : [];
+            foreach ($entries as $entry) {
+                $entry = $entry instanceof MoneyTransaction ? $entry : null;
+                if ($entry === null) {
+                    continue;
+                }
+                /** @var BankAccount $bankAccount */
+                $bankAccount = $entry->getBankAccount();
+                if ($bankAccount !== null) {
+                    $bankAccountText = is_string($bankAccount->getNameOneline()) ? $bankAccount->getNameOneline() : $this->text['notEntered'];
+                } else {
+                    $bankAccountText = $this->text['notEntered'];
+                }
+                /** @var string $categoryText */
+                $categoryText = $entry->getCategory();
+                $builder->addRow(
+                    $this->translate('form.category.entries.' . $categoryText . '.label'),
+                    is_string($entry->getDescription()) ? $entry->getDescription() : $this->text['notEntered'],
+                    $bankAccountText,
+                    new Cell($this->formatMoney((float)($entry->getAmount() ?? 0)), self::NUMERIC_FORMAT)
+                );
+                $subtotal += (float)($entry->getAmount() ?? 0.0);
+            }
+            $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), '', '', new Cell($this->formatMoney($subtotal), self::NUMERIC_FORMAT, true));
+            $total += $subtotal;
         }
-        $builder->addRow(new Cell($this->text['totalMoneyInAmount'], isHeader: true), '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, true));
+        $builder->addRow(new Cell($this->text['totalMoneyInAmount'], isHeader: true), '', '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, true));
 
         return $builder->makeTable();
     }
@@ -108,6 +129,7 @@ final class MoneyIn
             'notEntered' => $this->translate('review.moneyIn.notEntered'),
             'yes' => $this->translate('review.yes'),
             'no' => $this->translate('review.no'),
+            'totalAmount' => $this->translate('review.moneyIn.totalAmount'),
             'totalMoneyInAmount' => $this->translate('review.moneyIn.totalMoneyIn'),
         ];
     }
