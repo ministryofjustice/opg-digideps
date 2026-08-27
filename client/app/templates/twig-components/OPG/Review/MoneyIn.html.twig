@@ -4,8 +4,10 @@
 
 <twig:GOV:Summary:QaCard h="3" list="{{ list }}"/>
 
-{% if table is not null %}
+{% if tables|length > 0 %}
     <twig:GOV:Summary:Card h="3" header="{{ text.tableHeader }}">
-        <twig:GOV:Table table="{{ table }}"/>
+        {% for table in tables %}
+            <twig:GOV:Table table="{{ table }}"/>
+        {% endfor %}
     </twig:GOV:Summary:Card>
 {% endif %}
