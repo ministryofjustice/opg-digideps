@@ -21,7 +21,10 @@ final class MoneyIn
     private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
 
     public ?SummaryList $list = null;
-    public ?Table $table = null;
+    /**
+     * @var array<Table>
+     */
+    public array $tables = [];
     /**
      * @var array<string, string> $text
      */
@@ -40,7 +43,10 @@ final class MoneyIn
 
         $this->list = $this->makeList($report);
         if ($report->getMoneyInExists() === 'Yes') {
-            $this->table = $this->makeTable($report);
+            foreach ($report->groupMoneyTransactionsByGroup($report->getMoneyTransactionsIn()) as $transaction) {
+                $this->tables[] = $this->makeTable($transaction);
+            }
+            $this->tables[] = $this->makeTotalTable($report);
         }
     }
 
@@ -56,60 +62,58 @@ final class MoneyIn
         return $builder->makeList();
     }
 
-    private function makeTable(Report $report): ?Table
+    private function makeTable(mixed $transaction): Table
     {
-        if ($report->getMoneyInExists() ==  'no') {
-            return null;
-        }
-        $total = 0.0;
+        $entries = is_array($transaction) && isset($transaction['entries']) && is_array($transaction['entries']) ? $transaction['entries'] : [];
+        $firstEntry = reset($entries);
+        /** @var string $group */
+        $group = $firstEntry instanceof MoneyTransaction
+            ? $firstEntry->getGroup()
+            : null;
 
-        $builder = new TableBuilder();
-
-        foreach ($report->groupMoneyTransactionsByGroup($report->getMoneyTransactionsIn()) as $transaction) {
-            $entries = (is_array($transaction) && isset($transaction['entries']) && is_array($transaction['entries'])) ? $transaction['entries'] : [];
-            $firstEntry = reset($entries);
-            /** @var string $group */
-            $group = $firstEntry instanceof MoneyTransaction
-                ? $firstEntry->getGroup()
-                : null;
-            $subtotal = 0.0;
-
-            $builder->addRow(new Cell($this->translate('form.group.entries.' . $group), isHeader: true), '', '', '');
-            $builder->addHeader(
+        $builder = new TableBuilder(caption: $this->translate('form.group.entries.' . $group))
+            ->addColumns(1, 1, 1, 1)
+            ->addHeader(
                 $this->text['type'],
                 $this->text['description'],
                 $this->text['bankAccount'],
                 $this->text['amount'],
             );
 
-            foreach ($entries as $entry) {
-                $entry = $entry instanceof MoneyTransaction ? $entry : null;
-                if ($entry === null) {
-                    continue;
-                }
-                /** @var BankAccount $bankAccount */
-                $bankAccount = $entry->getBankAccount();
-                if ($bankAccount !== null) {
-                    $bankAccountText = is_string($bankAccount->getNameOneline()) ? $bankAccount->getNameOneline() : $this->text['notEntered'];
-                } else {
-                    $bankAccountText = $this->text['notEntered'];
-                }
-                /** @var string $categoryText */
-                $categoryText = $entry->getCategory();
-                $builder->addRow(
-                    $this->translate('form.category.entries.' . $categoryText . '.label'),
-                    is_string($entry->getDescription()) ? $entry->getDescription() : $this->text['notEntered'],
-                    $bankAccountText,
-                    new Cell($this->formatMoney((float)($entry->getAmount() ?? 0)), self::NUMERIC_FORMAT)
-                );
-                $subtotal += (float)($entry->getAmount() ?? 0.0);
+        $subtotal = 0.0;
+        foreach ($entries as $entry) {
+            $entry = $entry instanceof MoneyTransaction ? $entry : null;
+            if ($entry === null) {
+                continue;
             }
-            $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), '', '', new Cell($this->formatMoney($subtotal), self::NUMERIC_FORMAT, true));
-            $total += $subtotal;
+            /** @var BankAccount $bankAccount */
+            $bankAccount = $entry->getBankAccount();
+            if ($bankAccount !== null) {
+                $bankAccountText = is_string($bankAccount->getNameOneline()) ? $bankAccount->getNameOneline() : $this->text['notEntered'];
+            } else {
+                $bankAccountText = $this->text['notEntered'];
+            }
+            /** @var string $categoryText */
+            $categoryText = $entry->getCategory();
+            $builder->addRow(
+                $this->translate('form.category.entries.' . $categoryText . '.label'),
+                is_string($entry->getDescription()) ? $entry->getDescription() : $this->text['notEntered'],
+                $bankAccountText,
+                new Cell($this->formatMoney((float)($entry->getAmount() ?? 0)), self::NUMERIC_FORMAT)
+            );
+            $subtotal += (float)($entry->getAmount() ?? 0.0);
         }
-        $builder->addRow(new Cell($this->text['totalMoneyInAmount'], isHeader: true), '', '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, true));
+        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), '', '', new Cell($this->formatMoney($subtotal), self::NUMERIC_FORMAT, isBold: true));
 
         return $builder->makeTable();
+    }
+
+    private function makeTotalTable(Report $report): Table
+    {
+        return new TableBuilder(true)
+            ->addColumns(1, 1, 1, 1)
+            ->addRow(new Cell($this->text['totalMoneyInAmount'], colspan: 3), new Cell($this->formatMoney($report->getMoneyInTotal()), self::NUMERIC_FORMAT, isBold: true))
+            ->makeTable();
     }
 
     private function formatMoney(float $value): string
