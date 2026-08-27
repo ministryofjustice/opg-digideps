@@ -419,6 +419,7 @@ review:
     title: Money out
     question: Question
     answer: Answer
+    notEntered: Not entered
     payments: Payments
     totalAmount: Total amount
     totalMoneyOut: Total money out
