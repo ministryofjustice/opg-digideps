@@ -66,7 +66,15 @@ final class MoneyIn
         $builder = new TableBuilder();
 
         foreach ($report->groupMoneyTransactionsByGroup($report->getMoneyTransactionsIn()) as $transaction) {
+            $entries = (is_array($transaction) && isset($transaction['entries']) && is_array($transaction['entries'])) ? $transaction['entries'] : [];
+            $firstEntry = reset($entries);
+            /** @var string $group */
+            $group = $firstEntry instanceof MoneyTransaction
+                ? $firstEntry->getGroup()
+                : null;
             $subtotal = 0.0;
+
+            $builder->addRow(new Cell($this->translate('form.group.entries.' . $group), isHeader: true), '', '', '');
             $builder->addHeader(
                 $this->text['type'],
                 $this->text['description'],
@@ -74,7 +82,6 @@ final class MoneyIn
                 $this->text['amount'],
             );
 
-            $entries = (is_array($transaction) && isset($transaction['entries']) && is_array($transaction['entries'])) ? $transaction['entries'] : [];
             foreach ($entries as $entry) {
                 $entry = $entry instanceof MoneyTransaction ? $entry : null;
                 if ($entry === null) {
