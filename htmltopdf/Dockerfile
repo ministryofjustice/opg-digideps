@@ -9,17 +9,17 @@ RUN addgroup -S htmltopdf \
 
 # Install curl for healthcheck, requirements for pdf generation and fonts
 RUN apk add --no-cache \
-    curl \
-    cairo \
-    pango \
-    gdk-pixbuf \
-    jpeg \
-    libwebp \
-    tiff \
-    fontconfig \
-    ttf-freefont \
-    font-noto \
-    terminus-font \
+    "curl==8.21.0-r0" \
+    "cairo==1.18.4-r1" \
+    "pango==1.57.1-r0" \
+    "gdk-pixbuf==2.44.7-r1" \
+    "jpeg==9f-r0" \
+    "libwebp==1.6.0-r0" \
+    "tiff==4.7.1-r0" \
+    "fontconfig==2.17.1-r1" \
+    "ttf-freefont==20120503-r4" \
+    "font-noto==2026.06.01-r0" \
+    "terminus-font==4.49.1-r4" \
     && fc-cache -f
 
 COPY htmltopdf/requirements.txt .
