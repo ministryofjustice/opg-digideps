@@ -59,6 +59,10 @@
         } %}
     {% endif %}
 
+    {% if report.hasSection('balance') %}
+        <twig:OPG:Review:Balance report="{{ report }}"/>
+    {% endif %}
+
     {% if report.hasSection('assets') %}
         <twig:OPG:Review:Assets report="{{ report }}"/>
     {% endif %}
