@@ -91,6 +91,9 @@ final class Balance
 
         $builder->addItem($this->text['differenceFooter'], $this->formatMoney(abs($report->getTotalsOffset())));
 
+        $accountBalanceState = $report->isTotalsMatch() ? 'matched' : 'notMatched';
+        $builder->addItem('', $this->translate('review.'.$accountBalanceState));
+
         if (!$report->isTotalsMatch() && $report->getBalanceMismatchExplanation() !== null) {
             $builder->addItem($this->text['reasonNotBalancing'], ucfirst($report->getBalanceMismatchExplanation()));
         }
