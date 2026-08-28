@@ -53,13 +53,6 @@
     {% endif %}
 
     {% if report.hasSection('balance') %}
-        {% include '@App/Report/Rendered/_balance.html.twig' with {
-            'report': report,
-            'transDomain': 'report-balance'
-        } %}
-    {% endif %}
-
-    {% if report.hasSection('balance') %}
         <twig:OPG:Review:Balance report="{{ report }}"/>
     {% endif %}
 
