@@ -9,6 +9,7 @@ use OPG\Digideps\Frontend\Components\GOV\Summary\SummaryListBuilder;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Twig\Markup;
 
 #[AsTwigComponent]
 final class Balance
@@ -91,8 +92,9 @@ final class Balance
 
         $builder->addItem($this->text['differenceFooter'], $this->formatMoney(abs($report->getTotalsOffset())));
 
-        $accountBalanceState = $report->isTotalsMatch() ? 'matched' : 'notMatched';
-        $builder->addItem('', $this->translate('review.'.$accountBalanceState));
+        $statusClass = $report->isTotalsMatch() ? 'govuk-tag--green' : 'govuk-tag--red';
+        $statusText = $this->translate('review.' . ($report->isTotalsMatch() ? 'matched' : 'notMatched'));
+        $builder->addItem('', new Markup("<strong class=\"govuk-tag {$statusClass}\">{$statusText}</strong>", 'UTF-8'));
 
         if (!$report->isTotalsMatch() && $report->getBalanceMismatchExplanation() !== null) {
             $builder->addItem($this->text['reasonNotBalancing'], ucfirst($report->getBalanceMismatchExplanation()));
