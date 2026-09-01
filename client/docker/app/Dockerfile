@@ -105,7 +105,7 @@ RUN apk add --no-cache \
     "gmp==6.3.0-r4" \
     "libzip==1.11.4-r2" \
     "su-exec==0.3-r0" \
-    "unzip==6.0-r16" \
+    "unzip==6.0-r15" \
     "php84-pecl-igbinary==3.2.17_rc1-r0" \
     "php84-pecl-redis==6.3.0-r0" \
     "php84-pecl-imagick==3.8.1-r0" \
@@ -180,3 +180,14 @@ CMD sh -c "./check_processes.sh & exec php-fpm"
 FROM devtools-base AS devtools-admin
 USER root
 CMD sh -c "./check_processes.sh & exec php-fpm"
+
+
+##############################
+# Stage X: Devtools Admin (root)
+##############################
+FROM base AS upgrade-pinned-apk-packages
+USER root
+COPY client/docker/app/Dockerfile .
+COPY client/docker/app/check-apk-ver.sh .
+
+CMD sh -c "./check-apk-ver.sh"

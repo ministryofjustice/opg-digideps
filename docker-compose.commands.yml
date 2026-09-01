@@ -53,3 +53,12 @@ services:
       context: ./scripts/github_actions_audit
     volumes:
       - ./.github:/github:ro
+
+  frontend-apk-upgrade:
+    container_name: opg-digideps-frontend-apk-upgrade
+    build:
+      context: .
+      dockerfile: ./client/docker/app/Dockerfile
+      target: upgrade-pinned-apk-packages
+#        docker create --name=frontend-apk-upgrade opg-digideps-frontend-apk-upgrade:latest
+#        docker cp opg-digideps-frontend-apk-upgrade:/var/www/Dockerfile ./client/docker/app/Dockerfile2
