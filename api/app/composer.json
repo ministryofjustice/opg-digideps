@@ -84,7 +84,7 @@
         "doctrine/doctrine-fixtures-bundle": "^3.7.3",
         "friends-of-behat/mink-extension": "^2.7.5",
         "friends-of-behat/symfony-extension": "^2.6.2",
-        "guzzlehttp/guzzle": "^7.15.3",
+        "guzzlehttp/guzzle": "^7.15.4",
         "liuggio/fastest": "^1.14.2",
         "mockery/mockery": "^1.6.12",
         "osteel/openapi-httpfoundation-testing": "^0.14.0",
@@ -97,7 +97,7 @@
         "symfony/maker-bundle": "^1.67.0",
         "symfony/mime": "^6.4.41",
         "symfony/phpunit-bridge": "^6.4.42",
-        "symfony/var-dumper": "^6.4.42"
+        "symfony/var-dumper": "^6.4.43"
     },
     "minimum-stability": "stable",
     "extra": {
