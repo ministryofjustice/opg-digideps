@@ -72,3 +72,9 @@ jobs:
         with:
           name: client-unit-tests
           path: client/app/tests/Unit/coverage/client-unit-tests.xml
+
+      - name: update apk versions
+        run: |
+          make frontend-apk-upgrade
+          docker cp opg-digideps-frontend-apk-upgrade:/var/www/Dockerfile ./client/docker/app/Dockerfile
+          cat ./client/docker/app/Dockerfile

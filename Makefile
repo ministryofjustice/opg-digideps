@@ -316,3 +316,7 @@ playwright-typecheck: ##@playwright Typechecks the tests.
 audit-ga: ##@github_actions Audit github actions
 	docker compose -f docker-compose.commands.yml build audit-ga
 	docker compose -f docker-compose.commands.yml up audit-ga
+
+frontend-apk-upgrade: ##@apk_upgrades Upgrade pinned frontend apk versions
+	docker compose -f docker-compose.commands.yml build --no-cache frontend-apk-upgrade
+	docker compose -f docker-compose.commands.yml up frontend-apk-upgrade
