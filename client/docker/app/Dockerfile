@@ -60,6 +60,16 @@ COPY --chown=www-data:www-data client/docker/app/config/xdebug.ini /usr/local/et
 COPY --chown=www-data:www-data scripts/process_checks/check_processes.sh check_processes.sh
 
 ##############################
+# Stage X: Upgrade pinned apk packages (used only as target for pinned upgrades)
+##############################
+FROM base AS upgrade-pinned-apk-packages
+USER root
+COPY client/docker/app/Dockerfile .
+COPY scripts/upgrade_apk/check-apk-ver.sh .
+
+CMD sh -c "./check-apk-ver.sh"
+
+##############################
 # Stage 2a: PHP build stage
 ##############################
 FROM base AS php-builder
