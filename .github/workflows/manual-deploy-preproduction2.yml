@@ -1,0 +1,34 @@
+name: "[Manual] Deploy Specific Image to Preproduction2"
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Image tag to deploy"
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  terraform_apply_preproduction2:
+    name: preproduction2 environment apply terraform
+    uses: ./.github/workflows/_run-terraform.yml
+    with:
+      workspace: preproduction2
+      terraform_path: environment
+      apply: true
+      account_name: preproduction
+      container_version: ${{ github.event.inputs.image_tag }}
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
