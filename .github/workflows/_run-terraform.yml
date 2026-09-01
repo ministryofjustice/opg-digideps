@@ -42,7 +42,7 @@ jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
 
       - name: python layers folder
         if: inputs.terraform_path == 'account'
@@ -51,7 +51,7 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/actions/terraform-version@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@2186f4ee10b7f2839e0c795dcd01c729e6d1d4c0 # v4.8.1
         with:
           terraform_directory: terraform/${{ inputs.terraform_path }}
 
@@ -63,7 +63,7 @@ jobs:
       - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
         if: inputs.terraform_path == 'account'
         with:
-          go-version: "1.26.2"
+          go-version: "1.26.3"
 
       # requires go 1.25.5
       - name: build redeployer
@@ -74,7 +74,7 @@ jobs:
       - id: terraform_workspace_manager
         if: inputs.apply && inputs.terraform_path == 'environment' && inputs.pull_request_path
         name: register workspace
-        uses: ministryofjustice/opg-github-actions/actions/terraform-workspace-manager@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
+        uses: ministryofjustice/opg-github-actions/actions/terraform-workspace-manager@2186f4ee10b7f2839e0c795dcd01c729e6d1d4c0 # v4.8.1
         with:
           aws_account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
           aws_iam_role: digideps-ci
@@ -84,7 +84,7 @@ jobs:
           assume_role: false
 
       - id: deploy-key
-        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@f90a91695b7d02fe2b4133ba2f9ebc2c0f6b8f94 # v4.8.5
+        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@9e756945a9e2b6ac5dc81473b01f8b38600e6ed6 # v4.8.6
         with:
           deploy_key: ${{ secrets.ssh_private_key }}
 
