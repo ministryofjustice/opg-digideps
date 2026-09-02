@@ -22,7 +22,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Assert\Callback(callback: 'debtsValid', groups: ['debts'])]
 #[Assert\Callback(callback: 'feesValid', groups: ['fees'])]
 #[Assert\Callback(callback: 'profCostsInterimAtLeastOne', groups: ['prof-deputy-interim-costs'])]
-#[Assert\Callback(callback: 'unsubmittedSectionAtLeastOnce', groups: ['unsubmitted_sections'])]
 class Report implements StartEndDateComparableInterface
 {
     use ReportTraits\ReportAssetTrait;
