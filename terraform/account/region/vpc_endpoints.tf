@@ -78,6 +78,7 @@ module "sts_endpoint_vpc" {
   service_short_title = "sts"
   tags                = var.default_tags
 }
+<<<<<<< Updated upstream
 
 module "rds_endpoint_vpc" {
   source              = "./modules/vpc_endpoint"
@@ -96,3 +97,5 @@ resource "aws_vpc_endpoint" "s3_endpoint_vpc" {
   route_table_ids   = module.network.application_subnet_route_tables[*].id
   tags              = merge(var.default_tags, { Name = "s3" })
 }
+=======
+>>>>>>> Stashed changes
