@@ -22,14 +22,14 @@ final readonly class ReportSectionService
     ) {
     }
 
-    public function getReportMetadata(Report $report): ReportMetadata
+    public static function getReportMetadata(Report $report): ReportMetadata
     {
         return new ReportMetadata($report->getId(), ReportType::from($report->getType()));
     }
 
     public function getSectionMetadata(Report|ReportMetadata $reportOrMetadata, ReportSection $section, array $parameters = []): ?SectionMetadata
     {
-        $metadata = $reportOrMetadata instanceof Report ? $this->getReportMetadata($reportOrMetadata) : $reportOrMetadata;
+        $metadata = $reportOrMetadata instanceof Report ? self::getReportMetadata($reportOrMetadata) : $reportOrMetadata;
         $section = $metadata->getSectionLike($section);
         return $section !== null ? new SectionMetadata(
             new SectionTexts($section, $metadata, $this->translator, $parameters),
