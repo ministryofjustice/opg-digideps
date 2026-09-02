@@ -1,4 +1,4 @@
-FROM node:25.5.0-alpine3.22@sha256:7cda5d4400613ff7a4e9b2014bded8fa153871c32fd7ee12884c397c79bdcc93 AS node-base
+FROM node:25.6.0-alpine3.22@sha256:8c582bc73db57610b25f2ba4f71bd2d6f17f0b47367310c949acad09ea4dfcb3 AS node-base
 WORKDIR /app
 COPY client/resources/package.json .
 COPY client/resources/package-lock.json .
