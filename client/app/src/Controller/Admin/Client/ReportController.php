@@ -551,9 +551,12 @@ class ReportController extends AbstractController
     private function populateReportFromSession(Report $report, array $sessionData): void
     {
         foreach (['type', 'unsubmittedSectionsList'] as $field) {
-            if (isset($sessionData[$field])) {
+            /** @var ?string $value */
+            $value = $sessionData[$field] ?? null;
+
+            if ($value !== null) {
                 $setter = sprintf('set%s', ucfirst($field));
-                $report->{$setter}($sessionData[$field]);
+                $report->{$setter}($value);
             }
         }
 
