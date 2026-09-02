@@ -5,6 +5,7 @@ resource "aws_vpc_endpoint" "vpc_endpoint" {
   private_dns_enabled = true
   security_group_ids  = aws_security_group.vpc_endpoint[*].id
   subnet_ids          = var.subnet_ids
+  policy              = var.policy
   tags                = merge(var.tags, { Name = var.service_short_title })
 }
 
