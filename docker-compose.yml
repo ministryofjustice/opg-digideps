@@ -160,7 +160,7 @@ services:
 
   postgres:
     container_name: opg-digideps-postgres
-    image: postgres:14.22@sha256:eba8ddbdd837ecfbb6ca8a26d8deec68a2f9b076660102ae641dba0f371c099b
+    image: postgres:14.23@sha256:2f439458ab6a57a925825ae14f9d06910e4fe4a41c8d4a0ae06397e65b707e1b
     ports:
       - 5432:5432
     env_file:
@@ -168,11 +168,11 @@ services:
     restart: always
 
   redis-frontend:
-    image: redis:6.2.21@sha256:5443f35e8fc8fc8496964b8e8ea39abaf99434d7e1741e514f7f56906b1c9ff0
+    image: redis:6.2.22@sha256:e608fb94319e1aa53cecadbb051faa36d5c495f1142b99ca6673b41c2b428c0a
     restart: always
 
   redis-api:
-    image: redis:6.2.21@sha256:5443f35e8fc8fc8496964b8e8ea39abaf99434d7e1741e514f7f56906b1c9ff0
+    image: redis:6.2.22@sha256:e608fb94319e1aa53cecadbb051faa36d5c495f1142b99ca6673b41c2b428c0a
     restart: always
 
   file-scanner-rest:
@@ -245,7 +245,7 @@ services:
       ]
 
   composer:
-    image: composer:2.9.8@sha256:b09bccd91a78fe8a9ab4b33d707b862e8fe54fec17782e32683ad2a69c46867d
+    image: composer:2.10.0@sha256:1b73755de4f19775ba6087fd5313664493e06fab72b6fc27dc2044e87bb7c4c3
 
   custom-sql-query:
     image: custom-sql-query:latest
