@@ -1,7 +1,7 @@
 ##############################
 # Stage 1: Composer Build
 ##############################
-FROM composer:2.9.8@sha256:b09bccd91a78fe8a9ab4b33d707b862e8fe54fec17782e32683ad2a69c46867d AS composer
+FROM composer:2.10.0@sha256:1b73755de4f19775ba6087fd5313664493e06fab72b6fc27dc2044e87bb7c4c3 AS composer
 
 WORKDIR /app
 
@@ -37,7 +37,7 @@ RUN composer dump-autoload --optimize
 ##############################
 # Stage 2: Base PHP Image
 ##############################
-FROM php:8.4.24-fpm-alpine3.24@sha256:5992f8b7433fe7fa96dfbf67746c86d6c41bc91e686eac38fe531c72a02e40e4 AS application
+FROM php:8.4.24-fpm-alpine3.24@sha256:5992f8b7433fe7fa96dfbf67746c86d6c41bc91e686eac38fe531c72a02e40e4 AS base
 
 ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 
@@ -47,37 +47,6 @@ EXPOSE 443
 
 ENV TIMEOUT=20
 
-COPY --from=ghcr.io/php/pie:bin@sha256:65d91cecb73cb1fd03ae2a892d8ec76b25d34468532c0c2032afa9c412cf8b43 /pie /usr/bin/pie
-
-RUN apk --no-cache add \
-    postgresql-dev \
-    postgresql-client \
-    openssl \
-    su-exec \
-    php83-pecl-igbinary  \
-    php83-pecl-redis \
-    wget
-
-RUN docker-php-ext-install pdo pdo_pgsql opcache \
- && docker-php-ext-enable opcache
-
-RUN apk update && apk upgrade
-# Install necessary PHP extensions
-RUN docker-php-ext-install pdo pdo_pgsql opcache
-RUN docker-php-ext-enable opcache
-# Install pcov for faster coverage tooling
-RUN apk add --no-cache autoconf build-base
-RUN pie install pecl/pcov:^1.0.12 && docker-php-ext-enable pcov
-
-# Install Xdebug if directed to with build arg from docker-compose.yml
-ARG REQUIRE_XDEBUG=0
-RUN if [ "$REQUIRE_XDEBUG" = "1" ]; then \
-    apk add --update linux-headers && \
-    pie install xdebug/xdebug:^3.4 && \
-    docker-php-ext-enable xdebug && \
-    apk del linux-headers; \
-  fi
-
 COPY --chown=www-data:www-data api/app/config config
 COPY --chown=www-data:www-data api/app/public public
 COPY --chown=www-data:www-data api/app/scripts scripts
@@ -85,11 +54,12 @@ COPY --chown=www-data:www-data api/app/api.env api.env
 COPY --chown=www-data:www-data api/app/openapi openapi
 COPY --chown=www-data:www-data api/app/postgres.env postgres.env
 COPY --chown=www-data:www-data api/app/scripts/wait-for-db.sh wait-for-db.sh
+
 COPY --chown=www-data:www-data api/docker/app/config/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY --chown=www-data:www-data api/docker/app/config/generate_parameters_yml.sh generate_parameters_yml.sh
 COPY --chown=www-data:www-data api/docker/app/config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY --chown=www-data:www-data api/docker/app/config/error-handling.ini /usr/local/etc/php/conf.d/error-handling.ini
-#Check processes script
+
 COPY --chown=www-data:www-data scripts/process_checks/check_processes.sh /var/www/check_processes.sh
 
 RUN mkdir certs && chmod 755 certs \
@@ -102,6 +72,60 @@ RUN mkdir -p var/cache \
     && mkdir -p /var/log/app \
     && chown -R www-data var \
     && chown -R www-data /var/log/app
+
+##############################
+# Stage X: Upgrade pinned apk packages (used only as target for pinned upgrades)
+##############################
+FROM base AS upgrade-pinned-apk-packages
+USER root
+COPY api/docker/app/Dockerfile .
+COPY scripts/upgrade_apk/check-apk-ver.sh .
+
+CMD sh -c "./check-apk-ver.sh"
+
+##############################
+# Stage 2a: Base PHP Builder
+##############################
+FROM base AS php-builder
+
+COPY --from=ghcr.io/php/pie:bin@sha256:65d91cecb73cb1fd03ae2a892d8ec76b25d34468532c0c2032afa9c412cf8b43 /pie /usr/bin/pie
+
+RUN apk --no-cache add \
+    postgresql-dev \
+    autoconf \
+    build-base
+
+RUN pie install pecl/pcov:^1.0.12 && docker-php-ext-enable pcov
+
+RUN docker-php-ext-install pdo pdo_pgsql opcache
+
+# Install Xdebug if directed to with build arg from docker-compose.yml
+ARG REQUIRE_XDEBUG=0
+RUN if [ "$REQUIRE_XDEBUG" = "1" ]; then \
+    apk add --update linux-headers && \
+    pie install xdebug/xdebug:^3.4 && \
+    docker-php-ext-enable xdebug && \
+    apk del linux-headers; \
+  fi
+
+##############################
+# Stage 2a: Base PHP Application
+##############################
+FROM base AS application
+
+COPY --from=php-builder /usr/local/lib/php/extensions \
+                        /usr/local/lib/php/extensions
+COPY --from=php-builder /usr/local/etc/php/conf.d \
+                        /usr/local/etc/php/conf.d
+
+RUN apk --no-cache add \
+    "postgresql18-client==18.6-r0" \
+    "openssl==3.5.7-r0" \
+    "su-exec==0.3-r0" \
+    "php84-pecl-igbinary==3.2.17_rc1-r0"  \
+    "php84-pecl-redis==6.3.0-r0" \
+    "wget==1.25.0-r3"
+
 
 ##############################
 # Stage 3a: runtime image (image without test dependencies)

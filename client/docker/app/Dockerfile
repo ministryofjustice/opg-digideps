@@ -1,7 +1,7 @@
 ##############################
 # Stage 1: Base Composer Setup
 ##############################
-FROM composer:2.9.8@sha256:b09bccd91a78fe8a9ab4b33d707b862e8fe54fec17782e32683ad2a69c46867d AS composer
+FROM composer:2.10.0@sha256:1b73755de4f19775ba6087fd5313664493e06fab72b6fc27dc2044e87bb7c4c3 AS composer
 
 WORKDIR /app
 
@@ -39,22 +39,52 @@ RUN composer install --prefer-dist --no-interaction --no-scripts \
 ##############################
 FROM php:8.4.24-fpm-alpine3.24@sha256:5992f8b7433fe7fa96dfbf67746c86d6c41bc91e686eac38fe531c72a02e40e4 AS base
 
-ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
-
 WORKDIR /var/www
-ENV TIMEOUT=60
+
+# Shared app assets
+COPY --chown=www-data:www-data client/app/admin.env admin.env
+COPY --chown=www-data:www-data client/app/frontend.env frontend.env
+COPY --chown=www-data:www-data client/app/public public
+COPY --chown=www-data:www-data client/app/scripts scripts
+COPY --chown=www-data:www-data client/app/templates templates
+COPY --chown=www-data:www-data client/app/translations translations
+
+COPY --chown=www-data:www-data client/resources/assets assets
+COPY --chown=www-data:www-data client/resources/public/ public/
+
+COPY --chown=www-data:www-data client/docker/app/config/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY --chown=www-data:www-data client/docker/app/config/meta.json.tmpl public/meta.json.tmpl
+COPY --chown=www-data:www-data client/docker/app/config/generate_parameters_yml.sh generate_parameters_yml.sh
+COPY --chown=www-data:www-data client/docker/app/config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+COPY --chown=www-data:www-data scripts/process_checks/check_processes.sh check_processes.sh
+
+##############################
+# Stage X: Upgrade pinned apk packages (used only as target for pinned upgrades)
+##############################
+FROM base AS upgrade-pinned-apk-packages
+USER root
+COPY client/docker/app/Dockerfile .
+COPY scripts/upgrade_apk/check-apk-ver.sh .
+
+CMD sh -c "./check-apk-ver.sh"
+
+##############################
+# Stage 2a: PHP build stage
+##############################
+FROM base AS php-builder
 
 COPY --from=ghcr.io/php/pie:bin@sha256:65d91cecb73cb1fd03ae2a892d8ec76b25d34468532c0c2032afa9c412cf8b43 /pie /usr/bin/pie
 
-# Dependencies
-RUN apk update && apk upgrade && apk add --no-cache \
-    su-exec libzip-dev unzip \
-    php84-pecl-igbinary php84-pecl-redis php84-pecl-imagick \
-    gmp gmp-dev libheif libde265 ffmpeg \
-    autoconf build-base wget \
+RUN apk add --no-cache --virtual .build-deps \
+    autoconf \
+    build-base \
+    gmp-dev \
+    linux-headers \
+    libzip-dev \
  && docker-php-ext-install pcntl zip opcache gmp \
- && docker-php-ext-enable opcache \
- && pie install pecl/pcov:^1.0.12 && docker-php-ext-enable pcov
+ && pie install pecl/pcov:^1.0.12 \
+ && docker-php-ext-enable pcov
 
 # Optional Xdebug
 ARG REQUIRE_XDEBUG=0
@@ -65,36 +95,46 @@ RUN if [ "$REQUIRE_XDEBUG" = "1" ]; then \
       apk del linux-headers; \
     fi
 
+
+##############################
+# Stage 2b: Application
+##############################
+FROM base AS application
+
+ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
+
+ENV TIMEOUT=60
+
+COPY --from=php-builder /usr/local/lib/php/extensions \
+                        /usr/local/lib/php/extensions
+COPY --from=php-builder /usr/local/etc/php/conf.d \
+                        /usr/local/etc/php/conf.d
+
+# Dependencies
+RUN apk add --no-cache \
+    "gmp==6.3.0-r4" \
+    "libzip==1.11.4-r2" \
+    "su-exec==0.3-r0" \
+    "unzip==6.0-r16" \
+    "php84-pecl-igbinary==3.2.17_rc1-r0" \
+    "php84-pecl-redis==6.3.0-r0" \
+    "php84-pecl-imagick==3.8.1-r0" \
+    "libheif==1.23.0-r0" \
+    "libde265==1.0.18-r0" \
+    "ffmpeg==8.1.2-r0" \
+    "wget==1.25.0-r3"
+
 # Cache/log dirs
 RUN mkdir -p var/cache var/logs /var/log/app \
  && chown -R www-data var /var/log/app
 
 # Pwned Passwords
-COPY client/docker/app/extra/commonpasswords.txt /tmp/commonpasswords.txt
-RUN wget -q -O /tmp/commonpasswords.txt \
-    "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt" \
-    || echo "Using local copy" \
- && chown www-data /tmp/commonpasswords.txt
-
-# Shared app assets
-COPY --chown=www-data:www-data client/app/public public
-COPY --chown=www-data:www-data client/resources/public/ public/
-COPY --chown=www-data:www-data client/app/scripts scripts
-COPY --chown=www-data:www-data client/app/templates templates
-COPY --chown=www-data:www-data client/resources/assets assets
-COPY --chown=www-data:www-data client/app/translations translations
-COPY --chown=www-data:www-data client/app/frontend.env frontend.env
-COPY --chown=www-data:www-data client/app/admin.env admin.env
-COPY --chown=www-data:www-data client/docker/app/config/www.conf /usr/local/etc/php-fpm.d/www.conf
-COPY --chown=www-data:www-data client/docker/app/config/meta.json.tmpl public/meta.json.tmpl
-COPY --chown=www-data:www-data client/docker/app/config/generate_parameters_yml.sh generate_parameters_yml.sh
-COPY --chown=www-data:www-data client/docker/app/config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
-COPY --chown=www-data:www-data scripts/process_checks/check_processes.sh check_processes.sh
+COPY --chown=www-data:www-data client/docker/app/extra/commonpasswords.txt /tmp/commonpasswords.txt
 
 ##############################
 # Stage 3a: Runtime (production)
 ##############################
-FROM base AS runtime
+FROM application AS runtime
 
 COPY --chown=www-data:www-data --from=composer-runtime /app/vendor vendor
 COPY --chown=www-data:www-data --from=composer-runtime /app/app app
@@ -116,7 +156,7 @@ CMD sh -c "./check_processes.sh & exec php-fpm"
 ##############################
 # Stage 3b: Devtools Base
 ##############################
-FROM base AS devtools-base
+FROM application AS devtools-base
 
 COPY --chown=www-data:www-data --from=composer-devtools /app/vendor vendor
 COPY --chown=www-data:www-data --from=composer-devtools /app/app app

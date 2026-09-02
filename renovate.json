@@ -30,6 +30,14 @@
       "matchPackageNames": ["*"]
     },
     {
+      "groupName": "Terraform dependency updates",
+      "matchManagers": ["terraform"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "labels": ["dependencies", "terraform"],
+      "schedule": ["before 9am on Tuesday"],
+      "minimumReleaseAge": "7 days"
+    },
+    {
       "description": ["Docker Minor Dependency Exclusions - PHP"],
       "matchUpdateTypes": ["minor"],
       "matchDatasources": ["docker"],
@@ -47,7 +55,7 @@
       "matchManagers": ["dockerfile", "docker-compose"],
       "matchUpdateTypes": ["minor", "patch"],
       "labels": ["dependencies", "docker"],
-      "schedule": ["before 9am on Monday"],
+      "schedule": ["before 9am on Wednesday"],
       "minimumReleaseAge": "7 days"
     },
     {
