@@ -1,7 +1,7 @@
 ##############################
 # Stage 1: Composer Build
 ##############################
-FROM composer:2.9.8@sha256:b09bccd91a78fe8a9ab4b33d707b862e8fe54fec17782e32683ad2a69c46867d AS composer
+FROM composer:2.10.0@sha256:1b73755de4f19775ba6087fd5313664493e06fab72b6fc27dc2044e87bb7c4c3 AS composer
 
 WORKDIR /app
 
@@ -74,6 +74,16 @@ RUN mkdir -p var/cache \
     && chown -R www-data /var/log/app
 
 ##############################
+# Stage X: Upgrade pinned apk packages (used only as target for pinned upgrades)
+##############################
+FROM base AS upgrade-pinned-apk-packages
+USER root
+COPY api/docker/app/Dockerfile .
+COPY scripts/upgrade_apk/check-apk-ver.sh .
+
+CMD sh -c "./check-apk-ver.sh"
+
+##############################
 # Stage 2a: Base PHP Builder
 ##############################
 FROM base AS php-builder
@@ -109,7 +119,7 @@ COPY --from=php-builder /usr/local/etc/php/conf.d \
                         /usr/local/etc/php/conf.d
 
 RUN apk --no-cache add \
-    "postgresql18-client=18.6-r0" \
+    "postgresql18-client==18.6-r0" \
     "openssl==3.5.7-r0" \
     "su-exec==0.3-r0" \
     "php84-pecl-igbinary==3.2.17_rc1-r0"  \
