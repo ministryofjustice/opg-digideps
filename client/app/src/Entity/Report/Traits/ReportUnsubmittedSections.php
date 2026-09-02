@@ -39,7 +39,7 @@ trait ReportUnsubmittedSections
         return $this->unsubmittedSectionsList;
     }
 
-    public function setUnsubmittedSectionsList(string $unsubmittedSectionsList): static
+    public function setUnsubmittedSectionsList(?string $unsubmittedSectionsList): static
     {
         $this->unsubmittedSectionsList = $unsubmittedSectionsList;
 
