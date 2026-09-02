@@ -9,7 +9,7 @@ RUN addgroup -S htmltopdf \
 
 # Install curl for healthcheck, requirements for pdf generation and fonts
 RUN apk add --no-cache \
-    "curl==8.21.0-r0" \
+    "curl==8.22.0-r0" \
     "cairo==1.18.4-r1" \
     "pango==1.57.1-r0" \
     "gdk-pixbuf==2.44.7-r1" \
