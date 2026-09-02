@@ -57,7 +57,9 @@
                     <td>{{ (page ~ '.form.markSections.label') | trans }}</td>
                     <td>
                         {% for section in submitted.unsubmittedSectionsList | split(',') %}
-                            {{ ('prevNextLinks.sections.' ~ section) | trans({}, 'report-common') }}{% if not loop.last %},{% endif %}
+                            {% if section !== '' %}
+                                {{ ('prevNextLinks.sections.' ~ section) | trans({}, 'report-common') }}{% if not loop.last %},{% endif %}
+                            {% endif %}
                         {% endfor %}
                     </td>
                     <td>
