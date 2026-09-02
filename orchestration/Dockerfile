@@ -1,7 +1,7 @@
 # -------------------------
 # 1) Go builder
 # -------------------------
-FROM golang:1.26.3-alpine3.23@sha256:91eda9776261207ea25fd06b5b7fed8d397dd2c0a283e77f2ab6e91bfa71079d AS gobuilder
+FROM golang:1.26.4-alpine3.23@sha256:18b460dd17542c2ba43299a633cf6ebfc1115101509531471d7cfce1019af083 AS gobuilder
 
 COPY sleep_mode /app/sleep_mode
 WORKDIR /app/sleep_mode
@@ -19,7 +19,7 @@ CMD ["go", "test", "./..."]
 # -----------------------------------------
 # 2) Node deps builder: run npm ci
 # -----------------------------------------
-FROM node:26.3.0-alpine@sha256:3ad34ca6292aec4a91d8ddeb9229e29d9c2f689efd0dd242860889ac71842eba AS nodebuilder
+FROM node:26.3.1-alpine@sha256:a2dc166a387cc6ca1e62d0c8e265e49ca985d6e60abc9fe6e6c3d6ce8e63f606 AS nodebuilder
 
 WORKDIR /tests
 COPY tests/package.json tests/package-lock.json ./
@@ -35,7 +35,7 @@ RUN rm -rf /root/.npm /root/.cach
 # -----------------------------------------
 # 3) Final runtime image: NO npm installed
 # -----------------------------------------
-FROM alpine:3.23@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11
+FROM alpine:3.24@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b
 
 RUN apk update && apk upgrade
 
