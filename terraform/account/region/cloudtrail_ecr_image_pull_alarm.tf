@@ -29,6 +29,7 @@ resource "aws_cloudwatch_metric_alarm" "ecr_image_not_found" {
   metric_name = aws_cloudwatch_log_metric_filter.ecr_image_not_found.metric_transformation[0].name
 
   alarm_actions      = [aws_sns_topic.alerts.arn]
+  ok_actions         = var.account.pagerduty_enabled ? [aws_sns_topic.alerts.arn] : []
   treat_missing_data = "notBreaching"
   actions_enabled    = true
 
