@@ -1,5 +1,6 @@
 variable "vpc" {
   description = "VPC to use"
+  type        = any
 }
 
 variable "subnet_ids" {
@@ -26,4 +27,10 @@ variable "tags" {
   description = "A map of tags to use"
   type        = map(string)
   default     = {}
+}
+
+variable "policy" {
+  description = "VPC endpoint policy json"
+  type        = string
+  default     = ""
 }
