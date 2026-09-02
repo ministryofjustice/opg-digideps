@@ -5,18 +5,9 @@ namespace OPG\Digideps\Frontend\Entity\Report;
 class UnsubmittedSection
 {
     public function __construct(
-        private readonly string $id,
-        private readonly bool $present
+        public string $id,
+        public string $title,
+        public bool $present
     ) {
-    }
-
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    public function isPresent(): bool
-    {
-        return $this->present;
     }
 }

@@ -3,99 +3,46 @@
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use JMS\Serializer\Annotation as JMS;
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Report\UnsubmittedSection;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 trait ReportUnsubmittedSections
 {
     /**
-     * @var UnsubmittedSection[]
+     * @var array<UnsubmittedSection>
      */
-    private array $unsubmittedSection = [];
+    private array $unsubmittedSections = [];
 
-    /**
-     * @var string
-     */
-    #[JMS\Type('string')]
-    #[JMS\Groups(['report_unsubmitted_sections_list'])]
-    private $unsubmittedSectionsList;
-
-    /**
-     * @param UnsubmittedSection[] $unsubmittedSection
-     */
-    public function setUnsubmittedSection($unsubmittedSection): void
-    {
-        $this->unsubmittedSection = $unsubmittedSection;
-    }
-
-    /**
-     * Needed to fill form collection.
-     *
-     * @return UnsubmittedSection[]
-     */
     public function getUnsubmittedSections(): array
     {
-        // init with available section if empty
-        if (empty($this->unsubmittedSection)) {
-            foreach ($this->getAvailableSections() as $sectionId) {
-                $this->unsubmittedSection[] = new UnsubmittedSection($sectionId, false);
-            }
-        }
-
-        return $this->unsubmittedSection;
+        return $this->unsubmittedSections;
     }
 
     /**
-     * @return string
+     * @param array<UnsubmittedSection> $unsubmittedSections
      */
-    public function getUnsubmittedSectionsList()
+    public function setUnsubmittedSections(array $unsubmittedSections): static
     {
-        return $this->unsubmittedSectionsList;
-    }
-
-    /**
-     * @param string $unsubmittedSectionsList
-     *
-     * @return Report
-     */
-    public function setUnsubmittedSectionsList($unsubmittedSectionsList)
-    {
-        $this->unsubmittedSectionsList = $unsubmittedSectionsList;
+        $this->unsubmittedSections = $unsubmittedSections;
 
         return $this;
     }
 
     /**
-     * @return array of section IDs
+     * @var ?string comma-separated list of section identifiers; see ReportType values
      */
-    public function getUnsubmittedSectionsIds(): array
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report_unsubmitted_sections_list'])]
+    private ?string $unsubmittedSectionsList = null;
+
+    public function getUnsubmittedSectionsList(): ?string
     {
-        return array_filter(array_map(function ($us) {
-            return $us->isPresent() ? $us->getId() : null;
-        }, $this->getUnsubmittedSections()));
+        return $this->unsubmittedSectionsList;
     }
 
-    public function unsubmittedSectionAtLeastOnce(ExecutionContextInterface $context): void
+    public function setUnsubmittedSectionsList(string $unsubmittedSectionsList): static
     {
-        if (empty($this->getUnsubmittedSectionsIds())) {
-            // add error to all the sections
-            $context->buildViolation('report.unsubmissionSections.atLeastOnce')->atPath('unsubmittedSection[0].present')->addViolation();
-            for ($i = 1, $count = count($this->getUnsubmittedSections()); $i < $count; ++$i) {
-                $context->buildViolation('')->atPath("unsubmittedSection[$i].present")->addViolation();
-            }
-        }
-    }
+        $this->unsubmittedSectionsList = $unsubmittedSectionsList;
 
-    /**
-     * @param $sectionId
-     *
-     * @return bool
-     */
-    public function isSectionFlaggedForAttention($sectionId): bool
-    {
-        $sna = array_map('trim', explode(',', $this->getUnsubmittedSectionsList()));
-
-        return in_array($sectionId, $sna);
+        return $this;
     }
 }

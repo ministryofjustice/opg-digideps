@@ -32,7 +32,7 @@
                 {% for section in form.unsubmittedSections %}
                     {{ form_row(section.id) }}
                     {{ form_checkbox(section.present, '', {
-                        'labelText': ('prevNextLinks.sections.' ~ section.id.vars.value) | trans({}, 'report-common'),
+                        'labelText': section.vars.value.title,
                         'useFormGroup': false
                     }) }}
                 {% endfor %}

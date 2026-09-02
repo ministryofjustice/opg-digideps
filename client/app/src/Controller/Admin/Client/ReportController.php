@@ -7,6 +7,7 @@ namespace OPG\Digideps\Frontend\Controller\Admin\Client;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Report\Checklist;
 use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\UnsubmittedSection;
 use OPG\Digideps\Frontend\Entity\SynchronisableInterface;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Exception\ReportNotSubmittedException;
@@ -17,6 +18,7 @@ use OPG\Digideps\Frontend\Form\Admin\ManageReportConfirmType;
 use OPG\Digideps\Frontend\Form\Admin\ManageSubmittedReportType;
 use OPG\Digideps\Frontend\Form\Admin\ReportChecklistType;
 use OPG\Digideps\Frontend\Form\Admin\ReviewChecklistType;
+use OPG\Digideps\Frontend\Report\ReportSectionService;
 use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
@@ -98,7 +100,8 @@ class ReportController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
-        private readonly FormFactoryInterface $formFactory
+        private readonly FormFactoryInterface $formFactory,
+        private readonly ReportSectionService $reportSectionService,
     ) {
     }
 
@@ -334,7 +337,28 @@ class ReportController extends AbstractController
     {
         $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
 
-        $formClass = ($report->isSubmitted()) ? ManageSubmittedReportType::class : ManageActiveReportType::class;
+        $formClass = ManageActiveReportType::class;
+        if ($report->isSubmitted()) {
+            $formClass = ManageSubmittedReportType::class;
+        }
+
+        $unsubmittedSectionsList = $report->getUnsubmittedSectionsList();
+        $reportMeta = ReportSectionService::getReportMetadata($report);
+        $unsubmittedSections = [];
+
+        foreach ($reportMeta->sections as $reportSection) {
+            $sectionMeta = $this->reportSectionService->getSectionMetadata($reportMeta, $reportSection);
+            if ($sectionMeta === null) {
+                continue;
+            }
+
+            $present = $unsubmittedSectionsList !== null && str_contains($unsubmittedSectionsList, $reportSection->value);
+
+            $unsubmittedSections[] = new UnsubmittedSection($reportSection->value, $sectionMeta->texts->title, $present);
+        }
+
+        $report->setUnsubmittedSections($unsubmittedSections);
+
         $form = $this->formFactory->createNamed('manage_report', $formClass, $report, ['translation_domain' => 'admin-clients']);
 
         if (is_array($request->get('data'))) {
@@ -406,7 +430,7 @@ class ReportController extends AbstractController
             'dueDateCustom' => $customDueDate instanceof \DateTime ? $customDueDate->format('Y-m-d') : null,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'unsubmittedSectionsList' => implode(',', $report->getUnsubmittedSectionsIds()),
+            'unsubmittedSectionsList' => $report->getUnsubmittedSectionsList(),
         ]);
     }
 
