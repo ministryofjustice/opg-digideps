@@ -342,7 +342,7 @@ class ReportController extends AbstractController
             $formClass = ManageSubmittedReportType::class;
         }
 
-        $unsubmittedSectionsList = $report->getUnsubmittedSectionsList();
+        $unsubmittedSectionsList = $report->getUnsubmittedSectionsList() ?? '';
         $reportMeta = ReportSectionService::getReportMetadata($report);
         $unsubmittedSections = [];
 
@@ -352,7 +352,7 @@ class ReportController extends AbstractController
                 continue;
             }
 
-            $present = $unsubmittedSectionsList !== null && str_contains($unsubmittedSectionsList, $reportSection->value);
+            $present = str_contains($unsubmittedSectionsList, $reportSection->value);
 
             $unsubmittedSections[] = new UnsubmittedSection($reportSection->value, $sectionMeta->texts->title, $present);
         }
@@ -368,7 +368,6 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->setChoicesInSession($request, $form, $report);
-
             return $this->redirect($this->generateUrl('admin_report_manage_confirm', ['id' => $report->getId()]));
         }
 
@@ -395,22 +394,26 @@ class ReportController extends AbstractController
     private function prepopulateWithPreviousChoices(array $dataFromUrl, FormInterface $form): void
     {
         foreach (['type', 'dueDateChoice'] as $field) {
-            $form->has($field) && $form[$field]->setData($dataFromUrl[$field]);
+            $form->has($field) && array_key_exists($field, $dataFromUrl) && $form[$field]->setData($dataFromUrl[$field]);
         }
 
         foreach (['dueDateCustom', 'startDate', 'endDate'] as $field) {
             $form->has($field) && array_key_exists($field, $dataFromUrl) && $form[$field]->setData(new \DateTime($dataFromUrl[$field]));
         }
 
-        if ($form->has('unsubmittedSection') && isset($dataFromUrl['unsubmittedSectionsList'])) {
-            foreach ($form['unsubmittedSection']->getData() as $index => $section) {
-                $unsubmitted = explode(',', (string) $dataFromUrl['unsubmittedSectionsList']);
-                if (in_array($section->getId(), $unsubmitted)) {
-                    $form['unsubmittedSection']->getData()[$index]->setPresent(true);
+        if ($form->has('unsubmittedSections') && isset($dataFromUrl['unsubmittedSectionsList'])) {
+            /** @var array<UnsubmittedSection> $unsubmittedSections */
+            $unsubmittedSections = $form['unsubmittedSections']->getData();
+
+            $unsubmitted = explode(',', (string) $dataFromUrl['unsubmittedSectionsList']);
+
+            foreach ($unsubmittedSections as $section) {
+                if (in_array($section->id, $unsubmitted)) {
+                    $section->present = true;
                 }
             }
 
-            $form['unsubmittedSection']->setData($form['unsubmittedSection']->getData());
+            $form['unsubmittedSections']->setData($unsubmittedSections);
         }
     }
 
@@ -423,6 +426,17 @@ class ReportController extends AbstractController
         $startDate = isset($form['startDate']) ? $form['startDate']->getData()->format('Y-m-d') : null;
         $endDate = isset($form['endDate']) ? $form['endDate']->getData()->format('Y-m-d') : null;
 
+        /** @var array<UnsubmittedSection> $unsubmittedSections */
+        $unsubmittedSections = $form['unsubmittedSections']->getData();
+
+        $unsubmittedSectionsList = implode(
+            ',',
+            array_map(
+                fn (UnsubmittedSection $unsubmittedSection) => $unsubmittedSection->id,
+                array_filter($unsubmittedSections, fn (UnsubmittedSection $unsubmittedSection) => $unsubmittedSection->present)
+            )
+        );
+
         $request->getSession()->set('report-management-changes', [
             'type' => $form['type']->getData(),
             'dueDate' => $this->determineNewDueDateFromForm($report, $form)->format('Y-m-d'),
@@ -430,7 +444,7 @@ class ReportController extends AbstractController
             'dueDateCustom' => $customDueDate instanceof \DateTime ? $customDueDate->format('Y-m-d') : null,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'unsubmittedSectionsList' => $report->getUnsubmittedSectionsList(),
+            'unsubmittedSectionsList' => $unsubmittedSectionsList,
         ]);
     }
 
