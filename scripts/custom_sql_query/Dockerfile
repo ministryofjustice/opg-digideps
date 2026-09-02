@@ -1,7 +1,7 @@
 ARG FUNCTION_DIR="/function"
 
 # ===== BASE IMAGE =====
-FROM python:3.14.6-alpine3.23@sha256:b165067c5afc37fa5608a3c05609cc3d51aafd808a30fbfd822ee594fef55ad4 AS python-base
+FROM python:3.14.7-alpine3.24@sha256:c6ead215bfd31f1e433d968853b7a769989117115b728874824e6c0a27cb96fc AS python-base
 
 RUN apk update && apk upgrade
 
