@@ -201,39 +201,52 @@ final readonly class ReportTransitionService
 
         // check whether the pair already share a report, and remove it from the hw court order if so
         // (duals should not have a shared report); pfa always keeps the report if both have the same report
+        $hwCourtOrder = $courtOrderPair->hwCourtOrder;
+        $pfaCourtOrder = $courtOrderPair->pfaCourtOrder;
         $sharedReport = $courtOrderPair->getSharedLatestReport();
-        if ($sharedReport !== null) {
-            $sharedReport->setCourtOrder($courtOrderPair->pfaCourtOrder);
-            $result->messages[] = "Single -> Dual: Removed report {$sharedReport->getId()} " .
-                "from court order {$courtOrderPair->hwCourtOrder->getCourtOrderUid()}";
-        }
 
-        foreach ($affectedCourtOrders as $courtOrder) {
-            $latestReport = $courtOrder->getLatestReport();
-            if ($latestReport === null) {
-                // court order doesn't have its own report yet
-                $newReport = $this->reportService->createReportFromOrder($courtOrder);
-                $courtOrder->addReport($newReport);
+        if ($sharedReport === null) {
+            // no shared report, so keep the report on the previously-single court order
+            // and make a new report for the other court order in the pair
+            $courtOrderNeedingReport = $hwCourtOrder;
+            $existingReport = $pfaCourtOrder->getLatestReport();
 
-                $result->updatedReports[] = $newReport;
-
-                $result->messages[] = fn () => "Single -> Dual: Added new {$newReport->getType()} report " .
-                    "{$newReport->getId()} to court order {$courtOrder->getCourtOrderUid()}";
-            } else {
-                $latestReport->setCourtOrder($courtOrder);
-                $latestReport->setType("{$courtOrder->getDesiredReportType()}");
-
-                $result->updatedReports[] = $latestReport;
-
-                $result->messages[] = 'Single -> Dual: Assigned latest report ' . $latestReport->getId() .
-                    ' to court order ' . $courtOrder->getCourtOrderUid();
+            if ($existingReport === null) {
+                $courtOrderNeedingReport = $pfaCourtOrder;
+                $existingReport = $hwCourtOrder->getLatestReport();
             }
+
+            $courtOrderKeepingReport = ($courtOrderNeedingReport === $hwCourtOrder ? $pfaCourtOrder : $hwCourtOrder);
+            $result->messages[] = "Single -> Dual: Keeping report {$existingReport->getId()} " .
+                "on {$courtOrderKeepingReport->getOrderType()->value} court order " .
+                "{$courtOrderKeepingReport->getCourtOrderUid()}";
+        } else {
+            // shared (hybrid) report, so make it the report on the pfa and remove it from the hw
+            $sharedReport->setCourtOrder($pfaCourtOrder);
+            $sharedReport->setType("{$pfaCourtOrder->getDesiredReportType()}");
+
+            $hwCourtOrder->removeReport($sharedReport);
+
+            $result->updatedReports[] = $sharedReport;
+
+            $result->messages[] = "Single -> Dual: Removed report {$sharedReport->getId()} " .
+                "from HW court order {$hwCourtOrder->getCourtOrderUid()} and set as report on PFA court order " .
+                "{$pfaCourtOrder->getCourtOrderUid()}";
+
+            $courtOrderNeedingReport = $hwCourtOrder;
+            $existingReport = $sharedReport;
         }
 
-        if (
-            $courtOrderPair->pfaCourtOrder->getLatestReport() !== null &&
-            $courtOrderPair->hwCourtOrder->getLatestReport() !== null
-        ) {
+        $newReport = $this->reportService->createReportFromOrder($courtOrderNeedingReport);
+        $courtOrderNeedingReport->addReport($newReport);
+
+        $result->updatedReports[] = $newReport;
+
+        $result->messages[] = fn () => "Single -> Dual: Added new {$newReport->getType()} report " .
+            "{$newReport->getId()} to {$courtOrderNeedingReport->getOrderType()->value} " .
+            "court order {$courtOrderNeedingReport->getCourtOrderUid()}";
+
+        if ($existingReport !== null) {
             $result->transitioned = true;
             $result->updatedCourtOrders = $affectedCourtOrders;
         } else {
