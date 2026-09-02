@@ -38,6 +38,26 @@ data "aws_iam_policy_document" "s3_endpoint" {
       "arn:aws:s3:::alb-logs*/*",
       "arn:aws:s3:::alb-athena*",
       "arn:aws:s3:::alb-athena*/*",
+      "arn:aws:s3:::prod-eu-west-1-starport-layer-bucket",
+      "arn:aws:s3:::prod-eu-west-1-starport-layer-bucket/*",
+      "arn:aws:s3:::prod-eu-west-2-starport-layer-bucket",
+      "arn:aws:s3:::prod-eu-west-2-starport-layer-bucket/*",
+    ]
+  }
+
+  statement {
+    sid    = "AllowDeleteOnPABucket"
+    effect = "Allow"
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    actions = [
+      "s3:Delete*"
+    ]
+    resources = [
+      "arn:aws:s3:::pa-uploads-*",
+      "arn:aws:s3:::pa-uploads-*/*"
     ]
   }
 }
