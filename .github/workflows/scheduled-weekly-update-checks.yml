@@ -32,9 +32,8 @@ jobs:
       - name: update pinned apk versions
         run: |
           make frontend-apk-upgrade
-          docker cp opg-digideps-frontend-apk-upgrade:/var/www/Dockerfile ./client/docker/app/Dockerfile
           make api-apk-upgrade
-          docker cp opg-digideps-api-apk-upgrade:/var/www/Dockerfile ./client/docker/app/Dockerfile
+          make htmltopdf-apk-upgrade
 
       - name: Create a signed commit
         uses: ministryofjustice/modernisation-platform-github-actions/signed-commit@2988728879704953e739f82ac926d37931c6d01b # v6.1.9

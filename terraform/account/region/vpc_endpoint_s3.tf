@@ -38,6 +38,10 @@ data "aws_iam_policy_document" "s3_endpoint" {
       "arn:aws:s3:::alb-logs*/*",
       "arn:aws:s3:::alb-athena*",
       "arn:aws:s3:::alb-athena*/*",
+      "arn:aws:s3:::prod-eu-west-1-starport-layer-bucket",
+      "arn:aws:s3:::prod-eu-west-1-starport-layer-bucket/*",
+      "arn:aws:s3:::prod-eu-west-2-starport-layer-bucket",
+      "arn:aws:s3:::prod-eu-west-2-starport-layer-bucket/*",
     ]
   }
 }
