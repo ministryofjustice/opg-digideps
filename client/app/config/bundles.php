@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use JMS\SerializerBundle\JMSSerializerBundle;
+use KnpU\OAuth2ClientBundle\KnpUOAuth2ClientBundle;
 use OPG\Digideps\Frontend\App;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -20,6 +21,7 @@ return [
     MonologBundle::class => ['all' => true],
     App::class => ['all' => true],
     JMSSerializerBundle::class => ['all' => true],
+    KnpUOAuth2ClientBundle::class => ['all' => true],
     WebProfilerBundle::class => ['dev' => true, 'dev_with_debug' => true, 'test' => true, 'local' => true],
     DebugBundle::class => ['dev' => true, 'dev_with_debug' => true, 'test' => true, 'local' => true],
     TwigExtraBundle::class => ['all' => true],

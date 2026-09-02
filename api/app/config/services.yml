@@ -194,6 +194,11 @@ services:
         tags:
             - { name: security.voter }
 
+    OPG\Digideps\Backend\Security\MicrosoftTokenAuthenticator:
+        arguments:
+          $httpClient: "@app.guzzlehttp_clientinterface"
+          $entraUserInfoUrl: "%env(OAUTH_ENTRA_URL_USERINFO)%"
+
     OPG\Digideps\Backend\Service\Client\TokenStorage\RedisStorage:
         arguments:
             $redis: "@predis"

@@ -1,0 +1,42 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 1.1rem;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: linear-gradient(180deg, #4370a8 0, #00326e);
+  background-color: #00326e;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+form {
+  min-width: 500px;
+  width: 50%;
+  padding: 1rem;
+  border-radius: 3px;
+  background-color: white;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 0.5rem;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-size: inherit;
+}

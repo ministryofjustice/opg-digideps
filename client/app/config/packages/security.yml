@@ -84,6 +84,7 @@ security:
       custom_authenticators:
         - OPG\Digideps\Frontend\Security\LoginFormAuthenticator
         - OPG\Digideps\Frontend\Security\SessionAuthenticator
+        - OPG\Digideps\Frontend\Security\MicrosoftAuthenticator
       logout:
         path: app_logout
         # needed to save custom login params
@@ -104,6 +105,7 @@ security:
     # open URLs
     - { path: ^/v2/*, roles: PUBLIC_ACCESS }
     - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/connect\/, roles: PUBLIC_ACCESS }
     - { path: ^/logout, roles: PUBLIC_ACCESS }
     - { path: ^/manage, roles: PUBLIC_ACCESS }
     - { path: ^/feedback, roles: PUBLIC_ACCESS }

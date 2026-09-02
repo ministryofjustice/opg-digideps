@@ -51,6 +51,14 @@
         </div>
     {% endif %}
 
+    {% if isAdmin %}
+        <a class="behat-link-forgotten-password" href="/connect/entra">
+            <img src="{{ asset('images/ms-signin-light.svg') }}" alt="Sign in with Microsoft" />
+        </a>
+
+        <hr class="govuk-section-break govuk-section-break--m">
+    {% endif %}
+
     {% if app.session.get('login-context') == 'email-update' %}
         <div class="moj-banner">
             {{ macros.icon('information', 'moj-banner__icon') }}

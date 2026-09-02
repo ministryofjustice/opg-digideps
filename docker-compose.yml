@@ -100,6 +100,7 @@ services:
       - htmltopdf
       - localstack
       - mock-notify-api
+      - mock-oauth-provider
       - resources
     environment:
       APP_ENV: ${APP_ENV:-local}
@@ -405,3 +406,8 @@ services:
     image: playwright-check
     container_name: playwright-report
     restart: "no"
+
+  mock-oauth-provider:
+    build: mock-oauth-provider
+    ports:
+      - 8080:80

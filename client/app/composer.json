@@ -42,12 +42,14 @@
         "guzzlehttp/guzzle": "^7.15.3",
         "jms/serializer-bundle": "^5.5.2",
         "jolicode/slack-php-api": "^4.9",
+        "knpuniversity/oauth2-client-bundle": "^2.20",
         "league/mime-type-detection": "^1.16",
         "monolog/monolog": "^3.10.0",
         "orbitale/imagemagick-php": "^3.3.5",
         "php-http/guzzle7-adapter": "^1.1",
         "predis/predis": "^3.5.1",
         "ramsey/uuid": "^4.9.3",
+        "stevenmaguire/oauth2-microsoft": "^2.2",
         "symfony/asset": "^6.4.34",
         "symfony/cache": "^6.4.41",
         "symfony/config": "^6.4.37",
@@ -99,10 +101,6 @@
         }
     },
     "repositories": [
-        {
-            "type": "composer",
-            "url": "https://govuk-frontend-toolkit.appspot.com"
-        },
         {
             "type": "path",
             "url": "../../common",

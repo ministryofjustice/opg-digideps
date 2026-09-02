@@ -101,6 +101,7 @@ security:
         default:
             custom_authenticators:
                 - OPG\Digideps\Backend\Security\LoginRequestAuthenticator
+                - OPG\Digideps\Backend\Security\MicrosoftTokenAuthenticator
                 - OPG\Digideps\Backend\Security\RegistrationTokenAuthenticator
                 - OPG\Digideps\Backend\Security\HeaderTokenAuthenticator
             pattern: .*
