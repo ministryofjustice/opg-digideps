@@ -18,9 +18,15 @@ data "aws_iam_policy_document" "logs_endpoint" {
       identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
     }
     actions = [
-      "logs:*",
-      "rum:*",
-      "monitoring:*"
+      "rum:ListAppMonitors",
+      "logs:Get*",
+      "logs:List*",
+      "logs:Describe*",
+      "logs:Create*",
+      "logs:Put*",
+      "monitoring:Get*",
+      "monitoring:List*",
+      "monitoring:Describe*"
     ]
     resources = [
       "arn:aws:logs:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:*",
