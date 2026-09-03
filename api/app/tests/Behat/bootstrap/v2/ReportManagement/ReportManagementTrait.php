@@ -47,6 +47,8 @@ trait ReportManagementTrait
 
     /**
      * @When I manage the deputies :reportStatus report
+     *
+     * :reportStatus = "completed" (current active report) OR "submitted" (previous submitted report)
      */
     public function iManageTheDeputiesSubmittedReport(string $reportStatus): void
     {
@@ -209,8 +211,6 @@ trait ReportManagementTrait
      */
     public function confirmAllReportSectionsIncomplete(): void
     {
-        $this->printLastResponse();
-
         $this->iAmOnAdminManageReportPage();
         $roleType = $this->translateDeputyRole($this->interactingWithUserDetails->getUserRole());
 
