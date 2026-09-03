@@ -51,7 +51,7 @@ final readonly class ReportMetadata
     {
         $section = $like ? $this->getSectionLike($section) : $this->filterSection($section);
         return $section !== null ? new SectionLink(
-            new RoutedUrl(RoutedUrl::snakeCase($section->value), ['reportId' => $this->reportId]),
+            new RoutedUrl(RoutedUrl::snakeCase($section->getValueForRouting()), ['reportId' => $this->reportId]),
             new TranslatedText('report-sections', "title.{$section->value}")
         ) : $this->getOverviewLink();
     }
