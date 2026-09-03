@@ -73,7 +73,7 @@ describe('Upload file', () => {
     // stub the input element which is the target of the event
     const fileInput = {
       files: [{ size: 1024 }, { size: 2048 }],
-      form: form,
+      form,
       nodeName: 'INPUT',
       type: 'file',
       getAttribute: () => 'report_document_upload_files'
