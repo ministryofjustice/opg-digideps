@@ -4,6 +4,7 @@ namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Report\UnsubmittedSection;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 trait ReportUnsubmittedSections
 {
@@ -12,6 +13,9 @@ trait ReportUnsubmittedSections
      */
     private array $unsubmittedSections = [];
 
+    /**
+     * @return array<UnsubmittedSection>
+     */
     public function getUnsubmittedSections(): array
     {
         return $this->unsubmittedSections;
@@ -44,5 +48,31 @@ trait ReportUnsubmittedSections
         $this->unsubmittedSectionsList = $unsubmittedSectionsList;
 
         return $this;
+    }
+
+    /**
+     * Used by Twig template rendering Report model
+     */
+    public function isSectionFlaggedForAttention($sectionId): bool
+    {
+        $unsubmittedSections = array_map('trim', array_filter(
+            explode(',', $this->unsubmittedSectionsList)
+        ));
+
+        return in_array($sectionId, $unsubmittedSections);
+    }
+
+    /**
+     * Used by Report model validation callback
+     */
+    public function unsubmittedSectionAtLeastOnce(ExecutionContextInterface $context): void
+    {
+        if (count($this->getUnsubmittedSections()) === 0) {
+            // add error to all the sections
+            $context->buildViolation('report.unsubmissionSections.atLeastOnce')->atPath('unsubmittedSection[0].present')->addViolation();
+            for ($i = 1, $count = count($this->getUnsubmittedSections()); $i < $count; ++$i) {
+                $context->buildViolation('')->atPath("unsubmittedSection[$i].present")->addViolation();
+            }
+        }
     }
 }
