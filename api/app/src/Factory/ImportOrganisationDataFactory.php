@@ -66,13 +66,16 @@ class ImportOrganisationDataFactory implements DataFactoryInterface
                             spi.deputy_organisation AS name
                         FROM staging.pa_pro_ingest spi
                     ) o
+                    WHERE COALESCE(o.domain, '') <> ''
+                    -- Alternate version skipping organisations with blacklisted domains altogether
                     -- FROM (
                     --     SELECT
                     --         substring(spi.deputy_email from '@(.*)$') AS domain,
                     --         spi.deputy_organisation AS name
                     --     FROM staging.pa_pro_ingest spi
                     -- ) o
-                    -- WHERE o.domain NOT IN {$this->blacklist}
+                    -- WHERE COALESCE(o.domain, '') <> ''
+                    -- AND o.domain NOT IN {$this->blacklist}
                     GROUP BY o.domain
                 ");
                 $preLinked = $this->execute('
@@ -93,7 +96,10 @@ class ImportOrganisationDataFactory implements DataFactoryInterface
                             name, email_identifier, is_activated
                         )
                         SELECT
-                            COALESCE(sso.name, 'Your Organisation'),
+                            CASE
+                                WHEN COALESCE(sso.name, '') = '' THEN 'Your Organisation'
+                                ELSE sso.name
+                            END,
                             sso.domain,
                             TRUE
                         FROM staging.sirius_organisation sso
