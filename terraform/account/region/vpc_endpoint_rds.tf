@@ -6,7 +6,7 @@ module "rds_endpoint_vpc" {
   service             = "rds"
   service_short_title = "rds"
   tags                = var.default_tags
-  policy            = var.account.name == "development" ? data.aws_iam_policy_document.rds_api_endpoint.json : ""
+  policy              = var.account.name == "development" ? data.aws_iam_policy_document.rds_api_endpoint.json : ""
 }
 
 data "aws_iam_policy_document" "rds_api_endpoint" {
