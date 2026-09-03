@@ -19,16 +19,6 @@ module "ecr_api_endpoint_vpc" {
   tags                = var.default_tags
 }
 
-module "logs_endpoint_vpc" {
-  source              = "./modules/vpc_endpoint"
-  subnet_ids          = module.network.application_subnets[*].id
-  vpc                 = module.network.vpc
-  region              = data.aws_region.current.name
-  service             = "logs"
-  service_short_title = "logs"
-  tags                = var.default_tags
-}
-
 module "ssm_endpoint_vpc" {
   source              = "./modules/vpc_endpoint"
   subnet_ids          = module.network.application_subnets[*].id
