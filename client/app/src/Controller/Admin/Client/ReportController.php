@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Controller\Admin\Client;
 
+use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Report\Checklist;
 use OPG\Digideps\Frontend\Entity\Report\Report;
@@ -492,6 +493,7 @@ class ReportController extends AbstractController
     {
         $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
 
+        /** @var ?array $sessionData */
         $sessionData = $request->getSession()->get('report-management-changes');
         if ($sessionData === null || !$this->sufficientDataInSession($sessionData)) {
             return $this->redirect($this->generateUrl('admin_report_manage', ['id' => $report->getId()]));
@@ -506,7 +508,7 @@ class ReportController extends AbstractController
                 return $this->redirect($this->generateUrl('admin_client_details', ['id' => $report->getClient()->getId()]));
             }
 
-            $this->populateReportFromSession($report, $sessionData);
+            $this->populateReportFromSession($report, new ValidatingArray($sessionData));
             $this->restClient->put('report/' . $report->getId(), $report, ['report_type', 'report_due_date', ...($report->isSubmitted() ? [] : ['startEndDates'])]);
 
             if ($form->has('confirm') && $form['confirm']->getData() === 'yes' && $report->isSubmitted()) {
@@ -548,22 +550,20 @@ class ReportController extends AbstractController
     /**
      * @throws \Exception
      */
-    private function populateReportFromSession(Report $report, array $sessionData): void
+    private function populateReportFromSession(Report $report, ValidatingArray $sessionData): void
     {
-        foreach (['type', 'unsubmittedSectionsList'] as $field) {
-            /** @var ?string $value */
-            $value = $sessionData[$field] ?? null;
+        $report->setUnsubmittedSectionsList($sessionData->getStringOrNull('unsubmittedSectionsList'));
 
-            if ($value !== null) {
-                $setter = sprintf('set%s', ucfirst($field));
-                $report->{$setter}($value);
-            }
+        $reportType = $sessionData->getStringOrNull('type');
+        if ($reportType !== null) {
+            $report->setType($reportType);
         }
 
         foreach (['dueDate', 'startDate', 'endDate'] as $field) {
-            if (isset($sessionData[$field])) {
+            $fieldValue = $sessionData->getStringOrNull($field);
+            if ($fieldValue !== null) {
                 $setter = sprintf('set%s', ucfirst($field));
-                $report->{$setter}(new \DateTime($sessionData[$field]));
+                $report->{$setter}(new \DateTime($fieldValue));
             }
         }
     }
