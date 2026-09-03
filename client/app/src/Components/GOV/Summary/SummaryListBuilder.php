@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Components\GOV\Summary;
 
 use OPG\Digideps\Frontend\Components\RenderableInterface;
-use Twig\Markup;
 
 final class SummaryListBuilder
 {
@@ -28,7 +27,7 @@ final class SummaryListBuilder
         }
     }
 
-    public function addItem(RenderableInterface|string $key, Markup|RenderableInterface|string $value, null $action = null): SummaryListBuilder
+    public function addItem(RenderableInterface|string $key, RenderableInterface|string $value, null $action = null): SummaryListBuilder
     {
         $this->items[] = new Item($key, $value, $action);
         if ($action !== null) {
