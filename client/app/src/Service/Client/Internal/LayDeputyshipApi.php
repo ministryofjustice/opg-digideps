@@ -10,11 +10,11 @@ class LayDeputyshipApi
 {
     public const string UPLOAD_LAY_DEPUTYSHIP_ENDPOINT = 'v2/lay-deputyship/upload';
 
-    public function __construct(private RestClient $restClient)
+    public function __construct(private readonly RestClient $restClient)
     {
     }
 
-    public function uploadLayDeputyShip(mixed $compressedData, string $chunkId)
+    public function uploadLayDeputyShip(string $compressedData, string $chunkId)
     {
         return $this->restClient->setTimeout(600)->post(
             self::UPLOAD_LAY_DEPUTYSHIP_ENDPOINT,
