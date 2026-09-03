@@ -461,3 +461,41 @@ resource "aws_cloudwatch_event_target" "block_ips" {
   arn       = data.aws_lambda_function.block_ips_lambda.arn
   rule      = aws_cloudwatch_event_rule.block_ips.name
 }
+
+#Cleanup Reports
+
+resource "aws_cloudwatch_event_rule" "digideps_cleanup_reports" {
+  name                = "digideps-cleanup-reports-${local.environment}"
+  description         = "Cleanup reports for all clients ${terraform.workspace}"
+  schedule_expression = "cron(59 4 * * ? *)"
+  state               = "DISABLED"
+  tags                = var.default_tags
+}
+
+resource "aws_cloudwatch_event_target" "digideps_cleanup_reports" {
+  rule     = aws_cloudwatch_event_rule.digideps_cleanup_reports.name
+  arn      = aws_ecs_cluster.main.arn
+  role_arn = aws_iam_role.events_task_runner.arn
+
+  ecs_target {
+    task_count          = 1
+    task_definition_arn = aws_ecs_task_definition.api_high_memory.arn
+    launch_type         = "FARGATE"
+    platform_version    = "1.4.0"
+    network_configuration {
+      security_groups  = [module.api_service_security_group.id]
+      subnets          = data.aws_subnet.application[*].id
+      assign_public_ip = false
+    }
+  }
+  input = jsonencode(
+    {
+      "containerOverrides" : [
+        {
+          "name" : "api_app",
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:cleanup:reports", "--env=prod"]
+        }
+      ]
+    }
+  )
+}
