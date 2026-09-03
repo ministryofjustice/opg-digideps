@@ -320,7 +320,14 @@ audit-ga: ##@github_actions Audit github actions
 frontend-apk-upgrade: ##@apk_upgrades Upgrade pinned frontend apk versions
 	docker compose -f docker-compose.commands.yml build --no-cache frontend-apk-upgrade
 	docker compose -f docker-compose.commands.yml up frontend-apk-upgrade
+	docker cp opg-digideps-frontend-apk-upgrade:/var/www/Dockerfile ./client/docker/app/Dockerfile
 
 api-apk-upgrade: ##@apk_upgrades Upgrade pinned api apk versions
 	docker compose -f docker-compose.commands.yml build --no-cache api-apk-upgrade
 	docker compose -f docker-compose.commands.yml up api-apk-upgrade
+	docker cp opg-digideps-api-apk-upgrade:/var/www/Dockerfile ./api/docker/app/Dockerfile
+
+htmltopdf-apk-upgrade: ##@apk_upgrades Upgrade pinned htmltopdf apk versions
+	docker compose -f docker-compose.commands.yml build --no-cache htmltopdf-apk-upgrade
+	docker compose -f docker-compose.commands.yml up htmltopdf-apk-upgrade
+	docker cp opg-digideps-htmltopdf-apk-upgrade:/Dockerfile ./htmltopdf/Dockerfile
