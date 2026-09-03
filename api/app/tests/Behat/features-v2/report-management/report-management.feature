@@ -6,7 +6,7 @@ Feature: Report Management (applies to all admin roles)
         Given a Professional Deputy has completed a Pfa Low Assets report
         And a super admin user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
-        And I manage the deputies 'completed' report
+        And I manage the deputy's 'completed' report
         And I change the report type to 'Health and welfare'
         And I change the report due date to '3' weeks from now
         And I submit the new report details
@@ -18,7 +18,7 @@ Feature: Report Management (applies to all admin roles)
         And all the reports for the first client are associated with a pfa court order
         And an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
-        And I manage the deputies 'submitted' report
+        And I manage the deputy's 'submitted' report
         And I change the report 'start' date to '29 June 2021'
         And I change the report 'end' date to '28 June 2022'
         And I change the report due date to '4' weeks from now
@@ -34,7 +34,7 @@ Feature: Report Management (applies to all admin roles)
         And all the reports for the first client are associated with a pfa court order
         And an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
-        And I manage the deputies 'submitted' report
+        And I manage the deputy's 'submitted' report
         And I set the due date of the report to a custom date
         And I confirm all report sections are incomplete
         And I submit the new report details
@@ -47,10 +47,10 @@ Feature: Report Management (applies to all admin roles)
         Given a Public Authority Deputy has submitted a Combined High Assets report
         And an admin user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
-        And I manage the deputies 'submitted' report
+        And I manage the deputy's 'submitted' report
         And I confirm all report sections are incomplete
         And I submit the new report details
-        And I manage the deputies 'un-submitted' report
+        And I manage the deputy's 'un-submitted' report
         And I change the report due date to '5' weeks from now
         And I change the report type to 'Health and welfare'
         And I submit the new report details
@@ -61,7 +61,7 @@ Feature: Report Management (applies to all admin roles)
         Given a Public Authority Deputy has submitted a Combined High Assets report
         And an admin user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
-        And I manage the deputies 'submitted' report
+        And I manage the deputy's 'submitted' report
         And I confirm all report sections are incomplete
         And I submit the new report details
         And I close the un-submitted report
@@ -95,7 +95,7 @@ Feature: Report Management (applies to all admin roles)
         But they have not completed the client benefits section for their 'previous' report
         And an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
-        And I manage the deputies 'submitted' report
+        And I manage the deputy's 'submitted' report
         And I should see the client benefits check section in the checklist group
         And I confirm all report sections are incomplete
         And I submit the new report details
@@ -109,7 +109,7 @@ Feature: Report Management (applies to all admin roles)
         And all the reports for the first client are associated with a pfa court order
         And an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
-        And I manage the deputies 'submitted' report
+        And I manage the deputy's 'submitted' report
         And I change the report 'start' date to '29 June 2015'
         And I change the report 'end' date to '28 June 2016'
         And I should see the client benefits check section in the checklist group
@@ -128,7 +128,7 @@ Feature: Report Management (applies to all admin roles)
     And all the reports for the first client are associated with a pfa court order
     And an admin manager user accesses the admin app
     When I visit the admin client details page associated with the deputy I'm interacting with
-    And I manage the deputies 'submitted' report
+    And I manage the deputy's 'submitted' report
     And I change the report 'start' date to '29 June 2021'
     And I change the report 'end' date to '29 Sept 2022'
     And I confirm all report sections are incomplete

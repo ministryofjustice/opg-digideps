@@ -46,11 +46,11 @@ trait ReportManagementTrait
     protected string $reportStatus = '';
 
     /**
-     * @When I manage the deputies :reportStatus report
+     * @When I manage the deputy's :reportStatus report
      *
      * :reportStatus = "completed" (current active report) OR "submitted" (previous submitted report)
      */
-    public function iManageTheDeputiesSubmittedReport(string $reportStatus): void
+    public function iManageTheDeputysSubmittedReport(string $reportStatus): void
     {
         $this->iAmOnAdminClientDetailsPage();
         $this->reportStatus = $reportStatus;
@@ -316,7 +316,7 @@ trait ReportManagementTrait
             $this->assertStringContainsString(
                 'Changes needed',
                 $sectionListItem->getHtml(),
-                'Searching for "Changes needed" in list item that contains incomplete section name'
+                "Failed to find \"changes needed\" in list item that contains section name \"{$incompleteSectionName}\""
             );
         }
     }
