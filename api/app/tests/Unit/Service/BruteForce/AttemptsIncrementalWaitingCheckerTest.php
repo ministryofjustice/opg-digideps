@@ -29,9 +29,9 @@ final class AttemptsIncrementalWaitingCheckerTest extends TestCase
         $this->object->addFreezingRule(4, 35); // after 4 attempts, lock for 35 seconds
 
         $this->assertAccessible();
-        $this->attempt();
+        $this->attemptAction();
         $this->assertAccessible();
-        $this->attempt();
+        $this->attemptAction();
         $this->assertFrozen();
         $this->assertFrozen();
 
@@ -40,8 +40,8 @@ final class AttemptsIncrementalWaitingCheckerTest extends TestCase
         $this->object->overrideTimestamp(9990 + 20);
         $this->assertAccessible();
 
-        $this->attempt();
-        $this->attempt();
+        $this->attemptAction();
+        $this->attemptAction();
         $this->assertEquals(9990 + 20 + 35, $this->object->getUnfrozenAt($this->key));
 
         $this->assertFrozen();
@@ -52,7 +52,7 @@ final class AttemptsIncrementalWaitingCheckerTest extends TestCase
         $this->assertAccessible();
     }
 
-    private function attempt(): void
+    private function attemptAction(): void
     {
         $this->object->registerAttempt($this->key);
     }
@@ -72,7 +72,7 @@ final class AttemptsIncrementalWaitingCheckerTest extends TestCase
         $this->object->overrideTimestamp(0);
 
         $this->object->addFreezingRule(1, 10); // after 2 attempts, lock for 10 seconds
-        $this->attempt();
+        $this->attemptAction();
         $this->assertFrozen();
         $this->object->resetAttempts($this->key);
         $this->assertAccessible();
