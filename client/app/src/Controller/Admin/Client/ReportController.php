@@ -427,16 +427,19 @@ class ReportController extends AbstractController
         $startDate = isset($form['startDate']) ? $form['startDate']->getData()->format('Y-m-d') : null;
         $endDate = isset($form['endDate']) ? $form['endDate']->getData()->format('Y-m-d') : null;
 
-        /** @var array<UnsubmittedSection> $unsubmittedSections */
-        $unsubmittedSections = $form['unsubmittedSections']->getData();
+        $unsubmittedSectionsList = null;
+        if ($form->has('unsubmittedSections')) {
+            /** @var array<UnsubmittedSection> $unsubmittedSections */
+            $unsubmittedSections = $form['unsubmittedSections']->getData();
 
-        $unsubmittedSectionsList = implode(
-            ',',
-            array_map(
-                fn (UnsubmittedSection $unsubmittedSection) => $unsubmittedSection->id,
-                array_filter($unsubmittedSections, fn (UnsubmittedSection $unsubmittedSection) => $unsubmittedSection->present)
-            )
-        );
+            $unsubmittedSectionsList = implode(
+                ',',
+                array_map(
+                    fn (UnsubmittedSection $unsubmittedSection) => $unsubmittedSection->id,
+                    array_filter($unsubmittedSections, fn (UnsubmittedSection $unsubmittedSection) => $unsubmittedSection->present)
+                )
+            );
+        }
 
         $request->getSession()->set('report-management-changes', [
             'type' => $form['type']->getData(),
