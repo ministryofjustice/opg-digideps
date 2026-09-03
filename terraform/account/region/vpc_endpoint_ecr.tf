@@ -22,7 +22,7 @@ module "ecr_api_endpoint_vpc" {
 
 data "aws_iam_policy_document" "ecr_endpoint" {
   statement {
-    sid    = "AllowAccessToECR"
+    sid    = "AllowROAccessToECR"
     effect = "Allow"
     principals {
       type        = "AWS"
