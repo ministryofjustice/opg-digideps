@@ -36,7 +36,7 @@ Feature: Report submissions dashboard
         And I manually 'archive' the client that has one submitted report
         Then I should see the client row under the Synchronised tab
 
-    @super-admin @THIS
+    @super-admin
     Scenario: Manually trigger synchronisation
         Given a client has submitted one report
         And there was an error during synchronisation
