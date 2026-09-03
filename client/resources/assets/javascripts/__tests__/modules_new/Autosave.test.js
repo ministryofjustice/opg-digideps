@@ -110,7 +110,7 @@ describe('Form autosave', () => {
     }
 
     const mockWindow = {
-      document: document,
+      document,
       location: {
         href: null
       }
