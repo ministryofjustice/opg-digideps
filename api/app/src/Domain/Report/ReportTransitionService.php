@@ -216,10 +216,12 @@ final readonly class ReportTransitionService
                 $existingReport = $hwCourtOrder->getLatestReport();
             }
 
-            $courtOrderKeepingReport = ($courtOrderNeedingReport === $hwCourtOrder ? $pfaCourtOrder : $hwCourtOrder);
-            $result->messages[] = "Single -> Dual: Keeping report {$existingReport->getId()} " .
-                "on {$courtOrderKeepingReport->getOrderType()->value} court order " .
-                "{$courtOrderKeepingReport->getCourtOrderUid()}";
+            if ($existingReport !== null) {
+                $courtOrderKeepingReport = ($courtOrderNeedingReport === $hwCourtOrder ? $pfaCourtOrder : $hwCourtOrder);
+                $result->messages[] = "Single -> Dual: Keeping report {$existingReport->getId()} " .
+                    "on {$courtOrderKeepingReport->getOrderType()->value} court order " .
+                    "{$courtOrderKeepingReport->getCourtOrderUid()}";
+            }
         } else {
             // shared (hybrid) report, so make it the report on the pfa and remove it from the hw
             $sharedReport->setCourtOrder($pfaCourtOrder);
@@ -237,16 +239,16 @@ final readonly class ReportTransitionService
             $existingReport = $sharedReport;
         }
 
-        $newReport = $this->reportService->createReportFromOrder($courtOrderNeedingReport);
-        $courtOrderNeedingReport->addReport($newReport);
-
-        $result->updatedReports[] = $newReport;
-
-        $result->messages[] = fn () => "Single -> Dual: Added new {$newReport->getType()} report " .
-            "{$newReport->getId()} to {$courtOrderNeedingReport->getOrderType()->value} " .
-            "court order {$courtOrderNeedingReport->getCourtOrderUid()}";
-
         if ($existingReport !== null) {
+            $newReport = $this->reportService->createReportFromOrder($courtOrderNeedingReport);
+            $courtOrderNeedingReport->addReport($newReport);
+
+            $result->updatedReports[] = $newReport;
+
+            $result->messages[] = fn () => "Single -> Dual: Added new {$newReport->getType()} report " .
+                "{$newReport->getId()} to {$courtOrderNeedingReport->getOrderType()->value} " .
+                "court order {$courtOrderNeedingReport->getCourtOrderUid()}";
+
             $result->transitioned = true;
             $result->updatedCourtOrders = $affectedCourtOrders;
         } else {
@@ -255,7 +257,7 @@ final readonly class ReportTransitionService
                 $affectedCourtOrders
             );
 
-            $result->errorMessages[] = 'Single -> Dual: Unable to add report to other half of dual; ' .
+            $result->errorMessages[] = 'Single -> Dual: Unable to add/create reports for dual; ' .
                 'UIDs of court orders involved: ' .
                 implode(', ', $courtOrderUids);
         }
