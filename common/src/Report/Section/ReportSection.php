@@ -28,4 +28,14 @@ enum ReportSection: string
     case ACTIONS = 'actions';
     case OTHER_INFO = 'otherInfo';
     case DOCUMENTS = 'documents';
+
+    // work-around for the one case where the value of the enum cannot be snake-cased to get the route name
+    public function getValueForRouting(): string
+    {
+        if ($this === self::PA_DEPUTY_EXPENSES) {
+            return 'paFeeExpense';
+        }
+
+        return $this->value;
+    }
 }
