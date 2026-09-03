@@ -27,6 +27,7 @@ final readonly class RequiredReportFinder
                 ON (co.id = r.pfa_court_order_id AND co.order_type = 'pfa'
                 OR co.id = r.hw_court_order_id AND co.order_type = 'hw')
                 AND COALESCE(r.submitted, 'f') = 'f'
+            WHERE co.status = 'ACTIVE'
             GROUP BY co.id
             HAVING COUNT(r.id) = 0
             ")->iterateColumn() as $courtOrderId
