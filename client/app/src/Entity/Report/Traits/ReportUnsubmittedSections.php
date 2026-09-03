@@ -67,11 +67,16 @@ trait ReportUnsubmittedSections
      */
     public function unsubmittedSectionAtLeastOnce(ExecutionContextInterface $context): void
     {
-        if (count($this->getUnsubmittedSections()) === 0) {
-            // add error to all the sections
-            $context->buildViolation('report.unsubmissionSections.atLeastOnce')->atPath('unsubmittedSection[0].present')->addViolation();
+        $incompleteSections = array_filter(
+            $this->getUnsubmittedSections(),
+            fn (UnsubmittedSection $section) => $section->present
+        );
+
+        if (count($incompleteSections) === 0) {
+            // add error to all the sections as no section was marked as incomplete
+            $context->buildViolation('report.unsubmissionSections.atLeastOnce')->atPath('unsubmittedSections[0].present')->addViolation();
             for ($i = 1, $count = count($this->getUnsubmittedSections()); $i < $count; ++$i) {
-                $context->buildViolation('')->atPath("unsubmittedSection[$i].present")->addViolation();
+                $context->buildViolation('')->atPath("unsubmittedSections[$i].present")->addViolation();
             }
         }
     }
