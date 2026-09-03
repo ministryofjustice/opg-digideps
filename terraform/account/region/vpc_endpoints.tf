@@ -1,24 +1,4 @@
 # VPC Endpoints
-module "ecr_endpoint_vpc" {
-  source              = "./modules/vpc_endpoint"
-  subnet_ids          = module.network.application_subnets[*].id
-  vpc                 = module.network.vpc
-  region              = data.aws_region.current.name
-  service             = "ecr.dkr"
-  service_short_title = "ecr"
-  tags                = var.default_tags
-}
-
-module "ecr_api_endpoint_vpc" {
-  source              = "./modules/vpc_endpoint"
-  subnet_ids          = module.network.application_subnets[*].id
-  vpc                 = module.network.vpc
-  region              = data.aws_region.current.name
-  service             = "ecr.api"
-  service_short_title = "ecr_api"
-  tags                = var.default_tags
-}
-
 module "ssm_endpoint_vpc" {
   source              = "./modules/vpc_endpoint"
   subnet_ids          = module.network.application_subnets[*].id
