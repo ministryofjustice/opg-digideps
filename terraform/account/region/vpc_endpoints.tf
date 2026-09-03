@@ -78,13 +78,3 @@ module "sts_endpoint_vpc" {
   service_short_title = "sts"
   tags                = var.default_tags
 }
-
-module "rds_endpoint_vpc" {
-  source              = "./modules/vpc_endpoint"
-  subnet_ids          = module.network.application_subnets[*].id
-  vpc                 = module.network.vpc
-  region              = data.aws_region.current.name
-  service             = "rds"
-  service_short_title = "rds"
-  tags                = var.default_tags
-}
