@@ -1,14 +1,4 @@
 # VPC Endpoints
-module "secrets_endpoint_vpc" {
-  source              = "./modules/vpc_endpoint"
-  subnet_ids          = module.network.application_subnets[*].id
-  vpc                 = module.network.vpc
-  region              = data.aws_region.current.name
-  service             = "secretsmanager"
-  service_short_title = "secrets"
-  tags                = var.default_tags
-}
-
 module "ecr_endpoint_vpc" {
   source              = "./modules/vpc_endpoint"
   subnet_ids          = module.network.application_subnets[*].id
