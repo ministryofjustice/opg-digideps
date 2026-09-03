@@ -67,3 +67,10 @@ services:
       context: .
       dockerfile: ./api/docker/app/Dockerfile
       target: upgrade-pinned-apk-packages
+
+  htmltopdf-apk-upgrade:
+    container_name: opg-digideps-htmltopdf-apk-upgrade
+    build:
+      context: .
+      dockerfile: ./htmltopdf/Dockerfile
+      target: upgrade-pinned-apk-packages
