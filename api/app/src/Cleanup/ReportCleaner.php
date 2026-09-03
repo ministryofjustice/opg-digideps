@@ -6,24 +6,31 @@ namespace OPG\Digideps\Backend\Cleanup;
 
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Client;
+use Psr\Log\LoggerInterface;
 
 final readonly class ReportCleaner
 {
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager, private LoggerInterface $verboseLogger)
     {
     }
 
     public function clean(bool $dryRun, bool $allowNonContinuous, int ...$clientIds): string
     {
-        $logs = ['caseNumber,orderUid,reportId,orderMadeDate,reportStartDate,reportEndDate,action,status'];
+        $log = 'caseNumber,orderUid,reportId,orderMadeDate,reportStartDate,reportEndDate,action,status';
         $clientIds = empty($clientIds) ? $this->getAllClientIds() : $clientIds;
+        $count = count($clientIds);
 
-        foreach ($clientIds as $clientId) {
+        foreach ($clientIds as $i => $clientId) {
             $this->entityManager->clear();
-            $logs = array_merge($logs, $this->cleanClient($clientId, $dryRun, $allowNonContinuous));
+            $nextLogs = $this->cleanClient($clientId, $dryRun, $allowNonContinuous);
+            if (!empty($nextLogs)) {
+                $lines = count($nextLogs);
+                $this->verboseLogger->notice("[{$i}/{$count}] ClientId {$clientId}: {$lines} lines");
+                $log .= "\r\n" . implode("\r\n", $nextLogs);
+            }
         }
 
-        return implode("\r\n", $logs);
+        return $log;
     }
 
     /**
