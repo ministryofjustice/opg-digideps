@@ -6,10 +6,11 @@ namespace OPG\Digideps\Frontend\Components\OPG\Review;
 
 use OPG\Digideps\Frontend\Components\GOV\Summary\SummaryList;
 use OPG\Digideps\Frontend\Components\GOV\Summary\SummaryListBuilder;
+use OPG\Digideps\Frontend\Components\GOV\Tag;
+use OPG\Digideps\Frontend\Components\OPG\Renderable\TaggedValue;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Twig\Markup;
 
 #[AsTwigComponent]
 final class Balance
@@ -90,11 +91,13 @@ final class Balance
 
         $builder->addItem($this->text['reportClosingBalance'], $started ? $this->formatMoney($report->getCalculatedBalance()) : $this->text['notEntered']);
 
-        $builder->addItem($this->text['differenceFooter'], $this->formatMoney(abs($report->getTotalsOffset())));
-
-        $statusClass = $report->isTotalsMatch() ? 'govuk-tag--green' : 'govuk-tag--red';
-        $statusText = $this->translate('review.' . ($report->isTotalsMatch() ? 'matched' : 'notMatched'));
-        $builder->addItem('', new Markup("<strong class=\"govuk-tag {$statusClass}\">{$statusText}</strong>", 'UTF-8'));
+        $builder->addItem(
+            $this->text['differenceFooter'],
+            new TaggedValue($this->formatMoney(abs($report->getTotalsOffset())), new Tag(
+                $this->translate('review.' . ($report->isTotalsMatch() ? 'matched' : 'notMatched')),
+                $report->isTotalsMatch() ? Tag::GREEN : Tag::RED
+            ))
+        );
 
         if (!$report->isTotalsMatch() && $report->getBalanceMismatchExplanation() !== null) {
             $builder->addItem($this->text['reasonNotBalancing'], ucfirst($report->getBalanceMismatchExplanation()));
