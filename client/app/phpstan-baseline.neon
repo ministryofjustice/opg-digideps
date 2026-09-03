@@ -211,12 +211,6 @@ parameters:
 			path: src/Command/ProcessOrgCSVCommand.php
 
 		-
-			message: '#^Cannot call method post\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
 			message: '#^Cannot call method setOptionalColumns\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -6655,12 +6649,6 @@ parameters:
 			path: src/Service/Client/Internal/DeputyApi.php
 
 		-
-			message: '#^Cannot call method post\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Service/Client/Internal/LayDeputyshipApi.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\LayDeputyshipApi\:\:uploadLayDeputyShip\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -7179,18 +7167,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:registerUser\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Service/Client/RestClient.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:setLoggedUserId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Service/Client/RestClient.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:setTimeout\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Service/Client/RestClient.php
 
@@ -8103,12 +8079,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface\:\:getId\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: src/Service/DeputyProvider.php
-
-		-
-			message: '#^Cannot call method get\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: src/Service/DeputyProvider.php
 
