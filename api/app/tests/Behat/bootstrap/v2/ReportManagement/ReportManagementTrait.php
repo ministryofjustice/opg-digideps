@@ -305,6 +305,7 @@ trait ReportManagementTrait
 
         $sectionsMarkedIncomplete = $this->getSectionAnswers('manage-report')[0]['incompleteSectionsForm'];
 
+        /** @var string $incompleteSectionName */
         foreach ($sectionsMarkedIncomplete as $incompleteSectionName) {
             $locator = sprintf("//li//a[normalize-space()='%s']/../../..", $incompleteSectionName);
             $sectionListItem = $this->getSession()->getPage()->find('xpath', $locator);
