@@ -209,6 +209,8 @@ trait ReportManagementTrait
      */
     public function confirmAllReportSectionsIncomplete(): void
     {
+        $this->printLastResponse();
+
         $this->iAmOnAdminManageReportPage();
         $roleType = $this->translateDeputyRole($this->interactingWithUserDetails->getUserRole());
 
@@ -233,8 +235,7 @@ trait ReportManagementTrait
                 $this->determineCheckboxName($value, $checkboxValuesAndTranslations),
                 'manage-report',
                 $translation
-            )
-            ;
+            );
         }
     }
 
@@ -242,7 +243,7 @@ trait ReportManagementTrait
     {
         $checkboxDictionary = array_flip(array_keys($checkboxValuesAndTranslations));
 
-        return sprintf('manage_report[unsubmittedSection][%s][present]', $checkboxDictionary[$value]);
+        return sprintf('manage_report[unsubmittedSections][%s][present]', $checkboxDictionary[$value]);
     }
 
     /**
