@@ -420,35 +420,19 @@ trait ReportManagementTrait
      */
     public function iShouldSeeTheClientBenefitsCheckSectionInTheChecklistGroup(): void
     {
-        $this->assertClientBenefitsCheckboxVisible(true);
-    }
-
-    private function assertClientBenefitsCheckboxVisible(bool $shouldBeVisible): void
-    {
-        $benefitsCheckXpath = './/label[text()[contains(.,"Client benefits check")]]/..';
+        $benefitsCheckXpath = './/label[text()[contains(.,"Benefits check and money others received")]]/..';
 
         $checkboxDiv = $this->getSession()->getPage()->find('xpath', $benefitsCheckXpath);
 
         $checkboxIsVisible = !is_null($checkboxDiv);
 
-        if ($shouldBeVisible) {
-            if (!$checkboxIsVisible) {
-                $message = sprintf(
-                    'The checkbox for "Client benefits check" appeared on the page when it shouldn\'t have: %s',
-                    $checkboxDiv->getHtml()
-                );
+        if (!$checkboxIsVisible) {
+            $message = sprintf(
+                'The checkbox for "Benefits check and money others received" did not appear when it should have: %s',
+                $checkboxDiv->getHtml()
+            );
 
-                throw new BehatException($message);
-            }
-        } else {
-            if ($checkboxIsVisible) {
-                $message = sprintf(
-                    'The checkbox for "Client benefits check" did not appear on the page when it should have: %s',
-                    $this->getSession()->getPage()->find('xpath', '//main')->getHtml()
-                );
-
-                throw new BehatException($message);
-            }
+            throw new BehatException($message);
         }
     }
 
