@@ -19,13 +19,19 @@ final readonly class ReportCleaner
         $log = 'caseNumber,orderUid,reportId,orderMadeDate,reportStartDate,reportEndDate,action,status';
         $clientIds = empty($clientIds) ? $this->getAllClientIds() : $clientIds;
         $count = count($clientIds);
+        $startTime = microtime(true);
 
         foreach ($clientIds as $i => $clientId) {
+            memory_reset_peak_usage();
             $this->entityManager->clear();
             $nextLogs = $this->cleanClient($clientId, $dryRun, $allowNonContinuous);
             if (!empty($nextLogs)) {
+                $elapsed = microtime(true) - $startTime;
+                $expected = (int)round($elapsed * $count / ($i + 1));
+                $elapsed = (int)round($elapsed);
+                $peekMemory = memory_get_peak_usage() / 1024 / 1024;
                 $lines = count($nextLogs);
-                $this->verboseLogger->notice("[{$i}/{$count}] ClientId {$clientId}: {$lines} lines");
+                $this->verboseLogger->notice("[{$i}/{$count}][{$elapsed}s/{$expected}s][{$peekMemory}MiB] ClientId {$clientId}: {$lines} lines");
                 $log .= "\r\n" . implode("\r\n", $nextLogs);
             }
         }
