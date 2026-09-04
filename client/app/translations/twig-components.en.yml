@@ -2,3 +2,24 @@ gov:
   skipLink: Skip to main content
   backLink: Back
   errorMessage.aria: Error
+opg:
+  renderable:
+    bankAccount:
+      sortCode: Sort code
+      number: Account number
+      joint: Joint account
+      closed: Closed
+  review:
+    reportHeader:
+      header: Deputy report for %reportTypeHeading% decisions
+      reportInformation: Report information
+      deputyDetails: Deputy details
+      noDeputy: Could not determine deputy. This can happen if the report has not yet been submitted.
+      clientDetails: Client details
+      firstname: First names
+      lastname: Last name
+      address: Address
+      phone: Phone
+      caseNumber: Case number
+      reportingStart: Reporting start date
+      reportingEnd: Reporting end date

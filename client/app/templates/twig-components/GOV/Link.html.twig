@@ -9,5 +9,5 @@
 {% endif %}
 
 <a href="{{ href }}" class="{{ className }}"{% if inNewTab %} rel="noreferrer noopener" target="_blank"{% endif %}>
-    {% block content %}{% endblock %}
+    {% with outerScope %}{% block content %}{% endblock %}{% endwith %}
 </a>

@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Deputy;
 use OPG\Digideps\Frontend\Entity\Report\Traits as ReportTraits;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
@@ -162,11 +163,12 @@ class Report implements StartEndDateComparableInterface
     #[JMS\Groups(['unsubmit_date'])]
     private $unSubmitDate;
 
-    /**
-     * @var User
-     */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
-    private $submittedBy;
+    private ?User $submittedBy = null;
+
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Deputy')]
+    #[JMS\Groups(['deputy'])]
+    private ?Deputy $primaryDeputy = null;
 
     /**
      * @var ReportSubmission[]
@@ -240,7 +242,7 @@ class Report implements StartEndDateComparableInterface
 
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'significantDecisionsMade'])]
-    private $significantDecisionsMade;
+    private ?string $significantDecisionsMade = null;
 
     /**
      * @var string|null
@@ -384,18 +386,12 @@ class Report implements StartEndDateComparableInterface
     #[Assert\NotBlank(message: 'moneyOut.reasonForNoMoneyOut.notBlank', groups: ['reasonForNoMoneyOut'])]
     private $reasonForNoMoneyOut;
 
-    /**
-     * @return int $id
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -446,7 +442,7 @@ class Report implements StartEndDateComparableInterface
         return $this->startDate;
     }
 
-    public function setStartDate(?\DateTime $startDate = null)
+    public function setStartDate(?\DateTime $startDate = null): static
     {
         if ($startDate instanceof \DateTime) {
             $startDate->setTime(0, 0, 0);
@@ -540,10 +536,7 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getSubmittedBy()
+    public function getSubmittedBy(): ?User
     {
         return $this->submittedBy;
     }
@@ -727,7 +720,7 @@ class Report implements StartEndDateComparableInterface
         return $this->isDue;
     }
 
-    public function hasContacts()
+    public function hasContacts(): ?string
     {
         if (empty($this->getContacts()) && $this->getReasonForNoContacts() === null) {
             return null;
@@ -742,7 +735,7 @@ class Report implements StartEndDateComparableInterface
         return null;
     }
 
-    public function getSignificantDecisionsMade()
+    public function getSignificantDecisionsMade(): ?string
     {
         return $this->significantDecisionsMade;
     }
@@ -847,10 +840,7 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    /**
-     * @return MentalCapacity
-     */
-    public function getMentalCapacity()
+    public function getMentalCapacity(): ?MentalCapacity
     {
         return $this->mentalCapacity;
     }
@@ -1350,5 +1340,10 @@ class Report implements StartEndDateComparableInterface
         $this->reasonForNoMoneyOut = $reasonForNoMoneyOut;
 
         return $this;
+    }
+
+    public function getPrimaryDeputy(): ?Deputy
+    {
+        return $this->primaryDeputy;
     }
 }

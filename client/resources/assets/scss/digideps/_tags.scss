@@ -4,3 +4,7 @@
     @include govuk-font(14, $weight: bold);
   }
 }
+
+.govuk-tag {
+  max-width: unset !important;
+}
