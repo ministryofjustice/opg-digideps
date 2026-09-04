@@ -68,7 +68,7 @@ final class CourtOrderPair
         return null;
     }
 
-    public function getDetails(): string
+    public function __toString(): string
     {
         return "HW UID={$this->hwCourtOrder->getCourtOrderUid()}, PFA UID={$this->pfaCourtOrder->getCourtOrderUid()}";
     }

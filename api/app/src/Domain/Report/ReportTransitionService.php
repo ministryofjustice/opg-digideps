@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Domain\Report;
 
-use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderPair;
-use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\CourtOrderRepository;
 use OPG\Digideps\Backend\Service\ReportService;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipChange;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 
 /**
  * Transition a report from its old report type to its new one, splitting/merging/removing reports as necessary.
@@ -88,7 +88,6 @@ final readonly class ReportTransitionService
         CourtOrderRelationshipChange $courtOrderChange
     ): ReportTransitionResult {
         $result = new ReportTransitionResult();
-        $orderPairDetails = $courtOrderPair->getDetails();
 
         // where we have a hybrid transitioning to a dual, we expect the old sibling to exist as part of the hybrid
         // pair, and to be associated with the same report as the persisting court order; if the sibling is null,
@@ -97,7 +96,7 @@ final readonly class ReportTransitionService
         try {
             $oldSibling = $this->getOldSibling($courtOrderPair, $oldSiblingId);
         } catch (\DomainException $exception) {
-            $result->errorMessages[] = "Hybrid -> Dual: {$orderPairDetails} - {$exception->getMessage()}";
+            $result->errorMessages[] = "Hybrid -> Dual: {$courtOrderPair} - {$exception->getMessage()}";
             return $result;
         }
 
@@ -110,7 +109,7 @@ final readonly class ReportTransitionService
         // should share a report, otherwise they aren't really a hybrid
         $oldPair = CourtOrderPair::create($persistingCourtOrder, $oldSibling);
         if ($oldPair->getSharedLatestReport() === null) {
-            $result->errorMessages[] = "Hybrid -> Dual: {$oldPair->getDetails()} - " .
+            $result->errorMessages[] = "Hybrid -> Dual: {$oldPair} - " .
                 "Invalid hybrid: source court orders do not share the same latest report";
             return $result;
         }
@@ -118,7 +117,7 @@ final readonly class ReportTransitionService
         // convert existing hybrid report into single on the persisting court order
         $persistingReport = $persistingCourtOrder->getLatestReport();
         if ($persistingReport === null) {
-            $result->errorMessages[] = "Hybrid -> Dual: {$orderPairDetails} - "
+            $result->errorMessages[] = "Hybrid -> Dual: {$courtOrderPair} - "
                 .  'Could not find existing hybrid report to persist';
             return $result;
         }
@@ -138,7 +137,7 @@ final readonly class ReportTransitionService
         $result->transitioned = true;
         $result->updatedCourtOrders += [$persistingCourtOrder, $newReportCourtOrder];
         $result->updatedReports += [$persistingReport, $newReport];
-        $result->messages[] = "Hybrid -> Dual: {$orderPairDetails} - Converted hybrid report " .
+        $result->messages[] = "Hybrid -> Dual: {$courtOrderPair} - Converted hybrid report " .
             "{$persistingReport->getId()} to dual reports {$persistingReport->getId()} and {$newReport->getId()}";
 
         return $result;
@@ -152,14 +151,13 @@ final readonly class ReportTransitionService
         CourtOrderRelationshipChange $courtOrderChange
     ): ReportTransitionResult {
         $result = new ReportTransitionResult();
-        $orderPairDetails = $courtOrderPair->getDetails();
 
         // if this originated from a dual, there must be an old sibling
         $oldSiblingId = $courtOrderChange->oldSiblingId;
         try {
             $oldSibling = $this->getOldSibling($courtOrderPair, $oldSiblingId);
         } catch (\DomainException $exception) {
-            $result->errorMessages[] = "Dual -> Hybrid: {$orderPairDetails} - {$exception->getMessage()}";
+            $result->errorMessages[] = "Dual -> Hybrid: {$courtOrderPair} - {$exception->getMessage()}";
             return $result;
         }
 
@@ -168,14 +166,14 @@ final readonly class ReportTransitionService
             $this->dualToHybridAssignReports($courtOrderPair, $courtOrderChange, $oldSibling);
 
         if ($persistingReport === null || $defunctReport === null) {
-            $result->errorMessages[] = "Dual -> Hybrid: {$orderPairDetails} - ".
+            $result->errorMessages[] = "Dual -> Hybrid: {$courtOrderPair} - ".
                 "Persisting and/or defunct report unavailable";
             return $result;
         }
 
         // if the defunct and persisting reports are the same report, the court orders are hybrid and not dual
         if ($defunctReport->getId() === $persistingReport->getId()) {
-            $result->errorMessages[] = "Dual -> Hybrid: {$orderPairDetails} - " .
+            $result->errorMessages[] = "Dual -> Hybrid: {$courtOrderPair} - " .
                 "Invalid dual: court orders already share a latest report";
             return $result;
         }
@@ -200,7 +198,7 @@ final readonly class ReportTransitionService
         $result->transitioned = true;
         $result->updatedReports[] = $persistingReport;
         $result->removedReports[] = $defunctReport;
-        $result->messages[] = "Dual -> Hybrid: {$orderPairDetails} - Merged defunct report {$defunctReport->getId()} " .
+        $result->messages[] = "Dual -> Hybrid: {$courtOrderPair} - Merged defunct report {$defunctReport->getId()} " .
             "into hybrid report {$persistingReport->getId()}";
 
         return $result;
@@ -216,7 +214,6 @@ final readonly class ReportTransitionService
     private function singleToDual(CourtOrderPair $courtOrderPair): ReportTransitionResult
     {
         $result = new ReportTransitionResult();
-        $orderPairDetails = $courtOrderPair->getDetails();
 
         /** @var array<CourtOrder> $affectedCourtOrders */
         $affectedCourtOrders = [$courtOrderPair->pfaCourtOrder, $courtOrderPair->hwCourtOrder];
@@ -240,7 +237,7 @@ final readonly class ReportTransitionService
 
             if ($existingReport !== null) {
                 $courtOrderKeepingReport = ($courtOrderNeedingReport === $hwCourtOrder ? $pfaCourtOrder : $hwCourtOrder);
-                $result->messages[] = "Single -> Dual: {$orderPairDetails} - Keeping report {$existingReport->getId()} " .
+                $result->messages[] = "Single -> Dual: {$courtOrderPair} - Keeping report {$existingReport->getId()} " .
                     "on {$courtOrderKeepingReport->getOrderType()->value} court order " .
                     "{$courtOrderKeepingReport->getCourtOrderUid()}";
             }
@@ -253,7 +250,7 @@ final readonly class ReportTransitionService
 
             $result->updatedReports[] = $sharedReport;
 
-            $result->messages[] = "Single -> Dual: {$orderPairDetails} - Removed report {$sharedReport->getId()} " .
+            $result->messages[] = "Single -> Dual: {$courtOrderPair} - Removed report {$sharedReport->getId()} " .
                 "from HW court order {$hwCourtOrder->getCourtOrderUid()} and set as report on PFA court order " .
                 "{$pfaCourtOrder->getCourtOrderUid()}";
 
@@ -267,14 +264,14 @@ final readonly class ReportTransitionService
 
             $result->updatedReports[] = $newReport;
 
-            $result->messages[] = fn () => "Single -> Dual: {$orderPairDetails} - Added new {$newReport->getType()} " .
+            $result->messages[] = fn () => "Single -> Dual: {$courtOrderPair} - Added new {$newReport->getType()} " .
                 "report {$newReport->getId()} to {$courtOrderNeedingReport->getOrderType()->value} " .
                 "court order {$courtOrderNeedingReport->getCourtOrderUid()}";
 
             $result->transitioned = true;
             $result->updatedCourtOrders = $affectedCourtOrders;
         } else {
-            $result->errorMessages[] = "Single -> Dual: {$orderPairDetails} - Unable to add/create reports for dual";
+            $result->errorMessages[] = "Single -> Dual: {$courtOrderPair} - Unable to add/create reports for dual";
         }
 
         return $result;
