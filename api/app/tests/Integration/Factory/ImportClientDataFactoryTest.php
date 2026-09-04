@@ -31,6 +31,7 @@ class ImportClientDataFactoryTest extends ApiIntegrationTestCase
 
 
         $factory = new ImportClientDataFactory(self::$entityManager);
+        new \ReflectionObject($factory)->getProperty('preventCreationOfNonOrgClients')->setValue($factory, '');
         $factory->run(false);
 
         $all = $repository->findAll();
