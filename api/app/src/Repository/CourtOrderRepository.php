@@ -54,9 +54,10 @@ class CourtOrderRepository extends ServiceEntityRepository
             SELECT DISTINCT string_agg(co.court_order_uid, ', ')
             FROM court_order co
             INNER JOIN court_order_deputy cd ON co.id = cd.court_order_id
-            INNER JOIN court_order_report cr ON co.id = cr.court_order_id
             INNER JOIN deputy d ON cd.deputy_id = d.id
-            INNER JOIN report re ON cr.report_id = re.id
+            INNER JOIN report re
+                ON co.id = re.pfa_court_order_id AND co.order_type = 'pfa'
+                OR co.id = re.hw_court_order_id AND co.order_type = 'hw'
             WHERE co.status IN ('ACTIVE')
             AND cd.is_active = TRUE
             AND d.deputy_uid = :deputyUid
@@ -65,8 +66,9 @@ class CourtOrderRepository extends ServiceEntityRepository
         cod.is_active AS "isActive",
         co.status
         FROM report r
-        INNER JOIN court_order_report cor ON r.id = cor.report_id
-        INNER JOIN court_order co ON cor.court_order_id = co.id
+        INNER JOIN court_order co
+            ON co.id = r.pfa_court_order_id AND co.order_type = 'pfa'
+            OR co.id = r.hw_court_order_id AND co.order_type = 'hw'
         INNER JOIN court_order_deputy cod ON co.id = cod.court_order_id
         INNER JOIN client c ON co.client_id = c.id
         INNER JOIN deputy d ON cod.deputy_id = d.id

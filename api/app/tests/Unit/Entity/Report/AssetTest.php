@@ -6,6 +6,7 @@ namespace Tests\OPG\Digideps\Backend\Unit\Entity\Report;
 
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use PHPUnit\Framework\TestCase;
 
 final class AssetTest extends TestCase
@@ -15,8 +16,8 @@ final class AssetTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->object = new AssetOther();
-        $this->property = new AssetProperty();
+        $this->object = new AssetOther($this->createStub(Report::class));
+        $this->property = new AssetProperty($this->createStub(Report::class));
     }
 
     public function testSetterGetters(): void

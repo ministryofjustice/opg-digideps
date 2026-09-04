@@ -2,9 +2,12 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Stats\Query;
 
+use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputySet;
+use OPG\Digideps\Backend\Fixture\ReportList;
+use OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
-use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Service\Stats\Query\ClientsQuery;
 use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 
@@ -14,35 +17,49 @@ class ClientsQueryIntegrationTest extends ApiIntegrationTestCase
     {
         parent::setUpBeforeClass();
 
-        static::givenClientWithReportsOfType(['102', '102']);
-        static::givenClientWithReportsOfType(['103']);
-        static::givenClientWithReportsOfType(['103']);
-        static::givenClientWithReportsOfType(['104']);
-        static::givenClientWithReportsOfType(['102-5']);
-        static::givenClientWithReportsOfType(['102-5']);
-        static::givenClientWithReportsOfType(['103-5']);
-        static::givenClientWithReportsOfType(['102-6']);
-        static::givenClientWithReportsOfType(['102-6']);
-        static::givenClientWithReportsOfType(['103-6']);
+        self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(
+            DeputySet::oneLay(),
+            CourtOrderReportType::OPG102,
+            reportList: ReportList::manyReports()
+        )), flush: false);
+        self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(
+            DeputySet::oneLay(),
+            CourtOrderReportType::OPG103,
+        )), flush: false);
+        self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(
+            DeputySet::oneLay(),
+            CourtOrderReportType::OPG103,
+        )), flush: false);
+        self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(
+            DeputySet::oneLay(),
+            CourtOrderReportType::OPG104,
+        )), flush: false);
 
-        self::$entityManager->flush();
-    }
+        self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(
+            DeputySet::oneNamedPro(),
+            CourtOrderReportType::OPG102,
+        )), flush: false);
+        self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(
+            DeputySet::oneNamedPro(),
+            CourtOrderReportType::OPG102,
+        )), flush: false);
+        self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(
+            DeputySet::oneNamedPro(),
+            CourtOrderReportType::OPG103,
+        )), flush: false);
 
-    private static function givenClientWithReportsOfType(array $reportTypes): void
-    {
-        $client = new Client();
-        foreach ($reportTypes as $reportType) {
-            $report = new Report(
-                $client,
-                $reportType,
-                new \DateTime('2019-08-01'),
-                new \DateTime('2020-08-01')
-            );
-
-            self::$entityManager->persist($report);
-        }
-
-        self::$entityManager->persist($client);
+        self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(
+            DeputySet::oneNamedPa(),
+            CourtOrderReportType::OPG102,
+        )), flush: false);
+        self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(
+            DeputySet::oneNamedPa(),
+            CourtOrderReportType::OPG102,
+        )), flush: false);
+        self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(
+            DeputySet::oneNamedPa(),
+            CourtOrderReportType::OPG103,
+        )));
     }
 
     public function testReturnsTotalClientsByDeputyType(): void

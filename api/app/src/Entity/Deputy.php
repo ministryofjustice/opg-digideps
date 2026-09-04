@@ -176,7 +176,7 @@ class Deputy
             ?? DeputyType::LAY;
     }
 
-    public function setDeputyType(DeputyType $deputyType): self
+    public function setDeputyType(DeputyType $deputyType): static
     {
         $this->deputyType = $deputyType->value;
 
@@ -196,7 +196,7 @@ class Deputy
         return $this->deputyUid;
     }
 
-    public function setDeputyUid(string $deputyUid): self
+    public function setDeputyUid(string $deputyUid): static
     {
         $this->deputyUid = $deputyUid;
 
@@ -208,7 +208,7 @@ class Deputy
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): self
+    public function setFirstname(string $firstname): static
     {
         $this->firstname = trim($firstname);
 
@@ -220,7 +220,7 @@ class Deputy
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): self
+    public function setLastname(string $lastname): static
     {
         $this->lastname = trim($lastname);
 
@@ -232,7 +232,7 @@ class Deputy
         return $this->email1 ?? '';
     }
 
-    public function setEmail1(string $email1): self
+    public function setEmail1(string $email1): static
     {
         $this->email1 = trim($email1);
 
@@ -244,7 +244,7 @@ class Deputy
         return $this->email2;
     }
 
-    public function setEmail2(?string $email2): self
+    public function setEmail2(?string $email2): static
     {
         if (!is_null($email2)) {
             $email2 = trim($email2);
@@ -260,7 +260,7 @@ class Deputy
         return $this->email3;
     }
 
-    public function setEmail3(?string $email3): self
+    public function setEmail3(?string $email3): static
     {
         if (!is_null($email3)) {
             $email3 = trim($email3);
@@ -276,7 +276,7 @@ class Deputy
         return $this->address1;
     }
 
-    public function setAddress1(?string $address1): self
+    public function setAddress1(?string $address1): static
     {
         if (!is_null($address1)) {
             $address1 = trim($address1);
@@ -292,7 +292,7 @@ class Deputy
         return $this->address2;
     }
 
-    public function setAddress2(?string $address2): self
+    public function setAddress2(?string $address2): static
     {
         if (!is_null($address2)) {
             $address2 = trim($address2);
@@ -308,7 +308,7 @@ class Deputy
         return $this->address3;
     }
 
-    public function setAddress3(?string $address3): self
+    public function setAddress3(?string $address3): static
     {
         if (!is_null($address3)) {
             $address3 = trim($address3);
@@ -324,7 +324,7 @@ class Deputy
         return $this->address4;
     }
 
-    public function setAddress4(?string $address4): self
+    public function setAddress4(?string $address4): static
     {
         if (!is_null($address4)) {
             $address4 = trim($address4);
@@ -340,7 +340,7 @@ class Deputy
         return $this->address5;
     }
 
-    public function setAddress5(?string $address5): self
+    public function setAddress5(?string $address5): static
     {
         if (!is_null($address5)) {
             $address5 = trim($address5);
@@ -356,7 +356,7 @@ class Deputy
         return $this->addressPostcode;
     }
 
-    public function setAddressPostcode(?string $addressPostcode): self
+    public function setAddressPostcode(?string $addressPostcode): static
     {
         if (!is_null($addressPostcode)) {
             $addressPostcode = trim($addressPostcode);
@@ -372,7 +372,7 @@ class Deputy
         return $this->addressCountry;
     }
 
-    public function setAddressCountry(?string $addressCountry): self
+    public function setAddressCountry(?string $addressCountry): static
     {
         if (!is_null($addressCountry)) {
             $addressCountry = trim($addressCountry);
@@ -388,7 +388,7 @@ class Deputy
         return $this->phoneMain;
     }
 
-    public function setPhoneMain(?string $phoneMain): self
+    public function setPhoneMain(?string $phoneMain): static
     {
         if (!is_null($phoneMain)) {
             $phoneMain = trim($phoneMain);
@@ -404,7 +404,7 @@ class Deputy
         return $this->phoneAlternative;
     }
 
-    public function setPhoneAlternative(?string $phoneAlternative): self
+    public function setPhoneAlternative(?string $phoneAlternative): static
     {
         if (!is_null($phoneAlternative)) {
             $phoneAlternative = trim($phoneAlternative);

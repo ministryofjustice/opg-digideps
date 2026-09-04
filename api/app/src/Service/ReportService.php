@@ -13,7 +13,6 @@ use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\Factory\ReportFactory;
 use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -24,8 +23,8 @@ class ReportService
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly ReportFactory $reportFactory,
         private readonly LoggerInterface $logger,
+        private readonly \DateTimeImmutable $now = new \DateTimeImmutable()
     ) {
         /** @var PreRegistrationRepository $preRegistrationRepository */
         $preRegistrationRepository = $em->getRepository(PreRegistration::class);
@@ -62,8 +61,6 @@ class ReportService
 
         $this->em->persist($submission);
 
-        /** @var CourtOrder[] $courtOrders */
-        $courtOrders = $currentReport->getCourtOrders()->toArray();
         $client = $currentReport->getClient();
         $clientId = $client->getId();
         $now = new \DateTime()->format('Y-m-d H:i:s');
@@ -93,11 +90,9 @@ class ReportService
 
             $newYearReport = $this->createNextYearReport($currentReport);
 
-            foreach ($courtOrders as $courtOrder) {
-                if ($courtOrder->getStatus() === 'ACTIVE') {
-                    $courtOrder->addReport($newYearReport);
-                    $this->em->persist($courtOrder);
-                }
+            foreach ($currentReport->getActiveCourtOrders() as $courtOrder) {
+                $courtOrder->addReport($newYearReport);
+                $this->em->persist($courtOrder);
             }
         }
 
@@ -119,9 +114,7 @@ class ReportService
             $assetExists = $this->checkAssetExists($toReport, $asset);
 
             if (!$assetExists) {
-                $newAsset = $this->cloneAsset($asset);
-                $newAsset->setReport($toReport);
-
+                $newAsset = $this->cloneAsset($asset, $toReport);
                 $toReport->addAsset($newAsset);
                 $this->em->detach($newAsset);
                 $this->em->persist($newAsset);
@@ -134,7 +127,7 @@ class ReportService
             $accountExists = $this->checkBankAccountExists($toReport, $account);
 
             if (!$accountExists) {
-                $newAccount = $this->cloneBankAccount($account);
+                $newAccount = $this->cloneBankAccount($account, $toReport);
                 $newAccount->setReport($toReport);
                 $toReport->addAccount($newAccount);
                 $this->em->persist($newAccount);
@@ -147,10 +140,8 @@ class ReportService
         $toAssets = $toReport->getAssets();
 
         foreach ($toAssets as $toAsset) {
-            if ($toAsset->getType() === $asset->getType()) {
-                if ($asset->isEqual($toAsset)) {
-                    return true;
-                }
+            if ($asset->isEqual($toAsset)) {
+                return true;
             }
         }
 
@@ -160,10 +151,10 @@ class ReportService
     /**
      * Convert asset into Report Asset.
      */
-    private function cloneAsset(Asset $asset): Asset
+    private function cloneAsset(Asset $asset, Report $toReport): Asset
     {
         if ($asset instanceof AssetProperty) {
-            $newAsset = new AssetProperty();
+            $newAsset = new AssetProperty($toReport);
 
             $newAsset->setAddress($asset->getAddress());
             $newAsset->setAddress2($asset->getAddress2());
@@ -180,7 +171,7 @@ class ReportService
             $newAsset->setRentAgreementEndDate($asset->getRentAgreementEndDate());
             $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
         } elseif ($asset instanceof AssetOther) {
-            $newAsset = new AssetOther();
+            $newAsset = new AssetOther($toReport);
             $newAsset->setTitle($asset->getTitle());
             $newAsset->setDescription($asset->getDescription());
             $newAsset->setValuationDate($asset->getValuationDate());
@@ -193,9 +184,6 @@ class ReportService
         return $newAsset;
     }
 
-    /**
-     * @return bool
-     */
     private function checkBankAccountExists(Report $toReport, BankAccount $account): bool
     {
         foreach ($toReport->getBankAccounts() as $toAccount) {
@@ -216,9 +204,9 @@ class ReportService
     /**
      * Clones instance of Report and returns new Report Bank Account.
      */
-    private function cloneBankAccount(BankAccount $account): BankAccount
+    private function cloneBankAccount(BankAccount $account, Report $toReport): BankAccount
     {
-        $newAccount = new BankAccount();
+        $newAccount = new BankAccount($toReport);
 
         $newAccount->setBank($account->getBank());
         $newAccount->setAccountType($account->getAccountType());
@@ -248,7 +236,7 @@ class ReportService
         $endDate->modify('+12 months -1 day');
 
         $newReport = new Report(
-            $client,
+            $oldReport->getCourtOrder(),
             $newReportType, // report comes from casrec, or last year report, if not found
             $startDate,
             $endDate,
@@ -348,11 +336,9 @@ class ReportService
 
     /**
      * If the report is ready to submit, but is not yet due, return notFinished instead
-     * In all the the cases, return original $status.
+     * In all the cases, return original $status.
      *
      * @param string $status
-     *
-     * @return string
      */
     public function adjustReportStatus($status, \DateTime $endDate): string
     {
@@ -377,58 +363,36 @@ class ReportService
         return $endDate < $endOfToday;
     }
 
-    /**
-     * Work out which reports are required for the client by looking up related rows in the pre-reg table.
-     * Note that this only creates the report objects, but doesn't persist them.
-     * If a client is dual, we create both reports; if hybrid, we only create one.
-     *
-     * Note this doesn't check whether reports of the appropriate type already exist, and is intended for use
-     * with clients who have *no* reports.
-     *
-     * @return Report[]
-     */
-    public function createRequiredReports(Client $client): array
+    public function createReportFromOrder(CourtOrder $courtOrder): Report
     {
-        $preRegs = $this->preRegistrationRepository->findByCaseNumber($client->getCaseNumber());
+        $startDate = $this->determineStartDateOfFirstReport($courtOrder);
 
-        if (count($preRegs) < 1) {
-            return [];
+        $newReport = new Report(
+            courtOrder: $courtOrder,
+            type: "{$courtOrder->getDesiredReportType()}",
+            startDate: \DateTime::createFromImmutable($startDate),
+            endDate: \DateTime::createFromImmutable($startDate)->modify('+12 months -1 day'),
+            dateChecks: false,
+        );
+
+        $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
+
+        return $newReport;
+    }
+
+    public function determineStartDateOfFirstReport(CourtOrder $courtOrder): \DateTimeImmutable
+    {
+        $startDate = \DateTimeImmutable::createFromMutable($courtOrder->getOrderMadeDate())->setTime(0, 0);
+        if ($this->now < $startDate) {
+            throw new \DomainException("Encountered a court order with uid {$courtOrder->getCourtOrderUid()} before this court order's made date.");
         }
 
-        $pfa = null;
-        $hw = null;
-        $required = [];
+        $aYear = new \DateInterval('P1Y');
 
-        foreach ($preRegs as $preReg) {
-            // verify that we have all the necessary data to make the report from the pre-reg row; if not, skip it
-            $typeOfReport = $preReg->getTypeOfReport();
-            $orderType = $preReg->getOrderType();
-            $orderDate = $preReg->getOrderDate();
-
-            if (is_null($typeOfReport) || is_null($orderType) || is_null($orderDate)) {
-                continue;
-            }
-
-            $report = $this->reportFactory->create($client, $typeOfReport, $orderType, $orderDate);
-
-            // if the report created for this pre-reg row is a hybrid, we just want this report and no others
-            if ($report->isHybrid()) {
-                return [$report];
-            }
-
-            // screen out duplicates if there are multiple rows for pfa and/or hw reports for this client,
-            // so we get 2 reports max. (one pfa, one hw)
-            if (is_null($pfa) && $report->isPfa()) {
-                $pfa = $report;
-                $required[] = $report;
-            }
-
-            if (is_null($hw) && $report->isHw()) {
-                $hw = $report;
-                $required[] = $report;
-            }
+        $latestStartDate = $this->now->setTime(0, 0)->sub($aYear);
+        while ($startDate <= $latestStartDate) {
+            $startDate = $startDate->add($aYear);
         }
-
-        return $required;
+        return $startDate;
     }
 }

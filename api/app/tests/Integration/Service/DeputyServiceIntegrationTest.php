@@ -4,26 +4,21 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Service;
 
-use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputyDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputySet;
+use OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Service\DeputyService;
-use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
-use OPG\Digideps\Backend\TestHelpers\CourtOrderTestHelper;
-use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
-use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
-use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
-use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
 {
-    private static Fixtures $fixtures;
     private static DeputyService $sut;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-
-        self::$fixtures = new Fixtures(self::$entityManager);
 
         /** @var DeputyService $sut */
         $sut = self::$container->get(DeputyService::class);
@@ -32,27 +27,13 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
 
     public function testFindReportsInfoByUidSuccess()
     {
-        $deputyUid = 7000000021;
-        $courtOrderUid = '7100000080';
+        [
+            'client' => $client,
+            'persons' => ['deputies' => ['lay1' => $deputy]],
+            'orders' => [['pfa' => ['order' => $courtOrder, 'reports' => [$report]]]]
+        ] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        $client = ClientTestHelper::generateClient(em: self::$entityManager);
-        $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
-        $report = ReportTestHelper::generateReport(em: self::$entityManager, client: $client);
-        $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid", user: $user);
-        $client->setDeputy(deputy: $deputy);
-
-        self::$fixtures->persist($deputy, $client);
-        self::$fixtures->flush();
-
-        $courtOrder = CourtOrderTestHelper::generateCourtOrder(
-            em: self::$entityManager,
-            client: $client,
-            courtOrderUid: $courtOrderUid,
-            report: $report,
-            deputy: $deputy,
-        );
-
-        $results = self::$sut->findReportsInfoByUid(uid: "$deputyUid");
+        $results = self::$sut->findReportsInfoByUid(uid: $deputy->getDeputyUid());
 
         self::assertCount(1, $results);
         self::assertArrayHasKey('client', $results[0]);
@@ -79,29 +60,11 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
 
     public function testFindReportsInfoByUidDeputyNotActiveOnOrder()
     {
-        $deputyUid = 7000000022;
-        $courtOrderUid = '7100000081';
+        ['persons' => ['deputies' => ['lay1' => $deputy]],] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(
+            new DeputySet(new DeputyDescriptor('lay1', isActive: false))
+        )));
 
-        $client = ClientTestHelper::generateClient(em: self::$entityManager);
-        $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
-        $report = ReportTestHelper::generateReport(em: self::$entityManager, client: $client);
-        $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid", user: $user);
-        $client->setDeputy(deputy: $deputy);
-
-        self::$fixtures->persist($deputy, $client);
-        self::$fixtures->flush();
-
-        // active court order saved to database, but deputy is not active on the order
-        CourtOrderTestHelper::generateCourtOrder(
-            em: self::$entityManager,
-            client: $client,
-            courtOrderUid: $courtOrderUid,
-            report: $report,
-            deputy: $deputy,
-            deputyIsActive: false,
-        );
-
-        $results = self::$sut->findReportsInfoByUid(uid: "$deputyUid");
+        $results = self::$sut->findReportsInfoByUid(uid: $deputy->getDeputyUid());
 
         self::assertEquals(null, $results);
     }
@@ -115,41 +78,16 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
 
     public function testFindReportsInfoByUidUsesLatestReportType(): void
     {
-        $deputyUid = 7000000023;
-        $courtOrderUid = '7100000082';
-
-        $client = ClientTestHelper::generateClient(em: self::$entityManager);
-        $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
-        $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid", user: $user);
-        $client->setDeputy(deputy: $deputy);
-
-        self::$fixtures->persist($deputy, $client);
-        self::$fixtures->flush();
-
-        // active court order saved to database
-        $courtOrder = CourtOrderTestHelper::generateCourtOrder(
-            em: self::$entityManager,
-            client: $client,
-            courtOrderUid: $courtOrderUid,
-            deputy: $deputy,
-        );
 
         // two reports, one the current report and the other historical;
         // check that the most recent report's type is used as the type for the court order
         // (as displayed on the choose a court order page)
-        $currentStart = new \DateTime();
-        $currentReport = ReportTestHelper::generateReport(em: self::$entityManager, client: $client, type: '102', startDate: $currentStart);
+        ['persons' => ['deputies' => ['lay1' => $deputy]]] = self::$fixtureService->instantiateScenario(new Scenario(
+            new CourtOrderDescriptor(DeputySet::oneLay(), CourtOrderReportType::OPG102),
+            new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), CourtOrderReportType::OPG103, active: false)),
+        ));
 
-        $oldStart = $currentStart->sub(new \DateInterval('P2Y'));
-        $oldReport = ReportTestHelper::generateReport(em: self::$entityManager, client: $client, type: '103', startDate: $oldStart);
-
-        $courtOrder->addReport($currentReport);
-        $courtOrder->addReport($oldReport);
-
-        self::$fixtures->persist($currentReport, $oldReport, $courtOrder);
-        self::$fixtures->flush();
-
-        $results = self::$sut->findReportsInfoByUid(uid: "$deputyUid");
+        $results = self::$sut->findReportsInfoByUid(uid: $deputy->getDeputyUid());
 
         self::assertCount(1, $results);
         self::assertEquals('102', $results[0]['report']['type']);
@@ -158,46 +96,15 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
     // if there are two court orders for the same report, they display as a single item
     public function testFindReportsInfoByUidCombinesCourtOrders(): void
     {
-        $deputyUid = 7000000024;
-        $courtOrderUid1 = '7100000083';
-        $courtOrderUid2 = '7100000084';
-
-        $client = ClientTestHelper::generateClient(em: self::$entityManager);
-        $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
-        $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid", user: $user);
-        $client->setDeputy(deputy: $deputy);
-
-        self::$fixtures->persist($deputy, $client);
-        self::$fixtures->flush();
-
-        // two active court orders
-        $courtOrder1 = CourtOrderTestHelper::generateCourtOrder(
-            em: self::$entityManager,
-            client: $client,
-            courtOrderUid: $courtOrderUid1,
-            deputy: $deputy,
-        );
-
-        $courtOrder2 = CourtOrderTestHelper::generateCourtOrder(
-            em: self::$entityManager,
-            client: $client,
-            courtOrderUid: $courtOrderUid2,
-            type: CourtOrderType::HW,
-            deputy: $deputy,
-        );
-
         // one hybrid report associated with both court orders
-        $report = ReportTestHelper::generateReport(em: self::$entityManager, client: $client, type: '102-4');
-        $courtOrder1->addReport($report);
-        $courtOrder2->addReport($report);
+        ['persons' => ['deputies' => ['lay1' => $deputy]], 'orders' => [['pfa' => ['order' => $pfa], 'hw' => ['order' => $hw]]]] = self::$fixtureService->instantiateScenario(new Scenario(
+            new CourtOrderDescriptor(DeputySet::oneLay(), CourtOrderReportType::OPG102, single: false),
+        ));
 
-        self::$fixtures->persist($report, $courtOrder1, $courtOrder2);
-        self::$fixtures->flush();
-
-        $results = self::$sut->findReportsInfoByUid(uid: "$deputyUid");
+        $results = self::$sut->findReportsInfoByUid(uid: $deputy->getDeputyUid());
 
         self::assertCount(1, $results);
-        self::assertEquals([$courtOrderUid1, $courtOrderUid2], $results[0]['courtOrderUids']);
+        self::assertEquals([$pfa->getCourtOrderUid(), $hw->getCourtOrderUid()], $results[0]['courtOrderUids']);
         self::assertEquals('102-4', $results[0]['report']['type']);
     }
 }

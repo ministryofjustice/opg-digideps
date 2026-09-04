@@ -11,30 +11,30 @@ trait CreateUpdateTimestamps
 {
     #[JMS\Groups(['created-at'])]
     #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $createdAt = null;
+    private ?\DateTime $createdAt = null;
 
     #[JMS\Groups(['updated-at'])]
     #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $updatedAt = null;
+    private ?\DateTime $updatedAt = null;
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(?\DateTimeInterface $timestamp): self
+    public function setCreatedAt(?\DateTime $timestamp): static
     {
         $this->createdAt = $timestamp;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $timestamp): self
+    public function setUpdatedAt(?\DateTime $timestamp): static
     {
         $this->updatedAt = $timestamp;
 

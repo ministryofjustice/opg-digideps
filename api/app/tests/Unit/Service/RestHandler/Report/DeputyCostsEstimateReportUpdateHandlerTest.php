@@ -7,9 +7,13 @@ namespace Tests\OPG\Digideps\Backend\Unit\Service\RestHandler\Report;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +28,14 @@ final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
     {
         $date = new \DateTime('now', new \DateTimeZone('Europe/London'));
         $this->report = $this->getMockBuilder(Report::class)
-            ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
+            ->setConstructorArgs([new CourtOrder(
+                '',
+                CourtOrderType::PFA,
+                CourtOrderReportType::OPG102,
+                CourtOrderKind::Single,
+                new \DateTime(),
+                new Client()
+            ), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
             ->onlyMethods(['updateSectionsStatusCache'])
             ->getMock();
 
@@ -58,7 +69,7 @@ final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->report
             ->setProfDeputyCostsEstimateHasMoreInfo('yes')
             ->setProfDeputyCostsEstimateMoreInfoDetails('more info')
-            ->setProfDeputyEstimateCosts(new ArrayCollection([new ProfDeputyEstimateCost()]))
+            ->setProfDeputyEstimateCosts(new ArrayCollection([new ProfDeputyEstimateCost($this->report, '')]))
             ->setProfDeputyCostsEstimateManagementCostAmount(100.00);
 
         $this->ensureSectionStatusCacheWillBeUpdated();
@@ -77,7 +88,7 @@ final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->report
             ->setProfDeputyCostsEstimateHasMoreInfo('yes')
             ->setProfDeputyCostsEstimateMoreInfoDetails('more info')
-            ->setProfDeputyEstimateCosts(new ArrayCollection([new ProfDeputyEstimateCost()]))
+            ->setProfDeputyEstimateCosts(new ArrayCollection([new ProfDeputyEstimateCost($this->report, '')]))
             ->setProfDeputyCostsEstimateManagementCostAmount(100.00);
 
         $this->ensureSectionStatusCacheWillBeUpdated();
@@ -108,12 +119,12 @@ final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
 
     public function testUpdatesExistingOrCreatesNewProfDeputyEstimateCost(): void
     {
-        $existing = new ProfDeputyEstimateCost();
-        $existing
-            ->setReport($this->report)
-            ->setProfDeputyEstimateCostTypeId('forms-documents')
-            ->setAmount('22.99')
-            ->setHasMoreDetails(true);
+        $existing = new ProfDeputyEstimateCost(
+            $this->report,
+            'forms-documents',
+            true
+        )
+            ->setAmount('22.99');
 
         $this->report->addProfDeputyEstimateCost($existing);
 

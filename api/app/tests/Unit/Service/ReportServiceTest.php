@@ -7,55 +7,52 @@ namespace Tests\OPG\Digideps\Backend\Unit\Service;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\Factory\ReportFactory;
 use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Service\ReportService;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
-use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 final class ReportServiceTest extends TestCase
 {
     private User $user;
-    private BankAccount $bank1;
-    private AssetProperty $asset1;
     private Report $report;
     private Document $document1;
     private EntityManager&MockObject $em;
-    private LoggerInterface&MockObject $mockLogger;
-    private ReportFactory&MockObject $mockReportFactory;
     private PreRegistrationRepository&MockObject $mockPreRegistrationRepository;
     private ReportService $sut;
 
     public function setUp(): void
     {
-        $this->user = new User();
+        $this->user = new User('', '', '');
         $client = new Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
         $client->setCourtDate(new \DateTime('2014-06-06'));
 
-        $this->bank1 = new BankAccount()->setAccountNumber('1234');
-        $this->asset1 = new AssetProperty()
-            ->setAddress('SW1')
-            ->setOwned(AssetProperty::OWNED_FULLY);
-
-        $this->report = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
+        $this->report = new Report($this->makeCourtOrder($client), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
         $this->report->setNoAssetToAdd(false)
-            ->addAsset($this->asset1)
-            ->addAccount($this->bank1)
+            ->addAsset(
+                new AssetProperty($this->report)
+                    ->setAddress('SW1')
+                    ->setOwned(AssetProperty::OWNED_FULLY)
+            )
+            ->addAccount(new BankAccount($this->report)->setAccountNumber('1234'))
             ->setSubmittedBy($this->user);
 
-        $this->document1 = new Document($this->report)->setFileName('file1.pdf');
+        $this->document1 = new Document($this->report, 'file1.pdf');
         $this->report->addDocument($this->document1);
 
         $this->em = self::createMock(EntityManager::class);
@@ -70,11 +67,7 @@ final class ReportServiceTest extends TestCase
             return $this->mockPreRegistrationRepository;
         });
 
-        $this->mockReportFactory = $this->createMock(ReportFactory::class);
-
-        $this->mockLogger = $this->createMock(LoggerInterface::class);
-
-        $this->sut = new ReportService($this->em, $this->mockReportFactory, $this->mockLogger);
+        $this->sut = new ReportService($this->em, new NullLogger());
     }
 
     public function testSubmitInvalid(): void
@@ -91,7 +84,7 @@ final class ReportServiceTest extends TestCase
         $report = $this->report;
         $report->setAgreedBehalfDeputy('only_deputy');
 
-        $reportService = new ReportService($this->em, $this->mockReportFactory, $this->mockLogger);
+        $reportService = new ReportService($this->em, new NullLogger());
         $newYearReport = $reportService->submit($report, $this->user, new \DateTime('2016-01-15'));
 
         // assert current report
@@ -116,10 +109,10 @@ final class ReportServiceTest extends TestCase
 
         // A report for the next report period should already exist
         $client = $this->report->getClient();
-        $nextReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-01'), new \DateTime('2016-12-31'));
+        $nextReport = new Report($this->makeCourtOrder($client), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-01'), new \DateTime('2016-12-31'));
         $client->addReport($nextReport);
 
-        $reportService = new ReportService($this->em, $this->mockReportFactory, $this->mockLogger);
+        $reportService = new ReportService($this->em, new NullLogger());
 
         $report->setAgreedBehalfDeputy('only_deputy');
         $newYearReport = $reportService->submit($report, $this->user, new \DateTime());
@@ -146,14 +139,14 @@ final class ReportServiceTest extends TestCase
         $report->setUnSubmitDate(new \DateTime('2018-02-14'));
         $report->setAgreedBehalfDeputy('only_deputy');
 
-        $reportService = new ReportService($this->em, $this->mockReportFactory, $this->mockLogger);
+        $reportService = new ReportService($this->em, new NullLogger());
 
         // Submit a report without one set up for next year
         $reportService->submit($report, $this->user, new \DateTime());
 
         // Submit a report where next year's dates don't match
         $client = $this->report->getClient();
-        $nextReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-17'), new \DateTime('2017-01-16'));
+        $nextReport = new Report($this->makeCourtOrder($client), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-17'), new \DateTime('2017-01-16'));
         $client->addReport($nextReport);
 
         $report->setUnSubmitDate(new \DateTime('2018-02-14'));
@@ -165,7 +158,7 @@ final class ReportServiceTest extends TestCase
     public function testDuplicateResourcesNotPersisted(): void
     {
         $client = $this->report->getClient();
-        $newReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-01'), new \DateTime('2016-12-31'));
+        $newReport = new Report($this->makeCourtOrder($client), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-01'), new \DateTime('2016-12-31'));
 
         $oldAsset = $this->report->getAssets()[0];
         $this->assertNotNull($oldAsset);
@@ -235,16 +228,16 @@ final class ReportServiceTest extends TestCase
             ->with(PreRegistration::class)
             ->willReturn($preRegistrationRepo);
 
-        $sut = new ReportService($em, $this->mockReportFactory, $this->mockLogger);
+        $sut = new ReportService($em, new NullLogger());
 
         self::assertEquals($isAString, is_string($sut->getReportTypeBasedOnSirius($client)));
     }
 
     public static function getReportTypeBasedOnSiriusProvider(): array
     {
-        $lay = new User()->setRoleName(User::ROLE_LAY_DEPUTY);
-        $prof = new User()->setRoleName(User::ROLE_PROF_ADMIN);
-        $pa = new User()->setRoleName(User::ROLE_PA_ADMIN);
+        $lay = new User('', '', '')->setRoleName(User::ROLE_LAY_DEPUTY);
+        $prof = new User('', '', '')->setRoleName(User::ROLE_PROF_ADMIN);
+        $pa = new User('', '', '')->setRoleName(User::ROLE_PA_ADMIN);
 
         $layClient = new Client()
             ->addUser($lay)
@@ -277,7 +270,7 @@ final class ReportServiceTest extends TestCase
     {
         $user = $this->user->setActive(false);
 
-        $reportService = new ReportService($this->em, $this->mockReportFactory, $this->mockLogger);
+        $reportService = new ReportService($this->em, new NullLogger());
 
         $this->report->setAgreedBehalfDeputy('only_deputy');
 
@@ -286,96 +279,55 @@ final class ReportServiceTest extends TestCase
         $this->assertTrue($user->getActive());
     }
 
-    // pre-reg entries for cases which will result in required reports being created
-    public static function preRegEntriesForRequiredReports(): array
+    #[DataProvider('provideForDetermineStartDateOfFirstReport')]
+    public function testDetermineStartDateOfFirstReport(\DateTimeImmutable $now, \DateTimeImmutable $madeDate, ?\DateTimeImmutable $expectedStartDate): void
     {
-        $now = new \DateTime()->format('Y-m-d');
+        $em = $this->createStub(EntityManagerInterface::class);
+        $em->method('getRepository')->willReturn($this->createStub(PreRegistrationRepository::class));
 
-        $pfa = new PreRegistration(['ReportType' => 'OPG103', 'OrderType' => 'pfa', 'MadeDate' => $now]);
-        $hw = new PreRegistration(['ReportType' => 'OPG104', 'OrderType' => 'hw', 'MadeDate' => $now]);
-        $hybrid = new PreRegistration(['ReportType' => 'OPG102', 'OrderType' => 'hw', 'MadeDate' => $now]);
+        $reportService = new ReportService($em, new NullLogger(), $now);
+        $courtOrder = $this->createStub(CourtOrder::class);
+        $courtOrder->method('getOrderMadeDate')->willReturn(\DateTime::createFromImmutable($madeDate));
 
-        return [
-            // pfa report only
-            [
-                'preRegRows' => [$pfa], 'reportsCreated' => 1, 'expectedReportTypes' => ['103'],
-            ],
-
-            // hw report only
-            [
-                'preRegRows' => [$hw], 'reportsCreated' => 1, 'expectedReportTypes' => ['104'],
-            ],
-
-            // hybrid report only
-            [
-                'preRegRows' => [$hybrid], 'reportsCreated' => 1, 'expectedReportTypes' => ['102-4'],
-            ],
-
-            // pfa+hw reports
-            [
-                'preRegRows' => [$pfa, $hw], 'reportsCreated' => 2, 'expectedReportTypes' => ['103', '104'],
-            ],
-
-            // multiple rows (check we only get one pfa and one hw report)
-            [
-                'preRegRows' => [$pfa, $hw, $pfa, $hw], 'reportsCreated' => 4, 'expectedReportTypes' => ['103', '104'],
-            ],
-
-            // multiple rows (check we only get one hybrid report)
-            [
-                'preRegRows' => [$pfa, $hw, $hybrid, $pfa, $hw], 'reportsCreated' => 3, 'expectedReportTypes' => ['102-4'],
-            ],
-        ];
+        if ($expectedStartDate === null) {
+            $this->expectException(\DomainException::class);
+        }
+        $startDate = $reportService->determineStartDateOfFirstReport($courtOrder);
+        if ($expectedStartDate !== null) {
+            $this->assertSame($expectedStartDate->format('Y-m-d H:i:s'), $startDate->format('Y-m-d H:i:s'));
+        }
     }
 
-    /**
-     * @param PreRegistration[] $preRegRows
-     * @param string[] $expectedReportTypes
-     * @throws Exception
-     */
-    #[DataProvider('preRegEntriesForRequiredReports')]
-    public function testCreateRequiredReports(array $preRegRows, int $reportsCreated, array $expectedReportTypes): void
+    public static function provideForDetermineStartDateOfFirstReport(): array
     {
-        $mockClient = self::createMock(Client::class);
-        $mockClient->expects(self::once())
-            ->method('getCaseNumber')
-            ->willReturn('92345678');
+        return array_map(
+            fn (array $scenario) => array_map(fn (?string $date): ?\DateTimeImmutable => $date ? \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $date) ?: null: null, $scenario),
+            [
+                ['2023-03-15 00:00:00', '2023-06-15 00:00:00', null],
+                ['2023-06-14 23:59:59', '2023-06-15 00:00:00', null],
+                ['2023-06-15 00:00:00', '2023-06-15 00:00:00', '2023-06-15 00:00:00'],
+                ['2023-09-15 00:00:00', '2023-06-15 00:00:00', '2023-06-15 00:00:00'],
 
-        $this->mockPreRegistrationRepository->expects(self::once())
-            ->method('findByCaseNumber')
-            ->willReturn($preRegRows);
+                ['2024-03-15 00:00:00', '2023-06-15 00:00:00', '2023-06-15 00:00:00'],
+                ['2024-06-14 23:59:59', '2023-06-15 00:00:00', '2023-06-15 00:00:00'],
+                ['2024-06-15 00:00:00', '2023-06-15 00:00:00', '2024-06-15 00:00:00'],
+                ['2024-09-15 00:00:00', '2023-06-15 00:00:00', '2024-06-15 00:00:00'],
 
-        $this->mockReportFactory->expects(self::exactly($reportsCreated))
-            ->method('create')
-            ->with($mockClient, $this->isType('string'), $this->isType('string'), $this->isInstanceOf(\DateTime::class))
-            ->willReturnCallback(function (Client $client, string $typeOfReport, string $orderType) {
-                $stub = self::createStub(Report::class);
+                ['2025-03-15 00:00:00', '2023-06-15 00:00:00', '2024-06-15 00:00:00'],
+                ['2025-06-14 23:59:59', '2023-06-15 00:00:00', '2024-06-15 00:00:00'],
+                ['2025-06-15 00:00:00', '2023-06-15 00:00:00', '2025-06-15 00:00:00'],
+                ['2025-09-15 00:00:00', '2023-06-15 00:00:00', '2025-06-15 00:00:00'],
 
-                $reportType = str_replace('OPG', '', $typeOfReport);
+                ['2026-03-15 00:00:00', '2023-06-15 00:00:00', '2025-06-15 00:00:00'],
+                ['2026-06-14 23:59:59', '2023-06-15 00:00:00', '2025-06-15 00:00:00'],
+                ['2026-06-15 00:00:00', '2023-06-15 00:00:00', '2026-06-15 00:00:00'],
+                ['2026-09-15 00:00:00', '2023-06-15 00:00:00', '2026-06-15 00:00:00'],
+            ]
+        );
+    }
 
-                if ($typeOfReport === 'OPG102' || $typeOfReport === 'OPG103') {
-                    if ($orderType === 'hw') {
-                        $stub->method('isHybrid')->willReturn(true);
-                        $stub->method('isPfa')->willReturn(false);
-                        $reportType .= '-4';
-                    } else {
-                        $stub->method('isHybrid')->willReturn(false);
-                        $stub->method('isPfa')->willReturn(true);
-                    }
-                } elseif ($typeOfReport === 'OPG104') {
-                    $stub->method('isHw')->willReturn(true);
-                }
-
-                $stub->method('getType')->willReturn($reportType);
-
-                return $stub;
-            });
-
-        $reports = $this->sut->createRequiredReports($mockClient);
-
-        self::assertCount(count($expectedReportTypes), $reports);
-        self::assertEquals($expectedReportTypes, array_map(function (Report $report) {
-            return $report->getType();
-        }, $reports));
+    private function makeCourtOrder(Client $client): CourtOrder
+    {
+        return new CourtOrder('', CourtOrderType::PFA, CourtOrderReportType::OPG102, CourtOrderKind::Single, new \DateTime(), $client);
     }
 }
