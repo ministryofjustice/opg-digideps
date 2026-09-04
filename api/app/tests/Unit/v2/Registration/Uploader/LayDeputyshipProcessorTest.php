@@ -96,9 +96,12 @@ final class LayDeputyshipProcessorTest extends TestCase
 
         $existingClient = $this->createMock(Client::class);
 
-        $mockReportClass = $this->createPartialMock(Report::class, methods: ['getId']);
-        $existingReport = new $mockReportClass($existingClient, '102', new \DateTime(), new \DateTime(), false);
-        $existingReport->expects($this->once())->method('getId')->willReturn(1);
+        $existingReport = $this->getMockBuilder(Report::class)
+            ->setConstructorArgs([$existingClient, '102', new \DateTime(), new \DateTime(), false])
+            ->onlyMethods(['getId'])
+            ->getMock();
+        $existingReport->method('getId')->willReturn(1);
+
 
         $clientMatch = new ClientMatch(
             client: $existingClient,
