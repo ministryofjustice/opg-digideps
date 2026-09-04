@@ -12,11 +12,14 @@ class ImportClientDataFactory implements DataFactoryInterface
      * @var array<int, string> $errors
      */
     private array $errors;
+    private string $preventCreationOfNonOrgClients;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
     ) {
         $this->errors = [];
+        //TODO This needs to be removed when the registration work is done
+        $this->preventCreationOfNonOrgClients = 'JOIN staging.pa_pro_ingest ppi ON ppi.case_number = ssc.case_number';
     }
 
     public function getName(): string
@@ -108,7 +111,7 @@ class ImportClientDataFactory implements DataFactoryInterface
                             ssc.client_date_of_birth,
                             now()
                         FROM staging.sirius_client ssc
-                        JOIN staging.pa_pro_ingest ppi ON ppi.case_number = ssc.case_number -- Limit to org clients for now
+                        {$this->preventCreationOfNonOrgClients}
                         WHERE ssc.local_id IS NULL
                     ");
                     $postLinked = $this->execute('
