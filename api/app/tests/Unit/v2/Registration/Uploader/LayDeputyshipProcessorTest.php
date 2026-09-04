@@ -102,7 +102,6 @@ final class LayDeputyshipProcessorTest extends TestCase
             ->getMock();
         $existingReport->method('getId')->willReturn(1);
 
-
         $clientMatch = new ClientMatch(
             client: $existingClient,
             report: $existingReport,
