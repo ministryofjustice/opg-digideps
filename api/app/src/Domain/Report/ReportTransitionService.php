@@ -106,10 +106,19 @@ final readonly class ReportTransitionService
         ['persistingReportCourtOrder' => $persistingCourtOrder, 'newReportCourtOrder' => $newReportCourtOrder] =
             $this->hybridToDualAssignCourtOrders($courtOrderPair, $courtOrderChange);
 
+        // the persisting court order and the old sibling should share a report, otherwise they aren't really a hybrid
+        $oldPair = CourtOrderPair::create($persistingCourtOrder, $oldSibling);
+        if ($oldPair->getSharedLatestReport() === null) {
+            $result->errorMessages[] = "Hybrid -> Dual: {$oldPair->getDetails()} - " .
+                "Invalid hybrid: source court orders do no share the same latest report";
+            return $result;
+        }
+
         // convert existing hybrid report into single on the persisting court order
         $persistingReport = $persistingCourtOrder->getLatestReport();
         if ($persistingReport === null) {
-            $result->errorMessages[] = "Hybrid -> Dual: {$orderPairDetails} - Could not find existing hybrid report to persist";
+            $result->errorMessages[] = "Hybrid -> Dual: {$orderPairDetails} - "
+                .  'Could not find existing hybrid report to persist';
             return $result;
         }
 
@@ -156,9 +165,17 @@ final readonly class ReportTransitionService
         // figure out which report will persist (to become the hybrid report) and which becomes defunct
         ['persistingReport' => $persistingReport, 'defunctReport' => $defunctReport] =
             $this->dualToHybridAssignReports($courtOrderPair, $courtOrderChange, $oldSibling);
+
         if ($persistingReport === null || $defunctReport === null) {
             $result->errorMessages[] = "Dual -> Hybrid: {$orderPairDetails} - ".
                 "Persisting and/or defunct report unavailable";
+            return $result;
+        }
+
+        // if the defunct and persisting reports are the same report, the court orders are hybrid and not dual
+        if ($defunctReport->getId() === $persistingReport->getId()) {
+            $result->errorMessages[] = "Dual -> Hybrid: {$orderPairDetails} - " .
+                "Invalid dual: court orders already share a latest report";
             return $result;
         }
 
