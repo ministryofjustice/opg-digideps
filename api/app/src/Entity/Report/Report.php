@@ -223,7 +223,7 @@ class Report
 
     #[JMS\Groups(['report-client'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Client')]
-    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Client::class, cascade: ['persist'], inversedBy: 'reports')]
     private Client $client;
 
