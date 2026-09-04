@@ -106,11 +106,12 @@ final readonly class ReportTransitionService
         ['persistingReportCourtOrder' => $persistingCourtOrder, 'newReportCourtOrder' => $newReportCourtOrder] =
             $this->hybridToDualAssignCourtOrders($courtOrderPair, $courtOrderChange);
 
-        // the persisting court order and the old sibling should share a report, otherwise they aren't really a hybrid
+        // the persisting court order and the old sibling (which may be the same as the new sibling)
+        // should share a report, otherwise they aren't really a hybrid
         $oldPair = CourtOrderPair::create($persistingCourtOrder, $oldSibling);
         if ($oldPair->getSharedLatestReport() === null) {
             $result->errorMessages[] = "Hybrid -> Dual: {$oldPair->getDetails()} - " .
-                "Invalid hybrid: source court orders do no share the same latest report";
+                "Invalid hybrid: source court orders do not share the same latest report";
             return $result;
         }
 
