@@ -100,7 +100,7 @@ final class LayDeputyshipProcessorTest extends TestCase
             ->setConstructorArgs([$existingClient, '102', new \DateTime(), new \DateTime(), false])
             ->onlyMethods(['getId'])
             ->getMock();
-        $existingReport->method('getId')->willReturn(1);
+        $existingReport->expects($this->once())->method('getId')->willReturn(1);
 
         $clientMatch = new ClientMatch(
             client: $existingClient,
