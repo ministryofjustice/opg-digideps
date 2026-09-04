@@ -82,25 +82,9 @@ final class LayDeputyshipProcessorTest extends TestCase
     public function testProcessRowMatchingClientAndReport(): void
     {
         // Expectations
-        $orderDate = new \DateTime('2025-02-14');
-
         $layDeputyshipDto = new LayDeputyshipDto();
-        $layDeputyshipDto->setDeputyUid('222222222')
-            ->setCaseNumber('88888888')
-            ->setOrderType('pfa')
-            ->setTypeOfReport('OPG102')
-            ->setOrderDate($orderDate);
-
-        $user = new User();
-        $user->setDeputyUid(222222222);
-
         $existingClient = $this->createMock(Client::class);
-
-        $existingReport = $this->getMockBuilder(Report::class)
-            ->setConstructorArgs([$existingClient, '102', new \DateTime(), new \DateTime(), false])
-            ->onlyMethods(['getId'])
-            ->getMock();
-        $existingReport->expects($this->once())->method('getId')->willReturn(1);
+        $existingReport = $this->createMock(Report::class);
 
         $clientMatch = new ClientMatch(
             client: $existingClient,
