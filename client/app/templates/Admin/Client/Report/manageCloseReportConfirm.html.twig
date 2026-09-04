@@ -8,16 +8,12 @@
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 
-{% block supportTitleBottom %}
-    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
-{% endblock %}
-
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
     <p class="govuk-body">{{ (page ~ '.closeReport.confirmMessage') | trans }}</p>
     {{ form_start(form) }}
-    {{ form_submit(form.save, 'reportManage.closeReport.form.confirmSave', {
+    {{ form_submit(form.save, page ~ '.closeReport.form.confirmSave', {
         'buttonClass': 'behat-link-close-report-confirm govuk-button',
     }) }}
     {{ form_end(form) }}
