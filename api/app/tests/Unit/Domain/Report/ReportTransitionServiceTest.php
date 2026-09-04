@@ -103,6 +103,35 @@ final class ReportTransitionServiceTest extends TestCase
 
     /* HYBRID TO DUAL */
 
+    public function testHybridToDualInvalidHybrid(): void
+    {
+        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 98, CourtOrderKind::Dual);
+        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 99, CourtOrderKind::Dual);
+        $pfaCourtOrder->setSibling($hwCourtOrder);
+        $hwCourtOrder->setSibling($pfaCourtOrder);
+
+        // the court orders are not a hybrid as they have separate reports (NB also with incorrect types)
+        $this->makeReport(77, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
+        $this->makeReport(78, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$hwCourtOrder]);
+
+        // find(courtOrderId=98), find(currentSiblingId=99) = 2 calls; oldSiblingId==currentSiblingId so no extra find
+        $this->mockFind([98 => $pfaCourtOrder, 99 => $hwCourtOrder], 2);
+
+        $courtOrderRelationshipChange = new CourtOrderRelationshipChange(
+            courtOrderId: $pfaCourtOrder->getId(),
+            currentKind: CourtOrderKind::Dual,
+            currentSiblingId: $hwCourtOrder->getId(),
+            oldKind: CourtOrderKind::Hybrid,
+            oldSiblingId: $hwCourtOrder->getId(),
+        );
+
+        $result = $this->sut->transitionReports($courtOrderRelationshipChange);
+
+        self::assertNotNull($result);
+        self::assertCount(1, $result->errorMessages);
+        self::assertStringContainsString('Invalid hybrid', $result->errorMessages[0]);
+    }
+
     public function testHybridToDual(): void
     {
         $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 10, CourtOrderKind::Dual);
@@ -146,6 +175,33 @@ final class ReportTransitionServiceTest extends TestCase
     }
 
     /* DUAL TO HYBRID */
+
+    public function testDualToHybridInvalidDual(): void
+    {
+        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 401, CourtOrderKind::Dual, CourtOrderReportType::OPG102);
+        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 402, CourtOrderKind::Dual, CourtOrderReportType::OPG104);
+        $pfaCourtOrder->setSibling($hwCourtOrder);
+
+        // while marked as a dual, these court orders share the same latest report and are in fact already a hybrid
+        $this->makeReport(399, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder, $hwCourtOrder]);
+
+        // find(courtOrderId=401), find(currentSiblingId=402) = 2 calls; oldSiblingId==currentSiblingId so no extra find
+        $this->mockFind([401 => $pfaCourtOrder, 402 => $hwCourtOrder], 2);
+
+        $courtOrderRelationshipChange = new CourtOrderRelationshipChange(
+            courtOrderId: $pfaCourtOrder->getId(),
+            currentKind: CourtOrderKind::Hybrid,
+            currentSiblingId: $hwCourtOrder->getId(),
+            oldKind: CourtOrderKind::Dual,
+            oldSiblingId: $hwCourtOrder->getId(),
+        );
+
+        $result = $this->sut->transitionReports($courtOrderRelationshipChange);
+
+        self::assertNotNull($result);
+        self::assertCount(1, $result->errorMessages);
+        self::assertStringContainsString('Invalid dual', $result->errorMessages[0]);
+    }
 
     public function testDualToHybrid(): void
     {
@@ -350,31 +406,6 @@ final class ReportTransitionServiceTest extends TestCase
 
         self::assertNotNull($result);
         self::assertFalse($result->transitioned);
-    }
-
-    public function testHybridToDualReturnsErrorWhenPersistingReportNotFound(): void
-    {
-        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 110, CourtOrderKind::Dual);
-        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 111, CourtOrderKind::Hybrid);
-        $pfaCourtOrder->setSibling($hwCourtOrder);
-
-        // no report on pfaCourtOrder
-        // find(110), find(111); oldSiblingId==currentSiblingId so no extra find = 2 calls
-        $this->mockFind([110 => $pfaCourtOrder, 111 => $hwCourtOrder], 2);
-
-        $courtOrderChange = new CourtOrderRelationshipChange(
-            courtOrderId: $pfaCourtOrder->getId(),
-            currentKind: $pfaCourtOrder->getOrderKind(),
-            currentSiblingId: $hwCourtOrder->getId(),
-            oldKind: CourtOrderKind::Hybrid,
-            oldSiblingId: $hwCourtOrder->getId(),
-        );
-
-        $result = $this->sut->transitionReports($courtOrderChange);
-
-        self::assertNotNull($result);
-        self::assertFalse($result->transitioned);
-        self::assertStringContainsString('Could not find existing hybrid report', implode('', $result->errorMessages));
     }
 
     /* DUAL TO HYBRID ERRORS */
