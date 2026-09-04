@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Controller\Admin\Client;
 
+use OPG\Digideps\Common\Report\Section\SectionContext;
+use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Report\Checklist;
 use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\UnsubmittedSection;
 use OPG\Digideps\Frontend\Entity\SynchronisableInterface;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Exception\ReportNotSubmittedException;
@@ -17,6 +20,7 @@ use OPG\Digideps\Frontend\Form\Admin\ManageReportConfirmType;
 use OPG\Digideps\Frontend\Form\Admin\ManageSubmittedReportType;
 use OPG\Digideps\Frontend\Form\Admin\ReportChecklistType;
 use OPG\Digideps\Frontend\Form\Admin\ReviewChecklistType;
+use OPG\Digideps\Frontend\Report\ReportSectionService;
 use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
@@ -98,7 +102,8 @@ class ReportController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
-        private readonly FormFactoryInterface $formFactory
+        private readonly FormFactoryInterface $formFactory,
+        private readonly ReportSectionService $reportSectionService,
     ) {
     }
 
@@ -334,7 +339,32 @@ class ReportController extends AbstractController
     {
         $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
 
-        $formClass = ($report->isSubmitted()) ? ManageSubmittedReportType::class : ManageActiveReportType::class;
+        $formClass = ManageActiveReportType::class;
+        if ($report->isSubmitted()) {
+            $formClass = ManageSubmittedReportType::class;
+        }
+
+        $unsubmittedSectionsList = $report->getUnsubmittedSectionsList() ?? '';
+        $reportMeta = ReportSectionService::getReportMetadata($report);
+        $unsubmittedSections = [];
+
+        foreach ($reportMeta->sections as $reportSection) {
+            if (!$reportSection->isRelevantFor(SectionContext::ADMIN_MANAGE_CHECKLIST)) {
+                continue;
+            }
+
+            $sectionMeta = $this->reportSectionService->getSectionMetadata($reportMeta, $reportSection);
+            if ($sectionMeta === null) {
+                continue;
+            }
+
+            $present = str_contains($unsubmittedSectionsList, $reportSection->value);
+
+            $unsubmittedSections[] = new UnsubmittedSection($reportSection->value, $sectionMeta->texts->title, $present);
+        }
+
+        $report->setUnsubmittedSections($unsubmittedSections);
+
         $form = $this->formFactory->createNamed('manage_report', $formClass, $report, ['translation_domain' => 'admin-clients']);
 
         if (is_array($request->get('data'))) {
@@ -344,7 +374,6 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->setChoicesInSession($request, $form, $report);
-
             return $this->redirect($this->generateUrl('admin_report_manage_confirm', ['id' => $report->getId()]));
         }
 
@@ -371,22 +400,26 @@ class ReportController extends AbstractController
     private function prepopulateWithPreviousChoices(array $dataFromUrl, FormInterface $form): void
     {
         foreach (['type', 'dueDateChoice'] as $field) {
-            $form->has($field) && $form[$field]->setData($dataFromUrl[$field]);
+            $form->has($field) && array_key_exists($field, $dataFromUrl) && $form[$field]->setData($dataFromUrl[$field]);
         }
 
         foreach (['dueDateCustom', 'startDate', 'endDate'] as $field) {
             $form->has($field) && array_key_exists($field, $dataFromUrl) && $form[$field]->setData(new \DateTime($dataFromUrl[$field]));
         }
 
-        if ($form->has('unsubmittedSection') && isset($dataFromUrl['unsubmittedSectionsList'])) {
-            foreach ($form['unsubmittedSection']->getData() as $index => $section) {
-                $unsubmitted = explode(',', (string) $dataFromUrl['unsubmittedSectionsList']);
-                if (in_array($section->getId(), $unsubmitted)) {
-                    $form['unsubmittedSection']->getData()[$index]->setPresent(true);
+        if ($form->has('unsubmittedSections') && isset($dataFromUrl['unsubmittedSectionsList'])) {
+            /** @var array<UnsubmittedSection> $unsubmittedSections */
+            $unsubmittedSections = $form['unsubmittedSections']->getData();
+
+            $unsubmitted = explode(',', (string) $dataFromUrl['unsubmittedSectionsList']);
+
+            foreach ($unsubmittedSections as $section) {
+                if (in_array($section->id, $unsubmitted)) {
+                    $section->present = true;
                 }
             }
 
-            $form['unsubmittedSection']->setData($form['unsubmittedSection']->getData());
+            $form['unsubmittedSections']->setData($unsubmittedSections);
         }
     }
 
@@ -399,6 +432,20 @@ class ReportController extends AbstractController
         $startDate = isset($form['startDate']) ? $form['startDate']->getData()->format('Y-m-d') : null;
         $endDate = isset($form['endDate']) ? $form['endDate']->getData()->format('Y-m-d') : null;
 
+        $unsubmittedSectionsList = null;
+        if ($form->has('unsubmittedSections')) {
+            /** @var array<UnsubmittedSection> $unsubmittedSections */
+            $unsubmittedSections = $form['unsubmittedSections']->getData();
+
+            $unsubmittedSectionsList = implode(
+                ',',
+                array_map(
+                    fn (UnsubmittedSection $unsubmittedSection) => $unsubmittedSection->id,
+                    array_filter($unsubmittedSections, fn (UnsubmittedSection $unsubmittedSection) => $unsubmittedSection->present)
+                )
+            );
+        }
+
         $request->getSession()->set('report-management-changes', [
             'type' => $form['type']->getData(),
             'dueDate' => $this->determineNewDueDateFromForm($report, $form)->format('Y-m-d'),
@@ -406,7 +453,7 @@ class ReportController extends AbstractController
             'dueDateCustom' => $customDueDate instanceof \DateTime ? $customDueDate->format('Y-m-d') : null,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'unsubmittedSectionsList' => implode(',', $report->getUnsubmittedSectionsIds()),
+            'unsubmittedSectionsList' => $unsubmittedSectionsList,
         ]);
     }
 
@@ -454,6 +501,7 @@ class ReportController extends AbstractController
     {
         $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
 
+        /** @var ?array $sessionData */
         $sessionData = $request->getSession()->get('report-management-changes');
         if ($sessionData === null || !$this->sufficientDataInSession($sessionData)) {
             return $this->redirect($this->generateUrl('admin_report_manage', ['id' => $report->getId()]));
@@ -468,7 +516,7 @@ class ReportController extends AbstractController
                 return $this->redirect($this->generateUrl('admin_client_details', ['id' => $report->getClient()->getId()]));
             }
 
-            $this->populateReportFromSession($report, $sessionData);
+            $this->populateReportFromSession($report, new ValidatingArray($sessionData));
             $this->restClient->put('report/' . $report->getId(), $report, ['report_type', 'report_due_date', ...($report->isSubmitted() ? [] : ['startEndDates'])]);
 
             if ($form->has('confirm') && $form['confirm']->getData() === 'yes' && $report->isSubmitted()) {
@@ -510,19 +558,20 @@ class ReportController extends AbstractController
     /**
      * @throws \Exception
      */
-    private function populateReportFromSession(Report $report, array $sessionData): void
+    private function populateReportFromSession(Report $report, ValidatingArray $sessionData): void
     {
-        foreach (['type', 'unsubmittedSectionsList'] as $field) {
-            if (isset($sessionData[$field])) {
-                $setter = sprintf('set%s', ucfirst($field));
-                $report->{$setter}($sessionData[$field]);
-            }
+        $report->setUnsubmittedSectionsList($sessionData->getStringOrNull('unsubmittedSectionsList'));
+
+        $reportType = $sessionData->getStringOrNull('type');
+        if ($reportType !== null) {
+            $report->setType($reportType);
         }
 
         foreach (['dueDate', 'startDate', 'endDate'] as $field) {
-            if (isset($sessionData[$field])) {
+            $fieldValue = $sessionData->getStringOrNull($field);
+            if ($fieldValue !== null) {
                 $setter = sprintf('set%s', ucfirst($field));
-                $report->{$setter}(new \DateTime($sessionData[$field]));
+                $report->{$setter}(new \DateTime($fieldValue));
             }
         }
     }
