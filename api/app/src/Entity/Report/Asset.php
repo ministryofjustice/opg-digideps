@@ -19,53 +19,34 @@ abstract class Asset
 {
     use CreateUpdateTimestamps;
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['asset'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'asset_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var float
-     */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
     #[ORM\Column(name: 'asset_value', type: 'decimal', precision: 14, scale: 2, nullable: true)]
-    private $value;
+    private ?string $value = null;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'assets')]
-    private $report;
+    private Report $report;
 
-    /**
-     * Discriminator field.
-     *
-     * @var string
-     */
-    #[JMS\Exclude]
-    private $type;
-
-    /**
-     * @param string $type
-     *
-     * @return Asset instance
-     */
-    public static function factory($type)
+    final public function __construct(Report $report)
     {
-        switch ($type) {
-            case 'property':
-                return new AssetProperty();
-            default:
-                return new AssetOther();
-        }
+        $this->report = $report;
+    }
+
+    public static function factory(string $type, Report $report): Asset
+    {
+        return match ($type) {
+            'property' => new AssetProperty($report),
+            default => new AssetOther($report),
+        };
     }
 
     public function __clone()
@@ -73,54 +54,57 @@ abstract class Asset
         $this->id = null;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * Set value.
-     *
-     * @param string $value
-     */
-    public function setValue($value): static
+    public function setId(int $id): static
     {
-        $this->value = $value;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
 
         return $this;
     }
 
-    /**
-     * Get value.
-     *
-     * @return string
-     */
-    public function getValue()
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('type')]
+    #[JMS\Groups(['asset'])]
+    public function getAssetType(): string
+    {
+        return $this->getType();
+    }
+
+    public function setValue(null|float|int|string $value): static
+    {
+        $this->value = $value !== null ? (string)$value : null;
+
+        return $this;
+    }
+
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    /**
-     * @return float|null
-     */
     #[JMS\VirtualProperty]
     #[JMS\Type('float')]
     #[JMS\SerializedName('value_total')]
     #[JMS\Groups(['asset'])]
     public function getValueTotal(): ?float
     {
-        return $this->value === null ? null : floatval($this->value);
+        return $this->value === null ? null : (float)$this->value;
     }
 
     /**
      * Set report and set to false the report.noAssetToAdd status.
      */
-    public function setReport(?Report $report = null): static
+    public function setReport(Report $report): static
     {
         $this->report = $report;
 
@@ -130,25 +114,11 @@ abstract class Asset
         return $this;
     }
 
-    /**
-     * Get report.
-     *
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
+    abstract public function isEqual(Asset $asset): bool;
+    abstract protected function getType(): string;
 }

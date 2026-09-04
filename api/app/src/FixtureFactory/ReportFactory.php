@@ -28,8 +28,8 @@ class ReportFactory
             $type = $data['reportType'] . '-5';
         }
 
-        $startDate = $client->getExpectedReportStartDate($client->getCourtDate()->format('Y'));
-        $endDate = $client->getExpectedReportEndDate($client->getCourtDate()->format('Y'));
+        $startDate = $client->getExpectedReportStartDate((int)$client->getCourtDate()->format('Y'));
+        $endDate = $client->getExpectedReportEndDate((int)$client->getCourtDate()->format('Y'));
 
         $report = new Report($client, $type, $startDate, $endDate);
 
