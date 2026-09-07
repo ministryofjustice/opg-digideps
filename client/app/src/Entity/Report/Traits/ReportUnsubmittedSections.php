@@ -32,7 +32,7 @@ trait ReportUnsubmittedSections
     }
 
     /**
-     * @var ?string comma-separated list of section identifiers; see ReportType values
+     * @var ?string comma-separated list of section identifiers; see ReportSection::value
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report_unsubmitted_sections_list'])]
