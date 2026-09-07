@@ -514,15 +514,22 @@ class ReportController extends AbstractController
     {
         foreach (['type', 'unsubmittedSectionsList'] as $field) {
             if (isset($sessionData[$field])) {
-                $setter = sprintf('set%s', ucfirst($field));
-                $report->{$setter}($sessionData[$field]);
+                $value = $sessionData[$field];
+                match ($field) {
+                    'type' => $report->setType($value),
+                    'unsubmittedSectionsList' => $report->setUnsubmittedSectionsList($value)
+                };
             }
         }
 
         foreach (['dueDate', 'startDate', 'endDate'] as $field) {
             if (isset($sessionData[$field])) {
-                $setter = sprintf('set%s', ucfirst($field));
-                $report->{$setter}(new \DateTime($sessionData[$field]));
+                $value = new \DateTime($sessionData[$field]);
+                match ($field) {
+                    'dueDate' => $report->setDueDate($value),
+                    'startDate' => $report->setStartDate($value),
+                    'endDate' => $report->setEndDate($value)
+                };
             }
         }
     }
