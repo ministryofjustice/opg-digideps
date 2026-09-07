@@ -3,17 +3,6 @@ revision = 3
 requires-python = "==3.14.7"
 
 [[package]]
-name = "block-ips-lambda"
-version = "0.0.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "boto3" },
-]
-
-[package.metadata]
-requires-dist = [{ name = "boto3", specifier = "==1.43.89" }]
-
-[[package]]
 name = "boto3"
 version = "1.43.89"
 source = { registry = "https://pypi.org/simple" }
@@ -40,6 +29,17 @@ sdist = { url = "https://files.pythonhosted.org/packages/53/06/f63fb1befdf77af18
 wheels = [
     { url = "https://files.pythonhosted.org/packages/9e/9d/96f9dee6d12eedf1c2b4264eefd59c7ac8cac10daadb9a7bfccc9ee881c6/botocore-1.43.89-py3-none-any.whl", hash = "sha256:d7211220c815427fe71225acc6909e4ab5dfab3b03770e72fd16cf9eb86b3d1a", size = 15768272, upload-time = "2026-09-04T19:24:49.769Z" },
 ]
+
+[[package]]
+name = "cycle-secrets"
+version = "0.0.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "boto3" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "boto3", specifier = "==1.43.89" }]
 
 [[package]]
 name = "jmespath"

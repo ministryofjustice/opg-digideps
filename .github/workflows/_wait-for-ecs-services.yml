@@ -48,9 +48,18 @@ jobs:
         with:
           deploy_key: ${{ secrets.ssh_private_key }}
 
-      - name: install requirements
+      - name: Install uv
+        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
+        with:
+          version: "0.12.10"
+          enable-cache: true
+
+      - name: Install dependencies
         working-directory: scripts/pipeline/wait_until_ready
-        run: pip3 install -r requirements.txt
+        run: uv sync --locked
+
+      #          uv export --locked -o requirements.txt
+      #          python -m pip install --no-cache-dir -r requirements.txt
 
       - name: configure OIDC AWS credentials for ecs wait
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708
