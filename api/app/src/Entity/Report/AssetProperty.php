@@ -53,8 +53,8 @@ class AssetProperty extends Asset
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('float')]
-    #[ORM\Column(name: 'owned_percentage', type: 'decimal', precision: 14, scale: 2)]
-    private string $ownedPercentage = '0.0';
+    #[ORM\Column(name: 'owned_percentage', type: 'decimal', precision: 14, scale: 2, nullable: true)]
+    private ?string $ownedPercentage = null;
 
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
@@ -154,9 +154,9 @@ class AssetProperty extends Asset
         return $this->owned;
     }
 
-    public function getOwnedPercentage(): float
+    public function getOwnedPercentage(): ?string
     {
-        return (float)$this->ownedPercentage;
+        return $this->ownedPercentage;
     }
 
     public function getIsSubjectToEquityRelease(): string
@@ -212,9 +212,9 @@ class AssetProperty extends Asset
         return $this;
     }
 
-    public function setOwnedPercentage(int|float|string $ownedPercentage): static
+    public function setOwnedPercentage(null|int|float|string $ownedPercentage): static
     {
-        $this->ownedPercentage = (string)$ownedPercentage;
+        $this->ownedPercentage = $ownedPercentage === null ? null : (string)$ownedPercentage;
 
         return $this;
     }
@@ -271,7 +271,7 @@ class AssetProperty extends Asset
     public function getValueTotal(): ?float
     {
         if ($this->getOwned() == self::OWNED_PARTLY) {
-            return floatval($this->getValue()) * floatval($this->getOwnedPercentage() / 100);
+            return floatval($this->getValue()) * floatval($this->getOwnedPercentage()) / 100.0;
         }
 
         return parent::getValueTotal();
