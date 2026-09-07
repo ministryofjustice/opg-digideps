@@ -47,14 +47,10 @@ class DeputyCaseServiceIntegrationIntegrationTest extends ApiIntegrationTestCase
 
         // dd_user with same deputy UID;
         // note there's no association in deputy_case between client and dd_user
-        $user = new User();
+        $user = new User('Bill', 'Sykes', 'bill.sykes-deputy-case-candidate@opg.gov.uk');
         $user->setDeputyUid(intval($deputyUid))
-            ->setFirstname('Bill')
-            ->setLastname('Sykes')
-            ->setPassword('')
             ->setIsPrimary(true)
-            ->setActive(true)
-            ->setEmail('bill.sykes-deputy-case-candidate@opg.gov.uk');
+            ->setActive(true);
 
         self::$entityManager->persist($user);
 

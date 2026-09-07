@@ -66,10 +66,11 @@ class UserTestHelper
             $deputyUid = intval('7' . str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
         }
 
-        $user = new User()
-            ->setFirstname($firstName)
-            ->setLastname($lastName)
-            ->setEmail($email)
+        $user = new User(
+            $firstName,
+            $lastName,
+            $email
+        )
             ->setRoleName($roleName)
             ->setPhoneMain($faker->phoneNumber())
             ->setRegistrationDate(new \DateTime())

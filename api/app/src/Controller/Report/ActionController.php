@@ -57,6 +57,9 @@ class ActionController extends RestController
         return $action;
     }
 
+    /**
+     * @param array<string, ?string> $data
+     */
     private function updateEntity(array $data, Action $action): void
     {
         if (array_key_exists('do_you_expect_financial_decisions', $data)) {

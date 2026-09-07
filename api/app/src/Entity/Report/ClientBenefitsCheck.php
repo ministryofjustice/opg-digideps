@@ -38,59 +38,53 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
     #[Gedmo\Timestampable(on: 'create')]
-    private \DateTime $created;
+    private ?\DateTime $created;
 
     #[JMS\Groups(['client-benefits-check-report'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
     #[ORM\OneToOne(inversedBy: 'clientBenefitsCheck', targetEntity: Report::class)]
-    private ?Report $report;
+    private ?Report $report = null;
 
     /**
-     * @var string one of either [haveChecked, currentlyChecking, neverChecked]
+     * haveChecked, currentlyChecking, neverChecked
      */
     #[JMS\Groups(['client-benefits-check'])]
     #[JMS\Type('string')]
-    #[ORM\Column(name: 'when_last_checked_entitlement', type: 'string', nullable: false)]
-    private $whenLastCheckedEntitlement;
+    #[ORM\Column(name: 'when_last_checked_entitlement', type: 'string', nullable: true)]
+    private ?string $whenLastCheckedEntitlement = null;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Groups(['client-benefits-check'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[ORM\Column(name: 'date_last_checked_entitlement', type: 'datetime', nullable: true)]
-    private $dateLastCheckedEntitlement;
+    private ?\DateTime $dateLastCheckedEntitlement = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['client-benefits-check'])]
     #[JMS\Type('string')]
     #[ORM\Column(name: 'never_checked_explanation', type: 'text', nullable: true)]
-    private $neverCheckedExplanation;
+    private ?string $neverCheckedExplanation = null;
 
     /**
-     * @var string one of either [yes, no, doNotKnow]
+     * [yes, no, doNotKnow]
      */
     #[JMS\Groups(['client-benefits-check'])]
     #[JMS\Type('string')]
     #[ORM\Column(name: 'do_others_receive_money_on_clients_behalf', type: 'string', nullable: true)]
-    private $doOthersReceiveMoneyOnClientsBehalf;
+    private ?string $doOthersReceiveMoneyOnClientsBehalf = null;
 
-    /**
-     * @var ?string
-     */
     #[JMS\Groups(['client-benefits-check'])]
     #[JMS\Type('string')]
     #[ORM\Column(name: 'dont_know_money_explanation', type: 'text', nullable: true)]
-    private $dontKnowMoneyExplanation;
+    private ?string $dontKnowMoneyExplanation = null;
 
+    /**
+     * @var Collection<int, MoneyReceivedOnClientsBehalf>
+     */
     #[JMS\Groups(['client-benefits-check'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf>')]
     #[ORM\OneToMany(mappedBy: 'clientBenefitsCheck', targetEntity: MoneyReceivedOnClientsBehalf::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
     #[OrderBy(['created' => 'ASC'])]
-    private $typesOfMoneyReceivedOnClientsBehalf;
+    private Collection $typesOfMoneyReceivedOnClientsBehalf;
 
     public function getId(): UuidInterface
     {
@@ -152,12 +146,15 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
         return $this;
     }
 
+    /**
+     * @return Collection<int, MoneyReceivedOnClientsBehalf>
+     */
     public function getTypesOfMoneyReceivedOnClientsBehalf(): Collection
     {
         return $this->typesOfMoneyReceivedOnClientsBehalf;
     }
 
-    public function addTypeOfMoneyReceivedOnClientsBehalf(?MoneyReceivedOnClientsBehalf $moneyReceivedOnClientsBehalf): ClientBenefitsCheck
+    public function addTypeOfMoneyReceivedOnClientsBehalf(MoneyReceivedOnClientsBehalf $moneyReceivedOnClientsBehalf): ClientBenefitsCheck
     {
         if (!$this->typesOfMoneyReceivedOnClientsBehalf->contains($moneyReceivedOnClientsBehalf)) {
             $this->typesOfMoneyReceivedOnClientsBehalf->add($moneyReceivedOnClientsBehalf);
@@ -174,7 +171,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
         return $this;
     }
 
-    public function getCreated(): \DateTime
+    public function getCreated(): ?\DateTime
     {
         return $this->created;
     }

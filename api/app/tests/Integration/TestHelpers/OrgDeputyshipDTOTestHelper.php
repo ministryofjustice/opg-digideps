@@ -218,7 +218,7 @@ class OrgDeputyshipDTOTestHelper
          * @var OrganisationRepository $repository
          */
         $repository = $em->getRepository(Organisation::class);
-        $organisation = $repository->findByEmailIdentifier($orgIdentifier) ?? new Organisation();
+        $organisation = $repository->findByEmailIdentifier($orgIdentifier) ?? new Organisation('Your Organisation', $orgIdentifier);
 
         $organisation
             ->setName('Your Organisation')
@@ -249,11 +249,8 @@ class OrgDeputyshipDTOTestHelper
     {
         $faker = Factory::create();
 
-        $layDeputy = new User()
+        $layDeputy = new User($faker->firstName(), $faker->lastName(), $faker->email())
             ->setRoleName(User::ROLE_LAY_DEPUTY)
-            ->setFirstname($faker->firstName())
-            ->setLastname($faker->lastName())
-            ->setEmail($faker->email())
             ->setCoDeputyClientConfirmed(false);
 
         $client = new Client()

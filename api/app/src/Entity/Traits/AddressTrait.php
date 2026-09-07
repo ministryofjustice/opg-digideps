@@ -49,7 +49,7 @@ trait AddressTrait
         return $this->address1;
     }
 
-    public function setAddress1(?string $address1): self
+    public function setAddress1(?string $address1): static
     {
         $this->address1 = $address1;
 
@@ -61,7 +61,7 @@ trait AddressTrait
         return $this->address2;
     }
 
-    public function setAddress2(?string $address2): self
+    public function setAddress2(?string $address2): static
     {
         $this->address2 = $address2;
 
@@ -73,7 +73,7 @@ trait AddressTrait
         return $this->address3;
     }
 
-    public function setAddress3(?string $address3): self
+    public function setAddress3(?string $address3): static
     {
         $this->address3 = $address3;
 
@@ -85,7 +85,7 @@ trait AddressTrait
         return $this->addressPostcode;
     }
 
-    public function setAddressPostcode(?string $addressPostcode): self
+    public function setAddressPostcode(?string $addressPostcode): static
     {
         $this->addressPostcode = $addressPostcode;
 
@@ -97,7 +97,7 @@ trait AddressTrait
         return $this->addressCountry;
     }
 
-    public function setAddressCountry(?string $addressCountry): self
+    public function setAddressCountry(?string $addressCountry): static
     {
         $this->addressCountry = $addressCountry;
 
@@ -109,7 +109,7 @@ trait AddressTrait
         return $this->address4;
     }
 
-    public function setAddress4(?string $address4): self
+    public function setAddress4(?string $address4): static
     {
         $this->address4 = $address4;
 
@@ -121,7 +121,7 @@ trait AddressTrait
         return $this->address5;
     }
 
-    public function setAddress5(?string $address5): self
+    public function setAddress5(?string $address5): static
     {
         $this->address5 = $address5;
 
