@@ -339,6 +339,11 @@ final class ReportTest extends TestCase
         // assert empty as no report prior to the first report, completed two years ago
         $this->assertEmpty($reportTwoYearsAgo->getPreviousReportData());
 
+        /** @var array{
+         *     financial-summary: array<string, mixed>,
+         *     report-summary: array<string, mixed>
+         * } $report1PreviousData
+         */
         // report returned from two years ago
         $report1PreviousData = $reportLastYear->getPreviousReportData();
         $this->assertArrayHasKey('financial-summary', $report1PreviousData);
@@ -346,6 +351,11 @@ final class ReportTest extends TestCase
         $this->assertArrayHasKey('id', $report1PreviousData['report-summary']);
         $this->assertEquals($reportTwoYearsAgo->getId(), $report1PreviousData['report-summary']['id']);
 
+        /** @var array{
+         *     financial-summary: array<string, mixed>,
+         *     report-summary: array<string, mixed>
+         * } $currentReportPreviousData
+         */
         // assert current report contains last year's data
         $currentReportPreviousData = $reportLatest->getPreviousReportData();
         $this->assertArrayHasKey('financial-summary', $currentReportPreviousData);
@@ -366,7 +376,9 @@ final class ReportTest extends TestCase
             '102',
             $currentReportPreviousData['report-summary']['type']
         );
-        $this->assertArrayHasKey('nameOneLine', $currentReportPreviousData['financial-summary']['accounts'][$bankAccount1->getId()]);
+        /** @var array<string, mixed> $accountOne */
+        $accountOne = $currentReportPreviousData['financial-summary']['accounts'][$bankAccount1->getId()];
+        $this->assertArrayHasKey('nameOneLine', $accountOne);
         self::assertEquals(
             $currentReportPreviousData['financial-summary']['closing-balance-total'],
             (float)$bankAccount1->getClosingBalance() + (float)$bankAccount2->getClosingBalance()

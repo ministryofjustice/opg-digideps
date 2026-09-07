@@ -89,6 +89,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $data = $reportsGetAllRequest(['status' => 'new']);
         $this->assertEquals(['new' => 4, 'pending' => 1, 'archived' => 0], $data['counts']);
 
+        /** @var array<string, mixed> $submission4 */
         $submission4 = $this->getSubmissionByCaseNumber($data['records'], '1000004');
         $this->assertNotEmpty($submission4['id']);
         $this->assertNotEmpty($submission4['report']['type']);

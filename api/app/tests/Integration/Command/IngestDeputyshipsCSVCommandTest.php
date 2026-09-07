@@ -49,7 +49,10 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
 
         $app->add($setUp);
 
-        $command = $app->find(IngestDeputyshipsCSVCommand::$defaultName);
+        $commandName = IngestDeputyshipsCSVCommand::$defaultName;
+        self::assertIsString($commandName);
+        $command = $app->find($commandName);
+
         $this->commandTester = new CommandTester($command);
     }
 

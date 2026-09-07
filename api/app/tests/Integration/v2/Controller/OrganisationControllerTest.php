@@ -88,6 +88,7 @@ class OrganisationControllerTest extends AbstractTestController
     {
         self::$frameworkBundleClient->request('GET', '/v2/organisation/list', [], [], $this->headers);
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
@@ -105,6 +106,7 @@ class OrganisationControllerTest extends AbstractTestController
         $org = self::$orgs[0];
         self::$frameworkBundleClient->request('GET', '/v2/organisation/' . $org->getId(), [], [], $this->headers);
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
@@ -124,6 +126,7 @@ class OrganisationControllerTest extends AbstractTestController
     {
         self::$frameworkBundleClient->request('GET', '/v2/organisation/99999', [], [], $this->headers);
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
@@ -139,6 +142,7 @@ class OrganisationControllerTest extends AbstractTestController
     {
         self::$frameworkBundleClient->request('GET', '/v2/organisation/' . self::$orgs[0]->getId(), [], [], $this->headersDeputy);
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
 
         $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
@@ -151,6 +155,7 @@ class OrganisationControllerTest extends AbstractTestController
     {
         self::$frameworkBundleClient->request('GET', '/v2/organisation/' . end(self::$orgs)->getId(), [], [], $this->headersDeputy);
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
@@ -170,6 +175,7 @@ class OrganisationControllerTest extends AbstractTestController
             '{"name": "Org Name", "email_identifier": "email_id", "is_activated": true}'
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
@@ -203,6 +209,7 @@ class OrganisationControllerTest extends AbstractTestController
             $data
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
@@ -230,6 +237,7 @@ class OrganisationControllerTest extends AbstractTestController
             '{"name": "Org Name", "email_identifier": "email_id", "is_activated": true}'
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
@@ -249,6 +257,7 @@ class OrganisationControllerTest extends AbstractTestController
             '{"name": "Org Name Updated", "email_identifier": "email_id_updated", "is_activated": false}'
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
 
@@ -279,6 +288,7 @@ class OrganisationControllerTest extends AbstractTestController
             $data
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
@@ -318,6 +328,7 @@ class OrganisationControllerTest extends AbstractTestController
             '{"name": "Org 2", "email_identifier": "org_email_3", "is_activated": true}'
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
@@ -336,6 +347,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headersSuperAdmin
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
@@ -376,6 +388,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headers
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
 
         $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
@@ -398,6 +411,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headers
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
 
         $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode(), $response->getContent());
@@ -424,6 +438,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headers
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
@@ -446,6 +461,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headers
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
@@ -469,6 +485,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headersDeputy
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
     }
@@ -488,6 +505,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headersDeputy
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
@@ -511,6 +529,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headers
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
@@ -541,6 +560,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headers
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
@@ -564,6 +584,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headers
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
@@ -589,6 +610,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headersDeputy
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
     }
@@ -617,6 +639,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headersDeputy
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
@@ -645,6 +668,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headersDeputy
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
@@ -659,6 +683,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headersDeputy
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
@@ -673,6 +698,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headersDeputy
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
@@ -703,6 +729,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headersDeputy
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
@@ -717,6 +744,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headersDeputy
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
@@ -731,6 +759,7 @@ class OrganisationControllerTest extends AbstractTestController
             $this->headersDeputy
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 

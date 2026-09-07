@@ -59,22 +59,34 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         $url = '/report/' . self::$report1->getId() . '?' . http_build_query(['groups' => ['moneyTransactionsShortIn', 'moneyTransactionsShortOut']]);
 
         // assert data is retrieved
-        $data = $this->assertJsonRequest('GET', $url, [
+        /** @var array{data: array{money_transactions_short_in: list<array<string, mixed>>, money_transactions_short_out: list<array<string, mixed>>}} $response */
+        $response = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
-        ])['data'];
+        ]);
+
+        $data = $response['data'];
 
         // in
         $this->assertCount(2, $data['money_transactions_short_in']);
-        $this->assertArrayHasKey('id', $data['money_transactions_short_in'][0]);
-        $this->assertEquals('123.45', $data['money_transactions_short_in'][0]['amount']);
-        $this->assertEquals('d1', $data['money_transactions_short_in'][0]['description']);
-        $this->assertEquals('2015-12-31', $data['money_transactions_short_in'][0]['date']);
+        /** @var array<string, mixed> $inTransaction1 */
+        $inTransaction1 = $data['money_transactions_short_in'][0];
+        $this->assertArrayHasKey('id', $inTransaction1);
+        $this->assertEquals('123.45', $inTransaction1['amount']);
+        $this->assertEquals('d1', $inTransaction1['description']);
+        $this->assertEquals('2015-12-31', $inTransaction1['date']);
         // out
         $this->assertCount(1, $data['money_transactions_short_out']);
-        $this->assertArrayHasKey('id', $data['money_transactions_short_out'][2]);
-        $this->assertEquals('d3', $data['money_transactions_short_out'][2]['description']);
-        $this->assertEquals('5000.59', $data['money_transactions_short_out'][2]['amount']);
+
+        /** @var array<int|string, array<string, mixed>> $outTransactions */
+        $outTransactions = $data['money_transactions_short_out'] ?? [];
+        $this->assertNotEmpty($outTransactions);
+
+        /** @var array<string, mixed> $outTransaction1 */
+        $outTransaction1 = array_values($outTransactions)[0];
+        $this->assertArrayHasKey('id', $outTransaction1);
+        $this->assertEquals('d3', $outTransaction1['description']);
+        $this->assertEquals('5000.59', $outTransaction1['amount']);
     }
 
     public function testAddEditTransaction(): void

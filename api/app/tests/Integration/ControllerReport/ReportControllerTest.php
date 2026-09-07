@@ -198,6 +198,7 @@ class ReportControllerTest extends AbstractTestController
             ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
         )['data'];
 
+        self::assertIsArray($clientReportData);
         $this->assertArrayHasKey('report_seen', $clientReportData);
         $this->assertArrayNotHasKey('transactions', $clientReportData);
         $this->assertArrayNotHasKey('debts', $clientReportData);
@@ -215,6 +216,7 @@ class ReportControllerTest extends AbstractTestController
             ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
         )['data'];
 
+        self::assertIsArray($decisionData);
         $this->assertArrayHasKey('decisions', $decisionData);
 
         // assert assets
@@ -223,7 +225,7 @@ class ReportControllerTest extends AbstractTestController
             sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['asset']])),
             ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
         )['data'];
-
+        self::assertIsArray($assetsData);
         $this->assertArrayHasKey('assets', $assetsData);
 
         // assert debts
@@ -232,7 +234,7 @@ class ReportControllerTest extends AbstractTestController
             sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['debt']])),
             ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
         )['data'];
-
+        self::assertIsArray($debtsData);
         $this->assertArrayHasKey('debts', $debtsData);
 
         // assert fees
@@ -241,7 +243,7 @@ class ReportControllerTest extends AbstractTestController
             sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['fee']])),
             ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
         )['data'];
-
+        self::assertIsArray($feesData);
         $this->assertArrayHasKey('fees', $feesData);
 
         // assert report-submitted-by + user info
@@ -283,10 +285,11 @@ class ReportControllerTest extends AbstractTestController
             'gifts_state',
             ] as $key
         ) {
+            self::assertIsArray($statusData[$key]);
             $this->assertArrayHasKey('state', $statusData[$key]);
             $this->assertArrayHasKey('nOfRecords', $statusData[$key]);
         }
-
+        self::assertIsArray($statusData);
         $this->assertArrayHasKey('status', $statusData);
     }
 

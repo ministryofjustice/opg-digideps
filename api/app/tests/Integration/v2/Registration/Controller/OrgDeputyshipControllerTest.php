@@ -37,18 +37,23 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         $orgDeputyshipJson = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(2, 0);
         self::$frameworkBundleClient->request('POST', '/v2/org-deputyships', [], [], $this->headers, $orgDeputyshipJson);
 
-        $this->assertEquals(Response::HTTP_OK, self::$frameworkBundleClient->getResponse()->getStatusCode());
-        $this->assertJson(self::$frameworkBundleClient->getResponse()->getContent());
+        /** @var Response $response */
+        $response = self::$frameworkBundleClient->getResponse();
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertJson($response->getContent());
 
-        $this->assertResponseHasArrayKeys(self::$frameworkBundleClient->getResponse());
+        $this->assertResponseHasArrayKeys($response);
     }
 
     private function assertResponseHasArrayKeys(Response $response): void
     {
+        /** @var array<string, mixed> $decodedResponseContent */
         $decodedResponseContent = json_decode($response->getContent(), true)['data'];
 
         $this->assertArrayHasKey('errors', $decodedResponseContent);
         $this->assertArrayHasKey('added', $decodedResponseContent);
+
+        self::assertIsArray($decodedResponseContent['added']);
         $this->assertArrayHasKey('clients', $decodedResponseContent['added']);
         $this->assertArrayHasKey('deputies', $decodedResponseContent['added']);
         $this->assertArrayHasKey('organisations', $decodedResponseContent['added']);
@@ -70,7 +75,9 @@ class OrgDeputyshipControllerTest extends AbstractTestController
     ) {
         self::$frameworkBundleClient->request('POST', '/v2/org-deputyships', [], [], $this->headers, $deputyshipsJson);
 
-        $actualUploadResults = json_decode(self::$frameworkBundleClient->getResponse()->getContent(), true)['data'];
+        /** @var Response $response */
+        $response = self::$frameworkBundleClient->getResponse();
+        $actualUploadResults = json_decode($response->getContent(), true)['data'];
 
         self::assertCount($expectedClients, $actualUploadResults['added']['clients'], 'clients count was unexpected');
         self::assertCount($expectedDeputies, $actualUploadResults['added']['deputies'], 'deputies count was unexpected');
@@ -100,7 +107,9 @@ class OrgDeputyshipControllerTest extends AbstractTestController
     {
         self::$frameworkBundleClient->request('POST', '/v2/org-deputyships', [], [], $this->headers, $dtoJson);
 
-        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, self::$frameworkBundleClient->getResponse()->getStatusCode());
+        /** @var Response $response */
+        $response = self::$frameworkBundleClient->getResponse();
+        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
     }
 
     public static function invalidPayloadProvider(): array

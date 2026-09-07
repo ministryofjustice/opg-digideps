@@ -395,7 +395,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * @param int $id
      */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -446,7 +446,7 @@ class Report implements StartEndDateComparableInterface
         return $this->startDate;
     }
 
-    public function setStartDate(?\DateTime $startDate = null)
+    public function setStartDate(?\DateTime $startDate = null): static
     {
         if ($startDate instanceof \DateTime) {
             $startDate->setTime(0, 0, 0);

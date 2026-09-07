@@ -56,6 +56,7 @@ class DeputyIntegrationTest extends ApiIntegrationTestCase
         // retrieve the deputy from the db and check the association is populated correctly
         $retrievedDeputy = self::$deputyRepository->findOneBy(['deputyUid' => $deputy->getDeputyUid()]);
 
+        /** @var array<int, array<string, mixed>> $actual */
         $actual = $retrievedDeputy->getCourtOrdersWithStatus();
         $this->assertArrayHasKey('courtOrder', $actual[0]);
         $this->assertArrayHasKey('isActive', $actual[0]);

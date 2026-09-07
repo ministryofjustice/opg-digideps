@@ -92,6 +92,7 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
         // Reports
         self::assertIsArray($result['reports']);
         self::assertCount(1, $result['reports'], 'Expect exactly 1 report');
+        /** @var array<string, mixed> $reportRow */
         $reportRow = $result['reports'][0];
 
         // Status mapping: ['status']['status'] comes from 'report_status_cached'
