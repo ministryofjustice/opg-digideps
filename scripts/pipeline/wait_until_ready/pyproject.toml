@@ -1,5 +1,5 @@
 [project]
-name = "dr-backup"
+name = "wait-until-ready"
 version = "0.0.0"
 requires-python = "==3.14.7"
 dependencies = [
