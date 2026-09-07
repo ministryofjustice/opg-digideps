@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasBankAccountTrait;
 use OPG\Digideps\Frontend\Entity\User;
-use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class MoneyTransaction
 {
     use HasBankAccountTrait;
 
-    public static function getCategoriesGrouped($typeFilter)
+    public static function getCategoriesGrouped($typeFilter): array
     {
         $ret = [];
         foreach (MoneyTransaction::$categories as $k => $row) {
@@ -126,107 +128,78 @@ class MoneyTransaction
         ['anything-else-paid-out', true, 'moneyout-other', 'out'],
     ];
 
-    #[JMS\Type('string')]
+    #[JMS\Type('integer')]
     #[JMS\Groups(['transaction'])]
-    private $id;
+    private ?int $id = null;
 
     #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'moneyTransaction.form.category.notBlank', groups: ['transaction-group'])]
-    private $group;
+    private ?string $group = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['transaction'])]
     #[Assert\NotBlank(message: 'moneyTransaction.form.category.notBlank', groups: ['transaction-category'])]
-    private $category;
+    private ?string $category = null;
 
     #[JMS\Type('string')]
-    private $type;
+    /** @phpstan-ignore property.unusedType, property.onlyWritten */
+    private ?string $type = null;
 
-    /**
-     * @var ?string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['transaction'])]
     #[Assert\NotBlank(message: 'moneyTransaction.form.amount.notBlank', groups: ['transaction-amount'])]
     #[Assert\Range(notInRangeMessage: 'moneyTransaction.form.amount.notInRangeMessage', min: 0.01, max: 100000000000, groups: ['transaction-amount'])]
-    private $amount;
+    private ?string $amount = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['transaction'])]
     #[Assert\NotBlank(message: 'moneyTransaction.form.description.notBlank', groups: ['transaction-description'])]
     private ?string $description = null;
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getGroup()
+    public function getGroup(): ?string
     {
         return $this->group;
     }
 
-    /**
-     * @param mixed $group
-     */
-    public function setGroup($group): static
+    public function setGroup(?string $group): static
     {
         $this->group = $group;
-
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCategory()
+    public function getCategory(): ?string
     {
         return $this->category;
     }
 
-    /**
-     * @param mixed $category
-     */
-    public function setCategory($category): static
+    public function setCategory(?string $category): static
     {
-        if (MoneyTransaction::isValidCategory($category)) {
+        if ($category !== null && MoneyTransaction::isValidCategory($category)) {
             $this->category = $category;
         }
 
         return $this;
     }
 
-    /**
-     * @return ?string
-     */
-    public function getAmount()
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    /**
-     * @param ?string $amount
-     */
-    public function setAmount($amount): static
+    public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
-
         return $this;
     }
 
@@ -238,7 +211,6 @@ class MoneyTransaction
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -248,7 +220,7 @@ class MoneyTransaction
             list($categoryId, $hasDetails, $groupId, $type) = $cat;
 
             if (
-                (($groupId === $categoryId) && $category == $groupId) ||
+                ($groupId === $categoryId && $category == $groupId) ||
                 $category == $categoryId
             ) {
                 return true;
@@ -259,12 +231,13 @@ class MoneyTransaction
 
     /**
      * Get the type (in/out) based on the category.
-     * @return string in/out
+     *
+     * @return ?string 'in'|'out'|null
      */
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('type')]
     #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
-    public function getType()
+    public function getType(): ?string
     {
         foreach (self::$categories as $cat) {
             list($categoryId, $hasDetails, $groupId, $type) = $cat;

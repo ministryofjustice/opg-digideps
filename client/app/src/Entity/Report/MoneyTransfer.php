@@ -1,178 +1,115 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * MoneyTransfer.
- */
 class MoneyTransfer
 {
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
-    private $id;
+    /** @phpstan-ignore property.unusedType */
+    private ?int $id = null;
 
-    /**
-     * @var string
-     */
-    #[JMS\Type('string')]
+    #[JMS\Type('double')]
     #[JMS\Groups(['money-transfer'])]
     #[Assert\NotBlank(message: 'transfer.amount.notBlank', groups: ['money-transfer-amount'])]
     #[Assert\Range(notInRangeMessage: 'transfer.amount.notInRangeMessage', min: 0, max: 100000000000, groups: ['money-transfer-amount'])]
-    private $amount;
+    private ?float $amount = null;
 
-    /**
-     * @var BankAccount
-     */
     #[JMS\SerializedName('accountFrom')]
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\BankAccount')]
-    private $accountFrom;
+    private ?BankAccount $accountFrom = null;
 
     #[JMS\Type('integer')]
     #[JMS\Groups(['money-transfer'])]
     #[Assert\NotBlank(message: 'transfer.accountFrom.notBlank', groups: ['money-transfer-account-from'])]
-    private $accountFromId;
+    private ?int $accountFromId = null;
 
-    /**
-     * @var BankAccount
-     */
     #[JMS\SerializedName('accountTo')]
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\BankAccount')]
-    private $accountTo;
+    private ?BankAccount $accountTo = null;
 
     #[JMS\Type('integer')]
     #[JMS\Groups(['money-transfer'])]
     #[Assert\NotBlank(message: 'transfer.accountTo.notBlank', groups: ['money-transfer-account-to'])]
     #[Assert\Expression("(value == '' or value != this.getAccountFromId() )", message: 'transfer.accountTo.sameAsFromAccount', groups: ['money-transfer-account-to'])]
-    private $accountToId;
+    private ?int $accountToId = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['money-transfer'])]
-    private $description;
+    private ?string $description = null;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set amount.
-     *
-     * @param string $amount
-     */
-    public function setAmount($amount): static
+    public function setAmount(?float $amount): static
     {
         $this->amount = $amount;
-
         return $this;
     }
 
-    /**
-     * Get amount.
-     *
-     * @return string
-     */
-    public function getAmount()
+    public function getAmount(): ?float
     {
         return $this->amount;
     }
 
-    /**
-     * @return BankAccount
-     */
-    public function getAccountFrom()
+    public function getAccountFrom(): ?BankAccount
     {
         return $this->accountFrom;
     }
 
-    /**
-     * @return BankAccount
-     */
-    public function getAccountTo()
+    public function getAccountTo(): ?BankAccount
     {
         return $this->accountTo;
     }
 
-    /**
-     * @param BankAccount $from
-     */
-    public function setAccountFrom($from): static
+    public function setAccountFrom(?BankAccount $from): static
     {
         $this->accountFrom = $from;
-
         return $this;
     }
 
-    /**
-     * @param BankAccount $to
-     */
-    public function setAccountTo($to): static
+    public function setAccountTo(?BankAccount $to): static
     {
         $this->accountTo = $to;
-
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAccountFromId()
+    public function getAccountFromId(): ?int
     {
         return $this->accountFromId;
     }
 
-    /**
-     * @param mixed $accountFromId
-     */
-    public function setAccountFromId($accountFromId): static
+    public function setAccountFromId(?int $accountFromId): static
     {
         $this->accountFromId = $accountFromId;
-
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAccountToId()
+    public function getAccountToId(): ?int
     {
         return $this->accountToId;
     }
 
-    /**
-     * @param mixed $accountToId
-     */
-    public function setAccountToId($accountToId): static
+    public function setAccountToId(?int $accountToId): static
     {
         $this->accountToId = $accountToId;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription($description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 }

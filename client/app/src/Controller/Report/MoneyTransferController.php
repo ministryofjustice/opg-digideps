@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Controller\Report;
 
+use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Report\MoneyTransfer;
 use OPG\Digideps\Frontend\Entity\Report\Status;
@@ -104,9 +105,11 @@ class MoneyTransferController extends AbstractController
         }
 
         // common vars and data
-        /** @var array $dataFromUrl */
-        $dataFromUrl = $request->get('data') ?: [];
-        $stepUrlData = $dataFromUrl;
+        /** @var array $incomingData */
+        $incomingData = $request->get('data') ?: [];
+
+        $stepUrlData = new ValidatingArray($incomingData);
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
@@ -127,22 +130,27 @@ class MoneyTransferController extends AbstractController
                 throw $this->createNotFoundException('Transfer not found');
             }
 
-            $transfer->setAccountFromId($transfer->getAccountFrom()->getId());
-            $transfer->setAccountToId($transfer->getAccountTo()->getId());
+            $transfer->setAccountFromId($transfer->getAccountFrom()?->getId());
+            $transfer->setAccountToId($transfer->getAccountTo()?->getId());
         } else {
             $transfer = new MoneyTransfer();
         }
 
         // add URL-data into model
-        if (isset($dataFromUrl['from-id']) && isset($dataFromUrl['to-id'])) {
-            $transfer->setAccountFromId($dataFromUrl['from-id']);
-            $transfer->setAccountFrom($report->getBankAccountById($dataFromUrl['from-id']));
-            $transfer->setAccountToId($dataFromUrl['to-id']);
-            $transfer->setAccountTo($report->getBankAccountById($dataFromUrl['to-id']));
+        $fromAccountId = $stepUrlData->getIntegerOrNull('from-id');
+        if ($fromAccountId !== null) {
+            $transfer->setAccountFromId($fromAccountId);
+            $transfer->setAccountFrom($report->getBankAccountById($fromAccountId));
+        }
+
+        $toAccountId = $stepUrlData->getIntegerOrNull('to-id');
+        if ($toAccountId !== null) {
+            $transfer->setAccountToId($toAccountId);
+            $transfer->setAccountTo($report->getBankAccountById($toAccountId));
         }
 
         $stepRedirector->setStepUrlAdditionalParams([
-            'data' => $dataFromUrl,
+            'data' => $incomingData,
         ]);
 
         // create and handle form
@@ -158,11 +166,6 @@ class MoneyTransferController extends AbstractController
         $submitBtn = $form->get('save');
 
         if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
-            // decide what data in the partial form needs to be passed to next step
-
-            $stepUrlData['from-id'] = $transfer->getAccountFromId();
-            $stepUrlData['to-id'] = $transfer->getAccountToId();
-
             // edit
             if ($inEditMode) {
                 $this->addFlash(
@@ -247,8 +250,8 @@ class MoneyTransferController extends AbstractController
             'report' => $report,
             'form' => $form->createView(),
             'summary' => [
-                ['label' => 'deletePage.summary.accountFrom', 'value' => $transfer->getAccountFrom()->getNameOneLine()],
-                ['label' => 'deletePage.summary.accountTo', 'value' => $transfer->getAccountTo()->getNameOneLine()],
+                ['label' => 'deletePage.summary.accountFrom', 'value' => $transfer->getAccountFrom()?->getNameOneLine()],
+                ['label' => 'deletePage.summary.accountTo', 'value' => $transfer->getAccountTo()?->getNameOneLine()],
                 ['label' => 'deletePage.summary.amount', 'value' => $transfer->getAmount(), 'format' => 'money'],
                 ['label' => 'deletePage.summary.description', 'value' => $transfer->getDescription()],
             ],

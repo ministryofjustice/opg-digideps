@@ -1,41 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\Gift;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Gift;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportGiftTrait
 {
     /**
-     * @var string
+     * @var ?string 'yes'|'no'|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['gifts-exist'])]
     #[Assert\NotBlank(message: 'gifts.giftsExist.notBlank', groups: ['gifts-exist'])]
-    private $giftsExist;
+    private ?string $giftsExist = null;
 
     /**
-     *
      * @var Gift[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Gift>')]
     #[JMS\Groups(['gifts'])]
     private array $gifts = [];
 
-    /**
-     * @return string
-     */
-    public function getGiftsExist()
+    public function getGiftsExist(): ?string
     {
         return $this->giftsExist;
     }
 
-    /**
-     * @param string $giftsExist
-     */
-    public function setGiftsExist($giftsExist): static
+    public function setGiftsExist(?string $giftsExist): static
     {
         $this->giftsExist = $giftsExist;
 
@@ -67,12 +62,10 @@ trait ReportGiftTrait
 
     /**
      * Get gifts total value.
-     *
-     * @return float
      */
-    public function getGiftsTotalValue()
+    public function getGiftsTotalValue(): float
     {
-        $ret = 0;
+        $ret = 0.0;
         foreach ($this->getGifts() as $gift) {
             $ret += $gift->getAmount();
         }

@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasBankAccountTrait;
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
-use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Expense
@@ -12,28 +14,21 @@ class Expense
     use HasReportTrait;
     use HasBankAccountTrait;
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['expenses'])]
-    private $id;
+    private ?int $id = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['expenses'])]
     #[Assert\NotBlank(message: 'expenses.explanation.notBlank', groups: ['deputy-expense'])]
     private ?string $explanation = null;
 
-    /**
-     * @var float
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['expenses'])]
     #[Assert\NotBlank(message: 'expenses.amount.notBlank', groups: ['deputy-expense'])]
     #[Assert\Type(type: 'numeric', message: 'expenses.amount.type', groups: ['deputy-expense'])]
     #[Assert\Range(notInRangeMessage: 'expenses.amount.notInRangeMessage', min: 0.01, max: 100000000000, groups: ['deputy-expense'])]
-    private $amount;
+    private ?string $amount = null;
 
     /**
      * @JMS\Type("DateTime")
@@ -42,21 +37,14 @@ class Expense
      */
     private ?\DateTime $createdAt = null;
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
@@ -68,25 +56,17 @@ class Expense
     public function setExplanation(?string $explanation): static
     {
         $this->explanation = $explanation;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAmount()
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    /**
-     * @param string $amount
-     */
-    public function setAmount($amount): static
+    public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
-
         return $this;
     }
 

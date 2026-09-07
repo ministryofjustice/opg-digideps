@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
@@ -7,167 +9,108 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class MoneyTransactionShort
 {
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['moneyTransactionShort'])]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var Report
-     */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Report')]
-    private $report;
+    private ?Report $report = null;
 
-    /**
-     * @var float
-     */
-    #[JMS\Type('string')]
+    #[JMS\Type('double')]
     #[JMS\Groups(['moneyTransactionShort'])]
     #[Assert\NotBlank(message: 'moneyTransactionShort.amount.notBlank', groups: ['money-transaction-short'])]
     #[Assert\Type(type: 'numeric', message: 'moneyTransactionShort.amount.type', groups: ['money-transaction-short'])]
     #[Assert\Range(notInRangeMessage: 'moneyTransactionShort.amount.notInRangeMessage', min: 1000, max: 10000000, groups: ['money-transaction-short'])]
-    private $amount;
+    private ?float $amount = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['moneyTransactionShort'])]
     #[Assert\NotBlank(message: 'moneyTransactionShort.description.notBlank', groups: ['money-transaction-short'])]
-    private $description;
+    private ?string $description = null;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['moneyTransactionShort'])]
     #[Assert\Type(type: 'DateTimeInterface', message: 'moneyTransactionShort.date.notValid', groups: ['money-transaction-short'])]
-    private $date;
+    private ?\DateTime $date = null;
 
     /**
      * Discriminator field.
-     *
-     * @var string
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['moneyTransactionShort'])]
-    private $type;
+    private string $type;
 
     /**
      * MoneyTransactionShort constructor.
-     *
-     * @param string $type
      */
-    public function __construct($type)
+    public function __construct(string $type)
     {
-        $this->type = $type;
+        $this->setType($type);
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): ?Report
     {
         return $this->report;
     }
 
-    /**
-     * @param Report $report
-     */
-    public function setReport($report): static
+    public function setReport(?Report $report): static
     {
         $this->report = $report;
-
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getAmount()
+    public function getAmount(): ?float
     {
         return $this->amount;
     }
 
-    /**
-     * @param float $amount
-     */
-    public function setAmount($amount): static
+    public function setAmount(?float $amount): static
     {
         $this->amount = $amount;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDate()
+    public function getDate(): ?\DateTime
     {
         return $this->date;
     }
 
-    /**
-     * @param \DateTime $date
-     */
-    public function setDate($date): static
+    public function setDate(?\DateTime $date): static
     {
         $this->date = $date;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     */
-    public function setType($type): void
+    public function setType(string $type): static
     {
         $this->type = $type;
+        return $this;
     }
 }

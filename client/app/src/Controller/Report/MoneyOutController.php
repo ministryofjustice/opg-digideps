@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Controller\Report;
 
+use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Report\BankAccount;
 use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
@@ -207,7 +208,6 @@ class MoneyOutController extends AbstractController
     #[Template('@App/Report/MoneyOut/summary.html.twig')]
     public function summaryAction(Request $request, int $reportId): RedirectResponse|array
     {
-
         $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getMoneyOutState()['state'] == Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
@@ -223,7 +223,7 @@ class MoneyOutController extends AbstractController
 
     #[Route(path: '/report/{reportId}/money-out/{transactionId}/delete', name: 'money_out_delete')]
     #[Template('@App/Common/confirmDelete.html.twig')]
-    public function deleteAction(Request $request, int $reportId, string $transactionId, TranslatorInterface $translator): RedirectResponse|array
+    public function deleteAction(Request $request, int $reportId, int $transactionId, TranslatorInterface $translator): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -289,10 +289,12 @@ class MoneyOutController extends AbstractController
     ): RedirectResponse|array {
         // common vars and data
         /**
-         * @var array $dataFromUrl
+         * @var array $incomingData
          */
-        $dataFromUrl = $request->get('data') ?: [];
-        $stepUrlData = $dataFromUrl;
+        $incomingData = $request->get('data') ?: [];
+
+        $stepUrlData = new ValidatingArray($incomingData);
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
 
@@ -305,9 +307,10 @@ class MoneyOutController extends AbstractController
         $transaction = $this->acquireTransactions($transactionId, $report);
 
         // add URL-data into model
-        isset($dataFromUrl['category']) && $transaction->setCategory($dataFromUrl['category']);
+        $transaction->setCategory($stepUrlData->getStringOrNull('category'));
+
         $stepRedirector->setStepUrlAdditionalParams([
-            'data' => $dataFromUrl,
+            'data' => $incomingData,
         ]);
 
         // create and handle form
@@ -331,10 +334,10 @@ class MoneyOutController extends AbstractController
             // unset from page to prevent step redirector skipping step 2
             $stepRedirector->setFromPage(null);
 
-            $stepUrlData['category'] = $transaction->getCategory();
+            $incomingData['category'] = $transaction->getCategory();
 
             $stepRedirector->setStepUrlAdditionalParams([
-                'data' => $stepUrlData,
+                'data' => $incomingData,
             ]);
 
             return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
@@ -355,10 +358,11 @@ class MoneyOutController extends AbstractController
         ?int $transactionId = null
     ): RedirectResponse|array {
         // common vars and data
-        /**
-         * @var array $dataFromUrl
-         */
-        $dataFromUrl = $request->get('data') ?: [];
+        /** @var array $incomingData */
+        $incomingData = $request->get('data') ?: [];
+
+        $stepUrlData = new ValidatingArray($incomingData);
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
 
@@ -371,9 +375,10 @@ class MoneyOutController extends AbstractController
         $transaction = $this->acquireTransactions($transactionId, $report);
 
         // add URL-data into model
-        isset($dataFromUrl['category']) && $transaction->setCategory($dataFromUrl['category']);
+        $transaction->setCategory($stepUrlData->getStringOrNull('category'));
+
         $stepRedirector->setStepUrlAdditionalParams([
-            'data' => $dataFromUrl,
+            'data' => $incomingData,
         ]);
 
         // create and handle form
@@ -388,6 +393,7 @@ class MoneyOutController extends AbstractController
                 'report' => $report,
             ]
         );
+
         if ($transactionId === null) {
             $form->add('addAnother', AddAnotherThingType::class);
         }
@@ -432,7 +438,7 @@ class MoneyOutController extends AbstractController
                     $t->setBankAccountId($t->getBankAccount()->getId());
                 }
 
-                return $t->getId() == $transactionId;
+                return $t->getId() === $transactionId;
             });
             $transaction = array_shift($transaction);
         } else {

@@ -28,7 +28,7 @@ class Gift
     #[Assert\NotBlank(message: 'gifts.amount.notBlank', groups: ['gift'])]
     #[Assert\Type(type: 'numeric', message: 'gifts.amount.type', groups: ['gift'])]
     #[Assert\Range(notInRangeMessage: 'gifts.amount.notInRangeMessage', min: 0.01, max: 100000000000, groups: ['gift'])]
-    private float $amount = 0.0;
+    private ?float $amount = null;
 
     /**
      * @JMS\Type("DateTime")
@@ -61,12 +61,12 @@ class Gift
         return $this;
     }
 
-    public function getAmount(): float
+    public function getAmount(): ?float
     {
         return $this->amount;
     }
 
-    public function setAmount(float $amount): static
+    public function setAmount(?float $amount): static
     {
         $this->amount = $amount;
 
