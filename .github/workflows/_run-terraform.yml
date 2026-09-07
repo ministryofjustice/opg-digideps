@@ -51,7 +51,7 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/actions/terraform-version@2186f4ee10b7f2839e0c795dcd01c729e6d1d4c0 # v4.8.1
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@9e8b7c2fb29c11e77b12913f74459fa48b11829f # v4.8.2
         with:
           terraform_directory: terraform/${{ inputs.terraform_path }}
 
@@ -63,7 +63,7 @@ jobs:
       - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
         if: inputs.terraform_path == 'account'
         with:
-          go-version: "1.26.3"
+          go-version: "1.26.4"
 
       # requires go 1.25.5
       - name: build redeployer
@@ -74,7 +74,7 @@ jobs:
       - id: terraform_workspace_manager
         if: inputs.apply && inputs.terraform_path == 'environment' && inputs.pull_request_path
         name: register workspace
-        uses: ministryofjustice/opg-github-actions/actions/terraform-workspace-manager@2186f4ee10b7f2839e0c795dcd01c729e6d1d4c0 # v4.8.1
+        uses: ministryofjustice/opg-github-actions/actions/terraform-workspace-manager@9e8b7c2fb29c11e77b12913f74459fa48b11829f # v4.8.2
         with:
           aws_account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
           aws_iam_role: digideps-ci
@@ -84,7 +84,7 @@ jobs:
           assume_role: false
 
       - id: deploy-key
-        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@9e756945a9e2b6ac5dc81473b01f8b38600e6ed6 # v4.8.6
+        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@2ad72748485e27f590599a7e9768b9fc0d5b8e03 # v4.8.7
         with:
           deploy_key: ${{ secrets.ssh_private_key }}
 
