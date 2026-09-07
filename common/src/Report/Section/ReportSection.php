@@ -38,20 +38,4 @@ enum ReportSection: string
 
         return $this->value;
     }
-
-    /**
-     * Check whether the section should be active/displayed in a specific context.
-     * The contexts are places where sections may be rendered or referenced, e.g. from a checklist, from
-     * navigation, from the report overview.
-     *
-     * @return bool true if the section should be active/displayed in this context; false otherwise
-     */
-    public function isRelevantFor(SectionContext $ctx): bool
-    {
-        if ($ctx === SectionContext::ADMIN_MANAGE_CHECKLIST) {
-            return $this !== self::BALANCE;
-        }
-
-        return true;
-    }
 }
