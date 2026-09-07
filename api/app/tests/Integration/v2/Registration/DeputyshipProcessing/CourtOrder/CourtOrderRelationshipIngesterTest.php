@@ -51,28 +51,30 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
     {
         $client = new Client();
         self::$entityManager->persist($client);
-        $courtOrder = new CourtOrder();
-        $courtOrder->setId($id);
-        $courtOrder->setClient($client);
-        $courtOrder->setCourtOrderUid("UID-{$id}");
-        $courtOrder->setOrderKind($kind);
-        $courtOrder->setOrderType($orderType ?? CourtOrderType::PFA);
-        $courtOrder->setStatus($active ? 'ACTIVE' : 'CLOSED');
-        $courtOrder->setOrderMadeDate(new \DateTime());
-        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
+        $courtOrder = new CourtOrder(
+            "UID-{$id}",
+            $orderType ?? CourtOrderType::PFA,
+            CourtOrderReportType::OPG102,
+            $kind,
+            new \DateTime(),
+            $client,
+            $active ? 'ACTIVE' : 'CLOSED'
+        )->setId($id);
+
         if ($siblingId === null && $kind === CourtOrderKind::Single) {
             $courtOrder->setSibling(null);
         } elseif ($siblingId !== null && $kind !== CourtOrderKind::Single) {
-            $sibling = new CourtOrder();
-            $sibling->setId($siblingId);
-            $sibling->setClient($client);
-            $sibling->setCourtOrderUid("UID-{$siblingId}");
-            $sibling->setOrderKind($kind);
-            $sibling->setOrderType($courtOrder->getOrderType() === CourtOrderType::HW ? CourtOrderType::PFA : CourtOrderType::HW);
-            $sibling->setSibling($courtOrder);
-            $sibling->setStatus($activeSibling === null && $active || $activeSibling ? 'ACTIVE' : 'CLOSED');
-            $sibling->setOrderMadeDate(new \DateTime());
-            $sibling->setOrderReportType(CourtOrderReportType::OPG102);
+            $sibling = new CourtOrder(
+                "UID-{$siblingId}",
+                $courtOrder->getOrderType() === CourtOrderType::HW ? CourtOrderType::PFA : CourtOrderType::HW,
+                CourtOrderReportType::OPG102,
+                $kind,
+                new \DateTime(),
+                $client,
+                $activeSibling === null && $active || $activeSibling ? 'ACTIVE' : 'CLOSED'
+            )
+                ->setId($siblingId)
+                ->setSibling($courtOrder);
             $courtOrder->setSibling($sibling);
             self::$entityManager->persist($sibling);
         } else {

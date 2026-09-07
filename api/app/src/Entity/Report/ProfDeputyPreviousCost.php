@@ -11,131 +11,94 @@ use JMS\Serializer\Annotation as JMS;
 #[ORM\Entity]
 class ProfDeputyPreviousCost
 {
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['prof-deputy-costs-prev'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'prof_deputy_prev_cost_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'profDeputyPreviousCosts')]
-    private $report;
+    private Report $report;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['prof-deputy-costs-prev'])]
     #[ORM\Column(name: 'start_date', type: 'datetime', nullable: true)]
-    private $startDate;
+    private ?\DateTime $startDate = null;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['prof-deputy-costs-prev'])]
     #[ORM\Column(name: 'end_date', type: 'datetime', nullable: true)]
-    private $endDate;
+    private ?\DateTime $endDate = null;
 
-    /**
-     * @var float
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-costs-prev'])]
     #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
-    private $amount;
+    private ?string $amount;
 
-    /**
-     * ProfDeputyPreviousCost constructor.
-     *
-     * @param float $amount
-     */
-    public function __construct(Report $report, $amount)
+    public function __construct(Report $report, null|int|float|string $amount)
     {
         $this->report = $report;
-        $this->amount = $amount;
+        $this->setAmount($amount);
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport()
+    public function setId(int $id): static
+    {
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
+    }
+
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getStartDate()
+    public function getStartDate(): ?\DateTime
     {
         return $this->startDate;
     }
 
-    /**
-     * @param \DateTime $startDate
-     *
-     * @return ProfDeputyPreviousCost
-     */
-    public function setStartDate($startDate)
+    public function setStartDate(?\DateTime $startDate): static
     {
         $this->startDate = $startDate;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getEndDate()
+    public function getEndDate(): ?\DateTime
     {
         return $this->endDate;
     }
 
-    /**
-     * @param \DateTime $endDate
-     *
-     * @return ProfDeputyPreviousCost
-     */
-    public function setEndDate($endDate)
+    public function setEndDate(?\DateTime $endDate): static
     {
         $this->endDate = $endDate;
 
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getAmount()
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    /**
-     * @param float $amount
-     *
-     * @return ProfDeputyPreviousCost
-     */
-    public function setAmount($amount)
+    public function setAmount(null|float|int|string $amount): static
     {
-        $this->amount = $amount;
+        $this->amount = $amount !== null ? (string)$amount : null;
 
         return $this;
     }

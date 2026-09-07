@@ -1443,7 +1443,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 7
+			count: 6
 			path: src/Controller/Org/OrganisationController.php
 
 		-
@@ -2457,7 +2457,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: src/Entity/Client.php
 
 		-
@@ -2467,26 +2467,8 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:getClientContacts\(\) return type with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:getNotes\(\) return type with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:removeReport\(\) has parameter \$report with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:setClientContacts\(\) has parameter \$clientContacts with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Entity/Client.php
 
@@ -2499,12 +2481,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:setExpectedReportStartDate\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:setNotes\(\) has parameter \$notes with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Entity/Client.php
 
@@ -2541,18 +2517,6 @@ parameters:
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Client\:\:\$archivedAt is never written, only read\.$#'
 			identifier: property.onlyRead
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Client\:\:\$clientContacts with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Client\:\:\$notes with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Entity/Client.php
 
@@ -2671,32 +2635,8 @@ parameters:
 			path: src/Entity/Note.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Entity/Organisation.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:getClients\(\) should return array\<OPG\\Digideps\\Frontend\\Entity\\Client\> but returns Doctrine\\Common\\Collections\\ArrayCollection\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Organisation.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:getEmailIdentifierDisplay\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Entity/Organisation.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:getUserById\(\) should return OPG\\Digideps\\Frontend\\Entity\\User\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Organisation.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:getUsers\(\) should return array\<OPG\\Digideps\\Frontend\\Entity\\User\> but returns Doctrine\\Common\\Collections\\ArrayCollection\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Entity/Organisation.php
 
@@ -2707,32 +2647,8 @@ parameters:
 			path: src/Entity/Organisation.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:\$clients \(Doctrine\\Common\\Collections\\ArrayCollection\) does not accept array\<OPG\\Digideps\\Frontend\\Entity\\Client\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Organisation.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:\$clients with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Organisation.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:\$isActivated \(bool\) does not accept string\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Organisation.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:\$users \(Doctrine\\Common\\Collections\\ArrayCollection\) does not accept array\<OPG\\Digideps\\Frontend\\Entity\\User\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Organisation.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:\$users with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Entity/Organisation.php
 
@@ -3275,30 +3191,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Cannot call method add\(\) on Doctrine\\Common\\Collections\\ArrayCollection\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck\:\:getTypesOfMoneyReceivedOnClientsBehalf\(\) return type with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck\:\:setTypesOfMoneyReceivedOnClientsBehalf\(\) has parameter \$typesOfMoneyReceivedOnClientsBehalf with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck\:\:\$typesOfMoneyReceivedOnClientsBehalf with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Report/ClientBenefitsCheck.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:getAddress\(\) has no return type specified\.$#'
@@ -4405,12 +4297,6 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: '#^Cannot call method isActivated\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:getAddress1\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -4473,12 +4359,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:getJobTitle\(\) should return string but returns string\|null\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:getOrganisations\(\) return type with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Entity/User.php
 
@@ -4569,12 +4449,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setAddressPostcode\(\) has parameter \$addressPostcode with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:setOrganisations\(\) has parameter \$organisations with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Entity/User.php
 
@@ -4671,18 +4545,6 @@ parameters:
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\User\:\:\$deputyUid \(int\) does not accept int\|null\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\User\:\:\$organisations \(Doctrine\\Common\\Collections\\ArrayCollection\) in empty\(\) is not falsy\.$#'
-			identifier: empty.property
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\User\:\:\$organisations with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
 			count: 1
 			path: src/Entity/User.php
 
@@ -8053,7 +7915,7 @@ parameters:
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
 
 		-
-			message: '#^Cannot access offset ''deputyrole'' on mixed\.$#'
+			message: '#^Cannot access offset ''deputyRole'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
@@ -8083,7 +7945,7 @@ parameters:
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
 
 		-
-			message: '#^Cannot access offset ''reporttype'' on mixed\.$#'
+			message: '#^Cannot access offset ''reportType'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
@@ -8121,12 +7983,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Csv\\UserResearchResponseCsvGenerator\:\:transformDeputyshipLength\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
-
-		-
-			message: '#^PHPDoc tag @param has invalid value \(\[\]UserResearchResponse \$userResearchResponses\)\: Unexpected token "\[", expected type at offset 18 on line 2$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: src/Service/Csv/UserResearchResponseCsvGenerator.php
 
@@ -9637,7 +9493,7 @@ parameters:
 			path: src/TestHelpers/ReportHelpers.php
 
 		-
-			message: '#^Parameter \#1 \$deputyrole of method OPG\\Digideps\\Frontend\\Entity\\Report\\Satisfaction\:\:setDeputyrole\(\) expects string, int\|string\|null given\.$#'
+			message: '#^Parameter \#1 \$deputyRole of method OPG\\Digideps\\Frontend\\Entity\\Report\\Satisfaction\:\:setDeputyRole\(\) expects string, int\|string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/TestHelpers/SatisfactionHelpers.php
@@ -10021,49 +9877,13 @@ parameters:
 			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\ClientBenefitsCheckInterface\:\:getTypesOfMoneyReceivedOnClientsBehalf\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\ClientBenefitsCheckInterface\:\:getWhenLastCheckedEntitlement\(\)\.$#'
 			identifier: method.notFound
 			count: 2
 			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
 
 		-
-			message: '#^Cannot call method count\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
-			message: '#^Cannot call method first\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
-			message: '#^Cannot call method getAmount\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
-			message: '#^Cannot call method getAmountDontKnow\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
 			message: '#^Cannot call method getClient\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
-			message: '#^Cannot call method getMoneyType\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
@@ -10113,12 +9933,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Validator\\Constraints\\ClientBenefitsCheck\\ClientBenefitsCheckValidator\:\:neverCheckedExplanationValid\(\) has parameter \$value with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Validator\\Constraints\\ClientBenefitsCheck\\ClientBenefitsCheckValidator\:\:typesOfMoneyReceivedOnClientsBehalfValid\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
 
@@ -10719,12 +10533,6 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Entity\\Report\\ClientBenefitsCheckTest\:\:validation\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Entity/Report/ClientBenefitsCheckTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Entity\\Report\\ClientBenefitsCheckTest\:\:validation\(\) has parameter \$moneyTypes with generic class Doctrine\\Common\\Collections\\ArrayCollection but does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
 			count: 1
 			path: tests/Unit/Entity/Report/ClientBenefitsCheckTest.php
 
