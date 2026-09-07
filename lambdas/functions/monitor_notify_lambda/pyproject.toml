@@ -1,0 +1,10 @@
+[project]
+name = "custom-sql-lambda"
+version = "0.0.0"
+requires-python = "==3.14.7"
+dependencies = [
+    "boto3==1.43.62",
+    "requests==2.34.2",
+]
+[tool.uv]
+package = false

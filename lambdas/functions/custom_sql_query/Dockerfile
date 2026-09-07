@@ -32,9 +32,10 @@ RUN mkdir -p ${FUNCTION_DIR}
 WORKDIR /${FUNCTION_DIR}
 # Copy function code
 COPY app app
-COPY uv.lock .
 # Install the runtime interface client
 COPY --from=ghcr.io/astral-sh/uv@sha256:b46b03ddfcfbf8f547af7e9eaefdf8a39c8cebcba7c98858d3162bd28cf536f6 /uv /uvx /bin/
+COPY uv.lock .
+COPY pyproject.toml .
 RUN uv export --locked -o requirements.txt \
     && python -m pip install --no-cache-dir \
     --target ${FUNCTION_DIR} \
