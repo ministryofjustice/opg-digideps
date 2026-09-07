@@ -42,7 +42,7 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
     public function testValidatorAddsConstraintIfBreakdownTotalGreaterThanAmountItCanExceed()
     {
         $this
-            ->setTotalCostEstimate(43.0)
+            ->setTotalCostEstimate()
             ->setIndividualBreakdownCosts(30, 13.01)
             ->assertConstraintWillBeApplied()
             ->invokeTest();
@@ -54,7 +54,7 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
     public function testValidatorIgnoresConstraintIfBreakdownTotalNotGreaterThanAmountItCanExceed($costVariation)
     {
         $this
-            ->setTotalCostEstimate(43.0)
+            ->setTotalCostEstimate()
             ->setIndividualBreakdownCosts(30, $costVariation)
             ->assertConstraintWillNotBeApplied()
             ->invokeTest();
@@ -71,10 +71,9 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
         ];
     }
 
-    private function setTotalCostEstimate(float $totalCost): static
+    private function setTotalCostEstimate(): static
     {
-        $this->data->setProfDeputyManagementCostAmount($totalCost);
-
+        $this->data->setProfDeputyManagementCostAmount('43.0');
         return $this;
     }
 

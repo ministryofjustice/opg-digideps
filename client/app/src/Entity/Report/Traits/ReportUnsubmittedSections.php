@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use JMS\Serializer\Annotation as JMS;
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Report\UnsubmittedSection;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -14,17 +13,14 @@ trait ReportUnsubmittedSections
      */
     private array $unsubmittedSection = [];
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report_unsubmitted_sections_list'])]
-    private $unsubmittedSectionsList;
+    private ?string $unsubmittedSectionsList = null;
 
     /**
      * @param UnsubmittedSection[] $unsubmittedSection
      */
-    public function setUnsubmittedSection($unsubmittedSection): void
+    public function setUnsubmittedSection(array $unsubmittedSection): void
     {
         $this->unsubmittedSection = $unsubmittedSection;
     }
@@ -46,23 +42,14 @@ trait ReportUnsubmittedSections
         return $this->unsubmittedSection;
     }
 
-    /**
-     * @return string
-     */
-    public function getUnsubmittedSectionsList()
+    public function getUnsubmittedSectionsList(): ?string
     {
         return $this->unsubmittedSectionsList;
     }
 
-    /**
-     * @param string $unsubmittedSectionsList
-     *
-     * @return Report
-     */
-    public function setUnsubmittedSectionsList($unsubmittedSectionsList)
+    public function setUnsubmittedSectionsList(?string $unsubmittedSectionsList): static
     {
         $this->unsubmittedSectionsList = $unsubmittedSectionsList;
-
         return $this;
     }
 
@@ -87,15 +74,9 @@ trait ReportUnsubmittedSections
         }
     }
 
-    /**
-     * @param $sectionId
-     *
-     * @return bool
-     */
-    public function isSectionFlaggedForAttention($sectionId): bool
+    public function isSectionFlaggedForAttention(string $sectionId): bool
     {
-        $sna = array_map('trim', explode(',', $this->getUnsubmittedSectionsList()));
-
+        $sna = array_map('trim', explode(',', $this->getUnsubmittedSectionsList() ?? ''));
         return in_array($sectionId, $sna);
     }
 }

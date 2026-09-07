@@ -13,13 +13,9 @@ trait ReportTransfersTrait
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransfer>')]
     private array $moneyTransfers = [];
 
-    /**
-     *
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['money-transfers-no-transfers'])]
-    private $noTransfersToAdd;
+    private ?bool $noTransfersToAdd = null;
 
     /**
      * Return list of money transfers by ID (as a proxy for creation date). Does not alter the ordering of the
@@ -34,9 +30,9 @@ trait ReportTransfersTrait
         return $moneyTransfers;
     }
 
-    public function getMoneyTransferWithId($id): ?MoneyTransfer
+    public function getMoneyTransferWithId(int $id): ?MoneyTransfer
     {
-        return array_find($this->moneyTransfers, fn ($t) => $t->getId() == $id);
+        return array_find($this->moneyTransfers, fn (MoneyTransfer $t) => $t->getId() == $id);
     }
 
     /**
@@ -49,23 +45,14 @@ trait ReportTransfersTrait
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getNoTransfersToAdd()
+    public function getNoTransfersToAdd(): ?bool
     {
         return $this->noTransfersToAdd;
     }
 
-    /**
-     * @param bool $noTransfersToAdd
-     *
-     * @return $this
-     */
-    public function setNoTransfersToAdd($noTransfersToAdd): static
+    public function setNoTransfersToAdd(bool $noTransfersToAdd): static
     {
         $this->noTransfersToAdd = $noTransfersToAdd;
-
         return $this;
     }
 
