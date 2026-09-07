@@ -42,9 +42,11 @@ RUN apk add --no-cache \
     "terminus-font==4.49.1-r4" \
     && fc-cache -f
 
-COPY htmltopdf/requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
+COPY --from=ghcr.io/astral-sh/uv@sha256:b46b03ddfcfbf8f547af7e9eaefdf8a39c8cebcba7c98858d3162bd28cf536f6 /uv /uvx /bin/
+COPY htmltopdf/uv.lock .
+COPY htmltopdf/pyproject.toml .
+RUN uv export --locked -o requirements.txt \
+    && python -m pip install --no-cache-dir -r requirements.txt
 
 # Copy app and entrypoint
 COPY --chown=htmltopdf:htmltopdf htmltopdf/docker-entrypoint.sh /docker-entrypoint.sh

@@ -31,17 +31,6 @@ wheels = [
 ]
 
 [[package]]
-name = "dr-backup"
-version = "0.0.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "boto3" },
-]
-
-[package.metadata]
-requires-dist = [{ name = "boto3", specifier = "==1.43.89" }]
-
-[[package]]
 name = "jmespath"
 version = "1.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -91,3 +80,14 @@ sdist = { url = "https://files.pythonhosted.org/packages/53/0c/06f8b233b8fd13b9e
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7f/3e/5db95bcf282c52709639744ca2a8b149baccf648e39c8cc87553df9eae0c/urllib3-2.7.0-py3-none-any.whl", hash = "sha256:9fb4c81ebbb1ce9531cce37674bbc6f1360472bc18ca9a553ede278ef7276897", size = 131087, upload-time = "2026-05-07T16:13:17.151Z" },
 ]
+
+[[package]]
+name = "wait-until-ready"
+version = "0.0.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "boto3" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "boto3", specifier = "==1.43.89" }]

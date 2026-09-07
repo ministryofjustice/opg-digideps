@@ -1,0 +1,12 @@
+[project]
+name = "htmltopdf"
+version = "0.0.0"
+requires-python = "==3.14.7"
+dependencies = [
+    "executor==23.2",
+    "gunicorn==23.0.0",
+    "weasyprint==69.0",
+    "werkzeug==3.1.8"
+]
+[tool.uv]
+package = false
