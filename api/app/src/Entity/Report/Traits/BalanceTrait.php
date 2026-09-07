@@ -66,9 +66,6 @@ trait BalanceTrait
      * - money out
      * - expense (that includes Fees for PAs)
      * - gifts.
-     *
-     * Return null if any of the opening balance is null
-     * (that shouldn't be allowed anymore after a recent change. Refactor when/if convenient)
      */
     #[JMS\VirtualProperty]
     #[JMS\Groups(['balance'])]

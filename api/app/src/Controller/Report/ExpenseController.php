@@ -50,7 +50,7 @@ class ExpenseController extends RestController
             'explanation' => 'mustExist',
             'amount' => 'mustExist',
         ]);
-        $expense = new Expense($report);
+        $expense = new Expense($report, $data['explanation']);
 
         $this->updateEntityWithData($report, $expense, $data);
         $report->setPaidForAnything('yes');

@@ -124,7 +124,7 @@ final class LayDeputyshipProcessorTest extends TestCase
             ->setTypeOfReport('OPG102')
             ->setOrderDate($orderDate);
 
-        $user = new User();
+        $user = new User('Mike', 'Smith', 'mike.smith@example.com');
         $user->setDeputyUid(222222222);
 
         $this->mockEm->expects($this->once())->method('getRepository')->willReturn($this->mockUserRepository);

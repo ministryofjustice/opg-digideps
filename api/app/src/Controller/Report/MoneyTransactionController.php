@@ -40,8 +40,7 @@ class MoneyTransactionController extends RestController
            'amount' => 'notEmpty',
         ]);
 
-        $t = new MoneyTransaction($report);
-        $t->setCategory($data['category']);
+        $t = new MoneyTransaction($report, $data['category']);
         $t->setAmount($data['amount']);
         if (array_key_exists('description', $data)) {
             $t->setDescription($data['description']);

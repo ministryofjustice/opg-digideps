@@ -29,15 +29,13 @@ class MoneyTransferControllerTest extends AbstractTestController
         self::$account2 = self::fixtures()->createAccount(self::$report1, ['setBank' => 'bank2']);
 
         // add two transfer to report 1 between accounts
-        self::$transfer1 = new MoneyTransfer();
-        self::$transfer1->setReport(self::$report1)
+        self::$transfer1 = new MoneyTransfer(self::$report1)
             ->setAmount(1001)
             ->setFrom(self::$account2)
             ->setTo(self::$account1);
         self::fixtures()->persist(self::$transfer1);
 
-        $transfer2 = new MoneyTransfer();
-        $transfer2->setReport(self::$report1)
+        $transfer2 = new MoneyTransfer(self::$report1)
             ->setAmount(52)
             ->setFrom(self::$account1)
             ->setTo(self::$account2);
@@ -112,8 +110,8 @@ class MoneyTransferControllerTest extends AbstractTestController
         $t = $report->getMoneyTransfers()->get(2);
         $this->assertNotNull($t);
         $this->assertEquals(123345.56, $t->getAmount());
-        $this->assertEquals(self::$account1->getId(), $t->getFrom()->getId());
-        $this->assertEquals(self::$account2->getId(), $t->getTo()->getId());
+        $this->assertEquals(self::$account1->getId(), $t->getFrom()?->getId());
+        $this->assertEquals(self::$account2->getId(), $t->getTo()?->getId());
     }
 
     public function testEditTransfer(): void
@@ -144,8 +142,8 @@ class MoneyTransferControllerTest extends AbstractTestController
         $t = self::fixtures()->getRepo(MoneyTransfer::class)->find(self::$transfer1->getId());
         $this->assertNotNull($t);
         $this->assertEquals(124, $t->getAmount());
-        $this->assertEquals(self::$account2->getId(), $t->getFrom()->getId());
-        $this->assertEquals(self::$account1->getId(), $t->getTo()->getId());
+        $this->assertEquals(self::$account2->getId(), $t->getFrom()?->getId());
+        $this->assertEquals(self::$account1->getId(), $t->getTo()?->getId());
         $this->assertEquals(self::$report1->getId(), $t->getReport()->getId());
     }
 

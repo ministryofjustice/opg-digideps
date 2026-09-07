@@ -41,8 +41,8 @@ class SatisfactionRepositoryTest extends TestCase
         $toDate = new \DateTime('2026-03-31 23:59:59');
 
         $expectedRows = [
-            ['id' => 1, 'score' => 5, 'comments' => 'Great', 'deputyrole' => 'LAY', 'reporttype' => '103', 'created' => '2026-03-15'],
-            ['id' => 2, 'score' => 4, 'comments' => 'Good',  'deputyrole' => 'LAY', 'reporttype' => '103', 'created' => '2026-03-20'],
+            ['id' => 1, 'score' => 5, 'comments' => 'Great', 'deputyRole' => 'LAY', 'reportType' => '103', 'created' => '2026-03-15'],
+            ['id' => 2, 'score' => 4, 'comments' => 'Good',  'deputyRole' => 'LAY', 'reportType' => '103', 'created' => '2026-03-20'],
         ];
 
         $mockQuery = $this->createMock(Query::class);

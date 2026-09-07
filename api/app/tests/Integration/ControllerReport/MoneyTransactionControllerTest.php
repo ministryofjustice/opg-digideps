@@ -23,14 +23,10 @@ class MoneyTransactionControllerTest extends AbstractTestController
         ['persons' => ['users' => ['lay1' => $user1]], 'orders' => [['pfa' => ['reports' => [self::$report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
         ['orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        self::$t1 = new MoneyTransaction(self::$report1);
-        self::$t1->setCategory('dividends')->setAmount(123.45)->setDescription('d1');
-        self::$t2 = new MoneyTransaction(self::$report1);
-        self::$t2->setCategory('dividends')->setAmount(789.12)->setDescription('d2');
-        $t3 = new MoneyTransaction(self::$report1);
-        $t3->setCategory('loans')->setAmount(5000.59)->setDescription('d3');
-        $t4 = new MoneyTransaction(self::$report2);
-        $t4->setCategory('loans')->setAmount(123)->setDescription('belongs to report2');
+        self::$t1 = new MoneyTransaction(self::$report1, 'dividends')->setAmount(123.45)->setDescription('d1');
+        self::$t2 = new MoneyTransaction(self::$report1, 'dividends')->setAmount(789.12)->setDescription('d2');
+        $t3 = new MoneyTransaction(self::$report1, 'loans')->setAmount(5000.59)->setDescription('d3');
+        $t4 = new MoneyTransaction(self::$report2, 'loans')->setAmount(123)->setDescription('belongs to report2');
 
         self::fixtures()->persist(self::$t1, self::$t2, $t3, $t4);
         self::fixtures()->flush()->clear();
