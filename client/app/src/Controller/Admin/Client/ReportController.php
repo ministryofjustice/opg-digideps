@@ -345,6 +345,7 @@ class ReportController extends AbstractController
         }
 
         $unsubmittedSectionsList = $report->getUnsubmittedSectionsList() ?? '';
+        $unsubmittedSectionIds = array_map('trim', array_filter(explode(',', $unsubmittedSectionsList)));
         $reportMeta = ReportSectionService::getReportMetadata($report);
         $unsubmittedSections = [];
 
@@ -358,7 +359,7 @@ class ReportController extends AbstractController
                 continue;
             }
 
-            $present = str_contains($unsubmittedSectionsList, $reportSection->value);
+            $present = in_array($reportSection->value, $unsubmittedSectionIds, true);
 
             $unsubmittedSections[] = new UnsubmittedSection($reportSection->value, $sectionMeta->texts->title, $present);
         }
