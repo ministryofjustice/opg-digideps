@@ -32,12 +32,13 @@ RUN mkdir -p ${FUNCTION_DIR}
 WORKDIR /${FUNCTION_DIR}
 # Copy function code
 COPY app app
-COPY requirements.txt requirements.txt
+COPY uv.lock .
 # Install the runtime interface client
-RUN python -m pip install --no-cache-dir --upgrade pip
-RUN python -m pip install --no-cache-dir \
-        --target ${FUNCTION_DIR} \
-        --requirement requirements.txt
+COPY --from=ghcr.io/astral-sh/uv@sha256:b46b03ddfcfbf8f547af7e9eaefdf8a39c8cebcba7c98858d3162bd28cf536f6 /uv /uvx /bin/
+RUN uv export --locked -o requirements.txt \
+    && python -m pip install --no-cache-dir \
+    --target ${FUNCTION_DIR} \
+    -r requirements.txt
 
 # Multi-stage build: grab a fresh copy of the base image
 FROM python-alpine
