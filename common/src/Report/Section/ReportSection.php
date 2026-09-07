@@ -44,8 +44,7 @@ enum ReportSection: string
      * The contexts are places where sections may be rendered or referenced, e.g. from a checklist, from
      * navigation, from the report overview.
      *
-     * @return bool true if the section is non-editable (e.g. summary section) or decorative (e.g. header or footer)
-     * and should not be used in this context
+     * @return bool true if the section should be active/displayed in this context; false otherwise
      */
     public function isRelevantFor(SectionContext $ctx): bool
     {
