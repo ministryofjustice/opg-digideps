@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Controller\Admin\Client;
 
-use OPG\Digideps\Common\Report\Section\SectionContext;
 use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Report\Checklist;
@@ -350,10 +349,6 @@ class ReportController extends AbstractController
         $unsubmittedSections = [];
 
         foreach ($reportMeta->sections as $reportSection) {
-            if (!$reportSection->isRelevantFor(SectionContext::ADMIN_MANAGE_CHECKLIST)) {
-                continue;
-            }
-
             $sectionMeta = $this->reportSectionService->getSectionMetadata($reportMeta, $reportSection);
             if ($sectionMeta === null) {
                 continue;
