@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\Expense;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Expense;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportDeputyExpenseTrait
@@ -11,7 +13,7 @@ trait ReportDeputyExpenseTrait
     #[JMS\Type('string')]
     #[JMS\Groups(['expenses-paid-anything'])]
     #[Assert\NotBlank(message: 'expenses.paidForAnything.notBlank', groups: ['expenses-paid-anything'])]
-    private ?string $paidForAnything;
+    private ?string $paidForAnything = null;
 
     /**
      * @var Expense[]
@@ -22,7 +24,7 @@ trait ReportDeputyExpenseTrait
 
     #[JMS\Type('double')]
     #[JMS\Groups(['expenses-total'])]
-    private $expensesTotal;
+    private float $expensesTotal;
 
     public function getPaidForAnything(): ?string
     {
@@ -62,15 +64,8 @@ trait ReportDeputyExpenseTrait
         return $this;
     }
 
-    public function getExpensesTotal(): string
+    public function getExpensesTotal(): float
     {
         return $this->expensesTotal;
-    }
-
-    public function setExpensesTotal(string $expensesTotal): static
-    {
-        $this->expensesTotal = $expensesTotal;
-
-        return $this;
     }
 }

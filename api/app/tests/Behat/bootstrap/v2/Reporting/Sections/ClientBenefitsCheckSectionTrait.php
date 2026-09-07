@@ -14,6 +14,27 @@ trait ClientBenefitsCheckSectionTrait
     private string $missingMoneyTypeErrorText = 'Enter the type of payment';
     private string $missingWhoReceivedMoneyErrorText = 'Enter the name of the person or organisation who received the money';
     private string $atLeastOneMoneyTypeRequiredErrorText = 'Enter at least one payment';
+    public bool $clientBenefitsSectionAvailable = true;
+
+    /**
+     * @Given the deputies :currentOrPrevious report ends and is due :moreOrLess than 60 days after the client benefits check feature flag date
+     */
+    public function reportIsDueAfterClientBenefitCheckFeatureFlagDate(string $currentOrPrevious, string $moreOrLess): void
+    {
+        $moreOrLess = strtolower($moreOrLess);
+
+        if (!in_array($moreOrLess, ['more', 'less'])) {
+            throw new BehatException(sprintf('This step only accepts "more" or "less". %s provided.', $moreOrLess));
+        }
+
+        if ($moreOrLess === 'more') {
+            $this->endDateAndDueDateLoggedInUsersCurrentReportSetToDate('2040-01-01', $currentOrPrevious);
+            $this->clientBenefitsSectionAvailable = true;
+        } else {
+            $this->endDateAndDueDateLoggedInUsersCurrentReportSetToDate('2020-01-01', $currentOrPrevious);
+            $this->clientBenefitsSectionAvailable = false;
+        }
+    }
 
     /**
      * @When I navigate to and start the client benefits check report section

@@ -19,13 +19,10 @@ class Expense
     #[JMS\Groups(['expenses'])]
     private $id;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['expenses'])]
     #[Assert\NotBlank(message: 'expenses.explanation.notBlank', groups: ['deputy-expense'])]
-    private $explanation;
+    private ?string $explanation = null;
 
     /**
      * @var float
@@ -63,18 +60,12 @@ class Expense
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getExplanation()
+    public function getExplanation(): ?string
     {
         return $this->explanation;
     }
 
-    /**
-     * @param mixed $explanation
-     */
-    public function setExplanation($explanation): static
+    public function setExplanation(?string $explanation): static
     {
         $this->explanation = $explanation;
 

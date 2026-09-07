@@ -67,11 +67,11 @@ class TransactionsCsvGenerator
     private function generateDescription(Gift|Expense|MoneyTransaction $transaction): string
     {
         if (method_exists($transaction, 'getDescription')) {
-            return $transaction->getDescription();
+            return $transaction->getDescription() ?? '';
         }
 
         if (method_exists($transaction, 'getExplanation')) {
-            return $transaction->getExplanation();
+            return $transaction->getExplanation() ?? '';
         }
 
         return '';

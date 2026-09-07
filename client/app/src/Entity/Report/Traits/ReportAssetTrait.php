@@ -14,13 +14,12 @@ trait ReportAssetTrait
      * Note: it relies on the translation (see report-assets.en.yml form.choices) for historical reasons
      */
     #[JMS\Exclude]
-    private static $cashAssetTitles = [
+    private static array $cashAssetTitles = [
         'Unit trusts',
         'National Savings certificates',
         'Stocks and shares',
         'Premium Bonds',
     ];
-
 
     /**
      * @var Asset[]
@@ -28,11 +27,8 @@ trait ReportAssetTrait
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Asset>')]
     private array $assets = [];
 
-    /**
-     * @var float
-     */
     #[JMS\Type('double')]
-    private $assetsTotalValue;
+    private float $assetsTotalValue;
 
     /**
      * @param Asset[] $assets

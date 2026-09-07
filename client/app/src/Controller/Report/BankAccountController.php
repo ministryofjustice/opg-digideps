@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Controller\Report;
 
+use OPG\Digideps\Common\Validating\ValidatingArray;
+use OPG\Digideps\Common\Validating\ValidationException;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Report\BankAccount;
 use OPG\Digideps\Frontend\Entity\Report\Status;
@@ -53,6 +55,9 @@ class BankAccountController extends AbstractController
         ];
     }
 
+    /**
+     * @throws ValidationException
+     */
     #[Route(path: '/report/{reportId}/bank-account/step{step}/{accountId}', name: 'bank_accounts_step', requirements: ['step' => '\d+'])]
     #[Template('@App/Report/BankAccount/step.html.twig')]
     public function stepAction(Request $request, int $reportId, int $step, ?int $accountId = null): array|RedirectResponse
@@ -63,10 +68,11 @@ class BankAccountController extends AbstractController
         }
 
         // common vars and data
-        /** @var array $dataFromRequest */
-        $dataFromRequest = $request->get('data') ?: [];
+        /** @var array $incomingData */
+        $incomingData = $request->get('data') ?: [];
 
-        $stepUrlData = $dataFromRequest;
+        $dataFromRequest = new ValidatingArray($incomingData);
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
@@ -87,15 +93,16 @@ class BankAccountController extends AbstractController
         }
 
         // add URL-data into model
-        isset($dataFromRequest['type']) && $account->setAccountType($dataFromRequest['type']);
-        isset($dataFromRequest['bank']) && $account->setBank($dataFromRequest['bank']);
-        isset($dataFromRequest['number']) && $account->setAccountNumber($dataFromRequest['number']);
-        isset($dataFromRequest['sort-code']) && $account->setSortCode($dataFromRequest['sort-code']);
-        isset($dataFromRequest['is-joint']) && $account->setIsJointAccount($dataFromRequest['is-joint']);
-        isset($dataFromRequest['closing-balance']) && $account->setOpeningBalance($dataFromRequest['closing-balance']);
-        isset($dataFromRequest['opening-balance']) && $account->setClosingBalance($dataFromRequest['opening-balance']);
-        isset($dataFromRequest['is-closed']) && $account->setIsClosed($dataFromRequest['is-closed']);
-        $stepRedirector->setStepUrlAdditionalParams(['data' => $dataFromRequest]);
+        $account->setAccountType($dataFromRequest->getStringOrNull('type'));
+        $account->setBank($dataFromRequest->getStringOrNull('bank'));
+        $account->setAccountNumber($dataFromRequest->getStringOrNull('number'));
+        $account->setSortCode($dataFromRequest->getStringOrNull('sort-code'));
+        $account->setIsJointAccount($dataFromRequest->getStringOrNull('is-joint'));
+        $account->setOpeningBalance($dataFromRequest->getFloatOrNull('closing-balance'));
+        $account->setClosingBalance($dataFromRequest->getFloatOrNull('opening-balance'));
+        $account->setIsClosed((bool) $dataFromRequest->getIntegerOrNull('is-closed'));
+
+        $stepRedirector->setStepUrlAdditionalParams(['data' => $incomingData]);
 
         // create and handle form
         $form = $this->createForm(BankAccountType::class, $account, ['step' => $step]);
@@ -113,19 +120,19 @@ class BankAccountController extends AbstractController
         if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if ($step === 1) {
-                $stepUrlData['type'] = $account->getAccountType();
+                $incomingData['type'] = $account->getAccountType();
             }
 
             if ($step === 2) {
-                $stepUrlData['bank'] = $account->getBank();
-                $stepUrlData['number'] = $account->getAccountNumber();
-                $stepUrlData['sort-code'] = $account->getSortCode();
-                $stepUrlData['is-joint'] = $account->getIsJointAccount();
+                $incomingData['bank'] = $account->getBank();
+                $incomingData['number'] = $account->getAccountNumber();
+                $incomingData['sort-code'] = $account->getSortCode();
+                $incomingData['is-joint'] = $account->getIsJointAccount();
             }
 
             // redirect to next step if not on the last step
             if ($step !== $totalSteps) {
-                $stepRedirector->setStepUrlAdditionalParams(['data' => $stepUrlData]);
+                $stepRedirector->setStepUrlAdditionalParams(['data' => $incomingData]);
                 return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
             }
 

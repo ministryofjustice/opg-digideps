@@ -151,13 +151,10 @@ class MoneyTransaction
     #[Assert\Range(notInRangeMessage: 'moneyTransaction.form.amount.notInRangeMessage', min: 0.01, max: 100000000000, groups: ['transaction-amount'])]
     private $amount;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['transaction'])]
     #[Assert\NotBlank(message: 'moneyTransaction.form.description.notBlank', groups: ['transaction-description'])]
-    private $description;
+    private ?string $description = null;
 
     /**
      * @return mixed
@@ -233,18 +230,12 @@ class MoneyTransaction
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param mixed $description
-     */
-    public function setDescription($description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 

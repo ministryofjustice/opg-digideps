@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\Debt;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Debt;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -17,41 +19,28 @@ trait ReportDebtsTrait
     private array $debts = [];
 
     /**
-     * @var string
+     * 'yes'|'no'|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['debt'])]
     #[Assert\NotBlank(message: 'report.hasDebts.notBlank', groups: ['debts'])]
-    private $hasDebts;
+    private ?string $hasDebts = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['debt-management'])]
     #[Assert\NotBlank(message: 'report.debts-management.notBlank', groups: ['debt-management'])]
-    private $debtManagement;
+    private ?string $debtManagement = null;
 
-    /**
-     *
-     * @var string $debtsTotalAmount
-     */
-    #[JMS\Type('string')]
+    #[JMS\Type('double')]
     #[JMS\Groups(['debt'])]
-    private $debtsTotalAmount;
+    private float $debtsTotalAmount = 0.0;
 
-    /**
-     * Get debts total value.
-     *
-     * @return float
-     */
-    public function getDebtsTotalValue()
+    public function getDebtsTotalValue(): float
     {
-        $ret = 0;
+        $ret = 0.0;
         foreach ($this->getDebts() as $debt) {
-            $ret += $debt->getAmount();
+            $ret += $debt->getAmount() ?? 0.0;
         }
-
         return $ret;
     }
 
@@ -78,36 +67,24 @@ trait ReportDebtsTrait
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDebtsTotalAmount()
+    public function getDebtsTotalAmount(): float
     {
         return $this->debtsTotalAmount;
     }
 
-    /**
-     * @param string $debtsTotalAmount
-     */
-    public function setDebtsTotalAmount($debtsTotalAmount): static
+    public function setDebtsTotalAmount(float $debtsTotalAmount): static
     {
         $this->debtsTotalAmount = $debtsTotalAmount;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getHasDebts()
+    public function getHasDebts(): ?string
     {
         return $this->hasDebts;
     }
 
-    /**
-     * @param $hasDebts bool
-     */
-    public function setHasDebts($hasDebts): static
+    public function setHasDebts(string $hasDebts): static
     {
         $this->hasDebts = $hasDebts;
 
@@ -116,20 +93,16 @@ trait ReportDebtsTrait
 
     /**
      * Get debt management text.
-     *
-     * @return string
      */
-    public function getDebtManagement()
+    public function getDebtManagement(): ?string
     {
         return $this->debtManagement;
     }
 
     /**
      * Set debt management text.
-     *
-     * @param string $debtManagement
      */
-    public function setDebtManagement($debtManagement): static
+    public function setDebtManagement(?string $debtManagement): static
     {
         $this->debtManagement = $debtManagement;
 

@@ -89,9 +89,7 @@ class TransactionCsvGeneratorTest extends TestCase
         );
         $mockReport->method('getType')->willReturn(102);
 
-        $mockReport->method('getClient')->willReturn(
-            $this->generateMockClient(32)
-        );
+        $mockReport->method('getClient')->willReturn($this->generateMockClient());
 
         if (!empty($dueDate)) {
             $mockReport->method('getDueDate')->willReturn(new \DateTime($dueDate));
@@ -131,7 +129,7 @@ class TransactionCsvGeneratorTest extends TestCase
     private function generateMockTransactionEntity(string $class, int $counter): Gift|Expense|MoneyTransaction
     {
         return (match ($class) {
-            Gift::class => new Gift()->setAmount('10.00')->setExplanation('explanation for gift ' . $counter),
+            Gift::class => new Gift()->setAmount(10.00)->setExplanation('explanation for gift ' . $counter),
             Expense::class => new Expense()->setAmount('10.00')->setExplanation('explanation for expense ' . $counter),
             MoneyTransaction::class => new MoneyTransaction()->setAmount('10.00')->setDescription('description for transaction ' . $counter)
                 ->setCategory(MoneyTransaction::$categories[min($counter, count(MoneyTransaction::$categories) - 1)][0]),
@@ -151,13 +149,13 @@ class TransactionCsvGeneratorTest extends TestCase
         return $mockBankAccount;
     }
 
-    private function generateMockClient(int $counter): Client&MockObject
+    private function generateMockClient(): Client&MockObject
     {
         $mock = $this->createMock(Client::class);
-        $mock->method('getFirstname')->willReturn('Firstname' . $counter);
-        $mock->method('getLastname')->willReturn('Lastname' . $counter);
-        $mock->method('getCaseNumber')->willReturn($counter . $counter . $counter . $counter);
-        $mock->method('getTotalReportCount')->willReturn($counter * 2);
+        $mock->method('getFirstname')->willReturn('Firstname' . 32);
+        $mock->method('getLastname')->willReturn('Lastname' . 32);
+        $mock->method('getCaseNumber')->willReturn(32 . 32 . 32 . 32);
+        $mock->method('getTotalReportCount')->willReturn(32 * 2);
         $mock->method('getUnsubmittedReportsCount')->willReturn(1);
         $mock->method('getCourtDate')->willReturn(new \DateTime('11/8/2011'));
 

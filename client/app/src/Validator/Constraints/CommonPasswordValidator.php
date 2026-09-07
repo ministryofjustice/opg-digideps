@@ -12,7 +12,7 @@ class CommonPasswordValidator extends ConstraintValidator
     private const int CACHE_PASSWORDS_SECS = 24 * 3600;
 
     private string $filePathCommonPasswords;
-    private string $pwnedPasswordsUrl = '';
+    private string $pwnedPasswordsUrl;
     private bool $refreshCache;
 
     /**

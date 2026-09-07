@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use JMS\Serializer\Annotation as JMS;
@@ -11,30 +13,30 @@ trait ReportBalanceTrait
     #[JMS\Groups(['balance', 'balance_mismatch_explanation'])]
     #[Assert\NotBlank(message: 'report.balanceMismatchExplanation.notBlank', groups: ['balance'])]
     #[Assert\Length(min: 10, minMessage: 'report.balanceMismatchExplanation.length', groups: ['balance'])]
-    private string $balanceMismatchExplanation;
+    private ?string $balanceMismatchExplanation = null;
 
     #[JMS\Type('double')]
-    private float $totalsOffset;
+    private ?float $totalsOffset = null;
 
     #[JMS\Type('boolean')]
     private bool $totalsMatch;
 
     #[JMS\Type('double')]
-    private float $calculatedBalance;
+    private ?float $calculatedBalance = null;
 
-    public function getBalanceMismatchExplanation(): string
+    public function getBalanceMismatchExplanation(): ?string
     {
         return $this->balanceMismatchExplanation;
     }
 
-    public function setBalanceMismatchExplanation(string $balanceMismatchExplanation): static
+    public function setBalanceMismatchExplanation(?string $balanceMismatchExplanation): static
     {
         $this->balanceMismatchExplanation = $balanceMismatchExplanation;
 
         return $this;
     }
 
-    public function getCalculatedBalance(): float
+    public function getCalculatedBalance(): ?float
     {
         return $this->calculatedBalance;
     }
@@ -46,12 +48,12 @@ trait ReportBalanceTrait
         return $this;
     }
 
-    public function getTotalsOffset(): float
+    public function getTotalsOffset(): ?float
     {
         return $this->totalsOffset;
     }
 
-    public function setTotalsOffset(float $totalsOffset): static
+    public function setTotalsOffset(?float $totalsOffset): static
     {
         $this->totalsOffset = $totalsOffset;
 
