@@ -428,11 +428,7 @@ class MoneyOutController extends AbstractController
     {
         if ($transactionId !== null) {
             $transaction = array_filter($report->getMoneyTransactionsOut(), function ($t) use ($transactionId): bool {
-                if ($t->getBankAccount() instanceof BankAccount) {
-                    $t->setBankAccountId($t->getBankAccount()->getId());
-                }
-
-                return $t->getId() == $transactionId;
+                return $t->getId() === $transactionId;
             });
             $transaction = array_shift($transaction);
         } else {

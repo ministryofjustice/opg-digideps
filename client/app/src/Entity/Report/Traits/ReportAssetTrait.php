@@ -54,10 +54,8 @@ trait ReportAssetTrait
 
     /**
      * Get assets total value.
-     *
-     * @return float
      */
-    public function getAssetsTotalValue()
+    public function getAssetsTotalValue(): float
     {
         return $this->assetsTotalValue;
     }
@@ -65,9 +63,9 @@ trait ReportAssetTrait
     /**
      * @param string $type property|cash|other
      */
-    public function getAssetsTotalsSummaryPage($type): float|int
+    public function getAssetsTotalsSummaryPage(string $type): float
     {
-        $ret = 0;
+        $ret = 0.0;
 
         foreach ($this->assets as $asset) {
             $isProperty = $asset instanceof AssetProperty;
@@ -79,7 +77,7 @@ trait ReportAssetTrait
                 || ($type === 'cash' && $isCash)
                 || ($type === 'other' && $isOther)
             ) {
-                $ret += $asset->getValueTotal();
+                $ret += $asset->getValueTotal() ?? 0.0;
             }
         }
 

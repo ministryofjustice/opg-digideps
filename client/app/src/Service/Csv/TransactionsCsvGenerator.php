@@ -22,10 +22,7 @@ class TransactionsCsvGenerator
         $this->csvBuilder = $csvBuilder;
     }
 
-    /**
-     * @return string
-     */
-    public function generateTransactionsCsv(Report $report)
+    public function generateTransactionsCsv(Report $report): string
     {
         $headers = ['Type', 'Category', 'Amount', 'Bank name', 'Account details', 'Description'];
         $this->generateTransactionsCsvLines($report);
@@ -47,10 +44,9 @@ class TransactionsCsvGenerator
     /**
      * Generates Transaction row.
      *
-     * @param $transactions
-     * @param $type
+     * @param array<Gift|Expense|MoneyTransaction> $transactions
      */
-    private function generateTransactionRows($transactions, $type): void
+    private function generateTransactionRows(array $transactions, string $type): void
     {
         foreach ($transactions as $transaction) {
             $this->rows[] = [
@@ -67,12 +63,8 @@ class TransactionsCsvGenerator
     /**
      * Generates a description. Expenses and Gifts have an 'explanation' property,
      * Money transactions have a description property.
-     *
-     * @param Gift|Expense|MoneyTransaction $transaction
-     *
-     * @return string
      */
-    private function generateDescription($transaction)
+    private function generateDescription(Gift|Expense|MoneyTransaction $transaction): string
     {
         if (method_exists($transaction, 'getDescription')) {
             return $transaction->getDescription();
@@ -85,12 +77,7 @@ class TransactionsCsvGenerator
         return '';
     }
 
-    /**
-     * @param Gift|Expense|MoneyTransaction $transaction
-     *
-     * @return string
-     */
-    private function generateCategory($transaction)
+    private function generateCategory(Gift|Expense|MoneyTransaction $transaction): string
     {
         if (property_exists($transaction, 'category')) {
             return $this->translator
@@ -104,23 +91,21 @@ class TransactionsCsvGenerator
         return '';
     }
 
-    /**
-     * @param Gift|Expense|MoneyTransaction $transaction
-     *
-     * @return string
-     */
-    private function generateBankName($transaction)
+    private function generateBankName(Gift|Expense|MoneyTransaction $transaction): string
     {
-        return !empty($transaction->getBankAccount()) ? $transaction->getBankAccount()->getBank() : '';
+        if ($transaction->getBankAccount() === null) {
+            return '';
+        }
+
+        return $transaction->getBankAccount()->getBank() ?? '';
     }
 
-    /**
-     * @param Gift|Expense|MoneyTransaction $transaction
-     *
-     * @return string
-     */
-    private function generateBankAccountDetails($transaction)
+    private function generateBankAccountDetails(Gift|Expense|MoneyTransaction $transaction): string
     {
-        return !empty($transaction->getBankAccount()) ? $transaction->getBankAccount()->getDisplayName() : '';
+        if ($transaction->getBankAccount() === null) {
+            return '';
+        }
+
+        return $transaction->getBankAccount()->getDisplayName() ?? '';
     }
 }

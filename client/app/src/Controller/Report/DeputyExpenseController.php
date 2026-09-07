@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Controller\Report;
 
 use OPG\Digideps\Frontend\Controller\AbstractController;
-use OPG\Digideps\Frontend\Entity\Report\BankAccount;
 use OPG\Digideps\Frontend\Entity\Report\Expense;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Report\Status;
@@ -158,10 +157,6 @@ class DeputyExpenseController extends AbstractController
                 'account',
             ]
         );
-
-        if ($expense->getBankAccount() instanceof BankAccount) {
-            $expense->setBankAccountId($expense->getBankAccount()->getId());
-        }
 
         $form = $this->createForm(
             DeputyExpenseType::class,
