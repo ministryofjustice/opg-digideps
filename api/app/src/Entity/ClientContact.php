@@ -18,52 +18,35 @@ class ClientContact
     use CreationAudit;
     use AddressTrait;
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['clientcontact'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'user_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['clientcontact'])]
     #[ORM\Column(name: 'firstname', type: 'string', length: 100, nullable: false)]
-    private $firstName;
+    private string $firstName;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['clientcontact'])]
     #[ORM\Column(name: 'lastname', type: 'string', length: 100, nullable: false)]
-    private $lastName;
+    private string $lastName;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['clientcontact'])]
     #[ORM\Column(name: 'job_title', type: 'string', length: 150, nullable: true)]
-    private $jobTitle;
+    private ?string $jobTitle = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['clientcontact'])]
     #[ORM\Column(name: 'phone', type: 'string', length: 20, nullable: true)]
-    private $phone;
+    private ?string $phone = null;
 
     /**
-     * @var string
-     *
      * The following is changed to unique=false, as the migration was missing,
      * and prod data contains duplicate, making it impossible to add the
      * migration now, unless the data is cleaned
@@ -71,165 +54,122 @@ class ClientContact
     #[JMS\Type('string')]
     #[JMS\Groups(['clientcontact'])]
     #[ORM\Column(name: 'email', type: 'string', length: 60, unique: false, nullable: true)]
-    private $email;
+    private ?string $email = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['clientcontact'])]
     #[ORM\Column(name: 'org_name', type: 'string', length: 150, nullable: true)]
-    private $orgName;
+    private ?string $orgName = null;
 
-    /**
-     * @var Client
-     */
     #[JMS\Type('OPG\Digideps\Backend\Entity\Client')]
     #[JMS\Groups(['clientcontact-client'])]
     #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'clientContacts')]
-    private $client;
+    private Client $client;
 
-    /**
-     * @return Client
-     */
-    public function getClient()
+    public function __construct(Client $client, string $firstName, string $lastName)
+    {
+        $this->client = $client;
+        $this->firstName = $lastName;
+        $this->lastName = $firstName;
+    }
+
+    public function getId(): int
+    {
+        return $this->id ?? 0;
+    }
+
+    public function setId(int $id): static
+    {
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
+    }
+
+    public function getClient(): Client
     {
         return $this->client;
     }
 
-    /**
-     * @return $this
-     */
-    public function setClient(Client $client)
+    public function setClient(Client $client): static
     {
         $this->client = $client;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     *
-     * @return $this
-     */
-    public function setEmail($email)
+    public function setEmail(?string $email): static
     {
-        $this->email = strtolower($email);
+        $this->email = $email !== null ? strtolower($email) : null;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFirstName()
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
 
-    /**
-     * @param string $firstName
-     *
-     * @return $this
-     */
-    public function setFirstName($firstName)
+    public function setFirstName(string $firstName): static
     {
         $this->firstName = $firstName;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getJobTitle()
+    public function getJobTitle(): ?string
     {
         return $this->jobTitle;
     }
 
-    /**
-     * @param string $jobTitle
-     *
-     * @return $this
-     */
-    public function setJobTitle($jobTitle)
+    public function setJobTitle(?string $jobTitle): static
     {
         $this->jobTitle = $jobTitle;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLastName()
+    public function getLastName(): string
     {
         return $this->lastName;
     }
 
-    /**
-     * @param string $lastName
-     *
-     * @return $this
-     */
-    public function setLastName($lastName)
+    public function setLastName(string $lastName): static
     {
         $this->lastName = $lastName;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrgName()
+    public function getOrgName(): ?string
     {
         return $this->orgName;
     }
 
-    /**
-     * @param string $orgName
-     *
-     * @return $this
-     */
-    public function setOrgName($orgName)
+    public function setOrgName(?string $orgName): static
     {
         $this->orgName = $orgName;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPhone()
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
-    /**
-     * @param string $phone
-     *
-     * @return $this
-     */
-    public function setPhone($phone)
+    public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
 

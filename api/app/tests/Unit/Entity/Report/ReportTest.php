@@ -74,10 +74,10 @@ final class ReportTest extends TestCase
         self::assertEquals(0, $report1->getMoneyInTotal());
         self::assertEquals(0, $report1->getMoneyOutTotal());
         $report1->setMoneyTransactions(new ArrayCollection([
-            new MoneyTransaction($report1)->setCategory('account-interest')->setAmount(1),
-            new MoneyTransaction($report1)->setCategory('dividends')->setAmount(2),
-            new MoneyTransaction($report1)->setCategory('broadband')->setAmount(3),
-            new MoneyTransaction($report1)->setCategory('food')->setAmount(4),
+            new MoneyTransaction($report1, 'account-interest')->setAmount(1),
+            new MoneyTransaction($report1, 'dividends')->setAmount(2),
+            new MoneyTransaction($report1, 'broadband')->setAmount(3),
+            new MoneyTransaction($report1, 'food')->setAmount(4),
         ]));
         self::assertEquals(1 + 2, $report1->getMoneyInTotal());
         self::assertEquals(3 + 4, $report1->getMoneyOutTotal());
@@ -100,9 +100,9 @@ final class ReportTest extends TestCase
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
         self::assertEquals(0, $report->getAccountsOpeningBalanceTotal());
 
-        $report->addAccount(new BankAccount()->setBank('bank1')->setOpeningBalance('1'));
-        $report->addAccount(new BankAccount()->setBank('bank2')->setOpeningBalance('3'));
-        $report->addAccount(new BankAccount()->setBank('bank3')->setOpeningBalance('0'));
+        $report->addAccount(new BankAccount($report)->setBank('bank1')->setOpeningBalance('1'));
+        $report->addAccount(new BankAccount($report)->setBank('bank2')->setOpeningBalance('3'));
+        $report->addAccount(new BankAccount($report)->setBank('bank3')->setOpeningBalance('0'));
 
         self::assertEquals(4, $report->getAccountsOpeningBalanceTotal());
     }
@@ -113,12 +113,12 @@ final class ReportTest extends TestCase
 
         self::assertEquals(0, $report->getAccountsClosingBalanceTotal());
 
-        $report->addAccount(new BankAccount()->setBank('bank1')->setClosingBalance('1'));
+        $report->addAccount(new BankAccount($report)->setBank('bank1')->setClosingBalance('1'));
 
         self::assertEquals(1, $report->getAccountsClosingBalanceTotal());
 
-        $report->addAccount(new BankAccount()->setBank('bank2')->setClosingBalance('3'));
-        $report->addAccount(new BankAccount()->setBank('bank3')->setClosingBalance('0'));
+        $report->addAccount(new BankAccount($report)->setBank('bank2')->setClosingBalance('3'));
+        $report->addAccount(new BankAccount($report)->setBank('bank3')->setClosingBalance('0'));
 
         self::assertEquals(4, $report->getAccountsClosingBalanceTotal());
     }
@@ -130,21 +130,21 @@ final class ReportTest extends TestCase
 
         self::assertEquals(0, $report->getCalculatedBalance());
 
-        $report->addAccount(new BankAccount()->setBank('bank1')->setOpeningBalance('1'));
+        $report->addAccount(new BankAccount($report)->setBank('bank1')->setOpeningBalance('1'));
 
         self::assertEquals(1, $report->getCalculatedBalance());
 
-        $report->addMoneyTransaction(new MoneyTransaction($report)->setCategory('account-interest')->setAmount(20)); // in
-        $report->addMoneyTransaction(new MoneyTransaction($report)->setCategory('account-interest')->setAmount(20)); // in
-        $report->addMoneyTransaction(new MoneyTransaction($report)->setCategory('rent')->setAmount(15)); // out
-        $report->addMoneyTransaction(new MoneyTransaction($report)->setCategory('rent')->setAmount(15)); // out
+        $report->addMoneyTransaction(new MoneyTransaction($report, 'account-interest')->setAmount(20)); // in
+        $report->addMoneyTransaction(new MoneyTransaction($report, 'account-interest')->setAmount(20)); // in
+        $report->addMoneyTransaction(new MoneyTransaction($report, 'rent')->setAmount(15)); // out
+        $report->addMoneyTransaction(new MoneyTransaction($report, 'rent')->setAmount(15)); // out
 
-        $gift1 = new Gift($report)->setAmount('2');
-        $gift2 = new Gift($report)->setAmount('20');
+        $gift1 = new Gift($report, 'present')->setAmount('2');
+        $gift2 = new Gift($report, 'bonus')->setAmount('20');
         $report->setGifts(new ArrayCollection([$gift1, $gift2]));
 
-        $expense1 = new Expense($report)->setAmount('1');
-        $expense2 = new Expense($report)->setAmount('10');
+        $expense1 = new Expense($report, 'car')->setAmount('1');
+        $expense2 = new Expense($report, 'stationery')->setAmount('10');
         $report->setExpenses(new ArrayCollection([$expense1, $expense2]));
 
         $calculatedBalance = 1 + 20 + 20 - 15 - 15 - 22 - 11;
@@ -167,8 +167,8 @@ final class ReportTest extends TestCase
         $report->setProfDeputyCostsHasInterim('no');
         $report->setProfDeputyFixedCost(3);
         $report->setProfDeputyOtherCosts(new ArrayCollection([
-            new ProfDeputyOtherCost($report, 'id1', false, 10),
-            new ProfDeputyOtherCost($report, 'id2', false, 10),
+            new ProfDeputyOtherCost($report, 'id1', false, '10'),
+            new ProfDeputyOtherCost($report, 'id2', false, '10'),
         ]));
 
         self::assertEquals(-1 - 1 - 3 - 10 - 10, $report->getCalculatedBalance());
@@ -195,16 +195,16 @@ final class ReportTest extends TestCase
         self::assertTrue($report->getTotalsMatch());
 
         // account opened with 1000, closed with 2000. 1500 money in, 400 out. balance is 100
-        $report->addAccount(new BankAccount()->setBank('bank1')->setOpeningBalance('1000')->setClosingBalance('2000'));
-        $report->addMoneyTransaction(new MoneyTransaction($report)->setCategory('account-interest')->setAmount(1500)); // in
-        $report->addMoneyTransaction(new MoneyTransaction($report)->setCategory('rent')->setAmount(400)); // out
+        $report->addAccount(new BankAccount($report)->setBank('bank1')->setOpeningBalance('1000')->setClosingBalance('2000'));
+        $report->addMoneyTransaction(new MoneyTransaction($report, 'account-interest')->setAmount(1500)); // in
+        $report->addMoneyTransaction(new MoneyTransaction($report, 'rent')->setAmount(400)); // out
 
-        $gift1 = new Gift($report)->setAmount('2');
-        $gift2 = new Gift($report)->setAmount('20');
+        $gift1 = new Gift($report, 'present')->setAmount('2');
+        $gift2 = new Gift($report, 'bonus')->setAmount('20');
         $report->setGifts(new ArrayCollection([$gift1, $gift2]));
 
-        $expense1 = new Expense($report)->setAmount('1');
-        $expense2 = new Expense($report)->setAmount('10');
+        $expense1 = new Expense($report, 'car')->setAmount('1');
+        $expense2 = new Expense($report, 'stationery')->setAmount('10');
         $report->setExpenses(new ArrayCollection([$expense1, $expense2]));
 
         $expectedTotalOffset = 67; // 1000 - 2000 + 1500 - 400 - 11 - 22
@@ -213,7 +213,7 @@ final class ReportTest extends TestCase
         self::assertFalse($report->getTotalsMatch());
 
         // add missing transaction that fix the balance
-        $report->addMoneyTransaction(new MoneyTransaction($report)->setCategory('rent')->setAmount(67)); // in
+        $report->addMoneyTransaction(new MoneyTransaction($report, 'rent')->setAmount(67)); // in
 
         self::assertEquals(0, $report->getTotalsOffset());
         self::assertTrue($report->getTotalsMatch());
@@ -238,10 +238,10 @@ final class ReportTest extends TestCase
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
         self::assertEquals(0, $report->getExpensesTotal());
 
-        $expense1 = new Expense($report)->setAmount('1');
+        $expense1 = new Expense($report, 'car')->setAmount('1');
         $report->addExpense($expense1);
 
-        $expense2 = new Expense($report)->setAmount('2');
+        $expense2 = new Expense($report, 'stationery')->setAmount('2');
         $report->addExpense($expense2);
 
         self::assertEquals(1.0 + 2.0, $report->getExpensesTotal());
@@ -252,8 +252,8 @@ final class ReportTest extends TestCase
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
         self::assertEquals(0, $report->getAssetsTotalValue());
 
-        $report->addAsset(new AssetOther()->setValue('1'));
-        $report->addAsset(new AssetProperty()->setValue('2'));
+        $report->addAsset(new AssetOther($report)->setValue('1'));
+        $report->addAsset(new AssetProperty($report)->setValue('2'));
 
         self::assertEquals(3, $report->getAssetsTotalValue());
     }
@@ -288,23 +288,43 @@ final class ReportTest extends TestCase
 
     public function testGetPreviousReportData(): void
     {
-        $bankAccount0 = new BankAccount();
+        $client = new Client();
+        $now = new \DateTime();
+
+        $reportTwoYearsAgo = new Report($client, Report::PROF_COMBINED_LOW_ASSETS_TYPE, $now, $now);
+        $reportTwoYearsAgo->setId(8);
+
+
+        $reportLastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $now, $now);
+        $reportLastYear->setId(9);
+
+
+        $reportLatest = new Report($client, Report::LAY_PFA_LOW_ASSETS_TYPE, $now, $now);
+        $reportLatest->setId(10);
+
+        $client->addReport($reportTwoYearsAgo);
+        $client->addReport($reportLastYear);
+        $client->addReport($reportLatest);
+
+        $bankAccount0 = new BankAccount($reportTwoYearsAgo);
         $bankAccount0->setId(1);
         $bankAccount0->setBank('bank0');
         $bankAccount0->setAccountNumber('1111');
         $bankAccount0->setSortCode('111111');
         $bankAccount0->setOpeningBalance('600');
         $bankAccount0->setClosingBalance('600');
+        $reportTwoYearsAgo->addAccount($bankAccount0);
 
-        $bankAccount1 = new BankAccount();
+        $bankAccount1 = new BankAccount($reportLastYear);
         $bankAccount1->setId(2);
         $bankAccount1->setBank('bank1');
         $bankAccount1->setAccountNumber('2222');
         $bankAccount1->setSortCode('222222');
         $bankAccount1->setOpeningBalance('200');
         $bankAccount1->setClosingBalance('300');
+        $reportLastYear->addAccount($bankAccount1);
 
-        $bankAccount2 = new BankAccount();
+        $bankAccount2 = new BankAccount($reportLastYear);
         $bankAccount2->setId(3);
         $bankAccount2->setBank('bank2');
         $bankAccount2->setAccountNumber('3333');
@@ -448,7 +468,7 @@ final class ReportTest extends TestCase
     public function getAssetsSummaryReturnsCorrectStructure(): void
     {
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-01-01'), new \DateTime('2018-12-31'));
-        $report->addAsset(new AssetOther()->setValue('500'));
+        $report->addAsset(new AssetOther($report)->setValue('500'));
 
         $summary = $report->getAssetsSummary();
 

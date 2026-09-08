@@ -105,7 +105,7 @@ class JWTServiceTest extends TestCase
                 };
             });
 
-        $user = new User()
+        $user = new User('', '', '')
             ->setId(22)
             ->setRoleName('A_ROLE');
 
