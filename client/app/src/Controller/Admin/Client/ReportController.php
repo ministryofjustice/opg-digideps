@@ -345,7 +345,7 @@ class ReportController extends AbstractController
 
         $unsubmittedSectionsList = $report->getUnsubmittedSectionsList() ?? '';
         $unsubmittedSectionIds = array_map('trim', array_filter(explode(',', $unsubmittedSectionsList)));
-        $reportMeta = ReportSectionService::getReportMetadata($report);
+        $reportMeta = $this->reportSectionService->getReportMetadata($report);
         $unsubmittedSections = [];
 
         foreach ($reportMeta->sections as $reportSection) {
