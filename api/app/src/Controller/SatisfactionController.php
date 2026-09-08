@@ -27,9 +27,7 @@ class SatisfactionController extends RestController
 
     private function addSatisfactionScore(int $satisfactionLevel, string $comments): Satisfaction
     {
-        $satisfaction = new Satisfaction();
-        $satisfaction->setScore($satisfactionLevel);
-        $satisfaction->setComments($comments);
+        $satisfaction = new Satisfaction($satisfactionLevel, $comments);
 
         $this->em->persist($satisfaction);
         $this->em->flush();
