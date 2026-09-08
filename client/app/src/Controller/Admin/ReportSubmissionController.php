@@ -129,11 +129,16 @@ class ReportSubmissionController extends AbstractController
 
         /** @var Document $document */
         $document = $documents[0];
+        $filename = $document->getFileName() ?? 'unknown file name';
+
+        $documentRef = $document->getStorageReference();
+        if ($documentRef === null) {
+            throw $this->createNotFoundException("Document '$filename' could not be retrieved (no storage ref)");
+        }
 
         try {
-            $contents = $this->s3Storage->retrieve($document->getStorageReference());
+            $contents = $this->s3Storage->retrieve($documentRef);
         } catch (\Throwable) {
-            $filename = $document->getFileName();
             throw $this->createNotFoundException("Document '$filename' could not be retrieved");
         }
 

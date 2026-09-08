@@ -113,16 +113,26 @@ class DocumentService
 
         foreach ($reportSubmission->getDocuments() as $document) {
             try {
+                $documentRef = $document->getStorageReference();
+                if ($documentRef === null) {
+                    throw new \DomainException('no storage reference for document');
+                }
+
+                $documentFileName = $document->getFileName();
+                if ($documentFileName === null) {
+                    throw new \DomainException('document has no file name');
+                }
+
                 // AWS returns a object here - typecasting to string
-                $contents = $this->s3Storage->retrieve($document->getStorageReference());
+                $contents = $this->s3Storage->retrieve($documentRef);
 
                 $retrievedDocument = new RetrievedDocument();
                 $retrievedDocument->setContent($contents);
-                $retrievedDocument->setFileName($document->getFileName());
+                $retrievedDocument->setFileName($documentFileName);
                 $retrievedDocument->setReportSubmission($reportSubmission);
 
                 $retrievedDocuments[] = $retrievedDocument;
-            } catch (FileNotFoundException) {
+            } catch (FileNotFoundException | \DomainException) {
                 $missingDocument = new MissingDocument();
                 $missingDocument->setFileName($document->getFileName() ?? 'unknown file name');
                 $missingDocument->setReportSubmission($reportSubmission);

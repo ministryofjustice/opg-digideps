@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Traits\CreationAudit;
 use OPG\Digideps\Frontend\Entity\User;
-use JMS\Serializer\Annotation as JMS;
 
 class ReportSubmission
 {
@@ -39,7 +41,6 @@ class ReportSubmission
     public function setId(int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
@@ -51,7 +52,6 @@ class ReportSubmission
     public function setReport(Report $report): static
     {
         $this->report = $report;
-
         return $this;
     }
 
@@ -69,13 +69,7 @@ class ReportSubmission
     public function setDocuments(array $documents): static
     {
         $this->documents = $documents;
-
         return $this;
-    }
-
-    public function hasReportPdf(): bool
-    {
-        return array_any($this->documents, fn ($document) => $document->isReportPdf());
     }
 
     public function getArchivedBy(): ?User
@@ -86,7 +80,6 @@ class ReportSubmission
     public function setArchivedBy(?User $archivedBy): static
     {
         $this->archivedBy = $archivedBy;
-
         return $this;
     }
 
@@ -98,7 +91,6 @@ class ReportSubmission
     public function setDownloadable(bool $downloadable): static
     {
         $this->downloadable = $downloadable;
-
         return $this;
     }
 
