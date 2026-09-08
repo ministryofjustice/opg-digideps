@@ -16,12 +16,12 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class S3FileUploader
 {
     public function __construct(
-        private StorageInterface $s3Storage,
-        private RestClient $restClient,
-        private FileNameManipulation $fileNameFixer,
-        private DateTimeProvider $dateTimeProvider,
-        private MimeTypeAndExtensionChecker $mimeTypeAndExtensionChecker,
-        private ImageConvertor $imageConvertor,
+        private readonly StorageInterface $s3Storage,
+        private readonly RestClient $restClient,
+        private readonly FileNameManipulation $fileNameFixer,
+        private readonly DateTimeProvider $dateTimeProvider,
+        private readonly MimeTypeAndExtensionChecker $mimeTypeAndExtensionChecker,
+        private readonly ImageConvertor $imageConvertor,
     ) {
     }
 
