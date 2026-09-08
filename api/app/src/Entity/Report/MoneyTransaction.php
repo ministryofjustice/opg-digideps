@@ -64,6 +64,7 @@ class MoneyTransaction implements MoneyTransactionInterface
         ['sale-of-investment', true, 'one-off', 'in'],
         ['sale-of-property', true, 'one-off', 'in'],
 
+        ['other-incomes', true, 'moneyin-other', 'in'],
         ['anything-else', true, 'moneyin-other', 'in'], // no group
 
         // Money Out
