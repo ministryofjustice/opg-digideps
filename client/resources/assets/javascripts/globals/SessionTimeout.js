@@ -38,7 +38,7 @@ const SessionTimeout = function () {
       sessionExpiresMs: sessionExpiresValue * 1000,
       sessionPopupShowAfterMs: popupExpiresValue * 1000,
       keepSessionAliveUrl: keepAliveUrl,
-      okBtn: okBtn
+      okBtn
     })
   }
 

@@ -64,7 +64,11 @@ def generate_message(event):
                 topic_arn = record["Sns"]["TopicArn"]
                 region = topic_arn.split(":")[3]
                 valid = valid_alarm_name(topic_arn, subject)
-                if "AlarmName" in message and valid:
+                if (
+                    "AlarmName" in message
+                    and message.get("NewStateValue") == "ALARM"
+                    and valid
+                ):
                     payload = alarm_message(message, region)
     elif "GithubActions" in event:
         message = event["GithubActions"]

@@ -1,6 +1,26 @@
-FROM python:3.13.15-alpine3.24@sha256:540c7d91f98ff6880174c40e99067bf5941eb54d818a7a5e094d188b196a934d
+##############################
+# Stage 1: Base image
+##############################
+FROM python:3.13.15-alpine3.24@sha256:540c7d91f98ff6880174c40e99067bf5941eb54d818a7a5e094d188b196a934d as base
 
 WORKDIR /
+
+##############################
+# Stage X: Upgrade pinned apk packages (used only as target for pinned upgrades)
+##############################
+FROM base AS upgrade-pinned-apk-packages
+USER root
+COPY htmltopdf/Dockerfile .
+COPY scripts/upgrade_apk/check-apk-ver.sh .
+
+CMD sh -c "./check-apk-ver.sh"
+
+##############################
+# Stage 2: Runtime image
+##############################
+FROM base AS runtime
+
+CMD sh -c "./check-apk-ver.sh"
 
 ENV PYTHONUNBUFFERED=1
 
@@ -9,7 +29,7 @@ RUN addgroup -S htmltopdf \
 
 # Install curl for healthcheck, requirements for pdf generation and fonts
 RUN apk add --no-cache \
-    "curl==8.21.0-r0" \
+    "curl==8.22.0-r0" \
     "cairo==1.18.4-r1" \
     "pango==1.57.1-r0" \
     "gdk-pixbuf==2.44.7-r1" \
