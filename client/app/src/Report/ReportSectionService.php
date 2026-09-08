@@ -22,7 +22,7 @@ final readonly class ReportSectionService
     ) {
     }
 
-    public static function getReportMetadata(Report $report): ReportMetadata
+    public function getReportMetadata(Report $report): ReportMetadata
     {
         return new ReportMetadata($report->getId(), ReportType::from($report->getType()));
     }
