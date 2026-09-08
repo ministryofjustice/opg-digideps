@@ -10,128 +10,82 @@ class Fee
 {
     use HasReportTrait;
 
+    #[JMS\Groups(['fee'])]
+    #[JMS\Type('int')]
+    private ?int $id = null;
+
     #[JMS\Type('string')]
     #[JMS\Groups(['fee'])]
-    private $feeTypeId;
+    /** @phpstan-ignore property.unusedType */
+    private ?string $feeTypeId = null;
 
-    /**
-     * @var string decimal
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['fee'])]
     #[Assert\Type(type: 'numeric', message: 'fee.amount.notNumeric', groups: ['fees'])]
-    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'fee.amount.notInRangeMessage', groups: ['fees'])]
-    private $amount;
+    #[Assert\Range(notInRangeMessage: 'fee.amount.notInRangeMessage', min: 0, max: 100000000000, groups: ['fees'])]
+    private ?string $amount = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['fee'])]
     #[JMS\Type('boolean')]
-    private $hasMoreDetails;
+    private ?bool $hasMoreDetails = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['fee'])]
     #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'fee.moreDetails.notEmpty', groups: ['fees-more-details'])]
-    private $moreDetails;
+    private ?string $moreDetails = null;
 
-    /**
-     * @var int
-     */
-    #[JMS\Groups(['fee'])]
-    #[JMS\Type('int')]
-    private $id;
-
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFeeTypeId()
+    public function getFeeTypeId(): ?string
     {
         return $this->feeTypeId;
     }
 
     /**
-     * @param mixed $feeTypeId
+     * @return ?string decimal
      */
-    public function setFeeTypeId($feeTypeId): static
-    {
-        $this->feeTypeId = $feeTypeId;
-
-        return $this;
-    }
-
-    /**
-     * @return string decimal
-     */
-    public function getAmount()
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
     /**
-     * @param string $amount decimal
+     * @param ?string $amount decimal
      */
-    public function setAmount($amount): static
+    public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getHasMoreDetails()
+    public function getHasMoreDetails(): ?bool
     {
         return $this->hasMoreDetails;
     }
 
-    /**
-     * @param string $hasMoreDetails
-     */
-    public function setHasMoreDetails($hasMoreDetails): static
+    public function setHasMoreDetails(?bool $hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMoreDetails()
+    public function getMoreDetails(): ?string
     {
         return $this->moreDetails;
     }
 
-    /**
-     * @param string $moreDetails
-     */
-    public function setMoreDetails($moreDetails): static
+    public function setMoreDetails(?string $moreDetails): static
     {
         $this->moreDetails = $moreDetails;
-
         return $this;
     }
 }

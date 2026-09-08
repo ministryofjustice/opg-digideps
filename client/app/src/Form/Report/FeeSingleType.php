@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FeeSingleType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('feeTypeId', FormTypes\HiddenType::class)
@@ -31,13 +31,12 @@ class FeeSingleType extends AbstractType
             $form = $event->getForm();
 
             if ($fee->getHasMoreDetails()) {
-                $form->add('moreDetails', FormTypes\TextareaType::class, [
-                ]);
+                $form->add('moreDetails', FormTypes\TextareaType::class);
             }
         });
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Fee::class,
@@ -56,7 +55,7 @@ class FeeSingleType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'fee_single';
     }
