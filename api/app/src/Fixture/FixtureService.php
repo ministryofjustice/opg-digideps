@@ -207,7 +207,7 @@ final class FixtureService
 
             if ($deputy !== null) {
                 $persons['deputies'][$deputyDescriptor->deputyReference] = $deputy;
-                $deputy->associateWithCourtOrder($courtOrder);
+                $deputy->associateWithCourtOrder($courtOrder, $deputyDescriptor->isActive);
                 if ($organisation !== null) {
                     $deputy->setOrganisation($organisation);
                 } else {
@@ -253,7 +253,7 @@ final class FixtureService
             foreach ($descriptor->reportList->reportDescriptors as $reportDescriptor) {
                 $reports[] = $this->makeReport($courtOrder, $reportDescriptor);
                 if (count($reports) !== $count || !$first) {
-                    $this->makeReportSubmitted($reports[count($reports) - 1], $primary);
+                    $this->makeReportSubmitted($reports[count($reports) - 1], $reportDescriptor, $primary);
                 } elseif ($descriptor->reportList->currentIsSubmittable) {
                     $this->makeReportSubmittable($reports[count($reports) - 1]);
                 }
@@ -269,7 +269,7 @@ final class FixtureService
     private function makeClient(): Client
     {
         $address = explode("\n", $this->faker->streetAddress());
-        return $this->persist(new Client())
+        $client = new Client()
             ->setCaseNumber($this->counter->nextString(size: 8, postfix: 'T'))
             ->setFirstname($this->faker->firstName())
             ->setLastname($this->faker->lastName())
@@ -287,6 +287,8 @@ final class FixtureService
             ->setDeletedAt(null)
             ->setArchivedAt(null)
             ->setCreatedAt(null);
+
+        return $this->persist($client);
     }
 
     private function makeCourtOrder(CourtOrderDescriptor $descriptor, Client $client, CourtOrderType $type): CourtOrder
@@ -296,18 +298,10 @@ final class FixtureService
 
         $client->setCourtDate($madeDate);
 
-        return $this->persist(new CourtOrder()
-            ->setId($this->counter->nextInt())
-            ->setCourtOrderUid($this->counter->nextString(8))
-            ->setClient($client)
-            ->setOrderType($type)
-            ->setOrderKind($descriptor->single ? CourtOrderKind::Single : ($descriptor->siblingDeputySet === null ? CourtOrderKind::Hybrid : CourtOrderKind::Dual))
-            ->setOrderReportType($descriptor->single || $type !== CourtOrderType::HW ? $descriptor->reportType : CourtOrderReportType::OPG104)
-            ->setSibling(null)
-            ->setOrderMadeDate($madeDate)
-            ->setStatus($descriptor->active ? 'ACTIVE' : 'CLOSED')
-            ->setCreatedAt(null)
-            ->setUpdatedAt(null));
+        $courtOrder = new CourtOrder(
+        )->setId($this->counter->nextInt());
+
+        return $this->persist($courtOrder);
     }
 
     private function makeDeputy(DeputyDescriptor $descriptor, ?Organisation $organisation): Deputy
@@ -343,69 +337,68 @@ final class FixtureService
 
     private function makeOrganisation(DeputyDescriptor $descriptor): Organisation
     {
-        $organisation = new Organisation()
-            ->setId($this->counter->nextInt())
-            ->setIsActivated(true)
-            ->setDeletedAt()
-            ->setName($descriptor->organisation);
-        $organisation->setEmailIdentifier("@{$organisation->getId()}.$descriptor->emailDomain");
+        $id = $this->counter->nextInt();
+        $emailIdentifier = "@{$id}.{$descriptor->emailDomain}";
+        $organisation = new Organisation()->setId($id);
 
         return $this->persist($organisation);
     }
 
     private function makeUser(DeputyDescriptor $descriptor, ?Deputy $deputy = null, ?Organisation $organisation = null): User
     {
+        $id = $this->counter->nextInt();
+        $firstname = $deputy?->getFirstname() ?? $this->faker->firstName();
+        $lastname = $deputy?->getLastname() ?? $this->faker->lastName();
         $address = explode("\n", $this->faker->streetAddress());
-        $user = new User()
-            ->setId($this->counter->nextInt())
-            ->setDeputy($deputy)
-            ->setDeputyUid((int)$deputy?->getDeputyUid() ?: null)
-            ->setFirstname($deputy?->getFirstname() ?? $this->faker->firstName())
-            ->setLastname($deputy?->getLastname() ?? $this->faker->lastName())
-            ->setAddress1($deputy?->getAddress1() ?? $address[0])
-            ->setAddress2($deputy?->getAddress2() ?? $address[1] ?? '')
-            ->setAddress3($deputy?->getAddress3() ?? $address[2] ?? '')
-            ->setAddress4($deputy?->getAddress4() ?? $address[3] ?? '')
-            ->setAddress5($deputy?->getAddress5() ?? $address[4] ?? '')
-            ->setAddressCountry($deputy?->getAddressCountry() ?? 'GB')
-            ->setAddressPostcode($deputy?->getAddressPostcode() ?? $this->faker->postcode())
-            ->setPhoneMain($deputy?->getPhoneMain() ?? $this->faker->phoneNumber())
-            ->setRoleName(match ($descriptor->userType) {
-                UserType::Deputy => match ($descriptor->type) {
-                    DeputyType::LAY => User::ROLE_LAY_DEPUTY,
-                    DeputyType::PRO => User::ROLE_PROF_NAMED,
-                    DeputyType::PA => User::ROLE_PA_NAMED,
-                },
-                UserType::OrgAdmin => match ($descriptor->type) {
-                    DeputyType::LAY => throw new \DomainException('A lay cannot be a org admin.'),
-                    DeputyType::PRO => User::ROLE_PROF_ADMIN,
-                    DeputyType::PA => User::ROLE_PA_ADMIN,
-                },
-                UserType::OrgTeamMember => match ($descriptor->type) {
-                    DeputyType::LAY => throw new \DomainException('A lay cannot be a org admin.'),
-                    DeputyType::PRO => User::ROLE_PROF_TEAM_MEMBER,
-                    DeputyType::PA => User::ROLE_PA_TEAM_MEMBER,
-                },
-                UserType::Admin => User::ROLE_ADMIN,
-                UserType::AdminManager => User::ROLE_ADMIN_MANAGER,
-                UserType::SuperAdmin => User::ROLE_SUPER_ADMIN,
-            })
-            ->setActive($descriptor->isLoginActive)
-            ->setIsPrimary($descriptor->isPrimary)
-            ->setAgreeTermsUse(true)
-            ->setCoDeputyClientConfirmed(true)
-            ->setPassword($this->password)
-            ->setRegistrationDate(new \DateTime()->sub(new \DateInterval('P1Y')))
-            ->setRegistrationRoute(User::SELF_REGISTER)
-        ;
 
         if ($organisation !== null) {
-            $user->setEmail("{$user->getFirstname()}.{$user->getLastname()}{$organisation->getEmailIdentifier()}");
-            $organisation->addUser($user);
+            $email = "{$firstname}.{$lastname}{$organisation->getEmailIdentifier()}";
         } else {
-            $user->setEmail("{$user->getFirstname()}.{$user->getLastname()}@{$user->getId()}.{$descriptor->emailDomain}");
+            $email = "{$firstname}.{$lastname}@{$id}.{$descriptor->emailDomain}";
         }
 
+        $user = new User();
+        $user->setId($id)
+        ->setDeputy($deputy)
+        ->setDeputyUid((int)$deputy?->getDeputyUid() ?: null)
+        ->setAddress1($deputy?->getAddress1() ?? $address[0])
+        ->setAddress2($deputy?->getAddress2() ?? $address[1] ?? '')
+        ->setAddress3($deputy?->getAddress3() ?? $address[2] ?? '')
+        ->setAddress4($deputy?->getAddress4() ?? $address[3] ?? '')
+        ->setAddress5($deputy?->getAddress5() ?? $address[4] ?? '')
+        ->setAddressCountry($deputy?->getAddressCountry() ?? 'GB')
+        ->setAddressPostcode($deputy?->getAddressPostcode() ?? $this->faker->postcode())
+        ->setPhoneMain($deputy?->getPhoneMain() ?? $this->faker->phoneNumber())
+        ->setRoleName(match ($descriptor->userType) {
+            UserType::Deputy => match ($descriptor->type) {
+                DeputyType::LAY => User::ROLE_LAY_DEPUTY,
+                DeputyType::PRO => User::ROLE_PROF_NAMED,
+                DeputyType::PA => User::ROLE_PA_NAMED,
+            },
+            UserType::OrgAdmin => match ($descriptor->type) {
+                DeputyType::LAY => throw new \DomainException('A lay cannot be a org admin.'),
+                DeputyType::PRO => User::ROLE_PROF_ADMIN,
+                DeputyType::PA => User::ROLE_PA_ADMIN,
+            },
+            UserType::OrgTeamMember => match ($descriptor->type) {
+                DeputyType::LAY => throw new \DomainException('A lay cannot be a org admin.'),
+                DeputyType::PRO => User::ROLE_PROF_TEAM_MEMBER,
+                DeputyType::PA => User::ROLE_PA_TEAM_MEMBER,
+            },
+            UserType::Admin => User::ROLE_ADMIN,
+            UserType::AdminManager => User::ROLE_ADMIN_MANAGER,
+            UserType::SuperAdmin => User::ROLE_SUPER_ADMIN,
+        })
+        ->setActive($descriptor->isLoginActive)
+        ->setIsPrimary($descriptor->isPrimary)
+        ->setAgreeTermsUse(true)
+        ->setCoDeputyClientConfirmed(true)
+        ->setPassword($this->password)
+        ->setRegistrationDate(new \DateTime()->sub(new \DateInterval('P1Y')))
+        ->setLastLoggedIn(new \DateTime());
+        $user->setRegistrationRoute(User::SELF_REGISTER);
+
+        $organisation?->addUser($user);
         $deputy?->setEmail1($user->getEmail());
 
         return $this->persist($user);
@@ -429,27 +422,27 @@ final class FixtureService
         foreach ($reportDescriptor->supportingDocumentsWithoutS3Objects as $supportingDocumentWithoutS3Object) {
             $this->addSupportingDocumentWithoutS3Object($report, $supportingDocumentWithoutS3Object);
         }
-        return $report;
+
+        return $this->persist($report);
     }
 
-    private function makeReportSubmitted(Report $report, ?User $submitter): void
+    private function makeReportSubmitted(Report $report, ReportDescriptor $reportDescriptor, ?User $submitter): void
     {
+        $date = $reportDescriptor->submitDate ?? \DateTimeImmutable::createFromMutable($report->getEndDate())->add(new \DateInterval('P15D'));
         $report->setSubmitted(true);
-        $report->setSubmitDate((clone $report->getEndDate())->add(new \DateInterval('P15D')));
+        $report->setSubmitDate(\DateTime::createFromImmutable($date));
         $report->setSubmittedBy($submitter);
 
         $document = new Document($report);
         $document->setIsReportPdf(true);
         $document->setCreatedBy($submitter);
         $document->setStorageReference("dd_doc_{$report->getId()}_" . time());
-        $document->setFileName("DigiRep-{$this->counter->nextString(8)}.pdf");
         $this->persist($document);
 
         $reportSubmission = new ReportSubmission($report, $submitter);
         $reportSubmission->setUuid($this->counter->nextString(20));
+        $reportSubmission->setCreatedOn(\DateTime::createFromImmutable($date));
         $this->persist($reportSubmission);
-
-        $this->persist($report);
     }
 
     // this may be incomplete for making a HW report or a PFA 103 submittable,
@@ -460,36 +453,34 @@ final class FixtureService
         $report->setSignificantDecisionsMade('No')
             ->setReasonForNoDecisions('Nothing to be decided');
 
-        $mentalCapacity = new MentalCapacity($report)
+        $this->persist(new MentalCapacity($report)
             ->setMentalAssessmentDate(new \DateTime())
-            ->setHasCapacityChanged(MentalCapacity::CAPACITY_STAYED_SAME);
+            ->setHasCapacityChanged(MentalCapacity::CAPACITY_STAYED_SAME));
 
         // contacts
         $report->setReasonForNoContacts('No contacts necessary');
 
         // visits and care
-        $visitsCare = new VisitsCare()
-            ->setReport($report)
+        $this->persist(new VisitsCare()
             ->setDoYouLiveWithClient('yes')
             ->setDoesClientReceivePaidCare('no')
             ->setWhoIsDoingTheCaring('family')
-            ->setDoesClientHaveACarePlan('no');
+            ->setDoesClientHaveACarePlan('no'));
 
         // benefits check
-        $benefitsCheck = new ClientBenefitsCheck()
+        $this->persist(new ClientBenefitsCheck()
             ->setReport($report)
             ->setWhenLastCheckedEntitlement(ClientBenefitsCheckInterface::WHEN_CHECKED_IM_CURRENTLY_CHECKING)
-            ->setDoOthersReceiveMoneyOnClientsBehalf('no');
+            ->setDoOthersReceiveMoneyOnClientsBehalf('no'));
 
         // accounts
-        $account = new BankAccount()
-            ->setReport($report)
+        $this->persist(new BankAccount()
             ->setBank('Test Account')
             ->setAccountType('current')
             ->setAccountNumber('0011')
             ->setOpeningBalance('100.00')
             ->setClosingBalance('100.00')
-            ->setIsJointAccount('no');
+            ->setIsJointAccount('no'));
 
         // deputy expenses
         $report->setPaidForAnything('no');
@@ -512,9 +503,9 @@ final class FixtureService
         $report->setHasDebts('no');
 
         // actions
-        $action = new Action($report)
+        $this->persist(new Action($report)
             ->setDoYouExpectFinancialDecisions('no')
-            ->setDoYouHaveConcerns('no');
+            ->setDoYouHaveConcerns('no'));
 
         // any other information
         $report->setActionMoreInfo('no');
@@ -522,18 +513,9 @@ final class FixtureService
         // supporting documents
         $report->setWishToProvideDocumentation('no');
 
-        $this->persist($action);
-        $this->persist($account);
-        $this->persist($benefitsCheck);
-        $this->persist($visitsCare);
-        $this->persist($mentalCapacity);
-        $this->persist($report);
         $this->flush();
-
         $this->entityManager->refresh($report);
-
         $report->updateSectionsStatusCache();
-        $this->persist($report);
     }
 
     private function refreshCounter(): void
@@ -560,14 +542,11 @@ final class FixtureService
     {
         // required so that the system recognises the report has documents
         $report->setWishToProvideDocumentation('yes');
-        $this->persist($report);
 
         $document = new Document($report);
         $document->setIsReportPdf(false);
         $document->setCreatedBy($report->getSubmittedBy());
         $document->setStorageReference("dd_doc_{$report->getId()}_" . time());
-        $document->setFileName($filename);
         $this->persist($document);
-        $this->flush();
     }
 }
