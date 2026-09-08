@@ -7,266 +7,201 @@ namespace OPG\Digideps\Backend\Entity\Report;
 use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use OPG\Digideps\Backend\Entity\AssetInterface;
 
 #[ORM\Entity, ORM\HasLifecycleCallbacks]
-class AssetProperty extends Asset implements AssetInterface
+class AssetProperty extends Asset
 {
     public const string OCCUPANTS_OTHER = 'other';
     public const string OWNED_FULLY = 'fully';
     public const string OWNED_PARTLY = 'partly';
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['asset'])]
     #[ORM\Column(name: 'address', type: 'string', length: 200, nullable: true)]
-    private $address;
+    private ?string $address = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['asset'])]
     #[ORM\Column(name: 'address2', type: 'string', length: 200, nullable: true)]
-    private $address2;
+    private ?string $address2 = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['asset'])]
     #[ORM\Column(name: 'county', type: 'string', length: 75, nullable: true)]
-    private $county;
+    private ?string $county = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['asset'])]
     #[ORM\Column(name: 'postcode', type: 'string', length: 10, nullable: true)]
-    private $postcode;
+    private ?string $postcode = null;
+
+    #[JMS\Groups(['asset'])]
+    #[JMS\Type('string')]
+    #[ORM\Column(name: 'occupants', type: 'string', length: 550, nullable: true)]
+    private ?string $occupants = null;
 
     /**
-     * @var string
+     * fully/partly
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
-    #[ORM\Column(name: 'occupants', type: 'string', length: 550)]
-    private $occupants;
+    #[ORM\Column(name: 'owned', type: 'string', length: 15, nullable: true)]
+    private ?string $owned = null;
 
     /**
-     * @var string fully/partly
-     */
-    #[JMS\Groups(['asset'])]
-    #[JMS\Type('string')]
-    #[ORM\Column(name: 'owned', type: 'string', length: 15)]
-    private $owned;
-
-    /**
-     * @var float 0-100
+     * 0-100
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('float')]
-    #[ORM\Column(name: 'owned_percentage', type: 'decimal', precision: 14, scale: 2)]
-    private $ownedPercentage;
+    #[ORM\Column(name: 'owned_percentage', type: 'decimal', precision: 14, scale: 2, nullable: true)]
+    private ?string $ownedPercentage = null;
 
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
-    #[ORM\Column(name: 'is_subject_equity_rel', type: 'string', length: 4)]
-    private $isSubjectToEquityRelease;
+    #[ORM\Column(name: 'is_subject_equity_rel', type: 'string', length: 4, nullable: true)]
+    private ?string $isSubjectToEquityRelease = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
-    #[ORM\Column(name: 'has_mortgage', type: 'string', length: 4)]
-    private $hasMortgage;
+    #[ORM\Column(name: 'has_mortgage', type: 'string', length: 4, nullable: true)]
+    private ?string $hasMortgage = null;
 
-    /**
-     * @var float
-     */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('integer')]
-    #[ORM\Column(name: 'mortgage_outstanding', type: 'decimal', precision: 14, scale: 2)]
-    private $mortgageOutstandingAmount;
+    #[ORM\Column(name: 'mortgage_outstanding', type: 'decimal', precision: 14, scale: 2, nullable: true)]
+    private ?string $mortgageOutstandingAmount = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
-    #[ORM\Column(name: 'has_charges', type: 'string', length: 4)]
-    private $hasCharges;
+    #[ORM\Column(name: 'has_charges', type: 'string', length: 4, nullable: true)]
+    private ?string $hasCharges = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
-    #[ORM\Column(name: 'is_rented_out', type: 'string', length: 4)]
-    private $isRentedOut;
+    #[ORM\Column(name: 'is_rented_out', type: 'string', length: 4, nullable: true)]
+    private ?string $isRentedOut = null;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Groups(['asset'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[ORM\Column(name: 'rent_agreement_end_date', type: 'datetime', nullable: true)]
-    private $rentAgreementEndDate;
+    private ?\DateTime $rentAgreementEndDate = null;
 
-    /**
-     * @var float
-     */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('float')]
     #[ORM\Column(name: 'rent_income_month', type: 'decimal', precision: 14, scale: 2, nullable: true)]
-    private $rentIncomeMonth;
+    private ?string $rentIncomeMonth = '0.0';
 
-    /**
-     * Set address.
-     *
-     * @param string $address
-     */
-    public function setAddress($address)
+    protected function getType(): string
+    {
+        return 'property';
+    }
+
+    public function setAddress(?string $address): static
     {
         $this->address = $address;
 
         return $this;
     }
 
-    /**
-     * Get address.
-     */
-    public function getAddress()
+    public function getAddress(): ?string
     {
         return $this->address;
     }
 
-    /**
-     * Set postcode.
-     *
-     * @param string $postcode
-     */
-    public function setPostcode($postcode)
+    public function setPostcode(?string $postcode): static
     {
         $this->postcode = $postcode;
 
         return $this;
     }
 
-    /**
-     * Get address2.
-     *
-     * @return string
-     */
-    public function getAddress2()
+    public function getAddress2(): ?string
     {
         return $this->address2;
     }
 
-    /**
-     * Set county.
-     *
-     * @param string $county
-     */
-    public function setCounty($county)
+    public function setCounty(?string $county): static
     {
         $this->county = $county;
 
         return $this;
     }
 
-    /**
-     * Get county.
-     *
-     * @return string
-     */
-    public function getCounty()
+    public function getCounty(): ?string
     {
         return $this->county;
     }
 
-    /**
-     * Get postcode.
-     */
-    public function getPostcode()
+    public function getPostcode(): ?string
     {
         return $this->postcode;
     }
 
-    /**
-     * Set address2.
-     *
-     * @param string $address2
-     */
-    public function setAddress2($address2)
+    public function setAddress2(?string $address2): static
     {
         $this->address2 = $address2;
 
         return $this;
     }
 
-    public function getOccupants()
+    public function getOccupants(): ?string
     {
         return $this->occupants;
     }
 
-    public function getOwned()
+    public function getOwned(): string
     {
-        return $this->owned;
+        return $this->owned ?? AssetProperty::OWNED_FULLY;
     }
 
-    public function getOwnedPercentage()
+    public function getOwnedPercentage(): ?string
     {
         return $this->ownedPercentage;
     }
 
-    public function getIsSubjectToEquityRelease()
+    public function getIsSubjectToEquityRelease(): ?string
     {
         return $this->isSubjectToEquityRelease;
     }
 
-    public function getHasMortgage()
+    public function getHasMortgage(): ?string
     {
         return $this->hasMortgage;
     }
 
-    public function getMortgageOutstandingAmount()
+    public function getMortgageOutstandingAmount(): ?string
     {
         return $this->mortgageOutstandingAmount;
     }
 
-    public function getHasCharges()
+    public function getHasCharges(): ?string
     {
         return $this->hasCharges;
     }
 
-    public function getIsRentedOut()
+    public function getIsRentedOut(): ?string
     {
         return $this->isRentedOut;
     }
 
-    public function getRentAgreementEndDate()
+    public function getRentAgreementEndDate(): ?\DateTime
     {
         return $this->rentAgreementEndDate;
     }
 
-    public function getRentIncomeMonth()
+    public function getRentIncomeMonth(): ?string
     {
         return $this->rentIncomeMonth;
     }
 
-    public function setOccupants($occupants)
+    public function setOccupants(?string $occupants): static
     {
         $this->occupants = $occupants;
 
         return $this;
     }
 
-    public function setOwned($owned)
+    public function setOwned(string $owned): static
     {
         if (!in_array($owned, [self::OWNED_FULLY, self::OWNED_PARTLY])) {
             throw new \InvalidArgumentException(__METHOD__ . "Invalid owned type [$owned]");
@@ -277,66 +212,66 @@ class AssetProperty extends Asset implements AssetInterface
         return $this;
     }
 
-    public function setOwnedPercentage($ownedPercentage): static
+    public function setOwnedPercentage(null|int|float|string $ownedPercentage): static
     {
-        $this->ownedPercentage = $ownedPercentage;
+        $this->ownedPercentage = $ownedPercentage === null ? null : (string)$ownedPercentage;
 
         return $this;
     }
 
-    public function setIsSubjectToEquityRelease($isSubjectToEquityRelease)
+    public function setIsSubjectToEquityRelease(?string $isSubjectToEquityRelease): static
     {
         $this->isSubjectToEquityRelease = $isSubjectToEquityRelease;
 
         return $this;
     }
 
-    public function setHasMortgage($hasMortgage)
+    public function setHasMortgage(?string $hasMortgage): static
     {
         $this->hasMortgage = $hasMortgage;
 
         return $this;
     }
 
-    public function setMortgageOutstandingAmount($mortgageOutstandingAmount)
+    public function setMortgageOutstandingAmount(float|int|string|null $mortgageOutstandingAmount): static
     {
-        $this->mortgageOutstandingAmount = $mortgageOutstandingAmount;
+        $this->mortgageOutstandingAmount = $mortgageOutstandingAmount !== null ? (string)$mortgageOutstandingAmount : '0.0';
 
         return $this;
     }
 
-    public function setHasCharges($hasCharges)
+    public function setHasCharges(?string $hasCharges): static
     {
         $this->hasCharges = $hasCharges;
 
         return $this;
     }
 
-    public function setIsRentedOut($isRentedOut)
+    public function setIsRentedOut(?string $isRentedOut): static
     {
         $this->isRentedOut = $isRentedOut;
 
         return $this;
     }
 
-    public function setRentAgreementEndDate($rentAgreementEndDate)
+    public function setRentAgreementEndDate(?\DateTime $rentAgreementEndDate): static
     {
         $this->rentAgreementEndDate = $rentAgreementEndDate;
 
         return $this;
     }
 
-    public function setRentIncomeMonth($rentIncomeMonth)
+    public function setRentIncomeMonth(int|float|string|null $rentIncomeMonth): static
     {
-        $this->rentIncomeMonth = $rentIncomeMonth;
+        $this->rentIncomeMonth = $rentIncomeMonth !== null ? (string)$rentIncomeMonth : null;
 
         return $this;
     }
 
-    public function getValueTotal(): float|null
+    public function getValueTotal(): ?float
     {
         if ($this->getOwned() == self::OWNED_PARTLY) {
-            return floatval($this->getValue()) * floatval($this->getOwnedPercentage() / 100);
+            return floatval($this->getValue()) * floatval($this->getOwnedPercentage()) / 100.0;
         }
 
         return parent::getValueTotal();
@@ -344,7 +279,7 @@ class AssetProperty extends Asset implements AssetInterface
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function deleteUnusedData()
+    public function deleteUnusedData(): void
     {
         if ($this->getIsRentedOut() === 'no') {
             $this->setRentAgreementEndDate(null);
@@ -356,27 +291,11 @@ class AssetProperty extends Asset implements AssetInterface
         }
 
         if ($this->getOwned() === self::OWNED_FULLY) {
-            $this->setOwnedPercentage(null);
+            $this->setOwnedPercentage(0);
         }
     }
 
-    #[JMS\VirtualProperty]
-    #[JMS\SerializedName('type')]
-    #[JMS\Groups(['asset'])]
-    public function getAssetType()
-    {
-        return 'property';
-    }
-
-    public function getType()
-    {
-        return 'property';
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEqual(AssetInterface $asset)
+    public function isEqual(Asset $asset): bool
     {
         if ($asset instanceof AssetProperty) {
             return $asset->getAddress() === $this->getAddress()

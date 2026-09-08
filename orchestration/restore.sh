@@ -1,13 +1,28 @@
 #! /usr/bin/env sh
 
-set -e
+set -ex
 set -o pipefail
 
 source common.sh
 
+echo "ARGS: $AWS_ARGS"
+echo "S3_BUCKET: $S3_BUCKET"
+echo "S3_PREFIX: $S3_PREFIX"
 echo "Finding latest backup"
 
-LATEST_BACKUP=$(aws s3 $AWS_ARGS ls s3://$S3_BUCKET/$S3_PREFIX/ | sort | tail -n 1 | awk '{ print $4 }')
+echo "Listing backups in s3://$S3_BUCKET/$S3_PREFIX/"
+
+LISTING=$(aws s3 $AWS_ARGS ls "s3://$S3_BUCKET/$S3_PREFIX/")
+RET=$?
+
+echo "aws s3 ls exit code: $RET"
+echo "$LISTING"
+
+LATEST_BACKUP=$(echo "$LISTING" | sort | tail -n 1 | awk '{print $4}')
+
+echo "LATEST_BACKUP=$LATEST_BACKUP"
+
+#LATEST_BACKUP=$(aws s3 $AWS_ARGS ls s3://$S3_BUCKET/$S3_PREFIX/ | sort | tail -n 1 | awk '{ print $4 }')
 
 echo "Fetching ${LATEST_BACKUP} from S3"
 

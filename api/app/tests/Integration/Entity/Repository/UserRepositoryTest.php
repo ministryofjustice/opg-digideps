@@ -38,22 +38,22 @@ class UserRepositoryTest extends KernelTestCase
     public function testCountsInactiveUsers()
     {
         $oldUserWithNoClient = self::$fixtures->createUser();
-        $oldUserWithNoClient->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03'));
+        $oldUserWithNoClient->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03') ?: null);
         $oldUserWithNoClient->setRoleName(User::ROLE_LAY_DEPUTY);
 
         $oldUserWithNoReports = self::$fixtures->createUser();
-        $oldUserWithNoReports->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03'));
+        $oldUserWithNoReports->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03') ?: null);
         $oldUserWithNoReports->setRoleName(User::ROLE_LAY_DEPUTY);
         self::$fixtures->createClient($oldUserWithNoReports);
 
         $oldUserWithReport = self::$fixtures->createUser();
-        $oldUserWithReport->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03'));
+        $oldUserWithReport->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03') ?: null);
         $oldUserWithReport->setRoleName(User::ROLE_LAY_DEPUTY);
         $oldClientWithReport = self::$fixtures->createClient($oldUserWithReport);
         self::$fixtures->createReport($oldClientWithReport);
 
         $oldProfUserWithNoClient = self::$fixtures->createUser();
-        $oldProfUserWithNoClient->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03'));
+        $oldProfUserWithNoClient->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03') ?: null);
         $oldProfUserWithNoClient->setRoleName(User::ROLE_PROF_ADMIN);
 
         $recentUserWithNoClient = self::$fixtures->createUser();

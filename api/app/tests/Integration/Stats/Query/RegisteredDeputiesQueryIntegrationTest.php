@@ -27,10 +27,7 @@ class RegisteredDeputiesQueryIntegrationTest extends ApiIntegrationTestCase
     {
         for ($i = 0; $i < $count; ++$i) {
             $id = md5(microtime());
-            $user = new User()
-                ->setFirstname('Test')
-                ->setLastname('User')
-                ->setEmail("test-user-$id@example.com")
+            $user = new User('Test', 'User', "test-user-$id@example.com")
                 ->setRegistrationDate(new \DateTime())
                 ->setRoleName($roleName);
 

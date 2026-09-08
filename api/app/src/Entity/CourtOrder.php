@@ -17,9 +17,6 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use OPG\Digideps\Backend\Repository\CourtOrderRepository;
 
-/**
- * Court Orders for clients.
- */
 #[ORM\Table(name: 'court_order')]
 #[ORM\Entity(repositoryClass: CourtOrderRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -33,7 +30,7 @@ class CourtOrder
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'court_order_id_seq', allocationSize: 1, initialValue: 1)]
-    private int $id;
+    private ?int $id = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['court-order-basic', 'court-order-full', 'deputy-court-order-basic'])]
@@ -72,7 +69,7 @@ class CourtOrder
 
     #[ORM\JoinColumn(name: 'sibling_id', referencedColumnName: 'id')]
     #[ORM\OneToOne(targetEntity: CourtOrder::class)]
-    private ?CourtOrder $sibling;
+    private ?CourtOrder $sibling = null;
 
     /**
      * @see CourtOrderKind
@@ -91,16 +88,33 @@ class CourtOrder
     #[ORM\ManyToMany(targetEntity: Report::class, inversedBy: 'courtOrders', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private Collection $reports;
 
+    /**
+     * @var Collection<int, CourtOrderDeputy>
+     */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrderDeputy>')]
     #[ORM\OneToMany(mappedBy: 'courtOrder', targetEntity: CourtOrderDeputy::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private Collection $courtOrderDeputyRelationships;
 
     private ?ReportType $desiredReportType = null;
 
-    public function __construct()
-    {
+    public function __construct(
+        string $courtOrderUid,
+        CourtOrderType $orderType,
+        CourtOrderReportType $orderReportType,
+        CourtOrderKind $orderKind,
+        \DateTime $orderMadeDate,
+        Client $client,
+        string $status = 'ACTIVE'
+    ) {
         $this->courtOrderDeputyRelationships = new ArrayCollection();
         $this->reports = new ArrayCollection();
+        $this->courtOrderUid = $courtOrderUid;
+        $this->orderType = $orderType->value;
+        $this->orderReportType = $orderReportType->value;
+        $this->orderMadeDate = $orderMadeDate;
+        $this->client = $client;
+        $this->orderKind = $orderKind->value;
+        $this->status = $status;
     }
 
     /**
@@ -126,12 +140,18 @@ class CourtOrder
 
     public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    public function setId(int $id): CourtOrder
+    public function setId(int $id): static
     {
-        $this->id = $id;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
 
         return $this;
     }
@@ -141,7 +161,7 @@ class CourtOrder
         return $this->courtOrderUid;
     }
 
-    public function setCourtOrderUid(string $courtOrderUid): CourtOrder
+    public function setCourtOrderUid(string $courtOrderUid): static
     {
         $this->courtOrderUid = $courtOrderUid;
 
@@ -153,7 +173,7 @@ class CourtOrder
         return CourtOrderType::from($this->orderType);
     }
 
-    public function setOrderType(CourtOrderType $orderType): CourtOrder
+    public function setOrderType(CourtOrderType $orderType): static
     {
         $this->orderType = $orderType->value;
 
@@ -169,7 +189,7 @@ class CourtOrder
         return CourtOrderReportType::tryFrom(strtoupper($this->orderReportType)) ?? $fallBack;
     }
 
-    public function setOrderReportType(CourtOrderReportType $orderReportType): CourtOrder
+    public function setOrderReportType(CourtOrderReportType $orderReportType): static
     {
         $this->orderReportType = $orderReportType->value;
 
@@ -181,7 +201,7 @@ class CourtOrder
         return $this->status;
     }
 
-    public function setStatus(string $status): CourtOrder
+    public function setStatus(string $status): static
     {
         $this->status = $status;
 
@@ -193,7 +213,7 @@ class CourtOrder
         return $this->client;
     }
 
-    public function setClient(Client $client): CourtOrder
+    public function setClient(Client $client): static
     {
         $this->client = $client;
 
@@ -205,7 +225,7 @@ class CourtOrder
         return $this->orderMadeDate;
     }
 
-    public function setOrderMadeDate(\DateTime $orderMadeDate): CourtOrder
+    public function setOrderMadeDate(\DateTime $orderMadeDate): static
     {
         $this->orderMadeDate = $orderMadeDate;
 
@@ -217,7 +237,7 @@ class CourtOrder
         return $this->sibling;
     }
 
-    public function setSibling(?CourtOrder $sibling): CourtOrder
+    public function setSibling(?CourtOrder $sibling): static
     {
         $this->sibling = $sibling;
 
@@ -229,14 +249,14 @@ class CourtOrder
         return CourtOrderKind::from($this->orderKind);
     }
 
-    public function setOrderKind(CourtOrderKind $kind): CourtOrder
+    public function setOrderKind(CourtOrderKind $kind): static
     {
         $this->orderKind = $kind->value;
 
         return $this;
     }
 
-    public function addReport(Report $report): CourtOrder
+    public function addReport(Report $report): static
     {
         $this->reports->add($report);
 

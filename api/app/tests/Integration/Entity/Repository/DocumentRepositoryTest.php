@@ -94,8 +94,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $fileName .= $isResubmission ? '-resubmission.pdf' : '.pdf';
         $storageRef .= $isResubmission ? '-resubmission.pdf' : '.pdf';
 
-        $doc = new Document($report)
-            ->setFileName($fileName)
+        $doc = new Document($report, $fileName)
             ->setStorageReference($storageRef)
             ->setIsReportPdf($isReportPdf)
             ->setSynchronisationStatus($syncStatus)
@@ -138,13 +137,9 @@ class DocumentRepositoryTest extends KernelTestCase
 
     private function generateAndPersistUser(): User
     {
-        $user = new User()
-            ->setFirstname('Test')
-            ->setLastname('User')
-            ->setPassword('password123');
-
         $datePostFix = (string) new \DateTime()->getTimestamp();
-        $user->setEmail(sprintf('test-user%s%s@test.com', $datePostFix, rand(0, 100000)));
+        $user = new User('Test', 'User', sprintf('test-user%s%s@test.com', $datePostFix, rand(0, 100000)))
+            ->setPassword('password123');
 
         self::$entityManager->persist($user);
 

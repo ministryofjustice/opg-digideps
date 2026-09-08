@@ -24,7 +24,7 @@ class SatisfactionRepository extends ServiceEntityRepository
         $table = Satisfaction::class;
 
         $query = $entityManager->createQuery(
-            "SELECT s.id, s.score, s.comments, s.deputyrole, s.reporttype, s.created
+            "SELECT s.id, s.score, s.comments, s.deputyRole, s.reportType, s.created
              FROM $table s
              WHERE s.report IS NOT NULL
              AND s.created > :fromDate

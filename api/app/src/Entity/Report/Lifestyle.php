@@ -17,11 +17,11 @@ class Lifestyle
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'lifestyle_id_seq', allocationSize: 1, initialValue: 1)]
-    private int $id;
+    private ?int $id = null;
 
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\OneToOne(inversedBy: 'lifestyle', targetEntity: Report::class)]
-    private ?Report $report = null;
+    private Report $report;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['lifestyle'])]
@@ -47,28 +47,37 @@ class Lifestyle
     #[ORM\Column(name: 'activity_details_no', type: 'text', nullable: true)]
     private ?string $activityDetailsNo = null;
 
-    /**
-     * Get id
-     */
-    public function getId(): int
+    public function __construct(Report $report)
     {
-        return $this->id;
+        $this->report = $report;
     }
 
-    /**
-     * Set report
-     */
-    public function setReport(?Report $report = null): static
+    public function getId(): int
+    {
+        return $this->id ?? 0;
+    }
+
+    public function setId(int $id): static
+    {
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
+    }
+
+    public function setReport(Report $report): static
     {
         $this->report = $report;
 
         return $this;
     }
 
-    /**
-     * Get report
-     */
-    public function getReport(): ?Report
+    public function getReport(): Report
     {
         return $this->report;
     }

@@ -11,54 +11,48 @@ use JMS\Serializer\Annotation as JMS;
 #[ORM\Entity]
 class Action
 {
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'action_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\OneToOne(inversedBy: 'action', targetEntity: Report::class)]
-    private $report;
+    private Report $report;
 
     /**
-     * @var string yes|no|null
+     * yes|no|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['action'])]
     #[ORM\Column(name: 'do_you_expect_decisions', type: 'string', length: 4, nullable: true)]
-    private $doYouExpectFinancialDecisions;
+    private ?string $doYouExpectFinancialDecisions = null;
 
     /**
-     * @var string yes|no|null
+     * yes|no|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['action'])]
     #[ORM\Column(name: 'do_you_expect_decisions_details', type: 'text', nullable: true)]
-    private $doYouExpectFinancialDecisionsDetails;
+    private ?string $doYouExpectFinancialDecisionsDetails = null;
 
     /**
-     * @var string yes|no|null
+     * yes|no|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['action'])]
     #[ORM\Column(name: 'do_you_have_concerns', type: 'string', length: 4, nullable: true)]
-    private $doYouHaveConcerns;
+    private ?string $doYouHaveConcerns = null;
 
     /**
-     * @var string yes|no|null
+     * yes|no|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['action'])]
     #[ORM\Column(name: 'do_you_have_concerns_details', type: 'text', nullable: true)]
-    private $doYouHaveConcernsDetails;
+    private ?string $doYouHaveConcernsDetails = null;
 
     public function __construct(Report $report)
     {
@@ -66,87 +60,85 @@ class Action
         $report->setAction($this);
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * Set report.
-     *
-     * @return Contact
-     */
-    public function setReport(?Report $report = null)
+    public function setId(int $id): static
+    {
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
+    }
+
+    public function setReport(Report $report): static
     {
         $this->report = $report;
 
         return $this;
     }
 
-    /**
-     * Get report.
-     *
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    public function getDoYouExpectFinancialDecisions()
+    public function getDoYouExpectFinancialDecisions(): ?string
     {
         return $this->doYouExpectFinancialDecisions;
     }
 
-    public function getDoYouHaveConcerns()
+    public function getDoYouHaveConcerns(): ?string
     {
         return $this->doYouHaveConcerns;
     }
 
-    public function setDoYouExpectFinancialDecisions($doYouExpectFinancialDecisions): static
+    public function setDoYouExpectFinancialDecisions(?string $doYouExpectFinancialDecisions): static
     {
         $this->doYouExpectFinancialDecisions = $doYouExpectFinancialDecisions;
 
         return $this;
     }
 
-    public function setDoYouHaveConcerns($doYouHaveConcerns): static
+    public function setDoYouHaveConcerns(?string $doYouHaveConcerns): static
     {
         $this->doYouHaveConcerns = $doYouHaveConcerns;
 
         return $this;
     }
 
-    public function getDoYouExpectFinancialDecisionsDetails()
+    public function getDoYouExpectFinancialDecisionsDetails(): ?string
     {
         return $this->doYouExpectFinancialDecisionsDetails;
     }
 
-    public function getDoYouHaveConcernsDetails()
+    public function getDoYouHaveConcernsDetails(): ?string
     {
         return $this->doYouHaveConcernsDetails;
     }
 
-    public function setDoYouExpectFinancialDecisionsDetails($doYouExpectFinancialDecisionsDetails)
+    public function setDoYouExpectFinancialDecisionsDetails(?string $doYouExpectFinancialDecisionsDetails): static
     {
         $this->doYouExpectFinancialDecisionsDetails = $doYouExpectFinancialDecisionsDetails;
 
         return $this;
     }
 
-    public function setDoYouHaveConcernsDetails($doYouHaveConcernsDetails)
+    public function setDoYouHaveConcernsDetails(?string $doYouHaveConcernsDetails): static
     {
         $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
 
         return $this;
     }
 
-    public function cleanUpUnusedData()
+    public function cleanUpUnusedData(): void
     {
         if ($this->doYouExpectFinancialDecisions == 'no') {
             $this->doYouExpectFinancialDecisionsDetails = null;
