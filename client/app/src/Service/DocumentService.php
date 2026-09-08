@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service;
 
-use OPG\Digideps\Frontend\Entity\DocumentInterface;
 use OPG\Digideps\Frontend\Entity\Report\Document;
 use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Frontend\Model\MissingDocument;
@@ -62,7 +61,7 @@ class DocumentService
     /**
      * @throws \Exception if the document doesn't exist (in addition to S3 network/access failures
      */
-    private function deleteFromS3(DocumentInterface $document): array
+    private function deleteFromS3(Document $document): array
     {
         $ref = $document->getStorageReference();
         if (!$ref) {

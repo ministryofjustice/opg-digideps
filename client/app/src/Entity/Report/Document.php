@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
-use OPG\Digideps\Frontend\Entity\DocumentInterface;
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use OPG\Digideps\Frontend\Entity\SynchronisableInterface;
 use OPG\Digideps\Frontend\Entity\SynchronisableTrait;
@@ -16,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[Assert\Callback(callback: 'isValidForReport', groups: ['document'])]
-class Document implements DocumentInterface, SynchronisableInterface
+class Document implements SynchronisableInterface
 {
     use CreationAudit;
     use HasReportTrait;
