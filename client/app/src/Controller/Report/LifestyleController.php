@@ -72,9 +72,7 @@ class LifestyleController extends AbstractController
             /* @var Lifestyle $data */
             $data = $form->getData();
 
-            $data
-                ->setReport($report)
-                ->keepOnlyRelevantLifestyleData();
+            $data->setReport($report);
 
             if ($lifestyle->getId() == null) {
                 $this->restClient->post('report/lifestyle', $data, ['lifestyle', 'report-id']);

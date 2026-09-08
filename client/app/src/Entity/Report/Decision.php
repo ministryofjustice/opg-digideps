@@ -14,7 +14,7 @@ class Decision
 
     #[JMS\Type('integer')]
     #[JMS\Groups(['decision'])]
-    private int $id;
+    private ?int $id = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['decision'])]
@@ -38,12 +38,12 @@ class Decision
     /** @phpstan-ignore property.unusedType */
     private ?\DateTime $createdAt = null;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
         return $this;

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Entity\Report;
 
-use OPG\Digideps\Frontend\Entity\MoneyReceivedOnClientsBehalfInterface;
-use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\MoneyReceivedOnClientsBehalfInterface;
+use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck\MoneyReceivedOnClientsBehalf as CustomAssert;
 
 class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterface
 {
@@ -22,32 +22,23 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?ClientBenefitsCheck $clientBenefitsCheck = null;
 
-    /**
-     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
-     */
+    #[CustomAssert(groups: ['client-benefits-check'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $moneyType = null;
 
-    /**
-     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
-     */
+    #[CustomAssert(groups: ['client-benefits-check'])]
     #[JMS\Type('float')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?float $amount = null;
 
-    /**
-     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
-     *
-     * This will not be persisted - it exists to enable a checkbox in the form
-     */
+    // This will not be persisted - it exists to enable a checkbox in the form
+    #[CustomAssert(groups: ['client-benefits-check'])]
     #[JMS\Type('bool')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?bool $amountDontKnow = null;
 
-    /**
-     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
-     */
+    #[CustomAssert(groups: ['client-benefits-check'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $whoReceivedMoney;
@@ -60,7 +51,6 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     public function setId(?string $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
@@ -72,7 +62,6 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     public function setCreated(?\DateTime $created): static
     {
         $this->created = $created;
-
         return $this;
     }
 
@@ -84,7 +73,6 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     public function setClientBenefitsCheck(?ClientBenefitsCheck $clientBenefitsCheck): static
     {
         $this->clientBenefitsCheck = $clientBenefitsCheck;
-
         return $this;
     }
 
@@ -96,7 +84,6 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     public function setAmountDontKnow(?bool $amountDontKnow): static
     {
         $this->amountDontKnow = $amountDontKnow;
-
         return $this;
     }
 
@@ -108,7 +95,6 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     public function setAmount(?float $amount): static
     {
         $this->amount = $amount;
-
         return $this;
     }
 
@@ -120,7 +106,6 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     public function setMoneyType(?string $moneyType): static
     {
         $this->moneyType = $moneyType;
-
         return $this;
     }
 
@@ -132,7 +117,6 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     public function setWhoReceivedMoney(?string $whoReceivedMoney): static
     {
         $this->whoReceivedMoney = $whoReceivedMoney;
-
         return $this;
     }
 }

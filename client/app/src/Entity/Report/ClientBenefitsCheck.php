@@ -16,7 +16,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
-    private string $id;
+    private ?string $id = null;
 
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['report', 'client-benefits-check'])]
@@ -102,12 +102,12 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
         return $this;
     }
 
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function setId(string $id): static
+    public function setId(?string $id): static
     {
         $this->id = $id;
         return $this;

@@ -6,9 +6,7 @@ namespace OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck;
 
 use Symfony\Component\Validator\Constraint;
 
-/**
- * @Annotation
- */
+#[\Attribute]
 class MoneyReceivedOnClientsBehalf extends Constraint
 {
     public string $moneyDetailsMissingMoneyTypeMessage = 'form.moneyDetails.errors.missingType';

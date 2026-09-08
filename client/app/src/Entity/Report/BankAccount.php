@@ -45,7 +45,7 @@ class BankAccount implements BankAccountInterface
     ];
 
     #[JMS\Type('integer')]
-    private int $id;
+    private ?int $id = null;
 
     #[JMS\Groups(['account'])]
     #[JMS\Type('string')]
@@ -114,12 +114,12 @@ class BankAccount implements BankAccountInterface
     #[JMS\Groups(['account'])]
     private ?string $nameOneLine = null;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
         return $this;

@@ -1,137 +1,93 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
-use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Lifestyle
 {
     use HasReportTrait;
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['lifestyle'])]
-    private $id;
+    private ?int $id = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['lifestyle'])]
     #[Assert\NotBlank(message: 'lifestyle.careAppointments.notBlank', groups: ['lifestyle-care-appointments'])]
-    private $careAppointments;
+    private ?string $careAppointments = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['lifestyle'])]
     #[Assert\NotBlank(message: 'lifestyle.doesClientUndertakeSocialActivities.notBlank', groups: ['lifestyle-undertake-social-activities'])]
-    private $doesClientUndertakeSocialActivities;
+    private ?string $doesClientUndertakeSocialActivities = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['lifestyle'])]
     #[Assert\NotBlank(message: 'lifestyle.activityDetailsYes.notBlank', groups: ['lifestyle-activity-details-yes'])]
-    private $activityDetailsYes;
+    private ?string $activityDetailsYes = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['lifestyle'])]
     #[Assert\NotBlank(message: 'lifestyle.activityDetailsNo.notBlank', groups: ['lifestyle-activity-details-no'])]
-    private $activityDetailsNo;
+    private ?string $activityDetailsNo = null;
 
-    /**
-     * @return int $id
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCareAppointments()
+    public function getCareAppointments(): ?string
     {
         return $this->careAppointments;
     }
 
-    /**
-     * @param mixed $careAppointments
-     */
-    public function setCareAppointments($careAppointments): static
+    public function setCareAppointments(?string $careAppointments): static
     {
         $this->careAppointments = $careAppointments;
-
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDoesClientUndertakeSocialActivities()
+    public function getDoesClientUndertakeSocialActivities(): ?string
     {
         return $this->doesClientUndertakeSocialActivities;
     }
 
-    /**
-     * @param mixed $doesClientUndertakeSocialActivities
-     */
-    public function setDoesClientUndertakeSocialActivities($doesClientUndertakeSocialActivities): static
+    public function setDoesClientUndertakeSocialActivities(?string $doesClientUndertakeSocialActivities): static
     {
         $this->doesClientUndertakeSocialActivities = $doesClientUndertakeSocialActivities;
-
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function keepOnlyRelevantLifestyleData(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getActivityDetailsYes()
+    public function getActivityDetailsYes(): ?string
     {
         return $this->activityDetailsYes;
     }
 
-    /**
-     * @param mixed $activityDetailsYes
-     */
-    public function setActivityDetailsYes($activityDetailsYes): static
+    public function setActivityDetailsYes(?string $activityDetailsYes): static
     {
         $this->activityDetailsYes = $activityDetailsYes;
-
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getActivityDetailsNo()
+    public function getActivityDetailsNo(): ?string
     {
         return $this->activityDetailsNo;
     }
 
-    /**
-     * @param mixed $activityDetailsNo
-     */
-    public function setActivityDetailsNo($activityDetailsNo): static
+    public function setActivityDetailsNo(?string $activityDetailsNo): static
     {
         $this->activityDetailsNo = $activityDetailsNo;
-
         return $this;
     }
 }

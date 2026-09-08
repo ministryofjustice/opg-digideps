@@ -21,14 +21,14 @@ class Debt
 
     #[JMS\Groups(['debt'])]
     #[JMS\Type('boolean')]
-    private ?string $hasMoreDetails;
+    private ?bool $hasMoreDetails;
 
     #[JMS\Groups(['debt'])]
     #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'debt.moreDetails.notEmpty', groups: ['debts-more-details'])]
     private ?string $moreDetails;
 
-    public function __construct(?string $debtTypeId, ?string $amount, ?string $hasMoreDetails, ?string $moreDetails)
+    public function __construct(?string $debtTypeId, ?string $amount, ?bool $hasMoreDetails, ?string $moreDetails)
     {
         $this->debtTypeId = $debtTypeId;
         $this->amount = $amount;
@@ -58,12 +58,12 @@ class Debt
         return $this;
     }
 
-    public function getHasMoreDetails(): ?string
+    public function getHasMoreDetails(): ?bool
     {
         return $this->hasMoreDetails;
     }
 
-    public function setHasMoreDetails(?string $hasMoreDetails): static
+    public function setHasMoreDetails(?bool $hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
         return $this;

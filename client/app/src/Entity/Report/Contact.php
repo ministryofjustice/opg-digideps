@@ -14,7 +14,7 @@ class Contact
 
     #[JMS\Type('integer')]
     #[JMS\Groups(['contact'])]
-    private int $id;
+    private ?int $id = null;
 
     #[JMS\SerializedName('contact_name')]
     #[JMS\Type('string')]
@@ -69,12 +69,12 @@ class Contact
     /** @phpstan-ignore property.unusedType */
     private ?\DateTime $createdAt = null;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
         return $this;

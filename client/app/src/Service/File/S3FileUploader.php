@@ -82,26 +82,17 @@ class S3FileUploader
             ->setFileName($fileName)
             ->setIsReportPdf($isReportPdf);
 
+        $url = "/document/report/{$report->getId()}";
         if ($overwrite) {
-            $response = $this->persistDocumentOverwrite($report->getId(), $document);
-        } else {
-            $response = $this->persistDocument($report->getId(), $document);
+            $url .= "/overwrite";
         }
+
+        $response = $this->restClient->post($url, $document, ['document']);
 
         $id = new ValidatingArray(is_array($response) ? $response : [])->getIntegerOrThrow('id');
         $document->setId($id);
 
         return $document;
-    }
-
-    private function persistDocument(int $reportId, Document $document)
-    {
-        return $this->restClient->post("/document/report/$reportId", $document, ['document']);
-    }
-
-    private function persistDocumentOverwrite(int $reportId, Document $document)
-    {
-        return $this->restClient->post("/document/report/$reportId/overwrite", $document, ['document']);
     }
 
     /**
