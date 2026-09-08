@@ -52,9 +52,6 @@ jobs:
         working-directory: lambdas/functions/monitor_notify_lambda
         run: uv sync --locked
 
-      #          uv export --locked -o requirements.txt
-      #          python -m pip install --no-cache-dir -r requirements.txt
-
       - name: configure OIDC AWS credentials for slack notification
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
