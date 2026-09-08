@@ -10,6 +10,9 @@
          bootstrap="./bootstrap.php"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
          displayDetailsOnPhpunitDeprecations="true">
+  <testsuites>
+      <testsuite name="integration"><directory>.</directory></testsuite>
+  </testsuites>
   <php>
     <server name="KERNEL_DIR" value="../../src"/>
     <server name="APP_ENV" value="test"/>
