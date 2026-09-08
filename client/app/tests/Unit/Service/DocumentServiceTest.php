@@ -93,7 +93,8 @@ class DocumentServiceTest extends TestCase
             ->method('getDocuments')
             ->willReturn([$this->getDoc(1), $this->getDoc(2)]);
 
-        [$documents, $missing] = $this->sut->retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
+        ['retrieved' => $documents, 'missing' => $missing] =
+            $this->sut->retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
 
         $expectedRetrievedDoc1 = new RetrievedDocument();
         $expectedRetrievedDoc1->setFileName('file-name1.pdf');
@@ -127,7 +128,8 @@ class DocumentServiceTest extends TestCase
             ->method('getDocuments')
             ->willReturn([$this->getDoc(1), $this->getDoc(2)]);
 
-        [$documents, $missing] = $this->sut->retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
+        ['retrieved' => $documents, 'missing' => $missing] =
+            $this->sut->retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
 
         $expectedRetrievedDoc = new RetrievedDocument();
         $expectedRetrievedDoc->setFileName('file-name1.pdf');
@@ -167,9 +169,10 @@ class DocumentServiceTest extends TestCase
             ->method('getDocuments')
             ->willReturn([$this->getDoc(3)]);
 
-        [$documents, $missing] = $this->sut->retrieveDocumentsFromS3ByReportSubmissions(
-            [$reportSubmission, $reportSubmission2]
-        );
+        ['retrieved' => $documents, 'missing' => $missing] =
+            $this->sut->retrieveDocumentsFromS3ByReportSubmissions(
+                [$reportSubmission, $reportSubmission2]
+            );
 
         $expectedRetrievedDoc1 = new RetrievedDocument();
         $expectedRetrievedDoc1->setFileName('file-name1.pdf');
@@ -216,9 +219,8 @@ class DocumentServiceTest extends TestCase
             ->method('getDocuments')
             ->willReturn([$this->getDoc(3), $this->getDoc(4)]);
 
-        [$documents, $missing] = $this->sut->retrieveDocumentsFromS3ByReportSubmissions(
-            [$reportSubmission, $reportSubmission2]
-        );
+        ['retrieved' => $documents, 'missing' => $missing] =
+            $this->sut->retrieveDocumentsFromS3ByReportSubmissions([$reportSubmission, $reportSubmission2]);
 
         $expectedRetrievedDoc1 = new RetrievedDocument();
         $expectedRetrievedDoc1->setFileName('file-name1.pdf');

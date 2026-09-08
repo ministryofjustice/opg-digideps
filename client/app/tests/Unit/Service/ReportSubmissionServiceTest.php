@@ -189,7 +189,7 @@ class ReportSubmissionServiceTest extends TestCase
 
     public function testGetReportSubmissionById(): void
     {
-        $id = '123';
+        $id = 123;
 
         $this->mockRestClient->expects($this->once())->method('get')->with(
             "report-submission/{$id}",
@@ -202,7 +202,7 @@ class ReportSubmissionServiceTest extends TestCase
 
     public function testGetReportSubmissionByIds(): void
     {
-        $ids = ['123', '456'];
+        $ids = [123, 456];
 
         $reportSubmission1 = new ReportSubmission();
         $reportSubmission1->setId(123);

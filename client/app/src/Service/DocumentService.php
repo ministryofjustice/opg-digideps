@@ -97,18 +97,17 @@ class DocumentService
      * Returns two arrays utilising list() and array destructuring. Both values are accessible as variables
      * rather than accessing their array index.
      *
-     * When calling this function use the format:
+     * $retrievedDocuments - array of RetrievedDocuments from S3
+     * $missingDocuments - array of MissingDocuments
      *
-     * [$retrievedDocuments, $missingDocuments] = retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
-     *
-     * $retrievedDocuments - Array of RetrievedDocuments from S3
-     * $missingDocuments - Array of MissingDocuments
-     *
-     * @return array
+     * @return array{'retrieved': array<RetrievedDocument>, 'missing': array<MissingDocument>}
      */
     public function retrieveDocumentsFromS3ByReportSubmission(ReportSubmission $reportSubmission): array
     {
+        /** @var array<RetrievedDocument> $retrievedDocuments */
         $retrievedDocuments = [];
+
+        /** @var array<MissingDocument> $missingDocuments */
         $missingDocuments = [];
 
         foreach ($reportSubmission->getDocuments() as $document) {
@@ -141,7 +140,7 @@ class DocumentService
             }
         }
 
-        return [$retrievedDocuments, $missingDocuments];
+        return ['retrieved' => $retrievedDocuments, 'missing' => $missingDocuments];
     }
 
     /**
@@ -152,23 +151,27 @@ class DocumentService
      * See retrieveDocumentsFromS3ByReportSubmission() docblock for background.
      *
      * @param array<ReportSubmission> $reportSubmissions
+     * @return array{'retrieved': array<RetrievedDocument>, 'missing': array<MissingDocument>}
      */
     public function retrieveDocumentsFromS3ByReportSubmissions(array $reportSubmissions): array
     {
-        $allDocuments = [];
+        $allRetrieved = [];
         $allMissing = [];
 
         foreach ($reportSubmissions as $reportSubmission) {
-            [$documents, $missing] = $this->retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
+            ['retrieved' => $retrieved, 'missing' => $missing] =
+                $this->retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
 
             if (!empty($missing)) {
                 $allMissing = array_merge($allMissing, $missing);
             }
 
-            $allDocuments = array_merge($allDocuments, $documents);
+            $allRetrieved = array_merge($allRetrieved, $retrieved);
         }
 
-        return [$allDocuments, $allMissing];
+        /** @var array<RetrievedDocument> $allRetrieved */
+        /** @var array<MissingDocument> $allMissing */
+        return ['retrieved' => $allRetrieved, 'missing' => $allMissing];
     }
 
     /**

@@ -1,29 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Service\File;
 
-use OPG\Digideps\Frontend\Entity\Report\Document;
+use OPG\Digideps\Frontend\Model\RetrievedDocument;
 
 class DocumentsZipFileCreator
 {
     public const string TMP_ROOT_PATH = '/tmp/';
 
-    /**
-     * @var array
-     */
-    private $zipFiles;
-
-    public function __construct()
-    {
-        $this->zipFiles = [];
-    }
+    /** @var array<string> filenames of generated zip files */
+    private array $zipFiles = [];
 
     /**
-     * @param []RetrievedDocument $retrievedDocuments
+     * @param array<RetrievedDocument> $retrievedDocuments
      *
-     * @return array
+     * @return array<string>
      */
-    public function createZipFilesFromRetrievedDocuments(array $retrievedDocuments)
+    public function createZipFilesFromRetrievedDocuments(array $retrievedDocuments): array
     {
         // store files locally, for subsequent memory-less ZIP creation
         $filesToAdd = [];
@@ -59,9 +54,9 @@ class DocumentsZipFileCreator
     }
 
     /**
-     * @return string
+     * @return string filename of single generated zip file
      */
-    public function createMultiZipFile(array $zipFiles)
+    public function createMultiZipFile(array $zipFiles): string
     {
         $parentFilename = self::createMultiZipFilePath();
 
@@ -71,7 +66,7 @@ class DocumentsZipFileCreator
             \ZipArchive::CREATE | \ZipArchive::OVERWRITE | \ZipArchive::CHECKCONS
         );
 
-        //add each individual zipped report into the main zip file
+        // add each individual zipped report into the main zip file
         foreach ($zipFiles as $zipFile) {
             $zip->addFile($zipFile, basename($zipFile));
         }
@@ -83,43 +78,30 @@ class DocumentsZipFileCreator
     }
 
     /**
-     * remove temporary files.
+     * Remove temporary files.
      */
-    public function cleanUp()
+    public function cleanUp(): void
     {
-        if (!empty($this->zipFiles)) {
-            foreach ($this->zipFiles as $zipfile) {
-                if (file_exists($zipfile)) {
-                    unlink($zipfile);
-                }
+        foreach ($this->zipFiles as $zipFile) {
+            if (file_exists($zipFile)) {
+                unlink($zipFile);
             }
         }
     }
 
-    /**
-     * @param Document $document
-     *
-     * @return string
-     */
-    private static function createDocumentTmpFilePath(string $fileName)
+    private static function createDocumentTmpFilePath(string $fileName): string
     {
-        return self::TMP_ROOT_PATH . 'dd_temp_zip_' . $fileName . microtime(1);
+        return self::TMP_ROOT_PATH . 'dd_temp_zip_' . $fileName . microtime(true);
     }
 
-    /**
-     * @return string
-     */
-    private static function createZipFilePath(string $zipFileName)
+    private static function createZipFilePath(string $zipFileName): string
     {
         return self::TMP_ROOT_PATH . $zipFileName;
     }
 
-    /**
-     * @return string
-     */
-    private static function createMultiZipFilePath()
+    private static function createMultiZipFilePath(): string
     {
-        return self::TMP_ROOT_PATH . 'multidownload-' . microtime(1) . '.zip';
+        return self::TMP_ROOT_PATH . 'multidownload-' . microtime(true) . '.zip';
     }
 
     public function __destruct()

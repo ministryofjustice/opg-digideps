@@ -90,14 +90,19 @@ class ReportSubmissionController extends AbstractController
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function downloadDocuments(Request $request): Response
     {
-        $reportSubmissionIds =
-            !empty($request->query->get('reportSubmissionIds')) ? json_decode(urldecode($request->query->get('reportSubmissionIds'))) : null;
+        $reportSubmissionIds = [];
+        if (!empty($request->query->get('reportSubmissionIds'))) {
+            $reportSubmissionIds = json_decode(urldecode($request->query->get('reportSubmissionIds')));
+        }
 
         $downloadLocation = '';
 
+        /** @var array<int> $reportSubmissionIds */
         if (!empty($reportSubmissionIds)) {
             try {
-                [$retrievedDocuments, $missingDocuments] = $this->documentDownloader->retrieveDocumentsFromS3ByReportSubmissionIds($request, $reportSubmissionIds);
+                ['retrieved' => $retrievedDocuments, 'missing' => $ignored] =
+                    $this->documentDownloader->retrieveDocumentsFromS3ByReportSubmissionIds($reportSubmissionIds);
+
                 $downloadLocation = $this->documentDownloader->zipDownloadedDocuments($retrievedDocuments);
             } catch (\Throwable $e) {
                 $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
@@ -198,7 +203,8 @@ class ReportSubmissionController extends AbstractController
 
                 case self::ACTION_DOWNLOAD:
                     try {
-                        [$retrievedDocuments, $missingDocuments] = $this->documentDownloader->retrieveDocumentsFromS3ByReportSubmissionIds($request, $checkedBoxes);
+                        ['retrieved' => $retrievedDocuments, 'missing' => $missingDocuments] =
+                            $this->documentDownloader->retrieveDocumentsFromS3ByReportSubmissionIds($checkedBoxes);
 
                         if (!empty($missingDocuments)) {
                             $this->documentDownloader->setMissingDocsFlashMessage($request, $missingDocuments);

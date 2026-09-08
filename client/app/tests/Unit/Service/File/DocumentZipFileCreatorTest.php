@@ -83,7 +83,7 @@ class DocumentZipFileCreatorTest extends TestCase
         $zip->close();
     }
 
-    protected function generateTestZipFiles(\ZipArchive $zip, array $zipFileContent)
+    protected function generateTestZipFiles(\ZipArchive $zip, array $zipFileContent): array
     {
         $zipFiles = [];
 

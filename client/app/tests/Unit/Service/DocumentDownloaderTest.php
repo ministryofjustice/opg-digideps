@@ -48,7 +48,6 @@ class DocumentDownloaderTest extends TestCase
 
     public function testRetrieveDocumentsFromS3ByReportSubmissionIds(): void
     {
-        $request = new Request();
         $ids = [1, 2];
 
         $reportSubmission1 = new ReportSubmission();
@@ -77,10 +76,12 @@ class DocumentDownloaderTest extends TestCase
         $this->documentService->expects(self::once())
             ->method('retrieveDocumentsFromS3ByReportSubmissions')
             ->with($reportSubmissions)
-            ->willReturn([$expectedRetrievedDocuments, []]);
+            ->willReturn(['retrieved' => $expectedRetrievedDocuments, 'missing' => []]);
 
         $sut = new DocumentDownloader($this->documentService, $this->reportSubmissionService, $this->zipFileCreator);
-        [$retrievedDocuments, $missingDocuments] = $sut->retrieveDocumentsFromS3ByReportSubmissionIds($request, $ids);
+
+        ['retrieved' => $retrievedDocuments, 'missing' => $missingDocuments] =
+            $sut->retrieveDocumentsFromS3ByReportSubmissionIds($ids);
 
         self::assertEquals($expectedRetrievedDocuments, $retrievedDocuments);
         self::assertEmpty($missingDocuments);
@@ -88,9 +89,6 @@ class DocumentDownloaderTest extends TestCase
 
     public function testProcessDownloadMissingDocument(): void
     {
-        $request = new Request();
-        $session = new Session(new MockArraySessionStorage());
-        $request->setSession($session);
         $ids = [1, 2];
 
         $reportSubmission1 = new ReportSubmission();
@@ -115,18 +113,19 @@ class DocumentDownloaderTest extends TestCase
         $document2->setFileName('filename-2');
 
         $expectedRetrievedDocuments = [$document1];
-        $expectedMissingDocument = [$document2];
+        $expectedMissingDocuments = [$document2];
 
         $this->documentService->expects(self::once())
             ->method('retrieveDocumentsFromS3ByReportSubmissions')
             ->with($reportSubmissions)
-            ->willReturn([$expectedRetrievedDocuments, $expectedMissingDocument]);
+            ->willReturn(['retrieved' => $expectedRetrievedDocuments, 'missing' => $expectedMissingDocuments]);
 
         $sut = new DocumentDownloader($this->documentService, $this->reportSubmissionService, $this->zipFileCreator);
-        [$retrievedDocuments, $missingDocument] = $sut->retrieveDocumentsFromS3ByReportSubmissionIds($request, $ids);
+        ['retrieved' => $retrievedDocuments, 'missing' => $missingDocuments] =
+            $sut->retrieveDocumentsFromS3ByReportSubmissionIds($ids);
 
         self::assertEquals($expectedRetrievedDocuments, $retrievedDocuments);
-        self::assertEquals($missingDocument, $missingDocument);
+        self::assertEquals($expectedMissingDocuments, $missingDocuments);
     }
 
     private function generateReportSubmission(string $caseNumber): ReportSubmission

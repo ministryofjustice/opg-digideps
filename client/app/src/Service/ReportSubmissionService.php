@@ -134,11 +134,15 @@ class ReportSubmissionService
         return $this->htmltopdf->getPdfFromHtml($html);
     }
 
-    public function getReportSubmissionById(string $id)
+    public function getReportSubmissionById(int $id)
     {
         return $this->restClient->get("report-submission/$id", ReportSubmission::class);
     }
 
+    /**
+     * @param array<int> $ids
+     * @return array<ReportSubmission>
+     */
     public function getReportSubmissionsByIds(array $ids): array
     {
         $reportSubmissions = [];
