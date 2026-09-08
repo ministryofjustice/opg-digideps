@@ -11,32 +11,11 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 
 class DocumentDownloader
 {
-    public const string ACTION_DOWNLOAD = 'download';
-    public const string MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
-
-    /**
-     * @var DocumentService
-     */
-    private $documentService;
-
-    /**
-     * @var ReportSubmissionService
-     */
-    private $reportSubmissionService;
-
-    /**
-     * @var DocumentsZipFileCreator
-     */
-    private $zipFileCreator;
-
     public function __construct(
-        DocumentService $documentService,
-        ReportSubmissionService $reportSubmissionService,
-        DocumentsZipFileCreator $zipFileCreator
+        private readonly DocumentService $documentService,
+        private readonly ReportSubmissionService $reportSubmissionService,
+        private readonly DocumentsZipFileCreator $zipFileCreator
     ) {
-        $this->documentService = $documentService;
-        $this->reportSubmissionService = $reportSubmissionService;
-        $this->zipFileCreator = $zipFileCreator;
     }
 
     /**
