@@ -28,6 +28,16 @@ resource "aws_sns_topic_subscription" "pagerduty_alerts" {
   raw_message_delivery   = false
 }
 
+resource "aws_sns_topic_subscription" "pagerduty_guardduty_findings" {
+  count = local.pagerduty_is_enabled ? 1 : 0
+
+  topic_arn              = data.aws_sns_topic.guardduty_findings.arn
+  protocol               = "https"
+  endpoint_auto_confirms = true
+  endpoint               = local.pagerduty_endpoint
+  raw_message_delivery   = false
+}
+
 resource "aws_sns_topic_subscription" "pagerduty_availability_alerts" {
   provider = aws.global
   count    = local.pagerduty_is_enabled ? 1 : 0
