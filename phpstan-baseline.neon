@@ -13,6 +13,78 @@ parameters:
 			path: api/app/config/bootstrap.php
 
 		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 2
+			path: api/app/src/Cleanup/Model/Client.php
+
+		-
+			message: '#^Parameter \#1 \$datetime of class DateTimeImmutable constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: api/app/src/Cleanup/Model/Client.php
+
+		-
+			message: '#^Parameter \#3 \$orderUid of class OPG\\Digideps\\Backend\\Cleanup\\Model\\Order constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Cleanup/Model/Client.php
+
+		-
+			message: '#^Parameter \#5 \$submitted of class OPG\\Digideps\\Backend\\Cleanup\\Model\\Report constructor expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Cleanup/Model/Client.php
+
+		-
+			message: '#^Cannot access offset ''case_number'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: api/app/src/Cleanup/Model/Query.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: api/app/src/Cleanup/Model/Query.php
+
+		-
+			message: '#^Parameter \#2 \$caseNumber of class OPG\\Digideps\\Backend\\Cleanup\\Model\\Client constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Cleanup/Model/Query.php
+
+		-
+			message: '#^Parameter \#3 \$rows of class OPG\\Digideps\\Backend\\Cleanup\\Model\\Client constructor expects array\<array\<string, mixed\>\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Cleanup/Model/Query.php
+
+		-
+			message: '#^Parameter \#4 \$only of method OPG\\Digideps\\Backend\\Cleanup\\Model\\Query\:\:fetch\(\) expects array\<int\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Cleanup/Model/Query.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: api/app/src/Cleanup/ReportCleaner.php
+
+		-
+			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: api/app/src/Cleanup/ReportCleaner.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$clientIds of method OPG\\Digideps\\Backend\\Cleanup\\Model\\Query\:\:run\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Cleanup/ReportCleaner.php
+
+		-
 			message: '#^Binary operation "\." between ''\<comment\>Comparison…'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -239,6 +311,12 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: api/app/src/Command/UserRetentionPolicyCommand.php
+
+		-
+			message: '#^Parameter \#1 \$content of class Symfony\\Component\\HttpFoundation\\Response constructor expects string\|null, string\|false given\.$#'
+			identifier: argument.type
+			count: 3
+			path: api/app/src/Controller/Admin/CleanupController.php
 
 		-
 			message: '#^Cannot access property \$headers on mixed\.$#'
@@ -16027,7 +16105,7 @@ parameters:
 			path: api/app/tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
@@ -22901,6 +22979,54 @@ parameters:
 			identifier: binaryOp.invalid
 			count: 1
 			path: client/app/src/Controller/Admin/AjaxController.php
+
+		-
+			message: '#^Cannot access offset ''count'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Cannot access offset ''message'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Cannot access offset ''ok'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Parameter \#1 \$content of class Symfony\\Component\\HttpFoundation\\Response constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Parameter \#1 \$string of function strlen expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Part \$result\[''count''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Part \$result\[''message''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
 
 		-
 			message: '#^Cannot call method getArchivedAt\(\) on mixed\.$#'

@@ -331,6 +331,54 @@ parameters:
 			path: src/Controller/Admin/AjaxController.php
 
 		-
+			message: '#^Cannot access offset ''count'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Cannot access offset ''message'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Cannot access offset ''ok'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Parameter \#1 \$content of class Symfony\\Component\\HttpFoundation\\Response constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Parameter \#1 \$string of function strlen expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Part \$result\[''count''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Part \$result\[''message''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
 			message: '#^Cannot call method getArchivedAt\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 3
