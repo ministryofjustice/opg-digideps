@@ -15,7 +15,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent]
-final class MoneyInShort
+final class MoneyOutShort
 {
     private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
 
@@ -38,33 +38,31 @@ final class MoneyInShort
         $this->text = $this->makeText();
 
         $this->list = $this->makeList($report);
-        if ($report->getMoneyInExists() === 'Yes') {
-            $this->table = $this->makeTable($report);
-        }
+        $this->table = $this->makeTable($report);
     }
 
     private function makeList(Report $report): SummaryList
     {
         $builder = new SummaryListBuilder();
-        $builder->addItem($this->text['moneyInExists'], $report->getMoneyInExists() ?? $this->text['notEntered']);
+        $builder->addItem($this->text['moneyOutExists'], $report->getMoneyOutExists() ?? $this->text['notEntered']);
 
-        if ($report->getMoneyInExists() === 'Yes') {
+        if ($report->getMoneyOutExists() === 'Yes') {
             $listBuilder = new ListBuilder(true);
-            foreach ($report->getMoneyShortCategoriesInPresent() as $category) {
+            foreach ($report->getMoneyShortCategoriesOutPresent() as $category) {
                 $listBuilder->addItem($this->translate("form.categoriesEntries.{$category->getTypeId()}.label"));
             }
             $builder->addItem(
-                $this->text['categoriesIn'],
+                $this->text['categoriesOut'],
                 $listBuilder->makeUnorderedList()
             );
             $builder->addItem(
-                $this->text['moneyTransactionsShortInExist'],
-                $this->text[$report->getMoneyTransactionsShortInExist()] ?? $this->text['notEntered']
+                $this->text['moneyTransactionsShortOutExist'],
+                $this->text[$report->getMoneyTransactionsShortOutExist()] ?? $this->text['notEntered']
             );
         }
 
-        if ($report->getMoneyInExists() === 'No') {
-            $builder->addItem($this->text['reasonForNoMoneyIn'], $report->getReasonForNoMoneyIn() ?? $this->text['notEntered']);
+        if ($report->getMoneyOutExists() === 'No') {
+            $builder->addItem($this->text['reasonForNoMoneyOut'], $report->getReasonForNoMoneyOut() ?? $this->text['notEntered']);
         }
 
         return $builder->makeList();
@@ -72,7 +70,7 @@ final class MoneyInShort
 
     private function makeTable(Report $report): ?Table
     {
-        if ($report->getMoneyTransactionsShortInExist() === 'no') {
+        if ($report->getMoneyTransactionsShortOutExist() === 'no') {
             return null;
         }
         $total = 0.0;
@@ -85,7 +83,7 @@ final class MoneyInShort
             $this->text['amount'],
         );
 
-        foreach ($report->getMoneyTransactionsShortIn() as $entry) {
+        foreach ($report->getMoneyTransactionsShortOut() as $entry) {
             if ($entry->getDate() !== null) {
                 $date = $entry->getDate()->format("j F Y");
             } else {
@@ -115,17 +113,17 @@ final class MoneyInShort
     private function makeText(): array
     {
         return [
-            'header' => $this->translate('summaryPage.moneyIn.pageTitle'),
-            'moneyInExists' => $this->translate('summaryPage.moneyIn.hasMoneyIn.label'),
-            'reasonForNoMoneyIn' => $this->translate('summaryPage.moneyIn.reasonForNoMoneyIn.label'),
-            'categoriesIn' => $this->translate('form.categoriesIn.label'),
-            'moneyTransactionsShortInExist' => $this->translate('summaryPage.moneyIn.moneyTransactionsShortInExist.label'),
-            'description' => $this->translate('summaryPage.moneyIn.list.label.description'),
-            'date' => $this->translate('summaryPage.moneyIn.list.label.date'),
-            'amount' => $this->translate('summaryPage.moneyIn.list.label.amount'),
+            'header' => $this->translate('summaryPage.moneyOut.pageTitle'),
+            'moneyOutExists' => $this->translate('summaryPage.moneyOut.hasMoneyOut.label'),
+            'reasonForNoMoneyOut' => $this->translate('summaryPage.moneyOut.reasonForNoMoneyOut.label'),
+            'categoriesOut' => $this->translate('form.categoriesOut.label'),
+            'moneyTransactionsShortOutExist' => $this->translate('summaryPage.moneyOut.moneyTransactionsShortOutExist.label'),
+            'description' => $this->translate('summaryPage.moneyOut.list.label.description'),
+            'date' => $this->translate('summaryPage.moneyOut.list.label.date'),
+            'amount' => $this->translate('summaryPage.moneyOut.list.label.amount'),
             'question' => $this->translate('review.question'),
             'answer' => $this->translate('review.answer'),
-            'tableHeader' => $this->translate('summaryPage.moneyIn.listOfIncomeItems'),
+            'tableHeader' => $this->translate('summaryPage.moneyOut.listOfExpenses'),
             'notEntered' => $this->translate('review.notEntered'),
             'yes' => $this->translate('review.yes'),
             'no' => $this->translate('review.no'),
