@@ -20,6 +20,10 @@
         <twig:OPG:Review:VisitsCare report="{{ report }}"/>
     {% endif %}
 
+    {% if report.hasSection('lifestyle') %}
+        <twig:OPG:Review:Lifestyle report="{{ report }}"/>
+    {% endif %}
+
     {% if report.hasSection('clientBenefitsCheck') %}
         <twig:OPG:Review:ClientBenefitsCheck report="{{ report }}"/>
     {% endif %}
