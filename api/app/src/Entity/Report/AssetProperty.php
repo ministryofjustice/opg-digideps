@@ -37,49 +37,49 @@ class AssetProperty extends Asset
 
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
-    #[ORM\Column(name: 'occupants', type: 'string', length: 550)]
-    private string $occupants = '';
+    #[ORM\Column(name: 'occupants', type: 'string', length: 550, nullable: true)]
+    private ?string $occupants = null;
 
     /**
      * fully/partly
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
-    #[ORM\Column(name: 'owned', type: 'string', length: 15)]
-    private string $owned = 'fully';
+    #[ORM\Column(name: 'owned', type: 'string', length: 15, nullable: true)]
+    private ?string $owned = null;
 
     /**
      * 0-100
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('float')]
-    #[ORM\Column(name: 'owned_percentage', type: 'decimal', precision: 14, scale: 2)]
-    private string $ownedPercentage = '0.0';
+    #[ORM\Column(name: 'owned_percentage', type: 'decimal', precision: 14, scale: 2, nullable: true)]
+    private ?string $ownedPercentage = null;
 
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
-    #[ORM\Column(name: 'is_subject_equity_rel', type: 'string', length: 4)]
-    private string $isSubjectToEquityRelease = 'no';
+    #[ORM\Column(name: 'is_subject_equity_rel', type: 'string', length: 4, nullable: true)]
+    private ?string $isSubjectToEquityRelease = null;
 
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
-    #[ORM\Column(name: 'has_mortgage', type: 'string', length: 4)]
-    private string $hasMortgage = 'no';
+    #[ORM\Column(name: 'has_mortgage', type: 'string', length: 4, nullable: true)]
+    private ?string $hasMortgage = null;
 
     #[JMS\Groups(['asset'])]
     #[JMS\Type('integer')]
-    #[ORM\Column(name: 'mortgage_outstanding', type: 'decimal', precision: 14, scale: 2)]
-    private string $mortgageOutstandingAmount = '0.0';
+    #[ORM\Column(name: 'mortgage_outstanding', type: 'decimal', precision: 14, scale: 2, nullable: true)]
+    private ?string $mortgageOutstandingAmount = null;
 
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
-    #[ORM\Column(name: 'has_charges', type: 'string', length: 4)]
-    private string $hasCharges = 'no';
+    #[ORM\Column(name: 'has_charges', type: 'string', length: 4, nullable: true)]
+    private ?string $hasCharges = null;
 
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
-    #[ORM\Column(name: 'is_rented_out', type: 'string', length: 4)]
-    private string $isRentedOut = 'no';
+    #[ORM\Column(name: 'is_rented_out', type: 'string', length: 4, nullable: true)]
+    private ?string $isRentedOut = null;
 
     #[JMS\Groups(['asset'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
@@ -144,42 +144,42 @@ class AssetProperty extends Asset
         return $this;
     }
 
-    public function getOccupants(): string
+    public function getOccupants(): ?string
     {
         return $this->occupants;
     }
 
     public function getOwned(): string
     {
-        return $this->owned;
+        return $this->owned ?? AssetProperty::OWNED_FULLY;
     }
 
-    public function getOwnedPercentage(): float
+    public function getOwnedPercentage(): ?string
     {
-        return (float)$this->ownedPercentage;
+        return $this->ownedPercentage;
     }
 
-    public function getIsSubjectToEquityRelease(): string
+    public function getIsSubjectToEquityRelease(): ?string
     {
         return $this->isSubjectToEquityRelease;
     }
 
-    public function getHasMortgage(): string
+    public function getHasMortgage(): ?string
     {
         return $this->hasMortgage;
     }
 
-    public function getMortgageOutstandingAmount(): float
+    public function getMortgageOutstandingAmount(): ?string
     {
-        return (float)$this->mortgageOutstandingAmount;
+        return $this->mortgageOutstandingAmount;
     }
 
-    public function getHasCharges(): string
+    public function getHasCharges(): ?string
     {
         return $this->hasCharges;
     }
 
-    public function getIsRentedOut(): string
+    public function getIsRentedOut(): ?string
     {
         return $this->isRentedOut;
     }
@@ -189,12 +189,12 @@ class AssetProperty extends Asset
         return $this->rentAgreementEndDate;
     }
 
-    public function getRentIncomeMonth(): float
+    public function getRentIncomeMonth(): ?string
     {
-        return (float)$this->rentIncomeMonth;
+        return $this->rentIncomeMonth;
     }
 
-    public function setOccupants(string $occupants): static
+    public function setOccupants(?string $occupants): static
     {
         $this->occupants = $occupants;
 
@@ -212,21 +212,21 @@ class AssetProperty extends Asset
         return $this;
     }
 
-    public function setOwnedPercentage(int|float|string $ownedPercentage): static
+    public function setOwnedPercentage(null|int|float|string $ownedPercentage): static
     {
-        $this->ownedPercentage = (string)$ownedPercentage;
+        $this->ownedPercentage = $ownedPercentage === null ? null : (string)$ownedPercentage;
 
         return $this;
     }
 
-    public function setIsSubjectToEquityRelease(string $isSubjectToEquityRelease): static
+    public function setIsSubjectToEquityRelease(?string $isSubjectToEquityRelease): static
     {
         $this->isSubjectToEquityRelease = $isSubjectToEquityRelease;
 
         return $this;
     }
 
-    public function setHasMortgage(string $hasMortgage): static
+    public function setHasMortgage(?string $hasMortgage): static
     {
         $this->hasMortgage = $hasMortgage;
 
@@ -240,14 +240,14 @@ class AssetProperty extends Asset
         return $this;
     }
 
-    public function setHasCharges(string $hasCharges): static
+    public function setHasCharges(?string $hasCharges): static
     {
         $this->hasCharges = $hasCharges;
 
         return $this;
     }
 
-    public function setIsRentedOut(string $isRentedOut): static
+    public function setIsRentedOut(?string $isRentedOut): static
     {
         $this->isRentedOut = $isRentedOut;
 
@@ -271,7 +271,7 @@ class AssetProperty extends Asset
     public function getValueTotal(): ?float
     {
         if ($this->getOwned() == self::OWNED_PARTLY) {
-            return floatval($this->getValue()) * floatval($this->getOwnedPercentage() / 100);
+            return floatval($this->getValue()) * floatval($this->getOwnedPercentage()) / 100.0;
         }
 
         return parent::getValueTotal();

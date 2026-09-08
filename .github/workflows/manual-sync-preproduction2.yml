@@ -25,7 +25,7 @@ jobs:
       account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       account_name: preproduction
       task_name: "backup"
-      timeout: "700"
+      timeout: "3600"
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 
