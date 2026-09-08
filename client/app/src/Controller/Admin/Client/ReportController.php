@@ -514,7 +514,9 @@ class ReportController extends AbstractController
     {
         foreach (['type', 'unsubmittedSectionsList'] as $field) {
             if (isset($sessionData[$field])) {
+                /** @var string $value */
                 $value = $sessionData[$field];
+
                 match ($field) {
                     'type' => $report->setType($value),
                     'unsubmittedSectionsList' => $report->setUnsubmittedSectionsList($value)

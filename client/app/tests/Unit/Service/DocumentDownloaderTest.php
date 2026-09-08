@@ -13,43 +13,28 @@ use OPG\Digideps\Frontend\Service\DocumentDownloader;
 use OPG\Digideps\Frontend\Service\DocumentService;
 use OPG\Digideps\Frontend\Service\File\DocumentsZipFileCreator;
 use OPG\Digideps\Frontend\Service\ReportSubmissionService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 class DocumentDownloaderTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @var ObjectProphecy|DocumentService
-     */
-    private $documentService;
-
-    /**
-     * @var ObjectProphecy|ReportSubmissionService
-     */
-    private $reportSubmissionService;
-
-    /**
-     * @var ObjectProphecy|DocumentsZipFileCreator
-     */
-    private $zipFileCreator;
+    private MockObject&DocumentService $documentService;
+    private MockObject&ReportSubmissionService $reportSubmissionService;
+    private MockObject&DocumentsZipFileCreator $zipFileCreator;
 
     public function setUp(): void
     {
-        $this->documentService = self::prophesize(DocumentService::class);
-        $this->reportSubmissionService = self::prophesize(ReportSubmissionService::class);
-        $this->zipFileCreator = self::prophesize(DocumentsZipFileCreator::class);
+        $this->documentService = self::createMock(DocumentService::class);
+        $this->reportSubmissionService = self::createMock(ReportSubmissionService::class);
+        $this->zipFileCreator = self::createMock(DocumentsZipFileCreator::class);
     }
 
     public function testGenerateDownloadResponse(): void
     {
-        $sut = new DocumentDownloader($this->documentService->reveal(), $this->reportSubmissionService->reveal(), $this->zipFileCreator->reveal());
+        $sut = new DocumentDownloader($this->documentService, $this->reportSubmissionService, $this->zipFileCreator);
 
         $zipFile = '/tmp/test-file.zip';
         file_put_contents($zipFile, 'some content');
@@ -70,9 +55,13 @@ class DocumentDownloaderTest extends TestCase
         $reportSubmission2 = new ReportSubmission();
         $reportSubmissions = [$reportSubmission1, $reportSubmission2];
 
-        $this->reportSubmissionService->getReportSubmissionsByIds($ids)->willReturn($reportSubmissions);
-        $this->reportSubmissionService->assertReportSubmissionIsDownloadable($reportSubmission1)->willReturn(null);
-        $this->reportSubmissionService->assertReportSubmissionIsDownloadable($reportSubmission2)->willReturn(null);
+        $this->reportSubmissionService->expects(self::once())
+            ->method('getReportSubmissionsByIds')
+            ->with($ids)
+            ->willReturn($reportSubmissions);
+
+        $this->reportSubmissionService->expects(self::exactly(2))
+            ->method('assertReportSubmissionIsDownloadable');
 
         $document1 = new RetrievedDocument();
         $document1->setReportSubmission($reportSubmission1);
@@ -85,9 +74,12 @@ class DocumentDownloaderTest extends TestCase
 
         $expectedRetrievedDocuments = [$document1, $document2];
 
-        $this->documentService->retrieveDocumentsFromS3ByReportSubmissions($reportSubmissions)->willReturn([$expectedRetrievedDocuments, []]);
+        $this->documentService->expects(self::once())
+            ->method('retrieveDocumentsFromS3ByReportSubmissions')
+            ->with($reportSubmissions)
+            ->willReturn([$expectedRetrievedDocuments, []]);
 
-        $sut = new DocumentDownloader($this->documentService->reveal(), $this->reportSubmissionService->reveal(), $this->zipFileCreator->reveal());
+        $sut = new DocumentDownloader($this->documentService, $this->reportSubmissionService, $this->zipFileCreator);
         [$retrievedDocuments, $missingDocuments] = $sut->retrieveDocumentsFromS3ByReportSubmissionIds($request, $ids);
 
         self::assertEquals($expectedRetrievedDocuments, $retrievedDocuments);
@@ -106,9 +98,13 @@ class DocumentDownloaderTest extends TestCase
 
         $reportSubmissions = [$reportSubmission1, $reportSubmission2];
 
-        $this->reportSubmissionService->getReportSubmissionsByIds($ids)->willReturn($reportSubmissions);
-        $this->reportSubmissionService->assertReportSubmissionIsDownloadable($reportSubmission1)->willReturn(null);
-        $this->reportSubmissionService->assertReportSubmissionIsDownloadable($reportSubmission2)->willReturn(null);
+        $this->reportSubmissionService->expects(self::once())
+            ->method('getReportSubmissionsByIds')
+            ->with($ids)
+            ->willReturn($reportSubmissions);
+
+        $this->reportSubmissionService->expects(self::exactly(2))
+            ->method('assertReportSubmissionIsDownloadable');
 
         $document1 = new RetrievedDocument();
         $document1->setReportSubmission($reportSubmission1);
@@ -121,10 +117,12 @@ class DocumentDownloaderTest extends TestCase
         $expectedRetrievedDocuments = [$document1];
         $expectedMissingDocument = [$document2];
 
-        $this->documentService->retrieveDocumentsFromS3ByReportSubmissions($reportSubmissions)
+        $this->documentService->expects(self::once())
+            ->method('retrieveDocumentsFromS3ByReportSubmissions')
+            ->with($reportSubmissions)
             ->willReturn([$expectedRetrievedDocuments, $expectedMissingDocument]);
 
-        $sut = new DocumentDownloader($this->documentService->reveal(), $this->reportSubmissionService->reveal(), $this->zipFileCreator->reveal());
+        $sut = new DocumentDownloader($this->documentService, $this->reportSubmissionService, $this->zipFileCreator);
         [$retrievedDocuments, $missingDocument] = $sut->retrieveDocumentsFromS3ByReportSubmissionIds($request, $ids);
 
         self::assertEquals($expectedRetrievedDocuments, $retrievedDocuments);
@@ -147,9 +145,11 @@ class DocumentDownloaderTest extends TestCase
 
     public function testSetMissingDocsFlashMessage(): void
     {
-        $this->documentService->createMissingDocumentsFlashMessage(Argument::type('Array'))->willReturn('flash message');
+        $this->documentService->expects(self::once())
+            ->method('createMissingDocumentsFlashMessage')
+            ->willReturn('flash message');
 
-        $sut = new DocumentDownloader($this->documentService->reveal(), $this->reportSubmissionService->reveal(), $this->zipFileCreator->reveal());
+        $sut = new DocumentDownloader($this->documentService, $this->reportSubmissionService, $this->zipFileCreator);
 
         $reportSubmission1 = $this->generateReportSubmission('CaseNumber1');
         $reportSubmission2 = $this->generateReportSubmission('CaseNumber2');
@@ -174,9 +174,19 @@ class DocumentDownloaderTest extends TestCase
     public function testZipDownloadedDocuments(): void
     {
         $retrievedDocs = [new RetrievedDocument()];
-        $this->zipFileCreator->createZipFilesFromRetrievedDocuments($retrievedDocs)->shouldBeCalled()->willReturn([new \ZipArchive()]);
-        $this->zipFileCreator->createMultiZipFile(Argument::type('Array'))->shouldBeCalled()->willReturn('some-file.zip');
-        $sut = new DocumentDownloader($this->documentService->reveal(), $this->reportSubmissionService->reveal(), $this->zipFileCreator->reveal());
+        $zippedFiles = [new \ZipArchive()];
+
+        $this->zipFileCreator->expects(self::once())
+            ->method('createZipFilesFromRetrievedDocuments')
+            ->with($retrievedDocs)
+            ->willReturn($zippedFiles);
+
+        $this->zipFileCreator->expects(self::once())
+            ->method('createMultiZipFile')
+            ->with($zippedFiles)
+            ->willReturn('some-file.zip');
+
+        $sut = new DocumentDownloader($this->documentService, $this->reportSubmissionService, $this->zipFileCreator);
 
         $sut->zipDownloadedDocuments($retrievedDocs);
     }

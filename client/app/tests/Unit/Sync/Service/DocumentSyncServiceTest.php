@@ -233,15 +233,13 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     public function testSendSupportingDocumentSuccess(): void
     {
-        $document = $this->makeDocument()->setId(6789);
-
         $expectedUuidUsedToSyncDoc = 'report-pdf-submission-uuid';
         $expectedSubmissionIdUsedForSync = 1234;
         $expectedCaseRefUsedForSync = '1234567T';
 
         $queuedDocumentData = new QueuedDocumentData()
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
-            ->setDocumentId($document->getId())
+            ->setDocumentId(6789)
             ->setReportSubmissionId($expectedSubmissionIdUsedForSync)
             ->setReportSubmissionUuid($expectedUuidUsedToSyncDoc)
             ->setReportStartDate($this->reportStartDate)
@@ -476,15 +474,13 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     public function testSendDocumentInvalidFilenamesAreFixed(): void
     {
-        $document = $this->makeDocument()->setId(6789);
-
         $expectedUuidUsedToSyncDoc = 'report-pdf-submission-uuid';
         $expectedSubmissionIdUsedForSync = 1234;
         $expectedCaseRefUsedForSync = '1234567T';
 
         $queuedDocumentData = new QueuedDocumentData()
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
-            ->setDocumentId($document->getId())
+            ->setDocumentId(6789)
             ->setReportSubmissionId($expectedSubmissionIdUsedForSync)
             ->setReportSubmissionUuid($expectedUuidUsedToSyncDoc)
             ->setReportStartDate($this->reportStartDate)
@@ -535,14 +531,12 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     public function testSendDocumentMissingFileExtensionThrowsError(): void
     {
-        $document = $this->makeDocument()->setId(6789);
-
         $expectedUuidUsedToSyncDoc = 'report-pdf-submission-uuid';
         $expectedSubmissionIdUsedForSync = 1234;
 
         $queuedDocumentData = new QueuedDocumentData()
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
-            ->setDocumentId($document->getId())
+            ->setDocumentId(6789)
             ->setReportSubmissionId($expectedSubmissionIdUsedForSync)
             ->setReportSubmissionUuid($expectedUuidUsedToSyncDoc)
             ->setReportStartDate($this->reportStartDate)

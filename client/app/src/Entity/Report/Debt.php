@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
@@ -9,41 +11,24 @@ class Debt
 {
     #[JMS\Type('string')]
     #[JMS\Groups(['debt'])]
-    private $debtTypeId;
+    private ?string $debtTypeId;
 
-    /**
-     * @var string decimal
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['debt'])]
     #[Assert\Type(type: 'numeric', message: 'debt.amount.notNumeric', groups: ['debts'])]
     #[Assert\Range(notInRangeMessage: 'debt.amount.notInRangeMessage', min: 0, max: 100000000000, groups: ['debts'])]
-    private $amount;
+    private ?string $amount;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['debt'])]
     #[JMS\Type('boolean')]
-    private $hasMoreDetails;
+    private ?string $hasMoreDetails;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['debt'])]
     #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'debt.moreDetails.notEmpty', groups: ['debts-more-details'])]
-    private $moreDetails;
+    private ?string $moreDetails;
 
-    /**
-     * Debt constructor.
-     *
-     * @param $debtTypeId
-     * @param string $amount decimal
-     * @param string  $hasMoreDetails
-     * @param string  $moreDetails
-     */
-    public function __construct($debtTypeId, $amount, $hasMoreDetails, $moreDetails)
+    public function __construct(?string $debtTypeId, ?string $amount, ?string $hasMoreDetails, ?string $moreDetails)
     {
         $this->debtTypeId = $debtTypeId;
         $this->amount = $amount;
@@ -51,75 +36,47 @@ class Debt
         $this->moreDetails = $moreDetails;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDebtTypeId()
+    public function getDebtTypeId(): ?string
     {
         return $this->debtTypeId;
     }
 
-    /**
-     * @param mixed $debtTypeId
-     */
-    public function setDebtTypeId($debtTypeId): static
+    public function setDebtTypeId(?string $debtTypeId): static
     {
         $this->debtTypeId = $debtTypeId;
-
         return $this;
     }
 
-    /**
-     * @return string decimal
-     */
-    public function getAmount()
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    /**
-     * @param string $amount decimal
-     */
-    public function setAmount($amount): static
+    public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getHasMoreDetails()
+    public function getHasMoreDetails(): ?string
     {
         return $this->hasMoreDetails;
     }
 
-    /**
-     * @param string $hasMoreDetails
-     */
-    public function setHasMoreDetails($hasMoreDetails): static
+    public function setHasMoreDetails(?string $hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMoreDetails()
+    public function getMoreDetails(): ?string
     {
         return $this->moreDetails;
     }
 
-    /**
-     * @param string $moreDetails
-     */
-    public function setMoreDetails($moreDetails): static
+    public function setMoreDetails(?string $moreDetails): static
     {
         $this->moreDetails = $moreDetails;
-
         return $this;
     }
 }

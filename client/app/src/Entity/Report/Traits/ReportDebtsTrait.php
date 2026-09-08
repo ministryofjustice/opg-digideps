@@ -39,7 +39,7 @@ trait ReportDebtsTrait
     {
         $ret = 0.0;
         foreach ($this->getDebts() as $debt) {
-            $ret += $debt->getAmount() ?? 0.0;
+            $ret += (float) $debt->getAmount();
         }
         return $ret;
     }

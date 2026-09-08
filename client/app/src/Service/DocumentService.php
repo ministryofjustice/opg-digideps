@@ -17,41 +17,18 @@ use Twig\Environment;
 
 class DocumentService
 {
-    /**
-     * @var S3Storage
-     */
-    private $s3Storage;
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * DocumentService constructor.
-     */
-    public function __construct(S3Storage $s3Storage, RestClient $restClient, LoggerInterface $logger, Environment $twig)
-    {
-        $this->s3Storage = $s3Storage;
-        $this->restClient = $restClient;
-        $this->logger = $logger;
-        $this->twig = $twig;
+    public function __construct(
+        private readonly S3Storage $s3Storage,
+        private readonly RestClient $restClient,
+        private readonly LoggerInterface $logger,
+        private readonly Environment $twig
+    ) {
     }
 
     /**
      * @return bool true if deleted from S3 and database
      */
-    public function removeDocumentFromS3(Document $document)
+    public function removeDocumentFromS3(Document $document): bool
     {
         $documentId = $document->getId();
         $storageRef = $document->getStorageReference();
@@ -78,18 +55,14 @@ class DocumentService
             $this->log('error', $message);
 
             // rethrow exception to be caught by controller
-            throw ($e);
+            throw $e;
         }
     }
 
     /**
-     * @param Document $document
-     *
      * @throws \Exception if the document doesn't exist (in addition to S3 network/access failures
-     *
-     * @return bool true if delete is successful
      */
-    private function deleteFromS3(DocumentInterface $document)
+    private function deleteFromS3(DocumentInterface $document): array
     {
         $ref = $document->getStorageReference();
         if (!$ref) {
@@ -134,7 +107,7 @@ class DocumentService
      *
      * @return array
      */
-    public function retrieveDocumentsFromS3ByReportSubmission(ReportSubmission $reportSubmission)
+    public function retrieveDocumentsFromS3ByReportSubmission(ReportSubmission $reportSubmission): array
     {
         $retrievedDocuments = [];
         $missingDocuments = [];
@@ -142,7 +115,7 @@ class DocumentService
         foreach ($reportSubmission->getDocuments() as $document) {
             try {
                 // AWS returns a object here - typecasting to string
-                $contents = (string) $this->s3Storage->retrieve($document->getStorageReference());
+                $contents = $this->s3Storage->retrieve($document->getStorageReference());
 
                 $retrievedDocument = new RetrievedDocument();
                 $retrievedDocument->setContent($contents);
@@ -150,9 +123,9 @@ class DocumentService
                 $retrievedDocument->setReportSubmission($reportSubmission);
 
                 $retrievedDocuments[] = $retrievedDocument;
-            } catch (FileNotFoundException $e) {
+            } catch (FileNotFoundException) {
                 $missingDocument = new MissingDocument();
-                $missingDocument->setFileName($document->getFileName());
+                $missingDocument->setFileName($document->getFileName() ?? 'unknown file name');
                 $missingDocument->setReportSubmission($reportSubmission);
 
                 $missingDocuments[] = $missingDocument;
@@ -169,11 +142,9 @@ class DocumentService
      *
      * See retrieveDocumentsFromS3ByReportSubmission() docblock for background.
      *
-     * @param []ReportSubmission $reportSubmissions
-     *
-     * @return array
+     * @param array<ReportSubmission> $reportSubmissions
      */
-    public function retrieveDocumentsFromS3ByReportSubmissions(array $reportSubmissions)
+    public function retrieveDocumentsFromS3ByReportSubmissions(array $reportSubmissions): array
     {
         $allDocuments = [];
         $allMissing = [];
@@ -192,11 +163,9 @@ class DocumentService
     }
 
     /**
-     * @param []MissingDocument $missingDocuments
-     *
-     * @return string
+     * @param array<MissingDocument> $missingDocuments
      */
-    public function createMissingDocumentsFlashMessage(array $missingDocuments)
+    public function createMissingDocumentsFlashMessage(array $missingDocuments): string
     {
         return $this->twig->render(
             '@App/FlashMessages/missing-documents.html.twig',

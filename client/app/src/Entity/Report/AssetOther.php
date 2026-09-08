@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
@@ -12,19 +14,12 @@ class AssetOther extends Asset
     #[Assert\Length(min: 3, minMessage: 'asset.description.length')]
     private ?string $description;
 
-    /**
-     * Set description
-     */
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
-    /**
-     * Get description
-     */
     public function getDescription(): ?string
     {
         return $this->description;
@@ -46,8 +41,8 @@ class AssetOther extends Asset
         return $titleToTemplateMap[$this->getTitle() ?? ''] ?? 'default';
     }
 
-    public function getBehatIdentifier(): ?string
+    public function getBehatIdentifier(): string
     {
-        return $this->getDescription();
+        return $this->getDescription() ?? '';
     }
 }

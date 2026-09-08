@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Frontend\Service\File\Storage;
 
 use Aws\Result;
-use Aws\ResultInterface;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3ClientInterface;
 use GuzzleHttp\Psr7\Stream;
@@ -67,41 +66,39 @@ class S3Storage implements StorageInterface
         ]);
     }
 
-    public function removeFromS3(string $key): array
+    public function removeFromS3(?string $key): array
     {
         if (empty($key)) {
             throw new \RuntimeException('Could not remove file: Document not specified');
-        } else {
-            /*
-             * ListObjectVersions is permitted by ListBucketVersions in IAM.
-             */
-            $objectVersions = $this->s3Client->listObjectVersions([
-                'Bucket' => $this->bucketName,
-                'Prefix' => $key,
-            ]);
-
-            if (!$objectVersions instanceof ResultInterface || !$objectVersions->hasKey('Versions')) {
-                throw new \RuntimeException('Could not remove file: No results returned');
-            } else {
-                $objectVersions = $objectVersions->toArray();
-                $s3Result = [];
-
-                $objectsToDelete = $this->prepareObjectsToDelete($objectVersions);
-                if (empty($objectsToDelete)) {
-                    throw new \RuntimeException('Could not remove file: No objects founds');
-                } else {
-                    $s3Result = $this->s3Client->deleteObjects([
-                        'Bucket' => $this->bucketName,
-                        'Delete' => ['Objects' => $objectsToDelete],
-                    ]);
-                    $s3Result = $s3Result->toArray();
-
-                    $this->handleS3DeletionErrors($s3Result);
-                }
-
-                return $this->logS3Results($objectVersions, $objectsToDelete, $s3Result);
-            }
         }
+
+        // ListObjectVersions is permitted by ListBucketVersions in IAM.
+        $objectVersions = $this->s3Client->listObjectVersions([
+            'Bucket' => $this->bucketName,
+            'Prefix' => $key,
+        ]);
+
+        if (!$objectVersions->hasKey('Versions')) {
+            throw new \RuntimeException('Could not remove file: No results returned');
+        }
+
+        $objectVersions = $objectVersions->toArray();
+
+        $objectsToDelete = $this->prepareObjectsToDelete($objectVersions);
+        if (empty($objectsToDelete)) {
+            throw new \RuntimeException('Could not remove file: No objects found');
+        }
+
+        $s3Result = $this->s3Client->deleteObjects([
+            'Bucket' => $this->bucketName,
+            'Delete' => ['Objects' => $objectsToDelete],
+        ]);
+
+        $s3Result = $s3Result->toArray();
+
+        $this->handleS3DeletionErrors($s3Result);
+
+        return $this->logS3Results($objectVersions, $objectsToDelete, $s3Result);
     }
 
     private function logS3Results(array $objectVersions, array $objectsToDelete, array $s3Result): array

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Entity\Report;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\ClientBenefitsCheckInterface;
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
-use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
-use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as CustomAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ClientBenefitsCheck implements ClientBenefitsCheckInterface
@@ -16,52 +16,41 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
-    private ?string $id = null;
+    private string $id;
 
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?\DateTime $created = null;
 
-    /**
-     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
-     */
+    #[CustomAssert(groups: ['client-benefits-check'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $whenLastCheckedEntitlement = null;
 
-    /**
-     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
-     */
+    #[CustomAssert(groups: ['client-benefits-check'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?\DateTime $dateLastCheckedEntitlement = null;
 
-    /**
-     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
-     */
+    #[CustomAssert(groups: ['client-benefits-check'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $neverCheckedExplanation = null;
 
-    /**
-     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
-     */
+    #[CustomAssert(groups: ['client-benefits-check'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $doOthersReceiveMoneyOnClientsBehalf = '';
 
-    /**
-     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
-     */
+    #[CustomAssert(groups: ['client-benefits-check'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $dontKnowMoneyExplanation = null;
 
     /**
      * @var MoneyReceivedOnClientsBehalf[]|null
-     *
-     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
+    #[CustomAssert(groups: ['client-benefits-check'])]
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf>')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     #[Assert\Valid(groups: ['client-benefits-check'])]
@@ -99,7 +88,6 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setDateLastCheckedEntitlement(?\DateTime $dateLastCheckedEntitlement): static
     {
         $this->dateLastCheckedEntitlement = $dateLastCheckedEntitlement;
-
         return $this;
     }
 
@@ -111,19 +99,17 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setCreated(?\DateTime $created): static
     {
         $this->created = $created;
-
         return $this;
     }
 
-    public function getId(): ?string
+    public function getId(): string
     {
         return $this->id;
     }
 
-    public function setId(?string $id): static
+    public function setId(string $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
@@ -135,7 +121,6 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setDoOthersReceiveMoneyOnClientsBehalf(?string $doOthersReceiveMoneyOnClientsBehalf): static
     {
         $this->doOthersReceiveMoneyOnClientsBehalf = $doOthersReceiveMoneyOnClientsBehalf;
-
         return $this;
     }
 
@@ -147,7 +132,6 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setDontKnowMoneyExplanation(?string $dontKnowMoneyExplanation): static
     {
         $this->dontKnowMoneyExplanation = $dontKnowMoneyExplanation;
-
         return $this;
     }
 
@@ -165,7 +149,6 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setTypesOfMoneyReceivedOnClientsBehalf(?array $typesOfMoneyReceivedOnClientsBehalf): static
     {
         $this->typesOfMoneyReceivedOnClientsBehalf = $typesOfMoneyReceivedOnClientsBehalf;
-
         return $this;
     }
 

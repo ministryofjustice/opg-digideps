@@ -30,11 +30,9 @@ class Expense
     #[Assert\Range(notInRangeMessage: 'expenses.amount.notInRangeMessage', min: 0.01, max: 100000000000, groups: ['deputy-expense'])]
     private ?string $amount = null;
 
-    /**
-     * @JMS\Type("DateTime")
-     * @JMS\Groups({"expenses"})
-     * @phpstan-ignore property.unusedType
-     */
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['expenses'])]
+    /** @phpstan-ignore property.unusedType */
     private ?\DateTime $createdAt = null;
 
     public function getId(): ?int

@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
-use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[JMS\Discriminator(field: 'type', map: ['other' => 'OPG\Digideps\Frontend\Entity\Report\AssetOther', 'property' => 'OPG\Digideps\Frontend\Entity\Report\AssetProperty'])]
@@ -11,8 +13,11 @@ abstract class Asset
 {
     use HasReportTrait;
 
+    #[JMS\Type('integer')]
+    private ?int $id = null;
+
     #[JMS\Exclude]
-    protected $type;
+    protected ?string $type = null;
 
     /**
      * @JMS\Type("DateTime")
@@ -20,10 +25,7 @@ abstract class Asset
      */
     private ?\DateTime $createdAt = null;
 
-    /**
-     * @param string $type
-     */
-    public static function factory($type): Asset
+    public static function factory(?string $type): Asset
     {
         $typeLower = is_null($type) ? '' : strtolower($type);
         switch ($typeLower) {
@@ -32,13 +34,9 @@ abstract class Asset
             default:
                 $other = new AssetOther();
                 $other->setTitle($typeLower);
-
                 return $other;
         }
     }
-
-    #[JMS\Type('integer')]
-    private $id;
 
     #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'asset.title.notBlank', groups: ['title_only'])]
@@ -48,38 +46,34 @@ abstract class Asset
     #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'asset.value.notBlank')]
     #[Assert\Type(type: 'numeric', message: 'asset.value.type')]
-    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'asset.value.outOfRange')]
+    #[Assert\Range(notInRangeMessage: 'asset.value.outOfRange', min: 0, max: 100000000000)]
     #[Assert\NotBlank(message: 'asset.property.value.notBlank', groups: ['property-value'])]
     #[Assert\Type(type: 'numeric', message: 'asset.property.value.type', groups: ['property-value'])]
-    #[Assert\Range(min: 0, max: 100000000000, notInRangeMessage: 'asset.property.value.outOfRange', groups: ['property-value'])]
-    private $value;
+    #[Assert\Range(notInRangeMessage: 'asset.property.value.outOfRange', min: 0, max: 100000000000, groups: ['property-value'])]
+    private ?string $value = null;
 
-    /**
-     * @var float
-     */
     #[JMS\Type('double')]
-    private $valueTotal;
+    /** @phpstan-ignore property.unusedType */
+    private ?float $valueTotal = null;
 
     #[JMS\Type('DateTime')]
     #[Assert\Type(type: 'DateTime', message: 'asset.date.date')]
     protected ?\DateTime $valuationDate = null;
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId(?int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
     public function setTitle(?string $title): static
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -88,25 +82,18 @@ abstract class Asset
         return $this->title;
     }
 
-    public function setValue($value): static
+    public function setValue(?string $value): static
     {
         $this->value = $value;
-
         return $this;
     }
 
-    /**
-     * @return float|null
-     */
-    public function getValue()
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    /**
-     * @return float|null
-     */
-    public function getValueTotal()
+    public function getValueTotal(): ?float
     {
         return $this->valueTotal;
     }
@@ -114,7 +101,6 @@ abstract class Asset
     public function setValuationDate(?\DateTime $valuationDate): static
     {
         $this->valuationDate = $valuationDate;
-
         return $this;
     }
 
@@ -125,18 +111,14 @@ abstract class Asset
 
     /**
      * Get name of the template (Asset/list-items/_<template>.html.twig) used to render the partial in the list view.
-     *
-     * @return string
      */
-    abstract public function getListTemplateName();
+    abstract public function getListTemplateName(): string;
 
     /**
-     * Get an unique human readable ID in order to identify the item in the list based on its content.
+     * Get an unique human-readable ID in order to identify the item in the list based on its content.
      * Needed by functional testing.
-     *
-     * @return string
      */
-    abstract public function getBehatIdentifier();
+    abstract public function getBehatIdentifier(): string;
 
     public function getCreatedAt(): ?\DateTime
     {

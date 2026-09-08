@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
-use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Action
@@ -41,7 +43,6 @@ class Action
     public function setId(int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
@@ -53,7 +54,6 @@ class Action
     public function setDoYouExpectFinancialDecisions(?string $doYouExpectFinancialDecisions): static
     {
         $this->doYouExpectFinancialDecisions = $doYouExpectFinancialDecisions;
-
         return $this;
     }
 
@@ -65,7 +65,6 @@ class Action
     public function setDoYouExpectFinancialDecisionsDetails(?string $doYouExpectFinancialDecisionsDetails): static
     {
         $this->doYouExpectFinancialDecisionsDetails = $doYouExpectFinancialDecisionsDetails;
-
         return $this;
     }
 
@@ -77,7 +76,6 @@ class Action
     public function setDoYouHaveConcerns(?string $doYouHaveConcerns): static
     {
         $this->doYouHaveConcerns = $doYouHaveConcerns;
-
         return $this;
     }
 
@@ -89,7 +87,6 @@ class Action
     public function setDoYouHaveConcernsDetails(?string $doYouHaveConcernsDetails): static
     {
         $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
-
         return $this;
     }
 }

@@ -45,7 +45,7 @@ class BankAccount implements BankAccountInterface
     ];
 
     #[JMS\Type('integer')]
-    private ?int $id = null;
+    private int $id;
 
     #[JMS\Groups(['account'])]
     #[JMS\Type('string')]
@@ -114,22 +114,20 @@ class BankAccount implements BankAccountInterface
     #[JMS\Groups(['account'])]
     private ?string $nameOneLine = null;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId(?int $id): static
+    public function setId(int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
     public function setBank(?string $bank): static
     {
         $this->bank = $bank;
-
         return $this;
     }
 
@@ -141,7 +139,6 @@ class BankAccount implements BankAccountInterface
     public function setSortCode(?string $sortCode): static
     {
         $this->sortCode = $sortCode;
-
         return $this;
     }
 
@@ -153,7 +150,6 @@ class BankAccount implements BankAccountInterface
     public function setAccountNumber(?string $accountNumber): static
     {
         $this->accountNumber = $accountNumber;
-
         return $this;
     }
 
@@ -165,7 +161,6 @@ class BankAccount implements BankAccountInterface
     public function setOpeningBalance(?float $openingBalance): static
     {
         $this->openingBalance = $openingBalance;
-
         return $this;
     }
 
@@ -216,7 +211,6 @@ class BankAccount implements BankAccountInterface
     public function setIsClosed(bool $isClosed): static
     {
         $this->isClosed = $isClosed;
-
         return $this;
     }
 
@@ -259,7 +253,6 @@ class BankAccount implements BankAccountInterface
     public function setIsJointAccount(?string $isJointAccount): static
     {
         $this->isJointAccount = $isJointAccount;
-
         return $this;
     }
 
@@ -271,7 +264,6 @@ class BankAccount implements BankAccountInterface
     public function setMeta(?string $meta): static
     {
         $this->meta = $meta;
-
         return $this;
     }
 
@@ -283,7 +275,6 @@ class BankAccount implements BankAccountInterface
     public function setNameOneLine(?string $nameOneLine): static
     {
         $this->nameOneLine = $nameOneLine;
-
         return $this;
     }
 

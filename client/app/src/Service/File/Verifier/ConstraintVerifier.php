@@ -7,12 +7,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ConstraintVerifier implements VerifierInterface
 {
-    /** @var ValidatorInterface */
-    private $validator;
-
-    public function __construct(ValidatorInterface $validator)
+    public function __construct(private readonly ValidatorInterface $validator)
     {
-        $this->validator = $validator;
     }
 
     /**
@@ -25,7 +21,7 @@ class ConstraintVerifier implements VerifierInterface
         if (count($errors) > 0) {
             $message = sprintf(
                 '%s: %s',
-                $document->getFile()->getClientOriginalName(),
+                $document->getFile()?->getClientOriginalName() ?? 'unknown file name',
                 $errors->offsetGet(0)->getMessage()
             );
 

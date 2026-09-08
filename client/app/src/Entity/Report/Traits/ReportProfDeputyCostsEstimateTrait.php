@@ -17,15 +17,12 @@ trait ReportProfDeputyCostsEstimateTrait
     private ?string $profDeputyCostsEstimateHowCharged = null;
 
     /**
-     * @var ProfDeputyEstimateCost[]
+     * @var array<ProfDeputyEstimateCost>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyEstimateCost>')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     private array $profDeputyEstimateCosts = [];
 
-    /**
-     * @var array<int>
-     */
     #[JMS\Type('array')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     private array $profDeputyEstimateCostTypeIds = [];
@@ -35,9 +32,6 @@ trait ReportProfDeputyCostsEstimateTrait
     #[Assert\NotBlank(message: 'profDeputyEstimateCost.profDeputyManagementCostAmount.amount.notBlank', groups: ['prof-deputy-estimate-management-costs'])]
     private ?string $profDeputyManagementCostAmount = null;
 
-    /**
-     * @var array<int>
-     */
     #[JMS\Type('array')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     private array $profDeputyManagementCostTypeIds = [];
@@ -55,17 +49,11 @@ trait ReportProfDeputyCostsEstimateTrait
     #[Assert\NotBlank(message: 'profDeputyCostsEstimateMoreInfo.details.notBlank', groups: ['prof-deputy-costs-estimate-more-info-details'])]
     private ?string $profDeputyCostsEstimateMoreInfoDetails = null;
 
-    /**
-     * @return array
-     */
     public function getProfDeputyEstimateCostTypeIds(): array
     {
         return $this->profDeputyEstimateCostTypeIds;
     }
 
-    /**
-     * @param array<int> $profDeputyEstimateCostTypeIds
-     */
     public function setProfDeputyEstimateCostTypeIds(array $profDeputyEstimateCostTypeIds): static
     {
         $this->profDeputyEstimateCostTypeIds = $profDeputyEstimateCostTypeIds;
@@ -94,7 +82,7 @@ trait ReportProfDeputyCostsEstimateTrait
     }
 
     /**
-     * @return ProfDeputyEstimateCost[]
+     * @return array<ProfDeputyEstimateCost>
      */
     public function getProfDeputyEstimateCosts(): array
     {
@@ -102,7 +90,7 @@ trait ReportProfDeputyCostsEstimateTrait
     }
 
     /**
-     * @param ProfDeputyEstimateCost[] $profDeputyEstimateCosts
+     * @param array<ProfDeputyEstimateCost> $profDeputyEstimateCosts
      */
     public function setProfDeputyEstimateCosts(array $profDeputyEstimateCosts): static
     {
@@ -178,7 +166,6 @@ trait ReportProfDeputyCostsEstimateTrait
     public function setProfDeputyManagementCostTypeIds(array $profDeputyManagementCostTypeIds): static
     {
         $this->profDeputyManagementCostTypeIds = $profDeputyManagementCostTypeIds;
-
         return $this;
     }
 }

@@ -10,20 +10,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ScannerVerifier implements VerifierInterface
 {
-    /** @var ClamFileScanner */
-    private $scanner;
-
-    /** @var TranslatorInterface */
-    private $translator;
-
-    /** @var LoggerInterface */
-    private $logger;
-
-    public function __construct(ClamFileScanner $scanner, TranslatorInterface $translator, LoggerInterface $logger)
-    {
-        $this->scanner = $scanner;
-        $this->translator = $translator;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly ClamFileScanner $scanner,
+        private readonly TranslatorInterface $translator,
+        private readonly LoggerInterface $logger
+    ) {
     }
 
     /**
@@ -32,13 +23,19 @@ class ScannerVerifier implements VerifierInterface
     public function verify(Document $document, VerificationStatus $status): VerificationStatus
     {
         try {
-            $this->scanner->scanFile($document->getFile());
+            $fileToVerify = $document->getFile();
+
+            if ($fileToVerify === null) {
+                throw new \DomainException('no file to verify');
+            }
+
+            $this->scanner->scanFile($fileToVerify);
         } catch (\Throwable $e) {
             $this->logger->error($e->getMessage());
 
             $message = sprintf(
                 '%s: %s',
-                $document->getFile()->getClientOriginalName(),
+                $document->getFile()?->getClientOriginalName() ?? 'unknown file name',
                 $this->buildErrorMessage($e)
             );
 

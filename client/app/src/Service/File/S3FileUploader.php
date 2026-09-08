@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service\File;
 
+use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Entity\Report\Document;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Exception\MimeTypeAndFileExtensionDoNotMatchException;
@@ -82,12 +83,13 @@ class S3FileUploader
             ->setIsReportPdf($isReportPdf);
 
         if ($overwrite) {
-            $response = $this->persistDocumentOverwrite(intval($report->getId()), $document);
+            $response = $this->persistDocumentOverwrite($report->getId(), $document);
         } else {
-            $response = $this->persistDocument(intval($report->getId()), $document);
+            $response = $this->persistDocument($report->getId(), $document);
         }
 
-        $document->setId($response['id'] ?? null);
+        $id = new ValidatingArray(is_array($response) ? $response : [])->getIntegerOrThrow('id');
+        $document->setId($id);
 
         return $document;
     }

@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\DocumentInterface;
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use OPG\Digideps\Frontend\Entity\SynchronisableInterface;
 use OPG\Digideps\Frontend\Entity\SynchronisableTrait;
 use OPG\Digideps\Frontend\Entity\Traits\CreationAudit;
 use OPG\Digideps\Frontend\Service\File\FileNameManipulation;
-use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -22,10 +24,10 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     public const int FILE_NAME_MAX_LENGTH = 255;
 
-    public function isValidForReport(ExecutionContextInterface $context): void
+    public function isValidForReport(ExecutionContextInterface $context): bool
     {
         if (!($this->getFile() instanceof UploadedFile)) {
-            return;
+            return false;
         }
 
         $fileOriginalName = FileNameManipulation::fileNameSanitation($this->getFile()->getClientOriginalName());
@@ -33,13 +35,13 @@ class Document implements DocumentInterface, SynchronisableInterface
         if (empty($fileOriginalName)) {
             $context->buildViolation('document.file.errors.invalidName')->atPath('file')->addViolation();
 
-            return;
+            return false;
         }
 
         if (strlen($fileOriginalName) > self::FILE_NAME_MAX_LENGTH) {
             $context->buildViolation('document.file.errors.maxMessage')->atPath('file')->addViolation();
 
-            return;
+            return false;
         }
 
         $fileNames = [];
@@ -49,138 +51,92 @@ class Document implements DocumentInterface, SynchronisableInterface
 
         if (in_array($fileOriginalName, $fileNames)) {
             $context->buildViolation('document.file.errors.alreadyPresent')->atPath('file')->addViolation();
+            return false;
         }
+
+        return true;
     }
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['document'])]
-    private $id;
+    private ?int $id = null;
 
     /**
-     * // add more validators here if needed
-     * http://symfony.com/doc/current/reference/constraints/File.html.
-     *
-     * @var UploadedFile
+     * (add more validators here if needed)
+     * http://symfony.com/doc/current/reference/constraints/File.html
      */
     #[Assert\NotBlank(message: 'Please choose a file', groups: ['document'])]
-    #[Assert\File(maxSize: '15M', maxSizeMessage: 'document.file.errors.maxSizeMessage', mimeTypes: ['application/pdf', 'application/x-pdf', 'image/png', 'image/jpeg', 'image/heif'], mimeTypesMessage: 'document.file.errors.mimeTypesMessage', groups: ['document'])]
-    private $file;
+    #[Assert\File(maxSize: '15M', mimeTypes: ['application/pdf', 'application/x-pdf', 'image/png', 'image/jpeg', 'image/heif'], maxSizeMessage: 'document.file.errors.maxSizeMessage', mimeTypesMessage: 'document.file.errors.mimeTypesMessage', groups: ['document'])]
+    private ?UploadedFile $file = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['document'])]
-    private $fileName;
+    private ?string $fileName = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['document'])]
-    private $storageReference;
+    private ?string $storageReference = null;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['document'])]
-    private $isReportPdf;
+    private ?bool $isReportPdf = null;
 
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\ReportSubmission')]
     #[JMS\Groups(['document-report-subnmission'])]
     private ?ReportSubmission $reportSubmission = null;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFileName()
+    public function getFileName(): ?string
     {
         return $this->fileName;
     }
 
-    /**
-     * @param string $fileName
-     */
-    public function setFileName($fileName): static
+    public function setFileName(?string $fileName): static
     {
         $this->fileName = $fileName;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getStorageReference()
+    public function getStorageReference(): ?string
     {
         return $this->storageReference;
     }
 
-    /**
-     * @param string $storageReference
-     */
-    public function setStorageReference($storageReference): static
+    public function setStorageReference(?string $storageReference): static
     {
         $this->storageReference = $storageReference;
-
         return $this;
     }
 
-    /**
-     * @return UploadedFile
-     */
-    public function getFile()
+    public function getFile(): ?UploadedFile
     {
         return $this->file;
     }
 
-    /**
-     * @param UploadedFile $file
-     */
-    public function setFile($file): static
+    public function setFile(?UploadedFile $file): static
     {
         $this->file = $file;
-
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isReportPdf()
+    public function isReportPdf(): ?bool
     {
         return $this->isReportPdf;
     }
 
-    /**
-     * @param bool $isReportPdf
-     */
-    public function setIsReportPdf($isReportPdf): static
+    public function setIsReportPdf(?bool $isReportPdf): static
     {
         $this->isReportPdf = $isReportPdf;
-
         return $this;
     }
 
@@ -192,25 +148,22 @@ class Document implements DocumentInterface, SynchronisableInterface
     public function setReportSubmission(?ReportSubmission $repostSubmission): static
     {
         $this->reportSubmission = $repostSubmission;
-
         return $this;
     }
 
     /**
-     * Is document for OPG admin eyes only.
-     *
-     * @return bool
+     * For OPG admin only
      */
-    public function isAdminDocument()
+    public function isAdminDocument(): bool
     {
         return $this->isReportPdf() || $this->isTransactionDocument();
     }
 
     /**
-     * Is document a list of transaction document (admin only).
+     * Is document a list of transactions document (admin only)
      */
     private function isTransactionDocument(): bool
     {
-        return str_contains($this->getFileName(), 'DigiRepTransactions');
+        return str_contains($this->getFileName() ?? '', 'DigiRepTransactions');
     }
 }

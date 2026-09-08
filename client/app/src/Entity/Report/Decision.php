@@ -1,124 +1,84 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
-use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Decision
 {
     use HasReportTrait;
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['decision'])]
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['decision'])]
     #[Assert\NotBlank(message: 'decision.description.notBlank', groups: ['decision-description'])]
     #[Assert\Length(min: 2, minMessage: 'decision.description.length', groups: ['decision-description'])]
-    private $description;
+    private ?string $description = null;
 
-    /**
-     * @var bool
-     */
-    #[Assert\NotBlank(message: 'decision.clientInvolvedBoolean.notBlank', groups: ['decision-client-involved'])]
     #[JMS\Type('boolean')]
     #[JMS\Groups(['decision'])]
-    private $clientInvolvedBoolean;
+    #[Assert\NotBlank(message: 'decision.clientInvolvedBoolean.notBlank', groups: ['decision-client-involved'])]
+    private ?bool $clientInvolvedBoolean = null;
 
-    /**
-     * @var bool
-     */
-    #[Assert\NotBlank(message: 'decision.clientInvolvedDetails.notBlank', groups: ['decision-client-involved-details'])]
-    #[Assert\Length(min: 2, minMessage: 'decision.clientInvolvedDetails.length', groups: ['decision-client-involved-details'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['decision'])]
-    private $clientInvolvedDetails;
+    #[Assert\NotBlank(message: 'decision.clientInvolvedDetails.notBlank', groups: ['decision-client-involved-details'])]
+    #[Assert\Length(min: 2, minMessage: 'decision.clientInvolvedDetails.length', groups: ['decision-client-involved-details'])]
+    private ?bool $clientInvolvedDetails = null;
 
-    /**
-     * @JMS\Type("DateTime")
-     * @JMS\Groups({"decision"})
-     * @phpstan-ignore property.unusedType
-     */
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['decision'])]
+    /** @phpstan-ignore property.unusedType */
     private ?\DateTime $createdAt = null;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id): static
+    public function setId(int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isClientInvolvedBoolean()
+    public function isClientInvolvedBoolean(): ?bool
     {
         return $this->clientInvolvedBoolean;
     }
 
-    /**
-     * @param bool $clientInvolvedBoolean
-     */
-    public function setClientInvolvedBoolean($clientInvolvedBoolean): static
+    public function setClientInvolvedBoolean(?bool $clientInvolvedBoolean): static
     {
         $this->clientInvolvedBoolean = $clientInvolvedBoolean;
-
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isClientInvolvedDetails()
+    public function isClientInvolvedDetails(): ?bool
     {
         return $this->clientInvolvedDetails;
     }
 
-    /**
-     * @param bool $clientInvolvedDetails
-     */
-    public function setClientInvolvedDetails($clientInvolvedDetails): static
+    public function setClientInvolvedDetails(?bool $clientInvolvedDetails): static
     {
         $this->clientInvolvedDetails = $clientInvolvedDetails;
-
         return $this;
     }
 
