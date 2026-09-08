@@ -22,20 +22,22 @@ class Decision
     #[Assert\Length(min: 2, minMessage: 'decision.description.length', groups: ['decision-description'])]
     private ?string $description = null;
 
+    // NB Symfony handles the type shifting between string and bool; trying to enforce one type
+    // breaks the decision form checkbox
     #[JMS\Type('boolean')]
     #[JMS\Groups(['decision'])]
     #[Assert\NotBlank(message: 'decision.clientInvolvedBoolean.notBlank', groups: ['decision-client-involved'])]
-    private ?bool $clientInvolvedBoolean = null;
+    private bool|string|null $clientInvolvedBoolean = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['decision'])]
     #[Assert\NotBlank(message: 'decision.clientInvolvedDetails.notBlank', groups: ['decision-client-involved-details'])]
     #[Assert\Length(min: 2, minMessage: 'decision.clientInvolvedDetails.length', groups: ['decision-client-involved-details'])]
-    private ?bool $clientInvolvedDetails = null;
+    private ?string $clientInvolvedDetails = null;
 
     #[JMS\Type('DateTime')]
     #[JMS\Groups(['decision'])]
-    /** @phpstan-ignore property.unusedType */
+    /* @phpstan-ignore property.unusedType */
     private ?\DateTime $createdAt = null;
 
     public function getId(): ?int
@@ -60,23 +62,23 @@ class Decision
         return $this;
     }
 
-    public function isClientInvolvedBoolean(): ?bool
+    public function isClientInvolvedBoolean(): bool|string|null
     {
         return $this->clientInvolvedBoolean;
     }
 
-    public function setClientInvolvedBoolean(?bool $clientInvolvedBoolean): static
+    public function setClientInvolvedBoolean(bool|string|null $clientInvolvedBoolean): static
     {
         $this->clientInvolvedBoolean = $clientInvolvedBoolean;
         return $this;
     }
 
-    public function isClientInvolvedDetails(): ?bool
+    public function isClientInvolvedDetails(): ?string
     {
         return $this->clientInvolvedDetails;
     }
 
-    public function setClientInvolvedDetails(?bool $clientInvolvedDetails): static
+    public function setClientInvolvedDetails(?string $clientInvolvedDetails): static
     {
         $this->clientInvolvedDetails = $clientInvolvedDetails;
         return $this;
