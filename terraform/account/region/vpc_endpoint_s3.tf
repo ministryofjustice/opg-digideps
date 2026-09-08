@@ -19,7 +19,11 @@ data "aws_iam_policy_document" "s3_endpoint" {
     actions = [
       "s3:Get*",
       "s3:List*",
-      "s3:Put*"
+      "s3:Put*",
+      "s3:HeadBucket",
+      "s3:Create*",
+      "s3:AbortMultipartUpload",
+      "s3:Upload*",
     ]
     resources = [
       "arn:aws:s3:::pa-uploads-*",
@@ -38,6 +42,8 @@ data "aws_iam_policy_document" "s3_endpoint" {
       "arn:aws:s3:::alb-logs*/*",
       "arn:aws:s3:::alb-athena*",
       "arn:aws:s3:::alb-athena*/*",
+      "arn:aws:s3:::backup.complete-deputy-report.service.gov.uk",
+      "arn:aws:s3:::backup.complete-deputy-report.service.gov.uk/*",
       "arn:aws:s3:::prod-eu-west-1-starport-layer-bucket",
       "arn:aws:s3:::prod-eu-west-1-starport-layer-bucket/*",
       "arn:aws:s3:::prod-eu-west-2-starport-layer-bucket",

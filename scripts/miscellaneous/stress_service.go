@@ -1,23 +1,23 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 	"time"
-	"flag"
 )
 
-func makeRequests(url string, chStatus chan<-int, batchSize int) {
-  for z := 0; z < batchSize; z++ {
-    	req, _ := http.NewRequest(http.MethodGet, url, nil)
-    	req.Header.Set("Content-Type", "application/json")
-    	res, err := http.DefaultClient.Do(req)
-    	if err != nil {
-    		fmt.Printf("failed to call remote service: (%v)\n", err)
-    	}
-    	defer res.Body.Close()
-    	chStatus <- res.StatusCode
-  }
+func makeRequests(url string, chStatus chan<- int, batchSize int) {
+	for z := 0; z < batchSize; z++ {
+		req, _ := http.NewRequest(http.MethodGet, url, nil)
+		req.Header.Set("Content-Type", "application/json")
+		res, err := http.DefaultClient.Do(req)
+		if err != nil {
+			fmt.Printf("failed to call remote service: (%v)\n", err)
+		}
+		defer res.Body.Close()
+		chStatus <- res.StatusCode
+	}
 }
 
 // The purpose of this script is to put some basic stress on the application for testing of alarms and scaling etc
@@ -35,13 +35,13 @@ func main() {
 	var respStatus int
 	chStatus := make(chan int)
 
-  for i := 0; i < *numberOfBatches; i++ {
-    fmt.Printf("Processing batch %v of %v\n\n", i+1, *numberOfBatches)
-    go makeRequests(url, chStatus, *batchSize)
-    for z := 0; z < *batchSize; z++ {
-      respStatus = <- chStatus
-      fmt.Println(respStatus)
-    }
-    time.Sleep(time.Duration(*waitBetweenBatches)*time.Second )
-  }
+	for i := 0; i < *numberOfBatches; i++ {
+		fmt.Printf("Processing batch %v of %v\n\n", i+1, *numberOfBatches)
+		go makeRequests(url, chStatus, *batchSize)
+		for z := 0; z < *batchSize; z++ {
+			respStatus = <-chStatus
+			fmt.Println(respStatus)
+		}
+		time.Sleep(time.Duration(*waitBetweenBatches) * time.Second)
+	}
 }

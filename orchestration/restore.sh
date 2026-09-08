@@ -5,10 +5,7 @@ set -o pipefail
 
 source common.sh
 
-echo "ARGS: $AWS_ARGS"
-echo "S3_BUCKET: $S3_BUCKET"
-echo "S3_PREFIX: $S3_PREFIX"
-echo "Finding latest backup"
+echo "Listing backups in s3://$S3_BUCKET/$S3_PREFIX/"
 
 LATEST_BACKUP=$(aws s3 $AWS_ARGS ls s3://$S3_BUCKET/$S3_PREFIX/ | sort | tail -n 1 | awk '{ print $4 }')
 
