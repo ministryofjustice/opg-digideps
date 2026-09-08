@@ -48,6 +48,10 @@
         <twig:OPG:Review:MoneyIn report="{{ report }}"/>
     {% endif %}
 
+    {% if report.hasSection('moneyOutShort') %}
+        <twig:OPG:Review:MoneyOutShort report="{{ report }}"/>
+    {% endif %}
+
     {% if report.hasSection('moneyOut') %}
         <twig:OPG:Review:MoneyOut report="{{ report }}"/>
     {% endif %}

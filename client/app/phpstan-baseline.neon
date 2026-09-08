@@ -313,6 +313,12 @@ parameters:
 			path: src/Components/OPG/Review/Assets.php
 
 		-
+			message: '#^Parameter \#2 \$value of method OPG\\Digideps\\Frontend\\Components\\GOV\\Summary\\SummaryListBuilder\:\:addItem\(\) expects OPG\\Digideps\\Frontend\\Components\\RenderableInterface\|string, Twig\\Markup given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Balance.php
+
+		-
 			message: '#^Parameter \#1 \$type of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\BankAccount constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -3701,12 +3707,6 @@ parameters:
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Entity/Report/MoneyReceivedOnClientsBehalf.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getCategoriesGrouped\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getCategoriesGrouped\(\) has parameter \$typeFilter with no type specified\.$#'
