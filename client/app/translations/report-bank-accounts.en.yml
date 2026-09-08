@@ -93,3 +93,10 @@ form:
     label: Save and continue
   cancel:
     label: Cancel
+
+review:
+  tableHeader: List of accounts
+  account: Account
+  balanceOnStart: Balance on %startDate%
+  balanceOnEnd: Balance on %endDate%
+  notEntered: Not entered
