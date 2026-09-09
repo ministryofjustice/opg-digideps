@@ -124,6 +124,11 @@ RUN apk add --no-cache \
     "ffmpeg==8.1.2-r0" \
     "wget==1.25.0-r3"
 
+# TODO Remove this once alpine upgrade available as it patches a vulnerability
+RUN apk update && apk add --upgrade \
+    "curl=8.22.0-r0" \
+    "libcurl=8.22.0-r0"
+
 # Cache/log dirs
 RUN mkdir -p var/cache var/logs /var/log/app \
  && chown -R www-data var /var/log/app
