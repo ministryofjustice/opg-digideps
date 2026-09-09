@@ -29,10 +29,14 @@ final readonly class ReportCleaner
 
     public function clean(bool $allowNonContinuous, int ...$clientIds): void
     {
+        $this->verboseLogger->notice("Planning report cleanup. Allow non continuous: " . ($allowNonContinuous ? 'Yes' : 'No'));
         $this->connection->executeStatement('DELETE FROM report_cleanup_action WHERE TRUE');
         $this->connection->executeStatement('DELETE FROM report_cleanup_problem WHERE TRUE');
+        $this->verboseLogger->notice('Planning report cleanup for PFA.');
         $this->cleanType($allowNonContinuous, CourtOrderType::PFA, $clientIds);
+        $this->verboseLogger->notice('Planning report cleanup for HW.');
         $this->cleanType($allowNonContinuous, CourtOrderType::HW, $clientIds);
+        $this->verboseLogger->notice('Planning report cleanup. Done');
     }
 
     private function cleanType(bool $allowNonContinuous, CourtOrderType $type, array $clientIds): void
