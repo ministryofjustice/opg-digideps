@@ -407,10 +407,19 @@ form:
         label: Combined telephone and broadband
 
 review:
+  moneyIn:
+    title: Money in
+    question: Question
+    answer: Answer
+    notEntered: Not entered
+    income: Income
+    totalAmount: Total amount
+    totalMoneyIn: Total money in
   moneyOut:
     title: Money out
     question: Question
     answer: Answer
+    notEntered: Not entered
     payments: Payments
     totalAmount: Total amount
     totalMoneyOut: Total money out

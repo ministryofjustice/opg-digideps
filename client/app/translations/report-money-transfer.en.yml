@@ -68,3 +68,9 @@ form:
     hint: ""
   description:
     label: Description
+
+review:
+  no: No
+  yes: Yes
+  notEntered: Not entered
+  tableHeader: List of transfers
