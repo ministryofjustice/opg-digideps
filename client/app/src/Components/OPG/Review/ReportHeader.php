@@ -40,7 +40,7 @@ final class ReportHeader
         $this->text = $this->makeText();
 
         $this->reportInformation = $this->makeReportInformationList($report);
-        $this->deputyDetails = $this->makeDeputyDetailsList(/*$report->getPrimaryDeputy()*/null);//TODO
+        $this->deputyDetails = $this->makeDeputyDetailsList($report->getPrimaryDeputy());
         $this->clientDetails = $this->makeClientDetailsList($report->getClient());
     }
 

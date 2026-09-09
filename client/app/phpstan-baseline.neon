@@ -4225,6 +4225,12 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$primaryDeputy \(OPG\\Digideps\\Frontend\\Entity\\Deputy\|null\) is never assigned OPG\\Digideps\\Frontend\\Entity\\Deputy so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$profDeputyCostsEstimateMoreInfoDetails has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
