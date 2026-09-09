@@ -120,7 +120,7 @@ COPY --from=php-builder /usr/local/etc/php/conf.d \
 
 RUN apk --no-cache add \
     "postgresql18-client==18.6-r0" \
-    "openssl==3.5.7-r0" \
+    "openssl==3.5.8-r0" \
     "su-exec==0.3-r0" \
     "php84-pecl-igbinary==3.2.17_rc1-r0"  \
     "php84-pecl-redis==6.3.0-r0" \
