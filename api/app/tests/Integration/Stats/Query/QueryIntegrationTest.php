@@ -36,7 +36,7 @@ class QueryIntegrationTest extends ApiIntegrationTestCase
             'dimension' => ['roleName'],
         ]));
 
-        $this->assertContainsOnly('array', $result);
+        $this->assertContainsOnlyArray($result);
 
         $this->assertCount(2, $result[0]);
         $this->assertArrayHasKey('amount', $result[0]);
