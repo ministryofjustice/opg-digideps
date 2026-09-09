@@ -6,6 +6,7 @@ namespace OPG\Digideps\Backend\Entity\Cleanup;
 
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use OPG\Digideps\Backend\Cleanup\Model\Problem;
@@ -23,7 +24,7 @@ class ReportCleanupProblem
         public readonly ?int $orderId,
         #[Column(name: 'problem', type: 'integer', nullable: false, enumType: Problem::class)]
         public readonly Problem $problem,
-        #[Id, Column(name: 'id', type: 'integer', nullable: true)]
+        #[Id, GeneratedValue(strategy: 'IDENTITY'), Column(name: 'id', type: 'integer', nullable: true)]
         public readonly ?int $id = null
     ) {
     }
