@@ -85,13 +85,15 @@ jobs:
           ./scripts/workspace_cleanup.sh "${WC_WORKSPACES}"
         working-directory: terraform/environment
 
-      - name: SLSA
-        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+      - name: Install uv
+        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
         with:
-          requirements-file: scripts/pipeline/cleanup_task_definitions/requirements.txt
+          version: "0.12.10"
+          enable-cache: true
 
-      - name: Install requirements
-        run: pip install -r scripts/pipeline/cleanup_task_definitions/requirements.txt
+      - name: Install dependencies
+        working-directory: scripts/pipeline/cleanup_task_definitions
+        run: uv sync --locked
 
       - name: clean up old task definitions
         env:

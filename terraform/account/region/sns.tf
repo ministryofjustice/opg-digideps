@@ -41,3 +41,15 @@ resource "aws_sns_topic_subscription" "custom_cloudwatch_alarms" {
   protocol  = "lambda"
   topic_arn = data.aws_sns_topic.custom_cloudwatch_alarms.arn
 }
+
+data "aws_sns_topic" "guardduty_findings" {
+  name = "guardduty-findings"
+}
+
+resource "aws_sns_topic_subscription" "guardduty_findings" {
+  endpoint  = aws_lambda_function.monitor_notify_lambda.arn
+  protocol  = "lambda"
+  topic_arn = data.aws_sns_topic.guardduty_findings.arn
+
+  depends_on = [aws_lambda_permission.sns_guardduty_findings]
+}

@@ -10,38 +10,26 @@ class Decision
 {
     use HasReportTrait;
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['decision'])]
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['decision'])]
     #[Assert\NotBlank(message: 'decision.description.notBlank', groups: ['decision-description'])]
     #[Assert\Length(min: 2, minMessage: 'decision.description.length', groups: ['decision-description'])]
-    private $description;
+    private ?string $description = null;
 
-    /**
-     * @var bool
-     */
-    #[Assert\NotBlank(message: 'decision.clientInvolvedBoolean.notBlank', groups: ['decision-client-involved'])]
+    #[Assert\NotNull(message: 'decision.clientInvolvedBoolean.notBlank', groups: ['decision-client-involved'])]
     #[JMS\Type('boolean')]
     #[JMS\Groups(['decision'])]
-    private $clientInvolvedBoolean;
+    private ?bool $clientInvolvedBoolean = null;
 
-    /**
-     * @var bool
-     */
     #[Assert\NotBlank(message: 'decision.clientInvolvedDetails.notBlank', groups: ['decision-client-involved-details'])]
     #[Assert\Length(min: 2, minMessage: 'decision.clientInvolvedDetails.length', groups: ['decision-client-involved-details'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['decision'])]
-    private $clientInvolvedDetails;
+    private ?string $clientInvolvedDetails = null;
 
     /**
      * @JMS\Type("DateTime")
@@ -50,72 +38,41 @@ class Decision
      */
     private ?\DateTime $createdAt = null;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id): static
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isClientInvolvedBoolean()
+    public function isClientInvolvedBoolean(): ?bool
     {
         return $this->clientInvolvedBoolean;
     }
 
-    /**
-     * @param bool $clientInvolvedBoolean
-     */
-    public function setClientInvolvedBoolean($clientInvolvedBoolean): static
+    public function setClientInvolvedBoolean(?bool $clientInvolvedBoolean): static
     {
         $this->clientInvolvedBoolean = $clientInvolvedBoolean;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isClientInvolvedDetails()
+    public function isClientInvolvedDetails(): ?string
     {
         return $this->clientInvolvedDetails;
     }
 
-    /**
-     * @param bool $clientInvolvedDetails
-     */
-    public function setClientInvolvedDetails($clientInvolvedDetails): static
+    public function setClientInvolvedDetails(?string $clientInvolvedDetails): static
     {
         $this->clientInvolvedDetails = $clientInvolvedDetails;
 
