@@ -13,60 +13,63 @@ class MentalCapacity
     public const string CAPACITY_CHANGED = 'changed';
     public const string CAPACITY_STAYED_SAME = 'stayedSame';
 
+    /**
+     * @var int
+     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['mental-capacity'])]
-    private int $id;
+    private $id;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['mental-capacity'])]
     #[Assert\NotBlank(message: 'mentalCapacity.hasCapacityChanged.notBlank', groups: ['capacity'])]
-    private ?string $hasCapacityChanged = null;
+    private $hasCapacityChanged;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['mental-capacity'])]
     #[Assert\NotBlank(message: 'mentalCapacity.hasCapacityChangedDetails.notBlank', groups: ['has-capacity-changed-yes'])]
-    private ?string $hasCapacityChangedDetails = null;
+    private $hasCapacityChangedDetails;
 
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['mental-assessment-date'])]
     #[Assert\NotBlank(message: 'mentalCapacity.mentalAssessmentDate.notBlank', groups: ['mental-assessment-date'])]
-    private ?\DateTime $mentalAssessmentDate = null;
+    private $mentalAssessmentDate;
 
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }
 
-    public function getHasCapacityChanged(): ?string
+    public function getHasCapacityChanged()
     {
         return $this->hasCapacityChanged;
     }
 
-    public function getHasCapacityChangedDetails(): ?string
+    public function getHasCapacityChangedDetails()
     {
         return $this->hasCapacityChangedDetails;
     }
 
-    public function setHasCapacityChanged(?string $hasCapacityChanged): static
+    public function setHasCapacityChanged($hasCapacityChanged): static
     {
         $this->hasCapacityChanged = $hasCapacityChanged;
 
         return $this;
     }
 
-    public function setHasCapacityChangedDetails(?string $hasCapacityChangedDetails): static
+    public function setHasCapacityChangedDetails($hasCapacityChangedDetails): static
     {
         $this->hasCapacityChangedDetails = $hasCapacityChangedDetails;
 
         return $this;
     }
 
-    public function getMentalAssessmentDate(): ?\DateTime
+    public function getMentalAssessmentDate()
     {
         return $this->mentalAssessmentDate;
     }
 
-    public function setMentalAssessmentDate(?\DateTime $mentalAssessmentDate): static
+    public function setMentalAssessmentDate($mentalAssessmentDate): static
     {
         $this->mentalAssessmentDate = $mentalAssessmentDate;
 
