@@ -96,14 +96,14 @@ class BankAccount implements BankAccountInterface
     #[JMS\Groups(['account'])]
     #[Assert\NotBlank(message: 'account.openingBalance.notBlank', groups: ['bank-account-opening-balance'])]
     #[Assert\Type(type: 'numeric', message: 'account.openingBalance.type', groups: ['bank-account-opening-balance'])]
-    #[Assert\Range(maxMessage: 'account.openingBalance.outOfRange', max: 100000000000, groups: ['bank-account-opening-balance'])]
-    private null|string|int|float $openingBalance = null;
+    #[Assert\Range(max: 100000000000, maxMessage: 'account.openingBalance.outOfRange', groups: ['bank-account-opening-balance'])]
+    private mixed $openingBalance = null;
 
     #[JMS\Type('string')]
     #[Assert\Type(type: 'numeric', message: 'account.closingBalance.type', groups: ['bank-account-closing-balance'])]
-    #[Assert\Range(maxMessage: 'account.closingBalance.outOfRange', max: 100000000000, groups: ['bank-account-closing-balance'])]
+    #[Assert\Range(max: 100000000000, maxMessage: 'account.closingBalance.outOfRange', groups: ['bank-account-closing-balance'])]
     #[JMS\Groups(['account'])]
-    private null|string|int|float $closingBalance = null;
+    private mixed $closingBalance = null;
 
     /**
      * @var bool
@@ -190,19 +190,19 @@ class BankAccount implements BankAccountInterface
         return $this->accountNumber;
     }
 
-    public function setOpeningBalance(null|string|int|float $openingBalance): static
+    public function setOpeningBalance($openingBalance): static
     {
         $this->openingBalance = $openingBalance;
 
         return $this;
     }
 
-    public function getOpeningBalance(): null|string|int|float
+    public function getOpeningBalance()
     {
         return $this->openingBalance;
     }
 
-    public function setClosingBalance(null|string|int|float $closingBalance): static
+    public function setClosingBalance(mixed $closingBalance): static
     {
         $this->closingBalance = $closingBalance;
 
