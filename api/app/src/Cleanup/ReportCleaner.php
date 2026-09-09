@@ -63,7 +63,7 @@ final readonly class ReportCleaner
                     $expected = (int)round($elapsed * $count / ($i + 1));
                     $elapsed = (int)round($elapsed);
                     $peekMemory = (int)round(memory_get_peak_usage() / 1024 / 1024);
-                    $this->verboseLogger->notice("[{$i}/{$count}][{$elapsed}s/{$expected}s][{$peekMemory}MiB] CaseNumber:n {$client->caseNumber}");
+                    $this->verboseLogger->notice("[{$i}/{$count}][{$elapsed}s/{$expected}s][{$peekMemory}MiB] CaseNumber {$client->caseNumber}");
                 }
             }
         } catch (\Throwable $throwable) {
@@ -147,9 +147,6 @@ final readonly class ReportCleaner
                 c.case_number,
                 c.id AS client_id,
                 rcp.order_id,
-                o.court_order_uid AS order_uid,
-                o.status = 'ACTIVE' AS order_open,
-                o.order_made_date,
                 rcp.report_id,
                 r.start_date,
                 r.end_date,
@@ -159,11 +156,11 @@ final readonly class ReportCleaner
                 rcp.problem
             FROM report_cleanup_problem rcp
             LEFT JOIN report r ON r.id = rcp.report_id
-            LEFT JOIN client c ON r.client_id = rcp.client_id
-            LEFT JOIN court_order o ON o.id = rcp.order_id
+            LEFT JOIN client c ON r.client_id = c.id
             {$clientClause}
         ")->iterateAssociative() as $row) {
             $csv ??= implode(',', array_keys($row)) . "\r\n";
+            $row['problem'] = Problem::from((int)$row['problem'])->name;
             $csv .=  implode(',', $row) . "\r\n";
         }
         return $csv ?? 'NO PROBLEMS FOUND';
