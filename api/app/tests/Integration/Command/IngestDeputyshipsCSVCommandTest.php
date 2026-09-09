@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 class IngestDeputyshipsCSVCommandTest extends KernelTestCase
 {
     private string $csvFilename;
-    private S3Client|MockObject $s3;
+    private S3Client&MockObject $s3;
     private ParameterBag $params;
     private DeputyshipsCSVIngester|MockObject $deputyshipsCSVIngester;
     private LoggerInterface $logger;
@@ -32,10 +32,13 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
         $this->csvFilename = 'deputyshipsReport.csv';
         copy(dirname(dirname(__DIR__)) . '/csv/' . $this->csvFilename, '/tmp/' . $this->csvFilename);
 
-        $this->s3 = $this->getMockBuilder(S3Client::class)
+        /** @var S3Client&MockObject $s3 */
+        $s3 = $this->getMockBuilder(S3Client::class)
             ->disableOriginalConstructor()
-            ->addMethods(['getObject'])
+            ->onlyMethods(['getObject'])
             ->getMock();
+        $this->s3 = $s3;
+
         $this->params = new ParameterBag(['s3_sirius_bucket' => 'bucket']);
         $this->deputyshipsCSVIngester = $this->createMock(DeputyshipsCSVIngester::class);
         $this->logger = $this->createMock(LoggerInterface::class);
