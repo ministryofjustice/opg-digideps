@@ -6,18 +6,32 @@
 {% set deputy = submittedBy.isDeputyOrg and client.getDeputy ? client.getDeputy : submittedBy %}
 
 <div class="report-preview">
-    <twig:OPG:Review:ReportHeader report="{{ report }}"/>
+    <h1 class="govuk-heading-l">Deputy report for {{ reportTypeHeading }} decisions</h1>
+
+    {% include '@App/Report/Rendered/_client_and_deputy_information.html.twig' %}
 
     {% if report.hasSection('decisions')  %}
-        <twig:OPG:Review:Decisions report="{{ report }}"/>
+        {% include '@App/Report/Rendered/_decisions.html.twig' with {
+            'report': report,
+            'transOptions': transOptions,
+            'transDomain': 'report-decisions'
+        } %}
     {% endif %}
 
-    {% if report.hasSection('contacts') %}
-        <twig:OPG:Review:Contacts report="{{ report }}"/>
+    {% if report.getContacts is not null and report.hasSection('contacts') %}
+        {% include '@App/Report/Rendered/_contacts.html.twig' with {
+            'report': report,
+            'transOptions': transOptions,
+            'transDomain': 'report-contacts'
+        } %}
     {% endif %}
 
     {% if report.hasSection('visitsCare') %}
-        <twig:OPG:Review:VisitsCare report="{{ report }}"/>
+        {% include '@App/Report/Rendered/_visits_care.html.twig' with {
+            'visitsCare': report.visitsCare,
+            'transOptions': transOptions,
+            'transDomain': 'report-visits-care'
+        } %}
     {% endif %}
 
     {% if report.hasSection('clientBenefitsCheck') %}
@@ -25,19 +39,34 @@
     {% endif %}
 
     {% if report.hasSection('bankAccounts')%}
-        <twig:OPG:Review:BankAccounts report="{{ report }}"/>
+        {% include '@App/Report/Rendered/_bankAccounts.html.twig' with {
+            'report': report,
+            'transDomain': 'report-bank-accounts'
+        } %}
     {% endif %}
 
     {% if report.hasSection('deputyExpenses') %}
-        <twig:OPG:Review:DeputyExpenses report="{{ report }}"/>
+        {% include '@App/Report/Rendered/_deputy_expenses.html.twig' with {
+            'report': report,
+            'transOptions': transOptions,
+            'transDomain': 'report-deputy-expenses'
+        } %}
     {% endif %}
 
     {% if report.hasSection('gifts') %}
-        <twig:OPG:Review:Gift report="{{ report }}"/>
+        {% include '@App/Report/Rendered/_gifts.html.twig' with {
+          'report': report,
+          'transOptions': transOptions,
+          'transDomain': 'report-gifts'
+        } %}
     {% endif %}
 
     {% if report.hasSection('moneyTransfers') and (report.bankAccounts | length) > 1 %}
-        <twig:OPG:Review:MoneyTransfers report="{{ report }}"/>
+        {% include '@App/Report/Rendered/_transfers.html.twig' with {
+            'report': report,
+            'transOptions': transOptions,
+            'transDomain': 'report-money-transfer'
+        } %}
     {% endif %}
 
     {% if report.hasSection('moneyInShort') %}
@@ -45,15 +74,26 @@
     {% endif %}
 
     {% if report.hasSection('moneyIn') %}
-        <twig:OPG:Review:MoneyIn report="{{ report }}"/>
+        {% include '@App/Report/Rendered/_money_in_high_asset.html.twig' with {
+            'report': report,
+            'transOptions': transOptions,
+            'transDomain': 'report-money-transaction'
+        } %}
     {% endif %}
 
-    {% if report.hasSection('moneyOut') %}
-        <twig:OPG:Review:MoneyOut report="{{ report }}"/>
+    {% if report.hasSection('moneyOut')%}
+        {% include '@App/Report/Rendered/_money_out_high_asset.html.twig' with {
+            'report': report,
+            'transOptions': transOptions,
+            'transDomain': 'report-money-transaction'
+        } %}
     {% endif %}
 
     {% if report.hasSection('balance') %}
-        <twig:OPG:Review:Balance report="{{ report }}"/>
+        {% include '@App/Report/Rendered/_balance.html.twig' with {
+            'report': report,
+            'transDomain': 'report-balance'
+        } %}
     {% endif %}
 
     {% if report.hasSection('assets') %}

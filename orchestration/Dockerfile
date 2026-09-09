@@ -1,7 +1,7 @@
 # -------------------------
 # 1) Go builder
 # -------------------------
-FROM golang:1.26.8-alpine3.24@sha256:34efdd6036c92e155c8b0162a5da7626586b612ea636590035602c970eece564 AS gobuilder
+FROM golang:1.27.0-alpine3.24@sha256:4c9fe60190a2a3350ddc51de80d0224b8a6698d12bdfc999fee45ea9d6c46dbc AS gobuilder
 
 COPY sleep_mode /app/sleep_mode
 WORKDIR /app/sleep_mode
@@ -19,7 +19,7 @@ CMD ["go", "test", "./..."]
 # -----------------------------------------
 # 2) Node deps builder: run npm ci
 # -----------------------------------------
-FROM node:26.3.1-alpine@sha256:a2dc166a387cc6ca1e62d0c8e265e49ca985d6e60abc9fe6e6c3d6ce8e63f606 AS nodebuilder
+FROM node:26.4.0-alpine@sha256:725aeba2364a9b16beae49e180d83bd597dbd0b15c47f1f28875c290bfd255b9 AS nodebuilder
 
 WORKDIR /tests
 COPY tests/package.json tests/package-lock.json ./

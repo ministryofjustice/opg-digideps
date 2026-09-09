@@ -56,7 +56,6 @@ class ReportController extends AbstractController
         'debts',
         'decision',
         'debt-management',
-        'deputy',
         'documents',
         'expenses',
         'fee',
