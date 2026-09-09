@@ -36,7 +36,7 @@ trait ReportBankAccountsTrait
     }
 
     /**
-     * @return BankAccount[]
+     * @return array<BankAccount>
      */
     public function getBankAccounts(): array
     {
@@ -88,6 +88,7 @@ trait ReportBankAccountsTrait
     public function setAccountsOpeningBalanceTotal(float $accountsOpeningBalanceTotal): static
     {
         $this->accountsOpeningBalanceTotal = $accountsOpeningBalanceTotal;
+
         return $this;
     }
 
@@ -105,7 +106,6 @@ trait ReportBankAccountsTrait
                 continue;
             }
 
-            /* @var $bank BankAccount */
             $bankName = ($bank->getBank() === null ? '' : $bank->getBank() . ' - ') .
                 $bank->getAccountTypeText() . ' (****' . $bank->getAccountNumber() . ')';
             $banksList[$bankName] = $bank->getId();

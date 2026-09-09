@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\MoneyTransfer;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\MoneyTransfer;
 
 trait ReportTransfersTrait
 {
     /**
-     * @var MoneyTransfer[]
+     * @var array<MoneyTransfer>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransfer>')]
     private array $moneyTransfers = [];
@@ -21,7 +23,7 @@ trait ReportTransfersTrait
      * Return list of money transfers by ID (as a proxy for creation date). Does not alter the ordering of the
      * underlying $this->moneyTransfers property.
      *
-     * @return MoneyTransfer[]
+     * @return array<MoneyTransfer>
      */
     public function getMoneyTransfers(): array
     {
@@ -36,7 +38,7 @@ trait ReportTransfersTrait
     }
 
     /**
-     * @param MoneyTransfer[] $transfers
+     * @param array<MoneyTransfer> $transfers
      */
     public function setMoneyTransfers(array $transfers): static
     {

@@ -27,6 +27,7 @@ trait ReportMoreInfoTrait
     public function setActionMoreInfo(?string $actionMoreInfo): static
     {
         $this->actionMoreInfo = $actionMoreInfo;
+
         return $this;
     }
 
@@ -38,6 +39,7 @@ trait ReportMoreInfoTrait
     public function setActionMoreInfoDetails(?string $actionMoreInfoDetails): static
     {
         $this->actionMoreInfoDetails = $actionMoreInfoDetails;
+
         return $this;
     }
 }

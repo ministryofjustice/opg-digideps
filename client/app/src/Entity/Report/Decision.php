@@ -48,6 +48,7 @@ class Decision
     public function setId(?int $id): static
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -59,6 +60,7 @@ class Decision
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -70,6 +72,7 @@ class Decision
     public function setClientInvolvedBoolean(bool|string|null $clientInvolvedBoolean): static
     {
         $this->clientInvolvedBoolean = $clientInvolvedBoolean;
+
         return $this;
     }
 
@@ -81,6 +84,7 @@ class Decision
     public function setClientInvolvedDetails(?string $clientInvolvedDetails): static
     {
         $this->clientInvolvedDetails = $clientInvolvedDetails;
+
         return $this;
     }
 

@@ -53,6 +53,7 @@ class MoneyTransactionShort
     public function setId(?int $id): static
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -64,6 +65,7 @@ class MoneyTransactionShort
     public function setReport(?Report $report): static
     {
         $this->report = $report;
+
         return $this;
     }
 
@@ -75,6 +77,7 @@ class MoneyTransactionShort
     public function setAmount(?float $amount): static
     {
         $this->amount = $amount;
+
         return $this;
     }
 
@@ -86,6 +89,7 @@ class MoneyTransactionShort
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -97,6 +101,7 @@ class MoneyTransactionShort
     public function setDate(?\DateTime $date): static
     {
         $this->date = $date;
+
         return $this;
     }
 
@@ -108,6 +113,7 @@ class MoneyTransactionShort
     public function setType(string $type): static
     {
         $this->type = $type;
+
         return $this;
     }
 }

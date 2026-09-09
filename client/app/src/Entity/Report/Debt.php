@@ -44,6 +44,7 @@ class Debt
     public function setDebtTypeId(?string $debtTypeId): static
     {
         $this->debtTypeId = $debtTypeId;
+
         return $this;
     }
 
@@ -55,6 +56,7 @@ class Debt
     public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
+
         return $this;
     }
 
@@ -66,6 +68,7 @@ class Debt
     public function setHasMoreDetails(?bool $hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
+
         return $this;
     }
 
@@ -77,6 +80,7 @@ class Debt
     public function setMoreDetails(?string $moreDetails): static
     {
         $this->moreDetails = $moreDetails;
+
         return $this;
     }
 }

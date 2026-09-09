@@ -16,7 +16,7 @@ trait ReportDeputyExpenseTrait
     private ?string $paidForAnything = null;
 
     /**
-     * @var Expense[]
+     * @var array<Expense>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Expense>')]
     #[JMS\Groups(['expenses'])]
@@ -41,7 +41,7 @@ trait ReportDeputyExpenseTrait
     /**
      * Returns expenses in ascending createdAt order. Does not change the order of the underlying $this->expenses.
      *
-     * @return Expense[]
+     * @return array<Expense>
      */
     public function getExpenses(): array
     {
@@ -50,7 +50,10 @@ trait ReportDeputyExpenseTrait
         return $this->expenses;
     }
 
-    public function setExpenses(mixed $expenses): static
+    /**
+     * @param array<Expense> $expenses
+     */
+    public function setExpenses(array $expenses): static
     {
         $this->expenses = $expenses;
 

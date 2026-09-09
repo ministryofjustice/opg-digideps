@@ -164,6 +164,7 @@ class MoneyTransaction
     public function setId(?int $id): static
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -175,6 +176,7 @@ class MoneyTransaction
     public function setGroup(?string $group): static
     {
         $this->group = $group;
+
         return $this;
     }
 
@@ -200,6 +202,7 @@ class MoneyTransaction
     public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
+
         return $this;
     }
 
@@ -211,6 +214,7 @@ class MoneyTransaction
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 

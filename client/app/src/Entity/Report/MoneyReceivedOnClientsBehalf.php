@@ -73,6 +73,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     public function setClientBenefitsCheck(?ClientBenefitsCheck $clientBenefitsCheck): static
     {
         $this->clientBenefitsCheck = $clientBenefitsCheck;
+
         return $this;
     }
 
@@ -84,6 +85,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     public function setAmountDontKnow(?bool $amountDontKnow): static
     {
         $this->amountDontKnow = $amountDontKnow;
+
         return $this;
     }
 
@@ -95,6 +97,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     public function setAmount(?float $amount): static
     {
         $this->amount = $amount;
+
         return $this;
     }
 
@@ -106,6 +109,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     public function setMoneyType(?string $moneyType): static
     {
         $this->moneyType = $moneyType;
+
         return $this;
     }
 
@@ -117,6 +121,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     public function setWhoReceivedMoney(?string $whoReceivedMoney): static
     {
         $this->whoReceivedMoney = $whoReceivedMoney;
+
         return $this;
     }
 }

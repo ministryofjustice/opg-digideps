@@ -41,7 +41,7 @@ trait ReportGiftTrait
      * Return gifts ordered by createdAt in ascending order.
      * Does not change the order of the underling $this->gifts property.
      *
-     * @return Gift[]
+     * @return array<Gift>
      */
     public function getGifts(): array
     {
@@ -51,7 +51,7 @@ trait ReportGiftTrait
     }
 
     /**
-     * @param Gift[] $gifts
+     * @param array<Gift> $gifts
      */
     public function setGifts(array $gifts): static
     {
@@ -67,9 +67,8 @@ trait ReportGiftTrait
     {
         $ret = 0.0;
         foreach ($this->getGifts() as $gift) {
-            $ret += $gift->getAmount();
+            $ret += (float)$gift->getAmount();
         }
-
         return $ret;
     }
 }

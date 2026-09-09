@@ -82,20 +82,22 @@ class AssetProperty extends Asset
     #[Assert\Range(notInRangeMessage: 'asset.property.rentIncomeMonth.outOfRange', min: 0, max: 100000000000, groups: ['property-rent-income-month'])]
     private ?float $rentIncomeMonth = null;
 
-    public function setAddress(?string $address): static
-    {
-        $this->address = $address;
-        return $this;
-    }
-
     public function getAddress(): ?string
     {
         return $this->address;
     }
 
+    public function setAddress(?string $address): static
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
     public function setPostcode(?string $postcode): static
     {
         $this->postcode = $postcode;
+
         return $this;
     }
 
@@ -107,6 +109,7 @@ class AssetProperty extends Asset
     public function setCounty(?string $county): static
     {
         $this->county = $county;
+
         return $this;
     }
 
@@ -128,8 +131,7 @@ class AssetProperty extends Asset
     }
 
     /**
-     * Get address.
-     * @return String[]
+     * @return array<string>
      */
     public function getAddressValidLines(): array
     {
@@ -189,6 +191,7 @@ class AssetProperty extends Asset
     public function setOccupants(?string $occupants): static
     {
         $this->occupants = $occupants;
+
         return $this;
     }
 
@@ -206,48 +209,56 @@ class AssetProperty extends Asset
     public function setOwnedPercentage(?float $ownedPercentage): static
     {
         $this->ownedPercentage = $ownedPercentage;
+
         return $this;
     }
 
     public function setIsSubjectToEquityRelease(?string $isSubjectToEquityRelease): static
     {
         $this->isSubjectToEquityRelease = $isSubjectToEquityRelease;
+
         return $this;
     }
 
     public function setHasMortgage(?string $hasMortgage): static
     {
         $this->hasMortgage = $hasMortgage;
+
         return $this;
     }
 
     public function setMortgageOutstandingAmount(?int $mortgageOutstandingAmount): static
     {
         $this->mortgageOutstandingAmount = $mortgageOutstandingAmount;
+
         return $this;
     }
 
     public function setHasCharges(?string $hasCharges): static
     {
         $this->hasCharges = $hasCharges;
+
         return $this;
     }
 
     public function setIsRentedOut(?string $isRentedOut)
     {
         $this->isRentedOut = $isRentedOut;
+
         return $this;
     }
 
     public function setRentAgreementEndDate(?\DateTime $rentAgreementEndDate): static
     {
         $this->rentAgreementEndDate = $rentAgreementEndDate;
+
         return $this;
     }
 
     public function setRentIncomeMonth(?float $rentIncomeMonth): static
     {
         $this->rentIncomeMonth = $rentIncomeMonth;
+
         return $this;
     }
 

@@ -10,14 +10,14 @@ use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
 trait ReportMoneyTransactionTrait
 {
     /**
-     * @var MoneyTransaction[]
+     * @var array<MoneyTransaction>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>')]
     #[JMS\Groups(['transactionsIn'])]
     private array $moneyTransactionsIn = [];
 
     /**
-     * @var MoneyTransaction[]
+     * @var array<MoneyTransaction>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>')]
     #[JMS\Groups(['transactionsOut'])]
@@ -30,7 +30,7 @@ trait ReportMoneyTransactionTrait
     private ?float $moneyOutTotal = null;
 
     /**
-     * @param  MoneyTransaction[] $moneyTransactionsIn
+     * @param array<MoneyTransaction> $moneyTransactionsIn
      */
     public function setMoneyTransactionsIn(array $moneyTransactionsIn): static
     {
@@ -40,7 +40,7 @@ trait ReportMoneyTransactionTrait
     }
 
     /**
-     * @return MoneyTransaction[]
+     * @return array<MoneyTransaction>
      */
     public function getMoneyTransactionsIn(): array
     {
@@ -48,7 +48,7 @@ trait ReportMoneyTransactionTrait
     }
 
     /**
-     * @param MoneyTransaction[] $moneyTransactionsOut
+     * @param array<MoneyTransaction> $moneyTransactionsOut
      */
     public function setMoneyTransactionsOut(array $moneyTransactionsOut): static
     {
@@ -58,7 +58,7 @@ trait ReportMoneyTransactionTrait
     }
 
     /**
-     * @return MoneyTransaction[]
+     * @return array<MoneyTransaction>
      */
     public function getMoneyTransactionsOut(): array
     {
@@ -68,7 +68,7 @@ trait ReportMoneyTransactionTrait
     /**
      * Group money transactions by Group
      *
-     * @param MoneyTransaction[] $moneyTransactions
+     * @param array<MoneyTransaction> $moneyTransactions
      *
      * @return array array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]
      */
@@ -96,6 +96,7 @@ trait ReportMoneyTransactionTrait
     public function setMoneyInTotal(?float $moneyInTotal): static
     {
         $this->moneyInTotal = $moneyInTotal;
+
         return $this;
     }
 
@@ -107,6 +108,7 @@ trait ReportMoneyTransactionTrait
     public function setMoneyOutTotal(?float $moneyOutTotal): static
     {
         $this->moneyOutTotal = $moneyOutTotal;
+
         return $this;
     }
 }

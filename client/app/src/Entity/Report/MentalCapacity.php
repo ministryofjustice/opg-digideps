@@ -53,12 +53,14 @@ class MentalCapacity
     public function setHasCapacityChanged(?string $hasCapacityChanged): static
     {
         $this->hasCapacityChanged = $hasCapacityChanged;
+
         return $this;
     }
 
     public function setHasCapacityChangedDetails(?string $hasCapacityChangedDetails): static
     {
         $this->hasCapacityChangedDetails = $hasCapacityChangedDetails;
+
         return $this;
     }
 

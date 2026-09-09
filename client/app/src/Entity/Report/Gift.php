@@ -30,11 +30,9 @@ class Gift
     #[Assert\Range(notInRangeMessage: 'gifts.amount.notInRangeMessage', min: 0.01, max: 100000000000, groups: ['gift'])]
     private ?float $amount = null;
 
-    /**
-     * @JMS\Type("DateTime")
-     * @JMS\Groups({"gift"})
-     * @phpstan-ignore property.unusedType
-     */
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['gifts'])]
+    /** @phpstan-ignore property.unusedType */
     private ?\DateTime $createdAt = null;
 
     public function getId(): ?int

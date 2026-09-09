@@ -77,6 +77,7 @@ class Contact
     public function setId(?int $id): static
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -88,6 +89,7 @@ class Contact
     public function setContactName(?string $contactName): static
     {
         $this->contactName = $contactName;
+
         return $this;
     }
 
@@ -99,6 +101,7 @@ class Contact
     public function setAddress(?string $address): static
     {
         $this->address = $address;
+
         return $this;
     }
 
@@ -110,6 +113,7 @@ class Contact
     public function setAddress2(?string $address2): static
     {
         $this->address2 = $address2;
+
         return $this;
     }
 
@@ -121,6 +125,7 @@ class Contact
     public function setCounty(?string $county): static
     {
         $this->county = $county;
+
         return $this;
     }
 
@@ -132,6 +137,7 @@ class Contact
     public function setPostcode(?string $postcode): static
     {
         $this->postcode = $postcode;
+
         return $this;
     }
 
@@ -143,6 +149,7 @@ class Contact
     public function setCountry(?string $country): static
     {
         $this->country = $country;
+
         return $this;
     }
 
@@ -154,6 +161,7 @@ class Contact
     public function setExplanation(?string $explanation): static
     {
         $this->explanation = $explanation;
+
         return $this;
     }
 
@@ -165,6 +173,7 @@ class Contact
     public function setRelationship(?string $relationship): static
     {
         $this->relationship = $relationship;
+
         return $this;
     }
 
@@ -176,6 +185,7 @@ class Contact
     public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
+
         return $this;
     }
 

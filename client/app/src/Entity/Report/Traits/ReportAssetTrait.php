@@ -2,10 +2,9 @@
 
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Report\Asset;
 use OPG\Digideps\Frontend\Entity\Report\AssetProperty;
-use OPG\Digideps\Frontend\Entity\Report\Report;
-use JMS\Serializer\Annotation as JMS;
 
 trait ReportAssetTrait
 {
@@ -22,7 +21,7 @@ trait ReportAssetTrait
     ];
 
     /**
-     * @var Asset[]
+     * @var array<Asset>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Asset>')]
     private array $assets = [];
@@ -31,7 +30,7 @@ trait ReportAssetTrait
     private float $assetsTotalValue;
 
     /**
-     * @param Asset[] $assets
+     * @param array<Asset> $assets
      */
     public function setAssets(array $assets): static
     {
@@ -41,7 +40,7 @@ trait ReportAssetTrait
     }
 
     /**
-     * @return Asset[]
+     * @return array<Asset>
      */
     public function getAssets(): array
     {
@@ -57,7 +56,7 @@ trait ReportAssetTrait
     }
 
     /**
-     * @param string $type property|cash|other
+     * @param string $type 'property'|'cash'|'other'
      */
     public function getAssetsTotalsSummaryPage(string $type): float
     {

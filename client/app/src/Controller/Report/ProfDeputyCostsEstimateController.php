@@ -178,12 +178,13 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
         $defaultEstimateCostTypeIds = $report->getProfDeputyEstimateCostTypeIds();
         foreach ($defaultEstimateCostTypeIds as $defaultEstimateCostType) {
-            $estimateCosts[] = new ProfDeputyEstimateCost(
-                $defaultEstimateCostType['typeId'],
-                0.0,
-                $defaultEstimateCostType['hasMoreDetails'],
-                null
-            );
+            /** @var ?string $typeId */
+            $typeId = $defaultEstimateCostType['typeId'] ?? null;
+
+            /** @var bool|string $hasMoreDetails */
+            $hasMoreDetails = $defaultEstimateCostType['hasMoreDetails'] ?? null;
+
+            $estimateCosts[] = new ProfDeputyEstimateCost($typeId, 0.0, $hasMoreDetails);
         }
 
         return $estimateCosts;

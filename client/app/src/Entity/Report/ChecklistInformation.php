@@ -37,6 +37,7 @@ class ChecklistInformation
     public function setId(?int $id): static
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -48,6 +49,7 @@ class ChecklistInformation
     public function setChecklist(?Checklist $checklist): static
     {
         $this->checklist = $checklist;
+
         return $this;
     }
 
@@ -59,6 +61,7 @@ class ChecklistInformation
     public function setInformation(?string $information): static
     {
         $this->information = $information;
+
         return $this;
     }
 }

@@ -43,6 +43,7 @@ class Expense
     public function setId(?int $id): static
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -54,6 +55,7 @@ class Expense
     public function setExplanation(?string $explanation): static
     {
         $this->explanation = $explanation;
+
         return $this;
     }
 
@@ -65,6 +67,7 @@ class Expense
     public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
+
         return $this;
     }
 

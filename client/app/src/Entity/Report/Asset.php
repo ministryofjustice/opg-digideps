@@ -68,12 +68,7 @@ abstract class Asset
     public function setId(?int $id): static
     {
         $this->id = $id;
-        return $this;
-    }
 
-    public function setTitle(?string $title): static
-    {
-        $this->title = $title;
         return $this;
     }
 
@@ -82,15 +77,23 @@ abstract class Asset
         return $this->title;
     }
 
-    public function setValue(?string $value): static
+    public function setTitle(?string $title): static
     {
-        $this->value = $value;
+        $this->title = $title;
+
         return $this;
     }
 
     public function getValue(): ?string
     {
         return $this->value;
+    }
+
+    public function setValue(?string $value): static
+    {
+        $this->value = $value;
+
+        return $this;
     }
 
     public function getValueTotal(): ?float
@@ -101,6 +104,7 @@ abstract class Asset
     public function setValuationDate(?\DateTime $valuationDate): static
     {
         $this->valuationDate = $valuationDate;
+
         return $this;
     }
 

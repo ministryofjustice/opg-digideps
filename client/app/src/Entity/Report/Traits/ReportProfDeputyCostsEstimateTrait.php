@@ -57,6 +57,7 @@ trait ReportProfDeputyCostsEstimateTrait
     public function setProfDeputyEstimateCostTypeIds(array $profDeputyEstimateCostTypeIds): static
     {
         $this->profDeputyEstimateCostTypeIds = $profDeputyEstimateCostTypeIds;
+
         return $this;
     }
 
@@ -68,6 +69,7 @@ trait ReportProfDeputyCostsEstimateTrait
     public function setProfDeputyCostsEstimateHowCharged(?string $profDeputyCostsEstimateHowCharged): static
     {
         $this->profDeputyCostsEstimateHowCharged = $profDeputyCostsEstimateHowCharged;
+
         return $this;
     }
 
@@ -78,6 +80,7 @@ trait ReportProfDeputyCostsEstimateTrait
     {
         $getProfDeputyCostsEstimateHowChargedLower = is_null($this->getProfDeputyCostsEstimateHowCharged()) ?
             '' : strtolower($this->getProfDeputyCostsEstimateHowCharged());
+
         return $getProfDeputyCostsEstimateHowChargedLower == Report::PROF_DEPUTY_COSTS_TYPE_FIXED;
     }
 
@@ -115,6 +118,7 @@ trait ReportProfDeputyCostsEstimateTrait
     public function setProfDeputyCostsEstimateHasMoreInfo(?string $profDeputyCostsEstimateHasMoreInfo): static
     {
         $this->profDeputyCostsEstimateHasMoreInfo = $profDeputyCostsEstimateHasMoreInfo;
+
         return $this;
     }
 
@@ -126,6 +130,7 @@ trait ReportProfDeputyCostsEstimateTrait
     public function setProfDeputyCostsEstimateMoreInfoDetails(?string $profDeputyCostsEstimateMoreInfoDetails): static
     {
         $this->profDeputyCostsEstimateMoreInfoDetails = $profDeputyCostsEstimateMoreInfoDetails;
+
         return $this;
     }
 
@@ -155,6 +160,7 @@ trait ReportProfDeputyCostsEstimateTrait
     public function setProfDeputyManagementCostAmount(?string $profDeputyManagementCostAmount): static
     {
         $this->profDeputyManagementCostAmount = $profDeputyManagementCostAmount;
+
         return $this;
     }
 
@@ -166,6 +172,7 @@ trait ReportProfDeputyCostsEstimateTrait
     public function setProfDeputyManagementCostTypeIds(array $profDeputyManagementCostTypeIds): static
     {
         $this->profDeputyManagementCostTypeIds = $profDeputyManagementCostTypeIds;
+
         return $this;
     }
 }

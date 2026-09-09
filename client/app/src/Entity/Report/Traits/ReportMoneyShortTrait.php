@@ -12,27 +12,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait ReportMoneyShortTrait
 {
     /**
-     * @var MoneyShortCategory[]
+     * @var array<MoneyShortCategory>
      */
     #[JMS\Groups(['moneyShortCategoriesIn'])]
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory>')]
     private array $moneyShortCategoriesIn = [];
 
     /**
-     * @var MoneyShortCategory[]
+     * @var array<MoneyShortCategory>
      */
     #[JMS\Groups(['moneyShortCategoriesOut'])]
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory>')]
     private array $moneyShortCategoriesOut = [];
 
     /**
-     * @var MoneyTransactionShort[]
+     * @var array<MoneyTransactionShort>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort>')]
     private array $moneyTransactionsShortIn = [];
 
     /**
-     * @var MoneyTransactionShort[]
+     * @var array<MoneyTransactionShort>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort>')]
     private array $moneyTransactionsShortOut = [];
@@ -54,7 +54,7 @@ trait ReportMoneyShortTrait
     private ?string $moneyTransactionsShortOutExist = null;
 
     /**
-     * @return MoneyShortCategory[]
+     * @return array<MoneyShortCategory>
      */
     public function getMoneyShortCategoriesIn(): array
     {
@@ -62,7 +62,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @return MoneyShortCategory[]
+     * @return array<MoneyShortCategory>
      */
     public function getMoneyShortCategoriesInPresent(): array
     {
@@ -72,16 +72,17 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @param MoneyShortCategory[] $moneyShortCategoriesIn
+     * @param array<MoneyShortCategory> $moneyShortCategoriesIn
      */
     public function setMoneyShortCategoriesIn(array $moneyShortCategoriesIn): static
     {
         $this->moneyShortCategoriesIn = $moneyShortCategoriesIn;
+
         return $this;
     }
 
     /**
-     * @return MoneyShortCategory[]
+     * @return array<MoneyShortCategory>
      */
     public function getMoneyShortCategoriesOut(): array
     {
@@ -89,7 +90,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @return MoneyShortCategory[]
+     * @return array<MoneyShortCategory>
      */
     public function getMoneyShortCategoriesOutPresent(): array
     {
@@ -99,16 +100,17 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @param MoneyShortCategory[] $moneyShortCategoriesOut
+     * @param array<MoneyShortCategory> $moneyShortCategoriesOut
      */
     public function setMoneyShortCategoriesOut(array $moneyShortCategoriesOut): static
     {
         $this->moneyShortCategoriesOut = $moneyShortCategoriesOut;
+
         return $this;
     }
 
     /**
-     * @return MoneyTransactionShort[]
+     * @return array<MoneyTransactionShort>
      */
     public function getMoneyTransactionsShortIn(): array
     {
@@ -116,16 +118,17 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @param MoneyTransactionShort[] $moneyTransactionsShortIn
+     * @param array<MoneyTransactionShort> $moneyTransactionsShortIn
      */
     public function setMoneyTransactionsShortIn(array $moneyTransactionsShortIn): static
     {
         $this->moneyTransactionsShortIn = $moneyTransactionsShortIn;
+
         return $this;
     }
 
     /**
-     * @return MoneyTransactionShort[]
+     * @return array<MoneyTransactionShort>
      */
     public function getMoneyTransactionsShortOut()
     {
@@ -133,11 +136,12 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @param MoneyTransactionShort[] $moneyTransactionsShortOut
+     * @param array<MoneyTransactionShort> $moneyTransactionsShortOut
      */
     public function setMoneyTransactionsShortOut(array $moneyTransactionsShortOut): static
     {
         $this->moneyTransactionsShortOut = $moneyTransactionsShortOut;
+
         return $this;
     }
 
@@ -149,6 +153,7 @@ trait ReportMoneyShortTrait
     public function setMoneyTransactionsShortInExist(?string $moneyTransactionsShortInExist): static
     {
         $this->moneyTransactionsShortInExist = $moneyTransactionsShortInExist;
+
         return $this;
     }
 
@@ -160,11 +165,12 @@ trait ReportMoneyShortTrait
     public function setMoneyTransactionsShortOutExist(?string $moneyTransactionsShortOutExist): static
     {
         $this->moneyTransactionsShortOutExist = $moneyTransactionsShortOutExist;
+
         return $this;
     }
 
     /**
-     * @param  MoneyTransactionShort[] $records
+     * @param array<MoneyTransactionShort> $records
      */
     public function getTotalValue(array $records): float
     {

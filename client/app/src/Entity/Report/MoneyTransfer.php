@@ -50,6 +50,7 @@ class MoneyTransfer
     public function setAmount(?float $amount): static
     {
         $this->amount = $amount;
+
         return $this;
     }
 
@@ -71,12 +72,14 @@ class MoneyTransfer
     public function setAccountFrom(?BankAccount $from): static
     {
         $this->accountFrom = $from;
+
         return $this;
     }
 
     public function setAccountTo(?BankAccount $to): static
     {
         $this->accountTo = $to;
+
         return $this;
     }
 
@@ -88,6 +91,7 @@ class MoneyTransfer
     public function setAccountFromId(?int $accountFromId): static
     {
         $this->accountFromId = $accountFromId;
+
         return $this;
     }
 
@@ -99,6 +103,7 @@ class MoneyTransfer
     public function setAccountToId(?int $accountToId): static
     {
         $this->accountToId = $accountToId;
+
         return $this;
     }
 
@@ -110,6 +115,7 @@ class MoneyTransfer
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 }

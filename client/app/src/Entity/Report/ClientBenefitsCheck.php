@@ -88,6 +88,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setDateLastCheckedEntitlement(?\DateTime $dateLastCheckedEntitlement): static
     {
         $this->dateLastCheckedEntitlement = $dateLastCheckedEntitlement;
+
         return $this;
     }
 
@@ -99,6 +100,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setCreated(?\DateTime $created): static
     {
         $this->created = $created;
+
         return $this;
     }
 
@@ -110,6 +112,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setId(?string $id): static
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -121,6 +124,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setDoOthersReceiveMoneyOnClientsBehalf(?string $doOthersReceiveMoneyOnClientsBehalf): static
     {
         $this->doOthersReceiveMoneyOnClientsBehalf = $doOthersReceiveMoneyOnClientsBehalf;
+
         return $this;
     }
 
@@ -132,6 +136,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setDontKnowMoneyExplanation(?string $dontKnowMoneyExplanation): static
     {
         $this->dontKnowMoneyExplanation = $dontKnowMoneyExplanation;
+
         return $this;
     }
 
@@ -149,6 +154,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     public function setTypesOfMoneyReceivedOnClientsBehalf(?array $typesOfMoneyReceivedOnClientsBehalf): static
     {
         $this->typesOfMoneyReceivedOnClientsBehalf = $typesOfMoneyReceivedOnClientsBehalf;
+
         return $this;
     }
 

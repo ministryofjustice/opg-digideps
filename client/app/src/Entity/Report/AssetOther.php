@@ -14,15 +14,16 @@ class AssetOther extends Asset
     #[Assert\Length(min: 3, minMessage: 'asset.description.length')]
     private ?string $description;
 
-    public function setDescription(?string $description): static
-    {
-        $this->description = $description;
-        return $this;
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
     }
 
     public function getType(): string

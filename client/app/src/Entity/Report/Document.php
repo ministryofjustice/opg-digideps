@@ -92,6 +92,7 @@ class Document implements SynchronisableInterface
     public function setId(?int $id): static
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -103,6 +104,7 @@ class Document implements SynchronisableInterface
     public function setFileName(?string $fileName): static
     {
         $this->fileName = $fileName;
+
         return $this;
     }
 
@@ -114,6 +116,7 @@ class Document implements SynchronisableInterface
     public function setStorageReference(?string $storageReference): static
     {
         $this->storageReference = $storageReference;
+
         return $this;
     }
 
@@ -125,6 +128,7 @@ class Document implements SynchronisableInterface
     public function setFile(?UploadedFile $file): static
     {
         $this->file = $file;
+
         return $this;
     }
 
@@ -136,6 +140,7 @@ class Document implements SynchronisableInterface
     public function setIsReportPdf(?bool $isReportPdf): static
     {
         $this->isReportPdf = $isReportPdf;
+
         return $this;
     }
 
@@ -147,6 +152,7 @@ class Document implements SynchronisableInterface
     public function setReportSubmission(?ReportSubmission $repostSubmission): static
     {
         $this->reportSubmission = $repostSubmission;
+
         return $this;
     }
 

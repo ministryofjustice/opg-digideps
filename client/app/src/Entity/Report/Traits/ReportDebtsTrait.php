@@ -91,17 +91,11 @@ trait ReportDebtsTrait
         return $this;
     }
 
-    /**
-     * Get debt management text.
-     */
     public function getDebtManagement(): ?string
     {
         return $this->debtManagement;
     }
 
-    /**
-     * Set debt management text.
-     */
     public function setDebtManagement(?string $debtManagement): static
     {
         $this->debtManagement = $debtManagement;

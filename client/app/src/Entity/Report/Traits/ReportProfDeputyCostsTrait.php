@@ -14,20 +14,20 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 trait ReportProfDeputyCostsTrait
 {
-    #[Assert\NotBlank(message: 'profDeputyCostsHowCharged.notBlank', groups: ['prof-deputy-costs-how-charged'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['deputyCostsHowCharged'])]
+    #[Assert\NotBlank(message: 'profDeputyCostsHowCharged.notBlank', groups: ['prof-deputy-costs-how-charged'])]
     private ?string $profDeputyCostsHowCharged = null;
 
     /**
-     * null/'yes'/'no'
+     * @var ?string null|'yes'|'no'
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['profDeputyCostsHasPrevious'])]
     private ?string $profDeputyCostsHasPrevious = null;
 
     /**
-     * @var ProfDeputyOtherCost[]
+     * @var array<ProfDeputyOtherCost>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyOtherCost>')]
     #[JMS\Groups(['prof-deputy-other-costs'])]
@@ -36,7 +36,7 @@ trait ReportProfDeputyCostsTrait
     private array $profDeputyOtherCostIds = [];
 
     /**
-     * @var ProfDeputyPreviousCost[]
+     * @var array<ProfDeputyPreviousCost>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyPreviousCost>')]
     private array $profDeputyPreviousCosts = [];
@@ -48,14 +48,14 @@ trait ReportProfDeputyCostsTrait
     private ?float $profDeputyFixedCost = null;
 
     /**
-     *  @var ?string 'yes'|'no'|null
+     * @var ?string 'yes'|'no'|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['profDeputyCostsHasInterim'])]
     private ?string $profDeputyCostsHasInterim = null;
 
     /**
-     * @var ProfDeputyInterimCost[]
+     * @var array<ProfDeputyInterimCost>
      */
     #[JMS\Groups(['profDeputyInterimCosts'])]
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyInterimCost>')]
@@ -77,17 +77,17 @@ trait ReportProfDeputyCostsTrait
     #[JMS\Type('double')]
     private ?float $profDeputyTotalCostsTakenFromClient = null;
 
+    #[JMS\Type('array')]
+    #[JMS\Groups(['prof-deputy-other-costs'])]
+    private array $profDeputyOtherCostTypeIds = [];
+
     /**
-     * return true if only fixed is true.
+     * return true if only fixed is true
      */
     public function hasProfDeputyCostsHowChargedFixedOnly(): bool
     {
         return $this->getProfDeputyCostsHowCharged() == Report::PROF_DEPUTY_COSTS_TYPE_FIXED;
     }
-
-    #[JMS\Type('array')]
-    #[JMS\Groups(['prof-deputy-other-costs'])]
-    private array $profDeputyOtherCostTypeIds = [];
 
     public function getProfDeputyOtherCostTypeIds(): array
     {
@@ -147,11 +147,12 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyCostsHasPrevious(?string $profDeputyCostsHasPrevious): static
     {
         $this->profDeputyCostsHasPrevious = $profDeputyCostsHasPrevious;
+
         return $this;
     }
 
     /**
-     * @return ProfDeputyPreviousCost[]
+     * @return array<ProfDeputyPreviousCost>
      */
     public function getProfDeputyPreviousCosts(): array
     {
@@ -159,11 +160,12 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
-     * @param ProfDeputyPreviousCost[] $profDeputyPreviousCosts
+     * @param array<ProfDeputyPreviousCost> $profDeputyPreviousCosts
      */
     public function setProfDeputyPreviousCosts(array $profDeputyPreviousCosts): static
     {
         $this->profDeputyPreviousCosts = $profDeputyPreviousCosts;
+
         return $this;
     }
 
@@ -175,11 +177,12 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyCostsHasInterim(?string $profDeputyCostsHasInterim): static
     {
         $this->profDeputyCostsHasInterim = $profDeputyCostsHasInterim;
+
         return $this;
     }
 
     /**
-     * @return ProfDeputyInterimCost[]
+     * @return array<ProfDeputyInterimCost>
      */
     public function getProfDeputyInterimCosts(): array
     {
@@ -187,11 +190,12 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
-     * @param ProfDeputyInterimCost[] $profDeputyInterimCosts
+     * @param array<ProfDeputyInterimCost> $profDeputyInterimCosts
      */
     public function setProfDeputyInterimCosts(array $profDeputyInterimCosts): static
     {
         $this->profDeputyInterimCosts = $profDeputyInterimCosts;
+
         return $this;
     }
 
@@ -209,6 +213,7 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyOtherCosts(array $profDeputyOtherCosts): static
     {
         $this->profDeputyOtherCosts = $profDeputyOtherCosts;
+
         return $this;
     }
 
@@ -228,6 +233,7 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyCostsAmountToScco(?float $profDeputyCostsAmountToScco): static
     {
         $this->profDeputyCostsAmountToScco = $profDeputyCostsAmountToScco;
+
         return $this;
     }
 
@@ -239,6 +245,7 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyCostsReasonBeyondEstimate(?string $profDeputyCostsReasonBeyondEstimate): static
     {
         $this->profDeputyCostsReasonBeyondEstimate = $profDeputyCostsReasonBeyondEstimate;
+
         return $this;
     }
 
@@ -250,6 +257,7 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyOtherCostIds(array $profDeputyOtherCostIds): static
     {
         $this->profDeputyOtherCostIds = $profDeputyOtherCostIds;
+
         return $this;
     }
 
@@ -261,6 +269,7 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyFixedCost(?float $profDeputyFixedCost): static
     {
         $this->profDeputyFixedCost = $profDeputyFixedCost;
+
         return $this;
     }
 
@@ -272,6 +281,7 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyTotalCosts(?float $profDeputyTotalCosts): static
     {
         $this->profDeputyTotalCosts = $profDeputyTotalCosts;
+
         return $this;
     }
 
@@ -283,6 +293,7 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyTotalCostsTakenFromClient(?float $profDeputyTotalCostsTakenFromClient): static
     {
         $this->profDeputyTotalCostsTakenFromClient = $profDeputyTotalCostsTakenFromClient;
+
         return $this;
     }
 

@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
-use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Fee
@@ -42,6 +44,7 @@ class Fee
     public function setId(?int $id): static
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -64,6 +67,7 @@ class Fee
     public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
+
         return $this;
     }
 
@@ -75,6 +79,7 @@ class Fee
     public function setHasMoreDetails(?bool $hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
+
         return $this;
     }
 
@@ -86,6 +91,7 @@ class Fee
     public function setMoreDetails(?string $moreDetails): static
     {
         $this->moreDetails = $moreDetails;
+
         return $this;
     }
 }

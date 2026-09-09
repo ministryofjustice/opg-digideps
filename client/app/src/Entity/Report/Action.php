@@ -43,6 +43,7 @@ class Action
     public function setId(?int $id): static
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -54,6 +55,7 @@ class Action
     public function setDoYouExpectFinancialDecisions(?string $doYouExpectFinancialDecisions): static
     {
         $this->doYouExpectFinancialDecisions = $doYouExpectFinancialDecisions;
+
         return $this;
     }
 
@@ -65,6 +67,7 @@ class Action
     public function setDoYouExpectFinancialDecisionsDetails(?string $doYouExpectFinancialDecisionsDetails): static
     {
         $this->doYouExpectFinancialDecisionsDetails = $doYouExpectFinancialDecisionsDetails;
+
         return $this;
     }
 
@@ -76,6 +79,7 @@ class Action
     public function setDoYouHaveConcerns(?string $doYouHaveConcerns): static
     {
         $this->doYouHaveConcerns = $doYouHaveConcerns;
+
         return $this;
     }
 
@@ -87,6 +91,7 @@ class Action
     public function setDoYouHaveConcernsDetails(?string $doYouHaveConcernsDetails): static
     {
         $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
+
         return $this;
     }
 }

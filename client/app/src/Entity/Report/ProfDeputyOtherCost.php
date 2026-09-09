@@ -45,6 +45,7 @@ class ProfDeputyOtherCost
     public function setProfDeputyOtherCostTypeId(string $profDeputyOtherCostTypeId): static
     {
         $this->profDeputyOtherCostTypeId = $profDeputyOtherCostTypeId;
+
         return $this;
     }
 
@@ -56,6 +57,7 @@ class ProfDeputyOtherCost
     public function setAmount(float $amount): static
     {
         $this->amount = $amount;
+
         return $this;
     }
 
@@ -67,6 +69,7 @@ class ProfDeputyOtherCost
     public function setHasMoreDetails(bool|string $hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
+
         return $this;
     }
 
@@ -78,6 +81,7 @@ class ProfDeputyOtherCost
     public function setMoreDetails(string $moreDetails): static
     {
         $this->moreDetails = $moreDetails;
+
         return $this;
     }
 

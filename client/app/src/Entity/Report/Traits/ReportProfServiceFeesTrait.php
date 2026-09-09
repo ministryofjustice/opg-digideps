@@ -130,6 +130,7 @@ trait ReportProfServiceFeesTrait
     public function setPreviousProfFeesEstimateGiven(?string $previousProfFeesEstimateGiven): static
     {
         $this->previousProfFeesEstimateGiven = $previousProfFeesEstimateGiven;
+
         return $this;
     }
 
@@ -141,6 +142,7 @@ trait ReportProfServiceFeesTrait
     public function setProfFeesEstimateSccoReason(?string $profFeesEstimateSccoReason): static
     {
         $this->profFeesEstimateSccoReason = $profFeesEstimateSccoReason;
+
         return $this;
     }
 
@@ -158,6 +160,7 @@ trait ReportProfServiceFeesTrait
     public function setProfServiceFees(array $profServiceFees): static
     {
         $this->profServiceFees = $profServiceFees;
+
         return $this;
     }
 
@@ -222,11 +225,9 @@ trait ReportProfServiceFeesTrait
     private function getTotalChargedFees(array $profFees): float
     {
         $total = 0.00;
-
         foreach ($profFees as $profFee) {
             $total += $profFee->getAmountCharged();
         }
-
         return $total;
     }
 }

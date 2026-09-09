@@ -31,6 +31,7 @@ class ProfDeputyInterimCost
     public function setId(?int $id): static
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -42,6 +43,7 @@ class ProfDeputyInterimCost
     public function setAmount(?float $amount): static
     {
         $this->amount = $amount;
+
         return $this;
     }
 
@@ -53,6 +55,7 @@ class ProfDeputyInterimCost
     public function setDate(?\DateTime $date): static
     {
         $this->date = $date;
+
         return $this;
     }
 }

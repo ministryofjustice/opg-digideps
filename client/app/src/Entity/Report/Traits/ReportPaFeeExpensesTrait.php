@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 trait ReportPaFeeExpensesTrait
 {
     /**
-     * @var Fee[]
+     * @var array<Fee>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Fee>')]
     #[JMS\Groups(['fee'])]
@@ -34,7 +34,7 @@ trait ReportPaFeeExpensesTrait
     private ?float $feesTotal = null;
 
     /**
-     * @return Fee[]
+     * @return array<Fee>
      */
     public function getFees(): array
     {
@@ -42,7 +42,7 @@ trait ReportPaFeeExpensesTrait
     }
 
     /**
-     * @param Fee[] $fees
+     * @param array<Fee> $fees
      */
     public function setFees(array $fees): static
     {
@@ -92,7 +92,7 @@ trait ReportPaFeeExpensesTrait
     }
 
     /**
-     * @return Fee[]
+     * @return array<Fee>
      */
     public function getFeesWithValidAmount(): array
     {

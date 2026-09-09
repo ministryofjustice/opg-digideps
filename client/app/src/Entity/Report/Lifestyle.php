@@ -55,6 +55,7 @@ class Lifestyle
     public function setCareAppointments(?string $careAppointments): static
     {
         $this->careAppointments = $careAppointments;
+
         return $this;
     }
 
@@ -66,6 +67,7 @@ class Lifestyle
     public function setDoesClientUndertakeSocialActivities(?string $doesClientUndertakeSocialActivities): static
     {
         $this->doesClientUndertakeSocialActivities = $doesClientUndertakeSocialActivities;
+
         return $this;
     }
 
@@ -77,6 +79,7 @@ class Lifestyle
     public function setActivityDetailsYes(?string $activityDetailsYes): static
     {
         $this->activityDetailsYes = $activityDetailsYes;
+
         return $this;
     }
 
@@ -88,6 +91,7 @@ class Lifestyle
     public function setActivityDetailsNo(?string $activityDetailsNo): static
     {
         $this->activityDetailsNo = $activityDetailsNo;
+
         return $this;
     }
 }

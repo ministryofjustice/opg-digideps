@@ -30,6 +30,7 @@ class MoneyShortCategory
     public function setTypeId(string $typeId): static
     {
         $this->typeId = $typeId;
+
         return $this;
     }
 
@@ -41,6 +42,7 @@ class MoneyShortCategory
     public function setPresent(bool $present): static
     {
         $this->present = $present;
+
         return $this;
     }
 }

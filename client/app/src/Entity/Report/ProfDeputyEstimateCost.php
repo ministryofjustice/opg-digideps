@@ -13,13 +13,13 @@ class ProfDeputyEstimateCost
 {
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
-    private string $profDeputyEstimateCostTypeId;
+    private ?string $profDeputyEstimateCostTypeId;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     #[Assert\Type(type: 'numeric', message: 'profDeputyEstimateCost.amount.notNumeric', groups: ['prof-deputy-estimate-costs'])]
     #[Assert\Range(notInRangeMessage: 'profDeputyEstimateCost.amount.notInRangeMessage', min: 0, max: 100000000, groups: ['prof-deputy-estimate-costs'])]
-    private float $amount;
+    private ?float $amount;
 
     #[JMS\Type('boolean')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
@@ -29,15 +29,19 @@ class ProfDeputyEstimateCost
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     private ?string $moreDetails;
 
-    public function __construct(string $profDeputyEstimateCostTypeId, float $amount, bool|string $hasMoreDetails, ?string $moreDetails)
-    {
+    public function __construct(
+        ?string $profDeputyEstimateCostTypeId,
+        ?float $amount,
+        bool|string $hasMoreDetails,
+        ?string $moreDetails = null
+    ) {
         $this->profDeputyEstimateCostTypeId = $profDeputyEstimateCostTypeId;
         $this->amount = $amount;
         $this->hasMoreDetails = $hasMoreDetails;
         $this->moreDetails = $moreDetails;
     }
 
-    public function getProfDeputyEstimateCostTypeId(): string
+    public function getProfDeputyEstimateCostTypeId(): ?string
     {
         return $this->profDeputyEstimateCostTypeId;
     }
@@ -45,10 +49,11 @@ class ProfDeputyEstimateCost
     public function setProfDeputyEstimateCostTypeId(string $profDeputyEstimateCostTypeId): static
     {
         $this->profDeputyEstimateCostTypeId = $profDeputyEstimateCostTypeId;
+
         return $this;
     }
 
-    public function getAmount(): float
+    public function getAmount(): ?float
     {
         return $this->amount;
     }
@@ -56,6 +61,7 @@ class ProfDeputyEstimateCost
     public function setAmount(float $amount): static
     {
         $this->amount = $amount;
+
         return $this;
     }
 
@@ -67,6 +73,7 @@ class ProfDeputyEstimateCost
     public function setHasMoreDetails(string $hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
+
         return $this;
     }
 
@@ -78,6 +85,7 @@ class ProfDeputyEstimateCost
     public function setMoreDetails(?string $moreDetails): static
     {
         $this->moreDetails = $moreDetails;
+
         return $this;
     }
 

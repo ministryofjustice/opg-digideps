@@ -200,6 +200,7 @@ class Checklist implements SynchronisableInterface
     public function setId(?int $id): static
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -211,6 +212,7 @@ class Checklist implements SynchronisableInterface
     public function setReportingPeriodAccurate(?string $reportingPeriodAccurate): static
     {
         $this->reportingPeriodAccurate = $reportingPeriodAccurate;
+
         return $this;
     }
 
@@ -222,6 +224,7 @@ class Checklist implements SynchronisableInterface
     public function setContactDetailsUptoDate(?bool $contactDetailsUptoDate): static
     {
         $this->contactDetailsUptoDate = $contactDetailsUptoDate;
+
         return $this;
     }
 
@@ -233,6 +236,7 @@ class Checklist implements SynchronisableInterface
     public function setDeputyFullNameAccurateInSirius(?bool $deputyFullNameAccurateInSirius): static
     {
         $this->deputyFullNameAccurateInSirius = $deputyFullNameAccurateInSirius;
+
         return $this;
     }
 
@@ -244,6 +248,7 @@ class Checklist implements SynchronisableInterface
     public function setDecisionsSatisfactory(?string $decisionsSatisfactory): static
     {
         $this->decisionsSatisfactory = $decisionsSatisfactory;
+
         return $this;
     }
 
@@ -255,6 +260,7 @@ class Checklist implements SynchronisableInterface
     public function setConsultationsSatisfactory(?string $consultationsSatisfactory): static
     {
         $this->consultationsSatisfactory = $consultationsSatisfactory;
+
         return $this;
     }
 
@@ -266,6 +272,7 @@ class Checklist implements SynchronisableInterface
     public function setCareArrangements(?string $careArrangements): static
     {
         $this->careArrangements = $careArrangements;
+
         return $this;
     }
 
@@ -277,6 +284,7 @@ class Checklist implements SynchronisableInterface
     public function setAssetsDeclaredAndManaged(?string $assetsDeclaredAndManaged): static
     {
         $this->assetsDeclaredAndManaged = $assetsDeclaredAndManaged;
+
         return $this;
     }
 
@@ -288,6 +296,7 @@ class Checklist implements SynchronisableInterface
     public function setDebtsManaged(?string $debtsManaged): static
     {
         $this->debtsManaged = $debtsManaged;
+
         return $this;
     }
 
@@ -299,6 +308,7 @@ class Checklist implements SynchronisableInterface
     public function setOpenClosingBalancesMatch(?string $openClosingBalancesMatch): static
     {
         $this->openClosingBalancesMatch = $openClosingBalancesMatch;
+
         return $this;
     }
 
@@ -310,6 +320,7 @@ class Checklist implements SynchronisableInterface
     public function setAccountsBalance(?string $accountsBalance): static
     {
         $this->accountsBalance = $accountsBalance;
+
         return $this;
     }
 
@@ -321,6 +332,7 @@ class Checklist implements SynchronisableInterface
     public function setMoneyMovementsAcceptable(?string $moneyMovementsAcceptable): static
     {
         $this->moneyMovementsAcceptable = $moneyMovementsAcceptable;
+
         return $this;
     }
 
@@ -332,6 +344,7 @@ class Checklist implements SynchronisableInterface
     public function setDeputyChargeAllowedByCourt(?string $deputyChargeAllowedByCourt): static
     {
         $this->deputyChargeAllowedByCourt = $deputyChargeAllowedByCourt;
+
         return $this;
     }
 
@@ -343,6 +356,7 @@ class Checklist implements SynchronisableInterface
     public function setSatisfiedWithPaExpenses(?string $satisfiedWithPaExpenses): static
     {
         $this->satisfiedWithPaExpenses = $satisfiedWithPaExpenses;
+
         return $this;
     }
 
@@ -354,6 +368,7 @@ class Checklist implements SynchronisableInterface
     public function setSatisfiedWithHealthAndLifestyle(?string $satisfiedWithHealthAndLifestyle): static
     {
         $this->satisfiedWithHealthAndLifestyle = $satisfiedWithHealthAndLifestyle;
+
         return $this;
     }
 
@@ -365,6 +380,7 @@ class Checklist implements SynchronisableInterface
     public function setBondAdequate(?string $bondAdequate): static
     {
         $this->bondAdequate = $bondAdequate;
+
         return $this;
     }
 
@@ -376,6 +392,7 @@ class Checklist implements SynchronisableInterface
     public function setBondOrderMatchSirius(?string $bondOrderMatchSirius): static
     {
         $this->bondOrderMatchSirius = $bondOrderMatchSirius;
+
         return $this;
     }
 
@@ -387,6 +404,7 @@ class Checklist implements SynchronisableInterface
     public function setFutureSignificantDecisions(?string $futureSignificantDecisions): static
     {
         $this->futureSignificantDecisions = $futureSignificantDecisions;
+
         return $this;
     }
 
@@ -398,6 +416,7 @@ class Checklist implements SynchronisableInterface
     public function setHasDeputyRaisedConcerns(?string $hasDeputyRaisedConcerns): static
     {
         $this->hasDeputyRaisedConcerns = $hasDeputyRaisedConcerns;
+
         return $this;
     }
 
@@ -406,9 +425,10 @@ class Checklist implements SynchronisableInterface
         return $this->caseWorkerSatisified;
     }
 
-    public function setCaseWorkerSatisified(?string $caseWorkerSatisified): static
+    public function setCaseWorkerSatisified(?string $caseWorkerSatisfied): static
     {
-        $this->caseWorkerSatisified = $caseWorkerSatisified;
+        $this->caseWorkerSatisified = $caseWorkerSatisfied;
+
         return $this;
     }
 
@@ -420,6 +440,7 @@ class Checklist implements SynchronisableInterface
     public function setPaymentsMatchCostCertificate(?string $paymentsMatchCostCertificate): static
     {
         $this->paymentsMatchCostCertificate = $paymentsMatchCostCertificate;
+
         return $this;
     }
 
@@ -431,6 +452,7 @@ class Checklist implements SynchronisableInterface
     public function setProfCostsReasonableAndProportionate(?string $profCostsReasonableAndProportionate): static
     {
         $this->profCostsReasonableAndProportionate = $profCostsReasonableAndProportionate;
+
         return $this;
     }
 
@@ -451,10 +473,10 @@ class Checklist implements SynchronisableInterface
         return $this->nextBillingEstimatesSatisfactory;
     }
 
-    public function setNextBillingEstimatesSatisfactory(
-        ?string $nextBillingEstimatesSatisfactory
-    ): static {
+    public function setNextBillingEstimatesSatisfactory(?string $nextBillingEstimatesSatisfactory): static
+    {
         $this->nextBillingEstimatesSatisfactory = $nextBillingEstimatesSatisfactory;
+
         return $this;
     }
 
@@ -466,6 +488,7 @@ class Checklist implements SynchronisableInterface
     public function setLodgingSummary(?string $lodgingSummary): static
     {
         $this->lodgingSummary = $lodgingSummary;
+
         return $this;
     }
 
@@ -477,6 +500,7 @@ class Checklist implements SynchronisableInterface
     public function setFinalDecision(?string $finalDecision): static
     {
         $this->finalDecision = $finalDecision;
+
         return $this;
     }
 
@@ -504,6 +528,7 @@ class Checklist implements SynchronisableInterface
     public function setFurtherInformationReceived(?string $furtherInformationReceived): static
     {
         $this->furtherInformationReceived = $furtherInformationReceived;
+
         return $this;
     }
 
@@ -515,6 +540,7 @@ class Checklist implements SynchronisableInterface
     public function setSubmittedBy(?User $submittedBy): static
     {
         $this->submittedBy = $submittedBy;
+
         return $this;
     }
 
@@ -526,6 +552,7 @@ class Checklist implements SynchronisableInterface
     public function setSubmittedOn(?\DateTime $submittedOn): static
     {
         $this->submittedOn = $submittedOn;
+
         return $this;
     }
 
@@ -537,6 +564,7 @@ class Checklist implements SynchronisableInterface
     public function setButtonClicked(?string $buttonClicked): static
     {
         $this->buttonClicked = $buttonClicked;
+
         return $this;
     }
 
@@ -548,6 +576,7 @@ class Checklist implements SynchronisableInterface
     public function setUuid(?string $uuid): static
     {
         $this->uuid = $uuid;
+
         return $this;
     }
 
@@ -559,6 +588,7 @@ class Checklist implements SynchronisableInterface
     public function setClientBenefitsChecked(?string $clientBenefitsChecked): static
     {
         $this->clientBenefitsChecked = $clientBenefitsChecked;
+
         return $this;
     }
 }

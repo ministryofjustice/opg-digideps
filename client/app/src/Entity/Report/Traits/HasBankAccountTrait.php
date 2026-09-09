@@ -27,6 +27,7 @@ trait HasBankAccountTrait
     public function setBankAccountId(?int $bankAccountId): static
     {
         $this->bankAccountId = $bankAccountId;
+
         return $this;
     }
 
@@ -38,6 +39,7 @@ trait HasBankAccountTrait
     public function setBankAccount(?BankAccount $bankAccount): static
     {
         $this->bankAccount = $bankAccount;
+
         return $this;
     }
 }
