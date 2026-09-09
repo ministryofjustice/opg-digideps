@@ -3,6 +3,7 @@
 namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
@@ -250,9 +251,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $this->assertResponseIncludesReportWithCaseNumber($result, '1000000');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function updatePersistsUuidWhenProvided()
     {
         $reportSubmission = new ReportSubmissionHelper(self::fixtures()->getEntityManager())->generateAndPersistReportSubmission();

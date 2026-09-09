@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\Controller;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 use Tests\OPG\Digideps\Backend\Integration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +33,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    /** @test */
+    #[Test]
     public function create()
     {
         $orgDeputyshipJson = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(2, 0);
@@ -61,10 +62,8 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         $this->assertArrayHasKey('reports', $decodedResponseContent['added']);
     }
 
-    /**
-     * @test
-     *
-     */
+
+    #[Test]
     #[DataProvider('uploadProvider')]
     public function uploadProvidesFeedbackOnEntitiesProcessed(
         string $deputyshipsJson,
@@ -99,10 +98,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         ];
     }
 
-    /**
-     *
-     * @test
-     */
+    #[Test]
     #[DataProvider('invalidPayloadProvider')]
     public function createExceedingBatchSizeReturns413(string $dtoJson)
     {

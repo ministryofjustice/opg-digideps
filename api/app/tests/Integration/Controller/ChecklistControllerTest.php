@@ -7,6 +7,7 @@ namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 use OPG\Digideps\Backend\Entity\Report\Checklist;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Fixture\Scenario;
+use PHPUnit\Framework\Attributes\Test;
 
 class ChecklistControllerTest extends AbstractTestController
 {
@@ -23,8 +24,9 @@ class ChecklistControllerTest extends AbstractTestController
     }
 
     /**
-     * @test
+     * Verifies update uses secret-based authentication
      */
+    #[Test]
     public function updateUsesSecretBasedAuth(): void
     {
         $return = $this->assertJsonRequest('PUT', '/checklist/32', [
@@ -39,8 +41,9 @@ class ChecklistControllerTest extends AbstractTestController
     }
 
     /**
-     * @test
+     * Verifies update updates sync status on success
      */
+    #[Test]
     public function updateUpdatesSyncStatusOnSuccess(): void
     {
         $url = sprintf('/checklist/%s', self::$checklist->getId());
@@ -56,8 +59,9 @@ class ChecklistControllerTest extends AbstractTestController
     }
 
     /**
-     * @test
+     * Verifies update updates sync status on failure
      */
+    #[Test]
     public function updateUpdatesSyncStatusOnFailure(): void
     {
         $url = sprintf('/checklist/%s', self::$checklist->getId());
@@ -73,8 +77,9 @@ class ChecklistControllerTest extends AbstractTestController
     }
 
     /**
-     * @test
+     * Verifies update updates UUID when given in request
      */
+    #[Test]
     public function updateUpdatesUuidWhenGivenInRequest(): void
     {
         $url = sprintf('/checklist/%s', self::$checklist->getId());

@@ -9,6 +9,7 @@ use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use PHPUnit\Framework\Attributes\Test;
 
 class ClientBenefitsCheckControllerTest extends AbstractTestController
 {
@@ -57,8 +58,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
     }
-
-    /** @test */
+    #[Test]
     public function createHasSuitablePermissionsAllowed()
     {
         $deputyTokens = [self::$tokenDeputy, self::$tokenPa, self::$tokenProf];
@@ -71,8 +71,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
             $this->assertEndpointAllowedFor('POST', $url, $deputyToken, $this->okayData);
         }
     }
-
-    /** @test */
+    #[Test]
     public function createHasSuitablePermissionsNotAllowed()
     {
         $url = '/report/client-benefits-check';
@@ -82,8 +81,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
 
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin, $this->okayData);
     }
-
-    /** @test */
+    #[Test]
     public function readHasSuitablePermissionsAllowed()
     {
         $deputyTokens = [self::$tokenDeputy, self::$tokenPa, self::$tokenProf];
@@ -95,8 +93,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
             $this->assertEndpointAllowedFor('GET', $url, $deputyToken);
         }
     }
-
-    /** @test */
+    #[Test]
     public function readHasSuitablePermissionsNotAllowed()
     {
         $report = $this->prepareReport(true);
@@ -104,8 +101,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         $url = sprintf('/report/client-benefits-check/%s', $report->getClientBenefitsCheck()?->getId());
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
-
-    /** @test */
+    #[Test]
     public function updateHasSuitablePermissionsAllowed()
     {
         $deputyTokens = [self::$tokenDeputy, self::$tokenPa, self::$tokenProf];
@@ -116,8 +112,12 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
             $this->assertNotNull($clientBenefitsCheck);
             $url = sprintf('/report/client-benefits-check/%s', $clientBenefitsCheck->getId());
 
+
+
             $this->okayData['report_id'] = $report->getId();
-            $this->okayData['types_of_income_received_on_clients_behalf'][0]['id'] = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId();
+            $firstIncome = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->first();
+            $this->assertInstanceOf(MoneyReceivedOnClientsBehalf::class, $firstIncome);
+            $this->okayData['types_of_income_received_on_clients_behalf'][0]['id'] = $firstIncome->getId();
             $this->okayData['types_of_income_received_on_clients_behalf'][1] = [
                 'id' => null,
                 'created' => '2021-10-20',
@@ -130,8 +130,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
             $this->assertEndpointAllowedFor('PUT', $url, $deputyToken, $this->okayData);
         }
     }
-
-    /** @test */
+    #[Test]
     public function updateHasSuitablePermissionsNotAllowed()
     {
         $report = $this->prepareReport(true);
@@ -140,7 +139,9 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         $url = sprintf('/report/client-benefits-check/%s', $clientBenefitsCheck->getId());
 
         $this->okayData['report_id'] = $report->getId();
-        $this->okayData['types_of_income_received_on_clients_behalf'][0]['id'] = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId();
+        $firstIncome = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->first();
+        $this->assertInstanceOf(MoneyReceivedOnClientsBehalf::class, $firstIncome);
+        $this->okayData['types_of_income_received_on_clients_behalf'][0]['id'] = $firstIncome->getId();
         $this->okayData['types_of_income_received_on_clients_behalf'][1] = [
             'id' => null,
             'created' => '2021-10-20',

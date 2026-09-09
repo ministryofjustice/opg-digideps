@@ -16,6 +16,7 @@ use OPG\Digideps\Backend\Fixture\DeputyDescriptor;
 use OPG\Digideps\Backend\Fixture\DeputySet;
 use OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
+use PHPUnit\Framework\Attributes\Test;
 
 class ReportControllerTest extends AbstractTestController
 {
@@ -1021,7 +1022,7 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    /** @test */
+    #[Test]
     public function getQueuedDocumentsUsesSecretAuth(): void
     {
         $return = $this->assertJsonRequest('GET', '/report/all-with-queued-checklists', [

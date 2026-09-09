@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
@@ -86,7 +87,7 @@ class DocumentControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    /** @test */
+    #[Test]
     public function addDocumentForDeputy()
     {
         $type = 'report';
@@ -119,7 +120,7 @@ class DocumentControllerTest extends AbstractTestController
         return $document->getId();
     }
 
-    /** @test */
+    #[Test]
     public function getQueuedDocumentsUsesSecretAuth(): void
     {
         $return = $this->assertJsonRequest('GET', '/document/queued', [
@@ -141,7 +142,7 @@ class DocumentControllerTest extends AbstractTestController
         self::assertCount(0, json_decode($return['data'], true));
     }
 
-    /** @test */
+    #[Test]
     public function getQueuedDocuments(): void
     {
         // Queue a document
@@ -160,7 +161,7 @@ class DocumentControllerTest extends AbstractTestController
         self::assertCount(1, json_decode($return['data'], true));
     }
 
-    /** @test */
+    #[Test]
     public function updateDocumentSyncSuccess(): void
     {
         $url = sprintf('/document/%s', self::$document1->getId());
@@ -178,9 +179,7 @@ class DocumentControllerTest extends AbstractTestController
         self::assertEqualsWithDelta($syncTime->getTimeStamp(), new \DateTime($response['data']['synchronisation_time'])->getTimestamp(), 5);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     #[DataProvider('statusProvider')]
     public function updateDocumentNotSuccess(string $providedStatus, string $expectedStatus, ?string $error): void
     {
@@ -207,9 +206,7 @@ class DocumentControllerTest extends AbstractTestController
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function updateDocumentTempErrorsIncreasesSyncAttemptCounterAndSetsToQueued(): void
     {
         $url = sprintf('/document/%s', self::$document1->getId());
@@ -226,9 +223,7 @@ class DocumentControllerTest extends AbstractTestController
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function updateDocumentPermErrorReturnsAfter4Attempts(): void
     {
         $document = $this->repo->find(self::$document1->getId());
@@ -252,7 +247,7 @@ class DocumentControllerTest extends AbstractTestController
         self::assertEquals(0, $response['data']['sync_attempts']);
     }
 
-    /** @test */
+    #[Test]
     public function updateRelatedStatusesSuccess(): void
     {
         $response = $this->assertJsonRequest(
