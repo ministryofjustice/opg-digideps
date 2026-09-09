@@ -1,5 +1,5 @@
 {% props id, n %}
 
 <div id="{{ id }}-content-{{ n }}" class="govuk-accordion__section-content">
-    {% block content %}{% endblock %}
+    {% with outerScope %}{% block content %}{% endblock %}{% endwith %}
 </div>
