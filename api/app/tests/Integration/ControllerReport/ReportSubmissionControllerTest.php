@@ -2,6 +2,7 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
@@ -181,8 +182,8 @@ class ReportSubmissionControllerTest extends AbstractTestController
     }
 
     /**
-     * @dataProvider getDateRangeThresholds
      */
+    #[DataProvider('getDateRangeThresholds')]
     public function testGetCaserecDataRetrievesWithinGivenDateRangesInclusive(string $fromDate, string $toDate, array $expectedOutcomes)
     {
         $this->updateReportSubmissionByIdWithNewDateTime(1, '2018-01-01 12:00:00');

@@ -2,6 +2,7 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\v2\Controller;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\UserRepository;
@@ -196,8 +197,8 @@ class OrganisationControllerTest extends AbstractTestController
     /**
      * @test
      *
-     * @dataProvider getBadRequestData
      */
+    #[DataProvider('getBadRequestData')]
     public function createActionReturnsBadRequestIfGivenBadData($data)
     {
         self::$frameworkBundleClient->request(
@@ -274,8 +275,8 @@ class OrganisationControllerTest extends AbstractTestController
     /**
      * @test
      *
-     * @dataProvider getBadRequestData
      */
+    #[DataProvider('getBadRequestData')]
     public function updateActionReturnsBadRequestIfGivenBadData($data)
     {
         $orgId = self::$orgs[1]->getId();

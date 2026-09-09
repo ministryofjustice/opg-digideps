@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\Controller;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 use Tests\OPG\Digideps\Backend\Integration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use Symfony\Component\HttpFoundation\Response;
@@ -63,8 +64,8 @@ class OrgDeputyshipControllerTest extends AbstractTestController
     /**
      * @test
      *
-     * @dataProvider uploadProvider
      */
+    #[DataProvider('uploadProvider')]
     public function uploadProvidesFeedbackOnEntitiesProcessed(
         string $deputyshipsJson,
         int $expectedClients,
@@ -99,10 +100,10 @@ class OrgDeputyshipControllerTest extends AbstractTestController
     }
 
     /**
-     * @dataProvider invalidPayloadProvider
      *
      * @test
      */
+    #[DataProvider('invalidPayloadProvider')]
     public function createExceedingBatchSizeReturns413(string $dtoJson)
     {
         self::$frameworkBundleClient->request('POST', '/v2/org-deputyships', [], [], $this->headers, $dtoJson);

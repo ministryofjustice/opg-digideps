@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
@@ -41,8 +42,8 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
     }
 
     /**
-     * @dataProvider updateArchivedStatusDataProvider
      */
+    #[DataProvider('updateArchivedStatusDataProvider')]
     public function testUpdateArchivedStatus($isArchived, $docStatuses, $shouldArchive)
     {
         $client = new Client();
