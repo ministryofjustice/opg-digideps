@@ -1,8 +1,5 @@
 {
     "link": "https://design-system.service.gov.uk/styles/paragraphs/",
-    "props": [
-        { "name": "size", "type": "'s' | 'm' | 'l'", "default": "'m'" },
-        { "name": "noMargin", "type": "boolean", "default": "false" }
-    ],
+    "props": [{ "name": "size", "type": "'s' | 'm' | 'l'", "default": "'m'" }],
     "examples": ["paragraph"]
 }
