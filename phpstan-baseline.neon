@@ -139,6 +139,12 @@ parameters:
 			path: api/app/src/Command/ProcessLayCSVCommand.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\ProcessLayCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: api/app/src/Command/ProcessLayCSVCommand.php
+
+		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 2
@@ -223,10 +229,10 @@ parameters:
 			path: api/app/src/Command/ReportStatusUpdaterCommand.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\ResyncResubmittableErrorChecklists\:\:\$defaultName has no type specified\.$#'
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\ResyncResubmittableErrorDocuments\:\:\$defaultName has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
-			path: api/app/src/Command/ResyncResubmittableErrorChecklists.php
+			path: api/app/src/Command/ResyncResubmittableErrorDocuments.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:deleteInactivateUsers\(\) should return int but returns mixed\.$#'
@@ -21559,13 +21565,13 @@ parameters:
 			path: api/app/tests/Unit/Command/ProcessLayCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/ProcessOrgCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/UserRetentionPolicyCommandTest.php
@@ -26799,6 +26805,12 @@ parameters:
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$moneyOutExists has no type specified\.$#'
 			identifier: missingType.property
+			count: 1
+			path: client/app/src/Entity/Report/Report.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$primaryDeputy \(OPG\\Digideps\\Frontend\\Entity\\Deputy\|null\) is never assigned OPG\\Digideps\\Frontend\\Entity\\Deputy so it can be removed from the property type\.$#'
+			identifier: property.unusedType
 			count: 1
 			path: client/app/src/Entity/Report/Report.php
 
@@ -36973,12 +36985,6 @@ parameters:
 			path: client/app/tests/Unit/Service/StringUtilsTest.php
 
 		-
-			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\ChecklistSyncCommand\:\:getDefaultName\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Command\\ChecklistSyncCommandTest\:\:doesNotSyncIfFeatureIsNotEnabled\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -36997,7 +37003,7 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
