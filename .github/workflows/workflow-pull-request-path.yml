@@ -499,6 +499,7 @@ jobs:
       - api_integration_tests_1
       - api_integration_tests_2
       - api_integration_tests_3
+      - ecr_scan_results
     env:
       START_TIME: ${{ needs.workflow_variables.outputs.start_time }}
     steps:
