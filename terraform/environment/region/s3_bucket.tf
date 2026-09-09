@@ -27,6 +27,15 @@ module "pa_uploads" {
   replication_role_arn                 = aws_iam_role.backup_role.arn
   backup_kms_key_id                    = "arn:aws:kms:eu-west-1:${local.backup_account_id}:key/${var.account.s3.backup_kms_arn}"
   backup_account_id                    = local.backup_account_id
+  s3_vpc_endpoint_id                   = data.aws_vpc_endpoint.s3_endpoint.id
+
+  allowed_principal_arns = [
+    aws_iam_role.backup_role.arn,
+    "arn:aws:iam::${var.account.environment.account_id}:role/integrations-s3-read-${var.account.environment.name}",
+    "arn:aws:iam::${var.account.environment.account_id}:role/operator",
+    "arn:aws:iam::${var.account.environment.account_id}:role/breakglass",
+    "arn:aws:iam::${local.backup_account_id}:root"
+  ]
 
   providers = {
     aws = aws

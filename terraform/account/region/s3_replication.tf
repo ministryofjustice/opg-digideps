@@ -27,6 +27,45 @@ data "aws_iam_policy_document" "pa_uploads_branch_replication" {
   policy_id = "PutObjPolicy"
 
   statement {
+    sid    = "DenyUnlessViaVPCEndpointOrAllowedPrincipal"
+    effect = "Deny"
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    actions = ["s3:*"]
+
+    resources = [
+      aws_s3_bucket.pa_uploads_branch_replication[0].arn,
+      "${aws_s3_bucket.pa_uploads_branch_replication[0].arn}/*"
+    ]
+
+    condition {
+      test     = "StringNotEquals"
+      variable = "aws:SourceVpce"
+      values   = [aws_vpc_endpoint.s3_endpoint_vpc.id]
+    }
+
+    condition {
+      test     = "ArnNotLike"
+      variable = "aws:PrincipalArn"
+      values = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/digideps-backup-role.*",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/operator",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass"
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:PrincipalIsAWSService"
+      values   = ["false"]
+    }
+  }
+
+  statement {
     sid    = "DenyUnEncryptedObjectUploads"
     effect = "Deny"
 

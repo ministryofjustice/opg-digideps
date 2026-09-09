@@ -63,6 +63,44 @@ data "aws_iam_policy_document" "alb_access_athena_results" {
   policy_id = "PutObjPolicy"
 
   statement {
+    sid    = "DenyUnlessViaVPCEndpointOrAllowedPrincipal"
+    effect = "Deny"
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    actions = ["s3:*"]
+
+    resources = [
+      aws_s3_bucket.alb_access_athena_results.arn,
+      "${aws_s3_bucket.alb_access_athena_results.arn}/*"
+    ]
+
+    condition {
+      test     = "StringNotEquals"
+      variable = "aws:SourceVpce"
+      values   = [aws_vpc_endpoint.s3_endpoint_vpc.id]
+    }
+
+    condition {
+      test     = "ArnNotLike"
+      variable = "aws:PrincipalArn"
+      values = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/operator",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass"
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:PrincipalIsAWSService"
+      values   = ["false"]
+    }
+  }
+
+  statement {
     sid     = "DenyNoneSSLRequests"
     effect  = "Deny"
     actions = ["s3:*"]
