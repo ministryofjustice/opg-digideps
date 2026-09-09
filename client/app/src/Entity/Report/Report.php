@@ -99,12 +99,9 @@ class Report implements StartEndDateComparableInterface
     public const string YES_MONEY_EXISTS = 'Yes';
     public const string NO_MONEY_EXISTS = 'No';
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
-    #[JMS\Groups(['visits-care', 'report-id'])]
-    private $id;
+    #[JMS\Groups(['report', 'report-id'])]
+    private ?int $id = null;
 
     /**
      * see TYPE_* constant
@@ -163,11 +160,8 @@ class Report implements StartEndDateComparableInterface
     #[JMS\Groups(['unsubmit_date'])]
     private $unSubmitDate;
 
-    /**
-     * @var User
-     */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
-    private $submittedBy;
+    private ?User $submittedBy = null;
 
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Deputy')]
     #[JMS\Groups(['deputy'])]
@@ -245,7 +239,7 @@ class Report implements StartEndDateComparableInterface
 
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'significantDecisionsMade'])]
-    private $significantDecisionsMade;
+    private ?string $significantDecisionsMade = null;
 
     /**
      * @var string|null
@@ -389,18 +383,12 @@ class Report implements StartEndDateComparableInterface
     #[Assert\NotBlank(message: 'moneyOut.reasonForNoMoneyOut.notBlank', groups: ['reasonForNoMoneyOut'])]
     private $reasonForNoMoneyOut;
 
-    /**
-     * @return int $id
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -451,7 +439,7 @@ class Report implements StartEndDateComparableInterface
         return $this->startDate;
     }
 
-    public function setStartDate(?\DateTime $startDate = null)
+    public function setStartDate(?\DateTime $startDate = null): static
     {
         if ($startDate instanceof \DateTime) {
             $startDate->setTime(0, 0, 0);
@@ -545,10 +533,7 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getSubmittedBy()
+    public function getSubmittedBy(): ?User
     {
         return $this->submittedBy;
     }
@@ -732,7 +717,7 @@ class Report implements StartEndDateComparableInterface
         return $this->isDue;
     }
 
-    public function hasContacts()
+    public function hasContacts(): ?string
     {
         if (empty($this->getContacts()) && $this->getReasonForNoContacts() === null) {
             return null;
@@ -747,7 +732,7 @@ class Report implements StartEndDateComparableInterface
         return null;
     }
 
-    public function getSignificantDecisionsMade()
+    public function getSignificantDecisionsMade(): ?string
     {
         return $this->significantDecisionsMade;
     }
@@ -852,10 +837,7 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    /**
-     * @return MentalCapacity
-     */
-    public function getMentalCapacity()
+    public function getMentalCapacity(): ?MentalCapacity
     {
         return $this->mentalCapacity;
     }
