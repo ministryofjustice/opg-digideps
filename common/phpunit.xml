@@ -14,7 +14,10 @@
     </source>
     <testsuites>
         <testsuite name="unit">
-            <directory>tests</directory>
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="serialise">
+            <directory>tests/Serialise</directory>
         </testsuite>
     </testsuites>
     <extensions>
