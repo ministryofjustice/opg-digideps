@@ -55,7 +55,7 @@ class ProfDeputyOtherCost
     /**
      * @return mixed
      */
-    public function getProfDeputyOtherCostTypeId()
+    public function getProfDeputyOtherCostTypeId(): string
     {
         return $this->profDeputyOtherCostTypeId;
     }

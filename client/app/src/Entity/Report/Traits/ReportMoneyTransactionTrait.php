@@ -76,9 +76,9 @@ trait ReportMoneyTransactionTrait
      *
      * @param MoneyTransaction[] $moneyTransactions
      *
-     * @return array array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]
+     * @return array<array> array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]
      */
-    public function groupMoneyTransactionsByGroup(array $moneyTransactions)
+    public function groupMoneyTransactionsByGroup(array $moneyTransactions): array
     {
         $ret = [];
 

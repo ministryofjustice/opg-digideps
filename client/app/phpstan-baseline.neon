@@ -319,12 +319,6 @@ parameters:
 			path: src/Components/OPG/Review/BankAccounts.php
 
 		-
-			message: '#^Parameter \#1 \$value of method OPG\\Digideps\\Frontend\\Components\\OPG\\Review\\BankAccounts\:\:formatBalance\(\) expects float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Components/OPG/Review/BankAccounts.php
-
-		-
 			message: '#^Parameter \#2 \$number of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\BankAccount constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -367,19 +361,7 @@ parameters:
 			path: src/Components/OPG/Review/Contacts.php
 
 		-
-			message: '#^Parameter \#2 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\Cell\|OPG\\Digideps\\Frontend\\Components\\RenderableInterface\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Components/OPG/Review/Contacts.php
-
-		-
 			message: '#^Parameter \#3 \$address2 of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Components/OPG/Review/Contacts.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\Cell\|OPG\\Digideps\\Frontend\\Components\\RenderableInterface\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Components/OPG/Review/Contacts.php
@@ -401,36 +383,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Components/OPG/Review/Contacts.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: src/Components/OPG/Review/Contacts.php
-
-		-
-			message: '#^Binary operation "\." between ''review\.'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Components/OPG/Review/Decisions.php
-
-		-
-			message: '#^Cannot call method format\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Components/OPG/Review/Decisions.php
-
-		-
-			message: '#^Parameter \#2 \$value of method OPG\\Digideps\\Frontend\\Components\\GOV\\Summary\\SummaryListBuilder\:\:addItem\(\) expects OPG\\Digideps\\Frontend\\Components\\RenderableInterface\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Components/OPG/Review/Decisions.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\Cell\|OPG\\Digideps\\Frontend\\Components\\RenderableInterface\|string, bool given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Components/OPG/Review/Decisions.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
@@ -1699,7 +1651,19 @@ parameters:
 			path: src/Controller/Report/BankAccountController.php
 
 		-
+			message: '#^Parameter \#1 \$closingBalance of method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setClosingBalance\(\) expects float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/BankAccountController.php
+
+		-
 			message: '#^Parameter \#1 \$id of method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:trans\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/BankAccountController.php
+
+		-
+			message: '#^Parameter \#1 \$openingBalance of method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setOpeningBalance\(\) expects float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/BankAccountController.php
@@ -1957,6 +1921,12 @@ parameters:
 			path: src/Controller/Report/LifestyleController.php
 
 		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: src/Controller/Report/LifestyleController.php
+
+		-
 			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:post\(\) expects array\|object\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1965,6 +1935,12 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:put\(\) expects array\|object\|string, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/LifestyleController.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
 			count: 1
 			path: src/Controller/Report/LifestyleController.php
 
@@ -2409,6 +2385,12 @@ parameters:
 		-
 			message: '#^Binary operation "\." between mixed and '' \(deputy\)'' results in an error\.$#'
 			identifier: binaryOp.invalid
+			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
+			message: '#^Parameter \#1 \$reportId of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\ReportApi\:\:getReportIfNotSubmitted\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
@@ -3163,12 +3145,6 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:getOpeningBalance\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:getSortCode\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -3218,12 +3194,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setMeta\(\) has parameter \$meta with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setOpeningBalance\(\) has parameter \$openingBalance with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: src/Entity/Report/BankAccount.php
@@ -3325,12 +3295,6 @@ parameters:
 			path: src/Entity/Report/Contact.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:getExplanation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Contact.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:getId\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -3344,12 +3308,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:getPostcode\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Contact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:getRelationship\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Contact.php
@@ -3451,8 +3409,8 @@ parameters:
 			path: src/Entity/Report/Contact.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:\$explanation has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:\$explanation \(string\|null\) does not accept mixed\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/Contact.php
 
@@ -3475,8 +3433,8 @@ parameters:
 			path: src/Entity/Report/Contact.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:\$relationship has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:\$relationship \(string\|null\) does not accept mixed\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/Contact.php
 
@@ -3491,6 +3449,12 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: src/Entity/Report/Debt.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Decision\:\:\$id is never written, only read\.$#'
+			identifier: property.onlyRead
+			count: 1
+			path: src/Entity/Report/Decision.php
 
 		-
 			message: '#^Cannot call method getDocuments\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
@@ -3607,6 +3571,30 @@ parameters:
 			path: src/Entity/Report/Gift.php
 
 		-
+			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:getActivityDetailsNo\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Entity/Report/Lifestyle.php
+
+		-
+			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:getActivityDetailsYes\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Entity/Report/Lifestyle.php
+
+		-
+			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:getCareAppointments\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Entity/Report/Lifestyle.php
+
+		-
+			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:getDoesClientUndertakeSocialActivities\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Entity/Report/Lifestyle.php
+
+		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:\$activityDetailsNo has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -3631,68 +3619,8 @@ parameters:
 			path: src/Entity/Report/Lifestyle.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:getHasCapacityChanged\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:getHasCapacityChangedDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:getId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:getMentalAssessmentDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:setHasCapacityChanged\(\) has parameter \$hasCapacityChanged with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:setHasCapacityChangedDetails\(\) has parameter \$hasCapacityChangedDetails with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:setMentalAssessmentDate\(\) has parameter \$mentalAssessmentDate with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:\$hasCapacityChanged has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:\$hasCapacityChangedDetails has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:\$id is never written, only read\.$#'
 			identifier: property.onlyRead
-			count: 1
-			path: src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:\$mentalAssessmentDate has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: src/Entity/Report/MentalCapacity.php
 
@@ -3701,12 +3629,6 @@ parameters:
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Entity/Report/MoneyReceivedOnClientsBehalf.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getCategoriesGrouped\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getCategoriesGrouped\(\) has parameter \$typeFilter with no type specified\.$#'
@@ -3841,8 +3763,20 @@ parameters:
 			path: src/Entity/Report/ProfDeputyOtherCost.php
 
 		-
+			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost\:\:getProfDeputyOtherCostTypeId\(\) should return string but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Entity/Report/ProfDeputyOtherCost.php
+
+		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfDeputyOtherCost\:\:setProfDeputyOtherCostTypeId\(\) has parameter \$profDeputyOtherCostTypeId with no type specified\.$#'
 			identifier: missingType.parameter
+			count: 1
+			path: src/Entity/Report/ProfDeputyOtherCost.php
+
+		-
+			message: '#^PHPDoc tag @return with type mixed is not subtype of native type string\.$#'
+			identifier: return.phpDocType
 			count: 1
 			path: src/Entity/Report/ProfDeputyOtherCost.php
 
@@ -4003,20 +3937,8 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getSignificantDecisionsMade\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getTotalValue\(\) should return int but returns float\|int\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:hasContacts\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4087,12 +4009,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setMentalCapacity\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -4113,12 +4029,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setSignificantDecisionsMade\(\) has parameter \$significantDecisionsMade with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setStartDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4243,13 +4153,7 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$significantDecisionsMade has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$submittedBy \(OPG\\Digideps\\Frontend\\Entity\\User\) does not accept OPG\\Digideps\\Frontend\\Entity\\User\|null\.$#'
+			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$significantDecisionsMade \(string\|null\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -6295,6 +6199,12 @@ parameters:
 			path: src/Model/FeedbackReport.php
 
 		-
+			message: '#^Parameter \#1 \$reportId of class OPG\\Digideps\\Common\\Report\\ReportMetadata constructor expects int, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Report/ReportSectionService.php
+
+		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Resolver\\SubSectionRoute\\ProfCostsEstimateSubSectionRouteResolver\:\:breakdownSubsectionIsIncomplete\(\) has parameter \$state with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -6818,6 +6728,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$message of class Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/Client/Internal/ReportApi.php
+
+		-
+			message: '#^Parameter \#1 \$reportId of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\ReportApi\:\:getReport\(\) expects int, int\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Service/Client/Internal/ReportApi.php
@@ -9409,6 +9325,12 @@ parameters:
 			path: src/Sync/Service/ChecklistSyncService.php
 
 		-
+			message: '#^Method OPG\\Digideps\\Frontend\\Sync\\Service\\ChecklistSyncService\:\:syncChecklistsByReports\(\) should return array\{notSyncedCount\: int, reportIdsWithNullChecklists\: array\<int\>\} but returns array\{notSyncedCount\: int\<0, max\>, reportIdsWithNullChecklists\: list\<int\|null\>\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Sync/Service/ChecklistSyncService.php
+
+		-
 			message: '#^Call to function method_exists\(\) with Throwable and ''getCode'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -9437,48 +9359,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sync/Service/SiriusApiErrorTranslator.php
-
-		-
-			message: '#^Cannot call method setChecklist\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Cannot call method setClient\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Cannot call method setEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Cannot call method setReportSubmissions\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Cannot call method setType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\ChecklistTestHelper\:\:buildPfaHighReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist constructor expects OPG\\Digideps\\Frontend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\ClientHelpers\:\:createValidCaseNumber\(\) has no return type specified\.$#'
@@ -9557,30 +9437,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/TestHelpers/OrganisationHelpers.php
-
-		-
-			message: '#^Cannot call method setDueDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ReportHelpers.php
-
-		-
-			message: '#^Cannot call method setEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ReportHelpers.php
-
-		-
-			message: '#^Cannot call method setStartDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ReportHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\ReportHelpers\:\:createReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/ReportHelpers.php
 
 		-
 			message: '#^Parameter \#1 \$submittedBy of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setSubmittedBy\(\) expects OPG\\Digideps\\Frontend\\Entity\\User\|null, array\|object given\.$#'
@@ -13693,12 +13549,6 @@ parameters:
 			path: tests/Unit/Service/Mailer/MailFactoryTest.php
 
 		-
-			message: '#^Cannot call method setEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:assertStaticEmailProperties\(\) has parameter \$email with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -13761,18 +13611,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$type of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setType\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:\$newReport \(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:\$submittedReport \(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\) does not accept mixed\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: tests/Unit/Service/Mailer/MailFactoryTest.php
 

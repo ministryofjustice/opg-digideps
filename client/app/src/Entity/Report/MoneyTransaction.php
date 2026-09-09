@@ -11,7 +11,7 @@ class MoneyTransaction
 {
     use HasBankAccountTrait;
 
-    public static function getCategoriesGrouped($typeFilter)
+    public static function getCategoriesGrouped($typeFilter): array
     {
         $ret = [];
         foreach (MoneyTransaction::$categories as $k => $row) {
