@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
@@ -11,40 +13,23 @@ class ProfDeputyEstimateCost
 {
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
-    private $profDeputyEstimateCostTypeId;
+    private string $profDeputyEstimateCostTypeId;
 
-    /**
-     * @var string decimal
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     #[Assert\Type(type: 'numeric', message: 'profDeputyEstimateCost.amount.notNumeric', groups: ['prof-deputy-estimate-costs'])]
     #[Assert\Range(notInRangeMessage: 'profDeputyEstimateCost.amount.notInRangeMessage', min: 0, max: 100000000, groups: ['prof-deputy-estimate-costs'])]
-    private $amount;
+    private float $amount;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
-    private $hasMoreDetails;
+    private bool|string $hasMoreDetails;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
-    private $moreDetails;
+    private ?string $moreDetails;
 
-    /**
-     * ProfDeputyEstimateCost constructor.
-     *
-     * @param $profDeputyEstimateCostTypeId
-     * @param string $amount decimal
-     * @param string  $hasMoreDetails
-     * @param string  $moreDetails
-     */
-    public function __construct($profDeputyEstimateCostTypeId, $amount, $hasMoreDetails, $moreDetails)
+    public function __construct(string $profDeputyEstimateCostTypeId, float $amount, bool|string $hasMoreDetails, ?string $moreDetails)
     {
         $this->profDeputyEstimateCostTypeId = $profDeputyEstimateCostTypeId;
         $this->amount = $amount;
@@ -52,87 +37,58 @@ class ProfDeputyEstimateCost
         $this->moreDetails = $moreDetails;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getProfDeputyEstimateCostTypeId()
+    public function getProfDeputyEstimateCostTypeId(): string
     {
         return $this->profDeputyEstimateCostTypeId;
     }
 
-    /**
-     * @param $profDeputyEstimateCostTypeId
-     */
-    public function setProfDeputyEstimateCostTypeId($profDeputyEstimateCostTypeId): static
+    public function setProfDeputyEstimateCostTypeId(string $profDeputyEstimateCostTypeId): static
     {
         $this->profDeputyEstimateCostTypeId = $profDeputyEstimateCostTypeId;
-
         return $this;
     }
 
-    /**
-     * @return string decimal
-     */
-    public function getAmount()
+    public function getAmount(): float
     {
         return $this->amount;
     }
 
-    /**
-     * @param string $amount decimal
-     */
-    public function setAmount($amount): static
+    public function setAmount(float $amount): static
     {
         $this->amount = $amount;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getHasMoreDetails()
+    public function getHasMoreDetails(): bool|string
     {
         return $this->hasMoreDetails;
     }
 
-    /**
-     * @param string $hasMoreDetails
-     */
-    public function setHasMoreDetails($hasMoreDetails): static
+    public function setHasMoreDetails(string $hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMoreDetails()
+    public function getMoreDetails(): ?string
     {
         return $this->moreDetails;
     }
 
-    /**
-     * @param string $moreDetails
-     */
-    public function setMoreDetails($moreDetails): static
+    public function setMoreDetails(?string $moreDetails): static
     {
         $this->moreDetails = $moreDetails;
-
         return $this;
     }
 
     public function moreDetailsValidate(ExecutionContextInterface $context): void
     {
-        if (!$this->getHasMoreDetails()) {
-            return;
-        }
+        $hasMoreDetailsValue = $this->getHasMoreDetails();
+        $hasNoMoreDetails = $hasMoreDetailsValue === 'no' || $hasMoreDetailsValue === false;
 
-        $hasMoreDetails = trim($this->getMoreDetails(), " \n") ? true : false;
+        $moreDetailsExists = strlen(trim($this->getMoreDetails() ?? '', " \n")) > 0;
 
-        if ($this->getAmount() && !$hasMoreDetails) {
+        if ($hasNoMoreDetails && $moreDetailsExists && $this->getAmount()) {
             $context->buildViolation('profDeputyEstimateCost.moreDetails.notBlank')->atPath('moreDetails')->addViolation();
         }
     }

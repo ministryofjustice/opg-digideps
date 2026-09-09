@@ -180,7 +180,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
         foreach ($defaultEstimateCostTypeIds as $defaultEstimateCostType) {
             $estimateCosts[] = new ProfDeputyEstimateCost(
                 $defaultEstimateCostType['typeId'],
-                null,
+                0.0,
                 $defaultEstimateCostType['hasMoreDetails'],
                 null
             );

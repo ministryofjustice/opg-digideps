@@ -40,9 +40,6 @@ class MoneyTransactionShort
     #[JMS\Groups(['moneyTransactionShort'])]
     private string $type;
 
-    /**
-     * MoneyTransactionShort constructor.
-     */
     public function __construct(string $type)
     {
         $this->setType($type);

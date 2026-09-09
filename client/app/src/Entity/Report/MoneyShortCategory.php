@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
@@ -10,20 +12,11 @@ class MoneyShortCategory
     #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
     private string $typeId;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
-    private $present;
+    private bool $present;
 
-    /**
-     * IncomeBenefit constructor.
-     *
-     * @param string $typeId
-     * @param bool $present
-     */
-    public function __construct(string $typeId, $present)
+    public function __construct(string $typeId, bool $present)
     {
         $this->typeId = $typeId;
         $this->present = $present;
@@ -37,13 +30,9 @@ class MoneyShortCategory
     public function setTypeId(string $typeId): static
     {
         $this->typeId = $typeId;
-
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isPresent(): bool
     {
         return $this->present;
@@ -52,7 +41,6 @@ class MoneyShortCategory
     public function setPresent(bool $present): static
     {
         $this->present = $present;
-
         return $this;
     }
 }

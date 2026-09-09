@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
@@ -7,80 +9,50 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ProfDeputyInterimCost
 {
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['profDeputyInterimCosts'])]
     #[Assert\Range(notInRangeMessage: 'profDeputyInterimCost.amount.notInRangeMessage', min: 0.01, max: 10000000, groups: ['prof-deputy-interim-costs'])]
-    private $amount;
+    private ?float $amount = null;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['profDeputyInterimCosts'])]
     #[Assert\Type(type: 'DateTimeInterface', message: 'profDeputyInterimCost.date.notValid', groups: ['prof-deputy-interim-costs'])]
     #[Assert\LessThanOrEqual('today', message: 'profDeputyInterimCost.date.notFuture', groups: ['prof-deputy-interim-costs'])]
-    private $date;
+    private ?\DateTime $date = null;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAmount()
+    public function getAmount(): ?float
     {
         return $this->amount;
     }
 
-    /**
-     * @param string $amount
-     */
-    public function setAmount($amount): static
+    public function setAmount(?float $amount): static
     {
         $this->amount = $amount;
-
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDate()
+    public function getDate(): ?\DateTime
     {
         return $this->date;
     }
 
-    /**
-     * @param \DateTime $date
-     */
-    public function setDate($date): static
+    public function setDate(?\DateTime $date): static
     {
         $this->date = $date;
-
         return $this;
     }
 }

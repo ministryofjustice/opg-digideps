@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Form\Report;
 
 use OPG\Digideps\Frontend\Entity\Report\ProfDeputyEstimateCost;
@@ -12,7 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProfDeputyEstimateCostSingleType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('profDeputyEstimateCostTypeId', FormTypes\HiddenType::class)
@@ -24,16 +26,16 @@ class ProfDeputyEstimateCostSingleType extends AbstractType
             ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            /** @var ProfDeputyEstimateCost $profDeputyEstimateCost */
             $profDeputyEstimateCost = $event->getData();
-            $form = $event->getForm();
 
             if ($profDeputyEstimateCost->getHasMoreDetails()) {
-                $form->add('moreDetails', FormTypes\TextareaType::class, []);
+                $event->getForm()->add('moreDetails', FormTypes\TextareaType::class);
             }
         });
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => ProfDeputyEstimateCost::class,
@@ -42,7 +44,7 @@ class ProfDeputyEstimateCostSingleType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'prof_cost_single';
     }
