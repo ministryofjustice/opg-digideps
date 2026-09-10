@@ -73,6 +73,12 @@ parameters:
 			path: api/app/src/Command/ApiComparison.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\IngestDeputyshipsCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: api/app/src/Command/IngestDeputyshipsCSVCommand.php
+
+		-
 			message: '#^Cannot call method warning\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -129,6 +135,12 @@ parameters:
 		-
 			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, array\|bool\|float\|int\|string\|UnitEnum\|null given\.$#'
 			identifier: argument.type
+			count: 1
+			path: api/app/src/Command/ProcessLayCSVCommand.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\ProcessLayCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
 			count: 1
 			path: api/app/src/Command/ProcessLayCSVCommand.php
 
@@ -215,6 +227,12 @@ parameters:
 			identifier: booleanAnd.rightAlwaysTrue
 			count: 1
 			path: api/app/src/Command/ReportStatusUpdaterCommand.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\ResyncResubmittableErrorDocuments\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: api/app/src/Command/ResyncResubmittableErrorDocuments.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:deleteInactivateUsers\(\) should return int but returns mixed\.$#'
@@ -21541,7 +21559,7 @@ parameters:
 			path: api/app/tests/Integration/v2/Service/CourtOrderServiceIntegrationTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/ProcessLayCSVCommandTest.php
@@ -21553,7 +21571,7 @@ parameters:
 			path: api/app/tests/Unit/Command/ProcessOrgCSVCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Command/UserRetentionPolicyCommandTest.php
@@ -22885,6 +22903,36 @@ parameters:
 			path: client/app/src/Components/OPG/Review/Assets.php
 
 		-
+			message: '#^Parameter \#1 \$type of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\BankAccount constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Components/OPG/Review/BankAccounts.php
+
+		-
+			message: '#^Parameter \#1 \$value of method OPG\\Digideps\\Frontend\\Components\\OPG\\Review\\BankAccounts\:\:formatBalance\(\) expects float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Components/OPG/Review/BankAccounts.php
+
+		-
+			message: '#^Parameter \#2 \$number of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\BankAccount constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Components/OPG/Review/BankAccounts.php
+
+		-
+			message: '#^Parameter \#4 \$bankName of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\BankAccount constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Components/OPG/Review/BankAccounts.php
+
+		-
+			message: '#^Parameter \#6 \$closed of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\BankAccount constructor expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Components/OPG/Review/BankAccounts.php
+
+		-
 			message: '#^Cannot call method getTypesOfMoneyReceivedOnClientsBehalf\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -22895,6 +22943,84 @@ parameters:
 			identifier: nullCoalesce.expr
 			count: 1
 			path: client/app/src/Components/OPG/Review/ClientBenefitsCheck.php
+
+		-
+			message: '#^Parameter \#1 \$name of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#2 \$address1 of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\Cell\|OPG\\Digideps\\Frontend\\Components\\RenderableInterface\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#3 \$address2 of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\Cell\|OPG\\Digideps\\Frontend\\Components\\RenderableInterface\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#4 \$county of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#5 \$postcode of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#6 \$country of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: client/app/src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Binary operation "\." between ''review\.'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: client/app/src/Components/OPG/Review/Decisions.php
+
+		-
+			message: '#^Cannot call method format\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: client/app/src/Components/OPG/Review/Decisions.php
+
+		-
+			message: '#^Parameter \#2 \$value of method OPG\\Digideps\\Frontend\\Components\\GOV\\Summary\\SummaryListBuilder\:\:addItem\(\) expects OPG\\Digideps\\Frontend\\Components\\RenderableInterface\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: client/app/src/Components/OPG/Review/Decisions.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\Cell\|OPG\\Digideps\\Frontend\\Components\\RenderableInterface\|string, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Components/OPG/Review/Decisions.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
@@ -26679,6 +26805,12 @@ parameters:
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$moneyOutExists has no type specified\.$#'
 			identifier: missingType.property
+			count: 1
+			path: client/app/src/Entity/Report/Report.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$primaryDeputy \(OPG\\Digideps\\Frontend\\Entity\\Deputy\|null\) is never assigned OPG\\Digideps\\Frontend\\Entity\\Deputy so it can be removed from the property type\.$#'
+			identifier: property.unusedType
 			count: 1
 			path: client/app/src/Entity/Report/Report.php
 
@@ -32971,7 +33103,7 @@ parameters:
 			path: client/app/tests/Unit/Command/CheckCSVUploadedCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Command/CheckCSVUploadedCommandTest.php
@@ -36895,6 +37027,12 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
+			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\DocumentSyncCommand\:\:getDefaultName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
+
+		-
 			message: '#^Cannot call method method\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 4
@@ -36919,7 +37057,7 @@ parameters:
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
+			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
