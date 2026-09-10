@@ -313,6 +313,36 @@ parameters:
 			path: src/Components/OPG/Review/Assets.php
 
 		-
+			message: '#^Parameter \#1 \$type of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\BankAccount constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/BankAccounts.php
+
+		-
+			message: '#^Parameter \#1 \$value of method OPG\\Digideps\\Frontend\\Components\\OPG\\Review\\BankAccounts\:\:formatBalance\(\) expects float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/BankAccounts.php
+
+		-
+			message: '#^Parameter \#2 \$number of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\BankAccount constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/BankAccounts.php
+
+		-
+			message: '#^Parameter \#4 \$bankName of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\BankAccount constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/BankAccounts.php
+
+		-
+			message: '#^Parameter \#6 \$closed of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\BankAccount constructor expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/BankAccounts.php
+
+		-
 			message: '#^Cannot call method getTypesOfMoneyReceivedOnClientsBehalf\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -323,6 +353,84 @@ parameters:
 			identifier: nullCoalesce.expr
 			count: 1
 			path: src/Components/OPG/Review/ClientBenefitsCheck.php
+
+		-
+			message: '#^Parameter \#1 \$name of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#2 \$address1 of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\Cell\|OPG\\Digideps\\Frontend\\Components\\RenderableInterface\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#3 \$address2 of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\Cell\|OPG\\Digideps\\Frontend\\Components\\RenderableInterface\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#4 \$county of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#5 \$postcode of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Parameter \#6 \$country of class OPG\\Digideps\\Frontend\\Components\\OPG\\Renderable\\Contact constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Components/OPG/Review/Contacts.php
+
+		-
+			message: '#^Binary operation "\." between ''review\.'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Components/OPG/Review/Decisions.php
+
+		-
+			message: '#^Cannot call method format\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Components/OPG/Review/Decisions.php
+
+		-
+			message: '#^Parameter \#2 \$value of method OPG\\Digideps\\Frontend\\Components\\GOV\\Summary\\SummaryListBuilder\:\:addItem\(\) expects OPG\\Digideps\\Frontend\\Components\\RenderableInterface\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Components/OPG/Review/Decisions.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$cells of method OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\TableBuilder\:\:addRow\(\) expects OPG\\Digideps\\Frontend\\Components\\GOV\\Table\\Cell\|OPG\\Digideps\\Frontend\\Components\\RenderableInterface\|string, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Components/OPG/Review/Decisions.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
@@ -4113,6 +4221,12 @@ parameters:
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$moneyOutExists has no type specified\.$#'
 			identifier: missingType.property
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$primaryDeputy \(OPG\\Digideps\\Frontend\\Entity\\Deputy\|null\) is never assigned OPG\\Digideps\\Frontend\\Entity\\Deputy so it can be removed from the property type\.$#'
+			identifier: property.unusedType
 			count: 1
 			path: src/Entity/Report/Report.php
 
