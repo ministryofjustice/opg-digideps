@@ -19,7 +19,7 @@ class ProfDeputyEstimateCost
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     #[Assert\Type(type: 'numeric', message: 'profDeputyEstimateCost.amount.notNumeric', groups: ['prof-deputy-estimate-costs'])]
     #[Assert\Range(notInRangeMessage: 'profDeputyEstimateCost.amount.notInRangeMessage', min: 0, max: 100000000, groups: ['prof-deputy-estimate-costs'])]
-    private ?float $amount;
+    private ?string $amount;
 
     #[JMS\Type('boolean')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
@@ -53,12 +53,12 @@ class ProfDeputyEstimateCost
         return $this;
     }
 
-    public function getAmount(): ?float
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    public function setAmount(float $amount): static
+    public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
 

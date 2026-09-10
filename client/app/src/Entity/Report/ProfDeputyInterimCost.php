@@ -15,7 +15,7 @@ class ProfDeputyInterimCost
     #[JMS\Type('string')]
     #[JMS\Groups(['profDeputyInterimCosts'])]
     #[Assert\Range(notInRangeMessage: 'profDeputyInterimCost.amount.notInRangeMessage', min: 0.01, max: 10000000, groups: ['prof-deputy-interim-costs'])]
-    private ?float $amount = null;
+    private ?string $amount = null;
 
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['profDeputyInterimCosts'])]
@@ -35,12 +35,12 @@ class ProfDeputyInterimCost
         return $this;
     }
 
-    public function getAmount(): ?float
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    public function setAmount(?float $amount): static
+    public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
 

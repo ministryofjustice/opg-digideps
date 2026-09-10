@@ -463,7 +463,7 @@ class ProfDeputyCostsController extends AbstractController
         foreach ($defaultOtherCostTypeIds as $defaultOtherCostType) {
             $otherCosts[] = new ProfDeputyOtherCost(
                 $defaultOtherCostType['typeId'],
-                0.0,
+                '',
                 $defaultOtherCostType['hasMoreDetails'],
                 null
             );

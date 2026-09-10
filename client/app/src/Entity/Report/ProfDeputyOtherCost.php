@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
@@ -13,23 +11,31 @@ class ProfDeputyOtherCost
 {
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-other-costs'])]
-    private string $profDeputyOtherCostTypeId;
+    private ?string $profDeputyOtherCostTypeId = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-other-costs'])]
     #[Assert\Type(type: 'numeric', message: 'profDeputyOtherCost.amount.notNumeric', groups: ['prof-deputy-other-costs'])]
     #[Assert\Range(notInRangeMessage: 'profDeputyOtherCost.amount.notInRangeMessage', min: 0, max: 100000000000, groups: ['prof-deputy-other-costs'])]
-    private float $amount;
+    private ?string $amount;
 
     #[JMS\Type('boolean')]
     #[JMS\Groups(['prof-deputy-other-costs'])]
-    private bool|string $hasMoreDetails;
+    private bool $hasMoreDetails;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-other-costs'])]
     private ?string $moreDetails;
 
-    public function __construct(string $profDeputyOtherCostTypeId, float $amount, bool $hasMoreDetails, ?string $moreDetails)
+    /**
+     * ProfDeputyOtherCost constructor.
+     *
+     * @param ?string $profDeputyOtherCostTypeId
+     * @param ?string $amount decimal
+     * @param bool $hasMoreDetails
+     * @param ?string $moreDetails
+     */
+    public function __construct(?string $profDeputyOtherCostTypeId, ?string $amount, bool $hasMoreDetails, ?string $moreDetails)
     {
         $this->profDeputyOtherCostTypeId = $profDeputyOtherCostTypeId;
         $this->amount = $amount;
@@ -37,36 +43,42 @@ class ProfDeputyOtherCost
         $this->moreDetails = $moreDetails;
     }
 
-    public function getProfDeputyOtherCostTypeId(): string
+    public function getProfDeputyOtherCostTypeId(): ?string
     {
         return $this->profDeputyOtherCostTypeId;
     }
 
-    public function setProfDeputyOtherCostTypeId(string $profDeputyOtherCostTypeId): static
+    public function setProfDeputyOtherCostTypeId(?string $profDeputyOtherCostTypeId): static
     {
         $this->profDeputyOtherCostTypeId = $profDeputyOtherCostTypeId;
 
         return $this;
     }
 
-    public function getAmount(): ?float
+    /**
+     * @return ?string|null
+     */
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    public function setAmount(float $amount): static
+    /**
+     * @param ?string $amount decimal
+     */
+    public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
 
         return $this;
     }
 
-    public function getHasMoreDetails(): bool|string
+    public function getHasMoreDetails(): bool
     {
         return $this->hasMoreDetails;
     }
 
-    public function setHasMoreDetails(bool|string $hasMoreDetails): static
+    public function setHasMoreDetails(bool $hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
 
@@ -78,22 +90,24 @@ class ProfDeputyOtherCost
         return $this->moreDetails;
     }
 
-    public function setMoreDetails(string $moreDetails): static
+    public function setMoreDetails(?string $moreDetails): static
     {
         $this->moreDetails = $moreDetails;
 
         return $this;
     }
 
-    public function moreDetailsValidate(ExecutionContextInterface $context): void
+    public function moreDetailsValidate(ExecutionContextInterface $context): bool
     {
-        $hasMoreDetailsValue = $this->getHasMoreDetails();
-        $hasNoMoreDetails = $hasMoreDetailsValue === 'no' || $hasMoreDetailsValue === false;
+        if ($this->getHasMoreDetails()) {
+            $hasMoreDetails = trim($this->getMoreDetails() ?? '', " \n");
 
-        $moreDetailsExists = strlen(trim($this->getMoreDetails() ?? '', " \n")) > 0;
-
-        if ($hasNoMoreDetails && $moreDetailsExists && $this->getAmount()) {
-            $context->buildViolation('profDeputyOtherCost.moreDetails.notBlank')->atPath('moreDetails')->addViolation();
+            if ($this->getAmount() && empty($hasMoreDetails)) {
+                $context->buildViolation('profDeputyOtherCost.moreDetails.notBlank')->atPath('moreDetails')->addViolation();
+                return false;
+            }
         }
+
+        return true;
     }
 }

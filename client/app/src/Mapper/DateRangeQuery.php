@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Mapper;
 
-use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
+use OPG\Digideps\Frontend\Validator\Constraints\EndDateNotBeforeStartDate;
 use OPG\Digideps\Frontend\Validator\Constraints\StartEndDateComparableInterface;
 
-/**
- * @AppAssert\EndDateNotBeforeStartDate
- */
+#[EndDateNotBeforeStartDate]
 class DateRangeQuery implements StartEndDateComparableInterface
 {
     /** @var \DateTime|null */

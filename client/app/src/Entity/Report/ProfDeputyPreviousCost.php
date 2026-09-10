@@ -33,7 +33,7 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
     #[JMS\Groups(['profDeputyPrevCosts'])]
     #[Assert\NotBlank(message: 'profDeputyPreviousCost.amount.notBlank', groups: ['prof-deputy-prev-costs'])]
     #[Assert\Range(notInRangeMessage: 'profDeputyPreviousCost.amount.notInRangeMessage', min: 0.01, max: 10000000, groups: ['prof-deputy-prev-costs'])]
-    private ?float $amount = null;
+    private ?string $amount = null;
 
     public function getId(): ?int
     {
@@ -71,12 +71,12 @@ class ProfDeputyPreviousCost implements StartEndDateComparableInterface
         return $this;
     }
 
-    public function getAmount(): ?float
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    public function setAmount(?float $amount): static
+    public function setAmount(?string $amount): static
     {
         $this->amount = $amount;
 

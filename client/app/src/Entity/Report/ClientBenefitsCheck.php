@@ -7,7 +7,7 @@ namespace OPG\Digideps\Frontend\Entity\Report;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\ClientBenefitsCheckInterface;
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
-use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as CustomAssert;
+use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ClientBenefitsCheck implements ClientBenefitsCheckInterface
@@ -22,27 +22,27 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?\DateTime $created = null;
 
-    #[CustomAssert(groups: ['client-benefits-check'])]
+    #[ClientBenefitsCheckConstraint(groups: ['client-benefits-check'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $whenLastCheckedEntitlement = null;
 
-    #[CustomAssert(groups: ['client-benefits-check'])]
+    #[ClientBenefitsCheckConstraint(groups: ['client-benefits-check'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?\DateTime $dateLastCheckedEntitlement = null;
 
-    #[CustomAssert(groups: ['client-benefits-check'])]
+    #[ClientBenefitsCheckConstraint(groups: ['client-benefits-check'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $neverCheckedExplanation = null;
 
-    #[CustomAssert(groups: ['client-benefits-check'])]
+    #[ClientBenefitsCheckConstraint(groups: ['client-benefits-check'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $doOthersReceiveMoneyOnClientsBehalf = '';
 
-    #[CustomAssert(groups: ['client-benefits-check'])]
+    #[ClientBenefitsCheckConstraint(groups: ['client-benefits-check'])]
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?string $dontKnowMoneyExplanation = null;
@@ -50,7 +50,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     /**
      * @var MoneyReceivedOnClientsBehalf[]|null
      */
-    #[CustomAssert(groups: ['client-benefits-check'])]
+    #[ClientBenefitsCheckConstraint(groups: ['client-benefits-check'])]
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf>')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     #[Assert\Valid(groups: ['client-benefits-check'])]

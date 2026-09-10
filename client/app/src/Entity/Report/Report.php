@@ -117,17 +117,17 @@ class Report implements StartEndDateComparableInterface
     #[JMS\Groups(['startEndDates'])]
     #[Assert\NotBlank(message: 'report.startDate.notBlank', groups: ['start-end-dates'])]
     #[Assert\Type(type: 'DateTimeInterface', message: 'report.startDate.invalidMessage', groups: ['start-end-dates'])]
-    private \DateTime $startDate;
+    private ?\DateTime $startDate = null;
 
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['startEndDates'])]
     #[Assert\NotBlank(message: 'report.endDate.notBlank', groups: ['start-end-dates'])]
     #[Assert\Type(type: 'DateTimeInterface', message: 'report.endDate.invalidMessage', groups: ['start-end-dates'])]
-    private \DateTime $endDate;
+    private ?\DateTime $endDate = null;
 
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['report_due_date'])]
-    private \DateTime $dueDate;
+    private ?\DateTime $dueDate = null;
 
     #[JMS\Type('DateTime')]
     #[JMS\Groups(['submit'])]
@@ -135,7 +135,7 @@ class Report implements StartEndDateComparableInterface
 
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['unsubmit_date'])]
-    private ?\DateTime $unSubmitDate = null;
+    private ?\DateTime $unSubmitDate;
 
     #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
     private ?User $submittedBy = null;
@@ -333,7 +333,7 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    public function getStartDate(): \DateTime
+    public function getStartDate(): ?\DateTime
     {
         return $this->startDate;
     }
@@ -346,7 +346,7 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    public function getEndDate(): \DateTime
+    public function getEndDate(): ?\DateTime
     {
         return $this->endDate;
     }
@@ -361,7 +361,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * Due date. By default, 8 weeks after the end date.
      */
-    public function getDueDate(): \DateTime
+    public function getDueDate(): ?\DateTime
     {
         return $this->dueDate;
     }
@@ -479,6 +479,11 @@ class Report implements StartEndDateComparableInterface
     {
         if ($this->period !== null) {
             return $this->period;
+        }
+
+        // if we don't know the start and end dates, we can't show the period
+        if ($this->startDate === null || $this->endDate === null) {
+            return '';
         }
 
         $startDateStr = $this->startDate->format('Y');
