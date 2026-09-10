@@ -45,7 +45,9 @@ class ReportApi
         $ret = [];
         foreach ($reports as $report) {
             $id = $report->getId();
-            $ret[$id] = $this->getReport($id, $groups);
+            if ($id !== null) {
+                $ret[$id] = $this->getReport($id, $groups);
+            }
         }
 
         return $ret;

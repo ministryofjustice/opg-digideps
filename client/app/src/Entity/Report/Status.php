@@ -386,15 +386,11 @@ class Status
 
     public function getState(): string
     {
-        switch ($this->status) {
-            case 'notFinished':
-                return Status::STATE_INCOMPLETE;
-            case 'readyToSubmit':
-                return Status::STATE_DONE;
-            case 'notStarted':
-            default:
-                return Status::STATE_NOT_STARTED;
-        }
+        return match ($this->status) {
+            'notFinished' => Status::STATE_INCOMPLETE,
+            'readyToSubmit' => Status::STATE_DONE,
+            default => Status::STATE_NOT_STARTED,
+        };
     }
 
     public function getClientBenefitsCheckState(): array

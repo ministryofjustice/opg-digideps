@@ -2,8 +2,11 @@
 
 namespace OPG\Digideps\Frontend\Entity;
 
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\Report\ReportType;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 
 /**
  * Court Orders for clients.
@@ -179,16 +182,28 @@ class CourtOrder
         return array_values($deputies);
     }
 
+    // returns a human-readable string describing the type of this court order's active report
     public function getActiveReportType(): string
     {
-        if (!is_null($this->getActiveReport()) && !str_ends_with($this->getActiveReport()->getType(), '-4')) {
-            return match ($this->getOrderType()) {
-                'hw' => self::HEALTH_AND_WELFARE_REPORT,
-                'pfa' => self::PROPERTY_AND_AFFAIRS_REPORT,
-                default => throw new \UnhandledMatchError('Unknown order type' . $this->getOrderType()),
-            };
+        // as stored in the Report.type db field, e.g. 102-4, 102-4-5
+        $digigdepsReportType = $this->getActiveReport()?->getType();
+
+        if ($digigdepsReportType === null) {
+            throw new \UnhandledMatchError('Digideps report type is null');
         }
 
-        return self::PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT;
+        $reportType = ReportType::tryFrom($digigdepsReportType);
+        if ($reportType === null) {
+            throw new \UnhandledMatchError('Unknown order type ' . $this->getOrderType());
+        }
+
+        if ($reportType->courtOrderKind === CourtOrderKind::Hybrid) {
+            return self::PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT;
+        }
+
+        return match ($reportType->courtOrderType) {
+            CourtOrderType::HW => self::HEALTH_AND_WELFARE_REPORT,
+            CourtOrderType::PFA => self::PROPERTY_AND_AFFAIRS_REPORT
+        };
     }
 }

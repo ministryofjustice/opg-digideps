@@ -28,7 +28,7 @@ class ActionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $action = $report->getAction();
-        if (!$action) {
+        if ($action === null) {
             $action = new Action($report);
             $this->em->persist($action);
         }

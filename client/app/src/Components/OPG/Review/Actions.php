@@ -31,9 +31,12 @@ final class Actions
     {
         $this->parameters = ['%client%' => $report->getClient()->getFirstname()];
         $this->text = $this->makeText($report->get104TransSuffix());
-        $this->list = $this->makeList($report->getAction());
-    }
 
+        $action = $report->getAction();
+        if ($action !== null) {
+            $this->list = $this->makeList($action);
+        }
+    }
 
     private function makeList(Action $action): SummaryList
     {

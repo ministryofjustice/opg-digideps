@@ -33,7 +33,7 @@ class TransactionCsvGeneratorTest extends TestCase
 
     public function testGenerateTransactionsCsvNoTransactions(): void
     {
-        $this->mockReport = $this->generateMockReport(99, 0, 0, 0, 0);
+        $this->mockReport = $this->generateMockReport();
 
         $csvString = $this->sut->generateTransactionsCsv($this->mockReport);
         $this->assertStringContainsString('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
@@ -42,7 +42,6 @@ class TransactionCsvGeneratorTest extends TestCase
     public function testGenerateTransactionsCsvWithTransactions(): void
     {
         $this->mockReport = $this->generateMockReport(
-            99,
             20, // gifts
             20, // expenses
             50, // money out
@@ -64,17 +63,16 @@ class TransactionCsvGeneratorTest extends TestCase
      * Generates a mock Report with id and associated transactions
      */
     private function generateMockReport(
-        int $reportId,
         int $numGifts = 0,
         int $numExpenses = 0,
         int $numMoneyOut = 0,
-        int $numMoneyIn = 0,
-        string $dueDate = '2/5/2018',
-        string $submitDate = '4/28/2018'
+        int $numMoneyIn = 0
     ): MockObject&Report {
+        $submitDate = '4/28/2018';
+        $dueDate = '2/5/2018';
         $mockReport = $this->createMock(Report::class);
 
-        $mockReport->method('getId')->willReturn($reportId);
+        $mockReport->method('getId')->willReturn(99);
         $mockReport->method('getGifts')->willReturn(
             $this->generateMockTransactions(Gift::class, $numGifts)
         );
@@ -87,21 +85,13 @@ class TransactionCsvGeneratorTest extends TestCase
         $mockReport->method('getMoneyTransactionsIn')->willReturn(
             $this->generateMockTransactions(MoneyTransaction::class, $numMoneyIn)
         );
-        $mockReport->method('getType')->willReturn(102);
+        $mockReport->method('getType')->willReturn('102');
 
         $mockReport->method('getClient')->willReturn($this->generateMockClient());
 
-        if (!empty($dueDate)) {
-            $mockReport->method('getDueDate')->willReturn(new \DateTime($dueDate));
-        } else {
-            $mockReport->method('getDueDate')->willReturn(null);
-        }
+        $mockReport->method('getDueDate')->willReturn(new \DateTime('2/5/2018'));
 
-        if (!empty($submitDate)) {
-            $mockReport->method('getSubmitDate')->willReturn(new \DateTime($submitDate));
-        } else {
-            $mockReport->method('getSubmitDate')->willReturn(null);
-        }
+        $mockReport->method('getSubmitDate')->willReturn(new \DateTime('4/28/2018'));
 
         return $mockReport;
     }

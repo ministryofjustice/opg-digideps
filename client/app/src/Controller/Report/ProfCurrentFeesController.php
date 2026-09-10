@@ -104,8 +104,11 @@ class ProfCurrentFeesController extends AbstractController
         } else {
             // add
             $profServiceFee = new ProfServiceFeeCurrent();
-            if (!empty($request->get('serviceTypeId'))) {
-                $profServiceFee->setServiceTypeId($request->get('serviceTypeId'));
+
+            /** @var ?string $serviceTypeId */
+            $serviceTypeId = $request->get('serviceTypeId');
+            if (!empty($serviceTypeId)) {
+                $profServiceFee->setServiceTypeId($serviceTypeId);
             }
         }
 
@@ -149,7 +152,11 @@ class ProfCurrentFeesController extends AbstractController
 
             // step === 2 (if step == 1, we've already redirected above)
             // Check we have a valid service type (now in URL)
-            if (!array_key_exists($profServiceFee->getServiceTypeId(), ProfServiceFee::$serviceTypeIds)) {
+            $serviceTypeId = $profServiceFee->getServiceTypeId();
+            if (
+                $serviceTypeId === null ||
+                !array_key_exists($serviceTypeId, ProfServiceFee::$serviceTypeIds)
+            ) {
                 throw new \Exception('Invalid service type');
             }
 

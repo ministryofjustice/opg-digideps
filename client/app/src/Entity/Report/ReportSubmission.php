@@ -44,7 +44,7 @@ class ReportSubmission
         return $this;
     }
 
-    public function getReport(): ?Report
+    public function getReport(): Report
     {
         return $this->report;
     }
@@ -109,27 +109,12 @@ class ReportSubmission
     public function getZipName(): string
     {
         $report = $this->getReport();
-
-        if (is_null($report)) {
-            throw new \RuntimeException('Report submission has no associated report');
-        }
-
-        /** @var ?\DateTime $startDate */
-        $startDate = $report->getStartDate();
-
-        /** @var ?\DateTime $endDate */
-        $endDate = $report->getEndDate();
-
-        if (is_null($startDate) || is_null($endDate)) {
-            throw new \RuntimeException('Report submission is missing start or end date');
-        }
-
         $client = $report->getClient();
 
         return 'Report_'
             . $client->getCaseNumber()
-            . '_' . $startDate->format('Y')
-            . '_' . $endDate->format('Y')
+            . '_' . $report->getStartDate()->format('Y')
+            . '_' . $report->getEndDate()->format('Y')
             . '_' . $this->getId()
             . '.zip';
     }

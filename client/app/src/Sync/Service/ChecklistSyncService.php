@@ -162,9 +162,10 @@ class ChecklistSyncService
         $reportIdsWithNullChecklists = [];
         /** @var Report $report */
         foreach ($reports as $report) {
-            $checklistId = $report->getChecklist()->getId();
-            if ($checklistId === null) {
-                $reportIdsWithNullChecklists[] = $report->getId();
+            $reportId = $report->getId();
+            $checklistId = $report->getChecklist()?->getId();
+            if ($reportId !== null && $checklistId === null) {
+                $reportIdsWithNullChecklists[] = $reportId;
             }
             try {
                 $content = $this->pdfGenerator->generate($report);
@@ -196,14 +197,14 @@ class ChecklistSyncService
     protected function buildChecklistData(Report $report, string $content): QueuedChecklistData
     {
         return new QueuedChecklistData()
-            ->setChecklistId($report->getChecklist()->getId())
-            ->setChecklistUuid($report->getChecklist()->getUuid())
+            ->setChecklistId($report->getChecklist()?->getId())
+            ->setChecklistUuid($report->getChecklist()?->getUuid())
             ->setCaseNumber($report->getClient()->getCaseNumber())
             ->setChecklistFileContents($content)
             ->setReportStartDate($report->getStartDate())
             ->setReportEndDate($report->getEndDate())
             ->setReportSubmissions($report->getReportSubmissions())
-            ->setSubmitterEmail($report->getChecklist()->getSubmittedBy()?->getEmail())
+            ->setSubmitterEmail($report->getChecklist()?->getSubmittedBy()?->getEmail())
             ->setReportType($report->determineReportType());
     }
 

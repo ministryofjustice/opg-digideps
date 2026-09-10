@@ -223,7 +223,7 @@ class ReportController extends AbstractController
             // and mark the unsubmitted report as "incomplete"
             $unsubmittedReport = $client->getUnsubmittedReport();
 
-            if (!is_null($unsubmittedReport)) {
+            if ($unsubmittedReport !== null && $unsubmittedReport->getId() !== null) {
                 $activeReport = $report;
 
                 $report = $this->reportApi->getReportIfNotSubmitted(
@@ -332,7 +332,11 @@ class ReportController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var FeedbackReport $feedbackReport */
             $feedbackReport = $form->getData();
-            $satisfactionId = $this->satisfactionApi->createPostSubmissionFeedback($feedbackReport, $report->getType(), $reportId);
+            $satisfactionId = $this->satisfactionApi->createPostSubmissionFeedback(
+                $feedbackReport,
+                $report->getType() ?? 'unknown report type',
+                $reportId
+            );
             $postSubmissionUrl = $this->generateUrl('report_post_submission_user_research', ['reportId' => $reportId, 'satisfactionId' => $satisfactionId]);
 
             return $this->redirect($postSubmissionUrl);

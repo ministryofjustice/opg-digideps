@@ -1,55 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 class UnsubmittedSection
 {
     /**
-     * Store section identifier.
-     *
-     * @var string
+     * Store section identifier
      */
-    private $id;
+    private string $id;
 
     /**
-     * Store checkbox value.
-     *
-     * @var bool
+     * Store checkbox value
      */
-    private $present;
+    private bool $present;
 
     /**
-     * UnsubmittedSection constructor.
-     *
-     * @param string $id
-     * @param bool   $present
+     * UnsubmittedSection constructor
      */
-    public function __construct($id, $present)
+    public function __construct(string $id, bool $present)
     {
         $this->id = $id;
         $this->present = $present;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPresent()
+    public function isPresent(): bool
     {
         return $this->present;
     }
 
-    /**
-     * @param bool $present
-     */
-    public function setPresent($present): static
+    public function setPresent(bool $present): static
     {
         $this->present = $present;
 

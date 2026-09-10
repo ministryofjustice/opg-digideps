@@ -2,24 +2,22 @@
 
 namespace OPG\Digideps\Frontend\Entity\Report;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Deputy;
 use OPG\Digideps\Frontend\Entity\Report\Traits as ReportTraits;
 use OPG\Digideps\Frontend\Entity\User;
-use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
+use OPG\Digideps\Frontend\Validator\Constraints\EndDateNotBeforeStartDate;
+use OPG\Digideps\Frontend\Validator\Constraints\EndDateNotGreaterThanFifteenMonths;
+use OPG\Digideps\Frontend\Validator\Constraints\ProfDeputyCostsEstimate\CostBreakdownNotGreaterThanTotal;
 use OPG\Digideps\Frontend\Validator\Constraints\StartEndDateComparableInterface;
-use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Validator\Constraints\YearMustBeFourDigitsAndValid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @AppAssert\EndDateNotGreaterThanFifteenMonths(groups={"start-end-dates"})
- *
- * @AppAssert\EndDateNotBeforeStartDate(groups={"start-end-dates"})
- *
- * @AppAssert\YearMustBeFourDigitsAndValid(groups={"start-end-dates"})
- *
- * @AppAssert\ProfDeputyCostsEstimate\CostBreakdownNotGreaterThanTotal(groups={"prof-deputy-estimate-costs"})
- */
+#[CostBreakdownNotGreaterThanTotal(groups: ['prof-deputy-estimate-costs'])]
+#[EndDateNotBeforeStartDate(groups: ['start-end-dates'])]
+#[EndDateNotGreaterThanFifteenMonths(groups: ['start-end-dates'])]
+#[YearMustBeFourDigitsAndValid(groups: ['start-end-dates'])]
 #[Assert\Callback(callback: 'debtsValid', groups: ['debts'])]
 #[Assert\Callback(callback: 'feesValid', groups: ['fees'])]
 #[Assert\Callback(callback: 'profCostsInterimAtLeastOne', groups: ['prof-deputy-interim-costs'])]
@@ -70,7 +68,6 @@ class Report implements StartEndDateComparableInterface
 
     public const string STATUS_NOT_STARTED = 'notStarted';
     public const string STATUS_READY_TO_SUBMIT = 'readyToSubmit';
-    public const string STATUS_NOT_FINISHED = 'notFinished';
 
     public const string TYPE_HEALTH_WELFARE = '104';
     public const string TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
@@ -99,377 +96,262 @@ class Report implements StartEndDateComparableInterface
     public const string YES_MONEY_EXISTS = 'Yes';
     public const string NO_MONEY_EXISTS = 'No';
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['visits-care', 'report-id'])]
-    private $id;
+    private ?int $id = null;
 
     /**
-     * see TYPE_* constant
-     *
-     * @var string
+     * see TYPE_* constants
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report_type'])]
-    private $type;
+    private ?string $type = null;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
-    private $has106flag;
+    private bool $has106flag = false;
 
-    /**
-     * @var \DateTime|null
-     */
+    #[JMS\Type('boolean')]
+    private bool $isDue = false;
+
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['startEndDates'])]
     #[Assert\NotBlank(message: 'report.startDate.notBlank', groups: ['start-end-dates'])]
     #[Assert\Type(type: 'DateTimeInterface', message: 'report.startDate.invalidMessage', groups: ['start-end-dates'])]
-    private $startDate;
+    private \DateTime $startDate;
 
-    /**
-     * @var \DateTime|null
-     */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['startEndDates'])]
     #[Assert\NotBlank(message: 'report.endDate.notBlank', groups: ['start-end-dates'])]
     #[Assert\Type(type: 'DateTimeInterface', message: 'report.endDate.invalidMessage', groups: ['start-end-dates'])]
-    private $endDate;
+    private \DateTime $endDate;
 
-    /**
-     * @var bool
-     */
-    #[JMS\Type('boolean')]
-    private $isDue;
-
-    /**
-     * @var \DateTime|null
-     */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['report_due_date'])]
-    private $dueDate;
+    private \DateTime $dueDate;
 
     #[JMS\Type('DateTime')]
     #[JMS\Groups(['submit'])]
-    private ?\DateTimeInterface $submitDate = null;
+    private ?\DateTime $submitDate = null;
 
-    /**
-     * @var \DateTime|null
-     */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['unsubmit_date'])]
-    private $unSubmitDate;
+    private ?\DateTime $unSubmitDate = null;
 
-    /**
-     * @var User
-     */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
-    private $submittedBy;
+    private ?User $submittedBy = null;
 
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Deputy')]
     #[JMS\Groups(['deputy'])]
     private ?Deputy $primaryDeputy = null;
 
     /**
-     * @var ReportSubmission[]
+     * @var array<ReportSubmission>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ReportSubmission>')]
-    private $reportSubmissions;
+    private array $reportSubmissions;
 
-    /**
-     * @var Client
-     */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Client')]
-    private $client;
+    private Client $client;
 
-    /**
-     * @var string
-     */
     #[JMS\Exclude]
-    private $period;
+    private ?string $period = null;
 
     /**
-     * @var Contact[]
+     * @var array<Contact>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Contact>')]
     private array $contacts = [];
 
     /**
-     * @var Decision[]
+     * @var array<Decision>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Decision>')]
     private array $decisions = [];
 
-    /**
-     * @var VisitsCare|null
-     */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\VisitsCare')]
-    private $visitsCare;
+    private ?VisitsCare $visitsCare = null;
 
-    /**
-     * @var Lifestyle|null
-     */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Lifestyle')]
-    private $lifestyle;
+    private ?Lifestyle $lifestyle = null;
 
-    /**
-     * @var Action|null
-     */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Action')]
-    private $action;
+    private ?Action $action = null;
 
-    /**
-     * @var MentalCapacity
-     */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\MentalCapacity')]
-    private $mentalCapacity;
+    private ?MentalCapacity $mentalCapacity = null;
 
-    /**
-     * @var ClientBenefitsCheck
-     */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck')]
     #[Assert\Valid(groups: ['client-benefits-check'])]
     #[JMS\Groups(['client-benefits-check'])]
-    private $clientBenefitsCheck;
+    private ?ClientBenefitsCheck $clientBenefitsCheck = null;
 
-    /**
-     * @var string|null
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['reasonForNoContacts'])]
     #[Assert\NotBlank(message: 'contact.reasonForNoContacts.notBlank', groups: ['reasonForNoContacts'])]
-    private $reasonForNoContacts;
+    private ?string $reasonForNoContacts = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'significantDecisionsMade'])]
-    private $significantDecisionsMade;
+    private ?string $significantDecisionsMade = null;
 
-    /**
-     * @var string|null
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['reasonForNoDecisions'])]
     #[Assert\NotBlank(message: 'decision.reasonForNoDecisions.notBlank', groups: ['reason-no-decisions'])]
-    private $reasonForNoDecisions;
+    private ?string $reasonForNoDecisions = null;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['noAssetsToAdd'])]
-    private $noAssetToAdd;
+    private ?bool $noAssetToAdd = null;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['submit', 'submitted'])]
-    private $submitted;
+    private ?bool $submitted = null;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
-    private $reportSeen;
+    private ?bool $reportSeen = null;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
     #[Assert\IsTrue(message: 'report.agree', groups: ['declare'])]
-    private $agree;
+    private ?bool $agree = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'submit', 'submit_agreed'])]
     #[Assert\NotBlank(message: 'report.agreedBehalfDeputy.notBlank', groups: ['declare'])]
-    private $agreedBehalfDeputy;
+    private ?string $agreedBehalfDeputy = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'submit', 'submit_agreed'])]
     #[Assert\NotBlank(message: 'report.agreedBehalfDeputyExplanation.notBlank', groups: ['declare-explanation'])]
-    private $agreedBehalfDeputyExplanation;
+    private ?string $agreedBehalfDeputyExplanation = null;
 
     /**
-     * @var Document[]
+     * @var array<Document>
      */
     #[JMS\Groups(['report-documents'])]
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Document>')]
     private array $documents = [];
 
     /**
-     * @var Document[]
+     * @var array<Document>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Document>')]
     #[JMS\Groups(['report-documents'])]
     private array $submittedDocuments = [];
 
     /**
-     * @var Document[]
+     * @var array<Document>
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Document>')]
     #[JMS\Groups(['report-documents'])]
-    private $unsubmittedDocuments = [];
+    private array $unsubmittedDocuments = [];
 
-    /**
-     * @var Status
-     */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Status')]
-    private $status;
+    private ?Status $status = null;
 
-    /**
-     * @var ?string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'wish-to-provide-documentation', 'report-documents'])]
     #[Assert\NotBlank(message: 'document.wishToProvideDocumentation.notBlank', groups: ['wish-to-provide-documentation'])]
-    private $wishToProvideDocumentation;
+    private ?string $wishToProvideDocumentation = null;
 
     /**
-     * @var array
+     * @var array<string>
      */
     #[JMS\Type('array')]
     private array $availableSections = [];
 
-    /**
-     * @var Checklist
-     **/
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Checklist')]
-    private $checklist;
+    private ?Checklist $checklist = null;
 
-    /**
-     * @var ReviewChecklist
-     **/
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\ReviewChecklist')]
-    private $reviewChecklist;
+    private ?ReviewChecklist $reviewChecklist = null;
 
-    /**
-     * @var array
-     **/
     #[JMS\Type('array')]
     private array $previousReportData = [];
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
-    private $reportTitle;
+    private ?string $reportTitle = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'doesMoneyInExist'])]
     #[Assert\NotBlank(message: 'moneyIn.moneyInChoice.notBlank', groups: ['doesMoneyInExist'])]
-    private $moneyInExists;
+    private ?string $moneyInExists = null;
 
     /**
-     * @var string|null captures reason for no money in. Required if no money has gone in
+     * @var ?string captures reason for no money in. Required if no money has gone in
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'reasonForNoMoneyIn'])]
     #[Assert\NotBlank(message: 'moneyIn.reasonForNoMoneyIn.notBlank', groups: ['reasonForNoMoneyIn'])]
-    private $reasonForNoMoneyIn;
+    private ?string $reasonForNoMoneyIn = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'doesMoneyOutExist'])]
     #[Assert\NotBlank(message: 'moneyOut.moneyOutChoice.notBlank', groups: ['doesMoneyOutExist'])]
-    private $moneyOutExists;
+    private ?string $moneyOutExists = null;
 
     /**
-     * @var string captures reason for no money out. Required if no money has gone out
+     * @var ?string captures reason for no money out. Required if no money has gone out
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'reasonForNoMoneyOut'])]
     #[Assert\NotBlank(message: 'moneyOut.reasonForNoMoneyOut.notBlank', groups: ['reasonForNoMoneyOut'])]
-    private $reasonForNoMoneyOut;
+    private ?string $reasonForNoMoneyOut = null;
 
-    /**
-     * @return int $id
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(?int $id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     */
-    public function setType($type): static
+    public function setType(?string $type): static
     {
         $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getHas106flag()
+    public function getHas106flag(): bool
     {
         return $this->has106flag;
     }
 
-    /**
-     * @param bool $has106flag
-     */
-    public function setHas106flag($has106flag): static
+    public function setHas106flag(bool $has106flag): static
     {
         $this->has106flag = $has106flag;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime|null
-     */
-    public function getStartDate()
+    public function getStartDate(): \DateTime
     {
         return $this->startDate;
     }
 
-    public function setStartDate(?\DateTime $startDate = null)
+    public function setStartDate(\DateTime $startDate): static
     {
-        if ($startDate instanceof \DateTime) {
-            $startDate->setTime(0, 0, 0);
-        }
+        $startDate->setTime(0, 0);
         $this->startDate = $startDate;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime|null $endDate
-     */
-    public function getEndDate()
+    public function getEndDate(): \DateTime
     {
         return $this->endDate;
     }
 
-    public function setDueDate(?\DateTime $dueDate = null): static
+    public function setDueDate(\DateTime $dueDate): static
     {
         $this->dueDate = $dueDate;
 
@@ -477,63 +359,45 @@ class Report implements StartEndDateComparableInterface
     }
 
     /**
-     * Due date.
-     *
-     * as a default, 8 weeks after the end date
-     *
-     * @return \DateTime|null $dueDate
+     * Due date. By default, 8 weeks after the end date.
      */
-    public function getDueDate()
+    public function getDueDate(): \DateTime
     {
         return $this->dueDate;
     }
 
     /**
-     * Returns the days left to the due report
+     * Days left to the due report
      * 0 = same day
      * -1 = overdue by 1 day
-     * 1 = 1 day.
-     *
-     * @return int|void
+     * 1 = 1 day
      */
-    public function getDueDateDiffDays(?\DateTime $currentDate = null)
+    public function getDueDateDiffDays(?\DateTime $currentDate = null): int
     {
-        if (is_null($this->getDueDate())) {
-            return;
-        }
-
-        $currentDate = $currentDate ? $currentDate : new \DateTime();
+        $currentDate = $currentDate ?: new \DateTime();
 
         // clone and set time to 0,0,0 (might not be needed)
         $currentDate = clone $currentDate;
-        $currentDate->setTime(0, 0, 0);
+        $currentDate->setTime(0, 0);
         $dueDate = clone $this->getDueDate();
-        $dueDate->setTime(0, 0, 0);
+        $dueDate->setTime(0, 0);
 
-        $days = (int) $currentDate->diff($dueDate)->format('%R%a');
-
-        return $days;
+        return (int) $currentDate->diff($dueDate)->format('%R%a');
     }
 
-    /**
-     * Get submitDate.
-     */
-    public function getSubmitDate(): ?\DateTimeInterface
+    public function getSubmitDate(): ?\DateTime
     {
         return $this->submitDate;
     }
 
-    public function setSubmitDate(?\DateTimeInterface $submitDate = null): static
+    public function setSubmitDate(?\DateTime $submitDate = null): static
     {
         $this->submitDate = $submitDate;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime|null
-     */
-    public function getUnSubmitDate()
+    public function getUnSubmitDate(): ?\DateTime
     {
         return $this->unSubmitDate;
     }
@@ -545,10 +409,7 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getSubmittedBy()
+    public function getSubmittedBy(): ?User
     {
         return $this->submittedBy;
     }
@@ -560,114 +421,81 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    public function setEndDate(?\DateTime $endDate = null): static
+    public function setEndDate(\DateTime $endDate): static
     {
-        if ($endDate instanceof \DateTime) {
-            $endDate->setTime(23, 59, 59);
-        }
-        $this->endDate = $endDate;
+        $this->endDate = $endDate->setTime(23, 59, 59);
+        ;
 
         return $this;
     }
 
     /**
      * Generates next reporting period's start date.
-     *
-     * @return \DateTime|null
      */
-    public function getNextStartDate()
+    public function getNextStartDate(): \DateTime
     {
-        if (is_null($this->getStartDate())) {
-            return null;
-        }
+        $reportingPeriodInDays = $this->calculateReportingPeriod();
 
-        $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
-        if (!empty($reportingPeriodInDays)) {
-            $nextStart = clone $this->getStartDate();
-            $nextStart = $nextStart->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
-            $nextStart->setTime(0, 0, 0);
+        $nextStart = clone $this->getStartDate();
+        $nextStart = $nextStart->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
+        $nextStart->setTime(0, 0);
 
-            return $nextStart;
-        }
-
-        return null;
+        return $nextStart;
     }
 
     /**
      * Generates next reporting period's end date.
      * Note: Date diff returns 'difference' and so 1 day needs to be added.
-     *
-     * @return \DateTime|null
      */
-    public function getNextEndDate()
+    public function getNextEndDate(): \DateTime
     {
-        if (is_null($this->getEndDate())) {
-            return null;
-        }
+        $reportingPeriodInDays = $this->calculateReportingPeriod();
 
-        $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
-        if (!empty($reportingPeriodInDays)) {
-            $nextEnd = clone $this->getEndDate();
-            $nextEnd = $nextEnd->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
+        $nextEnd = clone $this->getEndDate();
+        $nextEnd = $nextEnd->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
 
-            $nextEnd->setTime(0, 0, 0);
+        $nextEnd->setTime(0, 0);
 
-            return $nextEnd;
-        }
-
-        return null;
+        return $nextEnd;
     }
 
     /**
      * Calculates the Reporting period according to $format.
      *
-     * @param string $format recognised by \DateTime
-     *
-     * @return string|null
+     * @param string $format as recognised by \DateTime
      */
-    private function calculateReportingPeriod($format = '%a')
+    private function calculateReportingPeriod(string $format = '%a'): string
     {
-        if ($this->getStartDate() instanceof \DateTime && $this->getEndDate() instanceof \DateTime) {
-            // add one day because difference doesn't include end date itself
-            return $this->getStartDate()->diff($this->getEndDate())->format($format);
-        }
-
-        return null;
+        return $this->getStartDate()->diff($this->getEndDate())->format($format);
     }
 
     /**
      * Return string representation of the start-end date period
-     * e.g. 2004 to 2005.
+     * e.g. '2004 to 2005'.
      *
-     * @return string $period
+     * NB this has the side effect of setting the period on the instance.
      */
-    public function getPeriod()
+    public function getPeriod(): string
     {
-        if ($this->period) {
-            return $this->period;
-        }
-
-        if (!$this->startDate instanceof \DateTime || !$this->endDate instanceof \DateTime) {
+        if ($this->period !== null) {
             return $this->period;
         }
 
         $startDateStr = $this->startDate->format('Y');
         $endDateStr = $this->endDate->format('Y');
 
-        if ($startDateStr != $endDateStr) {
+        if ($startDateStr !== $endDateStr) {
             $this->period = $startDateStr . ' to ' . $endDateStr;
 
             return $this->period;
         }
+
         $this->period = $startDateStr;
 
         return $this->period;
     }
 
-    /**
-     * @return Client
-     */
-    public function getClient()
+    public function getClient(): Client
     {
         return $this->client;
     }
@@ -683,7 +511,7 @@ class Report implements StartEndDateComparableInterface
      * Get contacts for the report sorted in ascending createdAt order.
      * Does not change the ordering of $this->contacts.
      *
-     * @return Contact[]
+     * @return array<Contact>
      */
     public function getContacts(): array
     {
@@ -693,7 +521,7 @@ class Report implements StartEndDateComparableInterface
     }
 
     /**
-     * @param array $contacts
+     * @param array<Contact> $contacts
      */
     public function setContacts(array $contacts): static
     {
@@ -705,7 +533,7 @@ class Report implements StartEndDateComparableInterface
     /**
      * Ordered by createdAt. Does not change the order of $this->decisions.
      *
-     * @return Decision[]
+     * @return array<Decision>
      */
     public function getDecisions(): array
     {
@@ -715,7 +543,7 @@ class Report implements StartEndDateComparableInterface
     }
 
     /**
-     * @param Decision[] $decisions
+     * @param array<Decision> $decisions
      */
     public function setDecisions(array $decisions): static
     {
@@ -724,15 +552,12 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDue()
+    public function isDue(): ?bool
     {
         return $this->isDue;
     }
 
-    public function hasContacts()
+    public function hasContacts(): ?string
     {
         if (empty($this->getContacts()) && $this->getReasonForNoContacts() === null) {
             return null;
@@ -741,121 +566,87 @@ class Report implements StartEndDateComparableInterface
         return $this->getReasonForNoContacts() ? 'no' : 'yes';
     }
 
-    public function setHasContacts($value)
+    // necessary to simplify form logic
+    public function setHasContacts(mixed $ignored): static
     {
-        // necessary to simplify form logic
-        return null;
+        return $this;
     }
 
-    public function getSignificantDecisionsMade()
+    public function getSignificantDecisionsMade(): ?string
     {
         return $this->significantDecisionsMade;
     }
 
-    public function setSignificantDecisionsMade($significantDecisionsMade)
+    public function setSignificantDecisionsMade(?string $significantDecisionsMade): static
     {
         $this->significantDecisionsMade = $significantDecisionsMade;
 
         return $this;
     }
 
-    public function setHasDecisions($value)
+    // necessary to simplify form logic
+    public function setHasDecisions(mixed $ignored): static
     {
-        // necessary to simplify form logic
-        return null;
+        return $this;
     }
 
-    /**
-     * @param string $reasonForNoContacts
-     *
-     * @return Report
-     */
-    public function setReasonForNoContacts($reasonForNoContacts)
+    public function setReasonForNoContacts(?string $reasonForNoContacts): static
     {
         $this->reasonForNoContacts = $reasonForNoContacts;
 
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getReasonForNoContacts()
+    public function getReasonForNoContacts(): ?string
     {
         return $this->reasonForNoContacts;
     }
 
-    /**
-     * @param string $reasonForNoDecisions
-     *
-     * @return Report
-     */
-    public function setReasonForNoDecisions($reasonForNoDecisions)
+    public function setReasonForNoDecisions(?string $reasonForNoDecisions): static
     {
         $this->reasonForNoDecisions = $reasonForNoDecisions;
 
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getReasonForNoDecisions()
+    public function getReasonForNoDecisions(): ?string
     {
         return $this->reasonForNoDecisions;
     }
 
-    /**
-     * @return VisitsCare
-     */
-    public function getVisitsCare()
+    public function getVisitsCare(): ?VisitsCare
     {
-        return $this->visitsCare ?: new VisitsCare();
+        return $this->visitsCare;
     }
 
-    /**
-     * @param VisitsCare $visitsCare
-     */
-    public function setVisitsCare($visitsCare): void
+    public function setVisitsCare(VisitsCare $visitsCare): void
     {
         $this->visitsCare = $visitsCare;
     }
 
-    /**
-     * @return Lifestyle
-     */
-    public function getLifestyle()
+    public function getLifestyle(): ?Lifestyle
     {
-        return $this->lifestyle ?: new Lifestyle();
+        return $this->lifestyle;
     }
 
-    /**
-     * @param Lifestyle $lifestyle
-     */
-    public function setLifestyle($lifestyle): void
+    public function setLifestyle(Lifestyle $lifestyle): void
     {
         $this->lifestyle = $lifestyle;
     }
 
-    public function getAction(): Action
+    public function getAction(): ?Action
     {
-        return $this->action ?: new Action();
+        return $this->action;
     }
 
-    /**
-     * @return Report
-     */
-    public function setAction(Action $action)
+    public function setAction(Action $action): static
     {
         $this->action = $action;
 
         return $this;
     }
 
-    /**
-     * @return MentalCapacity
-     */
-    public function getMentalCapacity()
+    public function getMentalCapacity(): ?MentalCapacity
     {
         return $this->mentalCapacity;
     }
@@ -867,20 +658,12 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    /**
-     * @return bool $noAssetToAdd
-     */
-    public function getNoAssetToAdd()
+    public function getNoAssetToAdd(): ?bool
     {
         return $this->noAssetToAdd;
     }
 
-    /**
-     * @param bool $noAssetToAdd
-     *
-     * @return Report
-     */
-    public function setNoAssetToAdd($noAssetToAdd)
+    public function setNoAssetToAdd(bool $noAssetToAdd): static
     {
         $this->noAssetToAdd = $noAssetToAdd;
 
@@ -892,10 +675,7 @@ class Report implements StartEndDateComparableInterface
         return $this->submitted;
     }
 
-    /**
-     * @param bool $submitted
-     */
-    public function setSubmitted($submitted): static
+    public function setSubmitted(bool $submitted): static
     {
         $this->submitted = $submitted;
 
@@ -909,28 +689,21 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getReportSeen()
+    public function getReportSeen(): ?bool
     {
         return $this->reportSeen;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAgree()
+    public function isAgree(): ?bool
     {
         return $this->agree;
     }
 
-    /**
-     * @param bool $agree
-     */
-    public function setAgree($agree): void
+    public function setAgree(?bool $agree): static
     {
         $this->agree = $agree;
+
+        return $this;
     }
 
     public function getAgreedBehalfDeputy(): ?string
@@ -938,28 +711,19 @@ class Report implements StartEndDateComparableInterface
         return $this->agreedBehalfDeputy;
     }
 
-    /**
-     * @param string $agreedBehalfDeputy
-     */
-    public function setAgreedBehalfDeputy($agreedBehalfDeputy)
+    public function setAgreedBehalfDeputy(?string $agreedBehalfDeputy)
     {
         $this->agreedBehalfDeputy = $agreedBehalfDeputy;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAgreedBehalfDeputyExplanation()
+    public function getAgreedBehalfDeputyExplanation(): ?string
     {
         return $this->agreedBehalfDeputyExplanation;
     }
 
-    /**
-     * @param string $agreedBehalfDeputyExplanation
-     */
-    public function setAgreedBehalfDeputyExplanation($agreedBehalfDeputyExplanation)
+    public function setAgreedBehalfDeputyExplanation(?string $agreedBehalfDeputyExplanation): static
     {
         $this->agreedBehalfDeputyExplanation = $agreedBehalfDeputyExplanation;
 
@@ -967,7 +731,7 @@ class Report implements StartEndDateComparableInterface
     }
 
     /**
-     * @return Document[]
+     * @return array<Document>
      */
     public function getDocuments(): array
     {
@@ -975,7 +739,7 @@ class Report implements StartEndDateComparableInterface
     }
 
     /**
-     * @return Document[]
+     * @return array<Document>
      */
     public function getSubmittedDocuments(): array
     {
@@ -983,7 +747,7 @@ class Report implements StartEndDateComparableInterface
     }
 
     /**
-     * @param Document[] $submittedDocuments
+     * @param array<Document> $submittedDocuments
      */
     public function setSubmittedDocuments(array $submittedDocuments): static
     {
@@ -993,7 +757,7 @@ class Report implements StartEndDateComparableInterface
     }
 
     /**
-     * @return Document[]
+     * @return array<Document>
      */
     public function getUnsubmittedDocuments(): array
     {
@@ -1004,13 +768,12 @@ class Report implements StartEndDateComparableInterface
      * Returns a list of deputy only documents. Those that should be visible to deputies only.
      * Excludes Report PDF and transactions PDF.
      *
-     * @return Document[]
+     * @return array<Document>
      */
     public function getDeputyDocuments(): array
     {
         if (count($this->documents) > 0) {
             return array_filter($this->documents, function (Document $document): bool {
-                /* @var $document Document */
                 return !($document->isAdminDocument() || $document->isReportPdf());
             });
         }
@@ -1019,7 +782,7 @@ class Report implements StartEndDateComparableInterface
     }
 
     /**
-     * @param Document[] $documents
+     * @param array<Document> $documents
      */
     public function setDocuments(array $documents): static
     {
@@ -1028,36 +791,24 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    /**
-     * @return Status
-     */
     public function getStatus(): Status
     {
-        return $this->status;
+        return $this->status ?: new Status($this);
     }
 
-    /**
-     * @param Status $status $statusrvice
-     */
-    public function setStatus($status): void
+    public function setStatus(Status $status): static
     {
         $this->status = $status;
+
+        return $this;
     }
 
-    /**
-     * @return ?string
-     */
-    public function getWishToProvideDocumentation()
+    public function getWishToProvideDocumentation(): ?string
     {
         return $this->wishToProvideDocumentation;
     }
 
-    /**
-     * @param string $wishToProvideDocumentation
-     *
-     * @return $this
-     */
-    public function setWishToProvideDocumentation($wishToProvideDocumentation)
+    public function setWishToProvideDocumentation(?string $wishToProvideDocumentation): static
     {
         $this->wishToProvideDocumentation = $wishToProvideDocumentation;
 
@@ -1066,35 +817,30 @@ class Report implements StartEndDateComparableInterface
 
     /**
      * @param string $format string where %s are endDate (Y), submitDate Y-m-d, case number
-     *
-     * @return string
      */
-    public function createAttachmentName($format)
+    public function createAttachmentName(string $format): string
     {
-        $endDate = $this->getEndDate();
         $submitDate = $this->getSubmitDate();
 
-        if (is_null($endDate)) {
-            throw new \RuntimeException('Cannot create an attachment for a report with no end date');
-        }
-
-        $attachmentName = sprintf(
+        return sprintf(
             $format,
-            $endDate->format('Y'),
-            $submitDate instanceof \DateTime ? $submitDate->format('Y-m-d') : 'n-a-', // some old reports have no submission date
+            $this->getEndDate()->format('Y'),
+            $submitDate instanceof \DateTime ?
+                $submitDate->format('Y-m-d') : 'n-a-', // some old reports have no submission date
             $this->getClient()->getCaseNumber()
         );
-
-        return $attachmentName;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getAvailableSections(): array
     {
         return $this->availableSections;
     }
 
     /**
-     * @param array $availableSections
+     * @param array<string> $availableSections
      */
     public function setAvailableSections(array $availableSections): static
     {
@@ -1103,36 +849,27 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    /**
-     * @param string $section
-     *
-     * @return bool
-     */
-    public function hasSection($section): bool
+    public function hasSection(string $section): bool
     {
         return in_array($section, $this->getAvailableSections());
     }
 
     /**
      * Has this report been submitted?
-     *
-     * @return bool
      */
     public function isSubmitted(): bool
     {
-        return (bool) $this->getSubmitted();
+        return $this->getSubmitted() === true;
     }
 
     /**
      * Generates the translation suffix to use depending on report type.
      *
      * 10x followed by "-104" for HW, "-4" for hybrid report and nothing for PF report
-     *
-     * @return string
      */
     public function get104TransSuffix(): string
     {
-        return (strpos($this->getType(), '-4') > 0) ?
+        return (strpos($this->getType() ?? '', '-4') > 0) ?
             '-4' :
             (
                 $this->getType() === '104' || $this->getType() === '104-6' ?
@@ -1140,80 +877,53 @@ class Report implements StartEndDateComparableInterface
             );
     }
 
-    /**
-     * @return Checklist
-     */
-    public function getChecklist()
+    public function getChecklist(): ?Checklist
     {
         return $this->checklist;
     }
 
-    /**
-     * @param Checklist $checklist
-     */
-    public function setChecklist($checklist): static
+    public function setChecklist(?Checklist $checklist): static
     {
         $this->checklist = $checklist;
 
         return $this;
     }
 
-    /**
-     * @return ReviewChecklist
-     */
-    public function getReviewChecklist()
+    public function getReviewChecklist(): ?ReviewChecklist
     {
         return $this->reviewChecklist;
     }
 
-    /**
-     * @param ReviewChecklist $reviewChecklist
-     */
-    public function setReviewChecklist($reviewChecklist): static
+    public function setReviewChecklist(?ReviewChecklist $reviewChecklist): static
     {
         $this->reviewChecklist = $reviewChecklist;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getPreviousReportData()
+    public function getPreviousReportData(): array
     {
         return $this->previousReportData;
     }
 
-    /**
-     * @param array $previousReportData
-     */
-    public function setPreviousReportData($previousReportData): static
+    public function setPreviousReportData(array $previousReportData): static
     {
         $this->previousReportData = $previousReportData;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isUnsubmitted()
+    public function isUnsubmitted(): bool
     {
-        return $this->getUnSubmitDate() && !$this->getSubmitted();
+        return $this->getUnSubmitDate() !== null && !$this->getSubmitted();
     }
 
-    /**
-     * @return string
-     */
-    public function getReportTitle()
+    public function getReportTitle(): ?string
     {
         return $this->reportTitle;
     }
 
-    /**
-     * @param string $reportTitle
-     */
-    public function setReportTitle($reportTitle): static
+    public function setReportTitle(?string $reportTitle): static
     {
         $this->reportTitle = $reportTitle;
 
@@ -1237,21 +947,48 @@ class Report implements StartEndDateComparableInterface
 
     public function isLayReport(): bool
     {
-        return in_array($this->getType(), [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE]);
+        return in_array(
+            $this->getType(),
+            [
+                self::LAY_PFA_HIGH_ASSETS_TYPE,
+                self::LAY_PFA_LOW_ASSETS_TYPE,
+                self::LAY_HW_TYPE,
+                self::LAY_COMBINED_HIGH_ASSETS_TYPE,
+                self::LAY_COMBINED_LOW_ASSETS_TYPE
+            ]
+        );
     }
 
     public function isPAreport(): bool
     {
-        return in_array($this->getType(), [self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE]);
+        return in_array(
+            $this->getType(),
+            [
+                self::PA_PFA_HIGH_ASSETS_TYPE,
+                self::PA_PFA_LOW_ASSETS_TYPE,
+                self::PA_HW_TYPE,
+                self::PA_COMBINED_HIGH_ASSETS_TYPE,
+                self::PA_COMBINED_LOW_ASSETS_TYPE
+            ]
+        );
     }
 
     public function isProfReport(): bool
     {
-        return in_array($this->getType(), [self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE]);
+        return in_array(
+            $this->getType(),
+            [
+                self::PROF_PFA_HIGH_ASSETS_TYPE,
+                self::PROF_PFA_LOW_ASSETS_TYPE,
+                self::PROF_HW_TYPE,
+                self::PROF_COMBINED_HIGH_ASSETS_TYPE,
+                self::PROF_COMBINED_LOW_ASSETS_TYPE
+            ]
+        );
     }
 
     /**
-     * @return ReportSubmission[]
+     * @return array<ReportSubmission>
      */
     public function getReportSubmissions(): array
     {
@@ -1259,7 +996,7 @@ class Report implements StartEndDateComparableInterface
     }
 
     /**
-     * @param ReportSubmission[] $reportSubmissions
+     * @param array<ReportSubmission> $reportSubmissions
      */
     public function setReportSubmissions(array $reportSubmissions): static
     {
@@ -1270,29 +1007,26 @@ class Report implements StartEndDateComparableInterface
 
     public function determineReportType(): string
     {
+        $type = $this->getType() ?? '';
+
         // Remove report type suffix if there is one.
-        if (str_ends_with($this->getType(), '-5') || str_ends_with($this->getType(), '-6')) {
-            $type = substr($this->getType(), 0, -2);
-        } else {
-            $type = $this->getType();
+        if (str_ends_with($type, '-5') || str_ends_with($type, '-6')) {
+            $type = substr($type, 0, -2);
         }
 
-        switch ($type) {
-            case self::TYPE_HEALTH_WELFARE:
-                return self::TYPE_ABBREVIATION_HW;
-            case self::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS:
-            case self::TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS:
-                return self::TYPE_ABBREVIATION_PF;
-            default:
-                return self::TYPE_ABBREVIATION_COMBINED;
-        }
+        return match ($type) {
+            self::TYPE_HEALTH_WELFARE => self::TYPE_ABBREVIATION_HW,
+            self::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS, self::TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS =>
+                self::TYPE_ABBREVIATION_PF,
+            default => self::TYPE_ABBREVIATION_COMBINED,
+        };
     }
 
     public function getReportTypeDefinition(): string
     {
         return match ($this->determineReportType()) {
-            'HW' => self::HEALTH_AND_WELFARE_REPORT,
-            'PF' => self::PROPERTY_AND_AFFAIRS_REPORT,
+            self::TYPE_ABBREVIATION_HW => self::HEALTH_AND_WELFARE_REPORT,
+            self::TYPE_ABBREVIATION_PF => self::PROPERTY_AND_AFFAIRS_REPORT,
             default => self::PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT,
         };
     }

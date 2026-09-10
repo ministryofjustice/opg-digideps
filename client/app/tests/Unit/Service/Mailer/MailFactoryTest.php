@@ -301,7 +301,7 @@ class MailFactoryTest extends TestCase
     /**
      * @dataProvider getOrgReportTypes
      */
-    public function testCreateReportSubmissionConfirmationEmailForOrgDeputy($reportType, $role)
+    public function testCreateReportSubmissionConfirmationEmailForOrgDeputy(string $reportType, string $role)
     {
         $clientFullName = $this->client->getFullname();
         $caseNumber = $this->client->getCaseNumber();

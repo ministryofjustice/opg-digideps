@@ -1,223 +1,153 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
-use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class VisitsCare
 {
     use HasReportTrait;
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['visits-care'])]
-    private $id;
+    private ?int $id = null;
 
+    /** @var ?string 'yes'|'no'|null */
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
     #[Assert\NotBlank(message: 'visitsCare.doYouLiveWithClient.notBlank', groups: ['visits-care-live-client'])]
-    private $doYouLiveWithClient;
+    private ?string $doYouLiveWithClient = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
     #[Assert\NotBlank(message: 'visitsCare.howOftenDoYouContactClient.notBlank', groups: ['visits-care-how-often-contact'])]
-    private $howOftenDoYouContactClient;
+    private ?string $howOftenDoYouContactClient = null;
 
+    /** @var ?string 'yes'|'no'|null */
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
     #[Assert\NotBlank(message: 'visitsCare.doesClientReceivePaidCare.notBlank', groups: ['visits-care-receive-paid-care'])]
-    private $doesClientReceivePaidCare;
+    private ?string $doesClientReceivePaidCare = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
     #[Assert\NotBlank(message: 'visitsCare.howIsCareFunded.notBlank', groups: ['visits-care-how-care-funded'])]
-    private $howIsCareFunded;
+    private ?string $howIsCareFunded = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
     #[Assert\NotBlank(message: 'visitsCare.whoIsDoingTheCaring.notBlank', groups: ['visits-care-who-does-caring'])]
-    private $whoIsDoingTheCaring;
+    private ?string $whoIsDoingTheCaring = null;
 
+    /** @var ?string 'yes'|'no'|null */
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
     #[JMS\SerializedName('does_client_have_a_care_plan')]
     #[Assert\NotBlank(message: 'visitsCare.doesClientHaveACarePlan.notBlank', groups: ['visits-care-have-care-plan'])]
-    private $doesClientHaveACarePlan;
+    private ?string $doesClientHaveACarePlan = null;
 
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['visits-care'])]
     #[Assert\NotBlank(message: 'visitsCare.whenWasCarePlanLastReviewed.notBlank', groups: ['visits-care-care-plan-last-review'])]
     #[Assert\Type(type: 'DateTime', message: 'visitsCare.whenWasCarePlanLastReviewed.invalidMessage', groups: ['visits-care-care-plan-last-review'])]
-    private ?\DateTimeInterface $whenWasCarePlanLastReviewed = null;
+    private ?\DateTime $whenWasCarePlanLastReviewed = null;
 
-    /**
-     * @return int $id
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(?int $id)
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * Set doYouLiveWithClient.
-     *
-     * @param string $doYouLiveWithClient
-     *
-     * @return VisitsCare
-     */
-    public function setDoYouLiveWithClient($doYouLiveWithClient)
+    public function setDoYouLiveWithClient(?string $doYouLiveWithClient): static
     {
         $this->doYouLiveWithClient = $doYouLiveWithClient;
 
         return $this;
     }
 
-    /**
-     * Get doYouLiveWithClient.
-     *
-     * @return string
-     */
-    public function getDoYouLiveWithClient()
+    public function getDoYouLiveWithClient(): ?string
     {
         return $this->doYouLiveWithClient;
     }
 
-    /**
-     * @return string
-     */
-    public function getHowOftenDoYouContactClient()
+    public function getHowOftenDoYouContactClient(): ?string
     {
         return $this->howOftenDoYouContactClient;
     }
 
-    /**
-     * @param string $howOftenDoYouContactClient
-     */
-    public function setHowOftenDoYouContactClient($howOftenDoYouContactClient): static
+    public function setHowOftenDoYouContactClient(?string $howOftenDoYouContactClient): static
     {
         $this->howOftenDoYouContactClient = $howOftenDoYouContactClient;
 
         return $this;
     }
 
-    /**
-     * Set doesClientReceivePaidCare.
-     *
-     * @param string $doesClientReceivePaidCare
-     */
-    public function setDoesClientReceivePaidCare($doesClientReceivePaidCare): static
+    public function setDoesClientReceivePaidCare(?string $doesClientReceivePaidCare): static
     {
         $this->doesClientReceivePaidCare = $doesClientReceivePaidCare;
 
         return $this;
     }
 
-    /**
-     * Get doesClientReceivePaidCare.
-     *
-     * @return string
-     */
-    public function getDoesClientReceivePaidCare()
+    public function getDoesClientReceivePaidCare(): ?string
     {
         return $this->doesClientReceivePaidCare;
     }
 
-    /**
-     * Set whoIsDoingTheCaring.
-     *
-     * @param string $whoIsDoingTheCaring
-     */
-    public function setWhoIsDoingTheCaring($whoIsDoingTheCaring): static
+    public function setWhoIsDoingTheCaring(?string $whoIsDoingTheCaring): static
     {
         $this->whoIsDoingTheCaring = $whoIsDoingTheCaring;
 
         return $this;
     }
 
-    /**
-     * Get whoIsDoingTheCaring.
-     *
-     * @return string
-     */
-    public function getWhoIsDoingTheCaring()
+    public function getWhoIsDoingTheCaring(): ?string
     {
         return $this->whoIsDoingTheCaring;
     }
 
-    /**
-     * Set doesClientHaveACarePlan.
-     *
-     * @param string $doesClientHaveACarePlan
-     */
-    public function setDoesClientHaveACarePlan($doesClientHaveACarePlan): static
+    public function setDoesClientHaveACarePlan(?string $doesClientHaveACarePlan): static
     {
         $this->doesClientHaveACarePlan = $doesClientHaveACarePlan;
 
         return $this;
     }
 
-    /**
-     * Get doesClientHaveACarePlan.
-     *
-     * @return string
-     */
-    public function getDoesClientHaveACarePlan()
+    public function getDoesClientHaveACarePlan(): ?string
     {
         return $this->doesClientHaveACarePlan;
     }
 
-    /**
-     * Set whenWasCarePlanLastReviewed.
-     *
-     * @param \DateTime $whenWasCarePlanLastReviewed
-     */
-    public function setWhenWasCarePlanLastReviewed(?\DateTimeInterface $whenWasCarePlanLastReviewed): static
+    public function setWhenWasCarePlanLastReviewed(?\DateTime $whenWasCarePlanLastReviewed): static
     {
         $this->whenWasCarePlanLastReviewed = $whenWasCarePlanLastReviewed;
 
         return $this;
     }
 
-    /**
-     * Get whenWasCarePlanLastReviewed.
-     */
-    public function getWhenWasCarePlanLastReviewed(): ?\DateTimeInterface
+    public function getWhenWasCarePlanLastReviewed(): ?\DateTime
     {
         return $this->whenWasCarePlanLastReviewed;
     }
 
-    /**
-     * Set howIsCareFunded.
-     *
-     * @param string $howIsCareFunded
-     */
-    public function setHowIsCareFunded($howIsCareFunded): static
+    public function setHowIsCareFunded(?string $howIsCareFunded): static
     {
         $this->howIsCareFunded = $howIsCareFunded;
 
         return $this;
     }
 
-    /**
-     * Get howIsCareFunded.
-     *
-     * @return string
-     */
-    public function getHowIsCareFunded()
+    public function getHowIsCareFunded(): ?string
     {
         return $this->howIsCareFunded;
     }

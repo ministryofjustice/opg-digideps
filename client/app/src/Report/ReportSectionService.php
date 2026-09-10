@@ -24,6 +24,9 @@ final readonly class ReportSectionService
 
     public function getReportMetadata(Report $report): ReportMetadata
     {
+        if ($report->getId() === null || $report->getType() === null) {
+            throw new \DomainException('Cannot get report metadata as report has no ID');
+        }
         return new ReportMetadata($report->getId(), ReportType::from($report->getType()));
     }
 

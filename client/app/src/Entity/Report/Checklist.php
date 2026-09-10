@@ -180,15 +180,18 @@ class Checklist implements SynchronisableInterface
     {
         $this->setReport($report);
 
-        // DDPB-2272: prefill answers based on report content
+        // DDPB-2272: if possible, pre-fill answers based on report content
         $action = $report->getAction();
-        $answer = $action->getDoYouExpectFinancialDecisions();
-        if ($answer) {
-            $this->setFutureSignificantDecisions($answer);
-        }
-        $answer = $action->getDoYouHaveConcerns();
-        if ($answer) {
-            $this->setHasDeputyRaisedConcerns($answer);
+
+        if ($action !== null) {
+            $answer = $action->getDoYouExpectFinancialDecisions();
+            if ($answer !== null) {
+                $this->setFutureSignificantDecisions($answer);
+            }
+            $answer = $action->getDoYouHaveConcerns();
+            if ($answer !== null) {
+                $this->setHasDeputyRaisedConcerns($answer);
+            }
         }
     }
 

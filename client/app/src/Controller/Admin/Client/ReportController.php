@@ -232,20 +232,21 @@ class ReportController extends AbstractController
         $syncFeatureIsEnabled = false;
 
         if ($parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC) === '1') {
+            $checklist = $report->getChecklist();
+
+            if ($checklist === null) {
+                throw new \DomainException('cannot synchronise checklist for report as checklist does not exist');
+            }
+
             $syncFeatureIsEnabled = true;
-            $this->queueChecklistForSyncing($report);
+            $checklist->setSynchronisationStatus(Checklist::SYNC_STATUS_QUEUED);
+            $this->restClient->put("report/{$id}/checked", $checklist, ['synchronisation']);
         }
 
         return [
             'report' => $report,
             'syncFeatureIsEnabled' => $syncFeatureIsEnabled,
         ];
-    }
-
-    protected function queueChecklistForSyncing(Report $report): void
-    {
-        $report->getChecklist()->setSynchronisationStatus(Checklist::SYNC_STATUS_QUEUED);
-        $this->restClient->put('report/' . $report->getId() . '/checked', $report->getChecklist(), ['synchronisation']);
     }
 
     /**
@@ -256,10 +257,6 @@ class ReportController extends AbstractController
     public function checklistPDFViewAction(int $id, ReportSubmissionService $reportSubmissionService): Response
     {
         $report = $this->reportApi->getReport($id, array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
-
-        if (is_null($report->getEndDate())) {
-            throw $this->createNotFoundException();
-        }
 
         try {
             $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
@@ -413,7 +410,7 @@ class ReportController extends AbstractController
     /**
      * @throws \Exception
      */
-    private function determineNewDueDateFromForm(Report $report, FormInterface $form): ?\DateTime
+    private function determineNewDueDateFromForm(Report $report, FormInterface $form): \DateTime
     {
         $newDueDate = $report->getDueDate();
 
