@@ -385,6 +385,7 @@ final class ReportStatusServiceTest extends TestCase
             ->getMock();
 
         $this->report
+            ->expects($this->once())
             ->method('hasSection')
             ->with(Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE)
             ->willReturn(true);

@@ -37,8 +37,6 @@ final class UserServiceTest extends TestCase
         $this->clientRepository = self::createMock(ClientRepository::class);
         $this->userRepository = self::createMock(UserRepository::class);
 
-        $this->em->method('getRepository')->with(Client::class)->willReturn($this->clientRepository);
-
         $this->sut = new UserService($this->em, $this->clientRepository, $this->userRepository);
     }
 

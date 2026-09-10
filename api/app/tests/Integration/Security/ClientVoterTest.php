@@ -58,7 +58,7 @@ class ClientVoterTest extends KernelTestCase
 
         if ($role === 'ROLE_ADMIN') {
             // The ROLE_ADMIN check verifies the users role with the isGranted($roleName) method.
-            $this->security->method('isGranted')->with($role)->willReturn(true);
+            $this->security->expects($this->once())->method('isGranted')->with($role)->willReturn(true);
         } else {
             $this->user->setRoleName($role);
         }
