@@ -5,6 +5,7 @@ namespace OPG\Digideps\Frontend\Form\Admin;
 use OPG\Digideps\Frontend\Form\DateType;
 use OPG\Digideps\Frontend\Form\Subscriber\ReportTypeChoicesSubscriber;
 use OPG\Digideps\Frontend\Form\Traits\HasTranslatorTrait;
+use OPG\Digideps\Frontend\Validator\Constraints\AugmentedExpression;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -42,13 +43,9 @@ class ManageSubmittedReportType extends AbstractType
                         'message' => 'report.endDate.beforeStart',
                         'groups' => ['startEndDates'],
                     ]),
-                    new Constraints\Expression([
-                        'expression' => 'this.getParent().get("startDate").getData().modify("+15 months") > this.getData()',
+                    new AugmentedExpression([
+                        'expression' => 'clone(this.getParent().get("startDate").getData()).modify("+15 months") > this.getData()',
                         'message' => 'report.endDate.greaterThan15Months',
-                        'groups' => ['startEndDates'],
-                    ]),
-                    new Constraints\Expression([
-                        'expression' => 'this.getParent().get("startDate").getData().modify("-15 months")',
                         'groups' => ['startEndDates'],
                     ]),
                 ],
