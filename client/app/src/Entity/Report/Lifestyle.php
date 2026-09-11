@@ -55,10 +55,7 @@ class Lifestyle
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCareAppointments()
+    public function getCareAppointments(): ?string
     {
         return $this->careAppointments;
     }
@@ -73,10 +70,7 @@ class Lifestyle
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDoesClientUndertakeSocialActivities()
+    public function getDoesClientUndertakeSocialActivities(): ?string
     {
         return $this->doesClientUndertakeSocialActivities;
     }
@@ -99,10 +93,7 @@ class Lifestyle
         return true;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getActivityDetailsYes()
+    public function getActivityDetailsYes(): ?string
     {
         return $this->activityDetailsYes;
     }
@@ -117,10 +108,7 @@ class Lifestyle
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getActivityDetailsNo()
+    public function getActivityDetailsNo(): ?string
     {
         return $this->activityDetailsNo;
     }

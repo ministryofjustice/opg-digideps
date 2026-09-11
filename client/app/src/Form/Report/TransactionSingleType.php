@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints\Valid;
 
 class TransactionSingleType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
                  ->add('id', FormTypes\HiddenType::class)
@@ -40,7 +40,7 @@ class TransactionSingleType extends AbstractType
         });
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
              'data_class' => MoneyTransaction::class,
@@ -49,7 +49,7 @@ class TransactionSingleType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'transaction_single';
     }
