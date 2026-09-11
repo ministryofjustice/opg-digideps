@@ -214,6 +214,7 @@ final class FixtureService
                     $client->setDeputy($deputy);
                 }
                 $user = $deputy->getUser();
+                $this->persist($deputy);
             }
             if ($organisation !== null) {
                 $persons['organisations'][$deputyDescriptor->emailDomain] = $organisation;
@@ -230,6 +231,7 @@ final class FixtureService
             }
         }
 
+        $this->persist($courtOrder);
         $this->flush();
         $this->entityManager->refresh($courtOrder);
 
@@ -243,6 +245,9 @@ final class FixtureService
             $courtOrder->setSibling($sibling['order']);
             if ($courtOrder->getOrderKind() === CourtOrderKind::Hybrid) {
                 $reports = $sibling['reports'];
+                foreach ($reports as $report) {
+                    $report->setCourtOrder($courtOrder);
+                }
             }
         }
 
@@ -420,7 +425,7 @@ final class FixtureService
     {
         $reportType = $order->getDesiredReportType();
         $report = new Report(
-            $order->getClient(),
+            $order,
             "{$reportType}",
             \DateTime::createFromImmutable($reportDescriptor->startDate),
             \DateTime::createFromImmutable($reportDescriptor->endDate),

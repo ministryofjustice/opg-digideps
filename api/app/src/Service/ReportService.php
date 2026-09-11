@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Backend\Service;
 
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Asset;
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
@@ -12,7 +13,6 @@ use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\Factory\ReportFactory;
 use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -23,8 +23,8 @@ class ReportService
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly ReportFactory $reportFactory,
         private readonly LoggerInterface $logger,
+        private readonly \DateTimeImmutable $now = new \DateTimeImmutable()
     ) {
         /** @var PreRegistrationRepository $preRegistrationRepository */
         $preRegistrationRepository = $em->getRepository(PreRegistration::class);
@@ -61,7 +61,6 @@ class ReportService
 
         $this->em->persist($submission);
 
-        $courtOrders = $currentReport->getCourtOrders()->toArray();
         $client = $currentReport->getClient();
         $clientId = $client->getId();
         $now = new \DateTime()->format('Y-m-d H:i:s');
@@ -91,11 +90,9 @@ class ReportService
 
             $newYearReport = $this->createNextYearReport($currentReport);
 
-            foreach ($courtOrders as $courtOrder) {
-                if ($courtOrder->getStatus() === 'ACTIVE') {
-                    $courtOrder->addReport($newYearReport);
-                    $this->em->persist($courtOrder);
-                }
+            foreach ($currentReport->getActiveCourtOrders() as $courtOrder) {
+                $courtOrder->addReport($newYearReport);
+                $this->em->persist($courtOrder);
             }
         }
 
@@ -239,7 +236,7 @@ class ReportService
         $endDate->modify('+12 months -1 day');
 
         $newReport = new Report(
-            $client,
+            $oldReport->getCourtOrder(),
             $newReportType, // report comes from casrec, or last year report, if not found
             $startDate,
             $endDate,
@@ -366,58 +363,36 @@ class ReportService
         return $endDate < $endOfToday;
     }
 
-    /**
-     * Work out which reports are required for the client by looking up related rows in the pre-reg table.
-     * Note that this only creates the report objects, but doesn't persist them.
-     * If a client is dual, we create both reports; if hybrid, we only create one.
-     *
-     * Note this doesn't check whether reports of the appropriate type already exist, and is intended for use
-     * with clients who have *no* reports.
-     *
-     * @return Report[]
-     */
-    public function createRequiredReports(Client $client): array
+    public function createReportFromOrder(CourtOrder $courtOrder): Report
     {
-        $preRegs = $this->preRegistrationRepository->findByCaseNumber($client->getCaseNumber());
+        $startDate = $this->determineStartDateOfFirstReport($courtOrder);
 
-        if (count($preRegs) < 1) {
-            return [];
+        $newReport = new Report(
+            courtOrder: $courtOrder,
+            type: "{$courtOrder->getDesiredReportType()}",
+            startDate: \DateTime::createFromImmutable($startDate),
+            endDate: \DateTime::createFromImmutable($startDate)->modify('+12 months -1 day'),
+            dateChecks: false,
+        );
+
+        $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
+
+        return $newReport;
+    }
+
+    public function determineStartDateOfFirstReport(CourtOrder $courtOrder): \DateTimeImmutable
+    {
+        $startDate = \DateTimeImmutable::createFromMutable($courtOrder->getOrderMadeDate())->setTime(0, 0);
+        if ($this->now < $startDate) {
+            throw new \DomainException("Encountered a court order with uid {$courtOrder->getCourtOrderUid()} before this court order's made date.");
         }
 
-        $pfa = null;
-        $hw = null;
-        $required = [];
+        $aYear = new \DateInterval('P1Y');
 
-        foreach ($preRegs as $preReg) {
-            // verify that we have all the necessary data to make the report from the pre-reg row; if not, skip it
-            $typeOfReport = $preReg->getTypeOfReport();
-            $orderType = $preReg->getOrderType();
-            $orderDate = $preReg->getOrderDate();
-
-            if (is_null($typeOfReport) || is_null($orderType) || is_null($orderDate)) {
-                continue;
-            }
-
-            $report = $this->reportFactory->create($client, $typeOfReport, $orderType, $orderDate);
-
-            // if the report created for this pre-reg row is a hybrid, we just want this report and no others
-            if ($report->isHybrid()) {
-                return [$report];
-            }
-
-            // screen out duplicates if there are multiple rows for pfa and/or hw reports for this client,
-            // so we get 2 reports max. (one pfa, one hw)
-            if (is_null($pfa) && $report->isPfa()) {
-                $pfa = $report;
-                $required[] = $report;
-            }
-
-            if (is_null($hw) && $report->isHw()) {
-                $hw = $report;
-                $required[] = $report;
-            }
+        $latestStartDate = $this->now->setTime(0, 0)->sub($aYear);
+        while ($startDate <= $latestStartDate) {
+            $startDate = $startDate->add($aYear);
         }
-
-        return $required;
+        return $startDate;
     }
 }

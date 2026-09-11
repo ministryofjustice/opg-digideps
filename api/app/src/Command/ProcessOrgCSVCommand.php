@@ -199,8 +199,9 @@ class ProcessOrgCSVCommand extends Command
 
     private function storeOutput(array $processingOutput): void
     {
-        $this->processingOutput['errors']['count'] += $processingOutput['errors']['count'];
-        $this->processingOutput['errors']['messages'] = implode(', ', $processingOutput['errors']['messages']);
+        $errors = $processingOutput['errors'] ?? [];
+        $this->processingOutput['errors']['count'] += $errors['count'] ?? 0;
+        $this->processingOutput['errors']['messages'] = implode(', ', $errors['messages'] ?? []);
 
         if (!empty($processingOutput['added'])) {
             foreach ($processingOutput['added'] as $group => $items) {

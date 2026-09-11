@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
+use OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\ApiTestTrait;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Document;
@@ -51,8 +52,7 @@ class DocumentRepositoryTest extends KernelTestCase
      */
     private function createAndSubmitReportWithSupportingDoc(\DateTime $submittedOn): array
     {
-        $client = $this->generateAndPersistClient('abc-123');
-        $report = $this->generateAndPersistReport($client);
+        ['client' => $client, 'orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
         $reportPdfDoc = $this->generateAndPersistDocument($report, true, 'QUEUED', $this->firstJulyPm, false);
         $supportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $this->firstJulyAm, false);
 
@@ -61,29 +61,6 @@ class DocumentRepositoryTest extends KernelTestCase
         self::$entityManager->flush();
 
         return [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission];
-    }
-
-    private function generateAndPersistClient(string $caseNumber): Client
-    {
-        $client = new Client()->setCaseNumber($caseNumber);
-
-        self::$entityManager->persist($client);
-
-        return $client;
-    }
-
-    private function generateAndPersistReport(Client $client): Report
-    {
-        $report = (new Report(
-            $client,
-            Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
-            $this->firstJulyAm,
-            $this->firstJulyAm->add(new \DateInterval('P364D'))
-        ));
-
-        self::$entityManager->persist($report);
-
-        return $report;
     }
 
     private function generateAndPersistDocument(Report $report, bool $isReportPdf, string $syncStatus, \DateTime $createdOn, bool $isResubmission): Document
@@ -163,17 +140,13 @@ class DocumentRepositoryTest extends KernelTestCase
         self::assertEquals($report->getStartDate()->format('Y-m-d'), $documents[$docId]['report_start_date']);
         self::assertEquals($report->getSubmitDate()?->format('Y-m-d H:i:s'), $documents[$docId]['report_submit_date']);
         self::assertEquals($submission->getUuid(), $documents[$docId]['report_submission_uuid']);
-
-        if ($report instanceof Report) {
-            self::assertEquals($report->getEndDate()->format('Y-m-d'), $documents[$docId]['report_end_date']);
-            self::assertEquals($report->getType(), $documents[$docId]['report_type']);
-        }
+        self::assertEquals($report->getEndDate()->format('Y-m-d'), $documents[$docId]['report_end_date']);
+        self::assertEquals($report->getType(), $documents[$docId]['report_type']);
     }
 
     private function createFailedDocumentSubmission($status, $createdOn, $caseNumber, $archived): void
     {
-        $client = $this->generateAndPersistClient('abc-123-' . $caseNumber);
-        $report = $this->generateAndPersistReport($client);
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
         $reportPdfDoc = $this->generateAndPersistDocument($report, true, $status, $this->firstJulyAm, false);
         $supportingDoc = $this->generateAndPersistDocument($report, false, $status, $this->firstJulyAm, false);
         $reportSubmission = $this->submitReport($report, $this->firstJulyPm, $reportPdfDoc, $supportingDoc);
@@ -340,7 +313,7 @@ class DocumentRepositoryTest extends KernelTestCase
         self::$entityManager->refresh($willNotQueue4);
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $willNotQueue4->getSynchronisationStatus());
 
-        self::assertEquals(6, count($documents));
+        self::assertCount(6, $documents);
     }
 
     public function testLogFailedDocuments(): void
