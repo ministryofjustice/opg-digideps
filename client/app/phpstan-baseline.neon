@@ -211,12 +211,6 @@ parameters:
 			path: src/Command/ProcessOrgCSVCommand.php
 
 		-
-			message: '#^Cannot call method post\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
 			message: '#^Cannot call method setOptionalColumns\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -443,6 +437,54 @@ parameters:
 			identifier: binaryOp.invalid
 			count: 1
 			path: src/Controller/Admin/AjaxController.php
+
+		-
+			message: '#^Cannot access offset ''count'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Cannot access offset ''message'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Cannot access offset ''ok'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Parameter \#1 \$content of class Symfony\\Component\\HttpFoundation\\Response constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Parameter \#1 \$string of function strlen expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Part \$result\[''count''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Part \$result\[''message''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: src/Controller/Admin/Cleanup/CleanupController.php
 
 		-
 			message: '#^Cannot call method getArchivedAt\(\) on mixed\.$#'
@@ -6769,12 +6811,6 @@ parameters:
 			path: src/Service/Client/Internal/DeputyApi.php
 
 		-
-			message: '#^Cannot call method post\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Service/Client/Internal/LayDeputyshipApi.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\LayDeputyshipApi\:\:uploadLayDeputyShip\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -7293,18 +7329,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:registerUser\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Service/Client/RestClient.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:setLoggedUserId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Service/Client/RestClient.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:setTimeout\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Service/Client/RestClient.php
 
@@ -8217,12 +8241,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface\:\:getId\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: src/Service/DeputyProvider.php
-
-		-
-			message: '#^Cannot call method get\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: src/Service/DeputyProvider.php
 

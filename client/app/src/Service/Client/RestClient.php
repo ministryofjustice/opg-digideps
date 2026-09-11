@@ -542,7 +542,7 @@ class RestClient implements RestClientInterface
     /**
      * @param int $timeout in seconds
      */
-    public function setTimeout($timeout)
+    public function setTimeout(int $timeout): static
     {
         $this->timeout = $timeout;
 
@@ -552,17 +552,14 @@ class RestClient implements RestClientInterface
     /**
      * @param int $userId
      */
-    public function setLoggedUserId($userId)
+    public function setLoggedUserId($userId): static
     {
         $this->userId = $userId;
 
         return $this;
     }
 
-    /**
-     * @return int|bool
-     */
-    private function getLoggedUserId()
+    private function getLoggedUserId(): ?int
     {
         if ($this->userId) {
             return $this->userId;
@@ -578,6 +575,6 @@ class RestClient implements RestClientInterface
             }
         }
 
-        return false;
+        return null;
     }
 }
