@@ -69,7 +69,7 @@ final readonly class RequiredReportDataFactory implements DataFactoryInterface
         }
 
         $newReport = $latest === null ? $this->createReportFromOrder($courtOrder) : $this->createReportFromReport($latest);
-        $courtOrder->addReport($newReport);
+        $this->em->persist($newReport);
         $this->em->persist($courtOrder);
         $this->em->flush();
     }
@@ -106,9 +106,7 @@ final readonly class RequiredReportDataFactory implements DataFactoryInterface
 
     private function createReportFromOrder(CourtOrder $courtOrder): Report
     {
-        $newReport = $this->reportService->createReportFromOrder($courtOrder);
-        $this->em->persist($newReport);
-        return $newReport;
+        return $this->reportService->createReportFromOrder($courtOrder);
     }
 
     private function createReportFromReport(Report $latest): Report

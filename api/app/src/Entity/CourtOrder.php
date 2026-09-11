@@ -255,6 +255,7 @@ class CourtOrder
         $reports = $this->getReports();
         if (!$reports->contains($report)) {
             $reports->add($report);
+            $report->setCourtOrder($this);
         }
         return $this;
     }
