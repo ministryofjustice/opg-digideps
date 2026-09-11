@@ -39,7 +39,7 @@ resource "aws_ecs_service" "api" {
       port_name      = "api-port"
       client_alias {
         dns_name = "api"
-        port     = 80
+        port     = 8080
       }
     }
   }
@@ -87,16 +87,17 @@ locals {
       image       = local.images.api-webserver,
       mountPoints = [],
       name        = "api_web",
+      user        = "nginx"
       portMappings = [{
         name          = "api-port",
-        containerPort = 80,
-        hostPort      = 80,
+        containerPort = 8080,
+        hostPort      = 8080,
         protocol      = "tcp"
       }],
       healthCheck = {
         command : [
           "CMD-SHELL",
-          "curl -f http://127.0.0.1:80/health-check || exit 1"
+          "curl -f http://127.0.0.1:8080/health-check || exit 1"
         ],
         interval = 30,
         timeout  = 5,
@@ -124,6 +125,7 @@ locals {
       image       = local.images.api,
       mountPoints = [],
       name        = "api_app",
+      user        = "www-data"
       portMappings = [{
         containerPort = 9000,
         hostPort      = 9000,
