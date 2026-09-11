@@ -123,7 +123,6 @@ final readonly class ReportTransitionService
         }
 
         $persistingReport->setCourtOrder($persistingCourtOrder);
-        $persistingCourtOrder->addReport($persistingReport);
         $persistingReport->setType("{$persistingCourtOrder->getDesiredReportType()}");
 
         // remove the persisting report from the sibling
@@ -132,7 +131,6 @@ final readonly class ReportTransitionService
 
         // create a new report on the court order which is the other half of the dual
         $newReport = $this->reportService->createReportFromOrder($newReportCourtOrder);
-        $newReportCourtOrder->addReport($newReport);
 
         $result->transitioned = true;
         $result->updatedCourtOrders += [$persistingCourtOrder, $newReportCourtOrder];
@@ -260,7 +258,6 @@ final readonly class ReportTransitionService
 
         if ($existingReport !== null) {
             $newReport = $this->reportService->createReportFromOrder($courtOrderNeedingReport);
-            $courtOrderNeedingReport->addReport($newReport);
 
             $result->updatedReports[] = $newReport;
 
