@@ -133,12 +133,6 @@ parameters:
 			path: api/app/src/Command/ProcessLayCSVCommand.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\ProcessLayCSVCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Command/ProcessLayCSVCommand.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 2
@@ -225,12 +219,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:deleteInactivateUsers\(\) should return int but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: api/app/src/Command/UserCleanupCommand.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: api/app/src/Command/UserCleanupCommand.php
 
