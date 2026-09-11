@@ -20,6 +20,10 @@
         <twig:OPG:Review:VisitsCare report="{{ report }}"/>
     {% endif %}
 
+    {% if report.hasSection('lifestyle') %}
+        <twig:OPG:Review:Lifestyle report="{{ report }}"/>
+    {% endif %}
+
     {% if report.hasSection('clientBenefitsCheck') %}
         <twig:OPG:Review:ClientBenefitsCheck report="{{ report }}"/>
     {% endif %}
@@ -48,6 +52,10 @@
         <twig:OPG:Review:MoneyIn report="{{ report }}"/>
     {% endif %}
 
+    {% if report.hasSection('moneyOutShort') %}
+        <twig:OPG:Review:MoneyOutShort report="{{ report }}"/>
+    {% endif %}
+
     {% if report.hasSection('moneyOut') %}
         <twig:OPG:Review:MoneyOut report="{{ report }}"/>
     {% endif %}
@@ -62,6 +70,10 @@
 
     {% if report.hasSection('debts') %}
         <twig:OPG:Review:Debts report="{{ report }}"/>
+    {% endif %}
+
+    {% if report.hasSection('profDeputyCosts') %}
+        <twig:OPG:Review:ProfDeputyCosts report="{{ report }}"/>
     {% endif %}
 
     {% if report.hasSection('actions') %}

@@ -433,6 +433,36 @@ parameters:
 			path: src/Components/OPG/Review/Decisions.php
 
 		-
+			message: '#^Parameter \#2 \$value of method OPG\\Digideps\\Frontend\\Components\\GOV\\Summary\\SummaryListBuilder\:\:addItem\(\) expects OPG\\Digideps\\Frontend\\Components\\RenderableInterface\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Components/OPG/Review/Lifestyle.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Components/OPG/Review/Lifestyle.php
+
+		-
+			message: '#^Cannot access offset ''typeId'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Components/OPG/Review/ProfDeputyCosts.php
+
+		-
+			message: '#^Part \$label \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: src/Components/OPG/Review/ProfDeputyCosts.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Components/OPG/Review/ProfDeputyCosts.php
+
+		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
