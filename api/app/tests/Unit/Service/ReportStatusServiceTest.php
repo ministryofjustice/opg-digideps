@@ -385,6 +385,7 @@ final class ReportStatusServiceTest extends TestCase
             ->getMock();
 
         $this->report
+            ->expects($this->once())
             ->method('hasSection')
             ->with(Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE)
             ->willReturn(true);
@@ -497,15 +498,15 @@ final class ReportStatusServiceTest extends TestCase
         ]);
 
         return [
-            [[], ReportStatusService::STATE_NOT_STARTED, false],
+            [[], ReportStatusService::STATE_NOT_STARTED],
             // incomplete
-            [['getDecisions' => new ArrayCollection([$decision])], ReportStatusService::STATE_INCOMPLETE, false],
-            [['getSignificantDecisionsMade' => 'No'], ReportStatusService::STATE_INCOMPLETE, false],
-            [['getMentalCapacity' => $mcComplete], ReportStatusService::STATE_INCOMPLETE, false],
-            [['getMentalCapacity' => $mcPartial, 'getDecisions' => new ArrayCollection([$decision])], ReportStatusService::STATE_INCOMPLETE, false],
+            [['getDecisions' => new ArrayCollection([$decision])], ReportStatusService::STATE_INCOMPLETE],
+            [['getSignificantDecisionsMade' => 'No'], ReportStatusService::STATE_INCOMPLETE],
+            [['getMentalCapacity' => $mcComplete], ReportStatusService::STATE_INCOMPLETE],
+            [['getMentalCapacity' => $mcPartial, 'getDecisions' => new ArrayCollection([$decision])], ReportStatusService::STATE_INCOMPLETE],
             // done
-            [['getMentalCapacity' => $mcComplete, 'getDecisions' => new ArrayCollection([$decision])], ReportStatusService::STATE_DONE, true],
-            [['getMentalCapacity' => $mcComplete, 'getReasonForNoDecisions' => 'x'], ReportStatusService::STATE_DONE, true],
+            [['getMentalCapacity' => $mcComplete, 'getDecisions' => new ArrayCollection([$decision])], ReportStatusService::STATE_DONE],
+            [['getMentalCapacity' => $mcComplete, 'getReasonForNoDecisions' => 'x'], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -516,11 +517,11 @@ final class ReportStatusServiceTest extends TestCase
         $badContact = self::createStub(Contact::class);
 
         return [
-            [[], ReportStatusService::STATE_NOT_STARTED, false],
+            [[], ReportStatusService::STATE_NOT_STARTED],
             // done
-            [['getContacts' => new ArrayCollection([$contact])], ReportStatusService::STATE_DONE, true],
-            [['getContacts' => new ArrayCollection([$badContact])], ReportStatusService::STATE_INCOMPLETE, true],
-            [['getReasonForNoContacts' => 'x'], ReportStatusService::STATE_DONE, true],
+            [['getContacts' => new ArrayCollection([$contact])], ReportStatusService::STATE_DONE],
+            [['getContacts' => new ArrayCollection([$badContact])], ReportStatusService::STATE_INCOMPLETE],
+            [['getReasonForNoContacts' => 'x'], ReportStatusService::STATE_DONE],
         ];
     }
 

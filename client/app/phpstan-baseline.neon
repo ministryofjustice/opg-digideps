@@ -1657,42 +1657,6 @@ parameters:
 			path: src/Controller/Report/BankAccountController.php
 
 		-
-			message: '#^Cannot call method getAccountNumber\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: '#^Cannot call method getAccountTypeText\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: '#^Cannot call method getBank\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: '#^Cannot call method getDisplaySortCode\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: '#^Cannot call method requiresBankName\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: '#^Cannot call method requiresSortCode\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
 			message: '#^Parameter \#1 \$accountType of method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setAccountType\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -2219,24 +2183,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: '#^Parameter \#1 \$from of method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransfer\:\:setAccountFrom\(\) expects OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount, OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: '#^Parameter \#1 \$id of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getBankAccountById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: '#^Parameter \#1 \$to of method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransfer\:\:setAccountTo\(\) expects OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount, OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
 
 		-
 			message: '#^Call to an undefined method Symfony\\Component\\Form\\FormInterface\:\:isClicked\(\)\.$#'
@@ -3945,12 +3891,6 @@ parameters:
 		-
 			message: '#^Cannot call method setReport\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getBankAccountOptions\(\) should return array\<string, int\> but returns array\<string, mixed\>\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -10513,12 +10453,6 @@ parameters:
 			path: tests/Unit/Command/CheckCSVUploadedCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Command/CheckCSVUploadedCommandTest.php
-
-		-
 			message: '#^Parameter \#1 \$secretName of method OPG\\Digideps\\Frontend\\Service\\SecretManagerService\:\:getSecret\(\) expects string, Prophecy\\Argument\\Token\\AnyValueToken given\.$#'
 			identifier: argument.type
 			count: 2
@@ -14137,12 +14071,6 @@ parameters:
 			path: tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
 
 		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -14181,12 +14109,6 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Command\\DocumentSyncCommandTest\:\:testSleepsWhenTurnedOff\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Sync/Command/DocumentSyncCommandTest.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 

@@ -60,16 +60,16 @@ class LayRegistrationServiceTest extends TestCase
                 return [self::createMock(Report::class)];
             });
 
-        $this->mockEntityManager->expects(self::any())
+        $this->mockEntityManager
             ->method('persist')
             ->willReturnCallback(function ($entity): void {
                 self::assertTrue(is_a($entity, Report::class) || is_a($entity, Client::class));
             });
 
-        $this->mockEntityManager->expects(self::any())
+        $this->mockEntityManager
             ->method('flush');
 
-        $this->mockEntityManager->expects(self::any())
+        $this->mockEntityManager
             ->method('clear');
 
         $numReports = $this->sut->addMissingReports(batchSize: 2);

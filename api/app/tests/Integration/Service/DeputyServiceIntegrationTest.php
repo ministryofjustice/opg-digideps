@@ -52,19 +52,22 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
             deputy: $deputy,
         );
 
+        /** @var array<int, array<string, mixed>> $results */
         $results = self::$sut->findReportsInfoByUid(uid: "$deputyUid");
 
         self::assertCount(1, $results);
         self::assertArrayHasKey('client', $results[0]);
 
-        self::assertArrayHasKey('firstName', $results[0]['client']);
-        self::assertEquals($client->getFirstName(), $results[0]['client']['firstName']);
+        /** @var array<string, mixed> $clientData */
+        $clientData = $results[0]['client'];
+        self::assertArrayHasKey('firstName', $clientData);
+        self::assertEquals($client->getFirstName(), $clientData['firstName']);
 
-        self::assertArrayHasKey('lastName', $results[0]['client']);
-        self::assertEquals($client->getLastName(), $results[0]['client']['lastName']);
+        self::assertArrayHasKey('lastName', $clientData);
+        self::assertEquals($client->getLastName(), $clientData['lastName']);
 
-        self::assertArrayHasKey('caseNumber', $results[0]['client']);
-        self::assertEquals($client->getCaseNumber(), $results[0]['client']['caseNumber']);
+        self::assertArrayHasKey('caseNumber', $clientData);
+        self::assertEquals($client->getCaseNumber(), $clientData['caseNumber']);
 
         self::assertArrayHasKey('courtOrderUids', $results[0]);
         self::assertEquals([$courtOrder->getCourtOrderUid()], $results[0]['courtOrderUids']);
@@ -73,8 +76,10 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
         self::assertEquals($courtOrder->getCourtOrderUid(), $results[0]['courtOrderLink']);
 
         self::assertArrayHasKey('report', $results[0]);
-        self::assertArrayHasKey('type', $results[0]['report']);
-        self::assertEquals($report->getType(), $results[0]['report']['type']);
+        /** @var array<string, mixed> $reportData */
+        $reportData = $results[0]['report'];
+        self::assertArrayHasKey('type', $reportData);
+        self::assertEquals($report->getType(), $reportData['type']);
     }
 
     public function testFindReportsInfoByUidDeputyNotActiveOnOrder()

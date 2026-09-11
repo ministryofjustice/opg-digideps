@@ -15,15 +15,17 @@ class ReportHelpers
         $startDate = new \DateTime('now');
         $endDate = new \DateTime('+1 year');
 
-        return new Report()
-            ->setType(Report::TYPE_COMBINED_HIGH_ASSETS)
-            ->setSubmittedBy(null)
-            ->setSubmitted(false)
-            ->setClient($client)
-            ->setId(1)
-            ->setStartDate($startDate)
-            ->setEndDate($endDate)
-            ->setDueDate($endDate);
+        $report = new Report();
+        $report->setType(Report::TYPE_COMBINED_HIGH_ASSETS);
+        $report->setSubmittedBy(null);
+        $report->setSubmitted(false);
+        $report->setClient($client);
+        $report->setId(1);
+        $report->setStartDate($startDate);
+        $report->setEndDate($endDate);
+        $report->setDueDate($endDate);
+
+        return $report;
     }
 
     public static function createSubmittedReport(): Report

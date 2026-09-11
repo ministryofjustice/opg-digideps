@@ -11,6 +11,7 @@ use OPG\Digideps\Backend\Security\ClientVoter;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -57,7 +58,7 @@ class ClientVoterTest extends KernelTestCase
 
         if ($role === 'ROLE_ADMIN') {
             // The ROLE_ADMIN check verifies the users role with the isGranted($roleName) method.
-            $this->security->method('isGranted')->with($role)->willReturn(true);
+            $this->security->expects($this->once())->method('isGranted')->with($role)->willReturn(true);
         } else {
             $this->user->setRoleName($role);
         }
@@ -239,9 +240,7 @@ class ClientVoterTest extends KernelTestCase
         ];
     }
 
-    /**
-     * @dataProvider deleteClientProvider
-     */
+    #[DataProvider('deleteClientProvider')]
     public function testDetermineDeletePermission(User $user, Client $client, int $expectedPermission): void
     {
         $security = self::createMock(Security::class);

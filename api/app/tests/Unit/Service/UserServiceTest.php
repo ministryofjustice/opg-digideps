@@ -12,7 +12,6 @@ use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\UserService;
 use OPG\Digideps\Backend\v2\DTO\InviteeDto;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -37,8 +36,6 @@ final class UserServiceTest extends TestCase
         $this->em = self::createMock(EntityManager::class);
         $this->clientRepository = self::createMock(ClientRepository::class);
         $this->userRepository = self::createMock(UserRepository::class);
-
-        $this->em->method('getRepository')->with(Client::class)->willReturn($this->clientRepository);
 
         $this->sut = new UserService($this->em, $this->clientRepository, $this->userRepository);
     }
@@ -115,7 +112,7 @@ final class UserServiceTest extends TestCase
 
         $this->userRepository->expects(self::atLeastOnce())
             ->method('findOneBy')
-            ->with(new IsType(IsType::TYPE_ARRAY))
+            ->with(self::callback(static fn (mixed $criteria): bool => is_array($criteria)))
             ->willReturnCallback(function (array $criteria) use ($deputyUid, $existingUser) {
                 if (
                     ($criteria['deputyUid'] ?? null) === $deputyUid

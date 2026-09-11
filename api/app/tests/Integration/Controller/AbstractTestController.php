@@ -12,6 +12,7 @@ use Osteel\OpenApi\Testing\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 abstract class AbstractTestController extends WebTestCase
@@ -98,6 +99,7 @@ abstract class AbstractTestController extends WebTestCase
             $rawData
         );
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), 'wrong content type. Headers: ' . $headers['CONTENT_TYPE']);
 
@@ -153,6 +155,7 @@ abstract class AbstractTestController extends WebTestCase
         $this->assertEquals($email, $responseArray['email']);
         $this->loggedInUserId = $responseArray['id'];
 
+        /** @var Response $response */
         $response = self::$frameworkBundleClient->getResponse();
 
         return $response->headers->get('AuthToken') ?? throw new \LogicException('Fixture login unsuccessful');

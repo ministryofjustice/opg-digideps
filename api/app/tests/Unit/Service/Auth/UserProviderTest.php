@@ -40,7 +40,7 @@ final class UserProviderTest extends TestCase
     public function testloadUserByUsernameDbNotFound(): void
     {
         $this->redis->set('token', 1);
-        $this->repo->method('find')->with(1)->willReturn(null);
+        $this->repo->expects($this->once())->method('find')->with(1)->willReturn(null);
         $this->logger->expects($this->once())->method('warning')->with($this->matchesRegularExpression('/not found/'));
         $this->expectException(\RuntimeException::class);
 
@@ -51,7 +51,7 @@ final class UserProviderTest extends TestCase
     {
         $user = $this->createMock(User::class);
         $this->redis->set('token', 1);
-        $this->repo->method('find')->with(1)->willReturn($user);
+        $this->repo->expects($this->once())->method('find')->with(1)->willReturn($user);
         $this->logger->expects($this->never())->method('warning');
 
         $this->assertEquals($user, $this->userProvider->loadUserByUsername('token'));
