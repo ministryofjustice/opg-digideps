@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProcessing;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
@@ -114,9 +115,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         ];
     }
 
-    /**
-     * @dataProvider compatibleReportDataProvider
-     */
+    #[DataProvider('compatibleReportDataProvider')]
     public function testCreateCompatibleReportCandidates(
         string $deputyType,
         string $orderType,

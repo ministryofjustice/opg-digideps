@@ -59,7 +59,7 @@ final class RestFormatterTest extends TestCase
         $this->inputOutputFormatter
             ->expects($this->once())
             ->method('addContextModifier')
-            ->with(self::isType('callable'));
+            ->with($this->isCallable());
 
         $this->sut->setJmsSerialiserGroups($serialiserGroups);
     }

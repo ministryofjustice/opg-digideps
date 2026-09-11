@@ -30,12 +30,13 @@ class QueryIntegrationTest extends ApiIntegrationTestCase
 
         $this->addUserWithRegistrationDate('2020-01-01');
 
+        /** @var array<int, array<string, mixed>> $result */
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'users',
             'dimension' => ['roleName'],
         ]));
 
-        $this->assertContainsOnly('array', $result);
+        $this->assertContainsOnlyArray($result);
 
         $this->assertCount(2, $result[0]);
         $this->assertArrayHasKey('amount', $result[0]);
@@ -46,6 +47,7 @@ class QueryIntegrationTest extends ApiIntegrationTestCase
     {
         $query = new UsersQuery($this::$entityManager);
 
+        /** @var array<int, array<string, mixed>> $result */
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'users',
         ]));

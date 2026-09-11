@@ -96,10 +96,10 @@ final class AuthServiceTest extends TestCase
 
     public function testGetUserByEmailAndPasswordUserNotFound(): void
     {
-        $this->userRepo->method('findOneBy')->with(['email' => 'email@example.org'])->willReturn(null);
+        $this->userRepo->expects($this->once())->method('findOneBy')->with(['email' => 'email@example.org'])->willReturn(null);
         $this->logger->expects($this->once())->method('info')->with($this->matchesRegularExpression('/not found/'));
 
-        $this->assertEquals(false, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
+        $this->assertFalse($this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
 
     public function testGetUserByEmailAndPasswordMismatchPassword(): void
@@ -107,8 +107,8 @@ final class AuthServiceTest extends TestCase
         $user = $this->createMock(User::class);
         $user->method('getPassword')->willReturn('encodedPassword');
 
-        $this->userRepo->method('findOneBy')->with(['email' => 'email@example.org'])->willReturn($user);
-        $this->passwordHasher->method('isPasswordValid')->with($user, 'plainPassword')->willReturn(false);
+        $this->userRepo->expects($this->once())->method('findOneBy')->with(['email' => 'email@example.org'])->willReturn($user);
+        $this->passwordHasher->expects($this->once())->method('isPasswordValid')->with($user, 'plainPassword')->willReturn(false);
         $this->logger->expects($this->once())->method('info')->with($this->matchesRegularExpression('/password mismatch/'));
 
         $this->assertEquals(null, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
@@ -119,8 +119,8 @@ final class AuthServiceTest extends TestCase
         $user = $this->createMock(User::class);
         $user->method('getPassword')->willReturn('encodedPassword');
 
-        $this->userRepo->method('findOneBy')->with(['email' => 'email@example.org'])->willReturn($user);
-        $this->passwordHasher->method('isPasswordValid')->with($user, 'plainPassword')->willReturn(true);
+        $this->userRepo->expects($this->once())->method('findOneBy')->with(['email' => 'email@example.org'])->willReturn($user);
+        $this->passwordHasher->expects($this->once())->method('isPasswordValid')->with($user, 'plainPassword')->willReturn(true);
 
         $this->assertEquals($user, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
@@ -129,7 +129,8 @@ final class AuthServiceTest extends TestCase
     {
         $user = $this->createMock(User::class);
 
-        $this->userRepo->method('findOneBy')
+        $this->userRepo->expects($this->once())
+            ->method('findOneBy')
             ->with(['registrationToken' => 'token'])
             ->willReturn($user);
 
@@ -138,7 +139,8 @@ final class AuthServiceTest extends TestCase
 
     public function testGetUserByInvalidToken(): void
     {
-        $this->userRepo->method('findOneBy')
+        $this->userRepo->expects($this->once())
+            ->method('findOneBy')
             ->with(['registrationToken' => 'wrongtoken'])
             ->willReturn(null);
 
@@ -178,19 +180,19 @@ final class AuthServiceTest extends TestCase
     #[Test]
     public function jWTIsValid(): void
     {
-        $this->JWTService->method('verify')->with('not-a.real-jwt')->willReturn(true);
+        $this->JWTService->expects($this->once())->method('verify')->with('not-a.real-jwt')->willReturn(true);
 
         $request = new Request();
         $request->headers->set(AuthService::HEADER_JWT, 'not-a.real-jwt');
 
-        $this->assertEquals(true, $this->authService->JWTIsValid($request));
+        $this->assertTrue($this->authService->JWTIsValid($request));
     }
 
     #[DataProvider('JWTValidFailureProvider')]
     #[Test]
     public function jWTIsValidFailures(Request $request): void
     {
-        $this->assertEquals(false, $this->authService->JWTIsValid($request));
+        $this->assertFalse($this->authService->JWTIsValid($request));
     }
 
     public static function JWTValidFailureProvider(): array
