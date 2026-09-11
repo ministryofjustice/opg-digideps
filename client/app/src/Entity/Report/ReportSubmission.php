@@ -113,8 +113,8 @@ class ReportSubmission
 
         return 'Report_'
             . $client->getCaseNumber()
-            . '_' . $report->getStartDate()->format('Y')
-            . '_' . $report->getEndDate()->format('Y')
+            . '_' . ($report->getStartDate()?->format('Y') ?? '')
+            . '_' . ($report->getEndDate()?->format('Y') ?? '')
             . '_' . $this->getId()
             . '.zip';
     }

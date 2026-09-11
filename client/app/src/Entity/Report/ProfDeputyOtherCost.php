@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
@@ -11,7 +13,7 @@ class ProfDeputyOtherCost
 {
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-other-costs'])]
-    private ?string $profDeputyOtherCostTypeId = null;
+    private ?string $profDeputyOtherCostTypeId;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-other-costs'])]
@@ -55,9 +57,6 @@ class ProfDeputyOtherCost
         return $this;
     }
 
-    /**
-     * @return ?string|null
-     */
     public function getAmount(): ?string
     {
         return $this->amount;

@@ -35,7 +35,7 @@ final class ReportHeader
     {
         $this->parameters = [
             '%client%' => $report->getClient()->getFirstname(),
-            '%reportTypeHeading%' => $report->get104TransSuffix() === '-4' ? 'property and financial, and health and welfare' : (str_contains($report->getType(), '104') ? 'health and welfare' : 'property and financial'),
+            '%reportTypeHeading%' => $report->get104TransSuffix() === '-4' ? 'property and financial, and health and welfare' : (str_contains($report->getType() ?? '', '104') ? 'health and welfare' : 'property and financial'),
         ];
         $this->text = $this->makeText();
 

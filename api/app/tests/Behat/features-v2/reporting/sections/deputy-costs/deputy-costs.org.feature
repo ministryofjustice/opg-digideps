@@ -179,7 +179,7 @@ Feature: Deputy costs - Applies to Org users only
         And I enter a valid amount and description that I am submitting to SCCO for assessment
         Then I should be on the deputy costs - breakdown page
 
-    @prof-admin-health-welfare-not-started @THIS
+    @prof-admin-health-welfare-not-started
     Scenario: A professional deputy provides invalid information - additional costs
         Given a Professional Admin Deputy has not started a report
         When I visit and start the deputy costs report section for an existing client

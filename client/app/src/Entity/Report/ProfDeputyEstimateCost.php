@@ -31,7 +31,7 @@ class ProfDeputyEstimateCost
 
     public function __construct(
         ?string $profDeputyEstimateCostTypeId,
-        ?float $amount,
+        ?string $amount,
         bool|string $hasMoreDetails,
         ?string $moreDetails = null
     ) {
@@ -89,15 +89,17 @@ class ProfDeputyEstimateCost
         return $this;
     }
 
-    public function moreDetailsValidate(ExecutionContextInterface $context): void
+    public function moreDetailsValidate(ExecutionContextInterface $context): bool
     {
-        $hasMoreDetailsValue = $this->getHasMoreDetails();
-        $hasNoMoreDetails = $hasMoreDetailsValue === 'no' || $hasMoreDetailsValue === false;
+        if ($this->getHasMoreDetails()) {
+            $hasMoreDetails = trim($this->getMoreDetails() ?? '', " \n");
 
-        $moreDetailsExists = strlen(trim($this->getMoreDetails() ?? '', " \n")) > 0;
-
-        if ($hasNoMoreDetails && $moreDetailsExists && $this->getAmount()) {
-            $context->buildViolation('profDeputyEstimateCost.moreDetails.notBlank')->atPath('moreDetails')->addViolation();
+            if ($this->getAmount() && empty($hasMoreDetails)) {
+                $context->buildViolation('profDeputyEstimateCost.moreDetails.notBlank')->atPath('moreDetails')->addViolation();
+                return false;
+            }
         }
+
+        return true;
     }
 }

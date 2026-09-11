@@ -78,8 +78,8 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
 
     private function setIndividualBreakdownCosts(int $costAlpha, float $costBeta): static
     {
-        $breakdownAlpha = new ProfDeputyEstimateCost('1', $costAlpha, false, null);
-        $breakdownBeta = new ProfDeputyEstimateCost('2', $costBeta, false, null);
+        $breakdownAlpha = new ProfDeputyEstimateCost('1', "{$costAlpha}", false, null);
+        $breakdownBeta = new ProfDeputyEstimateCost('2', "{$costBeta}", false, null);
 
         $this->data->setProfDeputyEstimateCosts([$breakdownAlpha, $breakdownBeta]);
 

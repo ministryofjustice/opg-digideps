@@ -8,27 +8,14 @@ use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ActionType extends AbstractType
 {
-    private $clientFirstName;
+    private int $step;
 
-    /**
-     * @var int
-     */
-    private $step;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->step = (int) $options['step'];
-        $this->translator = $options['translator'];
-        $this->clientFirstName = $options['clientFirstName'];
+        $this->step = (int) ($options['step'] ?? 1);
 
         if ($this->step === 1) {
             $builder
@@ -48,13 +35,15 @@ class ActionType extends AbstractType
         $builder->add('save', FormTypes\SubmitType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-actions',
+            'data_class' => Action::class,
             'validation_groups' => function (FormInterface $form) {
+                /* @var Action $data */
                 $data = $form->getData();
-                /* @var $data Action */
+
                 $validationGroups = [];
 
                 if ($this->step === 1) {
@@ -74,11 +63,10 @@ class ActionType extends AbstractType
                 return $validationGroups;
             },
         ])
-        ->setRequired(['step', 'translator', 'clientFirstName'])
-        ->setAllowedTypes('translator', TranslatorInterface::class);
+        ->setRequired(['step']);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'action';
     }

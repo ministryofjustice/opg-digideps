@@ -67,6 +67,7 @@ final class MoneyTransfers
         foreach ($report->getMoneyTransfers() as $transfer) {
             $fromAccount = $transfer->getAccountFrom();
             $toAccount = $transfer->getAccountTo();
+
             $builder->addRow(
                 new BankAccount(
                     is_string($fromAccount->getAccountTypeText()) ? $fromAccount->getAccountTypeText() : '',

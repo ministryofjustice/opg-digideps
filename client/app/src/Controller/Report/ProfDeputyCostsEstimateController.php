@@ -184,7 +184,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
             /** @var bool|string $hasMoreDetails */
             $hasMoreDetails = $defaultEstimateCostType['hasMoreDetails'] ?? null;
 
-            $estimateCosts[] = new ProfDeputyEstimateCost($typeId, 0.0, $hasMoreDetails);
+            $estimateCosts[] = new ProfDeputyEstimateCost($typeId, '0.0', $hasMoreDetails);
         }
 
         return $estimateCosts;

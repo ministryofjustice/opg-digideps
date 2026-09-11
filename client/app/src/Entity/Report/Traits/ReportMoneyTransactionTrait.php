@@ -88,9 +88,9 @@ trait ReportMoneyTransactionTrait
         return $ret;
     }
 
-    public function getMoneyInTotal(): ?float
+    public function getMoneyInTotal(): float
     {
-        return $this->moneyInTotal;
+        return $this->moneyInTotal ?? 0.0;
     }
 
     public function setMoneyInTotal(?float $moneyInTotal): static
@@ -100,9 +100,9 @@ trait ReportMoneyTransactionTrait
         return $this;
     }
 
-    public function getMoneyOutTotal(): ?float
+    public function getMoneyOutTotal(): float
     {
-        return $this->moneyOutTotal;
+        return $this->moneyOutTotal ?? 0.0;
     }
 
     public function setMoneyOutTotal(?float $moneyOutTotal): static

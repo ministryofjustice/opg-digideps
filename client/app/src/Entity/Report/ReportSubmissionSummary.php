@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
@@ -7,146 +9,104 @@ use JMS\Serializer\Annotation as JMS;
 class ReportSubmissionSummary
 {
     #[JMS\Type('integer')]
-    private $id;
+    private ?int $id = null;
 
     #[JMS\Type('string')]
-    private $caseNumber;
+    private ?string $caseNumber = null;
 
     #[JMS\Type("DateTime<'Y-m-d'>")]
-    private $dateReceived;
+    private ?\DateTime $dateReceived = null;
 
     #[JMS\Type("DateTime<'Y-m-d'>")]
-    private $scanDate;
+    private ?\DateTime $scanDate = null;
 
     #[JMS\Type('string')]
-    private $formType;
+    private ?string $formType = null;
 
     #[JMS\Type('string')]
-    private $documentType;
+    private ?string $documentType = null;
 
     #[JMS\Type('string')]
-    private $documentId;
+    private ?string $documentId = null;
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCaseNumber()
+    public function getCaseNumber(): ?string
     {
         return $this->caseNumber;
     }
 
-    /**
-     * @param mixed $caseNumber
-     */
-    public function setCaseNumber($caseNumber): static
+    public function setCaseNumber(?string $caseNumber): static
     {
         $this->caseNumber = $caseNumber;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDateReceived()
+    public function getDateReceived(): ?\DateTime
     {
         return $this->dateReceived;
     }
 
-    /**
-     * @param mixed $dateReceived
-     */
-    public function setDateReceived($dateReceived): static
+    public function setDateReceived(?\DateTime $dateReceived): static
     {
         $this->dateReceived = $dateReceived;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getScanDate()
+    public function getScanDate(): ?\DateTime
     {
         return $this->scanDate;
     }
 
-    /**
-     * @param mixed $scanDate
-     */
-    public function setScanDate($scanDate): static
+    public function setScanDate(?\DateTime $scanDate): static
     {
         $this->scanDate = $scanDate;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFormType()
+    public function getFormType(): ?string
     {
         return $this->formType;
     }
 
-    /**
-     * @param mixed $formType
-     */
-    public function setFormType($formType): static
+    public function setFormType(?string $formType): static
     {
         $this->formType = $formType;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDocumentType()
+    public function getDocumentType(): ?string
     {
         return $this->documentType;
     }
 
-    /**
-     * @param mixed $documentType
-     */
-    public function setDocumentType($documentType): static
+    public function setDocumentType(?string $documentType): static
     {
         $this->documentType = $documentType;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDocumentId()
+    public function getDocumentId(): ?string
     {
         return $this->documentId;
     }
 
-    /**
-     * @param mixed $documentId
-     */
-    public function setDocumentId($documentId): static
+    public function setDocumentId(?string $documentId): static
     {
         $this->documentId = $documentId;
 

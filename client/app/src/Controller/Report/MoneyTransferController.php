@@ -130,8 +130,8 @@ class MoneyTransferController extends AbstractController
                 throw $this->createNotFoundException('Transfer not found');
             }
 
-            $transfer->setAccountFromId($transfer->getAccountFrom()?->getId());
-            $transfer->setAccountToId($transfer->getAccountTo()?->getId());
+            $transfer->setAccountFromId($transfer->getAccountFrom()->getId());
+            $transfer->setAccountToId($transfer->getAccountTo()->getId());
         } else {
             $transfer = new MoneyTransfer();
         }
@@ -250,8 +250,8 @@ class MoneyTransferController extends AbstractController
             'report' => $report,
             'form' => $form->createView(),
             'summary' => [
-                ['label' => 'deletePage.summary.accountFrom', 'value' => $transfer->getAccountFrom()?->getNameOneLine()],
-                ['label' => 'deletePage.summary.accountTo', 'value' => $transfer->getAccountTo()?->getNameOneLine()],
+                ['label' => 'deletePage.summary.accountFrom', 'value' => $transfer->getAccountFrom()->getNameOneLine()],
+                ['label' => 'deletePage.summary.accountTo', 'value' => $transfer->getAccountTo()->getNameOneLine()],
                 ['label' => 'deletePage.summary.amount', 'value' => $transfer->getAmount(), 'format' => 'money'],
                 ['label' => 'deletePage.summary.description', 'value' => $transfer->getDescription()],
             ],

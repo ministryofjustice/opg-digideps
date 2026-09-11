@@ -29,7 +29,9 @@ class VisitsCare
     {
         $this->parameters = ['%client%' => $report->getClient()->getFirstname()];
         $this->text = $this->makeText($report->get104TransSuffix());
-        $this->list = $this->makeList($report->getVisitsCare());
+        if ($report->getVisitsCare() !== null) {
+            $this->list = $this->makeList($report->getVisitsCare());
+        }
     }
 
 

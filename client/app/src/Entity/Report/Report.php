@@ -135,7 +135,7 @@ class Report implements StartEndDateComparableInterface
 
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['unsubmit_date'])]
-    private ?\DateTime $unSubmitDate;
+    private ?\DateTime $unSubmitDate = null;
 
     #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
     private ?User $submittedBy = null;
@@ -374,12 +374,18 @@ class Report implements StartEndDateComparableInterface
      */
     public function getDueDateDiffDays(?\DateTime $currentDate = null): int
     {
+        $dueDate = $this->getDueDate();
+        if ($dueDate === null) {
+            throw new \DomainException('cannot get due date diff in days as due date is not set');
+        }
+
         $currentDate = $currentDate ?: new \DateTime();
 
         // clone and set time to 0,0,0 (might not be needed)
         $currentDate = clone $currentDate;
         $currentDate->setTime(0, 0);
-        $dueDate = clone $this->getDueDate();
+
+        $dueDate = clone $dueDate;
         $dueDate->setTime(0, 0);
 
         return (int) $currentDate->diff($dueDate)->format('%R%a');
@@ -435,8 +441,12 @@ class Report implements StartEndDateComparableInterface
     public function getNextStartDate(): \DateTime
     {
         $reportingPeriodInDays = $this->calculateReportingPeriod();
+        $startDate = $this->getStartDate();
+        if ($startDate === null) {
+            throw new \DomainException('cannot get next start date as current start date is null');
+        }
 
-        $nextStart = clone $this->getStartDate();
+        $nextStart = clone $startDate;
         $nextStart = $nextStart->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
         $nextStart->setTime(0, 0);
 
@@ -450,8 +460,12 @@ class Report implements StartEndDateComparableInterface
     public function getNextEndDate(): \DateTime
     {
         $reportingPeriodInDays = $this->calculateReportingPeriod();
+        $endDate = $this->getEndDate();
+        if ($endDate === null) {
+            throw new \DomainException('cannot get next end date as current end date is null');
+        }
 
-        $nextEnd = clone $this->getEndDate();
+        $nextEnd = clone $endDate;
         $nextEnd = $nextEnd->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
 
         $nextEnd->setTime(0, 0);
@@ -466,6 +480,10 @@ class Report implements StartEndDateComparableInterface
      */
     private function calculateReportingPeriod(string $format = '%a'): string
     {
+        if ($this->getEndDate() === null || $this->getStartDate() === null) {
+            throw new \DomainException('cannot get period as one or both dates are null');
+        }
+
         return $this->getStartDate()->diff($this->getEndDate())->format($format);
     }
 
@@ -829,7 +847,7 @@ class Report implements StartEndDateComparableInterface
 
         return sprintf(
             $format,
-            $this->getEndDate()->format('Y'),
+            $this->getEndDate()?->format('Y') ?? '',
             $submitDate instanceof \DateTime ?
                 $submitDate->format('Y-m-d') : 'n-a-', // some old reports have no submission date
             $this->getClient()->getCaseNumber()

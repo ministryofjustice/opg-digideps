@@ -44,6 +44,7 @@ class BankAccount implements BankAccountInterface
         'cfo',
     ];
 
+    #[JMS\Groups(['account'])]
     #[JMS\Type('integer')]
     private ?int $id = null;
 
@@ -90,7 +91,7 @@ class BankAccount implements BankAccountInterface
     #[JMS\Type('boolean')]
     #[JMS\Groups(['account'])]
     #[Assert\NotBlank(message: 'account.isClosed.notBlank', groups: ['bank-account-is-closed'])]
-    private ?bool $isClosed = null;
+    private bool $isClosed = false;
 
     /**
      * @var ?string 'yes'|'no'|null
@@ -208,7 +209,7 @@ class BankAccount implements BankAccountInterface
         return true;
     }
 
-    public function getIsClosed(): ?bool
+    public function getIsClosed(): bool
     {
         return $this->isClosed;
     }

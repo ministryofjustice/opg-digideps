@@ -81,9 +81,9 @@ class Contact
         return $this;
     }
 
-    public function getContactName(): ?string
+    public function getContactName(): string
     {
-        return $this->contactName;
+        return $this->contactName ?? '';
     }
 
     public function setContactName(?string $contactName): static

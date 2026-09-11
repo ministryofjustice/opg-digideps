@@ -68,11 +68,7 @@ class ActionController extends AbstractController
         $form = $this->createForm(
             ActionType::class,
             $action,
-            [
-                'step' => $step,
-                'translator' => $translator,
-                'clientFirstName' => $report->getClient()->getFirstname(),
-            ]
+            ['step' => $step]
         );
 
         $form->handleRequest($request);

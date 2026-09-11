@@ -21,7 +21,7 @@ class MoneyTransfer
 
     #[JMS\SerializedName('accountFrom')]
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\BankAccount')]
-    private ?BankAccount $accountFrom = null;
+    private BankAccount $accountFrom;
 
     #[JMS\Type('integer')]
     #[JMS\Groups(['money-transfer'])]
@@ -30,7 +30,7 @@ class MoneyTransfer
 
     #[JMS\SerializedName('accountTo')]
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\BankAccount')]
-    private ?BankAccount $accountTo = null;
+    private BankAccount $accountTo;
 
     #[JMS\Type('integer')]
     #[JMS\Groups(['money-transfer'])]
@@ -59,24 +59,24 @@ class MoneyTransfer
         return $this->amount;
     }
 
-    public function getAccountFrom(): ?BankAccount
+    public function getAccountFrom(): BankAccount
     {
         return $this->accountFrom;
     }
 
-    public function getAccountTo(): ?BankAccount
+    public function getAccountTo(): BankAccount
     {
         return $this->accountTo;
     }
 
-    public function setAccountFrom(?BankAccount $from): static
+    public function setAccountFrom(BankAccount $from): static
     {
         $this->accountFrom = $from;
 
         return $this;
     }
 
-    public function setAccountTo(?BankAccount $to): static
+    public function setAccountTo(BankAccount $to): static
     {
         $this->accountTo = $to;
 
@@ -85,7 +85,7 @@ class MoneyTransfer
 
     public function getAccountFromId(): ?int
     {
-        return $this->accountFromId;
+        return $this->accountFromId ?? $this->accountFrom->getId();
     }
 
     public function setAccountFromId(?int $accountFromId): static
@@ -97,7 +97,7 @@ class MoneyTransfer
 
     public function getAccountToId(): ?int
     {
-        return $this->accountToId;
+        return $this->accountToId ?? $this->accountTo->getId();
     }
 
     public function setAccountToId(?int $accountToId): static

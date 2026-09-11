@@ -412,33 +412,37 @@ class ReportController extends AbstractController
      */
     private function determineNewDueDateFromForm(Report $report, FormInterface $form): \DateTime
     {
-        $newDueDate = $report->getDueDate();
+        $dueDate = $report->getDueDate();
+        $endDate = $report->getEndDate();
+        if ($dueDate === null || $endDate === null) {
+            throw new \DomainException('cannot determine new due date as due date or end date is null');
+        }
 
         /** @var null|string|int $dueDateChoice */
         $dueDateChoice = $form['dueDateChoice']->getData();
 
         if (!empty($dueDateChoice) && preg_match('/^\d+$/', "$dueDateChoice")) {
-            $newDueDate = new \DateTime();
-            $newDueDate->modify("+$dueDateChoice weeks");
+            $dueDate = new \DateTime();
+            $dueDate->modify("+$dueDateChoice weeks");
         } elseif ($dueDateChoice == 'custom') {
             /** @var ?\DateTime $dueDateCustom */
             $dueDateCustom = $form['dueDateCustom']->getData();
 
             if (!is_null($dueDateCustom)) {
-                $newDueDate = $dueDateCustom;
+                $dueDate = $dueDateCustom;
             }
         }
 
-        if ($dueDateChoice === null && $newDueDate < $report->getEndDate()) {
-            $newDueDate = clone $report->getEndDate();
+        if ($dueDateChoice === null && $dueDate < $endDate) {
+            $dueDate = clone $endDate;
             if ($report->isLayReport()) {
-                $newDueDate = $newDueDate->add(new \DateInterval('P21D'));
+                $dueDate = $dueDate->add(new \DateInterval('P21D'));
             } else {
-                $newDueDate = $newDueDate->add(new \DateInterval('P56D'));
+                $dueDate = $dueDate->add(new \DateInterval('P56D'));
             }
         }
 
-        return $newDueDate;
+        return $dueDate;
     }
 
     /**
