@@ -9,7 +9,10 @@
          colors="true"
          bootstrap="./bootstrap.php"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
-         displayDetailsOnPhpunitDeprecations="true">
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnPhpunitDeprecations="true"
+         displayDetailsOnPhpunitNotices="true">
   <testsuites>
       <testsuite name="integration"><directory>.</directory></testsuite>
   </testsuites>
