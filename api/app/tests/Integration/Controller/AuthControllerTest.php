@@ -7,7 +7,6 @@ use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\Test;
-use Symfony\Component\HttpFoundation\Response;
 
 class AuthControllerTest extends AbstractTestController
 {
@@ -210,7 +209,7 @@ class AuthControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEquals('deputy@example.org', $data['email']);
 
-        /** @var Response $response */
+
         $response = self::$frameworkBundleClient->getResponse();
         // logout
         $authToken = $response->headers->get('AuthToken');
