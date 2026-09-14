@@ -27,22 +27,25 @@ final readonly class ClientInspector
         $this->reportInspectors = $inspectors;
     }
 
-    public function isClean(): bool
-    {
-        return array_all($this->reportInspectors, fn (ReportInspector $inspector): bool => $inspector->isClean());
-    }
-
-    public function isContinuous(): bool
-    {
-        $reports = array_map(fn (ReportInspector $inspector): Report => $inspector->report, $this->reportInspectors);
-        return array_all($this->reportInspectors, fn (ReportInspector $inspector): bool => $inspector->hasNoOverlapWith(...$reports));
-    }
-
     /**
      * @return array<ReportCleanupAction|ReportCleanupProblem>
      */
     public function getCleaningActions(): array
     {
-        return array_merge(...array_map(fn (ReportInspector $inspector): array => $inspector->getCleaningActions(), $this->reportInspectors));
+        $reports = array_map(fn (ReportInspector $inspector): Report => $inspector->report, $this->reportInspectors);
+        $actions = [];
+        foreach ($this->reportInspectors as $reportInspector) {
+            if (!$reportInspector->isClean()) {
+                $problems = $reportInspector->getCleaningProblems();
+                if (!empty($problems)) {
+                    $actions = array_merge($actions, $problems);
+                } elseif ($reportInspector->hasNoOverlapWith(...$reports)) {
+                    $actions = array_merge($actions, $reportInspector->getCleaningActions());
+                } else {
+                    $actions = array_merge($actions, $reportInspector->getCleaningActions(true));
+                }
+            }
+        }
+        return $actions;
     }
 }

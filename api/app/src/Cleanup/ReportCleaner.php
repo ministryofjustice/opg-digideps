@@ -74,19 +74,13 @@ final readonly class ReportCleaner
         $this->entityManager->clear();
     }
 
-    private function cleanClient(Client $client, bool $allowNonContinuous): void
+    private function cleanClient(Client $client): void
     {
         try {
             $inspector = new ClientInspector($client);
-            if (!$inspector->isClean()) {
-                if (!$allowNonContinuous && !$inspector->isContinuous()) {
-                    $this->entityManager->persist(new ReportCleanupProblem($client->clientId, null, Problem::NotContinuous));
-                } else {
-                    foreach ($inspector->getCleaningActions() as $action) {
-                        $this->entityManager->persist($action);
-                        $this->counter->nextInt();
-                    }
-                }
+            foreach ($inspector->getCleaningActions() as $action) {
+                $this->entityManager->persist($action);
+                $this->counter->nextInt();
             }
         } catch (\Throwable $throwable) {
             $this->verboseLogger->error(sprintf("Unexpected error '%s' for client with id %s: %s", $throwable::class, $client->clientId, $throwable->getMessage()));
