@@ -1,17 +1,6 @@
 name: "[Workflow] Destroy ephemeral environment"
 
-permissions:
-  id-token: write
-  contents: read
-  security-events: none
-  pull-requests: none
-  actions: none
-  checks: none
-  deployments: none
-  issues: none
-  packages: none
-  repository-projects: none
-  statuses: none
+permissions: {}
 
 defaults:
   run:
@@ -32,6 +21,8 @@ jobs:
       build_identifier: ${{ steps.variables.outputs.build_identifier }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
       - name: extract variables for workflow
         id: variables
         env:
@@ -44,11 +35,15 @@ jobs:
   cleanup_workspace:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     needs:
       - workspace_name
     steps:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
 
       - id: terraform_version
         name: get terraform version

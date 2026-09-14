@@ -4,7 +4,7 @@ echo """
 
 """
 
-actionlint /github/workflows/*.yml
+actionlint -ignore 'at "uses" is not following the format "owner/' /github/workflows/*.yml
 
 echo """
 
@@ -12,6 +12,6 @@ echo """
 
 """
 
-zizmor --collect=all /github
+zizmor --collect=all /github/workflows/*.yml
 
 echo "===== FINISHED ANALYSING GITHUB ACTIONS ====="

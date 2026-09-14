@@ -5,24 +5,17 @@ on:
     # 9pm every day except Sundays
     - cron: "0 21 * * 0-6"
 
-permissions:
-  id-token: write
-  contents: read
-  security-events: none
-  pull-requests: none
-  actions: none
-  checks: none
-  deployments: none
-  issues: none
-  packages: none
-  repository-projects: none
-  statuses: none
+permissions: {}
 
 jobs:
   terraform_environment_cleanup:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
 
       - id: terraform_version
         name: get terraform version
@@ -51,10 +44,12 @@ jobs:
 
       - name: Get ephemeral workspaces to clean up
         id: get_workspaces
+        env:
+          DEVELOPMENT_ACCOUNT: ${{ vars.DEVELOPMENT_ACCOUNT }}
         run: |
           WORKSPACES="$(terraform-workspace-manager \
             -protected-workspaces=true \
-            -aws-account-id=${{ vars.DEVELOPMENT_ACCOUNT }} \
+            -aws-account-id=${DEVELOPMENT_ACCOUNT} \
             -aws-iam-role=digideps-ci-boundary \
             -assume-role=false)"
           echo "workspaces=${WORKSPACES}" >> "$GITHUB_OUTPUT"
@@ -112,7 +107,7 @@ jobs:
 
   slack_notify_failure:
     name: notify of failure
-    uses: ./.github/workflows/_slack-notification.yml
+    uses: $/.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
       - terraform_environment_cleanup

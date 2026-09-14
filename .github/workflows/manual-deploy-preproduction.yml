@@ -11,23 +11,15 @@ on:
         required: false
         default: "none"
 
-permissions:
-  id-token: write
-  contents: read
-  security-events: none
-  pull-requests: none
-  actions: none
-  checks: none
-  deployments: none
-  issues: none
-  packages: none
-  repository-projects: none
-  statuses: none
+permissions: {}
 
 jobs:
   terraform_apply_preproduction:
     name: preproduction environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
+    permissions:
+      id-token: write
+      contents: read
     with:
       workspace: preproduction
       terraform_path: environment
@@ -41,7 +33,10 @@ jobs:
   run_task:
     if: github.event.inputs.task_name != 'none'
     name: run specified task
-    uses: ./.github/workflows/_run-task.yml
+    permissions:
+      id-token: write
+      contents: read
+    uses: $/.github/workflows/_run-task.yml
     needs:
       - terraform_apply_preproduction
     secrets:

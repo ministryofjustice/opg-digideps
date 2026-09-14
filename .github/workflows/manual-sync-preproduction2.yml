@@ -3,23 +3,15 @@ name: "[Manual] Synchronise Preproduction2"
 on:
   workflow_dispatch:
 
-permissions:
-  id-token: write
-  contents: read
-  security-events: none
-  pull-requests: none
-  actions: none
-  checks: none
-  deployments: none
-  issues: none
-  packages: none
-  repository-projects: none
-  statuses: none
+permissions: {}
 
 jobs:
   backup_preproduction:
     name: backup preproduction
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
+    permissions:
+      id-token: write
+      contents: read
     with:
       workspace: preproduction
       account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
@@ -31,7 +23,10 @@ jobs:
 
   restore_to_preproduction2:
     name: restore to preproduction2
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
+    permissions:
+      id-token: write
+      contents: read
     needs:
       - backup_preproduction
     with:

@@ -7,23 +7,15 @@ on:
         description: "Image tag to deploy"
         required: true
 
-permissions:
-  id-token: write
-  contents: read
-  security-events: none
-  pull-requests: none
-  actions: none
-  checks: none
-  deployments: none
-  issues: none
-  packages: none
-  repository-projects: none
-  statuses: none
+permissions: {}
 
 jobs:
   terraform_apply_preproduction2:
     name: preproduction2 environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
+    permissions:
+      id-token: write
+      contents: read
     with:
       workspace: preproduction2
       terraform_path: environment
