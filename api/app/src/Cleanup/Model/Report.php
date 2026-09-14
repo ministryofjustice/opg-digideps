@@ -19,7 +19,6 @@ final readonly class Report
         public bool $submitted,
         Order ...$orders,
     ) {
-        usort($orders, fn (Order $left, Order $right) => $left->madeDate->getTimestamp() <=> $right->madeDate->getTimestamp());
         $this->orders = $orders;
     }
 }
