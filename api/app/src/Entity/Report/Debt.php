@@ -54,15 +54,16 @@ class Debt
 
     #[JMS\Groups(['debt'])]
     #[ORM\Column(name: 'more_details', type: 'text', nullable: true)]
-    private ?string $moreDetails = null;
+    private ?string $moreDetails;
 
-    public function __construct(Report $report, string $debtTypeId, bool $hasMoreDetails, null|string|int|float $amount = null)
+    public function __construct(Report $report, string $debtTypeId, bool $hasMoreDetails, null|string|int|float $amount = null, ?string $moreDetails = null)
     {
         $this->report = $report;
         $report->addDebt($this);
 
         $this->debtTypeId = $debtTypeId;
         $this->hasMoreDetails = $hasMoreDetails;
+        $this->moreDetails = $this->hasMoreDetails ? $moreDetails : null;
         $this->setAmount($amount);
     }
 
