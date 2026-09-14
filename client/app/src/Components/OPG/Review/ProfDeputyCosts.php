@@ -70,10 +70,12 @@ final class ProfDeputyCosts
                 }
             }
             $builder->addItem($this->text['amountToScco'], $report->getProfDeputyCostsAmountToScco() === null ? $this->text['notEntered'] : $this->formatMoney($report->getProfDeputyCostsAmountToScco()));
+
+            if (!empty($report->getProfDeputyCostsReasonBeyondEstimate())) {
+                $builder->addItem($this->text['beyondEstimate'], $report->getProfDeputyCostsReasonBeyondEstimate());
+            }
         }
-        if (!empty($report->getProfDeputyCostsReasonBeyondEstimate())) {
-            $builder->addItem('beyondEstimate', $report->getProfDeputyCostsReasonBeyondEstimate());
-        }
+
         return $builder->makeList();
     }
 
@@ -103,6 +105,7 @@ final class ProfDeputyCosts
             'underPracticeDirection19B' => $this->translate('interimExists.form.profDeputyCostsHasInterim.label'),
             'costForInterim' => $this->translate('review.costForInterim'),
             'amountToScco' => $this->translate('amountToScco.form.profDeputyCostsAmountToScco.label'),
+            'beyondEstimate' => $this->translate('amountToScco.form.profDeputyCostsReasonBeyondEstimate.labelSummary'),
             'totalCosts' => $this->translate('summaryPage.questionLabel.totaPaidThisPeriod'),
             'tableHeader' => $this->translate('summaryPage.breakdownOfAdditionalCosts'),
             'costType' => $this->translate('summaryPage.item'),
