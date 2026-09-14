@@ -42,7 +42,7 @@ final class CleanupController extends AbstractController
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function report(Request $request): Response
     {
-        $model = new CleanupModel(null, false, false);
+        $model = new CleanupModel(null, false);
         $form = $this->createForm(CleanupType::class, $model);
 
         if ($request->getMethod() === 'POST') {
@@ -64,7 +64,7 @@ final class CleanupController extends AbstractController
                         if ($model->caseNumber !== null) {
                             $this->addFlash($result['ok'] ? 'notice' : 'error', $result['ok'] ? 'Planning successful' : "Planning error: {$result['message']}");
                         }
-                        $model = new CleanupModel(null, false, false);
+                        $model = new CleanupModel(null, false);
                         $form = $this->createForm(CleanupType::class, $model);
                     }
                 }

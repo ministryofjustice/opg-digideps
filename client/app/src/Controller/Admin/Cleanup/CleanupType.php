@@ -18,7 +18,6 @@ final class CleanupType extends AbstractType
         $builder
             ->add('caseNumber', TextType::class)
             ->add('notDryRun', CheckboxType::class)
-            ->add('allowNotContinuous', CheckboxType::class)
             ->add('submit', SubmitType::class)
         ;
     }

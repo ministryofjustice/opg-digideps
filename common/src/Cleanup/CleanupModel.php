@@ -9,7 +9,6 @@ final class CleanupModel
     public function __construct(
         public ?string $caseNumber,
         public bool $notDryRun,
-        public bool $allowNotContinuous,
     ) {
     }
 }

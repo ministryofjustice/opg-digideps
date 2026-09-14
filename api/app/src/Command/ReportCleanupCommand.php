@@ -17,7 +17,7 @@ class ReportCleanupCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->reportCleaner->clean($input->hasArgument('allow-not-continuous'));
+        $this->reportCleaner->clean();
         if ($input->hasArgument('execute-actions')) {
             $this->reportCleaner->executeActions();
         }

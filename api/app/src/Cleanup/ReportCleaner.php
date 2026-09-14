@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Cleanup\Model\Client;
 use OPG\Digideps\Backend\Cleanup\Model\Problem;
 use OPG\Digideps\Backend\Cleanup\Model\Query;
-use OPG\Digideps\Backend\Entity\Cleanup\ReportCleanupProblem;
 use OPG\Digideps\Backend\Entity\Counter\Counter;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use Psr\Log\LoggerInterface;
@@ -27,19 +26,19 @@ final readonly class ReportCleaner
         $this->query = new Query($this->connection, $this->verboseLogger);
     }
 
-    public function clean(bool $allowNonContinuous, int ...$clientIds): void
+    public function clean(int ...$clientIds): void
     {
-        $this->verboseLogger->notice("Planning report cleanup. Allow non continuous: " . ($allowNonContinuous ? 'Yes' : 'No'));
+        $this->verboseLogger->notice('Planning report cleanup.');
         $this->connection->executeStatement('DELETE FROM report_cleanup_action WHERE TRUE');
         $this->connection->executeStatement('DELETE FROM report_cleanup_problem WHERE TRUE');
         $this->verboseLogger->notice('Planning report cleanup for PFA.');
-        $this->cleanType($allowNonContinuous, CourtOrderType::PFA, $clientIds);
+        $this->cleanType(CourtOrderType::PFA, $clientIds);
         $this->verboseLogger->notice('Planning report cleanup for HW.');
-        $this->cleanType($allowNonContinuous, CourtOrderType::HW, $clientIds);
+        $this->cleanType(CourtOrderType::HW, $clientIds);
         $this->verboseLogger->notice('Planning report cleanup. Done');
     }
 
-    private function cleanType(bool $allowNonContinuous, CourtOrderType $type, array $clientIds): void
+    private function cleanType(CourtOrderType $type, array $clientIds): void
     {
         try {
             $count = count($clientIds);
@@ -52,7 +51,7 @@ final readonly class ReportCleaner
             foreach ($this->query->run($type, ...$clientIds) as $i => $client) {
                 memory_reset_peak_usage();
 
-                $this->cleanClient($client, $allowNonContinuous);
+                $this->cleanClient($client);
 
                 if ($this->counter->nextInt() > 256) {
                     $this->counter->reset();
@@ -74,19 +73,13 @@ final readonly class ReportCleaner
         $this->entityManager->clear();
     }
 
-    private function cleanClient(Client $client, bool $allowNonContinuous): void
+    private function cleanClient(Client $client): void
     {
         try {
             $inspector = new ClientInspector($client);
-            if (!$inspector->isClean()) {
-                if (!$allowNonContinuous && !$inspector->isContinuous()) {
-                    $this->entityManager->persist(new ReportCleanupProblem($client->clientId, null, Problem::NotContinuous));
-                } else {
-                    foreach ($inspector->getCleaningActions() as $action) {
-                        $this->entityManager->persist($action);
-                        $this->counter->nextInt();
-                    }
-                }
+            foreach ($inspector->getCleaningActions() as $action) {
+                $this->entityManager->persist($action);
+                $this->counter->nextInt();
             }
         } catch (\Throwable $throwable) {
             $this->verboseLogger->error(sprintf("Unexpected error '%s' for client with id %s: %s", $throwable::class, $client->clientId, $throwable->getMessage()));

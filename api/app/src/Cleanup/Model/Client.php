@@ -15,6 +15,8 @@ final readonly class Client
      */
     public array $orders;
 
+    public ?Order $activeOrder;
+
     /**
      * @param array<array<string, mixed>> $rows
      */
@@ -25,12 +27,27 @@ final readonly class Client
     ) {
         $orders = [];
         $reports = [];
+
         foreach ($rows as $row) {
             $orderId = (int)$row['order_id'];
-            $reportId = (int)$row['report_id'];
             if (!array_key_exists($orderId, $orders)) {
                 $orders[$orderId] = new Order($this, $orderId, $row['order_uid'], new \DateTimeImmutable($row['order_made_date'])->setTime(0, 0), (bool)$row['open']);
             }
+        }
+        $this->orders = $orders;
+        $activeOrders = array_filter($this->orders, fn (Order $order): bool => $order->open);
+        $activeOrder = null;
+        foreach ($activeOrders as $candidate) {
+            $activeOrder ??= $candidate;
+            if ($activeOrder->madeDate < $candidate->madeDate) {
+                $activeOrder = $candidate;
+            }
+        }
+        $this->activeOrder = $activeOrder;
+
+        foreach ($rows as $row) {
+            $orderId = (int)$row['order_id'];
+            $reportId = (int)$row['report_id'];
             $reports[$reportId] ??= [
                 'orders' => [],
                 'report_id' => $reportId,
@@ -38,11 +55,9 @@ final readonly class Client
                 'end_date' => new \DateTimeImmutable($row['report_end_date'])->setTime(0, 0),
                 'submitted' => $row['submitted']
             ];
-            $reports[$reportId]['orders'][$orderId] = $orders[$orderId];
+            $reports[$reportId]['orders'][$orderId] = $this->orders[$orderId];
         }
-        usort($orders, fn (Order $left, Order $right) => $left->madeDate->getTimestamp() <=> $right->madeDate->getTimestamp());
-        $this->orders = $orders;
-        $reports = array_map(fn (array $data): Report => new Report(
+        $this->reports = array_map(fn (array $data): Report => new Report(
             $this,
             $data['report_id'],
             $data['start_date'],
@@ -50,7 +65,5 @@ final readonly class Client
             $data['submitted'],
             ...$data['orders']
         ), $reports);
-        usort($reports, fn (Report $left, Report $right) => $left->startDate->getTimestamp() <=> $right->endDate->getTimestamp());
-        $this->reports = $reports;
     }
 }

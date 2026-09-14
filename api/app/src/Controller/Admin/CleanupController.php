@@ -48,7 +48,7 @@ class CleanupController extends AbstractController
                 array_push($clientIds, ...array_map(fn (string $caseNumber): int => $this->clientRepository->findByCaseNumber($caseNumber)?->getId() ?? throw new NotFound("Client with case number {$caseNumber}"), explode(',', $model->caseNumber)));
             }
             if (!empty($clientIds)) {
-                $this->reportCleaner->clean($model->allowNotContinuous, ...$clientIds);
+                $this->reportCleaner->clean(...$clientIds);
             }
             if ($model->notDryRun) {
                 $count = $this->reportCleaner->executeActions();
