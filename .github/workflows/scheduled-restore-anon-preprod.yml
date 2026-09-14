@@ -5,23 +5,14 @@ on:
     # 6.30pm every week day (Mon-Fri)
     - cron: "30 18 * * 0-5"
 
-permissions:
-  id-token: write
-  contents: read
-  security-events: none
-  pull-requests: none
-  actions: none
-  checks: none
-  deployments: none
-  issues: none
-  packages: none
-  repository-projects: none
-  statuses: none
+permissions: {}
 
 jobs:
   backup_production:
     name: backup production
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
+    permissions:
+      id-token: write
     with:
       workspace: production
       account_id: ${{ vars.PRODUCTION_ACCOUNT }}
@@ -33,7 +24,9 @@ jobs:
 
   restore_to_preproduction:
     name: restore to preproduction
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
+    permissions:
+      id-token: write
     needs:
       - backup_production
     with:
@@ -48,7 +41,9 @@ jobs:
 
   backup_preproduction:
     name: backup preproduction
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
+    permissions:
+      id-token: write
     needs:
       - restore_to_preproduction
     with:
@@ -62,7 +57,9 @@ jobs:
 
   restore_to_preproduction2:
     name: restore to preproduction2
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
+    permissions:
+      id-token: write
     needs:
       - backup_preproduction
     with:
@@ -77,8 +74,10 @@ jobs:
 
   slack_notify_failure:
     name: notify of failure
-    uses: ./.github/workflows/_slack-notification.yml
+    uses: $/.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
+    permissions:
+      id-token: write
     needs:
       - backup_production
     with:

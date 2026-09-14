@@ -2,23 +2,14 @@ name: "[Manual] Spin up Development environment"
 
 on: workflow_dispatch
 
-permissions:
-  id-token: write
-  contents: read
-  security-events: none
-  pull-requests: none
-  actions: none
-  checks: none
-  deployments: none
-  issues: none
-  packages: none
-  repository-projects: none
-  statuses: none
+permissions: {}
 
 jobs:
   latest_deployed_image:
     name: get latest deployed image
-    uses: ./.github/workflows/_latest-deployed-image.yml
+    uses: $/.github/workflows/_latest-deployed-image.yml
+    permissions:
+      id-token: write
     with:
       workspace: training
       terraform_path: environment
@@ -28,7 +19,9 @@ jobs:
 
   terraform_apply_development:
     name: development environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
+    permissions:
+      id-token: write
     needs:
       - latest_deployed_image
     with:
@@ -43,7 +36,9 @@ jobs:
 
   reset_database:
     name: reset development database
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
+    permissions:
+      id-token: write
     needs:
       - terraform_apply_development
     with:
@@ -57,7 +52,9 @@ jobs:
 
   slack_notify_success:
     name: notify of success
-    uses: ./.github/workflows/_slack-notification.yml
+    uses: $/.github/workflows/_slack-notification.yml
+    permissions:
+      id-token: write
     needs:
       - reset_database
     with:
@@ -68,8 +65,10 @@ jobs:
 
   slack_notify_failure:
     name: notify of failure
-    uses: ./.github/workflows/_slack-notification.yml
+    uses: $/.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
+    permissions:
+      id-token: write
     needs:
       - reset_database
     with:
