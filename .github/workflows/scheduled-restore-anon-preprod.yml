@@ -21,7 +21,7 @@ permissions:
 jobs:
   backup_production:
     name: backup production
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
     with:
       workspace: production
       account_id: ${{ vars.PRODUCTION_ACCOUNT }}
@@ -33,7 +33,7 @@ jobs:
 
   restore_to_preproduction:
     name: restore to preproduction
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
     needs:
       - backup_production
     with:
@@ -48,7 +48,7 @@ jobs:
 
   backup_preproduction:
     name: backup preproduction
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
     needs:
       - restore_to_preproduction
     with:
@@ -62,7 +62,7 @@ jobs:
 
   restore_to_preproduction2:
     name: restore to preproduction2
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
     needs:
       - backup_preproduction
     with:
@@ -77,7 +77,7 @@ jobs:
 
   slack_notify_failure:
     name: notify of failure
-    uses: ./.github/workflows/_slack-notification.yml
+    uses: $/.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
       - backup_production

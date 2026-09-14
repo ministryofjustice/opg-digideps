@@ -12,6 +12,6 @@ echo """
 
 """
 
-zizmor --collect=all /github
+zizmor --collect=all /github/workflows/*.yml
 
 echo "===== FINISHED ANALYSING GITHUB ACTIONS ====="

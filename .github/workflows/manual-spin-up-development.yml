@@ -18,7 +18,7 @@ permissions:
 jobs:
   latest_deployed_image:
     name: get latest deployed image
-    uses: ./.github/workflows/_latest-deployed-image.yml
+    uses: $/.github/workflows/_latest-deployed-image.yml
     with:
       workspace: training
       terraform_path: environment
@@ -28,7 +28,7 @@ jobs:
 
   terraform_apply_development:
     name: development environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
     needs:
       - latest_deployed_image
     with:
@@ -43,7 +43,7 @@ jobs:
 
   reset_database:
     name: reset development database
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
     needs:
       - terraform_apply_development
     with:
@@ -57,7 +57,7 @@ jobs:
 
   slack_notify_success:
     name: notify of success
-    uses: ./.github/workflows/_slack-notification.yml
+    uses: $/.github/workflows/_slack-notification.yml
     needs:
       - reset_database
     with:
@@ -68,7 +68,7 @@ jobs:
 
   slack_notify_failure:
     name: notify of failure
-    uses: ./.github/workflows/_slack-notification.yml
+    uses: $/.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
       - reset_database

@@ -23,7 +23,7 @@ permissions:
 jobs:
   terraform_apply_preproduction2:
     name: preproduction2 environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
     with:
       workspace: preproduction2
       terraform_path: environment

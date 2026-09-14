@@ -35,6 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Generate build output using Markdown
@@ -72,14 +73,14 @@ jobs:
   create_tag_release:
     name: Create release tag from releasable
     needs: [workflow_variables]
-    uses: ./.github/workflows/_tag-release.yml
+    uses: $/.github/workflows/_tag-release.yml
     with:
       current_tag: releasable
       release_tag: ${{ needs.workflow_variables.outputs.version_tag }}
 
   terraform_apply_account_development:
     name: development account apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
     secrets:
@@ -93,7 +94,7 @@ jobs:
 
   terraform_apply_account_preproduction:
     name: preproduction account apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
       - terraform_apply_account_development
@@ -108,7 +109,7 @@ jobs:
 
   terraform_apply_preproduction:
     name: preproduction environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
     needs:
       - terraform_apply_account_preproduction
       - workflow_variables
@@ -123,7 +124,7 @@ jobs:
 
   terraform_apply_training:
     name: training environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
     needs:
       - terraform_apply_preproduction
       - workflow_variables
@@ -138,7 +139,7 @@ jobs:
 
   terraform_apply_account_production:
     name: production account apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
     needs:
       - workflow_variables
       - terraform_apply_preproduction
@@ -153,7 +154,7 @@ jobs:
 
   terraform_apply_production:
     name: production environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
     needs:
       - terraform_apply_account_production
       - workflow_variables
@@ -168,7 +169,7 @@ jobs:
 
   smoke_tests_production:
     name: smoke tests on production
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
     needs:
       - workflow_variables
       - terraform_apply_production
@@ -196,7 +197,7 @@ jobs:
 
   slack_notify_success:
     name: notify of success
-    uses: ./.github/workflows/_slack-notification.yml
+    uses: $/.github/workflows/_slack-notification.yml
     needs:
       - workflow_variables
       - end_of_workflow
@@ -207,7 +208,7 @@ jobs:
 
   slack_notify_failure:
     name: notify of failure
-    uses: ./.github/workflows/_slack-notification.yml
+    uses: $/.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
       - workflow_variables

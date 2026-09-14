@@ -19,7 +19,7 @@ permissions:
 jobs:
   backup_preproduction:
     name: backup preproduction
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
     with:
       workspace: preproduction
       account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
@@ -31,7 +31,7 @@ jobs:
 
   restore_to_preproduction2:
     name: restore to preproduction2
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
     needs:
       - backup_preproduction
     with:
