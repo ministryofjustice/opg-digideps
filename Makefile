@@ -331,3 +331,7 @@ htmltopdf-apk-upgrade: ##@apk_upgrades Upgrade pinned htmltopdf apk versions
 	docker compose -f docker-compose.commands.yml build --no-cache htmltopdf-apk-upgrade
 	docker compose -f docker-compose.commands.yml up htmltopdf-apk-upgrade
 	docker cp opg-digideps-htmltopdf-apk-upgrade:/Dockerfile ./htmltopdf/Dockerfile
+
+check-php-cs-fixer: ##@php-cs-fixer Check php-cs-fixer
+	CHANGED_PHP_FILES="$(shell git diff --diff-filter=d --name-only origin/main... -- '**/*.php' | xargs)" \
+	docker compose -f docker-compose.commands.yml up php-cs-fixer

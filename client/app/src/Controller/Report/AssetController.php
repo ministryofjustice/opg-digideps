@@ -23,8 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AssetController extends AbstractController
-{
+class AssetController extends AbstractController {
     private static array $jmsGroups = [
         'asset',
         'asset-state',
