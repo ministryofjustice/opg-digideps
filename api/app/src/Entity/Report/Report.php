@@ -1270,8 +1270,21 @@ class Report
 
     public function setCourtOrder(CourtOrder $courtOrder): static
     {
+        $this->pfaCourtOrder?->removeReport($this);
+        $this->hwCourtOrder?->removeReport($this);
+        $this->pfaCourtOrder?->getSibling()?->removeReport($this);
+        $this->hwCourtOrder?->getSibling()?->removeReport($this);
+
         $this->pfaCourtOrder = $courtOrder->getOrderType() === CourtOrderType::HW ? $courtOrder->isHybrid() ? $courtOrder->getSibling() : null : $courtOrder;
         $this->hwCourtOrder = $courtOrder->getOrderType() === CourtOrderType::PFA ? $courtOrder->isHybrid() ? $courtOrder->getSibling() : null : $courtOrder;
+
+        if ($this->pfaCourtOrder !== null && !$this->pfaCourtOrder->getReports()->contains($this)) {
+            $this->pfaCourtOrder->getReports()->add($this);
+        }
+        if ($this->hwCourtOrder !== null && !$this->hwCourtOrder->getReports()->contains($this)) {
+            $this->hwCourtOrder->getReports()->add($this);
+        }
+
         return $this;
     }
 
@@ -1335,5 +1348,10 @@ class Report
             }
         }
         return $candidate;
+    }
+
+    public function hasNeverBeenSubmitted(): bool
+    {
+        return $this->getSubmitDate() !== null && $this->getSubmitted() !== true && $this->getUnSubmitDate() === null;
     }
 }

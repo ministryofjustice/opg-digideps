@@ -26,20 +26,16 @@ final readonly class ReportReassembler
             return $result;
         }
 
-        if ($transitionResult->hasErrors()) {
-            $result->appendError(implode('; ', $transitionResult->errorMessages));
-            return $result;
-        }
-
         foreach ($transitionResult->updatedReports as $updatedReport) {
             $this->entityManager->persist($updatedReport);
         }
 
-        foreach ($transitionResult->updatedCourtOrders as $updatedCourtOrder) {
-            $this->entityManager->persist($updatedCourtOrder);
-        }
-
         $this->entityManager->flush();
+
+        if ($transitionResult->hasErrors()) {
+            $result->appendError(implode('; ', $transitionResult->errorMessages));
+            return $result;
+        }
 
         $result->appendMessage(implode('; ', array_map(fn (callable|string $message): string => is_string($message) ? $message : $message(), $transitionResult->messages)));
 
