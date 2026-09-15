@@ -13,9 +13,14 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CourtOrderRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(private readonly ManagerRegistry $registry)
     {
         parent::__construct($registry, CourtOrder::class);
+    }
+
+    public function clear(): void
+    {
+        $this->registry->getManager()->clear();
     }
 
     public function findCourtOrderByUid(string $uid): ?array
