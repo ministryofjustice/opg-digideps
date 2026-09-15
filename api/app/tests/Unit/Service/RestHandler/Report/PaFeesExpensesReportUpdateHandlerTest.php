@@ -36,11 +36,6 @@ final class PaFeesExpensesReportUpdateHandlerTest extends TestCase
             ->onlyMethods(['addFeesToReportIfMissing'])
             ->getMock();
 
-        $this->em->expects($this->any())
-            ->method('getRepository')
-            ->with(Report::class)
-            ->willReturn($this->reportRepo);
-
         $this->sut = new PaFeesExpensesReportUpdateHandler($this->em);
     }
 
@@ -50,6 +45,10 @@ final class PaFeesExpensesReportUpdateHandlerTest extends TestCase
     public function testInitialiseFeesGetCreated(): void
     {
         $this->ensureSectionStatusCacheWillBeUpdated();
+        $this->em->expects($this->once())
+            ->method('getRepository')
+            ->with(Report::class)
+            ->willReturn($this->reportRepo);
         $this->reportRepo->expects($this->once())
             ->method('addFeesToReportIfMissing')
             ->with($this->report);

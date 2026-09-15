@@ -72,7 +72,9 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
         $app->add($sut);
 
-        $command = $app->find(CheckCSVUploadedCommand::$defaultName);
+        $commandName = CheckCSVUploadedCommand::$defaultName;
+        self::assertIsString($commandName);
+        $command = $app->find($commandName);
         $this->commandTester = new CommandTester($command);
 
         $this->now = new \DateTime();

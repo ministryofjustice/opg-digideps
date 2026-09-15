@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Security;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Security\UserVoter;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
@@ -247,8 +248,8 @@ class UserVoterTest extends KernelTestCase
     }
 
     /**
-     * @dataProvider deleteUserProvider
      */
+    #[DataProvider('deleteUserProvider')]
     public function testDetermineDeletePermission(User $deletor, User $deletee, int $expectedPermission): void
     {
         $token = new UsernamePasswordToken($deletor, 'private-firewall');
@@ -462,8 +463,8 @@ class UserVoterTest extends KernelTestCase
     }
 
     /**
-     * @dataProvider addEditUserProvider
      */
+    #[DataProvider('addEditUserProvider')]
     public function testDetermineAddEditPermission(User $editor, User $editee, int $expectedPermission): void
     {
         $sut = new UserVoter();

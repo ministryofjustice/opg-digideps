@@ -12,6 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SatisfactionPerformanceStatsCommand extends Command
 {
+    /** @var string|null $defaultName */
     public static $defaultName = 'digideps:satisfaction-performance-stats';
 
     public function __construct(
