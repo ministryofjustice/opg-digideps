@@ -991,42 +991,39 @@ class Report
             return $courtOrder->getCourtOrderUid();
         };
 
-        $courtOrderUids = array_map($uidPopulateCallback, $this->getActiveCourtOrders());
-        $latestOrderedCourtOrderUids = sort($courtOrderUids);
+        $latestCourtOrderUids = array_map($uidPopulateCallback, $this->getActiveCourtOrders());
+        sort($latestCourtOrderUids);
 
         $orderedSubmittedClientReports = $this->getClient()->getSubmittedReports();
         $latestStartDate = $this->getStartDate();
 
         $filteredReports = $orderedSubmittedClientReports->filter(function (Report $clientReport) use (
             $latestStartDate,
-            $latestOrderedCourtOrderUids,
+            $latestCourtOrderUids,
             $uidPopulateCallback,
         ): bool {
             $courtOrderUids = array_map($uidPopulateCallback, $clientReport->getActiveCourtOrders());
-            $OrderedCourtOrderUids = sort($courtOrderUids);
+            sort($courtOrderUids);
 
             $endDate = $clientReport->getEndDate();
-            $daysBetweenReports = $endDate->diff($latestStartDate)->days;
 
-            return $OrderedCourtOrderUids === $latestOrderedCourtOrderUids &&
-                $daysBetweenReports === 1 &&
+            return count(array_diff($latestCourtOrderUids, $courtOrderUids)) === 0 &&
+                $endDate->diff($latestStartDate)->days === 1 &&
                 $clientReport->isPfa();
         });
 
-        if ($filteredReports->count() > 1) {
-            $report = $filteredReports->first();
+        $report = $filteredReports->first();
 
-            /** @var Report $filteredReport */
-            foreach ($filteredReports as $filteredReport) {
-                if ($filteredReport->getSubmitDate() > $report->getSubmitDate()) {
-                    $report = $filteredReport;
+        if ($report instanceof Report) {
+            if ($filteredReports->count() > 1) {
+                /** @var Report $filteredReport */
+                foreach ($filteredReports as $filteredReport) {
+                    if ($filteredReport->getSubmitDate() > $report->getSubmitDate()) {
+                        $report = $filteredReport;
+                    }
                 }
             }
-        } else {
-            $report = $filteredReports->first() ?: null;
-        }
 
-        if ($report !== null) {
             return [
                 'report-summary' => $report->getReportSummary(),
                 'financial-summary' => $report->getFinancialSummary(),
