@@ -991,21 +991,24 @@ class Report
             return $courtOrder->getCourtOrderUid();
         };
 
-        $latestCourtOrderUids = sort(array_map($uidPopulateCallback, $this->getActiveCourtOrders()));
+        $courtOrderUids = array_map($uidPopulateCallback, $this->getActiveCourtOrders());
+        $latestOrderedCourtOrderUids = sort($courtOrderUids);
+
         $orderedSubmittedClientReports = $this->getClient()->getSubmittedReports();
         $latestStartDate = $this->getStartDate();
 
         $filteredReports = $orderedSubmittedClientReports->filter(function (Report $clientReport) use (
             $latestStartDate,
-            $latestCourtOrderUids,
+            $latestOrderedCourtOrderUids,
             $uidPopulateCallback,
         ): bool {
-            $reportCourtOrderUids = sort(array_map($uidPopulateCallback, $clientReport->getActiveCourtOrders()));
+            $courtOrderUids = array_map($uidPopulateCallback, $clientReport->getActiveCourtOrders());
+            $OrderedCourtOrderUids = sort($courtOrderUids);
 
             $endDate = $clientReport->getEndDate();
-            $daysBetweenReports = $endDate->diff($latestStartDate)->d;
+            $daysBetweenReports = $endDate->diff($latestStartDate)->days;
 
-            return $reportCourtOrderUids === $latestCourtOrderUids &&
+            return $OrderedCourtOrderUids === $latestOrderedCourtOrderUids &&
                 $daysBetweenReports === 1 &&
                 $clientReport->isPfa();
         });
