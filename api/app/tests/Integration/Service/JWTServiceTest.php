@@ -15,6 +15,7 @@ use OPG\Digideps\Backend\Service\SecretManagerService;
 use OPG\Digideps\Backend\Service\Time\DateTimeProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\LoggerInterface;
 
 class JWTServiceTest extends TestCase
@@ -52,7 +53,7 @@ class JWTServiceTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function verifyWithAValidJWT(): void
     {
         $jwt = $this->createSignedJWTString();
@@ -60,7 +61,7 @@ class JWTServiceTest extends TestCase
         self::assertTrue($this->sut->verify($jwt));
     }
 
-    /** @test */
+    #[Test]
     public function verifyWithMissingAlgorithmFails(): void
     {
         $jwt = $this->createUnsignedJWTString('https://example.org');
@@ -68,7 +69,7 @@ class JWTServiceTest extends TestCase
         self::assertFalse($this->sut->verify($jwt));
     }
 
-    /** @test */
+    #[Test]
     public function verifyWithIncorrectAudienceFails(): void
     {
         $jwt = $this->createSignedJWTString('wrong_aud');
@@ -76,7 +77,7 @@ class JWTServiceTest extends TestCase
         self::assertFalse($this->sut->verify($jwt));
     }
 
-    /** @test */
+    #[Test]
     public function verifyWithIncorrectIssuerFails(): void
     {
         $jwt = $this->createSignedJWTString('urn:opg:registration_service', 'wrong_iss');
@@ -84,7 +85,7 @@ class JWTServiceTest extends TestCase
         self::assertFalse($this->sut->verify($jwt));
     }
 
-    /** @test */
+    #[Test]
     public function createNewJWT(): void
     {
         if ($this->privateKeyPem === '' || $this->publicKeyPem === '') {

@@ -192,11 +192,6 @@ final class CourtOrderInviteServiceTest extends TestCase
 
         $mockPreregistration->expects(self::once())->method('getDeputyUid')->willReturn($deputyUid);
 
-        $this->mockCourtOrderService->expects(self::once())
-            ->method('getByUidAsUser')
-            ->with($courtOrderUid, $invitingUser)
-            ->willReturn($mockCourtOrder);
-
         $this->mockEntityManager->expects(self::once())->method('beginTransaction');
         $this->mockEntityManager->expects(self::once())->method('rollback');
 
@@ -245,11 +240,6 @@ final class CourtOrderInviteServiceTest extends TestCase
             ->willReturn($mockPreregistration);
 
         $mockPreregistration->expects(self::once())->method('getDeputyUid')->willReturn($deputyUid);
-
-        $this->mockCourtOrderService->expects(self::once())
-            ->method('getByUidAsUser')
-            ->with($courtOrderUid, $invitingUser)
-            ->willReturn($mockCourtOrder);
 
         $this->mockEntityManager->expects(self::once())->method('beginTransaction');
         $this->mockEntityManager->expects(self::once())->method('commit');

@@ -344,7 +344,7 @@ final class ReportServiceTest extends TestCase
 
         $this->mockReportFactory->expects(self::exactly($reportsCreated))
             ->method('create')
-            ->with($mockClient, $this->isType('string'), $this->isType('string'), $this->isInstanceOf(\DateTime::class))
+            ->with($mockClient, $this->isString(), $this->isString(), $this->isInstanceOf(\DateTime::class))
             ->willReturnCallback(function (Client $client, string $typeOfReport, string $orderType) {
                 $stub = self::createStub(Report::class);
 

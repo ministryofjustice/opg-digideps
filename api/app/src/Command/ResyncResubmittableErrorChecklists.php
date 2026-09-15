@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ResyncResubmittableErrorChecklists extends Command
 {
+    /** @var string|null $defaultName */
     protected static $defaultName = 'digideps:resync-resubmittable-error-checklists';
 
     public function __construct(private readonly ChecklistRepository $checklistRepository)
