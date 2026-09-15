@@ -14,20 +14,14 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Install PHP-CS-Fixer
-        run: |
-          curl -OL https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/releases/download/v3.95.11/php-cs-fixer.phar
-          php php-cs-fixer.phar --version
-
-      - name: Detect changed PHP files
+      - name: Detect changed PHP files to see if we should skip
         run: |
           {
             echo "CHANGED_PHP_FILES<<EOF"
             git diff --diff-filter=d --name-only origin/main... -- '**/*.php'
             echo "EOF"
-          } >> "$GITHUB_ENV"
+          } >> "$CHANGED_PHP_FILES"
 
       - name: Run php-cs-fixer
         if: env.CHANGED_PHP_FILES != ''
-        run: |
-          php php-cs-fixer.phar check --config=.php-cs-fixer.dist.php -v --show-progress=none $CHANGED_PHP_FILES
+        run: make check-php-cs-fixer
