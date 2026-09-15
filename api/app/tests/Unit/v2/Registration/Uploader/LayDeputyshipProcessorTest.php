@@ -83,19 +83,16 @@ final class LayDeputyshipProcessorTest extends TestCase
     {
         // Expectations
         $layDeputyshipDto = new LayDeputyshipDto();
-        $existingClient = $this->createMock(Client::class);
+        $existingClient = new Client();
 
-        $mockReportClass = $this->createPartialMock(Report::class, methods: ['getId']);
-        $existingReport = new $mockReportClass(new CourtOrder(
+        $existingReport = new Report(new CourtOrder(
             '',
             CourtOrderType::PFA,
             CourtOrderReportType::OPG102,
             CourtOrderKind::Single,
             new \DateTime(),
             $existingClient
-        ), '102', new \DateTime(), new \DateTime(), false);
-        $existingReport->expects($this->once())->method('getId')->willReturn(1);
-        $existingReport = $this->createMock(Report::class);
+        ), '102', new \DateTime(), new \DateTime(), false)->setId(1);
 
         $clientMatch = new ClientMatch(
             client: $existingClient,

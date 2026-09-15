@@ -68,8 +68,8 @@ final readonly class RequiredReportDataFactory implements DataFactoryInterface
             return;
         }
 
-        $newReport = $latest === null ? $this->createReportFromOrder($courtOrder) : $this->createReportFromReport($latest);
-        $courtOrder->addReport($newReport);
+        $newReport = $latest === null ? $this->createReportFromOrder($courtOrder) : $this->createReportFromReport($latest->setCourtOrder($courtOrder));
+        $this->em->persist($newReport);
         $this->em->persist($courtOrder);
         $this->em->flush();
     }
@@ -106,9 +106,7 @@ final readonly class RequiredReportDataFactory implements DataFactoryInterface
 
     private function createReportFromOrder(CourtOrder $courtOrder): Report
     {
-        $newReport = $this->reportService->createReportFromOrder($courtOrder);
-        $this->em->persist($newReport);
-        return $newReport;
+        return $this->reportService->createReportFromOrder($courtOrder) ?? throw new \RuntimeException("Can't create a report based on court_order with uid {$courtOrder->getCourtOrderUid()} which already has a report with id {$courtOrder->getLatestReport()?->getId()}.");
     }
 
     private function createReportFromReport(Report $latest): Report
