@@ -13,8 +13,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class BalanceController extends AbstractController
-{
+class BalanceController extends AbstractController {
     private static array $jmsGroups = [
         'report',
         'account',
