@@ -24,9 +24,12 @@ final readonly class RequiredReportFinder
             SELECT DISTINCT co.id
             FROM court_order co
             LEFT JOIN report r
-                ON (co.id = r.pfa_court_order_id AND co.order_type = 'pfa'
-                OR co.id = r.hw_court_order_id AND co.order_type = 'hw')
-                AND COALESCE(r.submitted, 'f') = 'f'
+                ON r.submit_date IS NULL
+                AND NOT COALESCE(r.submitted, 0::BOOLEAN)
+                AND (
+                    co.id = r.pfa_court_order_id AND co.order_type = 'pfa'
+                    OR co.id = r.hw_court_order_id AND co.order_type = 'hw'
+                )
             GROUP BY co.id
             HAVING COUNT(r.id) = 0
             ")->iterateColumn() as $courtOrderId
