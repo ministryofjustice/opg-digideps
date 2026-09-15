@@ -39,6 +39,8 @@ final class CourtOrderPair
             );
         }
 
+        $siblingCourtOrder->setOrderKind($mainCourtOrder->getOrderKind());
+
         [$pfaCourtOrder, $hwCourtOrder] = match ($mainCourtOrder->getOrderType()) {
             CourtOrderType::PFA => [$mainCourtOrder, $siblingCourtOrder],
             CourtOrderType::HW => [$siblingCourtOrder, $mainCourtOrder],
