@@ -24,8 +24,7 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
     private LoggerInterface $logger;
     private CommandTester $commandTester;
 
-    public function setUp(): void
-    {
+    public function setUp(): void {
         $kernel = static::createKernel();
         $app = new Application($kernel);
 
