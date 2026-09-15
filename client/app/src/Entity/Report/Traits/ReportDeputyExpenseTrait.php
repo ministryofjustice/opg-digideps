@@ -71,7 +71,7 @@ trait ReportDeputyExpenseTrait
 
     public function setExpensesTotal(?float $expensesTotal): static
     {
-        $this->expensesTotal = (float) $expensesTotal;
+        $this->expensesTotal = $expensesTotal ?? 0.0;
 
         return $this;
     }

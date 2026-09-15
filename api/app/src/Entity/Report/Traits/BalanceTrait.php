@@ -36,14 +36,14 @@ trait BalanceTrait
     {
         $ret = 0.0;
         foreach ($this->getBankAccounts() as $a) {
-            $ret += (float)($a->getOpeningBalance() ?? 0.0);
+            $ret += (float) $a->getOpeningBalance();
         }
 
         return $ret;
     }
 
     /**
-     * Return sum of closing balances (if all of them have a value, otherwise returns null).
+     * Return sum of closing balances
      */
     #[JMS\VirtualProperty]
     #[JMS\Groups(['balance', 'account'])]
@@ -53,7 +53,7 @@ trait BalanceTrait
     {
         $ret = 0.0;
         foreach ($this->getBankAccounts() as $a) {
-            $ret += (float)$a->getClosingBalance();
+            $ret += (float) $a->getClosingBalance();
         }
 
         return $ret;
