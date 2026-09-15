@@ -66,6 +66,7 @@ class AssetController extends AbstractController
         ]);
 
         $form->handleRequest($request);
+        $test = 'foo';
 
         if ($form->isSubmitted() && $form->isValid()) {
             switch ($report->getNoAssetToAdd()) {
