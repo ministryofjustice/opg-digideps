@@ -54,6 +54,20 @@ final readonly class ReportTransitionService
             return $result;
         }
 
+        if ($courtOrderChange->oldKind === CourtOrderKind::Single && $courtOrderChange->oldSiblingId !== null) {
+            $courtOrderChange = new CourtOrderRelationshipChange(
+                $courtOrderChange->courtOrderId,
+                $courtOrderChange->currentKind,
+                $courtOrderChange->currentSiblingId,
+                $courtOrderPair->getSharedLatestReport() !== null ? CourtOrderKind::Hybrid : CourtOrderKind::Dual,
+                $courtOrderChange->oldSiblingId,
+            );
+
+            if (!($courtOrderChange->hasKindChange() || $courtOrderChange->hasSiblingIdChange())) {
+                return null;
+            }
+        }
+
         // if we are working from a dual or hybrid to hybrid or dual respectively, we only need to work from
         // one side of the pair, so constrain transitions to the PFA side
         $isPfa = ($courtOrder->getOrderType() === CourtOrderType::PFA);
@@ -212,6 +226,11 @@ final readonly class ReportTransitionService
     private function singleToDual(CourtOrderPair $courtOrderPair): ReportTransitionResult
     {
         $result = new ReportTransitionResult();
+
+        if ($courtOrderPair->separateReportsExistForBothOrders()) {
+            $result->messages[] = "Single -> Dual: {$courtOrderPair} - Both orders already have reports. Nothing to do.";
+            return $result;
+        }
 
         /** @var array<CourtOrder> $affectedCourtOrders */
         $affectedCourtOrders = [$courtOrderPair->pfaCourtOrder, $courtOrderPair->hwCourtOrder];

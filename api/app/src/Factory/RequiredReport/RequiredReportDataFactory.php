@@ -68,7 +68,7 @@ final readonly class RequiredReportDataFactory implements DataFactoryInterface
             return;
         }
 
-        $newReport = $latest === null ? $this->createReportFromOrder($courtOrder) : $this->createReportFromReport($latest);
+        $newReport = $latest === null ? $this->createReportFromOrder($courtOrder) : $this->createReportFromReport($latest->setCourtOrder($courtOrder));
         $this->em->persist($newReport);
         $this->em->persist($courtOrder);
         $this->em->flush();
