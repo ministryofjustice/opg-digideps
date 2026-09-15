@@ -93,10 +93,11 @@ class TestUserFixtures extends AbstractDataFixture
         }
 
         // Create user
-        $user = new User()
-            ->setFirstname('test')
-            ->setLastname($data['id'])
-            ->setEmail($data['id'] . '@example.org')
+        $user = new User(
+            'test',
+            $data['id'],
+            $data['id'] . '@example.org'
+        )
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setPhoneMain('07911111111111')

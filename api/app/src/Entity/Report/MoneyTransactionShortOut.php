@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity, ORM\HasLifecycleCallbacks]
 class MoneyTransactionShortOut extends MoneyTransactionShort
 {
-    public function getType()
+    public function getType(): string
     {
         return 'out';
     }

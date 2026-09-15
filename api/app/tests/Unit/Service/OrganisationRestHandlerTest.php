@@ -53,7 +53,7 @@ final class OrganisationRestHandlerTest extends TestCase
 
         $this->validator->expects(self::once())->method('validate')->willReturn(new ConstraintViolationList());
 
-        $this->orgFactory->expects(self::once())->method('createFromEmailIdentifier')->willReturn(new Organisation());
+        $this->orgFactory->expects(self::once())->method('createFromEmailIdentifier')->willReturn(new Organisation('', ''));
 
         $this->em->expects(self::once())->method('persist')->with(self::isInstanceOf(Organisation::class));
 
@@ -91,7 +91,7 @@ final class OrganisationRestHandlerTest extends TestCase
     #[Test]
     public function createOrgAlreadyExists(): void
     {
-        $this->orgRepository->expects(self::once())->method('findOneBy')->willReturn(new Organisation());
+        $this->orgRepository->expects(self::once())->method('findOneBy')->willReturn(new Organisation('', ''));
 
         self::expectException(OrganisationCreationException::class);
 
@@ -119,7 +119,7 @@ final class OrganisationRestHandlerTest extends TestCase
                 new ConstraintViolation('an error', null, [], null, null, null)
             ]));
 
-        $this->orgFactory->expects(self::once())->method('createFromEmailIdentifier')->willReturn(new Organisation());
+        $this->orgFactory->expects(self::once())->method('createFromEmailIdentifier')->willReturn(new Organisation('', ''));
 
         self::expectException(OrganisationCreationException::class);
 
@@ -129,9 +129,7 @@ final class OrganisationRestHandlerTest extends TestCase
     #[Test]
     public function updateValidOrgDetails(): void
     {
-        $originalOrg = new Organisation();
-        $originalOrg->setEmailIdentifier('cba@.com');
-        $originalOrg->setname('Your Organisation');
+        $originalOrg = new Organisation('Your Organisation', 'cba@.com');
 
         $this->orgRepository->expects(self::once())->method('find')->willReturn($originalOrg);
         $this->orgRepository->expects(self::once())->method('findOneBy')->willReturn(null);
@@ -171,9 +169,7 @@ final class OrganisationRestHandlerTest extends TestCase
     #[Test]
     public function updateOrgEmailIdentifierInUse(): void
     {
-        $originalOrg = new Organisation();
-        $originalOrg->setEmailIdentifier('cba@.com');
-        $originalOrg->setname('Your Organisation');
+        $originalOrg = new Organisation('Your Organisation', 'cba@.com');
 
         $this->orgRepository->expects(self::once())->method('find')->willReturn($originalOrg);
 
@@ -187,9 +183,7 @@ final class OrganisationRestHandlerTest extends TestCase
     #[Test]
     public function updateOrgValidationFails(): void
     {
-        $originalOrg = new Organisation();
-        $originalOrg->setEmailIdentifier('cba@.com');
-        $originalOrg->setname('Your Organisation');
+        $originalOrg = new Organisation('Your Organisation', 'cba@.com');
 
         $this->orgRepository->expects(self::once())->method('find')->willReturn($originalOrg);
         $this->orgRepository->expects(self::once())->method('findOneBy')->willReturn(null);

@@ -11,17 +11,9 @@ on:
         required: true
 
 permissions:
-  actions: none
-  checks: none
-  contents: write
-  deployments: none
-  id-token: write
-  issues: none
-  packages: none
-  pull-requests: read
-  repository-projects: none
   security-events: write
-  statuses: none
+  id-token: write
+  pull-requests: read
 
 jobs:
   snyk_iac_scan:
@@ -38,7 +30,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
 
       - name: Configure OIDC AWS Credentials Pull
         uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
@@ -48,7 +42,7 @@ jobs:
           role-duration-seconds: 900
           role-session-name: ga-ecr-pull-digideps
 
-      - uses: aws-actions/amazon-ecr-login@fa648b43de3d4d023bcb3f89ed6940096949c419 # v2.1.5
+      - uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
         id: login-ecr
         with:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
@@ -56,7 +50,7 @@ jobs:
 
       - name: Snyk IaC ${{ matrix.name }}
         id: snyk_iac
-        uses: ministryofjustice/opg-github-actions/actions/snyk-iac@f90a91695b7d02fe2b4133ba2f9ebc2c0f6b8f94 # v4.8.5
+        uses: ministryofjustice/opg-github-actions/actions/snyk-iac@2ad72748485e27f590599a7e9768b9fc0d5b8e03 # v4.8.7
         with:
           iac_test_directory: "${{ matrix.terraform_configuration_path }}"
           SNYK_TOKEN: ${{ secrets.snyk_token }}
@@ -64,7 +58,7 @@ jobs:
           snyk_policy_path: "${{ matrix.terraform_configuration_path }}.snyk"
 
       - name: Upload Snyk IaC results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@38697555549f1db7851b81482ff19f1fa5c4fedc # v4.34.1
+        uses: github/codeql-action/upload-sarif@c10b8064de6f491fea524254123dbe5e09572f13 # v4.35.1
         if: always()
         with:
           category: "IaC-${{matrix.name}}"

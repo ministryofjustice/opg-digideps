@@ -39,10 +39,10 @@ const ToggleRequired = {
       targetElement.appendChild(toggleMessage)
 
       targetElement.toggleRequiredConfig = {
-        optionalSpan: optionalSpan,
-        toggleMessage: toggleMessage,
-        requiredMessage: requiredMessage,
-        optionalMessage: optionalMessage
+        optionalSpan,
+        toggleMessage,
+        requiredMessage,
+        optionalMessage
       }
 
       const handler = this.makeHandler(triggerElement, targetElement)

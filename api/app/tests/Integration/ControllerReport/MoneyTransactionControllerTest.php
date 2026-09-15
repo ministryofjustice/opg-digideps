@@ -23,14 +23,10 @@ class MoneyTransactionControllerTest extends AbstractTestController
         ['persons' => ['users' => ['lay1' => $user1]], 'orders' => [['pfa' => ['reports' => [self::$report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
         ['orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        self::$t1 = new MoneyTransaction(self::$report1);
-        self::$t1->setCategory('dividends')->setAmount(123.45)->setDescription('d1');
-        self::$t2 = new MoneyTransaction(self::$report1);
-        self::$t2->setCategory('dividends')->setAmount(789.12)->setDescription('d2');
-        $t3 = new MoneyTransaction(self::$report1);
-        $t3->setCategory('loans')->setAmount(5000.59)->setDescription('d3');
-        $t4 = new MoneyTransaction(self::$report2);
-        $t4->setCategory('loans')->setAmount(123)->setDescription('belongs to report2');
+        self::$t1 = new MoneyTransaction(self::$report1, 'dividends')->setAmount(123.45)->setDescription('d1');
+        self::$t2 = new MoneyTransaction(self::$report1, 'dividends')->setAmount(789.12)->setDescription('d2');
+        $t3 = new MoneyTransaction(self::$report1, 'loans')->setAmount(5000.59)->setDescription('d3');
+        $t4 = new MoneyTransaction(self::$report2, 'loans')->setAmount(123)->setDescription('belongs to report2');
 
         self::fixtures()->persist(self::$t1, self::$t2, $t3, $t4);
         self::fixtures()->flush()->clear();
@@ -55,26 +51,41 @@ class MoneyTransactionControllerTest extends AbstractTestController
             . '?' . http_build_query(['groups' => ['transactionsIn', 'transactionsOut']]);
 
         // assert data is retrieved
-        $data = $this->assertJsonRequest('GET', $url, [
+        /** @var array{data: array{money_transactions_in: list<array<string, mixed>>, money_transactions_out: list<array<string, mixed>>}} $response */
+        $response = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
-        ])['data'];
+        ]);
 
-        // in
+        $data = $response['data'];
+
         $this->assertCount(2, $data['money_transactions_in']);
-        $this->assertArrayHasKey('id', $data['money_transactions_in'][0]);
-        $this->assertEquals('dividends', $data['money_transactions_in'][0]['category']);
-        $this->assertEquals('123.45', $data['money_transactions_in'][0]['amount']);
-        $this->assertArrayHasKey('id', $data['money_transactions_in'][1]);
-        $this->assertEquals('dividends', $data['money_transactions_in'][1]['category']);
-        $this->assertEquals('789.12', $data['money_transactions_in'][1]['amount']);
+
+        /** @var array<string, mixed> $inTransaction1 */
+        $inTransaction1 = $data['money_transactions_in'][0];
+        $this->assertArrayHasKey('id', $inTransaction1);
+        $this->assertEquals('dividends', $inTransaction1['category']);
+        $this->assertEquals('123.45', $inTransaction1['amount']);
+
+        /** @var array<string, mixed> $inTransaction2 */
+        $inTransaction2 = $data['money_transactions_in'][1];
+        $this->assertArrayHasKey('id', $inTransaction2);
+        $this->assertEquals('dividends', $inTransaction2['category']);
+        $this->assertEquals('789.12', $inTransaction2['amount']);
+
         // out
         $this->assertCount(1, $data['money_transactions_out']);
-        $this->assertArrayHasKey('id', $data['money_transactions_out'][2]);
-        $this->assertEquals('loans', $data['money_transactions_out'][2]['category']);
-        $this->assertEquals('5000.59', $data['money_transactions_out'][2]['amount']);
-    }
 
+        /** @var array<int|string, array<string, mixed>> $outTransactions */
+        $outTransactions = $data['money_transactions_out'] ?? [];
+        $this->assertNotEmpty($outTransactions);
+
+        /** @var array<string, mixed> $outTransaction1 */
+        $outTransaction1 = array_values($outTransactions)[0];
+        $this->assertArrayHasKey('id', $outTransaction1);
+        $this->assertEquals('loans', $outTransaction1['category']);
+        $this->assertEquals('5000.59', $outTransaction1['amount']);
+    }
     public function testAddEditTransaction(): void
     {
         $url = '/report/' . self::$report1->getId() . '/money-transaction';

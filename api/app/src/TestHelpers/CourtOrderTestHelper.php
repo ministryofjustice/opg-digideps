@@ -27,14 +27,15 @@ class CourtOrderTestHelper
         \DateTime $orderDate = (new \DateTime()),
         CourtOrderKind $courtOrderKind = CourtOrderKind::Single,
     ): CourtOrder {
-        $courtOrder = new CourtOrder()
-            ->setCourtOrderUid($courtOrderUid)
-            ->setClient($client)
-            ->setOrderKind($courtOrderKind)
-            ->setOrderType($type)
-            ->setOrderReportType($type === CourtOrderType::PFA || $courtOrderKind === CourtOrderKind::Hybrid ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104)
-            ->setStatus($status)
-            ->setOrderMadeDate($orderDate);
+        $courtOrder = new CourtOrder(
+            $courtOrderUid,
+            $type,
+            $type === CourtOrderType::PFA || $courtOrderKind === CourtOrderKind::Hybrid ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104,
+            $courtOrderKind,
+            $orderDate,
+            $client,
+            $status
+        );
 
         if (!is_null($report)) {
             $courtOrder->addReport($report);

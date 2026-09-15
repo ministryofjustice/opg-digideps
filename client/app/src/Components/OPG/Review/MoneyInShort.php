@@ -50,7 +50,7 @@ final class MoneyInShort
 
         if ($report->getMoneyInExists() === 'Yes') {
             $listBuilder = new ListBuilder(true);
-            foreach ($report->getmoneyShortCategoriesInPresent() as $category) {
+            foreach ($report->getMoneyShortCategoriesInPresent() as $category) {
                 $listBuilder->addItem($this->translate("form.categoriesEntries.{$category->getTypeId()}.label"));
             }
             $builder->addItem(
@@ -72,7 +72,7 @@ final class MoneyInShort
 
     private function makeTable(Report $report): ?Table
     {
-        if ($report->getMoneyTransactionsShortInExist() ==  'no') {
+        if ($report->getMoneyTransactionsShortInExist() === 'no') {
             return null;
         }
         $total = 0.0;
@@ -99,14 +99,14 @@ final class MoneyInShort
             );
             $total += $entry->getAmount() ?? 0.0;
         }
-        $builder->addRow(new Cell($this->text['above£1kTransactionsTotal'], isHeader: true), '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, true));
+        $builder->addRow(new Cell($this->text['above£1kTransactionsTotal'], isHeader: true), '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, isBold: true));
 
         return $builder->makeTable();
     }
 
     private function formatMoney(float $value): string
     {
-        return '£ ' . number_format($value, 2);
+        return '£' . number_format($value, 2);
     }
 
     /**
@@ -125,7 +125,7 @@ final class MoneyInShort
             'amount' => $this->translate('summaryPage.moneyIn.list.label.amount'),
             'question' => $this->translate('review.question'),
             'answer' => $this->translate('review.answer'),
-            'tableHeader' => $this->translate('review.list'),
+            'tableHeader' => $this->translate('summaryPage.moneyIn.listOfIncomeItems'),
             'notEntered' => $this->translate('review.notEntered'),
             'yes' => $this->translate('review.yes'),
             'no' => $this->translate('review.no'),

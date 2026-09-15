@@ -1,9 +1,13 @@
-{% props icon="!", aria="Warning" %}
+{% props icon="!", aria="Warning", noMargin=false %}
+{% set className = "govuk-warning-text" %}
+{% if noMargin %}
+    {% set className = className ~ ' govuk-!-margin-0' %}
+{% endif %}
 
-<div class="govuk-warning-text">
+<div {{ attributes.defaults({class: className}) }}>
     <span class="govuk-warning-text__icon" aria-hidden="true">{{ icon }}</span>
     <strong class="govuk-warning-text__text">
         <span class="govuk-visually-hidden">{{ aria }}</span>
-        {% block content %}{% endblock %}
+        {% with outerScope %}{% block content %}{% endblock %}{% endwith %}
     </strong>
 </div>

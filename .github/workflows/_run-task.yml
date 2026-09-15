@@ -49,9 +49,6 @@ on:
 
 permissions:
   id-token: write
-  contents: read
-  security-events: none
-  pull-requests: none
 
 env:
   HELPER_VERSION: "0.10.4"
@@ -60,11 +57,13 @@ jobs:
   run-task:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/actions/terraform-version@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@9e8b7c2fb29c11e77b12913f74459fa48b11829f # v4.8.2
         with:
           terraform_directory: terraform/environment
 
@@ -89,7 +88,7 @@ jobs:
           chmod +x ecs-helper/ecs-runner
 
       - id: deploy-key
-        uses: "ministryofjustice/opg-github-actions/actions/github-deploy-key@f90a91695b7d02fe2b4133ba2f9ebc2c0f6b8f94" # v4.8.5
+        uses: "ministryofjustice/opg-github-actions/actions/github-deploy-key@2ad72748485e27f590599a7e9768b9fc0d5b8e03" # v4.8.7
         with:
           deploy_key: ${{ secrets.ssh_private_key }}
 

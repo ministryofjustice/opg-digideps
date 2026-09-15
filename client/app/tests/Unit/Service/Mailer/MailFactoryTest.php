@@ -31,14 +31,14 @@ class MailFactoryTest extends TestCase
         $this->layDeputy = $this->generateUser();
         $this->layDeputy->setClients([$this->client]);
 
-        $this->submittedReport = new Report()
-            ->setClient($this->client)
-            ->setStartDate(new \DateTime('2017-03-24'))
-            ->setEndDate(new \DateTime('2018-03-23'));
+        $this->submittedReport = new Report();
+        $this->submittedReport->setClient($this->client);
+        $this->submittedReport->setStartDate(new \DateTime('2017-03-24'));
+        $this->submittedReport->setEndDate(new \DateTime('2018-03-23'));
 
-        $this->newReport = new Report()
-            ->setStartDate(new \DateTime('2018-03-24'))
-            ->setEndDate(new \DateTime('2019-03-23'));
+        $this->newReport = new Report();
+        $this->newReport->setStartDate(new \DateTime('2018-03-24'));
+        $this->newReport->setEndDate(new \DateTime('2019-03-23'));
 
         $this->translator = $this->createMock(TranslatorInterface::class);
         $this->router = $this->createMock(RouterInterface::class);

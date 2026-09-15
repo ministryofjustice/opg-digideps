@@ -87,3 +87,8 @@ form:
     defaultOption: Please select ...
   save:
     label: Save and continue
+
+review:
+  notEntered: Not entered
+  yes: Yes
+  no: No

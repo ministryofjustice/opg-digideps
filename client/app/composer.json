@@ -13,9 +13,9 @@
         }
     },
     "scripts": {
-        "lint:phpstan": "phpstan",
-        "lint:phpstan:baseline": "phpstan && phpstan --generate-baseline",
-        "lint:phpstan:baseline:force": "phpstan --generate-baseline"
+        "lint:phpstan": "phpstan --memory-limit=512M",
+        "lint:phpstan:baseline": "phpstan --memory-limit=512M && phpstan --memory-limit=512M --generate-baseline",
+        "lint:phpstan:baseline:force": "phpstan --memory-limit=512M --generate-baseline"
     },
     "autoload": {
         "psr-4": {
@@ -124,6 +124,6 @@
         "phpunit/phpunit": "^9.6.34",
         "symfony/maker-bundle": "^1.67.0",
         "symfony/phpunit-bridge": "^6.4.35",
-        "symfony/var-dumper": "^6.4.36"
+        "symfony/var-dumper": "^6.4.42"
     }
 }

@@ -96,6 +96,7 @@ class AccountControllerTest extends AbstractTestController
      */
     public function testGetAccounts()
     {
+        /** @var array<int, array<string, mixed>> $data */
         $data = $this->assertJsonRequest(
             'GET',
             sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['account']])),

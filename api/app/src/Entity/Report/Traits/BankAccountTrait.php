@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
-use OPG\Digideps\Backend\Entity\Report\Report;
 
 trait BankAccountTrait
 {
@@ -21,7 +20,7 @@ trait BankAccountTrait
     #[ORM\OrderBy(['id' => 'ASC'])]
     private Collection $bankAccounts;
 
-    public function addAccount(BankAccount $accounts): Report
+    public function addAccount(BankAccount $accounts): static
     {
         $this->bankAccounts[] = $accounts;
 

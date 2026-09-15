@@ -1,7 +1,7 @@
 ##############################
 # Stage 1: Base Composer Setup
 ##############################
-FROM composer:2.9.8@sha256:b09bccd91a78fe8a9ab4b33d707b862e8fe54fec17782e32683ad2a69c46867d AS composer
+FROM composer:2.10.1@sha256:7725eb4545c438629ae8bde3ef0bb9a5038ef566126ad878442a69007242d267 AS composer
 
 WORKDIR /app
 
@@ -37,7 +37,7 @@ RUN composer install --prefer-dist --no-interaction --no-scripts \
 ##############################
 # Stage 2: Base PHP + Shared Files
 ##############################
-FROM php:8.4.24-fpm-alpine3.24@sha256:5992f8b7433fe7fa96dfbf67746c86d6c41bc91e686eac38fe531c72a02e40e4 AS base
+FROM php:8.4.25-fpm-alpine3.24@sha256:49734670eccf414af884c2a0c2e558401e228615f8028f1c9fca30a0d4fb1bc2 AS base
 
 WORKDIR /var/www
 
@@ -58,6 +58,16 @@ COPY --chown=www-data:www-data client/docker/app/config/generate_parameters_yml.
 COPY --chown=www-data:www-data client/docker/app/config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 COPY --chown=www-data:www-data scripts/process_checks/check_processes.sh check_processes.sh
+
+##############################
+# Stage X: Upgrade pinned apk packages (used only as target for pinned upgrades)
+##############################
+FROM base AS upgrade-pinned-apk-packages
+USER root
+COPY client/docker/app/Dockerfile .
+COPY scripts/upgrade_apk/check-apk-ver.sh .
+
+CMD sh -c "./check-apk-ver.sh"
 
 ##############################
 # Stage 2a: PHP build stage
@@ -113,6 +123,11 @@ RUN apk add --no-cache \
     "libde265==1.0.18-r0" \
     "ffmpeg==8.1.2-r0" \
     "wget==1.25.0-r3"
+
+# TODO Remove this once alpine upgrade available as it patches a vulnerability
+RUN apk update && apk add --upgrade \
+    "curl=8.22.0-r0" \
+    "libcurl=8.22.0-r0"
 
 # Cache/log dirs
 RUN mkdir -p var/cache var/logs /var/log/app \
