@@ -42,11 +42,8 @@ class BankAccount implements BankAccountInterface
         'cfo',
     ];
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
-    private $id;
+    private ?int $id = null;
 
     /**
      * @var string
@@ -142,12 +139,12 @@ class BankAccount implements BankAccountInterface
     #[JMS\Groups(['account'])]
     private $nameOneLine;
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId($id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
 
