@@ -55,7 +55,9 @@ final class ProcessOrgCSVCommandTest extends KernelTestCase
 
         $app->add($setUp);
 
-        $command = $app->find(ProcessOrgCSVCommand::$defaultName);
+        $commandName = ProcessOrgCSVCommand::$defaultName;
+        self::assertIsString($commandName);
+        $command = $app->find($commandName);
         $this->commandTester = new CommandTester($command);
     }
 

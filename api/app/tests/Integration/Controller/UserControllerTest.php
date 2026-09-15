@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
@@ -491,8 +492,8 @@ class UserControllerTest extends AbstractTestController
     }
 
     /**
-     * @dataProvider recreateTokenProviderForRole
      */
+    #[DataProvider('recreateTokenProviderForRole')]
     public function testRecreateTokenAcceptsClientSecret($secret, string $email, bool $passOrFail): void
     {
         /**

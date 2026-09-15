@@ -123,9 +123,12 @@ trait ReportBankAccountsTrait
         foreach ($banks as $bank) {
             /* @var $bank BankAccount */
             $bankName = (!empty($bank->getBank()) ? $bank->getBank() . ' - ' : '') . $bank->getAccountTypeText() . ' (****' . $bank->getAccountNumber() . ')';
-            $banksList[$bankName] = $bank->getId();
-        }
+            $bankId = $bank->getId();
 
+            if (is_int($bankId)) {
+                $banksList[$bankName] = $bankId;
+            }
+        }
         return $banksList;
     }
 }

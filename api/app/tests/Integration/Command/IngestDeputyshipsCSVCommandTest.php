@@ -2,12 +2,12 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Command;
 
+use Aws\S3\S3Client;
 use OPG\Digideps\Backend\Command\IngestDeputyshipsCSVCommand;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
-use Aws\S3\S3Client;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 class IngestDeputyshipsCSVCommandTest extends KernelTestCase
 {
     private string $csvFilename;
-    private S3Client|MockObject $s3;
+    private S3Client&MockObject $s3;
     private ParameterBag $params;
     private DeputyshipsCSVIngester|MockObject $deputyshipsCSVIngester;
     private LoggerInterface $logger;
@@ -32,10 +32,10 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
         $this->csvFilename = 'deputyshipsReport.csv';
         copy(dirname(dirname(__DIR__)) . '/csv/' . $this->csvFilename, '/tmp/' . $this->csvFilename);
 
-        $this->s3 = $this->getMockBuilder(S3Client::class)
-            ->disableOriginalConstructor()
-            ->addMethods(['getObject'])
-            ->getMock();
+        /** @var S3Client&MockObject $s3 */
+        $s3 = $this->createMock(S3Client::class);
+        $this->s3 = $s3;
+
         $this->params = new ParameterBag(['s3_sirius_bucket' => 'bucket']);
         $this->deputyshipsCSVIngester = $this->createMock(DeputyshipsCSVIngester::class);
         $this->logger = $this->createMock(LoggerInterface::class);
@@ -49,7 +49,10 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
 
         $app->add($setUp);
 
-        $command = $app->find(IngestDeputyshipsCSVCommand::$defaultName);
+        $commandName = IngestDeputyshipsCSVCommand::$defaultName;
+        self::assertIsString($commandName);
+        $command = $app->find($commandName);
+
         $this->commandTester = new CommandTester($command);
     }
 
@@ -60,9 +63,12 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
             ->method('getAwsErrorCode')
             ->willReturn('oops');
 
-        $this->s3->expects($this->once())
-            ->method('getObject')
-            ->willThrowException($mockException);
+        $this->s3->method('__call')
+            ->willReturnCallback(function ($method, $args) use ($mockException) {
+                if ($method === 'getObject') {
+                    throw $mockException;
+                }
+            });
 
         $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
         $output = $this->commandTester->getDisplay();
@@ -75,9 +81,12 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
 
     public function testExecuteWithFailedCSVProcessing(): void
     {
-        $this->s3->expects($this->once())
-            ->method('getObject')
-            ->willReturn(new Result());
+        $this->s3->method('__call')
+            ->willReturnCallback(function ($method, $args) {
+                if ($method === 'getObject') {
+                    return new Result();
+                }
+            });
 
         $this->deputyshipsCSVIngester->expects($this->once())
             ->method('processCsv')
@@ -95,9 +104,12 @@ class IngestDeputyshipsCSVCommandTest extends KernelTestCase
 
     public function testExecuteWithSuccessfulFilePull(): void
     {
-        $this->s3->expects($this->once())
-            ->method('getObject')
-            ->willReturn(new Result());
+        $this->s3->method('__call')
+            ->willReturnCallback(function ($method, $args) {
+                if ($method === 'getObject') {
+                    return new Result();
+                }
+            });
 
         $this->deputyshipsCSVIngester->expects($this->once())
             ->method('processCsv')
