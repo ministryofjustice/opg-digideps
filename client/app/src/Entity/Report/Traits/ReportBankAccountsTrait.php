@@ -60,9 +60,9 @@ trait ReportBankAccountsTrait
         return $this->accountsClosingBalanceTotal;
     }
 
-    public function setAccountsClosingBalanceTotal(float $accountsClosingBalanceTotal): static
+    public function setAccountsClosingBalanceTotal(?float $accountsClosingBalanceTotal): static
     {
-        $this->accountsClosingBalanceTotal = $accountsClosingBalanceTotal;
+        $this->accountsClosingBalanceTotal = $accountsClosingBalanceTotal ?? 0.0;
 
         return $this;
     }
@@ -82,9 +82,9 @@ trait ReportBankAccountsTrait
         return $this->accountsOpeningBalanceTotal;
     }
 
-    public function setAccountsOpeningBalanceTotal(float $accountsOpeningBalanceTotal): void
+    public function setAccountsOpeningBalanceTotal(?float $accountsOpeningBalanceTotal): void
     {
-        $this->accountsOpeningBalanceTotal = $accountsOpeningBalanceTotal;
+        $this->accountsOpeningBalanceTotal = $accountsOpeningBalanceTotal ?? 0.0;
     }
 
     /**
