@@ -46,9 +46,11 @@ trait ReportManagementTrait
     protected string $reportStatus = '';
 
     /**
-     * @When I manage the deputies :reportStatus report
+     * @When I manage the deputy's :reportStatus report
+     *
+     * :reportStatus = "completed" (current active report) OR "submitted" (previous submitted report)
      */
-    public function iManageTheDeputiesSubmittedReport(string $reportStatus): void
+    public function iManageTheDeputysSubmittedReport(string $reportStatus): void
     {
         $this->iAmOnAdminClientDetailsPage();
         $this->reportStatus = $reportStatus;
@@ -233,8 +235,7 @@ trait ReportManagementTrait
                 $this->determineCheckboxName($value, $checkboxValuesAndTranslations),
                 'manage-report',
                 $translation
-            )
-            ;
+            );
         }
     }
 
@@ -242,7 +243,7 @@ trait ReportManagementTrait
     {
         $checkboxDictionary = array_flip(array_keys($checkboxValuesAndTranslations));
 
-        return sprintf('manage_report[unsubmittedSection][%s][present]', $checkboxDictionary[$value]);
+        return sprintf('manage_report[unsubmittedSections][%s][present]', $checkboxDictionary[$value]);
     }
 
     /**
@@ -304,6 +305,7 @@ trait ReportManagementTrait
 
         $sectionsMarkedIncomplete = $this->getSectionAnswers('manage-report')[0]['incompleteSectionsForm'];
 
+        /** @var string $incompleteSectionName */
         foreach ($sectionsMarkedIncomplete as $incompleteSectionName) {
             $locator = sprintf("//li//a[normalize-space()='%s']/../../..", $incompleteSectionName);
             $sectionListItem = $this->getSession()->getPage()->find('xpath', $locator);
@@ -315,7 +317,7 @@ trait ReportManagementTrait
             $this->assertStringContainsString(
                 'Changes needed',
                 $sectionListItem->getHtml(),
-                'Searching for "Changes needed" in list item that contains incomplete section name'
+                "Failed to find \"changes needed\" in list item that contains section name \"{$incompleteSectionName}\""
             );
         }
     }
@@ -419,35 +421,19 @@ trait ReportManagementTrait
      */
     public function iShouldSeeTheClientBenefitsCheckSectionInTheChecklistGroup(): void
     {
-        $this->assertClientBenefitsCheckboxVisible(true);
-    }
-
-    private function assertClientBenefitsCheckboxVisible(bool $shouldBeVisible): void
-    {
-        $benefitsCheckXpath = './/label[text()[contains(.,"Client benefits check")]]/..';
+        $benefitsCheckXpath = './/label[text()[contains(.,"Benefits check and money others received")]]/..';
 
         $checkboxDiv = $this->getSession()->getPage()->find('xpath', $benefitsCheckXpath);
 
         $checkboxIsVisible = !is_null($checkboxDiv);
 
-        if ($shouldBeVisible) {
-            if (!$checkboxIsVisible) {
-                $message = sprintf(
-                    'The checkbox for "Client benefits check" appeared on the page when it shouldn\'t have: %s',
-                    $checkboxDiv->getHtml()
-                );
+        if (!$checkboxIsVisible) {
+            $message = sprintf(
+                'The checkbox for "Benefits check and money others received" did not appear when it should have: %s',
+                $checkboxDiv->getHtml()
+            );
 
-                throw new BehatException($message);
-            }
-        } else {
-            if ($checkboxIsVisible) {
-                $message = sprintf(
-                    'The checkbox for "Client benefits check" did not appear on the page when it should have: %s',
-                    $this->getSession()->getPage()->find('xpath', '//main')->getHtml()
-                );
-
-                throw new BehatException($message);
-            }
+            throw new BehatException($message);
         }
     }
 

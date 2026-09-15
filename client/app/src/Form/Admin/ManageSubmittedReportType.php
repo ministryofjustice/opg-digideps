@@ -7,7 +7,9 @@ use OPG\Digideps\Frontend\Form\Subscriber\ReportTypeChoicesSubscriber;
 use OPG\Digideps\Frontend\Form\Traits\HasTranslatorTrait;
 use OPG\Digideps\Frontend\Validator\Constraints\AugmentedExpression;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type as FormTypes;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints;
@@ -20,9 +22,9 @@ class ManageSubmittedReportType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('id', FormTypes\HiddenType::class)
+            ->add('id', HiddenType::class)
             ->addEventSubscriber(new ReportTypeChoicesSubscriber($this->translator))
-            ->add('unsubmittedSection', FormTypes\CollectionType::class, [
+            ->add('unsubmittedSections', CollectionType::class, [
                 'entry_type' => UnsubmittedSectionType::class,
                 'entry_options' => ['constraints' => new Valid()],
             ])
@@ -60,7 +62,7 @@ class ManageSubmittedReportType extends AbstractType
                     new Constraints\Date(['message' => 'report.dueDate.invalidMessage']),
                 ],
             ])
-            ->add('save', FormTypes\SubmitType::class);
+            ->add('save', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
