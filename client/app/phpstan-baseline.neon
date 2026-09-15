@@ -525,7 +525,7 @@ parameters:
 		-
 			message: '#^Cannot call method getData\(\) on Symfony\\Component\\Form\\FormInterface\|null\.$#'
 			identifier: method.nonObject
-			count: 10
+			count: 9
 			path: src/Controller/Admin/Client/ReportController.php
 
 		-
@@ -9409,48 +9409,6 @@ parameters:
 			path: src/Sync/Service/SiriusApiErrorTranslator.php
 
 		-
-			message: '#^Cannot call method setChecklist\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Cannot call method setClient\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Cannot call method setEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Cannot call method setReportSubmissions\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Cannot call method setType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\ChecklistTestHelper\:\:buildPfaHighReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist constructor expects OPG\\Digideps\\Frontend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/TestHelpers/ChecklistTestHelper.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\ClientHelpers\:\:createValidCaseNumber\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -9527,30 +9485,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/TestHelpers/OrganisationHelpers.php
-
-		-
-			message: '#^Cannot call method setDueDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ReportHelpers.php
-
-		-
-			message: '#^Cannot call method setEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ReportHelpers.php
-
-		-
-			message: '#^Cannot call method setStartDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ReportHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\ReportHelpers\:\:createReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/ReportHelpers.php
 
 		-
 			message: '#^Parameter \#1 \$submittedBy of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setSubmittedBy\(\) expects OPG\\Digideps\\Frontend\\Entity\\User\|null, array\|object given\.$#'
@@ -13657,12 +13591,6 @@ parameters:
 			path: tests/Unit/Service/Mailer/MailFactoryTest.php
 
 		-
-			message: '#^Cannot call method setEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:assertStaticEmailProperties\(\) has parameter \$email with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -13725,18 +13653,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$type of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setType\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:\$newReport \(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:\$submittedReport \(OPG\\Digideps\\Frontend\\Entity\\Report\\Report\) does not accept mixed\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: tests/Unit/Service/Mailer/MailFactoryTest.php
 

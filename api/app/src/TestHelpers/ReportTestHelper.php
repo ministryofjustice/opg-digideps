@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\TestHelpers;
 
-use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Action;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
@@ -30,19 +30,15 @@ class ReportTestHelper
     }
 
     public static function generateReport(
-        EntityManagerInterface $em,
-        ?Client $client = null,
-        ?string $type = null,
+        CourtOrder $courtOrder,
         ?\DateTime $startDate = null,
         ?\DateTime $endDate = null,
         bool $dateChecks = true
     ): Report {
-        $client = $client ?: ClientTestHelper::generateClient($em);
-        $type = $type ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
         $startDate = $startDate ?: new \DateTime('2 years ago');
         $endDate = $endDate ?: (clone $startDate)->add(new \DateInterval('P1Y'));
 
-        $report = new Report($client, $type, $startDate, $endDate, dateChecks: $dateChecks);
+        $report = new Report($courtOrder, "{$courtOrder->getDesiredReportType()}", $startDate, $endDate, dateChecks: $dateChecks);
         self::completeBankAccounts($report);
 
         return $report;
@@ -133,7 +129,7 @@ class ReportTestHelper
         $newReportEndDate->modify('+365 day');
 
         $client = $report->getClient();
-        $newReport = self::generateReport($em, $client, $report->getType(), $newReportStartDate, $newReportEndDate);
+        $newReport = self::generateReport($report->getCourtOrder(), $newReportStartDate, $newReportEndDate);
 
         $client->addReport($newReport);
         $newReport->setClient($client);

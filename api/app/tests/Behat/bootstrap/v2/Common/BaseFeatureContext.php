@@ -610,7 +610,7 @@ class BaseFeatureContext extends MinkContext
         );
 
         $deputyUid = 123452222001 + rand(1, 999);
-        $primaryUserNoCourtOrders = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId . '999', null, $deputyUid));
+        $primaryUserNoCourtOrders = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId . '999', null, $deputyUid, false));
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
