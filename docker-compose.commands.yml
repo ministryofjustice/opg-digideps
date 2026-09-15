@@ -74,3 +74,20 @@ services:
       context: .
       dockerfile: ./htmltopdf/Dockerfile
       target: upgrade-pinned-apk-packages
+
+  php-cs-fixer:
+    build:
+      context: .
+      dockerfile: ./php-cs-fixer/Dockerfile
+    working_dir: /workdir
+    volumes:
+      - .:/workdir
+    entrypoint:
+      - sh
+      - -c
+      - |
+        php /usr/local/bin/php-cs-fixer check \
+          --config=.php-cs-fixer.dist.php \
+          -v \
+          --show-progress=none \
+          $$(cat changed-files.txt)
