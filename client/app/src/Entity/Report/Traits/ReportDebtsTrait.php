@@ -72,7 +72,7 @@ trait ReportDebtsTrait
 
     public function setDebtsTotalAmount(?float $debtsTotalAmount): static
     {
-        $this->debtsTotalAmount = (float) $debtsTotalAmount;
+        $this->debtsTotalAmount = $debtsTotalAmount ?? 0.0;
 
         return $this;
     }

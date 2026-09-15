@@ -41,9 +41,9 @@ trait ReportBalanceTrait
         return $this->calculatedBalance;
     }
 
-    public function setCalculatedBalance(float $calculatedBalance): static
+    public function setCalculatedBalance(?float $calculatedBalance): static
     {
-        $this->calculatedBalance = $calculatedBalance;
+        $this->calculatedBalance = $calculatedBalance ?? 0.0;
 
         return $this;
     }
@@ -53,9 +53,9 @@ trait ReportBalanceTrait
         return $this->totalsOffset;
     }
 
-    public function setTotalsOffset(float $totalsOffset): static
+    public function setTotalsOffset(?float $totalsOffset): static
     {
-        $this->totalsOffset = $totalsOffset;
+        $this->totalsOffset = $totalsOffset ?? 0.0;
 
         return $this;
     }
