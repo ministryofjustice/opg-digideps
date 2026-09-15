@@ -68,6 +68,10 @@
         <twig:OPG:Review:Assets report="{{ report }}"/>
     {% endif %}
 
+    {% if report.hasSection('paDeputyExpenses') %}
+        <twig:OPG:Review:PADeputyExpenses report="{{ report }}"/>
+    {% endif %}
+
     {% if report.hasSection('debts') %}
         <twig:OPG:Review:Debts report="{{ report }}"/>
     {% endif %}
