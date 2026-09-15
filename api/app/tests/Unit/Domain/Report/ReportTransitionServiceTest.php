@@ -14,7 +14,6 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\CourtOrderRepository;
 use OPG\Digideps\Backend\Service\ReportService;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipChange;
-use OPG\Digideps\Common\Report\ReportType;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -31,35 +30,11 @@ final class ReportTransitionServiceTest extends TestCase
         $this->sut = new ReportTransitionService($this->mockReportService, $this->mockCourtOrderRepository);
     }
 
-    /**
-     * @param array<CourtOrder> $courtOrders
-     */
-    private function makeReport(int $id, string $type, array $courtOrders): Report
+    private function makeReport(int $id, string $type, CourtOrder $courtOrder): Report
     {
         $startDate = new \DateTime();
         $endDate = $startDate->add(new \DateInterval('P364D'));
-        $reportType = ReportType::from($type);
-
-        $mainCourtOrder = $courtOrders[0] ?? new CourtOrder(
-            '',
-            $reportType->courtOrderType,
-            $reportType->courtOrderReportType,
-            $reportType->courtOrderKind,
-            new \DateTime(),
-            new Client()
-        );
-
-        $siblingCourtOrder = $courtOrders[1] ?? null;
-        $report = new Report($mainCourtOrder, $type, $startDate, $endDate, false)->setId($id);
-        if ($siblingCourtOrder !== null) {
-            $report->setCourtOrder($siblingCourtOrder);
-        }
-
-        foreach ($courtOrders as $courtOrder) {
-            $courtOrder->addReport($report);
-        }
-
-        return $report;
+        return new Report($courtOrder, $type, $startDate, $endDate, false)->setId($id);
     }
 
     private function makeCourtOrder(
@@ -111,8 +86,8 @@ final class ReportTransitionServiceTest extends TestCase
         $hwCourtOrder->setSibling($pfaCourtOrder);
 
         // the court orders are not a hybrid as they have separate reports (NB also with incorrect types)
-        $this->makeReport(77, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
-        $this->makeReport(78, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$hwCourtOrder]);
+        $this->makeReport(77, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $pfaCourtOrder);
+        $this->makeReport(78, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $hwCourtOrder);
 
         // find(courtOrderId=98), find(currentSiblingId=99) = 2 calls; oldSiblingId==currentSiblingId so no extra find
         $this->mockFind([98 => $pfaCourtOrder, 99 => $hwCourtOrder], 2);
@@ -134,17 +109,19 @@ final class ReportTransitionServiceTest extends TestCase
 
     public function testHybridToDual(): void
     {
-        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 10, CourtOrderKind::Dual);
-        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 11, CourtOrderKind::Dual);
+        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 10, CourtOrderKind::Hybrid);
+        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 11, CourtOrderKind::Hybrid);
         $pfaCourtOrder->setSibling($hwCourtOrder);
         $hwCourtOrder->setSibling($pfaCourtOrder);
 
-        $hybridReport = $this->makeReport(12, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder, $hwCourtOrder]);
+        $hybridReport = $this->makeReport(12, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $pfaCourtOrder);
+        $pfaCourtOrder->setOrderKind(CourtOrderKind::Dual);
+        $hwCourtOrder->setOrderKind(CourtOrderKind::Dual);
 
         // find(courtOrderId=10), find(currentSiblingId=11) = 2 calls; oldSiblingId==currentSiblingId so no extra find
         $this->mockFind([10 => $pfaCourtOrder, 11 => $hwCourtOrder], 2);
 
-        $newHwReport = $this->makeReport(13, Report::LAY_HW_TYPE, [$hwCourtOrder]);
+        $newHwReport = $this->makeReport(13, Report::LAY_HW_TYPE, $hwCourtOrder);
 
         $this->mockReportService->expects(self::once())
             ->method('createReportFromOrder')
@@ -178,12 +155,14 @@ final class ReportTransitionServiceTest extends TestCase
 
     public function testDualToHybridInvalidDual(): void
     {
-        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 401, CourtOrderKind::Dual, CourtOrderReportType::OPG102);
-        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 402, CourtOrderKind::Dual, CourtOrderReportType::OPG104);
+        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 401, CourtOrderKind::Hybrid, CourtOrderReportType::OPG102);
+        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 402, CourtOrderKind::Hybrid, CourtOrderReportType::OPG104);
         $pfaCourtOrder->setSibling($hwCourtOrder);
 
         // while marked as a dual, these court orders share the same latest report and are in fact already a hybrid
-        $this->makeReport(399, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder, $hwCourtOrder]);
+        $this->makeReport(399, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $pfaCourtOrder);
+        $pfaCourtOrder->setOrderKind(CourtOrderKind::Dual);
+        $hwCourtOrder->setOrderKind(CourtOrderKind::Dual);
 
         // find(courtOrderId=401), find(currentSiblingId=402) = 2 calls; oldSiblingId==currentSiblingId so no extra find
         $this->mockFind([401 => $pfaCourtOrder, 402 => $hwCourtOrder], 2);
@@ -205,12 +184,13 @@ final class ReportTransitionServiceTest extends TestCase
 
     public function testDualToHybrid(): void
     {
-        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 40, CourtOrderKind::Hybrid, CourtOrderReportType::OPG102);
+        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 40, CourtOrderKind::Dual, CourtOrderReportType::OPG102);
         $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 41);
         $pfaCourtOrder->setSibling($hwCourtOrder);
 
-        $pfaReport = $this->makeReport(42, Report::LAY_PFA_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
-        $hwReport = $this->makeReport(43, Report::LAY_HW_TYPE, [$hwCourtOrder]);
+        $pfaReport = $this->makeReport(42, Report::LAY_PFA_HIGH_ASSETS_TYPE, $pfaCourtOrder);
+        $hwReport = $this->makeReport(43, Report::LAY_HW_TYPE, $hwCourtOrder);
+        $pfaCourtOrder->setOrderKind(CourtOrderKind::Hybrid);
 
         // find(courtOrderId=40), find(currentSiblingId=41) = 2 calls; oldSiblingId==currentSiblingId so no extra find
         $this->mockFind([40 => $pfaCourtOrder, 41 => $hwCourtOrder], 2);
@@ -241,20 +221,24 @@ final class ReportTransitionServiceTest extends TestCase
 
     public function testSingleToDualPersistsExistingReport(): void
     {
-        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 50, CourtOrderKind::Dual);
-        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 52);
-        $pfaCourtOrder->setSibling($hwCourtOrder);
+        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 50, CourtOrderKind::Single);
+        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 52, CourtOrderKind::Dual);
 
-        $pfaReport = $this->makeReport(62, Report::LAY_PFA_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
-        $newHwReport = $this->makeReport(63, Report::LAY_HW_TYPE, []);
+        $pfaReport = $this->makeReport(62, Report::LAY_PFA_HIGH_ASSETS_TYPE, $pfaCourtOrder);
+        $pfaCourtOrder->setOrderKind(CourtOrderKind::Dual);
+        $pfaCourtOrder->setSibling($hwCourtOrder);
 
         // find(courtOrderId=50), find(currentSiblingId=52) = 2 calls (no oldSiblingId for single->dual)
         $this->mockFind([50 => $pfaCourtOrder, 52 => $hwCourtOrder], 2);
 
+        $newHwReport = [];
         $this->mockReportService->expects($this->once())
             ->method('createReportFromOrder')
             ->with($hwCourtOrder)
-            ->willReturn($newHwReport);
+            ->willReturnCallback(function (CourtOrder $courtOrder) use (&$newHwReport) {
+                $newHwReport[] = $this->makeReport(63, Report::LAY_HW_TYPE, $courtOrder);
+                return $newHwReport[0];
+            });
 
         $courtOrderRelationshipChange = new CourtOrderRelationshipChange(
             courtOrderId: $pfaCourtOrder->getId(),
@@ -267,7 +251,7 @@ final class ReportTransitionServiceTest extends TestCase
         $this->sut->transitionReports($courtOrderRelationshipChange);
 
         $actualHwReport = $hwCourtOrder->getLatestReport();
-        self::assertEquals($newHwReport, $actualHwReport);
+        self::assertEquals($newHwReport[0], $actualHwReport);
         self::assertEquals(Report::LAY_HW_TYPE, $actualHwReport?->getType());
 
         $actualPfaReport = $pfaCourtOrder->getLatestReport();
@@ -277,12 +261,14 @@ final class ReportTransitionServiceTest extends TestCase
 
     public function testSingleToDualWhereSingleIsReallyHybrid(): void
     {
-        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 54, CourtOrderKind::Dual);
-        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 55);
+        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 54, CourtOrderKind::Hybrid);
+        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 55, CourtOrderKind::Single);
         $pfaCourtOrder->setSibling($hwCourtOrder);
 
-        $pfaReport = $this->makeReport(66, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder, $hwCourtOrder]);
-        $newHwReport = $this->makeReport(67, Report::LAY_HW_TYPE, []);
+        $pfaReport = $this->makeReport(66, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $pfaCourtOrder);
+        $newHwReport = $this->makeReport(67, Report::LAY_HW_TYPE, $hwCourtOrder);
+        $pfaCourtOrder->setOrderKind(CourtOrderKind::Dual);
+        $hwCourtOrder->setOrderKind(CourtOrderKind::Dual);
 
         // find(courtOrderId=50), find(currentSiblingId=52) = 2 calls (no oldSiblingId for single->dual)
         $this->mockFind([54 => $pfaCourtOrder, 55 => $hwCourtOrder], 2);
@@ -364,7 +350,7 @@ final class ReportTransitionServiceTest extends TestCase
         $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 91, CourtOrderKind::Dual);
         $pfaCourtOrder->setSibling($hwCourtOrder);
 
-        $this->makeReport(92, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder, $hwCourtOrder]);
+        $this->makeReport(92, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $pfaCourtOrder);
 
         // find(courtOrderId=90), find(currentSiblingId=91) = 2 calls; oldSiblingId=null so getOldSibling returns early
         $this->mockFind([90 => $pfaCourtOrder, 91 => $hwCourtOrder], 2);
@@ -389,7 +375,7 @@ final class ReportTransitionServiceTest extends TestCase
         $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 101, CourtOrderKind::Hybrid);
         $pfaCourtOrder->setSibling($hwCourtOrder);
 
-        $this->makeReport(102, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder, $hwCourtOrder]);
+        $this->makeReport(102, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $pfaCourtOrder);
 
         // find(100), find(101), find(999 -> null) = 3 calls
         $this->mockFind([100 => $pfaCourtOrder, 101 => $hwCourtOrder], 3);
@@ -416,8 +402,8 @@ final class ReportTransitionServiceTest extends TestCase
         $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 121);
         $pfaCourtOrder->setSibling($hwCourtOrder);
 
-        $this->makeReport(122, Report::LAY_PFA_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
-        $this->makeReport(123, Report::LAY_HW_TYPE, [$hwCourtOrder]);
+        $this->makeReport(122, Report::LAY_PFA_HIGH_ASSETS_TYPE, $pfaCourtOrder);
+        $this->makeReport(123, Report::LAY_HW_TYPE, $hwCourtOrder);
 
         // find(120), find(121) = 2 calls; oldSiblingId=null so getOldSibling returns early
         $this->mockFind([120 => $pfaCourtOrder, 121 => $hwCourtOrder], 2);
@@ -496,8 +482,8 @@ final class ReportTransitionServiceTest extends TestCase
         $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 151);
         $pfaCourtOrder->setSibling($hwCourtOrder);
 
-        $this->makeReport(152, Report::LAY_PFA_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
-        $this->makeReport(153, Report::LAY_HW_TYPE, [$hwCourtOrder]);
+        $this->makeReport(152, Report::LAY_PFA_HIGH_ASSETS_TYPE, $pfaCourtOrder);
+        $this->makeReport(153, Report::LAY_HW_TYPE, $hwCourtOrder);
 
         // find(150), find(151) = 2 calls
         $this->mockFind([150 => $pfaCourtOrder, 151 => $hwCourtOrder], 2);
@@ -525,8 +511,8 @@ final class ReportTransitionServiceTest extends TestCase
         $pfaCourtOrder->setSibling($newHwCourtOrder);
         $oldHwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 162, CourtOrderKind::Dual);
 
-        $pfaReport = $this->makeReport(163, Report::LAY_PFA_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
-        $oldHwReport = $this->makeReport(164, Report::LAY_HW_TYPE, [$oldHwCourtOrder]);
+        $pfaReport = $this->makeReport(163, Report::LAY_PFA_HIGH_ASSETS_TYPE, $pfaCourtOrder);
+        $oldHwReport = $this->makeReport(164, Report::LAY_HW_TYPE, $oldHwCourtOrder);
 
         // find(160), find(161), find(162 for oldSibling) = 3 calls
         $this->mockFind([160 => $pfaCourtOrder, 161 => $newHwCourtOrder, 162 => $oldHwCourtOrder], 3);
@@ -553,13 +539,16 @@ final class ReportTransitionServiceTest extends TestCase
 
     public function testHybridToDualWithSiblingIdChange(): void
     {
-        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 170, CourtOrderKind::Dual);
+        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 170, CourtOrderKind::Hybrid);
         $newHwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 171, CourtOrderKind::Dual);
-        $pfaCourtOrder->setSibling($newHwCourtOrder);
         $oldHwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 172, CourtOrderKind::Hybrid);
+        $pfaCourtOrder->setSibling($oldHwCourtOrder);
 
-        $hybridReport = $this->makeReport(173, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder, $oldHwCourtOrder]);
-        $newHwReport = $this->makeReport(174, Report::LAY_HW_TYPE, []);
+        $hybridReport = $this->makeReport(173, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $pfaCourtOrder);
+        $newHwReport = $this->makeReport(174, Report::LAY_HW_TYPE, $newHwCourtOrder);
+        $pfaCourtOrder->setSibling($newHwCourtOrder);
+        $pfaCourtOrder->setOrderKind(CourtOrderKind::Dual);
+        $oldHwCourtOrder->setOrderKind(CourtOrderKind::Dual);
 
         // find(170), find(171), find(172 for oldSibling) = 3 calls
         $this->mockFind([170 => $pfaCourtOrder, 171 => $newHwCourtOrder, 172 => $oldHwCourtOrder], 3);
