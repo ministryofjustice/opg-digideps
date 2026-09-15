@@ -87,13 +87,7 @@ class ReportService
         } else {
             // first-time submission
             $this->logger->warning("Creating next year report for client $clientId (NO existing report) at $now");
-
             $newYearReport = $this->createNextYearReport($currentReport);
-
-            foreach ($currentReport->getActiveCourtOrders() as $courtOrder) {
-                $courtOrder->addReport($newYearReport);
-                $this->em->persist($courtOrder);
-            }
         }
 
         $this->em->flush(); // single transaction for report.submitted flags + new year report creation
@@ -337,21 +331,16 @@ class ReportService
     /**
      * If the report is ready to submit, but is not yet due, return notFinished instead
      * In all the cases, return original $status.
-     *
-     * @param string $status
      */
-    public function adjustReportStatus($status, \DateTime $endDate): string
+    public function adjustReportStatus(string $status, \DateTime $endDate): string
     {
-        if ($status == Report::STATUS_READY_TO_SUBMIT && !self::isDue($endDate)) {
+        if ($status === Report::STATUS_READY_TO_SUBMIT && !self::isDue($endDate)) {
             return Report::STATUS_NOT_FINISHED;
         }
 
         return $status;
     }
 
-    /**
-     * @return bool
-     */
     public static function isDue(?\DateTime $endDate = null): bool
     {
         if (!$endDate) {
@@ -363,8 +352,12 @@ class ReportService
         return $endDate < $endOfToday;
     }
 
-    public function createReportFromOrder(CourtOrder $courtOrder): Report
+    public function createReportFromOrder(CourtOrder $courtOrder): ?Report
     {
+        $latest = $courtOrder->getLatestReport();
+        if ($latest?->hasNeverBeenSubmitted() === true) {
+            return null;
+        }
         $startDate = $this->determineStartDateOfFirstReport($courtOrder);
 
         $newReport = new Report(
@@ -384,7 +377,7 @@ class ReportService
     {
         $startDate = \DateTimeImmutable::createFromMutable($courtOrder->getOrderMadeDate())->setTime(0, 0);
         if ($this->now < $startDate) {
-            throw new \DomainException("Encountered a court order with uid {$courtOrder->getCourtOrderUid()} before this court order's made date.");
+            throw new \DomainException("Encountered a court order with uid {$courtOrder->getCourtOrderUid()} before this court order's made date");
         }
 
         $aYear = new \DateInterval('P1Y');
