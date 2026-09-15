@@ -1248,6 +1248,8 @@ class Report
     {
         $this->pfaCourtOrder = $courtOrder->getOrderType() === CourtOrderType::HW ? $courtOrder->isHybrid() ? $courtOrder->getSibling() : null : $courtOrder;
         $this->hwCourtOrder = $courtOrder->getOrderType() === CourtOrderType::PFA ? $courtOrder->isHybrid() ? $courtOrder->getSibling() : null : $courtOrder;
+        $this->pfaCourtOrder?->addReport($this);
+        $this->hwCourtOrder?->addReport($this);
         return $this;
     }
 
@@ -1311,5 +1313,10 @@ class Report
             }
         }
         return $candidate;
+    }
+
+    public function hasNeverBeenSubmitted(): bool
+    {
+        return $this->getSubmitDate() !== null && $this->getSubmitted() !== true && $this->getUnSubmitDate() === null;
     }
 }
