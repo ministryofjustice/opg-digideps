@@ -12,7 +12,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent]
-class PADeputyExpenses
+class PaDeputyExpenses
 {
     private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
 
