@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\BankAccount;
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\BankAccount;
 
 trait ReportBankAccountsTrait
 {
@@ -14,18 +15,11 @@ trait ReportBankAccountsTrait
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\BankAccount>')]
     private array $bankAccounts = [];
 
-    /**
-     * @var float
-     */
     #[JMS\Type('double')]
-    private $accountsClosingBalanceTotal;
+    private float $accountsClosingBalanceTotal = 0.0;
 
-
-    /**
-     * @var float
-     */
     #[JMS\Type('double')]
-    private $accountsOpeningBalanceTotal;
+    private float $accountsOpeningBalanceTotal = 0.0;
 
     public function setBankAccounts(array $bankAccounts): static
     {
@@ -61,52 +55,34 @@ trait ReportBankAccountsTrait
         return array_find($this->bankAccounts, fn ($account) => $account->getId() == $id);
     }
 
-    /**
-     * @return float
-     */
-    public function getAccountsClosingBalanceTotal()
+    public function getAccountsClosingBalanceTotal(): float
     {
         return $this->accountsClosingBalanceTotal;
     }
 
-    /**
-     * @param float $accountsClosingBalanceTotal
-     */
-    public function setAccountsClosingBalanceTotal($accountsClosingBalanceTotal): static
+    public function setAccountsClosingBalanceTotal(float $accountsClosingBalanceTotal): static
     {
         $this->accountsClosingBalanceTotal = $accountsClosingBalanceTotal;
 
         return $this;
     }
 
-    /**
-     ** @return bool
-     */
-    public function hasMoneyIn()
+    public function hasMoneyIn(): bool
     {
         return count($this->getMoneyTransactionsIn()) > 0;
     }
 
-    /**
-     ** @return bool
-     */
-    public function hasMoneyOut()
+    public function hasMoneyOut(): bool
     {
         return count($this->getMoneyTransactionsOut()) > 0;
     }
 
-    /**
-     * @return float
-     */
-    public function getAccountsOpeningBalanceTotal()
+    public function getAccountsOpeningBalanceTotal(): float
     {
         return $this->accountsOpeningBalanceTotal;
     }
 
-    /**
-     * @param float $accountsOpeningBalanceTotal
-     */
-    public function setAccountsOpeningBalanceTotal($accountsOpeningBalanceTotal): void
+    public function setAccountsOpeningBalanceTotal(float $accountsOpeningBalanceTotal): void
     {
         $this->accountsOpeningBalanceTotal = $accountsOpeningBalanceTotal;
     }
