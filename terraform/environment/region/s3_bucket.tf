@@ -34,7 +34,7 @@ module "pa_uploads" {
     "arn:aws:iam::${var.account.environment.account_id}:role/integrations-s3-read-${var.account.environment.name}",
     "arn:aws:iam::${var.account.environment.account_id}:role/operator",
     "arn:aws:iam::${var.account.environment.account_id}:role/breakglass",
-    "arn:aws:iam::${local.backup_account_id}:root"
+    "arn:aws:iam::${var.account.environment.account_id}:role/digideps-ci-boundary"
   ]
 
   providers = {

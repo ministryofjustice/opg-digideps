@@ -109,6 +109,12 @@ data "aws_iam_policy_document" "bucket" {
     }
 
     condition {
+      test     = "StringNotEquals"
+      variable = "aws:PrincipalAccount"
+      values   = [var.backup_account_id]
+    }
+
+    condition {
       test     = "Bool"
       variable = "aws:PrincipalIsAWSService"
       values   = ["false"]

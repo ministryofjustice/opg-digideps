@@ -52,9 +52,11 @@ data "aws_iam_policy_document" "pa_uploads_branch_replication" {
       test     = "ArnNotLike"
       variable = "aws:PrincipalArn"
       values = [
+        aws_iam_role.replication[0].arn,
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/digideps-backup-role.*",
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/operator",
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass"
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/digideps-ci-boundary"
       ]
     }
 

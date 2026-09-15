@@ -105,7 +105,8 @@ data "aws_iam_policy_document" "alb_access" {
       values = [
         data.aws_elb_service_account.region.arn,
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/operator",
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass"
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/digideps-ci-boundary"
       ]
     }
 
