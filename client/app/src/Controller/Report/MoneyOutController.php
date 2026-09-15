@@ -427,7 +427,7 @@ class MoneyOutController extends AbstractController
     private function acquireTransactions(?int $transactionId, Report $report): MoneyTransaction
     {
         if ($transactionId !== null) {
-            $transaction = array_filter($report->getMoneyTransactionsOut(), function ($t) use ($transactionId): bool {
+            $transaction = array_filter($report->getMoneyTransactionsOut(), function (MoneyTransaction $t) use ($transactionId): bool {
                 if ($t->getBankAccount() instanceof BankAccount) {
                     $t->setBankAccountId($t->getBankAccount()->getId());
                 }
