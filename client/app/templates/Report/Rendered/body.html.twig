@@ -76,6 +76,10 @@
         <twig:OPG:Review:ProfDeputyCosts report="{{ report }}"/>
     {% endif %}
 
+    {% if report.hasSection('profDeputyCostsEstimate') %}
+        <twig:OPG:Review:ProfDeputyCostsEstimate report="{{ report }}"/>
+    {% endif %}
+
     {% if report.hasSection('actions') %}
         <twig:OPG:Review:Actions report="{{ report }}"/>
     {% endif %}

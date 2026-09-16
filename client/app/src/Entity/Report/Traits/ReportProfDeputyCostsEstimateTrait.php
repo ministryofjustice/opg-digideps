@@ -140,7 +140,7 @@ trait ReportProfDeputyCostsEstimateTrait
         return $this;
     }
 
-    public function getProfDeputyCostsEstimateMoreInfoDetails()
+    public function getProfDeputyCostsEstimateMoreInfoDetails(): string
     {
         return $this->profDeputyCostsEstimateMoreInfoDetails;
     }
@@ -175,7 +175,7 @@ trait ReportProfDeputyCostsEstimateTrait
     /**
      * @return float
      */
-    public function getProfDeputyManagementCostAmount()
+    public function getProfDeputyManagementCostAmount(): float
     {
         return $this->profDeputyManagementCostAmount;
     }
@@ -183,7 +183,7 @@ trait ReportProfDeputyCostsEstimateTrait
     /**
      * @param float $profDeputyManagementCostAmount
      */
-    public function setProfDeputyManagementCostAmount($profDeputyManagementCostAmount): static
+    public function setProfDeputyManagementCostAmount(float $profDeputyManagementCostAmount): static
     {
         $this->profDeputyManagementCostAmount = $profDeputyManagementCostAmount;
 
