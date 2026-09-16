@@ -60,22 +60,25 @@ class PaDeputyExpenses
         }
 
         $builder = new TableBuilder()
-            ->addColumns(1, 1)
+            ->addColumns(1, 1, 1)
             ->addHeader(
                 $this->text['category'],
+                $this->text['details'],
                 $this->text['amount'],
             );
 
         foreach ($report->getFeesWithValidAmount() as $fee) {
             /** @var string $feeText */
             $feeText = $fee->getFeeTypeId();
+            $detailsText = $fee->getMoreDetails() ?? '';
             $builder->addRow(
                 $this->translate('form.entries.' . $feeText . '.label'),
+                $this->translate($detailsText),
                 $this->formatMoney((float)$fee->getAmount())
             );
         }
 
-        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), new Cell($this->formatMoney((float)$report->getFeesTotal()), self::NUMERIC_FORMAT, isBold: true));
+        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), '', new Cell($this->formatMoney((float)$report->getFeesTotal()), self::NUMERIC_FORMAT, isBold: true));
         return $builder->makeTable();
     }
 
@@ -128,6 +131,7 @@ class PaDeputyExpenses
             'noPADeputyExpensesExplanation' => $this->translate('review.reasonForNoFees'),
             'otherExpenses' => $this->translate('otherExistPage.form.paidForAnything.label'),
             'category' => $this->translate('review.categories'),
+            'details' => $this->translate('review.details'),
             'amount' => $this->translate('review.amount'),
             'totalAmount' => $this->translate('review.totalAmount'),
             'description' => $this->translate('review.description'),
