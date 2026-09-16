@@ -28,7 +28,7 @@ trait ReportDebtsTrait
     #[Assert\NotBlank(message: 'report.debts-management.notBlank', groups: ['debt-management'])]
     private ?string $debtManagement = null;
 
-    #[JMS\Type('string')]
+    #[JMS\Type('double')]
     #[JMS\Groups(['debt'])]
     private float $debtsTotalAmount = 0.0;
 
