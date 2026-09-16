@@ -100,6 +100,7 @@ class SatisfactionRepositoryTest extends TestCase
             'very_satisfied'    => 3,
         ]]);
 
+        /** @var array<int, array<string, mixed>> $result */
         $result = $this->sut->getSatisfactionDataForPeriod($statsStartDate, $statsEndDate);
 
         // 5 score keys + 1 user_satisfaction_percent key = 6 entries
