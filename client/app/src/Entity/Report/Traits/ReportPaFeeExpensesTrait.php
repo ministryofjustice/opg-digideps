@@ -1,44 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\Fee;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Fee;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 trait ReportPaFeeExpensesTrait
 {
     /**
-     *
      * @var Fee[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Fee>')]
     #[JMS\Groups(['fee'])]
     private array $fees = [];
 
-    /**
-     *
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['reasonForNoFees'])]
     #[Assert\NotBlank(message: 'fee.reasonForNoFees.notBlank', groups: ['reasonForNoFees'])]
-    private $reasonForNoFees;
+    private ?string $reasonForNoFees = null;
 
     /**
-     *
-     * @var string $hasFees
+     * 'yes'|'no'|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['fee'])]
-    private $hasFees;
+    private ?string $hasFees;
 
-    /**
-     * @var string $feesTotal
-     */
     #[JMS\Type('double')]
-    private $feesTotal;
+    private float $feesTotal = 0.0;
 
     /**
      * @return Fee[]
@@ -58,36 +51,24 @@ trait ReportPaFeeExpensesTrait
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getReasonForNoFees()
+    public function getReasonForNoFees(): ?string
     {
         return $this->reasonForNoFees;
     }
 
-    /**
-     * @param string $reasonForNoFees
-     */
-    public function setReasonForNoFees($reasonForNoFees): static
+    public function setReasonForNoFees(?string $reasonForNoFees): static
     {
         $this->reasonForNoFees = $reasonForNoFees;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFeesTotal()
+    public function getFeesTotal(): float
     {
         return $this->feesTotal;
     }
 
-    /**
-     * @param string $feesTotal
-     */
-    public function setFeesTotal($feesTotal): static
+    public function setFeesTotal(float $feesTotal): static
     {
         $this->feesTotal = $feesTotal;
 
@@ -101,18 +82,12 @@ trait ReportPaFeeExpensesTrait
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getHasFees()
+    public function getHasFees(): ?string
     {
         return $this->hasFees;
     }
 
-    /**
-     * @param string $hasFees
-     */
-    public function setHasFees($hasFees): static
+    public function setHasFees(?string $hasFees): static
     {
         $this->hasFees = $hasFees;
 
@@ -131,12 +106,10 @@ trait ReportPaFeeExpensesTrait
 
     /**
      * Used to improve the section flow. see usage in Controller.
-     *
-     * @return bool
      */
-    public function isOtherFeesSectionComplete()
+    public function isOtherFeesSectionComplete(): bool
     {
         return $this->getPaidForAnything() === 'no'
-        || ($this->getPaidForAnything() === 'yes' && count($this->getExpenses()));
+        || ($this->getPaidForAnything() === 'yes' && count($this->getExpenses())) > 0;
     }
 }
