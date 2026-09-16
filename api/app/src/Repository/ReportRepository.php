@@ -13,7 +13,6 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
-use OPG\Digideps\Backend\Entity\Report\Debt;
 use OPG\Digideps\Backend\Entity\Report\Fee;
 use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -37,27 +36,6 @@ class ReportRepository extends ServiceEntityRepository
     public function clear(): void
     {
         $this->registry->getManager()->clear();
-    }
-
-    /**
-     * add empty Debts to Report.
-     * Called from doctrine listener.
-     */
-    public function addDebtsToReportIfMissing(Report $report): int
-    {
-        $ret = 0;
-
-        // skips if already added
-        if (count($report->getDebts()) > 0) {
-            return $ret;
-        }
-
-        foreach (Debt::$debtTypeIds as $row) {
-            new Debt($report, $row[0], $row[1], null);
-            ++$ret;
-        }
-
-        return $ret;
     }
 
     public function addFeesToReportIfMissing(Report $report): ?int
