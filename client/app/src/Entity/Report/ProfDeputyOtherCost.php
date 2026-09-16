@@ -11,7 +11,7 @@ class ProfDeputyOtherCost
 {
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-other-costs'])]
-    private $profDeputyOtherCostTypeId;
+    private string $profDeputyOtherCostTypeId;
 
     /**
      * @var string|null decimal
@@ -39,12 +39,12 @@ class ProfDeputyOtherCost
     /**
      * ProfDeputyOtherCost constructor.
      *
-     * @param $profDeputyOtherCostTypeId
+     * @param string $profDeputyOtherCostTypeId
      * @param string|null $amount decimal
      * @param bool $hasMoreDetails
      * @param string|null $moreDetails
      */
-    public function __construct($profDeputyOtherCostTypeId, ?string $amount, bool $hasMoreDetails, ?string $moreDetails)
+    public function __construct(string $profDeputyOtherCostTypeId, ?string $amount, bool $hasMoreDetails, ?string $moreDetails)
     {
         $this->profDeputyOtherCostTypeId = $profDeputyOtherCostTypeId;
         $this->amount = $amount;
@@ -52,18 +52,12 @@ class ProfDeputyOtherCost
         $this->moreDetails = $moreDetails;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getProfDeputyOtherCostTypeId()
+    public function getProfDeputyOtherCostTypeId(): string
     {
         return $this->profDeputyOtherCostTypeId;
     }
 
-    /**
-     * @param $profDeputyOtherCostTypeId
-     */
-    public function setProfDeputyOtherCostTypeId($profDeputyOtherCostTypeId): static
+    public function setProfDeputyOtherCostTypeId(string $profDeputyOtherCostTypeId): static
     {
         $this->profDeputyOtherCostTypeId = $profDeputyOtherCostTypeId;
 
