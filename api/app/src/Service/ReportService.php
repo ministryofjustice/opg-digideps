@@ -352,10 +352,11 @@ class ReportService
         return $endDate < $endOfToday;
     }
 
-    public function createReportFromOrder(CourtOrder $courtOrder): Report
+    public function createReportFromOrder(CourtOrder $courtOrder): ?Report
     {
-        if ($courtOrder->getLatestReport() !== null) {
-            throw new \RuntimeException("Can't create a report based on a court_order which already has a report.");
+        $latest = $courtOrder->getLatestReport();
+        if ($latest !== null) {
+            return null;
         }
         $startDate = $this->determineStartDateOfFirstReport($courtOrder);
 

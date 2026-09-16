@@ -119,6 +119,13 @@ final readonly class ReportTransitionService
         ['persistingReportCourtOrder' => $persistingCourtOrder, 'newReportCourtOrder' => $newReportCourtOrder] =
             $this->hybridToDualAssignCourtOrders($courtOrderPair, $courtOrderChange);
 
+        // create a new report on the court order which is the other half of the dual
+        $newReport = $this->reportService->createReportFromOrder($newReportCourtOrder);
+        if ($newReport === null) {
+            $result->errorMessages[] = "Hybrid -> Dual: {$courtOrderPair} - Court order with uid {$newReportCourtOrder->getCourtOrderUid()} was deemed to need a new report but already had a report with id {$newReportCourtOrder->getLatestReport()?->getId()}.";
+            return $result;
+        }
+
         // the persisting court order and the old sibling (which may be the same as the new sibling)
         // should share a report, otherwise they aren't really a hybrid
         $oldPair = CourtOrderPair::create($persistingCourtOrder, $oldSibling);
@@ -143,14 +150,11 @@ final readonly class ReportTransitionService
         $oldSibling->removeReport($persistingReport);
         $result->updatedCourtOrders[] = $oldSibling;
 
-        // create a new report on the court order which is the other half of the dual
-        $newReport = $this->reportService->createReportFromOrder($newReportCourtOrder);
-
         $result->transitioned = true;
         $result->updatedCourtOrders += [$persistingCourtOrder, $newReportCourtOrder];
         $result->updatedReports += [$persistingReport, $newReport];
         $result->messages[] = "Hybrid -> Dual: {$courtOrderPair} - Converted hybrid report " .
-            "{$persistingReport->getId()} to dual reports {$persistingReport->getId()} and {$newReport->getId()}";
+                "{$persistingReport->getId()} to dual reports {$persistingReport->getId()} and {$newReport->getId()}";
 
         return $result;
     }
@@ -277,12 +281,17 @@ final readonly class ReportTransitionService
 
         if ($existingReport !== null) {
             $newReport = $this->reportService->createReportFromOrder($courtOrderNeedingReport);
-
-            $result->updatedReports[] = $newReport;
-
-            $result->messages[] = fn () => "Single -> Dual: {$courtOrderPair} - Added new {$newReport->getType()} " .
-                "report {$newReport->getId()} to {$courtOrderNeedingReport->getOrderType()->value} " .
-                "court order {$courtOrderNeedingReport->getCourtOrderUid()}";
+            if ($newReport === null) {
+                $newReport = $courtOrderNeedingReport->getLatestReport() ?? throw new \LogicException("We know latest report is not null at this point.");
+                $result->messages[] = fn () => "Single -> Dual: {$courtOrderPair} - Kept existing {$newReport->getType()} " .
+                    "report {$newReport->getId()} on {$courtOrderNeedingReport->getOrderType()->value} " .
+                    "court order {$courtOrderNeedingReport->getCourtOrderUid()}";
+            } else {
+                $result->updatedReports[] = $newReport;
+                $result->messages[] = fn () => "Single -> Dual: {$courtOrderPair} - Added new {$newReport->getType()} " .
+                    "report {$newReport->getId()} to {$courtOrderNeedingReport->getOrderType()->value} " .
+                    "court order {$courtOrderNeedingReport->getCourtOrderUid()}";
+            }
 
             $result->transitioned = true;
             $result->updatedCourtOrders = $affectedCourtOrders;
