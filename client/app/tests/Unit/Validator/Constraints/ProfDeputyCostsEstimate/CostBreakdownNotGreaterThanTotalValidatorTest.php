@@ -17,6 +17,7 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
 {
     private ExecutionContextInterface&MockObject $context;
     private Report $data;
+    private ConstraintValidator $sut;
 
     private ConstraintValidator $sut;
 
@@ -43,23 +44,14 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
             ->invokeTest();
     }
 
-    /**
-     * @dataProvider breakdownCostVariations
-     */
-    public function testValidatorIgnoresConstraintIfBreakdownTotalNotGreaterThanAmountItCanExceed(string $costVariation): void
+    public function testValidatorIgnoresConstraintIfBreakdownTotalNotGreaterThanAmountItCanExceed()
     {
-        $this->setTotalCostEstimate()
-            ->setIndividualBreakdownCosts($costVariation)
-            ->assertConstraintWillNotBeApplied()
-            ->invokeTest();
-    }
-
-    public static function breakdownCostVariations(): array
-    {
-        return [
-            ['costVariation' => '12.99'],
-            ['costVariation' => '13.00']
-        ];
+        foreach (['12.99', '13.00'] as $costVariation) {
+            $this->setTotalCostEstimate()
+                ->setIndividualBreakdownCosts('30', $costVariation)
+                ->assertConstraintWillNotBeApplied()
+                ->invokeTest();
+        }
     }
 
     private function setTotalCostEstimate(): static
@@ -71,8 +63,8 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
 
     private function setIndividualBreakdownCosts(string $costBeta): static
     {
-        $breakdownAlpha = new ProfDeputyEstimateCost(1, '30', 'yes', null);
-        $breakdownBeta = new ProfDeputyEstimateCost(2, $costBeta, 'yes', null);
+        $breakdownAlpha = new ProfDeputyEstimateCost('1', '30', false, null);
+        $breakdownBeta = new ProfDeputyEstimateCost('2', $costBeta, false, null);
 
         $this->data->setProfDeputyEstimateCosts([$breakdownAlpha, $breakdownBeta]);
 
