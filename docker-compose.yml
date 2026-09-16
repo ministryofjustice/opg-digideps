@@ -217,9 +217,6 @@ services:
       timeout: 30s
       retries: 50
 
-  wait-for-it:
-    build: ./wait-for-it
-
   mock-sirius-integration:
     build:
       context: .
