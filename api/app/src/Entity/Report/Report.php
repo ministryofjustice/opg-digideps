@@ -1314,4 +1314,9 @@ class Report
         }
         return $candidate;
     }
+
+    public function hasNeverBeenSubmitted(): bool
+    {
+        return $this->getSubmitDate() !== null && $this->getSubmitted() !== true && $this->getUnSubmitDate() === null;
+    }
 }
