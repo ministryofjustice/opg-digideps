@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @money-out-short
+@v2 @v2_reporting_2 @money-out @money-out-short @money-out-short.org
 Feature: Money Out Short - Org users
 
     @prof-pfa-low-not-started
