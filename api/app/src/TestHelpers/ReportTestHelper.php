@@ -8,7 +8,6 @@ use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Action;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
-use OPG\Digideps\Backend\Entity\Report\Debt;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Lifestyle;
 use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
@@ -46,6 +45,9 @@ class ReportTestHelper
 
     public static function completeReport(Report $report, EntityManagerInterface $em): void
     {
+        $em->persist($report);
+        $em->flush();
+        $em->refresh($report);
         self::completeDecisions($report);
         self::completeContacts($report);
         self::completeVisitsCare($report);
@@ -246,13 +248,9 @@ class ReportTestHelper
     private static function completeDebts(Report $report, EntityManagerInterface $em): void
     {
         $report->setHasDebts('yes');
+        $debt = $report->getDebtByTypeId('care-fees') ?? throw new \LogicException('Please persist and flush the report at least once before filling in debts.');
 
-        $debt = new Debt(
-            $report,
-            'care-fees',
-            false,
-            '10.0'
-        );
+        $debt->setAmountAndDetails('10.0', null);
 
         $report->setDebtManagement('Slowly paying it off');
         $report->addDebt($debt);
