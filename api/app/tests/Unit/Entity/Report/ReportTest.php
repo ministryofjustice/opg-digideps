@@ -405,7 +405,7 @@ final class ReportTest extends TestCase
         );
     }
 
-    public function testPreviousReportDataLogic(): void
+    public function testNoPreviousReportDataLogic(): void
     {
         $client = new Client();
         $report1 = new Report($client, Report::PROF_COMBINED_LOW_ASSETS_TYPE, new \DateTime('2023-01-01'), new \DateTime('2023-12-31'));

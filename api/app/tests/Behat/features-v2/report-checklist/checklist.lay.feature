@@ -4,6 +4,7 @@ Feature: Reporting Checklists - Lay reporting checklist
     @admin @lay-combined-high-submitted
     Scenario: An admin submits the checklist form - applies to all admin roles
         Given a Lay Deputy has submitted a Combined High Assets report
+        And the deputies 'previous' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         And an admin user accesses the admin app
         When I navigate to the clients search page
         And I search for the client I'm interacting with
