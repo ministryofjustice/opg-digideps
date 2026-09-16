@@ -104,7 +104,7 @@ final class ReportTransitionServiceTest extends TestCase
 
         self::assertNotNull($result);
         self::assertCount(1, $result->errorMessages);
-        self::assertStringContainsString('Invalid hybrid', $result->errorMessages[0]);
+        self::assertStringContainsString('Hybrid -> Dual: HW UID=990011, PFA UID=980011 - Court order with uid 990011 was deemed to need a new report but already had a report with id 78.', $result->errorMessages[0]);
     }
 
     public function testHybridToDual(): void

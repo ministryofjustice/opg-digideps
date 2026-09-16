@@ -106,7 +106,7 @@ final readonly class RequiredReportDataFactory implements DataFactoryInterface
 
     private function createReportFromOrder(CourtOrder $courtOrder): Report
     {
-        return $this->reportService->createReportFromOrder($courtOrder);
+        return $this->reportService->createReportFromOrder($courtOrder) ?? throw new \RuntimeException("Can't create a report based on court_order with uid {$courtOrder->getCourtOrderUid()} which already has a report with id {$courtOrder->getLatestReport()?->getId()}.");
     }
 
     private function createReportFromReport(Report $latest): Report
