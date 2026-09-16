@@ -231,8 +231,22 @@ final readonly class ReportTransitionService
     {
         $result = new ReportTransitionResult();
 
-        if ($courtOrderPair->separateReportsExistForBothOrders()) {
-            $result->messages[] = "Single -> Dual: {$courtOrderPair} - Both orders already have reports. Nothing to do.";
+        $hwLatestReport = $courtOrderPair->hwCourtOrder->getLatestReport();
+        $pfaLatestReport = $courtOrderPair->pfaCourtOrder->getLatestReport();
+        if ($hwLatestReport !== null && $pfaLatestReport !== null && $hwLatestReport->getId() !== $pfaLatestReport->getId()) {
+            $actions = [];
+            if (count($hwLatestReport->getCourtOrders()) === 2) {
+                $hwLatestReport->setCourtOrder($courtOrderPair->hwCourtOrder);
+                $result->updatedReports[] = $hwLatestReport;
+                $actions[] = "Unlinked {$hwLatestReport->getType()} report {$hwLatestReport->getId()} from court order {$courtOrderPair->pfaCourtOrder->getCourtOrderUid()}.";
+            }
+            if (count($pfaLatestReport->getCourtOrders()) === 2) {
+                $pfaLatestReport->setCourtOrder($courtOrderPair->pfaCourtOrder);
+                $result->updatedReports[] = $pfaLatestReport;
+                $actions[] = "Unlinked {$hwLatestReport->getType()} report {$hwLatestReport->getId()} from court order {$courtOrderPair->pfaCourtOrder->getCourtOrderUid()}.";
+            }
+            $action = empty($actions) ? 'Nothing to do.' : implode(' ', $actions);
+            $result->messages[] = "Single -> Dual: {$courtOrderPair} - Both orders already have reports. {$action}";
             return $result;
         }
 
