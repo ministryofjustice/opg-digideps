@@ -355,7 +355,7 @@ class ReportService
     public function createReportFromOrder(CourtOrder $courtOrder): ?Report
     {
         $latest = $courtOrder->getLatestReport();
-        if ($latest !== null) {
+        if ($latest?->hasNeverBeenSubmitted() === true) {
             return null;
         }
         $startDate = $this->determineStartDateOfFirstReport($courtOrder);
