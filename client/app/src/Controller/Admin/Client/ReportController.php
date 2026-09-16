@@ -232,20 +232,21 @@ class ReportController extends AbstractController
         $syncFeatureIsEnabled = false;
 
         if ($parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC) === '1') {
+            $checklist = $report->getChecklist();
+
+            if ($checklist === null) {
+                throw new \DomainException('cannot synchronise checklist for report as checklist does not exist');
+            }
+
             $syncFeatureIsEnabled = true;
-            $this->queueChecklistForSyncing($report);
+            $checklist->setSynchronisationStatus(Checklist::SYNC_STATUS_QUEUED);
+            $this->restClient->put("report/{$id}/checked", $checklist, ['synchronisation']);
         }
 
         return [
             'report' => $report,
             'syncFeatureIsEnabled' => $syncFeatureIsEnabled,
         ];
-    }
-
-    protected function queueChecklistForSyncing(Report $report): void
-    {
-        $report->getChecklist()->setSynchronisationStatus(Checklist::SYNC_STATUS_QUEUED);
-        $this->restClient->put('report/' . $report->getId() . '/checked', $report->getChecklist(), ['synchronisation']);
     }
 
     /**
@@ -256,10 +257,6 @@ class ReportController extends AbstractController
     public function checklistPDFViewAction(int $id, ReportSubmissionService $reportSubmissionService): Response
     {
         $report = $this->reportApi->getReport($id, array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
-
-        if (is_null($report->getEndDate())) {
-            throw $this->createNotFoundException();
-        }
 
         try {
             $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
@@ -413,35 +410,39 @@ class ReportController extends AbstractController
     /**
      * @throws \Exception
      */
-    private function determineNewDueDateFromForm(Report $report, FormInterface $form): ?\DateTime
+    private function determineNewDueDateFromForm(Report $report, FormInterface $form): \DateTime
     {
-        $newDueDate = $report->getDueDate();
+        $dueDate = $report->getDueDate();
+        $endDate = $report->getEndDate();
+        if ($dueDate === null || $endDate === null) {
+            throw new \DomainException('cannot determine new due date as due date or end date is null');
+        }
 
         /** @var null|string|int $dueDateChoice */
         $dueDateChoice = $form['dueDateChoice']->getData();
 
         if (!empty($dueDateChoice) && preg_match('/^\d+$/', "$dueDateChoice")) {
-            $newDueDate = new \DateTime();
-            $newDueDate->modify("+$dueDateChoice weeks");
+            $dueDate = new \DateTime();
+            $dueDate->modify("+$dueDateChoice weeks");
         } elseif ($dueDateChoice == 'custom') {
             /** @var ?\DateTime $dueDateCustom */
             $dueDateCustom = $form['dueDateCustom']->getData();
 
             if (!is_null($dueDateCustom)) {
-                $newDueDate = $dueDateCustom;
+                $dueDate = $dueDateCustom;
             }
         }
 
-        if ($dueDateChoice === null && $newDueDate < $report->getEndDate()) {
-            $newDueDate = clone $report->getEndDate();
+        if ($dueDateChoice === null && $dueDate < $endDate) {
+            $dueDate = clone $endDate;
             if ($report->isLayReport()) {
-                $newDueDate = $newDueDate->add(new \DateInterval('P21D'));
+                $dueDate = $dueDate->add(new \DateInterval('P21D'));
             } else {
-                $newDueDate = $newDueDate->add(new \DateInterval('P56D'));
+                $dueDate = $dueDate->add(new \DateInterval('P56D'));
             }
         }
 
-        return $newDueDate;
+        return $dueDate;
     }
 
     /**
@@ -514,15 +515,24 @@ class ReportController extends AbstractController
     {
         foreach (['type', 'unsubmittedSectionsList'] as $field) {
             if (isset($sessionData[$field])) {
-                $setter = sprintf('set%s', ucfirst($field));
-                $report->{$setter}($sessionData[$field]);
+                /** @var string $value */
+                $value = $sessionData[$field];
+
+                match ($field) {
+                    'type' => $report->setType($value),
+                    'unsubmittedSectionsList' => $report->setUnsubmittedSectionsList($value)
+                };
             }
         }
 
         foreach (['dueDate', 'startDate', 'endDate'] as $field) {
             if (isset($sessionData[$field])) {
-                $setter = sprintf('set%s', ucfirst($field));
-                $report->{$setter}(new \DateTime($sessionData[$field]));
+                $value = new \DateTime($sessionData[$field]);
+                match ($field) {
+                    'dueDate' => $report->setDueDate($value),
+                    'startDate' => $report->setStartDate($value),
+                    'endDate' => $report->setEndDate($value)
+                };
             }
         }
     }
