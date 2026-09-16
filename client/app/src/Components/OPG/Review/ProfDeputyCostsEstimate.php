@@ -40,7 +40,7 @@ final class ProfDeputyCostsEstimate
         if (in_array($report->getProfDeputyCostsEstimateHowCharged(), ['assessed', 'both'])) {
             $builder->addItem(
                 $this->text['generalCosts'],
-                $this->formatMoney($report->getProfDeputyManagementCostAmount())
+                $report->getProfDeputyManagementCostAmount() === null ? $this->text['notEntered'] : $this->formatMoney($report->getProfDeputyManagementCostAmount())
             );
             $moreInfoText = $report->getProfDeputyCostsEstimateHasMoreInfo() === 'yes' ? $report->getProfDeputyCostsEstimateMoreInfoDetails() : $this->text['noMoreInfo'];
             $builder->addItem($this->text['moreInfo'], $moreInfoText);
