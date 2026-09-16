@@ -18,12 +18,9 @@ abstract class ProfServiceFee
     public const string TYPE_CURRENT_FEE = 'current';
     public const string TYPE_ESTIMATED_FEE = 'estimated';
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['prof-service-fees'])]
-    private $id;
+    private ?int $id = null;
 
     /**
      * Hold service type.
@@ -104,18 +101,12 @@ abstract class ProfServiceFee
     #[Assert\NotBlank(message: 'profServiceFee.paymentReceivedDate.notBlank', groups: ['prof-service-fee-details-type-payment-received'])]
     private $paymentReceivedDate;
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
 
