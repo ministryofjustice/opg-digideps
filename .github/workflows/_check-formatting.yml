@@ -7,19 +7,14 @@ permissions: {}
 
 jobs:
   php-cs-fixer:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Install PHP-CS-Fixer
-        run: |
-          curl -OL https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/releases/download/v3.95.11/php-cs-fixer.phar
-          php php-cs-fixer.phar --version
-
-      - name: Detect changed PHP files
+      - name: Detect changed PHP files to see if we should skip
         run: |
           {
             echo "CHANGED_PHP_FILES<<EOF"
@@ -29,5 +24,4 @@ jobs:
 
       - name: Run php-cs-fixer
         if: env.CHANGED_PHP_FILES != ''
-        run: |
-          php php-cs-fixer.phar check --config=.php-cs-fixer.dist.php -v --show-progress=none $CHANGED_PHP_FILES
+        run: make check-php-cs-fixer
