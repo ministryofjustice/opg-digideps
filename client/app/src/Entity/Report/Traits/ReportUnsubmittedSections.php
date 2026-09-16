@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use JMS\Serializer\Annotation as JMS;
@@ -9,27 +11,9 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 trait ReportUnsubmittedSections
 {
     /**
-     * @var array<UnsubmittedSection>
+     * @var UnsubmittedSection[]
      */
     private array $unsubmittedSections = [];
-
-    /**
-     * @return array<UnsubmittedSection>
-     */
-    public function getUnsubmittedSections(): array
-    {
-        return $this->unsubmittedSections;
-    }
-
-    /**
-     * @param array<UnsubmittedSection> $unsubmittedSections
-     */
-    public function setUnsubmittedSections(array $unsubmittedSections): static
-    {
-        $this->unsubmittedSections = $unsubmittedSections;
-
-        return $this;
-    }
 
     /**
      * @var ?string comma-separated list of section identifiers; see ReportSection::value
@@ -37,6 +21,24 @@ trait ReportUnsubmittedSections
     #[JMS\Type('string')]
     #[JMS\Groups(['report_unsubmitted_sections_list'])]
     private ?string $unsubmittedSectionsList = null;
+
+    /**
+     * @return UnsubmittedSection[]
+     */
+    public function getUnsubmittedSections(): array
+    {
+        return $this->unsubmittedSections;
+    }
+
+    /**
+     * @param UnsubmittedSection[] $unsubmittedSections
+     */
+    public function setUnsubmittedSections(array $unsubmittedSections): static
+    {
+        $this->unsubmittedSections = $unsubmittedSections;
+
+        return $this;
+    }
 
     public function getUnsubmittedSectionsList(): ?string
     {
@@ -50,14 +52,9 @@ trait ReportUnsubmittedSections
         return $this;
     }
 
-    /**
-     * Used by Twig template rendering Report model
-     */
-    public function isSectionFlaggedForAttention($sectionId): bool
+    public function isSectionFlaggedForAttention(string $sectionId): bool
     {
-        $unsubmittedSections = array_map('trim', array_filter(
-            explode(',', $this->unsubmittedSectionsList ?? '')
-        ));
+        $unsubmittedSections = array_map('trim', explode(',', $this->setUnsubmittedSectionsList ?? ''));
 
         return in_array($sectionId, $unsubmittedSections);
     }
@@ -80,4 +77,6 @@ trait ReportUnsubmittedSections
             }
         }
     }
+
+
 }
