@@ -15,7 +15,7 @@ trait DebtTrait
      * @var Collection<int, Debt>
      */
     #[JMS\Groups(['debt'])]
-    #[ORM\OneToMany(mappedBy: 'report', targetEntity: Debt::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Debt::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['id' => 'ASC'])]
     private Collection $debts;
 
