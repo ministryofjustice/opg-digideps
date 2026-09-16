@@ -115,10 +115,11 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
 
     private function createProfDeputyEstimateCost(Report $report, $postedProfDeputyEstimateCostType): ProfDeputyEstimateCost
     {
-        return new ProfDeputyEstimateCost()
-            ->setReport($report)
-            ->setProfDeputyEstimateCostTypeId($postedProfDeputyEstimateCostType['prof_deputy_estimate_cost_type_id'])
-            ->setHasMoreDetails($postedProfDeputyEstimateCostType['has_more_details'])
+        return new ProfDeputyEstimateCost(
+            $report,
+            $postedProfDeputyEstimateCostType['prof_deputy_estimate_cost_type_id'],
+            $postedProfDeputyEstimateCostType['has_more_details'],
+        )
             ->setAmount($postedProfDeputyEstimateCostType['amount']);
     }
 

@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Deputy;
 use OPG\Digideps\Frontend\Entity\Report\Traits as ReportTraits;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
@@ -167,6 +168,10 @@ class Report implements StartEndDateComparableInterface
      */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
     private $submittedBy;
+
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Deputy')]
+    #[JMS\Groups(['deputy'])]
+    private ?Deputy $primaryDeputy = null;
 
     /**
      * @var ReportSubmission[]
@@ -1350,5 +1355,10 @@ class Report implements StartEndDateComparableInterface
         $this->reasonForNoMoneyOut = $reasonForNoMoneyOut;
 
         return $this;
+    }
+
+    public function getPrimaryDeputy(): ?Deputy
+    {
+        return $this->primaryDeputy;
     }
 }

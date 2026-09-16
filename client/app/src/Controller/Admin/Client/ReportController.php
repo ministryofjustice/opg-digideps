@@ -307,6 +307,23 @@ class ReportController extends AbstractController
         ];
     }
 
+    #[Route(path: 'preview-pdf', name: 'admin_preview_pdf', methods: ['GET'])]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
+    public function previewPdf(
+        int $id,
+        ReportSubmissionService $reportSubmissionService,
+    ): Response {
+        $report = $this->reportApi->getReport($id, self::$reportGroupsAll);
+
+        $html = $reportSubmissionService->getPdfHtml($report);
+
+        if ($html === false) {
+            throw $this->createNotFoundException('Unable to generate report HTML.');
+        }
+
+        return new Response($html);
+    }
+
     /**
      * @throws \Exception
      */

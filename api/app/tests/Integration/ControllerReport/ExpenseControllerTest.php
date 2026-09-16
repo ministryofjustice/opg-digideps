@@ -68,7 +68,7 @@ class ExpenseControllerTest extends AbstractTestController
 
         $this->assertEquals(self::$expense1->getId(), $data['id']);
         $this->assertEquals(self::$expense1->getExplanation(), $data['explanation']);
-        $this->assertEquals(self::$expense1->getAmount(), $data['amount']);
+        $this->assertEquals((float)self::$expense1->getAmount(), (float)$data['amount']);
     }
 
     public function testPostPutAuth(): void

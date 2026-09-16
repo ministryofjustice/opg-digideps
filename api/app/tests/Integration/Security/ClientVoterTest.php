@@ -11,6 +11,7 @@ use OPG\Digideps\Backend\Security\ClientVoter;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -26,7 +27,7 @@ class ClientVoterTest extends KernelTestCase
 
     public function setUp(): void
     {
-        $this->user = new User();
+        $this->user = new User('', '', '');
         $this->token = $this->createMock(TokenInterface::class);
         $this->security = $this->getMockBuilder(Security::class)->disableOriginalConstructor()->getMock();
         $this->voter = new ClientVoter($this->security);
@@ -57,7 +58,7 @@ class ClientVoterTest extends KernelTestCase
 
         if ($role === 'ROLE_ADMIN') {
             // The ROLE_ADMIN check verifies the users role with the isGranted($roleName) method.
-            $this->security->method('isGranted')->with($role)->willReturn(true);
+            $this->security->expects($this->once())->method('isGranted')->with($role)->willReturn(true);
         } else {
             $this->user->setRoleName($role);
         }
@@ -89,7 +90,7 @@ class ClientVoterTest extends KernelTestCase
 
     private function ensureClientAndUserBelongToDifferentOrganisations(Client $client, Organisation $organisation): ClientVoterTest
     {
-        $usersOrganisation = new Organisation()->setIsActivated(true);
+        $usersOrganisation = new Organisation('', '', true);
         $usersOrganisation->addUser($this->user);
         $client->setOrganisation($organisation);
 
@@ -136,8 +137,7 @@ class ClientVoterTest extends KernelTestCase
     public function testGrantsAccessToNonLayUsersIfClientBelongsToUsersActivatedOrganisation(): void
     {
         $client = new Client();
-        $organisation = new Organisation();
-        $organisation->setIsActivated(true);
+        $organisation = new Organisation('', '', true);
 
         $this
             ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
@@ -149,8 +149,7 @@ class ClientVoterTest extends KernelTestCase
     public function testDeniesAccessToNonLayUsersIfClientBelongsToADifferentActivatedOrganisation()
     {
         $client = new Client();
-        $organisation = new Organisation();
-        $organisation->setIsActivated(true);
+        $organisation = new Organisation('', '', true);
 
         $this
             ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
@@ -162,8 +161,7 @@ class ClientVoterTest extends KernelTestCase
     public function testDeniesAccessToNonLayUsersIfClientBelongsToUsersInactiveOrganisationButDoesNotBelongToUser(): void
     {
         $client = new Client();
-        $organisation = new Organisation();
-        $organisation->setIsActivated(false);
+        $organisation = new Organisation('', '');
 
         $this
             ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
@@ -175,8 +173,7 @@ class ClientVoterTest extends KernelTestCase
     public function testDeniesAccessToNonLayUsersIfClientBelongsActiveOrganisationAndTheUserDespiteUserNotBeingInTheOrganisation(): void
     {
         $client = new Client();
-        $organisation = new Organisation();
-        $organisation->setIsActivated(true);
+        $organisation = new Organisation('', '', true);
 
         $this
             ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
@@ -189,8 +186,7 @@ class ClientVoterTest extends KernelTestCase
     public function testAllowsAccessToNonLayUsersIfClientBelongsToInactiveOrganisationAndTheUserDespiteUserNotBeingInTheOrganisation(): void
     {
         $client = new Client();
-        $organisation = new Organisation();
-        $organisation->setIsActivated(false);
+        $organisation = new Organisation('', '');
 
         $this
             ->ensureUserIsLoggedInWithRole('NOT_LAY_DEPUTY')
@@ -244,9 +240,7 @@ class ClientVoterTest extends KernelTestCase
         ];
     }
 
-    /**
-     * @dataProvider deleteClientProvider
-     */
+    #[DataProvider('deleteClientProvider')]
     public function testDetermineDeletePermission(User $user, Client $client, int $expectedPermission): void
     {
         $security = self::createMock(Security::class);

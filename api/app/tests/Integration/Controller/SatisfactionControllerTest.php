@@ -6,6 +6,7 @@ use OPG\Digideps\Backend\Entity\Satisfaction;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 use OPG\Digideps\Backend\Entity\Report\Report;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SatisfactionControllerTest extends AbstractTestController
 {
@@ -129,8 +130,9 @@ class SatisfactionControllerTest extends AbstractTestController
     }
 
     /**
-     * @dataProvider getInvalidInputs
+     * Provides invalid inputs for satisfaction endpoint testing
      */
+    #[DataProvider('getInvalidInputs')]
     public function testSatisfactionFailsOnInvalidData($url, $data)
     {
         $this->assertJsonRequest('POST', $url, [
@@ -150,8 +152,9 @@ class SatisfactionControllerTest extends AbstractTestController
     }
 
     /**
-     * @dataProvider getValidInputs
+     * Provides valid inputs for satisfaction endpoint testing
      */
+    #[DataProvider('getValidInputs')]
     public function testSatisfactionAcceptsValidData($url, $data)
     {
         $report = $this->prepareReport();

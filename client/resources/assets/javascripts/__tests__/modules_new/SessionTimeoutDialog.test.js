@@ -16,9 +16,9 @@ describe('SessionTimeoutDialog', function () {
 
     const validOptions = {
       element: divElement,
-      sessionExpiresMs: sessionExpiresMs,
-      sessionPopupShowAfterMs: sessionPopupShowAfterMs,
-      keepSessionAliveUrl: keepSessionAliveUrl,
+      sessionExpiresMs,
+      sessionPopupShowAfterMs,
+      keepSessionAliveUrl,
       okBtn: buttonElement
     }
 

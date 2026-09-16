@@ -312,3 +312,26 @@ playwright-format: ##@playwright Formats the tests.
 playwright-typecheck: ##@playwright Typechecks the tests.
 	docker compose build playwright-tests
 	docker compose run --rm playwright-tests typecheck
+
+audit-ga: ##@github_actions Audit github actions
+	docker compose -f docker-compose.commands.yml build audit-ga
+	docker compose -f docker-compose.commands.yml up audit-ga
+
+frontend-apk-upgrade: ##@apk_upgrades Upgrade pinned frontend apk versions
+	docker compose -f docker-compose.commands.yml build --no-cache frontend-apk-upgrade
+	docker compose -f docker-compose.commands.yml up frontend-apk-upgrade
+	docker cp opg-digideps-frontend-apk-upgrade:/var/www/Dockerfile ./client/docker/app/Dockerfile
+
+api-apk-upgrade: ##@apk_upgrades Upgrade pinned api apk versions
+	docker compose -f docker-compose.commands.yml build --no-cache api-apk-upgrade
+	docker compose -f docker-compose.commands.yml up api-apk-upgrade
+	docker cp opg-digideps-api-apk-upgrade:/var/www/Dockerfile ./api/docker/app/Dockerfile
+
+htmltopdf-apk-upgrade: ##@apk_upgrades Upgrade pinned htmltopdf apk versions
+	docker compose -f docker-compose.commands.yml build --no-cache htmltopdf-apk-upgrade
+	docker compose -f docker-compose.commands.yml up htmltopdf-apk-upgrade
+	docker cp opg-digideps-htmltopdf-apk-upgrade:/Dockerfile ./htmltopdf/Dockerfile
+
+check-php-cs-fixer: ##@php-cs-fixer Check php-cs-fixer
+	CHANGED_PHP_FILES="$(shell git diff --diff-filter=d --name-only origin/main... -- '**/*.php' | xargs)" \
+	docker compose -f docker-compose.commands.yml up --build --exit-code-from php-cs-fixer php-cs-fixer

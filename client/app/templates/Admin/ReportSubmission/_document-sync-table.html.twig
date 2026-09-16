@@ -40,6 +40,9 @@
                                 <a href="{{ path('admin_regenerate_pdf', { id: report.id }) }}">
                                     {{- 'page.postactions.regenerate' | trans -}}
                                 </a>
+                                <a href="{{ path('admin_preview_pdf', { id: report.id }) }}">
+                                    {{- 'page.postactions.preview' | trans -}}
+                                </a>
                             {% endif %}
                         {% endif %}
                     </td>

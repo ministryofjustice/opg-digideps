@@ -21,6 +21,7 @@ variable "accounts" {
     object({
       account_id         = string
       name               = string
+      pagerduty_enabled  = bool
       ip_block_workspace = string
       db_subnet_group    = string
       ec_subnet_group    = string

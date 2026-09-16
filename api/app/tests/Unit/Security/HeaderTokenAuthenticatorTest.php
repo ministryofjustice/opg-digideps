@@ -54,7 +54,7 @@ final class HeaderTokenAuthenticatorTest extends TestCase
         $supportedRequest = new Request();
         $supportedRequest->headers->set('AuthToken', 'AuthTokenValue');
 
-        $user = new User()->setEmail('a@b.com');
+        $user = new User('', '', 'a@b.com');
         $postAuthToken = new PostAuthenticationToken($user, 'a_firewall', ['ROLE_LAY_DEPUTY']);
 
         $this->userRepository->expects($this->once())->method('findOneBy')->with(['email' => 'a@b.com'])->willReturn($user);
@@ -83,25 +83,20 @@ final class HeaderTokenAuthenticatorTest extends TestCase
         $supportedRequest = new Request();
         $supportedRequest->headers->set('AuthToken', 'AuthTokenValue');
 
-        $user = new User()
-            ->setEmail('a@b.com');
+        $user = new User('', '', 'a@b.com');
         $postAuthToken = new PostAuthenticationToken($user, 'a_firewall', ['ROLE_LAY_DEPUTY']);
 
         $this->redisClient->expects(self::once())->method('get')->with('AuthTokenValue')->willReturn(serialize($postAuthToken));
         $this->userRepository->expects(self::never())->method('findOneBy');
 
-        $passport = new SelfValidatingPassport(
-            new UserBadge($postAuthToken->getUserIdentifier(), function ($userEmail): User {
-                $user = $this->userRepository->findOneBy(['email' => strtolower($userEmail)]);
+        $passport = $this->sut->authenticate($supportedRequest);
 
-                if ($user instanceof User) {
-                    return $user;
-                }
+        self::assertInstanceOf(SelfValidatingPassport::class, $passport);
+        self::assertTrue($passport->hasBadge(UserBadge::class));
 
-                throw new UserNotFoundException('User not found');
-            })
-        );
-
-        self::assertEquals($passport, $this->sut->authenticate($supportedRequest));
+        /** @var UserBadge $userBadge */
+        $userBadge = $passport->getBadge(UserBadge::class);
+        self::assertEquals('a@b.com', $userBadge->getUserIdentifier());
+        self::assertTrue(is_callable($userBadge->getUserLoader()));
     }
 }

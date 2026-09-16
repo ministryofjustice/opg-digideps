@@ -6,7 +6,10 @@ $print-text: #454572;
   @include govuk-clearfix;
   @include govuk-font(14);
   color: $black;
-  overflow: hidden;
+  // WeasyPrint can split content incorrectly across pages when
+  // overflow:hidden is applied to the report container.
+  // Allow overflow so page-break rules on child elements are honoured.
+  overflow: visible;
   box-sizing: border-box;
 
   // =======================================================

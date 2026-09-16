@@ -1,33 +1,52 @@
-# Manually check PDFs generate when updating this
-FROM python:3.13.13-alpine3.23@sha256:420cd0bf0f3998275875e02ecd5808168cf0843cbb4d3c536432f729247b2acc
+##############################
+# Stage 1: Base image
+##############################
+FROM python:3.13.15-alpine3.24@sha256:540c7d91f98ff6880174c40e99067bf5941eb54d818a7a5e094d188b196a934d as base
 
 WORKDIR /
+
+##############################
+# Stage X: Upgrade pinned apk packages (used only as target for pinned upgrades)
+##############################
+FROM base AS upgrade-pinned-apk-packages
+USER root
+COPY htmltopdf/Dockerfile .
+COPY scripts/upgrade_apk/check-apk-ver.sh .
+
+CMD sh -c "./check-apk-ver.sh"
+
+##############################
+# Stage 2: Runtime image
+##############################
+FROM base AS runtime
+
+CMD sh -c "./check-apk-ver.sh"
+
 ENV PYTHONUNBUFFERED=1
 
-# Create non-root user
-RUN addgroup -S htmltopdf && adduser -S htmltopdf -G htmltopdf
+RUN addgroup -S htmltopdf \
+ && adduser -S htmltopdf -G htmltopdf
 
-# Install runtime dependencies
-RUN apk --update --upgrade --no-cache add \
-    cairo-dev pango-dev gdk-pixbuf bash jpeg-dev curl libwebp tiff libcrypto3 libssl3 ncurses-libs ncurses-terminfo-base libwebp
+# Install curl for healthcheck, requirements for pdf generation and fonts
+RUN apk add --no-cache \
+    "curl==8.22.0-r0" \
+    "cairo==1.18.4-r1" \
+    "pango==1.57.1-r0" \
+    "gdk-pixbuf==2.44.7-r1" \
+    "jpeg==9f-r0" \
+    "libwebp==1.6.0-r0" \
+    "tiff==4.7.1-r0" \
+    "fontconfig==2.17.1-r1" \
+    "ttf-freefont==20120503-r4" \
+    "font-noto==2026.06.01-r0" \
+    "terminus-font==4.49.1-r4" \
+    && fc-cache -f
 
-# Fonts
-RUN apk --update --upgrade --no-cache add fontconfig ttf-freefont font-noto terminus-font \
-    && fc-cache -f \
-    && fc-list | sort
-
-# Copy and install Python dependencies
-COPY htmltopdf/requirements.txt .
-
-RUN set -ex \
-    && apk add --no-cache --virtual .build-deps musl-dev gcc g++ zlib-dev libffi-dev \
-    && pip install --upgrade --no-cache-dir pip \
-    && pip install --no-cache-dir -r requirements.txt \
-    && apk del .build-deps \
-    # Remove pip, setuptools, and wheel to harden the image
-    && python -m ensurepip --upgrade \
-    && pip uninstall -y pip setuptools wheel || true \
-    && rm -rf /root/.cache /usr/lib/python*/ensurepip /usr/share/man /tmp/* /var/cache/apk/*
+COPY --from=ghcr.io/astral-sh/uv@sha256:2bb3ebca0a796a155094a27773d290c4b074572e6107f171d88d086682fd2500 /uv /uvx /bin/
+COPY htmltopdf/uv.lock .
+COPY htmltopdf/pyproject.toml .
+RUN uv export --locked -o requirements.txt \
+    && python -m pip install --no-cache-dir -r requirements.txt
 
 # Copy app and entrypoint
 COPY --chown=htmltopdf:htmltopdf htmltopdf/docker-entrypoint.sh /docker-entrypoint.sh
@@ -36,13 +55,11 @@ COPY --chown=htmltopdf:htmltopdf htmltopdf/clean-tmp /etc/periodic/hourly/clean-
 
 # Static assets
 # NOTE: the resources container has to be built first for these CSS files to exist
-COPY client/resources/public/assets/*/stylesheets/formatted-report.css ./tmp/
-COPY client/resources/public/assets/*/stylesheets/fonts.css ./tmp/
+COPY --chown=htmltopdf:htmltopdf client/resources/public/assets/*/stylesheets/formatted-report.css ./tmp/
+COPY --chown=htmltopdf:htmltopdf client/resources/public/assets/*/stylesheets/fonts.css ./tmp/
 
 # Check processes script
-COPY --chown=clamav:clamav scripts/process_checks/check_processes.sh /check_processes.sh
-
-EXPOSE 80
+COPY --chown=htmltopdf:htmltopdf scripts/process_checks/check_processes.sh /check_processes.sh
 
 COPY scripts/hardening/harden.sh /harden.sh
 

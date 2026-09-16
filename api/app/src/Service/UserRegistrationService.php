@@ -60,9 +60,8 @@ class UserRegistrationService
         }
 
         // proceed with brand new deputy and client
-        $user = new User();
+        $user = $this->createUser($selfRegisterData);
         $user->recreateRegistrationToken();
-        $this->populateUser($user, $selfRegisterData);
 
         $client = new Client();
         $this->populateClient($client, $selfRegisterData);
@@ -151,14 +150,16 @@ class UserRegistrationService
         }
     }
 
-    private function populateUser(User $user, SelfRegisterData $selfRegisterData): void
+    private function createUser(SelfRegisterData $selfRegisterData): User
     {
-        $user->setFirstname($selfRegisterData->getFirstname() ?? '');
-        $user->setLastname($selfRegisterData->getLastname() ?? '');
-        $user->setEmail($selfRegisterData->getEmail() ?? '');
-        $user->setAddressPostcode($selfRegisterData->getPostcode() ?? '');
-        $user->setActive(false);
-        $user->setRoleName(User::ROLE_LAY_DEPUTY);
+        return new User(
+            $selfRegisterData->getFirstname() ?? '',
+            $selfRegisterData->getLastname() ?? '',
+            $selfRegisterData->getEmail() ?? '',
+        )
+            ->setAddressPostcode($selfRegisterData->getPostcode() ?? '')
+            ->setActive(false)
+            ->setRoleName(User::ROLE_LAY_DEPUTY);
     }
 
     private function populateClient(Client $client, SelfRegisterData $selfRegisterData): void

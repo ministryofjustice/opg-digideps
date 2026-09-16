@@ -1,0 +1,23 @@
+{% props address %}
+
+{% if address.address1 %}<twig:GOV:Paragraph size="m" noMargin>
+    {{ address.address1 }}
+</twig:GOV:Paragraph>{% endif %}
+{% if address.address2 %}<twig:GOV:Paragraph size="m" noMargin>
+    {{ address.address2 }}
+</twig:GOV:Paragraph>{% endif %}
+{% if address.address3 %}<twig:GOV:Paragraph size="m" noMargin>
+    {{ address.address3 }}
+</twig:GOV:Paragraph>{% endif %}
+{% if address.address4 %}<twig:GOV:Paragraph size="m" noMargin>
+    {{ address.address4 }}
+</twig:GOV:Paragraph>{% endif %}
+{% if address.address5 %}<twig:GOV:Paragraph size="m" noMargin>
+    {{ address.address5 }}
+</twig:GOV:Paragraph>{% endif %}
+{% if address.postcode %}<twig:GOV:Paragraph size="m" noMargin>
+    {{ address.postcode }}
+</twig:GOV:Paragraph>{% endif %}
+{% if address.country %}<twig:GOV:Paragraph size="m" noMargin>
+    {{ address.country | country_name }}
+</twig:GOV:Paragraph>{% endif %}

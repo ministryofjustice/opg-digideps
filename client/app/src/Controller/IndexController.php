@@ -115,15 +115,6 @@ class IndexController extends AbstractController
     {
     }
 
-    #[Route(path: '/error-503', name: 'error-503')]
-    public function error503(Request $request): ?Response
-    {
-        $vars = [];
-        $vars['request'] = $request;
-
-        return $this->render('@App/Index/error-503.html.twig', $vars);
-    }
-
     /**
      * keep session alive. Called from session timeout dialog.
      */
@@ -135,15 +126,6 @@ class IndexController extends AbstractController
         $session->set('refreshedAt', time());
 
         return new Response('session refreshed successfully');
-    }
-
-    #[Route(path: '/access-denied', name: 'access_denied')]
-    public function accessDenied(): Response
-    {
-        return new Response(
-            $this->renderView('@App/Index/access-denied.html.twig'),
-            403  // return code
-        );
     }
 
     #[Route(path: '/terms', name: 'terms')]

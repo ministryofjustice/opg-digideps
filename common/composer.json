@@ -11,15 +11,15 @@
   },
   "require": {
     "jms/serializer-bundle": "^5.5.2",
-    "symfony/form": "^6.4.42",
-    "symfony/validator": "^6.4.42",
+    "symfony/form": "^6.4.44",
+    "symfony/validator": "^6.4.45",
     "monolog/monolog": "^3.10.0"
   },
   "require-dev": {
-    "symfony/http-kernel": "^6.4.42",
-    "dg/bypass-finals": "^1.10.2",
-    "phpstan/phpstan": "^2.2.5",
-    "phpunit/phpunit": "^13.2.4",
+    "symfony/http-kernel": "^6.4.43",
+    "dg/bypass-finals": "^1.11.0",
+    "phpstan/phpstan": "^2.2.6",
+    "phpunit/phpunit": "^13.2.5",
     "phpstan/phpstan-phpunit": "^2.0.18"
   },
   "extra": {
@@ -28,7 +28,7 @@
     }
   },
   "scripts": {
-    "lint:phpstan": "phpstan",
+    "lint:phpstan": "phpstan --memory-limit=512M",
     "tests:unit": "phpunit"
   },
   "autoload": {

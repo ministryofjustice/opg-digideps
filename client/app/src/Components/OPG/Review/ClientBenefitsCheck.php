@@ -88,7 +88,7 @@ final class ClientBenefitsCheck
 
     private function formatMoney(float $value): string
     {
-        return '£ ' . number_format($value, 2);
+        return '£' . number_format($value, 2);
     }
 
     /**

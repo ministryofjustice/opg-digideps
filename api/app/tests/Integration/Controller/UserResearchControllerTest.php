@@ -2,6 +2,7 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use OPG\Digideps\Backend\Entity\Satisfaction;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
@@ -119,9 +120,7 @@ class UserResearchControllerTest extends AbstractTestController
 
         $report->setClient($client);
 
-        $satisfaction = new Satisfaction()
-            ->setReport($report)
-            ->setScore(2);
+        $satisfaction = new Satisfaction(2)->setReport($report);
 
         $em->persist($client);
         $em->persist($report);
@@ -132,8 +131,8 @@ class UserResearchControllerTest extends AbstractTestController
     }
 
     /**
-     * @dataProvider getInvalidInputs
      */
+    #[DataProvider('getInvalidInputs')]
     public function testUserResearchFailsOnInvalidData($data): void
     {
         $this->assertJsonRequest('POST', '/user-research', [

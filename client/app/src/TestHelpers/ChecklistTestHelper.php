@@ -15,11 +15,11 @@ class ChecklistTestHelper
     {
         $user = new User()->setEmail($email);
 
-        $report = new Report()
-            ->setStartDate(new \DateTime('2020-02-01'))
-            ->setEndDate(new \DateTime('2021-02-01'))
-            ->setReportSubmissions([])
-            ->setType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS);
+        $report = new Report();
+        $report->setStartDate(new \DateTime('2020-02-01'));
+        $report->setEndDate(new \DateTime('2021-02-01'));
+        $report->setReportSubmissions([]);
+        $report->setType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS);
 
         $checklist = new Checklist($report)->setSubmittedBy($user);
         $checklist->setId($id);

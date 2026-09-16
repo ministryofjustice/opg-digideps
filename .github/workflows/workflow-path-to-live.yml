@@ -12,29 +12,21 @@ on:
     branches:
       - main # match main
 
-permissions:
-  id-token: write
-  contents: write
-  security-events: write
-  pull-requests: read
-  actions: none
-  checks: none
-  deployments: none
-  issues: none
-  packages: none
-  repository-projects: none
-  statuses: none
+permissions: {}
 
 jobs:
   workflow_variables:
     runs-on: ubuntu-latest
     name: output workflow variables
+    permissions:
+      contents: write
     outputs:
       build_identifier: "main"
       version_tag: ${{ steps.semver_tag.outputs.tag }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Generate build output using Markdown
@@ -56,7 +48,7 @@ jobs:
 
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/actions/semver@3a15a16fcc221821c2869eecd8822c5d62af2984 # v4.7.0
+        uses: ministryofjustice/opg-github-actions/actions/semver@9e8b7c2fb29c11e77b12913f74459fa48b11829f # v4.8.2
         with:
           prerelease: false
           default_bump: ${{ steps.semver_bump.outputs.default_bump }}
@@ -72,14 +64,18 @@ jobs:
   create_tag_release:
     name: Create release tag from releasable
     needs: [workflow_variables]
-    uses: ./.github/workflows/_tag-release.yml
+    uses: $/.github/workflows/_tag-release.yml
+    permissions:
+      id-token: write
     with:
       current_tag: releasable
       release_tag: ${{ needs.workflow_variables.outputs.version_tag }}
 
   terraform_apply_account_development:
     name: development account apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
+    permissions:
+      id-token: write
     needs:
       - workflow_variables
     secrets:
@@ -93,7 +89,9 @@ jobs:
 
   terraform_apply_account_preproduction:
     name: preproduction account apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
+    permissions:
+      id-token: write
     needs:
       - workflow_variables
       - terraform_apply_account_development
@@ -108,7 +106,9 @@ jobs:
 
   terraform_apply_preproduction:
     name: preproduction environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
+    permissions:
+      id-token: write
     needs:
       - terraform_apply_account_preproduction
       - workflow_variables
@@ -123,7 +123,9 @@ jobs:
 
   terraform_apply_training:
     name: training environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
+    permissions:
+      id-token: write
     needs:
       - terraform_apply_preproduction
       - workflow_variables
@@ -138,7 +140,9 @@ jobs:
 
   terraform_apply_account_production:
     name: production account apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
+    permissions:
+      id-token: write
     needs:
       - workflow_variables
       - terraform_apply_preproduction
@@ -153,7 +157,9 @@ jobs:
 
   terraform_apply_production:
     name: production environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: $/.github/workflows/_run-terraform.yml
+    permissions:
+      id-token: write
     needs:
       - terraform_apply_account_production
       - workflow_variables
@@ -168,7 +174,9 @@ jobs:
 
   smoke_tests_production:
     name: smoke tests on production
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
+    permissions:
+      id-token: write
     needs:
       - workflow_variables
       - terraform_apply_production
@@ -189,14 +197,19 @@ jobs:
       - workflow_variables
     steps:
       - name: workflow ended successfully
+        env:
+          BUILD_IDENTIFIER: ${{ needs.workflow_variables.outputs.build_identifier }}
+          VERSION: ${{ needs.workflow_variables.outputs.version_tag }}
         run: |
-          echo "${{ needs.workflow_variables.outputs.build_identifier }} PR environment tested, built and deployed"
-          echo "Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}"
-          echo "URL: https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
+          echo "${BUILD_IDENTIFIER} PR environment tested, built and deployed"
+          echo "Tag Used: ${VERSION}"
+          echo "URL: https://${BUILD_IDENTIFIER}.complete-deputy-report.service.gov.uk"
 
   slack_notify_success:
     name: notify of success
-    uses: ./.github/workflows/_slack-notification.yml
+    uses: $/.github/workflows/_slack-notification.yml
+    permissions:
+      id-token: write
     needs:
       - workflow_variables
       - end_of_workflow
@@ -207,8 +220,10 @@ jobs:
 
   slack_notify_failure:
     name: notify of failure
-    uses: ./.github/workflows/_slack-notification.yml
+    uses: $/.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
+    permissions:
+      id-token: write
     needs:
       - workflow_variables
       - end_of_workflow

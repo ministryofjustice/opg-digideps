@@ -1,10 +1,11 @@
 #! /usr/bin/env python
 """
-    WSGI APP to convert htmltopdf As a webservice
+WSGI APP to convert htmltopdf As a webservice
 
-    :copyright: (c) 2013 by Openlabs Technologies & Consulting (P) Limited
-    :license: BSD, see LICENSE for more details.
+:copyright: (c) 2013 by Openlabs Technologies & Consulting (P) Limited
+:license: BSD, see LICENSE for more details.
 """
+
 import base64
 import json
 import tempfile
@@ -46,9 +47,15 @@ def application(request):
 
         file_name = source_file.name
 
+        source_file.flush()
+
         try:
             # Split out additional CSS into a file if we need more in the future...
-            HTML(file_name, media_type="screen", encoding="utf-8").write_pdf(
+            html = HTML(
+                file_name, base_url="/tmp", media_type="screen", encoding="utf-8"
+            )
+
+            html.write_pdf(
                 file_name + ".pdf",
                 stylesheets=[
                     CSS(

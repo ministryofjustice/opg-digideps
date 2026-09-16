@@ -6,6 +6,7 @@ namespace OPG\Digideps\Backend\Entity\Report;
 
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
+use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
@@ -25,7 +26,6 @@ use OPG\Digideps\Backend\Entity\Report\Traits\MoneyShortTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\MoneyTransactionTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\MoneyTransferTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\MoreInfoTrait;
-use OPG\Digideps\Backend\Entity\Report\Traits\ProfServiceFeesTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\ReportProfDeputyCostsEstimateTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\ReportProfDeputyCostsTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\StatusTrait;
@@ -42,9 +42,6 @@ use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Common\Report\Section\ReportSection;
 use OPG\Digideps\Common\Report\Section\Sections;
 
-/**
- * Reports.
- */
 #[ORM\Table(name: 'report')]
 #[ORM\Index(columns: ['end_date'], name: 'end_date_idx')]
 #[ORM\Index(columns: ['submit_date'], name: 'submit_date_idx')]
@@ -67,7 +64,6 @@ class Report
     use MoneyTransferTrait;
     use MoreInfoTrait;
     use DebtTrait;
-    use ProfServiceFeesTrait;
     use ReportProfDeputyCostsTrait;
     use ReportProfDeputyCostsEstimateTrait;
     use StatusTrait;
@@ -143,7 +139,6 @@ class Report
     public const string PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
 
     public const int BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS = 60;
-
 
     /**
      * @return array<string>
@@ -487,7 +482,6 @@ class Report
         $this->reportSubmissions = new ArrayCollection();
         $this->wishToProvideDocumentation = null;
         $this->currentProfPaymentsReceived = null;
-        $this->profServiceFees = new ArrayCollection();
         $this->checklist = null;
         $this->profDeputyPreviousCosts = new ArrayCollection();
         $this->profDeputyInterimCosts = new ArrayCollection();
@@ -525,16 +519,13 @@ class Report
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
     /**
-     * @param string $type See TYPE_ constants
+     * See TYPE_ constants
      */
     public function setType(string $type): static
     {
@@ -569,7 +560,7 @@ class Report
     }
 
     /**
-     * @param string $section See SECTION_ constants
+     * See SECTION_ constants
      */
     public function hasSection(string $section): bool
     {
@@ -599,15 +590,6 @@ class Report
     public function getEndDate(): \DateTime
     {
         return $this->endDate;
-    }
-
-    /**
-     * For check reasons.
-     */
-    public function hasSamePeriodAs(Report $report): bool
-    {
-        return $this->startDate->format('Ymd') === $report->getStartDate()->format('Ymd')
-            && $this->endDate->format('Ymd') === $report->getEndDate()->format('Ymd');
     }
 
     public function setSubmitDate(?\DateTime $submitDate): static
@@ -1002,6 +984,8 @@ class Report
                 return [
                     'report-summary' => $report->getReportSummary(),
                     'financial-summary' => $report->getFinancialSummary(),
+                    'assets-summary' => $report->getAssetsSummary(),
+                    'debts-summary' => $report->getDebtsSummary(),
                 ];
             }
         }
@@ -1016,7 +1000,6 @@ class Report
     {
         $accounts = [];
         $openingBalanceTotal = 0;
-        /** @var BankAccount $ba */
         foreach ($this->getBankAccounts() as $ba) {
             $accounts[$ba->getId()]['nameOneLine'] = $ba->getNameOneLine();
             $accounts[$ba->getId()]['bank'] = $ba->getBank();
@@ -1026,7 +1009,7 @@ class Report
             $accounts[$ba->getId()]['isClosed'] = $ba->getIsClosed();
             $accounts[$ba->getId()]['isJointAccount'] = $ba->getIsJointAccount();
 
-            $openingBalanceTotal += $ba->getOpeningBalance();
+            $openingBalanceTotal += (float)$ba->getOpeningBalance();
         }
 
         return [
@@ -1045,6 +1028,26 @@ class Report
         return [
             'id' => $this->getId(),
             'type' => $this->getType(),
+        ];
+    }
+
+    public function getAssetsSummary(): array
+    {
+        return [
+            'assetsTotal' => $this->getAssetsTotalValue(),
+            'startDate' => $this->getStartDate(),
+            'endDate' => $this->getEndDate(),
+            'noAssetsToAdd' => $this->getNoAssetToAdd(),
+        ];
+    }
+
+    public function getDebtsSummary(): array
+    {
+        return [
+            'debtsTotal' => $this->getDebtsTotalAmount(),
+            'startDate' => $this->getStartDate(),
+            'endDate' => $this->getEndDate(),
+            'hasDebts' => $this->getHasDebts(),
         ];
     }
 
@@ -1106,10 +1109,10 @@ class Report
     }
 
     /**
-     * The client benefits check section of the report should be required for:.
+     * The client benefits check section of the report should be required for:
      *
-     * Reports with an unsubmit date that had originally completed the section
-     * Reports without an unsubmit date and a due date more than 60 days after the client benefits section release date
+     * Reports with an unsubmit date that had originally completed the section.
+     * Reports without an unsubmit date and a due date more than 60 days after the client benefits section release date.
      */
     public function requiresBenefitsCheckSection(): bool
     {
@@ -1117,9 +1120,9 @@ class Report
             return $this->getClientBenefitsCheck() instanceof ClientBenefitsCheck;
         } else {
             // Provides a positive or negative string showing days between feature flag and due date
-            $diffInDays = $this->getBenefitsSectionReleaseDate()->diff($this->getDueDate())->format('%R%a');
+            $diffInDays = (int)$this->getBenefitsSectionReleaseDate()?->diff($this->getDueDate())?->format('%R%a');
 
-            return intval($diffInDays) > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
+            return $diffInDays > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
         }
     }
 
@@ -1261,5 +1264,26 @@ class Report
     public function getReportType(): ReportType
     {
         return $this->reportType;
+    }
+
+    #[JMS\VirtualProperty]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Deputy')]
+    #[JMS\Groups(['deputy'])]
+    public function getPrimaryDeputy(): ?Deputy
+    {
+        $candidate = $this->submittedBy?->getDeputy();
+        if ($candidate !== null) {
+            return $candidate;
+        }
+
+        foreach ($this->getCourtOrders() as $courtOrder) {
+            foreach ($courtOrder->getActiveDeputies() as $deputy) {
+                $candidate ??= $deputy;
+                if ($candidate->getDeputyType() === DeputyType::LAY && $deputy->getDeputyType() !== DeputyType::LAY) {
+                    $candidate = $deputy;
+                }
+            }
+        }
+        return $candidate;
     }
 }
