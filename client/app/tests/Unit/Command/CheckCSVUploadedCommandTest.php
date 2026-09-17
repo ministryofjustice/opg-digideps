@@ -114,7 +114,8 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(false);
 
-        $this->secretManagerService->method('getSecret')
+        $this->secretManagerService->expects(self::atLeastOnce())
+            ->method('getSecret')
             ->with('opg-response-slack-token')
             ->willReturn($this->slackSecret);
 
@@ -175,7 +176,8 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(true);
 
-        $this->secretManagerService->method('getSecret')
+        $this->secretManagerService->expects(self::atLeastOnce())
+            ->method('getSecret')
             ->with('opg-response-slack-token')
             ->willReturn($this->slackSecret);
 
@@ -191,7 +193,8 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
                 self::assertMatchesRegularExpression(self::NO_UPLOAD_MESSAGE_REGEX, $text);
             });
 
-        $this->slackClientFactory->method('createClient')
+        $this->slackClientFactory->expects(self::atLeastOnce())
+            ->method('createClient')
             ->with($this->slackSecret)
             ->willReturn($slackClient);
 
@@ -270,7 +273,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->assertEquals(1, $result, sprintf('Expected command to return 1, got %d', $result));
     }
 
-    public function testExecuteErrorMessagePostedToSlackWhenUnableToRetrieveBankHolidays()
+    public function testExecuteErrorMessagePostedToSlackWhenUnableToRetrieveBankHolidays(): void
     {
         $this->now = new \DateTime('01-02-2021');
 
