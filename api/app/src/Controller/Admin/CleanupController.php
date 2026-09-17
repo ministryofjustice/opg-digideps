@@ -8,6 +8,7 @@ use OPG\Digideps\Backend\Cleanup\ReportCleaner;
 use OPG\Digideps\Backend\Exception\NotFound;
 use OPG\Digideps\Backend\Repository\ClientRepository;
 use OPG\Digideps\Common\Cleanup\CleanupModel;
+use OPG\Digideps\Common\Validating\ValidatingArray;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,10 +40,12 @@ class CleanupController extends AbstractController
     public function reportCleanup(Request $request): Response
     {
         try {
-            $model = unserialize($request->getContent(), ['allowed_classes' => [CleanupModel::class], 'max_depth' => 1]);
-            if (!$model instanceof CleanupModel) {
+            $json = json_decode($request->getContent(), true);
+            if (!is_array($json)) {
                 throw new \TypeError();
             }
+            $array = new ValidatingArray($json);
+            $model = new CleanupModel($array->getStringOrNull('caseNumber'), $array->getBooleanOrThrow('notDryRun'));
             $clientIds = [];
             if ($model->caseNumber !== null) {
                 array_push($clientIds, ...array_map(fn (string $caseNumber): int => $this->clientRepository->findByCaseNumber($caseNumber)?->getId() ?? throw new NotFound("Client with case number {$caseNumber}"), explode(',', $model->caseNumber)));
