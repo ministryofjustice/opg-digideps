@@ -53,7 +53,7 @@ final class CleanupController extends AbstractController
                     if (!$model->notDryRun && $model->caseNumber === null) {
                         $this->addFlash('error', 'Via web page planning is only possible for a specific list of cases.');
                     } else {
-                        $result = $this->restClient->setTimeout(3600)->post('/admin/cleanup/reports/plan', serialize($model), expectedResponseType: 'raw');
+                        $result = $this->restClient->setTimeout(3600)->post('/admin/cleanup/reports/plan', json_encode($model) ?: throw new \LogicException('Cannot happen'), expectedResponseType: 'raw');
                         if ($result instanceof Stream) {
                             $result = $result->getContents();
                         }
