@@ -421,6 +421,14 @@ class Report
     #[ORM\ManyToMany(targetEntity: CourtOrder::class, mappedBy: 'reports', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private Collection $courtOrders;
 
+    #[ORM\ManyToOne(targetEntity: CourtOrder::class, fetch: 'EXTRA_LAZY')]
+    #[ORM\JoinColumn(name: 'pfa_court_order_id', nullable: true)]
+    private ?CourtOrder $pfaCourtOrder = null;
+
+    #[ORM\ManyToOne(targetEntity: CourtOrder::class, fetch: 'EXTRA_LAZY')]
+    #[ORM\JoinColumn(name: 'hw_court_order_id', nullable: true)]
+    private ?CourtOrder $hwCourtOrder = null;
+
     private ReportType $reportType;
     private Sections $sections;
     private ?\DateTime $benefitsSectionReleaseDate = null;
