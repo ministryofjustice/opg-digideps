@@ -15,6 +15,7 @@ final class ProfDeputyCostsEstimate
 {
     public ?SummaryList $list = null;
 
+    public ?SummaryList $generalCostsList = null;
     /**
      * @var array<string, string> $text
      */
@@ -31,6 +32,7 @@ final class ProfDeputyCostsEstimate
         $this->parameters = ['%client%' => $report->getClient()->getFirstname()];
         $this->text = $this->makeText();
         $this->list = $this->makeList($report);
+        $this->generalCostsList = $this->makeGeneralCostsList($report);
     }
 
     private function makeList(Report $report): SummaryList
@@ -46,6 +48,33 @@ final class ProfDeputyCostsEstimate
             $moreInfoText = $report->getProfDeputyCostsEstimateHasMoreInfo() === 'yes' ? $report->getProfDeputyCostsEstimateMoreInfoDetails() : $this->text['noMoreInfo'];
             $builder->addItem($this->text['moreInfo'], $moreInfoText);
         }
+        return $builder->makeList();
+    }
+
+    private function makeGeneralCostsList(Report $report): ?SummaryList
+    {
+        if (!in_array($report->getProfDeputyCostsEstimateHowCharged(), ['assessed', 'both'])) {
+            return null;
+        }
+
+        $builder = new SummaryListBuilder();
+        foreach ($report->generateActualSubmittedEstimateCosts() as $estimateCostTypeId) {
+            if (!is_array($estimateCostTypeId) || !isset($estimateCostTypeId['typeId']) || !is_string($estimateCostTypeId['typeId'])) {
+                continue;
+            }
+
+            /** @var float|null $amount */
+            $amount = $estimateCostTypeId['amount'] ?? null;
+            if (!isset($amount)) {
+                $builder->addItem($this->translate("breakdown.form.entries.{$estimateCostTypeId['typeId']}.label"), $this->text['notEntered']);
+            } else {
+                $builder->addItem(
+                    $this->translate("breakdown.form.entries.{$estimateCostTypeId['typeId']}.label"),
+                    $this->formatMoney((float)$amount)
+                );
+            }
+        }
+
         return $builder->makeList();
     }
 
@@ -66,6 +95,7 @@ final class ProfDeputyCostsEstimate
             'fixed' => $this->translate('howCharged.form.options.fixed'),
             'assessed' => $this->translate('howCharged.form.options.assessed'),
             'both' => $this->translate('howCharged.form.options.both'),
+            'generalCostsHeader' => $this->translate('review.breakdownHeading'),
         ];
     }
 
