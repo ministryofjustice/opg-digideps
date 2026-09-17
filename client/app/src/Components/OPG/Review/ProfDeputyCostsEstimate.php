@@ -63,16 +63,12 @@ final class ProfDeputyCostsEstimate
                 continue;
             }
 
-            /** @var float|null $amount */
-            $amount = $estimateCostTypeId['amount'] ?? null;
-            if (!isset($amount)) {
-                $builder->addItem($this->translate("breakdown.form.entries.{$estimateCostTypeId['typeId']}.label"), $this->text['notEntered']);
-            } else {
-                $builder->addItem(
-                    $this->translate("breakdown.form.entries.{$estimateCostTypeId['typeId']}.label"),
-                    $this->formatMoney((float)$amount)
-                );
-            }
+            $amountValue = $estimateCostTypeId['amount'] ?? 0.0;
+            $amount = is_numeric($amountValue) ? (float) $amountValue : 0.0;
+            $builder->addItem(
+                $this->translate("breakdown.form.entries.{$estimateCostTypeId['typeId']}.label"),
+                $this->formatMoney($amount)
+            );
         }
 
         return $builder->makeList();
