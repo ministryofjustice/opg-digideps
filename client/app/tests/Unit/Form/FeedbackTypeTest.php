@@ -18,9 +18,9 @@ class FeedbackTypeTest extends TypeTestCase
     {
         $this->translator = $this->createMock(TranslatorInterface::class);
         $this->translator->method('trans')->willReturnCallback(function (string $key, array $parameters, string $domain) {
-            $this->assertSame([], $parameters);
-            $this->assertSame('feedback', $domain);
-            $this->assertStringStartsWith('form.satisfactionLevel.choices.', $key);
+            self::assertSame([], $parameters);
+            self::assertSame('feedback', $domain);
+            self::assertStringStartsWith('form.satisfactionLevel.choices.', $key);
             return $key;
         });
 
@@ -54,7 +54,7 @@ class FeedbackTypeTest extends TypeTestCase
 
         $form->submit($formData);
 
-        $this->assertTrue($form->isSubmitted());
-        $this->assertFalse($form->isValid());
+        self::assertTrue($form->isSubmitted());
+        self::assertFalse($form->isValid());
     }
 }

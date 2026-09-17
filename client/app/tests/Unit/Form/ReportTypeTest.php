@@ -21,7 +21,7 @@ class ReportTypeTest extends TypeTestCase
         ];
     }
 
-    public function testSubmitValidYear()
+    public function testSubmitValidYear(): void
     {
         $currentDate = new \DateTime();
         $currentYear = $currentDate->format('Y');
@@ -49,11 +49,11 @@ class ReportTypeTest extends TypeTestCase
 
         $form->submit($formData);
 
-        $this->assertTrue($form->isSubmitted());
-        $this->assertTrue($form->isValid());
+        self::assertTrue($form->isSubmitted());
+        self::assertTrue($form->isValid());
     }
 
-    public function testSubmitInvalidYear()
+    public function testSubmitInvalidYear(): void
     {
         $startDate = [
             'year' => '2000',
@@ -78,10 +78,10 @@ class ReportTypeTest extends TypeTestCase
         $form->submit($formData);
         $errors = $form['startDate']->getErrors();
 
-        $this->assertTrue($form->isSubmitted());
-        $this->assertFalse($form->isValid());
+        self::assertTrue($form->isSubmitted());
+        self::assertFalse($form->isValid());
 
-        $this->assertCount(1, $errors);
-        $this->assertSame('Please enter a valid start date.', $errors[0]->getMessage());
+        self::assertCount(1, $errors);
+        self::assertSame('Please enter a valid start date.', $errors[0]->getMessage());
     }
 }
