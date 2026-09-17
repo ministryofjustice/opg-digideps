@@ -11,8 +11,6 @@ use Symfony\Component\Validator\Validation;
 class MoneyReceivedOnClientsBehalfTest extends TestCase
 {
     /**
-     * @test
-     *
      * @dataProvider invalidDataProvider
      */
     public function testValidation($moneyType, $amount, $amountDontKnow, $whoReceived, $expectedViolationCount)
@@ -32,7 +30,7 @@ class MoneyReceivedOnClientsBehalfTest extends TestCase
         $this->assertCount($expectedViolationCount, $result);
     }
 
-    public function invalidDataProvider()
+    public static function invalidDataProvider(): array
     {
         return [
             'Fails when $amountDontKnow is true and $moneyType, $amount and $whoReceived are null' => [
