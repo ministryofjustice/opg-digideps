@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\Client;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Utils;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
@@ -30,37 +29,35 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RestClientTest extends TestCase
 {
-    private RestClient $object;
+    private string $clientSecret = 'secret-123';
+    private string $sessionToken = 'sessionToken347349r783';
+    private JWTService&MockObject $jwtService;
     private ClientInterface&MockObject $client;
     private SerializerInterface&MockObject $serialiser;
     private RedisStorage&MockObject $redisStorage;
     private LoggerInterface&MockObject $logger;
     private ContainerInterface&MockObject $container;
-    private string $clientSecret;
-    private string $sessionToken;
     private ResponseInterface&MockObject $endpointResponse;
-    private JWTService $jwtService;
     private ParameterBagInterface&MockObject $parameterBag;
+    private RestClient $sut;
 
     public function setUp(): void
     {
-        $this->client = $this->createMock(ClientInterface::class);
-        $this->redisStorage = $this->createMock(RedisStorage::class);
-        $this->serialiser = $this->createMock(SerializerInterface::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
-        $this->clientSecret = 'secret-123';
-        $this->sessionToken = 'sessionToken347349r783';
-        $this->parameterBag = $this->createMock(ParameterBagInterface::class);
+        $this->client = self::createMock(ClientInterface::class);
+        $this->redisStorage = self::createMock(RedisStorage::class);
+        $this->serialiser = self::createMock(SerializerInterface::class);
+        $this->logger = self::createMock(LoggerInterface::class);
+        $this->endpointResponse = self::createMock(ResponseInterface::class);
+        $this->jwtService = self::createMock(JWTService::class);
 
-        $this->container = $this->createMock(ContainerInterface::class);
+        $this->parameterBag = self::createMock(ParameterBagInterface::class);
+        $this->parameterBag->method('get')->with('kernel.debug')->willReturn(false);
+
+        $this->container = self::createMock(ContainerInterface::class);
         $this->container->method('get')->with('jms_serializer')->willReturn($this->serialiser);
         $this->container->method('get')->with('logger')->willReturn($this->logger);
 
-        $this->endpointResponse = $this->createMock(ResponseInterface::class);
-        $this->parameterBag->method('get')->with('kernel.debug')->willReturn(false);
-        $this->jwtService = $this->createMock(JWTService::class);
-
-        $this->object = new RestClient(
+        $this->sut = new RestClient(
             $this->container,
             $this->client,
             $this->redisStorage,
@@ -71,14 +68,14 @@ class RestClientTest extends TestCase
             $this->jwtService
         );
 
-        $this->object->setLoggedUserId(1);
+        $this->sut->setLoggedUserId(1);
     }
 
     public function testLogin(): void
     {
         $credentialsArray = ['username' => 'u', 'password' => 'p'];
         $credentialsJson = json_encode($credentialsArray);
-        $loggedUser = $this->createMock(User::class)->method('getId')->willReturn(1);
+        $loggedUser = self::createMock(User::class)->method('getId')->willReturn(1);
         $userArray = ['id' => 1, 'firstname' => 'Peter'];
         $userJson = json_encode($userArray);
 
@@ -92,18 +89,17 @@ class RestClientTest extends TestCase
         $this->endpointResponse->method('hasHeader')->with('JWT')->willReturn(false);
         $this->endpointResponse->method('getBody')->willReturn(Utils::streamFor($userJson));
 
-        $this->client
-            ->method('request')->with('post', '/auth/login', [
+        $this->client->method('request')->with('post', '/auth/login', [
                 'body' => $credentialsJson,
                 'headers' => ['ClientSecret' => $this->clientSecret],
             ])->willReturn($this->endpointResponse);
 
-        $this->logger->expects($this->never())->method('warning');
+        $this->logger->expects(self::never())->method('warning');
 
-        [$user, $authToken] = $this->object->login($credentialsArray);
+        [$user, $authToken] = $this->sut->login($credentialsArray);
 
-        $this->assertEquals($loggedUser, $user);
-        $this->assertEquals($this->sessionToken, $authToken);
+        self::assertEquals($loggedUser, $user);
+        self::assertEquals($this->sessionToken, $authToken);
     }
 
     public function testLogout(): void
@@ -115,11 +111,11 @@ class RestClientTest extends TestCase
         $this->endpointResponse->method('getStatusCode')->willReturn(Response::HTTP_OK);
         $this->endpointResponse->method('getBody')->willReturn(Utils::streamFor($responseJson));
 
-        $this->redisStorage->expects($this->exactly(2))->method('get')->willReturnMap([
+        $this->redisStorage->expects(self::exactly(2))->method('get')->willReturnMap([
             [1, $this->sessionToken],
             ['urn:opg:digideps:users:1-jwt', false],
         ]);
-        $this->redisStorage->expects($this->once())->method('reset');
+        $this->redisStorage->expects(self::once())->method('reset');
 
         $this->serialiser->method('deserialize')->with($responseJson, 'array', 'json')->willReturn($responseArray);
 
@@ -128,7 +124,7 @@ class RestClientTest extends TestCase
                 'headers' => ['AuthToken' => $this->sessionToken],
             ])->willReturn($this->endpointResponse);
 
-        $this->assertEquals($responseData, $this->object->logout());
+        self::assertEquals($responseData, $this->sut->logout());
     }
 
     public function testLoadUserByToken(): void
@@ -138,7 +134,7 @@ class RestClientTest extends TestCase
         $userJson = json_encode($userArray);
         $responseArray = ['success' => true, 'data' => $userArray];
         $responseJson = json_encode($responseArray);
-        $loggedUser = $this->createMock(User::class);
+        $loggedUser = self::createMock(User::class);
 
         $this->serialiser->method('deserialize')->willReturnMap([
             [$userJson, User::class, 'json', null, $loggedUser],
@@ -152,7 +148,7 @@ class RestClientTest extends TestCase
             'headers' => ['ClientSecret' => $this->clientSecret],
         ])->willReturn($this->endpointResponse);
 
-        $this->assertEquals($loggedUser, $this->object->loadUserByToken($token));
+        self::assertEquals($loggedUser, $this->sut->loadUserByToken($token));
     }
 
     public function testRegisterUser(): void
@@ -160,12 +156,12 @@ class RestClientTest extends TestCase
         $this->logger->method('error')->willReturnCallback(function ($e) {
             echo $e;
         });
-        $user = $this->createMock(User::class);
+        $user = self::createMock(User::class);
 
         $data = ['id' => 1];
         $responseArray = ['success' => true, 'data' => $data];
         $responseJson = json_encode($responseArray);
-        $selfRegData = $this->createMock(SelfRegisterData::class);
+        $selfRegData = self::createMock(SelfRegisterData::class);
         $selfRegDataJson = 'selfRegData.json';
 
         $this->serialiser->method('deserialize')->willReturnMap([
@@ -183,7 +179,7 @@ class RestClientTest extends TestCase
             'body' => $selfRegDataJson,
         ])->willReturn($this->endpointResponse);
 
-        $this->assertEquals($user, $this->object->registerUser($selfRegData));
+        self::assertEquals($user, $this->sut->registerUser($selfRegData));
     }
 
     public function testPut(): void
@@ -202,7 +198,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->method('getStatusCode')->willReturn(Response::HTTP_OK);
         $this->endpointResponse->method('getBody')->willReturn(Utils::streamFor($responseJson));
 
-        $this->redisStorage->expects($this->exactly(2))->method('get')->willReturnMap([
+        $this->redisStorage->expects(self::exactly(2))->method('get')->willReturnMap([
             [1, $this->sessionToken],
             ['urn:opg:digideps:users:1-jwt', false],
         ]);
@@ -212,7 +208,7 @@ class RestClientTest extends TestCase
             'body' => $putDataSerialised,
         ])->willReturn($this->endpointResponse);
 
-        $this->assertEquals($responseData, $this->object->put($endpointUrl, $putData, []));
+        self::assertEquals($responseData, $this->sut->put($endpointUrl, $putData, []));
     }
 
     public function testPost(): void
@@ -231,7 +227,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->method('getStatusCode')->willReturn(Response::HTTP_CREATED);
         $this->endpointResponse->method('getBody')->willReturn(Utils::streamFor($responseJson));
 
-        $this->redisStorage->expects($this->exactly(2))->method('get')->willReturnMap([
+        $this->redisStorage->expects(self::exactly(2))->method('get')->willReturnMap([
             [1, $this->sessionToken],
             ['urn:opg:digideps:users:1-jwt', false],
         ]);
@@ -241,7 +237,7 @@ class RestClientTest extends TestCase
             'body' => $postDataSerialised,
         ])->willReturn($this->endpointResponse);
 
-        $this->assertEquals($responseData, $this->object->post($endpointUrl, $postData, []));
+        self::assertEquals($responseData, $this->sut->post($endpointUrl, $postData, []));
     }
 
     public function testGetArray(): void
@@ -255,7 +251,7 @@ class RestClientTest extends TestCase
 
         $this->serialiser->method('deserialize')->with($responseJson, 'array', 'json')->willReturn($responseArray);
 
-        $this->redisStorage->expects($this->exactly(2))->method('get')->willReturnMap([
+        $this->redisStorage->expects(self::exactly(2))->method('get')->willReturnMap([
             [1, $this->sessionToken],
             ['urn:opg:digideps:users:1-jwt', false],
         ]);
@@ -268,7 +264,7 @@ class RestClientTest extends TestCase
             'query' => ['groups' => $jmsGroups],
         ])->willReturn($this->endpointResponse);
 
-        $this->assertEquals($responseData, $this->object->get($endpointUrl, $responseType, $jmsGroups));
+        self::assertEquals($responseData, $this->sut->get($endpointUrl, $responseType, $jmsGroups));
     }
 
     public function testGetEntity(): void
@@ -279,14 +275,14 @@ class RestClientTest extends TestCase
         $responseDataJson = json_encode($responseData);
         $responseArray = ['success' => true, 'data' => $responseData];
         $responseJson = json_encode($responseArray);
-        $user = $this->createMock(User::class);
+        $user = self::createMock(User::class);
 
         $this->serialiser->method('deserialize')->willReturnMap([
             [$responseJson, 'array', 'json', null, $responseArray],
             [$responseDataJson, User::class, 'json', null, $user],
         ]);
 
-        $this->redisStorage->expects($this->exactly(2))->method('get')->willReturnMap([
+        $this->redisStorage->expects(self::exactly(2))->method('get')->willReturnMap([
             [1, $this->sessionToken],
             ['urn:opg:digideps:users:1-jwt', false],
         ]);
@@ -298,7 +294,7 @@ class RestClientTest extends TestCase
             'headers' => ['AuthToken' => $this->sessionToken],
         ])->willReturn($this->endpointResponse);
 
-        $this->assertEquals($user, $this->object->get($endpointUrl, $expectedResponseType));
+        self::assertEquals($user, $this->sut->get($endpointUrl, $expectedResponseType));
     }
 
     public function testGetEntities(): void
@@ -312,8 +308,8 @@ class RestClientTest extends TestCase
         $responseData = [$user1Array, $user2Array];
         $responseArray = ['success' => true, 'data' => $responseData];
         $responseJson = json_encode($responseArray);
-        $user1 = $this->createMock(User::class);
-        $user2 = $this->createMock(User::class);
+        $user1 = self::createMock(User::class);
+        $user2 = self::createMock(User::class);
 
         $user1->method('getId')->willReturn(1);
         $user2->method('getId')->willReturn(2);
@@ -324,7 +320,7 @@ class RestClientTest extends TestCase
             [$user2Json, User::class, 'json', null, $user2],
         ]);
 
-        $this->redisStorage->expects($this->exactly(2))->method('get')->willReturnMap([
+        $this->redisStorage->expects(self::exactly(2))->method('get')->willReturnMap([
             [1, $this->sessionToken],
             ['urn:opg:digideps:users:1-jwt', false],
         ]);
@@ -336,15 +332,15 @@ class RestClientTest extends TestCase
             'headers' => ['AuthToken' => $this->sessionToken],
         ])->willReturn($this->endpointResponse);
 
-        $actual = $this->object->get($endpointUrl, $expectedResponseType);
+        $actual = $this->sut->get($endpointUrl, $expectedResponseType);
 
-        $this->assertEquals($user1, $actual[1]);
-        $this->assertEquals($user2, $actual[2]);
+        self::assertEquals($user1, $actual[1]);
+        self::assertEquals($user2, $actual[2]);
     }
 
     public function testGetNoSuccess(): void
     {
-        $this->expectException(NoSuccess::class);
+        self::expectException(NoSuccess::class);
 
         $endpointUrl = '/path/to/endpoint';
         $expectedResponseType = 'array';
@@ -352,10 +348,9 @@ class RestClientTest extends TestCase
         $responseArray = ['success' => false, 'data' => $responseData, 'message' => 'm'];
         $responseJson = json_encode($responseArray);
 
-        $this->serialiser
-            ->method('deserialize')->with($responseJson, 'array', 'json');
+        $this->serialiser->method('deserialize')->with($responseJson, 'array', 'json');
 
-        $this->redisStorage->expects($this->exactly(2))->method('get')->willReturnMap([
+        $this->redisStorage->expects(self::exactly(2))->method('get')->willReturnMap([
             [1, $this->sessionToken],
             ['urn:opg:digideps:users:1-jwt', false],
         ]);
@@ -367,7 +362,7 @@ class RestClientTest extends TestCase
             'headers' => ['AuthToken' => $this->sessionToken],
         ])->willReturn($this->endpointResponse);
 
-        $this->object->get($endpointUrl, $expectedResponseType);
+        $this->sut->get($endpointUrl, $expectedResponseType);
     }
 
     public function testGetWrongExpectedType(): void
@@ -378,16 +373,15 @@ class RestClientTest extends TestCase
         $responseData = [];
         $responseArray = ['success' => true, 'data' => $responseData];
         $responseJson = json_encode($responseArray);
-        $user1 = $this->createMock(User::class);
-        $user2 = $this->createMock(User::class);
+        $user1 = self::createMock(User::class);
+        $user2 = self::createMock(User::class);
 
         $user1->method('getId')->willReturn(1);
         $user2->method('getId')->willReturn(2);
 
-        $this->serialiser
-            ->method('deserialize')->with($responseJson, 'array', 'json')->willReturn($responseArray);
+        $this->serialiser->method('deserialize')->with($responseJson, 'array', 'json')->willReturn($responseArray);
 
-        $this->redisStorage->expects($this->exactly(2))->method('get')->willReturnMap([
+        $this->redisStorage->expects(self::exactly(2))->method('get')->willReturnMap([
             [1, $this->sessionToken],
             ['urn:opg:digideps:users:1-jwt', false],
         ]);
@@ -399,31 +393,31 @@ class RestClientTest extends TestCase
             'headers' => ['AuthToken' => $this->sessionToken],
         ])->willReturn($this->endpointResponse);
 
-        $actual = $this->object->get($endpointUrl, $expectedResponseType);
+        $actual = $this->sut->get($endpointUrl, $expectedResponseType);
 
-        $this->assertEquals($user1, $actual[1]);
-        $this->assertEquals($user2, $actual[2]);
+        self::assertEquals($user1, $actual[1]);
+        self::assertEquals($user2, $actual[2]);
     }
 
     public function testNetworkExceptionIsLoggedAndReThrown(): void
     {
-        $this->expectException(RestClientException::class);
+        self::expectException(RestClientException::class);
 
         $endpointUrl = '/path/to/endpoint';
 
-        $this->redisStorage->expects($this->exactly(2))->method('get')->willReturnMap([
+        $this->redisStorage->expects(self::exactly(2))->method('get')->willReturnMap([
             [1, $this->sessionToken],
             ['urn:opg:digideps:users:1-jwt', false],
         ]);
 
         $this->endpointResponse->method('getBody');
-        $this->logger->expects($this->once())->method('warning');
+        $this->logger->expects(self::once())->method('warning');
 
         $this->client->method('request')->with('get', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
         ])->willThrowException(new TransferException('network failure'));
 
-        $this->object->get($endpointUrl, 'array');
+        $this->sut->get($endpointUrl, 'array');
     }
 
     public function testDelete(): void
@@ -434,7 +428,7 @@ class RestClientTest extends TestCase
         $responseJson = json_encode($responseArray);
 
         $this->serialiser->method('deserialize')->with($responseJson, 'array', 'json')->willReturn($responseArray);
-        $this->redisStorage->expects($this->exactly(2))->method('get')->willReturnMap([
+        $this->redisStorage->expects(self::exactly(2))->method('get')->willReturnMap([
             [1, $this->sessionToken],
             ['urn:opg:digideps:users:1-jwt', false],
         ]);
@@ -446,40 +440,33 @@ class RestClientTest extends TestCase
             'headers' => ['AuthToken' => $this->sessionToken],
         ])->willReturn($this->endpointResponse);
 
-        $this->assertEquals($responseData, $this->object->delete($endpointUrl));
+        self::assertEquals($responseData, $this->sut->delete($endpointUrl));
     }
 
     public function testGetHistory(): void
     {
-        $this->client = $this->createMock(ClientInterface::class);
-        $this->redisStorage = $this->createMock(RedisStorage::class);
-        $this->serialiser = $this->createMock(SerializerInterface::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
-        $this->clientSecret = 'secret-123';
-        $this->sessionToken = 'sessionToken347349r783';
-        $this->container = $this->createMock(ContainerInterface::class);
-        $this->parameterBag = $this->createMock(ParameterBagInterface::class);
-
-        $requestStackMock = $this->createMock(RequestStack::class);
+        $requestStackMock = self::createMock(RequestStack::class);
         $requestStackMock->method('getCurrentRequest')->willReturn(null);
-        $this->container->method('has')->with('request_stack')->willReturn(true);
 
-        $this->container->method('get')->willReturnMap([
+        $container = self::createMock(ContainerInterface::class);
+        $container->method('has')->with('request_stack')->willReturn(true);
+        $container->method('get')->willReturnMap([
             ['jms_serializer', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, $this->serialiser],
             ['logger', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, $this->logger],
             ['request_stack', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, $requestStackMock],
         ]);
 
-        $this->parameterBag->method('get')->with('kernel.debug')->willReturn(true);
+        $parameterBag = self::createMock(ParameterBagInterface::class);
+        $parameterBag->method('get')->with('kernel.debug')->willReturn(true);
 
         $object = new RestClient(
-            $this->container,
+            $container,
             $this->client,
             $this->redisStorage,
             $this->serialiser,
             $this->logger,
             $this->clientSecret,
-            $this->parameterBag,
+            $parameterBag,
             $this->jwtService
         );
         $object->setLoggedUserId(1);
@@ -490,7 +477,7 @@ class RestClientTest extends TestCase
         $responseJson = json_encode($responseArray);
 
         $this->serialiser->method('deserialize')->with($responseJson, 'array', 'json')->willReturn($responseArray);
-        $this->redisStorage->expects($this->exactly(2))->method('get')->willReturnMap([
+        $this->redisStorage->expects(self::exactly(2))->method('get')->willReturnMap([
             [1, $this->sessionToken],
             ['urn:opg:digideps:users:1-jwt', false],
         ]);
@@ -505,30 +492,21 @@ class RestClientTest extends TestCase
         $object->delete($endpointUrl);
 
         $actual = $object->getHistory();
-        $this->assertCount(1, $actual);
+        self::assertCount(1, $actual);
 
-        $this->assertEquals($endpointUrl, $actual[0]['url']);
-        $this->assertEquals('delete', $actual[0]['method']);
-        $this->assertStringContainsString($this->sessionToken, $actual[0]['options']);
-        $this->assertEquals(Response::HTTP_OK, $actual[0]['responseCode']);
-        $this->assertStringContainsString('bbbbb', $actual[0]['responseBody']);
+        self::assertEquals($endpointUrl, $actual[0]['url']);
+        self::assertEquals('delete', $actual[0]['method']);
+        self::assertStringContainsString($this->sessionToken, $actual[0]['options']);
+        self::assertEquals(Response::HTTP_OK, $actual[0]['responseCode']);
+        self::assertStringContainsString('bbbbb', $actual[0]['responseBody']);
 
-        $this->assertTrue($actual[0]['time'] > 0);
-        $this->assertTrue($actual[0]['time'] < 1);
+        self::assertTrue($actual[0]['time'] > 0);
+        self::assertTrue($actual[0]['time'] < 1);
     }
 
     public function testJWTReturnedWhenSuperAdminLogsIn(): void
     {
-        $client = $this->createMock(Client::class);
-        $redisStorage = $this->createMock(RedisStorage::class);
-        $serializer = $this->createMock(SerializerInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
-        $jwtService = $this->createMock(JWTService::class);
-
-        $clientSecret = 'aSecret';
-        $sessionToken = 'someToken123';
-
-        $expectedLoggedInUser = $this->createMock(User::class);
+        $expectedLoggedInUser = self::createMock(User::class);
         $expectedLoggedInUser->method('getId')->willReturn(1);
         $expectedLoggedInUser->method('getRolename')->willReturn('ROLE_SUPER_ADMIN');
         $userArray = ['id' => 1, 'firstname' => 'Peter'];
@@ -536,60 +514,63 @@ class RestClientTest extends TestCase
 
         $encodedJWT = 'not-real-jwt';
 
-        $parameterBag = $this->createMock(ParameterBagInterface::class);
-
-        $container = $this->createMock(ContainerInterface::class);
-
         $request = new Request();
         $request->headers->set('x-aws-request-id', 'THIS_IS_THE_REQUEST_ID');
 
         // Create a mock for RequestStack
-        $requestStackMock = $this->createMock(RequestStack::class);
+        $requestStackMock = self::createMock(RequestStack::class);
         $requestStackMock->method('getCurrentRequest')->willReturn($request);
 
+        $container = self::createMock(ContainerInterface::class);
         $container->method('has')->with('request_stack')->willReturn(true);
         $container->method('get')->with('request_stack')->willReturn($requestStackMock);
+
         $sut = new RestClient(
             $container,
-            $client,
-            $redisStorage,
-            $serializer,
-            $logger,
-            $clientSecret,
-            $parameterBag,
-            $jwtService
+            $this->client,
+            $this->redisStorage,
+            $this->serialiser,
+            $this->logger,
+            $this->clientSecret,
+            $this->parameterBag,
+            $this->jwtService
         );
 
         $credentialsArray = ['username' => 'u', 'password' => 'p'];
         $credentialsJson = json_encode($credentialsArray);
-        $serializer->method('serialize')->with($credentialsArray, 'json', null)->willReturn($credentialsJson);
-        $serializer->method('deserialize')->willReturnMap([
+        $this->serialiser->method('serialize')->with($credentialsArray, 'json', null)->willReturn($credentialsJson);
+        $this->serialiser->method('deserialize')->willReturnMap([
             [$userJson, 'array', 'json', null, ['success' => true, 'data' => $userArray]],
             [$userJson, User::class, 'json', null, $expectedLoggedInUser],
         ]);
 
-        $loginResponse = new GuzzleResponse(200, ['AuthToken' => $sessionToken, 'JWT' => [0 => $encodedJWT]], $userJson);
+        $loginResponse = new GuzzleResponse(200, ['AuthToken' => $this->sessionToken, 'JWT' => [0 => $encodedJWT]], $userJson);
 
-        $client->method('request')->willReturnCallback(function (string $method, string $path, array $options) use ($loginResponse, $clientSecret, $credentialsJson) {
-            $this->assertSame('post', $method);
-            $this->assertSame('/auth/login', $path);
-            $this->assertTrue(
+        $this->client->method('request')->willReturnCallback(function (string $method, string $path, array $options) use ($loginResponse, $credentialsJson) {
+            self::assertSame('post', $method);
+            self::assertSame('/auth/login', $path);
+            self::assertTrue(
                 isset($options['body'], $options['headers']['ClientSecret'])
                 && $options['body'] === $credentialsJson
-                && $options['headers']['ClientSecret'] === $clientSecret
+                && $options['headers']['ClientSecret'] === $this->clientSecret
             );
             return $loginResponse;
         });
 
-        $jwtService->expects($this->atLeastOnce())->method('getUrn')->with($encodedJWT)->willReturn('urn:opg:digideps:users:1');
+        $this->jwtService->expects(self::atLeastOnce())
+            ->method('getUrn')
+            ->with($encodedJWT)
+            ->willReturn('urn:opg:digideps:users:1');
 
-        $redisStorage->expects($this->atLeastOnce())->method('set')->with('urn:opg:digideps:users:1-jwt', $encodedJWT);
+        $this->redisStorage->expects(self::atLeastOnce())
+            ->method('set')
+            ->with('urn:opg:digideps:users:1-jwt', $encodedJWT);
 
-        $logger->expects($this->never())->method('warning');
+        $this->logger->expects(self::never())->method('warning');
 
         [$actualUser, $actualAuthToken] = $sut->login($credentialsArray);
 
-        $this->assertEquals($expectedLoggedInUser, $actualUser);
-        $this->assertEquals($sessionToken, $actualAuthToken);
+        self::assertEquals($expectedLoggedInUser, $actualUser);
+        self::assertEquals($this->sessionToken, $actualAuthToken);
     }
 }

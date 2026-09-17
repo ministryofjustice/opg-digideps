@@ -12,6 +12,7 @@ use OPG\Digideps\Frontend\Service\Client\Internal\UserApi;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\TestHelpers\ClientHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -21,82 +22,76 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class ClientApiTest extends TestCase
 {
-    private RestClient $restClient;
-    private RouterInterface $router;
-    private UserApi $userApi;
-    private TokenStorageInterface $tokenStorage;
-    private ObservableEventDispatcher $eventDispatcher;
-
+    private RestClient&MockObject $restClient;
+    private TokenStorageInterface&MockObject $tokenStorage;
+    private ObservableEventDispatcher&MockObject $eventDispatcher;
     private ClientApi $sut;
 
     public function setUp(): void
     {
         $this->restClient = $this->createMock(RestClient::class);
-        $this->router = $this->createMock(RouterInterface::class);
-        $this->userApi = $this->createMock(UserApi::class);
         $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
         $this->eventDispatcher = $this->createMock(ObservableEventDispatcher::class);
 
         $this->sut = new ClientApi(
             $this->restClient,
-            $this->router,
-            $this->userApi,
+            $this->createMock(RouterInterface::class),
+            $this->createMock(UserApi::class),
             $this->tokenStorage,
             $this->eventDispatcher,
             $this->createStub(LoggerInterface::class),
         );
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $clientWithUsers = ClientHelpers::createClientWithUsers();
         $currentUser = UserHelpers::createUser();
 
-        $this->restClient->expects(static::once())
+        $this->restClient->expects(self::once())
             ->method('get')
             ->with(sprintf('v2/client/%s', $clientWithUsers->getId()), 'Client', self::anything(), self::anything())
             ->willReturn($clientWithUsers);
 
         $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'firewall', $currentUser->getRoles());
-        $this->tokenStorage->expects(static::once())
+        $this->tokenStorage->expects(self::once())
             ->method('getToken')
             ->willReturn($usernamePasswordToken);
 
-        $this->restClient->expects(static::once())
+        $this->restClient->expects(self::once())
             ->method('delete')
             ->with(sprintf('client/%s/delete', $clientWithUsers->getId()));
 
         $trigger = 'A_TRIGGER';
         $clientDeletedEvent = new ClientDeletedEvent($clientWithUsers, $currentUser, $trigger);
-        $this->eventDispatcher->expects(static::once())
+        $this->eventDispatcher->expects(self::once())
             ->method('dispatch')
             ->with($clientDeletedEvent, 'client.deleted');
 
         $this->sut->delete($clientWithUsers->getId(), $trigger);
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $preUpdateClient = ClientHelpers::createClient();
         $postUpdateClient = ClientHelpers::createClient();
         $currentUser = UserHelpers::createUser();
         $trigger = 'SOME_TRIGGER';
 
-        /** @var ResponseInterface $mockResponse */
         $mockResponse = $this->createMock(ResponseInterface::class);
-        $this->restClient->expects(static::once())
+        $this->restClient->expects(self::once())
             ->method('put')
-            ->with('client/upsert', $postUpdateClient, static::anything())
+            ->with('client/upsert', $postUpdateClient, self::anything())
             ->willReturn($mockResponse);
 
         $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'firewall', $currentUser->getRoles());
-        $this->tokenStorage->expects(static::once())
+        $this->tokenStorage->expects(self::once())
             ->method('getToken')
             ->willReturn($usernamePasswordToken);
 
         $clientUpdatedEvent = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $currentUser, $trigger);
 
-        $this->eventDispatcher->expects(static::once())
+        $this->eventDispatcher->expects(self::once())
             ->method('dispatch')
             ->with($clientUpdatedEvent, 'client.updated');
 
