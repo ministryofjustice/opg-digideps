@@ -4,48 +4,39 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\Client\Internal;
 
+use Faker\Factory;
+use Faker\Generator;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Model\FeedbackReport;
 use OPG\Digideps\Frontend\Service\Client\Internal\SatisfactionApi;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
-use Faker\Factory;
-use Faker\Generator;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
 class SatisfactionApiTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @var Generator */
-    private $faker;
-
-    /** @var RestClient&ObjectProphecy */
-    private $restClient;
-
-    /** @var SatisfactionApi */
-    private $sut;
+    private Generator $faker;
+    private RestClient&MockObject $restClient;
+    private SatisfactionApi $sut;
 
     public function setUp(): void
     {
         $this->faker = Factory::create('en_UK');
-        $this->restClient = self::prophesize(RestClient::class);
-        $this->sut = new SatisfactionApi($this->restClient->reveal());
+        $this->restClient = self::createMock(RestClient::class);
+        $this->sut = new SatisfactionApi($this->restClient);
     }
 
-    /**
-     * @test
-     */
-    public function createGeneralFeedback()
+    public function testCreateGeneralFeedback(): void
     {
         $score = $this->faker->randomElement([1, 2, 3, 4, 5]);
         $comments = $this->faker->realText();
 
-        $this->restClient->post(
-            'satisfaction/public',
-            ['score' => $score, 'comments' => $comments]
-        )->shouldBeCalled();
+        $this->restClient->expects(self::once())
+            ->method('post')
+            ->with(
+                'satisfaction/public',
+                ['score' => $score, 'comments' => $comments]
+            );
 
         $formData = [
             'comments' => $comments,
@@ -60,12 +51,13 @@ class SatisfactionApiTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @dataProvider commentsProvider
      */
-    public function createPostSubmissionFeedback(?string $comments, string $expectedCommentsInPostRequest, ?int $reportId)
-    {
+    public function testCreatePostSubmissionFeedback(
+        ?string $comments,
+        string $expectedCommentsInPostRequest,
+        ?int $reportId
+    ): void {
         $score = $this->faker->randomElement([1, 2, 3, 4, 5]);
         $reportType = $this->faker->randomElement([
             Report::TYPE_COMBINED_HIGH_ASSETS,
@@ -76,16 +68,17 @@ class SatisfactionApiTest extends TestCase
             Report::TYPE_HEALTH_WELFARE,
         ]);
 
-        $this->restClient->post(
-            'satisfaction',
-            [
-                'score' => $score,
-                'comments' => $expectedCommentsInPostRequest,
-                'reportType' => $reportType,
-                'reportId' => $reportId,
-            ]
-        )
-            ->shouldBeCalled()
+        $this->restClient->expects(self::once())
+            ->method('post')
+            ->with(
+                'satisfaction',
+                [
+                    'score' => $score,
+                    'comments' => $expectedCommentsInPostRequest,
+                    'reportType' => $reportType,
+                    'reportId' => $reportId,
+                ]
+            )
             ->willReturn(1);
 
         $feedbackReportObject = new FeedbackReport()
@@ -95,7 +88,7 @@ class SatisfactionApiTest extends TestCase
         $this->sut->createPostSubmissionFeedback($feedbackReportObject, $reportType, $reportId);
     }
 
-    public function commentsProvider()
+    public static function commentsProvider(): array
     {
         return [
             'Comments included - Report' => ['Its greeeeat', 'Its greeeeat', 222],
