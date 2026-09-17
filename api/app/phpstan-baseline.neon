@@ -2257,6 +2257,30 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$hwCourtOrder \(OPG\\Digideps\\Backend\\Entity\\CourtOrder\|null\) is never assigned OPG\\Digideps\\Backend\\Entity\\CourtOrder so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$hwCourtOrder is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$pfaCourtOrder \(OPG\\Digideps\\Backend\\Entity\\CourtOrder\|null\) is never assigned OPG\\Digideps\\Backend\\Entity\\CourtOrder so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$pfaCourtOrder is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
 			message: '#^Parameter \#1 \$active of method OPG\\Digideps\\Backend\\Entity\\User\:\:setActive\(\) expects bool, mixed given\.$#'
 			identifier: argument.type
 			count: 1
