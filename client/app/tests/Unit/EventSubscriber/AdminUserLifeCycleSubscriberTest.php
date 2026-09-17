@@ -52,9 +52,7 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
         $createdUser = $this->userHelpers->createUser();
         $userCreatedEvent = new AdminUserCreatedEvent($createdUser);
 
-        $this->mailer->expects(self::once())
-            ->method('sendActivationEmail')
-            ->with($createdUser);
+        $this->mailer->expects(self::once())->method('sendActivationEmail')->with($createdUser);
 
         $this->sut->sendEmail($userCreatedEvent);
     }
@@ -80,13 +78,9 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $this->dateTimeProvider->expects(self::once())
-            ->method('getDateTime')
-            ->willReturn($now);
+        $this->dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($now);
 
-        $this->logger->expects(self::once())
-            ->method('notice')
-            ->with('', $expectedEvent);
+        $this->logger->expects(self::once())->method('notice')->with('', $expectedEvent);
 
         $adminManagerCreatedEvent = new AdminManagerCreatedEvent($trigger, $currentUser, $createdAdminManager);
 
@@ -114,13 +108,9 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $this->dateTimeProvider->expects(self::once())
-            ->method('getDateTime')
-            ->willReturn($now);
+        $this->dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($now);
 
-        $this->logger->expects(self::once())
-            ->method('notice')
-            ->with('', $expectedEvent);
+        $this->logger->expects(self::once())->method('notice')->with('', $expectedEvent);
 
         $adminManagerDeletedEvent = new AdminManagerDeletedEvent($trigger, $currentUser, $deletedAdminManager);
 

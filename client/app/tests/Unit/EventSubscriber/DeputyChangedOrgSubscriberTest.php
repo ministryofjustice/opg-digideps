@@ -32,9 +32,7 @@ class DeputyChangedOrgSubscriberTest extends TestCase
         $dateTimeProvider = self::createMock(DateTimeProvider::class);
 
         $now = new \DateTime();
-        $dateTimeProvider->expects(self::once())
-            ->method('getDateTime')
-            ->willReturn($now);
+        $dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($now);
 
         $trigger = 'DEPUTY_CHANGED_ORG';
 

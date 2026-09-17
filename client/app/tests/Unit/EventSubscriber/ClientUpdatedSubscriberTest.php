@@ -57,9 +57,7 @@ class ClientUpdatedSubscriberTest extends TestCase
     public function testLogEvent(Client $postUpdateClient, string $expectedLogMessage): void
     {
         $now = new \DateTime();
-        $this->dateTimeProvider->expects(self::once())
-            ->method('getDateTime')
-            ->willReturn($now);
+        $this->dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($now);
 
         $preUpdateClient = ClientHelpers::createClient();
         $changedBy = UserHelpers::createUser();
@@ -79,9 +77,7 @@ class ClientUpdatedSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $this->logger->expects(self::once())
-            ->method('notice')
-            ->with($expectedLogMessage, $expectedEvent);
+        $this->logger->expects(self::once())->method('notice')->with($expectedLogMessage, $expectedEvent);
 
         $this->sut->logEvent($event);
     }
