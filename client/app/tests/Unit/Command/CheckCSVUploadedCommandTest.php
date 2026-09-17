@@ -93,7 +93,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
         $result = $this->commandTester->execute([]);
 
-        $this->assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
+        self::assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
     }
 
     public function testExecuteOnBankHolidaysSlackIsNotPostedTo(): void
@@ -106,7 +106,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
         $result = $this->commandTester->execute([]);
 
-        $this->assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
+        self::assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
     }
 
     public function testExecuteOnNonBankHolidaysWhenAllCSVsHaveNotBeenUploadedSlackIsPostedTo(): void
@@ -139,7 +139,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
         $result = $this->commandTester->execute([]);
 
-        $this->assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
+        self::assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
     }
 
     public function testExecuteOnNonBankHolidaysWhenASiriusLayCSVHasNotBeenUploadedSlackIsPostedTo(): void
@@ -168,7 +168,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
         $result = $this->commandTester->execute([]);
 
-        $this->assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
+        self::assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
     }
 
     public function testExecuteOnNonBankHolidaysWhereLogStreamExistsButNoMatchingCSVEventsExistSlackIsPostedTo(): void
@@ -200,7 +200,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
         $result = $this->commandTester->execute([]);
 
-        $this->assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
+        self::assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
     }
 
     public function testExecuteErrorIsLoggedIfCantGetAuditLogs(): void
@@ -229,7 +229,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
         $result = $this->commandTester->execute([]);
 
-        $this->assertEquals(1, $result, sprintf('Expected command to return 1, got %d', $result));
+        self::assertEquals(1, $result, sprintf('Expected command to return 1, got %d', $result));
     }
 
     public function testExecuteErrorIsLoggedIfSlackPostIsNotSuccessful(): void
@@ -270,7 +270,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
         $result = $this->commandTester->execute([]);
 
-        $this->assertEquals(1, $result, sprintf('Expected command to return 1, got %d', $result));
+        self::assertEquals(1, $result, sprintf('Expected command to return 1, got %d', $result));
     }
 
     public function testExecuteErrorMessagePostedToSlackWhenUnableToRetrieveBankHolidays(): void
@@ -307,7 +307,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
         $result = $this->commandTester->execute([]);
 
-        $this->assertEquals(1, $result, sprintf('Expected command to return 1, got %d', $result));
+        self::assertEquals(1, $result, sprintf('Expected command to return 1, got %d', $result));
     }
 
     private function todayIsABankHoliday(bool $isABankHoliday): void
