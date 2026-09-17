@@ -82,7 +82,7 @@ trait ReportDebtsTrait
         return $this->hasDebts;
     }
 
-    public function setHasDebts(string $hasDebts): static
+public function setHasDebts(?string $hasDebts): static
     {
         $this->hasDebts = $hasDebts;
 
