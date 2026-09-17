@@ -39,8 +39,7 @@ class ClientBenefitsCheckTest extends TestCase
             ->setReport($report);
 
         $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping(true)
-            ->addDefaultDoctrineAnnotationReader()
+            ->enableAttributeMapping()
             ->getValidator();
 
         $result = $validator->validate($sut, null, 'client-benefits-check');

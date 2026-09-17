@@ -15,8 +15,7 @@ class CoDeputyInviteTypeTest extends TypeTestCase
     protected function getExtensions()
     {
         $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping(true)
-            ->addDefaultDoctrineAnnotationReader()
+            ->enableAttributeMapping()
             ->getValidator();
 
         return [
