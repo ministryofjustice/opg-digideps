@@ -33,9 +33,7 @@ class ClientDeletedSubscriberTest extends TestCase
         $dateTimeProvider = self::createMock(DateTimeProvider::class);
 
         $now = new \DateTime();
-        $dateTimeProvider->expects(self::once())
-            ->method('getDateTime')
-            ->willReturn($now);
+        $dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($now);
 
         $currentUser = UserHelpers::createUser();
         $trigger = 'A_TRIGGER';
@@ -53,9 +51,7 @@ class ClientDeletedSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $logger->expects(self::once())
-            ->method('notice')
-            ->with('', $expectedEvent);
+        $logger->expects(self::once())->method('notice')->with('', $expectedEvent);
 
         new ClientDeletedSubscriber($logger, $dateTimeProvider)->logEvent($clientDeletedEvent);
     }

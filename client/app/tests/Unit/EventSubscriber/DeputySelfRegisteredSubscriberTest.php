@@ -9,14 +9,10 @@ use OPG\Digideps\Frontend\EventSubscriber\DeputySelfRegisteredSubscriber;
 use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 class DeputySelfRegisteredSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @test */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals(
             [DeputySelfRegisteredEvent::NAME => 'sendEmail'],
@@ -24,17 +20,14 @@ class DeputySelfRegisteredSubscriberTest extends TestCase
         );
     }
 
-    /** @test */
-    public function sendEmail()
+    public function testSendEmail(): void
     {
         $selfRegisteredDeputy = UserHelpers::createUser();
         $deputyRegisteredEvent = new DeputySelfRegisteredEvent($selfRegisteredDeputy);
 
-        $mailer = self::prophesize(Mailer::class);
-        $mailer->sendActivationEmail($selfRegisteredDeputy)->shouldBeCalled();
+        $mailer = self::createMock(Mailer::class);
+        $mailer->expects(self::once())->method('sendActivationEmail')->with($selfRegisteredDeputy);
 
-        $sut = new DeputySelfRegisteredSubscriber($mailer->reveal());
-
-        $sut->sendEmail($deputyRegisteredEvent);
+        new DeputySelfRegisteredSubscriber($mailer)->sendEmail($deputyRegisteredEvent);
     }
 }

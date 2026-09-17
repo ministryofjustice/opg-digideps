@@ -10,47 +10,33 @@ use OPG\Digideps\Frontend\EventSubscriber\UserUpdatedSubscriber;
 use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class UserUpdatedSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @var UserHelpers */
-    private $userHelpers;
-
-    /** @var ObjectProphecy */
-    private $dateTimeProvider;
-
-    /** @var ObjectProphecy */
-    private $logger;
-
-    /** @var ObjectProphecy */
-    private $mailer;
-
-    /** @var UserUpdatedSubscriber */
-    private $sut;
+    private UserHelpers $userHelpers;
+    private DateTimeProvider&MockObject $dateTimeProvider;
+    private LoggerInterface&MockObject $logger;
+    private Mailer&MockObject $mailer;
+    private UserUpdatedSubscriber $sut;
 
     public function setUp(): void
     {
         $this->userHelpers = new UserHelpers();
-        $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
-        $this->logger = self::prophesize(LoggerInterface::class);
-        $this->mailer = self::prophesize(Mailer::class);
+        $this->dateTimeProvider = self::createMock(DateTimeProvider::class);
+        $this->logger = self::createMock(LoggerInterface::class);
+        $this->mailer = self::createMock(Mailer::class);
 
         $this->sut = (new UserUpdatedSubscriber(
-            $this->dateTimeProvider->reveal(),
-            $this->logger->reveal(),
-            $this->mailer->reveal()
+            $this->dateTimeProvider,
+            $this->logger,
+            $this->mailer
         ));
     }
 
-    /** @test */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals(
             [
@@ -63,8 +49,7 @@ class UserUpdatedSubscriberTest extends TestCase
         );
     }
 
-    /** @test */
-    public function auditLogEmailHasChanged()
+    public function testAuditLogEmailHasChanged(): void
     {
         $now = new \DateTime('now');
 
@@ -85,15 +70,14 @@ class UserUpdatedSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
-        $this->logger->notice('', $expectedEvent)->shouldBeCalled();
+        $this->dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($now);
+        $this->logger->expects(self::once())->method('notice')->with('', $expectedEvent);
 
         $event = new UserUpdatedEvent($preUpdateUser, $postUpdateUser, $currentUser, $trigger);
         $this->sut->auditLog($event);
     }
 
-    /** @test */
-    public function auditLogRoleHasChanged()
+    public function testAuditLogRoleHasChanged(): void
     {
         $now = new \DateTime('now');
 
@@ -113,15 +97,14 @@ class UserUpdatedSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
-        $this->logger->notice('', $expectedEvent)->shouldBeCalled();
+        $this->dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($now);
+        $this->logger->expects(self::once())->method('notice')->with('', $expectedEvent);
 
         $event = new UserUpdatedEvent($preUpdateUser, $postUpdateUser, $currentUser, $trigger);
         $this->sut->auditLog($event);
     }
 
-    /** @test */
-    public function auditLogRoleOrEmailHasNotChanged()
+    public function testAuditLogRoleOrEmailHasNotChanged(): void
     {
         $trigger = 'A_TRIGGER';
 
@@ -129,7 +112,7 @@ class UserUpdatedSubscriberTest extends TestCase
         $postUpdateUser = (clone $preUpdateUser)->setFirstname('Sufjan')->setLastname('Stevens');
         $currentUser = $this->userHelpers->createUser();
 
-        $this->logger->notice(Argument::cetera())->shouldNotBeCalled();
+        $this->logger->expects(self::never())->method('notice');
 
         $event = new UserUpdatedEvent($preUpdateUser, $postUpdateUser, $currentUser, $trigger);
         $this->sut->auditLog($event);
@@ -137,20 +120,19 @@ class UserUpdatedSubscriberTest extends TestCase
 
     /**
      * @dataProvider deputyProvider
-     * @test
      */
-    public function sendEmailLayDeputyDetailsHaveChanged(User $preUpdateUser, User $postUpdateUser)
+    public function testSendEmailLayDeputyDetailsHaveChanged(User $preUpdateUser, User $postUpdateUser): void
     {
         $trigger = 'A_TRIGGER';
         $currentUser = $this->userHelpers->createUser();
 
-        $this->mailer->sendUpdateDeputyDetailsEmail($postUpdateUser)->shouldBeCalled();
+        $this->mailer->expects(self::once())->method('sendUpdateDeputyDetailsEmail')->with($postUpdateUser);
 
         $event = new UserUpdatedEvent($preUpdateUser, $postUpdateUser, $currentUser, $trigger);
         $this->sut->sendEmail($event);
     }
 
-    public function deputyProvider()
+    public static function deputyProvider(): array
     {
         $preUpdateUser = new User()
             ->setId(1)
@@ -180,17 +162,14 @@ class UserUpdatedSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
-    public function sendEmailEmailNotSentWhenRoleIsNotLayDeputy()
+    public function testSendEmailEmailNotSentWhenRoleIsNotLayDeputy(): void
     {
         $trigger = 'A_TRIGGER';
         $preUpdateUser = $this->userHelpers->createUser();
         $postUpdateUser = (clone $preUpdateUser)->setRoleName('NOT_LAY_DEPUTY')->setEmail('new.email@example.org');
         $currentUser = $this->userHelpers->createUser();
 
-        $this->mailer->sendUpdateDeputyDetailsEmail(Argument::any())->shouldNotBeCalled();
+        $this->mailer->expects(self::never())->method('sendUpdateDeputyDetailsEmail');
 
         $event = new UserUpdatedEvent($preUpdateUser, $postUpdateUser, $currentUser, $trigger);
         $this->sut->sendEmail($event);

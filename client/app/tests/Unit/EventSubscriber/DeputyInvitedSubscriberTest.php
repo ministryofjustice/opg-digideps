@@ -26,9 +26,7 @@ class DeputyInvitedSubscriberTest extends TestCase
         $deputyInvitedEvent = new DeputyInvitedEvent($invitedDeputy);
 
         $mailer = self::createMock(Mailer::class);
-        $mailer->expects(self::once())
-            ->method('sendInvitationEmail')
-            ->with($invitedDeputy);
+        $mailer->expects(self::once())->method('sendInvitationEmail')->with($invitedDeputy);
 
         new DeputyInvitedSubscriber($mailer)->sendEmail($deputyInvitedEvent);
     }
