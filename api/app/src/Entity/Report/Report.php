@@ -218,7 +218,7 @@ class Report
 
     #[JMS\Groups(['report-client'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Client')]
-    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Client::class, cascade: ['persist'], inversedBy: 'reports')]
     private Client $client;
 
@@ -420,6 +420,14 @@ class Report
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrder>')]
     #[ORM\ManyToMany(targetEntity: CourtOrder::class, mappedBy: 'reports', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private Collection $courtOrders;
+
+    #[ORM\ManyToOne(targetEntity: CourtOrder::class, fetch: 'EXTRA_LAZY')]
+    #[ORM\JoinColumn(name: 'pfa_court_order_id', nullable: true)]
+    private ?CourtOrder $pfaCourtOrder = null;
+
+    #[ORM\ManyToOne(targetEntity: CourtOrder::class, fetch: 'EXTRA_LAZY')]
+    #[ORM\JoinColumn(name: 'hw_court_order_id', nullable: true)]
+    private ?CourtOrder $hwCourtOrder = null;
 
     private ReportType $reportType;
     private Sections $sections;

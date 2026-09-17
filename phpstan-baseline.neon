@@ -13,6 +13,78 @@ parameters:
 			path: api/app/config/bootstrap.php
 
 		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 3
+			path: api/app/src/Cleanup/Model/Client.php
+
+		-
+			message: '#^Parameter \#1 \$datetime of class DateTimeImmutable constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: api/app/src/Cleanup/Model/Client.php
+
+		-
+			message: '#^Parameter \#3 \$orderUid of class OPG\\Digideps\\Backend\\Cleanup\\Model\\Order constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Cleanup/Model/Client.php
+
+		-
+			message: '#^Parameter \#5 \$submitted of class OPG\\Digideps\\Backend\\Cleanup\\Model\\Report constructor expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Cleanup/Model/Client.php
+
+		-
+			message: '#^Cannot access offset ''case_number'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: api/app/src/Cleanup/Model/Query.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: api/app/src/Cleanup/Model/Query.php
+
+		-
+			message: '#^Parameter \#2 \$caseNumber of class OPG\\Digideps\\Backend\\Cleanup\\Model\\Client constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Cleanup/Model/Query.php
+
+		-
+			message: '#^Parameter \#3 \$rows of class OPG\\Digideps\\Backend\\Cleanup\\Model\\Client constructor expects array\<array\<string, mixed\>\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Cleanup/Model/Query.php
+
+		-
+			message: '#^Parameter \#4 \$only of method OPG\\Digideps\\Backend\\Cleanup\\Model\\Query\:\:fetch\(\) expects array\<int\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Cleanup/Model/Query.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 2
+			path: api/app/src/Cleanup/ReportCleaner.php
+
+		-
+			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array\<string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: api/app/src/Cleanup/ReportCleaner.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$clientIds of method OPG\\Digideps\\Backend\\Cleanup\\Model\\Query\:\:run\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Cleanup/ReportCleaner.php
+
+		-
 			message: '#^Binary operation "\." between ''\<comment\>Comparison…'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -223,6 +295,12 @@ parameters:
 			path: api/app/src/Command/UserCleanupCommand.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: api/app/src/Command/UserCleanupCommand.php
+
+		-
 			message: '#^Parameter \#1 \$messages of method Symfony\\Component\\Console\\Output\\OutputInterface\:\:writeln\(\) expects iterable\|string, Exception given\.$#'
 			identifier: argument.type
 			count: 1
@@ -239,6 +317,12 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: api/app/src/Command/UserRetentionPolicyCommand.php
+
+		-
+			message: '#^Parameter \#1 \$content of class Symfony\\Component\\HttpFoundation\\Response constructor expects string\|null, string\|false given\.$#'
+			identifier: argument.type
+			count: 3
+			path: api/app/src/Controller/Admin/CleanupController.php
 
 		-
 			message: '#^Cannot access property \$headers on mixed\.$#'
@@ -2157,6 +2241,30 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getSectionStatusesCached\(\) should return array but returns mixed\.$#'
 			identifier: return.type
+			count: 1
+			path: api/app/src/Entity/Report/Report.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$hwCourtOrder \(OPG\\Digideps\\Backend\\Entity\\CourtOrder\|null\) is never assigned OPG\\Digideps\\Backend\\Entity\\CourtOrder so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: api/app/src/Entity/Report/Report.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$hwCourtOrder is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: api/app/src/Entity/Report/Report.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$pfaCourtOrder \(OPG\\Digideps\\Backend\\Entity\\CourtOrder\|null\) is never assigned OPG\\Digideps\\Backend\\Entity\\CourtOrder so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: api/app/src/Entity/Report/Report.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$pfaCourtOrder is never read, only written\.$#'
+			identifier: property.onlyWritten
 			count: 1
 			path: api/app/src/Entity/Report/Report.php
 
@@ -22411,12 +22519,6 @@ parameters:
 			path: client/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
-			message: '#^Cannot call method post\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Command/ProcessOrgCSVCommand.php
-
-		-
 			message: '#^Cannot call method setOptionalColumns\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -22673,6 +22775,54 @@ parameters:
 			identifier: binaryOp.invalid
 			count: 1
 			path: client/app/src/Controller/Admin/AjaxController.php
+
+		-
+			message: '#^Cannot access offset ''count'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Cannot access offset ''message'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Cannot access offset ''ok'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Parameter \#1 \$content of class Symfony\\Component\\HttpFoundation\\Response constructor expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Parameter \#1 \$string of function strlen expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Part \$result\[''count''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
+
+		-
+			message: '#^Part \$result\[''message''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
 
 		-
 			message: '#^Cannot call method getArchivedAt\(\) on mixed\.$#'
@@ -28873,12 +29023,6 @@ parameters:
 			path: client/app/src/Service/Client/Internal/DeputyApi.php
 
 		-
-			message: '#^Cannot call method post\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Service/Client/Internal/LayDeputyshipApi.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\LayDeputyshipApi\:\:uploadLayDeputyShip\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -29397,18 +29541,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:registerUser\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: client/app/src/Service/Client/RestClient.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:setLoggedUserId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Service/Client/RestClient.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:setTimeout\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: client/app/src/Service/Client/RestClient.php
 
@@ -30321,12 +30453,6 @@ parameters:
 		-
 			message: '#^Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface\:\:getId\(\)\.$#'
 			identifier: method.notFound
-			count: 1
-			path: client/app/src/Service/DeputyProvider.php
-
-		-
-			message: '#^Cannot call method get\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: client/app/src/Service/DeputyProvider.php
 
@@ -36447,6 +36573,12 @@ parameters:
 		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Sync\\Service\\DocumentSyncRunner\:\:expects\(\)\.$#'
 			identifier: method.notFound
+			count: 1
+			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
+
+		-
+			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\DocumentSyncCommand\:\:getDefaultName\(\)\.$#'
+			identifier: staticMethod.notFound
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
