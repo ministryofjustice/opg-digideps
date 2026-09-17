@@ -28,7 +28,7 @@ trait ReportPaFeeExpensesTrait
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['fee'])]
-    private ?string $hasFees;
+private ?string $hasFees = null;
 
     #[JMS\Type('double')]
     private float $feesTotal = 0.0;
