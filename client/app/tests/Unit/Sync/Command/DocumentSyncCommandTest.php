@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Sync\Command;
 
 use OPG\Digideps\Frontend\Service\ParameterStoreService;

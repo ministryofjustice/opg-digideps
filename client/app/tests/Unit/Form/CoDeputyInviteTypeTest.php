@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Form;
 
 use OPG\Digideps\Frontend\Entity\User;

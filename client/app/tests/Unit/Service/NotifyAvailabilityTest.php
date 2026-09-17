@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Service;
 
 use Alphagov\Notifications\Client as NotifyClient;
