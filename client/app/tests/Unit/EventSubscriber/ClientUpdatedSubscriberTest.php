@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\EventSubscriber;
 
+use Faker\Factory;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Event\ClientUpdatedEvent;
@@ -13,44 +14,31 @@ use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\ClientHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
-use Faker\Factory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class ClientUpdatedSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @var ObjectProphecy */
-    private $logger;
-
-    /** @var ObjectProphecy */
-    private $dateTimeProvider;
-
-    /** @var ObjectProphecy */
-    private $mailer;
-
-    /** @var ClientUpdatedSubscriber */
-    private $sut;
+    private LoggerInterface&MockObject $logger;
+    private DateTimeProvider&MockObject $dateTimeProvider;
+    private Mailer&MockObject $mailer;
+    private ClientUpdatedSubscriber $sut;
 
     public function setUp(): void
     {
-        $this->logger = self::prophesize(LoggerInterface::class);
-        $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
-        $this->mailer = self::prophesize(Mailer::class);
+        $this->logger = self::createMock(LoggerInterface::class);
+        $this->dateTimeProvider = self::createMock(DateTimeProvider::class);
+        $this->mailer = self::createMock(Mailer::class);
 
         $this->sut = new ClientUpdatedSubscriber(
-            $this->logger->reveal(),
-            $this->dateTimeProvider->reveal(),
-            $this->mailer->reveal()
+            $this->logger,
+            $this->dateTimeProvider,
+            $this->mailer
         );
     }
 
-    /** @test */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals(
             [
@@ -65,12 +53,13 @@ class ClientUpdatedSubscriberTest extends TestCase
 
     /**
      * @dataProvider clientProviderLogEvent
-     * @test
      */
-    public function logEvent(Client $postUpdateClient, string $expectedLogMessage)
+    public function testLogEvent(Client $postUpdateClient, string $expectedLogMessage): void
     {
         $now = new \DateTime();
-        $this->dateTimeProvider->getDateTime()->willReturn($now);
+        $this->dateTimeProvider->expects(self::once())
+            ->method('getDateTime')
+            ->willReturn($now);
 
         $preUpdateClient = ClientHelpers::createClient();
         $changedBy = UserHelpers::createUser();
@@ -90,11 +79,14 @@ class ClientUpdatedSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $this->logger->notice($expectedLogMessage, $expectedEvent)->shouldBeCalled();
+        $this->logger->expects(self::once())
+            ->method('notice')
+            ->with($expectedLogMessage, $expectedEvent);
+
         $this->sut->logEvent($event);
     }
 
-    public function clientProviderLogEvent()
+    public static function clientProviderLogEvent(): array
     {
         $postUpdateClient = ClientHelpers::createClient();
 
@@ -104,8 +96,7 @@ class ClientUpdatedSubscriberTest extends TestCase
         ];
     }
 
-    /** @test */
-    public function logEventOnlyLogsOnEmailChange()
+    public function testLogEventOnlyLogsOnEmailChange(): void
     {
         $preUpdateClient = ClientHelpers::createClient();
         $postUpdateClient = ClientHelpers::createClient()->setEmail($preUpdateClient->getEmail());
@@ -114,22 +105,23 @@ class ClientUpdatedSubscriberTest extends TestCase
 
         $event = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $changedBy, $trigger);
 
-        $this->logger->notice(Argument::cetera())->shouldNotBeCalled();
+        $this->logger->expects(self::never())->method('notice');
+
         $this->sut->logEvent($event);
     }
 
     /**
-     * @test
      * @dataProvider clientProviderSendEmailDetailsChanged
      */
-    public function sendEmail(Client $preUpdateClient, Client $postUpdateClient)
+    public function testSendEmail(Client $preUpdateClient, Client $postUpdateClient): void
     {
         $changedBy = UserHelpers::createUser()->setRoleName(User::ROLE_LAY_DEPUTY);
         $trigger = 'A_TRIGGER';
 
         $event = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $changedBy, $trigger);
 
-        $this->mailer->sendUpdateClientDetailsEmail($postUpdateClient)->shouldBeCalled();
+        $this->mailer->expects(self::once())->method('sendUpdateClientDetailsEmail')->with($postUpdateClient);
+
         $this->sut->sendEmail($event);
     }
 
@@ -152,8 +144,7 @@ class ClientUpdatedSubscriberTest extends TestCase
         ];
     }
 
-    /** @test */
-    public function sendEmailClientDetailsNotChanged()
+    public function testSendEmailClientDetailsNotChanged(): void
     {
         $preUpdateClient = ClientHelpers::createClient();
         $postUpdateClient = clone $preUpdateClient;
@@ -162,12 +153,12 @@ class ClientUpdatedSubscriberTest extends TestCase
 
         $event = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $changedBy, $trigger);
 
-        $this->mailer->sendUpdateClientDetailsEmail($postUpdateClient)->shouldNotBeCalled();
+        $this->mailer->expects(self::never())->method('sendUpdateClientDetailsEmail');
+
         $this->sut->sendEmail($event);
     }
 
-    /** @test */
-    public function sendEmailEmailNotSentWhenDetailsChangedButClientsAreDifferent()
+    public function testSendEmailEmailNotSentWhenDetailsChangedButClientsAreDifferent(): void
     {
         $preUpdateClient = ClientHelpers::createClient();
         $postUpdateClient = ClientHelpers::createClient()->setId(12345);
@@ -176,7 +167,8 @@ class ClientUpdatedSubscriberTest extends TestCase
 
         $event = new ClientUpdatedEvent($preUpdateClient, $postUpdateClient, $changedBy, $trigger);
 
-        $this->mailer->sendUpdateClientDetailsEmail($postUpdateClient)->shouldNotBeCalled();
+        $this->mailer->expects(self::never())->method('sendUpdateClientDetailsEmail');
+
         $this->sut->sendEmail($event);
     }
 }
