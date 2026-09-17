@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Resolver\SubSectionRoute;
 
 use OPG\Digideps\Frontend\Entity\Report\Report;

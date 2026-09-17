@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\DataImporter;
 
 use OPG\Digideps\Frontend\Service\DataImporter\CsvToArray;

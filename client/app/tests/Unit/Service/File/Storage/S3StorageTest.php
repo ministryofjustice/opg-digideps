@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\File\Storage;
 
 use Aws\Command;
@@ -23,13 +25,13 @@ class S3StorageTest extends TestCase
 
     public function setUp(): void
     {
-        $this->fileContent = 'FILE-CONTENT-' . microtime(1);
+        $this->fileContent = 'FILE-CONTENT-' . microtime(true);
     }
 
     public function testUploadDownloadDeleteTextContent(): void
     {
         // create timestamped file and key to undo effects of potential previous executions
-        $key = 'storagetest-upload-download-delete' . microtime(1);
+        $key = 'storagetest-upload-download-delete' . microtime(true);
 
         $awsClient = $this->createAwsMock();
         $awsClient->expects($this->once())->method('putObject')
@@ -110,7 +112,7 @@ class S3StorageTest extends TestCase
         $object = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
 
         // create timestamped file and key to undo effects of potential previous executions
-        $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
+        $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
         $fileContent = file_get_contents(__DIR__ . '/cat.jpg');
 
         $object->store($key, $fileContent);
@@ -127,7 +129,7 @@ class S3StorageTest extends TestCase
         $awsClient->method('doesObjectExistV2')->willReturn(false);
 
         // create timestamped file and key to undo effects of potential previous executions
-        $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
+        $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
         $fileContent = file_get_contents(__DIR__ . '/cat.jpg');
 
         $mockLogger = $this->createMock(LoggerInterface::class);
@@ -147,7 +149,7 @@ class S3StorageTest extends TestCase
 
     public function testRemoveFromS3NoErrors(): void
     {
-        $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
+        $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
 
         $awsClient = $this->createAwsMock();
 
@@ -200,7 +202,7 @@ class S3StorageTest extends TestCase
 
     public function testRemoveFromS3WithErrors(): void
     {
-        $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
+        $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
 
         $awsClient = $this->createAwsMock();
 
@@ -266,7 +268,7 @@ class S3StorageTest extends TestCase
 
     public function testRemoveFromS3WithKeyNotFound(): void
     {
-        $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
+        $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
 
         $awsClient = $this->createAwsMock();
 
@@ -311,7 +313,7 @@ class S3StorageTest extends TestCase
 
     public function testRemoveFromS3WhenS3NotWorking(): void
     {
-        $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
+        $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
 
         $awsClient = $this->createAwsMock();
 

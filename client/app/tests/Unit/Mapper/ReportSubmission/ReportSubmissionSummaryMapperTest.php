@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Mapper\ReportSubmission;
 
 use OPG\Digideps\Frontend\Mapper\DateRangeQuery;

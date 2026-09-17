@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Service;
 
 use Aws\Result;
@@ -69,8 +71,8 @@ class ParameterStoreServiceTest extends TestCase
     public function parameterDataProvider()
     {
         return [
-            'document sync set to true' => ['document-sync', 1],
-            'checklist sync set to false' => ['checklist-sync', 0],
+            'document sync set to true' => ['document-sync', '1'],
+            'checklist sync set to false' => ['checklist-sync', '0'],
         ];
     }
 }
