@@ -8,6 +8,12 @@ trait TypeOrThrowTrait
 {
     abstract protected function getUnvalidated(string|int|null $key): mixed;
 
+    public function getBooleanOrThrow(string|int|null $key): bool
+    {
+        $value = $this->getUnvalidated($key);
+        return is_bool($value) ? $value : throw new ValidationException('bool', $value);
+    }
+
     public function getIntegerOrThrow(string|int|null $key): int
     {
         $value = $this->getUnvalidated($key);
