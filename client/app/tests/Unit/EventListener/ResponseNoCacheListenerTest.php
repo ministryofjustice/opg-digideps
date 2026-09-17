@@ -34,9 +34,9 @@ class ResponseNoCacheListenerTest extends TestCase
         $headers->expects($invocationMatcher)
             ->method('set')
             ->willReturnCallback(function ($name, $value) use ($invocationMatcher) {
-                $invocationNumber = $invocationMatcher->getInvocationCount();
-                self::assertEquals(self::EXPECTED_SET_CALLS[$invocationNumber][0], $name);
-                self::assertEquals(self::EXPECTED_SET_CALLS[$invocationNumber][1], $value);
+                $invocation = $invocationMatcher->getInvocationCount();
+                self::assertEquals(self::EXPECTED_SET_CALLS[$invocation][0], $name);
+                self::assertEquals(self::EXPECTED_SET_CALLS[$invocation][1], $value);
             });
 
         $response = self::createMock(Response::class);
@@ -79,12 +79,12 @@ class ResponseNoCacheListenerTest extends TestCase
         $headers->expects($invocationMatcher)
             ->method('set')
             ->willReturnCallback(function ($name, $value) use ($invocationMatcher) {
-                $invocationNumber = $invocationMatcher->getInvocationCount();
+                $invocation = $invocationMatcher->getInvocationCount();
 
                 self::assertNotEquals('X-Session-Safe-Id', $name, 'X-Session-Safe-Id should never be set');
 
-                self::assertEquals(self::EXPECTED_SET_CALLS[$invocationNumber][0], $name);
-                self::assertEquals(self::EXPECTED_SET_CALLS[$invocationNumber][1], $value);
+                self::assertEquals(self::EXPECTED_SET_CALLS[$invocation][0], $name);
+                self::assertEquals(self::EXPECTED_SET_CALLS[$invocation][1], $value);
             });
 
         $response = self::createMock(Response::class);

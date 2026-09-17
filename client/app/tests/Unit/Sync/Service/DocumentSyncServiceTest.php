@@ -592,13 +592,13 @@ class DocumentSyncServiceTest extends KernelTestCase
      */
     private function setRestClientExpectations(array $expectations): void
     {
-        $matcher = self::exactly(count($expectations));
+        $invocationMatcher = self::exactly(count($expectations));
 
         $this->restClient
-            ->expects($matcher)
+            ->expects($invocationMatcher)
             ->method('apiCall')
-            ->willReturnCallback(function (array $parameters) use ($matcher, $expectations) {
-                $invocation = $matcher->getInvocationCount();
+            ->willReturnCallback(function (array $parameters) use ($invocationMatcher, $expectations) {
+                $invocation = $invocationMatcher->getInvocationCount();
 
                 if (!isset($expectations[$invocation])) {
                     throw new \LogicException('Unexpected number of invocations');
