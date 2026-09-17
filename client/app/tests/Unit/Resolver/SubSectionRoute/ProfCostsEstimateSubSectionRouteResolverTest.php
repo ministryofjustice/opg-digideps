@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Resolver\SubSectionRoute;
 
+use OPG\Digideps\Frontend\Entity\Report\ProfDeputyEstimateCost;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Report\Status;
 use OPG\Digideps\Frontend\Resolver\SubSectionRoute\ProfCostsEstimateSubSectionRouteResolver;
@@ -11,8 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class ProfCostsEstimateSubSectionRouteResolverTest extends TestCase
 {
-    /** @var ProfCostsEstimateSubSectionRouteResolver */
-    private $sut;
+    private ProfCostsEstimateSubSectionRouteResolver $sut;
 
     public function setUp(): void
     {
@@ -23,14 +23,14 @@ class ProfCostsEstimateSubSectionRouteResolverTest extends TestCase
     {
         $route = $this->sut->resolve(new Report(), Status::STATE_NOT_STARTED);
 
-        $this->assertNull($route);
+        self::assertNull($route);
     }
 
     public function testReturnsSummaryRouteIfSectionIsComplete()
     {
         $route = $this->sut->resolve(new Report(), Status::STATE_DONE);
 
-        $this->assertEquals(ProfCostsEstimateSubSectionRouteResolver::SUMMARY_ROUTE, $route);
+        self::assertEquals(ProfCostsEstimateSubSectionRouteResolver::SUMMARY_ROUTE, $route);
     }
 
     public function testReturnsBreakdownRouteIfSectionIsIncompleteAndBreakdownCostsNotEntered()
@@ -39,15 +39,16 @@ class ProfCostsEstimateSubSectionRouteResolverTest extends TestCase
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsEstimateSubSectionRouteResolver::BREAKDOWN_ROUTE, $route);
+        self::assertEquals(ProfCostsEstimateSubSectionRouteResolver::BREAKDOWN_ROUTE, $route);
     }
 
     public function testReturnsMoreInfoRouteIfSectionIsIncompleteAndBreakdownCostsEnteredAndMoreInfoNotEntered()
     {
-        $report = new Report()->setProfDeputyEstimateCosts(['foo' => 'bar']);
+        $cost = new ProfDeputyEstimateCost('foo', '1', 'yes', 'yes');
+        $report = new Report()->setProfDeputyEstimateCosts([$cost]);
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsEstimateSubSectionRouteResolver::MORE_INFO_ROUTE, $route);
+        self::assertEquals(ProfCostsEstimateSubSectionRouteResolver::MORE_INFO_ROUTE, $route);
     }
 }
