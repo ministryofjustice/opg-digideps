@@ -11,19 +11,14 @@ use OPG\Digideps\Frontend\Validator\Constraints\StartEndDateComparableInterface;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @AppAssert\EndDateNotGreaterThanFifteenMonths(groups={"start-end-dates"})
- *
- * @AppAssert\EndDateNotBeforeStartDate(groups={"start-end-dates"})
- *
- * @AppAssert\YearMustBeFourDigitsAndValid(groups={"start-end-dates"})
- *
- * @AppAssert\ProfDeputyCostsEstimate\CostBreakdownNotGreaterThanTotal(groups={"prof-deputy-estimate-costs"})
- */
 #[Assert\Callback(callback: 'debtsValid', groups: ['debts'])]
 #[Assert\Callback(callback: 'feesValid', groups: ['fees'])]
 #[Assert\Callback(callback: 'profCostsInterimAtLeastOne', groups: ['prof-deputy-interim-costs'])]
 #[Assert\Callback(callback: 'unsubmittedSectionAtLeastOnce', groups: ['unsubmitted_sections'])]
+#[AppAssert\EndDateNotGreaterThanFifteenMonths(groups: ['start-end-dates'])]
+#[AppAssert\EndDateNotBeforeStartDate(groups: ['start-end-dates'])]
+#[AppAssert\YearMustBeFourDigitsAndValid(groups: ['start-end-dates'])]
+#[AppAssert\ProfDeputyCostsEstimate\CostBreakdownNotGreaterThanTotal(groups: ['prof-deputy-estimate-costs'])]
 class Report implements StartEndDateComparableInterface
 {
     use ReportTraits\ReportAssetTrait;
