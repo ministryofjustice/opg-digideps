@@ -259,13 +259,13 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             2 => ['error', 'Failed to post to Slack during CSV upload check: Slack returned error code "500"'],
         ];
 
-        $expectedNumInvocations = self::exactly(count($expectations));
-        $this->logger->expects($expectedNumInvocations)
+        $invocationMatcher = self::exactly(count($expectations));
+        $this->logger->expects($invocationMatcher)
             ->method('log')
-            ->willReturnCallback(function (string $level, string $message) use ($expectedNumInvocations, $expectations): void {
-                $callNum = $expectedNumInvocations->getInvocationCount();
-                self::assertEquals($level, $expectations[$callNum][0]);
-                self::assertEquals($message, $expectations[$callNum][1]);
+            ->willReturnCallback(function (string $level, string $message) use ($invocationMatcher, $expectations): void {
+                $invocation = $invocationMatcher->getInvocationCount();
+                self::assertEquals($level, $expectations[$invocation][0]);
+                self::assertEquals($message, $expectations[$invocation][1]);
             });
 
         $result = $this->commandTester->execute([]);
