@@ -2,16 +2,14 @@
 
 namespace OPG\Digideps\Frontend\Entity\Report;
 
-use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
-use OPG\Digideps\Frontend\Validator\Constraints\StartEndDateComparableInterface;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Validator\Constraints\EndDateNotBeforeStartDate;
+use OPG\Digideps\Frontend\Validator\Constraints\EndDateNotGreaterThanFifteenMonths;
+use OPG\Digideps\Frontend\Validator\Constraints\StartEndDateComparableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @AppAssert\EndDateNotBeforeStartDate(groups={"prof-deputy-prev-costs"})
- *
- * @AppAssert\EndDateNotGreaterThanFifteenMonths(groups={"prof-deputy-prev-costs"})
- */
+#[EndDateNotBeforeStartDate(groups: ['prof-deputy-prev-costs'])]
+#[EndDateNotGreaterThanFifteenMonths(groups: ['prof-deputy-prev-costs'])]
 class ProfDeputyPreviousCost implements StartEndDateComparableInterface
 {
     /**
