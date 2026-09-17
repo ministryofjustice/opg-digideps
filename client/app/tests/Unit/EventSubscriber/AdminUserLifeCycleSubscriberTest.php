@@ -12,46 +12,33 @@ use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class AdminUserLifeCycleSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @var UserHelpers */
-    private $userHelpers;
-
-    /** @var ObjectProphecy */
-    private $dateTimeProvider;
-
-    /** @var ObjectProphecy */
-    private $logger;
-
-    /** @var ObjectProphecy */
-    private $mailer;
-
-    /** @var AdminUserLifeCycleSubscriber */
-    private $sut;
+    private UserHelpers $userHelpers;
+    private DateTimeProvider&MockObject $dateTimeProvider;
+    private LoggerInterface&MockObject$logger;
+    private Mailer&MockObject $mailer;
+    private AdminUserLifeCycleSubscriber $sut;
 
     public function setUp(): void
     {
         $this->userHelpers = new UserHelpers();
-        $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
-        $this->logger = self::prophesize(LoggerInterface::class);
-        $this->mailer = self::prophesize(Mailer::class);
+        $this->dateTimeProvider = self::createMock(DateTimeProvider::class);
+        $this->logger = self::createMock(LoggerInterface::class);
+        $this->mailer = self::createMock(Mailer::class);
 
-        $this->sut = (new AdminUserLifeCycleSubscriber(
-            $this->mailer->reveal(),
-            $this->logger->reveal(),
-            $this->dateTimeProvider->reveal()
-        ));
+        $this->sut = new AdminUserLifeCycleSubscriber(
+            $this->mailer,
+            $this->logger,
+            $this->dateTimeProvider
+        );
     }
 
-    /** @test */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals([
             AdminUserCreatedEvent::NAME => 'sendEmail',
@@ -60,19 +47,19 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
         ], AdminUserLifeCycleSubscriber::getSubscribedEvents());
     }
 
-    /** @test */
-    public function sendEmail()
+    public function testSendEmail(): void
     {
         $createdUser = $this->userHelpers->createUser();
         $userCreatedEvent = new AdminUserCreatedEvent($createdUser);
 
-        $this->mailer->sendActivationEmail($createdUser)->shouldBeCalled();
+        $this->mailer->expects(self::once())
+            ->method('sendActivationEmail')
+            ->with($createdUser);
 
         $this->sut->sendEmail($userCreatedEvent);
     }
 
-    /** @test */
-    public function logAdminManagerCreatedEvent()
+    public function testLogAdminManagerCreatedEvent(): void
     {
         $now = new \DateTime('now');
 
@@ -93,16 +80,20 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
-        $this->logger->notice('', $expectedEvent)->shouldBeCalled();
+        $this->dateTimeProvider->expects(self::once())
+            ->method('getDateTime')
+            ->willReturn($now);
+
+        $this->logger->expects(self::once())
+            ->method('notice')
+            ->with('', $expectedEvent);
 
         $adminManagerCreatedEvent = new AdminManagerCreatedEvent($trigger, $currentUser, $createdAdminManager);
 
         $this->sut->logAdminManagerCreatedEvent($adminManagerCreatedEvent);
     }
 
-    /** @test */
-    public function logAdminManagerDeletedEvent()
+    public function testLogAdminManagerDeletedEvent(): void
     {
         $now = new \DateTime('now');
 
@@ -123,8 +114,13 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($now);
-        $this->logger->notice('', $expectedEvent)->shouldBeCalled();
+        $this->dateTimeProvider->expects(self::once())
+            ->method('getDateTime')
+            ->willReturn($now);
+
+        $this->logger->expects(self::once())
+            ->method('notice')
+            ->with('', $expectedEvent);
 
         $adminManagerDeletedEvent = new AdminManagerDeletedEvent($trigger, $currentUser, $deletedAdminManager);
 
