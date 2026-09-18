@@ -262,11 +262,11 @@ class ReportController extends AbstractController
     {
         $report = $this->reportApi->getReport($id, array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
 
-if ($report->getEndDate() === null) {
-    throw $this->createNotFoundException();
-}
+        if ($report->getEndDate() === null) {
+            throw $this->createNotFoundException();
+        }
 
-try {
+        try {
             $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
 
             if ($pdfBinary === false) {
