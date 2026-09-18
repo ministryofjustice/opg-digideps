@@ -34,14 +34,16 @@ class S3StorageTest extends TestCase
         $key = 'storagetest-upload-download-delete' . microtime(true);
 
         $awsClient = $this->createAwsMock();
-        $awsClient->expects($this->once())->method('putObject')
+        $awsClient->expects(self::once())
+            ->method('putObject')
             ->with(new IsType(IsType::TYPE_ARRAY))
             ->willReturn($this->generateAwsResult(200));
 
         $awsClient->method('waitUntil')->willReturn($awsClient);
         $awsClient->method('doesObjectExistV2')->willReturn(true);
 
-        $awsClient->expects($this->once())->method('getObjectTagging')
+        $awsClient->expects(self::once())
+            ->method('getObjectTagging')
             ->with(new IsType(IsType::TYPE_ARRAY))
             ->willReturn(
                 [
@@ -55,35 +57,37 @@ class S3StorageTest extends TestCase
                 ]
             );
 
-        $awsClient->expects($this->once())->method('deleteObject')
-            ->willReturn($this->generateAwsResult(204));
+        $awsClient->expects(self::once())->method('deleteObject')->willReturn($this->generateAwsResult(204));
 
         // Initial call to getObject returns fileContent
         $awsClient->method('getObject')
             ->with(new IsType(IsType::TYPE_ARRAY))
             ->willReturn($this->generateAwsResult(200, [], $this->createMockStream($this->fileContent)));
 
-        $mockLogger = $this->createMock(LoggerInterface::class);
-        $mockLogger->expects($this->atLeastOnce())->method('log');
+        $mockLogger = self::createMock(LoggerInterface::class);
+        $mockLogger->expects(self::atLeastOnce())->method('log');
 
         $storage1 = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
         // store
         $ret = $storage1->store($key, $this->fileContent);
-        $this->assertEquals(200, $ret->toArray()['@metadata']['statusCode']);
+        self::assertEquals(200, $ret->toArray()['@metadata']['statusCode']);
 
         // retrieve
-        $this->assertEquals($this->fileContent, $storage1->retrieve($key));
+        self::assertEquals($this->fileContent, $storage1->retrieve($key));
 
         // delete
         $ret = $storage1->delete($key);
-        $this->assertEquals(204, $ret->toArray()['@metadata']['statusCode']);
+        self::assertEquals(204, $ret->toArray()['@metadata']['statusCode']);
 
-        $awsClient->method('getObject')->with(new IsType(IsType::TYPE_ARRAY))->willThrowException(new FileNotFoundException());
+        $awsClient->method('getObject')
+            ->with(new IsType(IsType::TYPE_ARRAY))
+            ->willThrowException(new FileNotFoundException());
+
         $storage2 = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
         // try retrieve after deletion (Exception expected)
-        $this->expectException(FileNotFoundException::class);
+        self::expectException(FileNotFoundException::class);
         $storage2->retrieve($key);
     }
 
@@ -102,21 +106,23 @@ class S3StorageTest extends TestCase
         $awsClient = $this->createAwsMock();
 
         $awsClient->method('putObject')->willReturn($this->generateAwsResult(200));
-        $awsClient->method('getObject')->with(
-            new IsType(IsType::TYPE_ARRAY)
-        )->willReturn($this->generateAwsResult(200, [], $this->createMockStream(file_get_contents(__DIR__ . '/cat.jpg'))));
+        $awsClient->method('getObject')
+            ->with(new IsType(IsType::TYPE_ARRAY))
+            ->willReturn(
+                $this->generateAwsResult(200, [], $this->createMockStream(file_get_contents(__DIR__ . '/cat.jpg')))
+            );
 
         $awsClient->method('waitUntil')->willReturn($awsClient);
         $awsClient->method('doesObjectExistV2')->willReturn(true);
 
-        $object = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
 
         // create timestamped file and key to undo effects of potential previous executions
         $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
         $fileContent = file_get_contents(__DIR__ . '/cat.jpg');
 
-        $object->store($key, $fileContent);
-        $this->assertEquals($fileContent, $object->retrieve($key));
+        $sut->store($key, $fileContent);
+        self::assertEquals($fileContent, $sut->retrieve($key));
     }
 
     public function testFailedUploadBinaryContent(): void
@@ -132,7 +138,7 @@ class S3StorageTest extends TestCase
         $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
         $fileContent = file_get_contents(__DIR__ . '/cat.jpg');
 
-        $mockLogger = $this->createMock(LoggerInterface::class);
+        $mockLogger = self::createMock(LoggerInterface::class);
         $mockLogger->method('log')->with(
             'error',
             'Failed to upload file to S3. Filename: ' . $key,
@@ -141,10 +147,10 @@ class S3StorageTest extends TestCase
             ]]
         );
 
-        $object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
-        $this->expectException(FileUploadFailedException::class);
-        $object->store($key, $fileContent);
+        self::expectException(FileUploadFailedException::class);
+        $sut->store($key, $fileContent);
     }
 
     public function testRemoveFromS3NoErrors(): void
@@ -153,45 +159,49 @@ class S3StorageTest extends TestCase
 
         $awsClient = $this->createAwsMock();
 
-        $awsClient->method('listObjectVersions')->with(
-            [
-                'Bucket' => 'unit_test_bucket',
-                'Prefix' => $key,
-            ]
-        )->willReturn(
-            $this->generateAwsResult(
-                200,
+        $awsClient->method('listObjectVersions')
+            ->with(
                 [
-                    'Versions' => [
-                        0 => [
-                            'Key' => $key,
-                            'VersionId' => 'testVersionId_1',
+                    'Bucket' => 'unit_test_bucket',
+                    'Prefix' => $key,
+                ]
+            )
+            ->willReturn(
+                $this->generateAwsResult(
+                    200,
+                    [
+                        'Versions' => [
+                            0 => [
+                                'Key' => $key,
+                                'VersionId' => 'testVersionId_1',
+                            ],
+                            1 => [
+                                'Key' => $key,
+                                'VersionId' => 'testVersionId_2',
+                            ],
                         ],
-                        1 => [
-                            'Key' => $key,
-                            'VersionId' => 'testVersionId_2',
+                    ]
+                )
+            );
+
+        $awsClient->method('deleteObjects')
+            ->with(
+                [
+                    'Bucket' => 'unit_test_bucket',
+                    'Delete' => [
+                        'Objects' => [
+                            ['Key' => $key, 'VersionId' => 'testVersionId_1'],
+                            ['Key' => $key, 'VersionId' => 'testVersionId_2'],
                         ],
                     ],
                 ]
             )
-        );
+            ->willReturn($this->generateAwsResult(200));
 
-        $awsClient->method('deleteObjects')->with(
-            [
-                'Bucket' => 'unit_test_bucket',
-                'Delete' => [
-                    'Objects' => [
-                        ['Key' => $key, 'VersionId' => 'testVersionId_1'],
-                        ['Key' => $key, 'VersionId' => 'testVersionId_2'],
-                    ],
-                ],
-            ]
-        )->willReturn($this->generateAwsResult(200));
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
 
-        $object = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
-
-        $result = $object->removeFromS3($key);
-        $this->assertEquals(
+        $result = $sut->removeFromS3($key);
+        self::assertEquals(
             [
                 ['Key' => $key, 'VersionId' => 'testVersionId_1'],
                 ['Key' => $key, 'VersionId' => 'testVersionId_2'],
@@ -206,58 +216,62 @@ class S3StorageTest extends TestCase
 
         $awsClient = $this->createAwsMock();
 
-        $awsClient->method('listObjectVersions')->with(
-            [
-                'Bucket' => 'unit_test_bucket',
-                'Prefix' => $key,
-            ]
-        )->willReturn(
-            $this->generateAwsResult(
-                200,
+        $awsClient->method('listObjectVersions')
+            ->with(
                 [
-                    'Versions' => [
-                        0 => [
-                            'Key' => $key,
-                            'VersionId' => 'testVersionId_1',
+                    'Bucket' => 'unit_test_bucket',
+                    'Prefix' => $key,
+                ]
+            )
+            ->willReturn(
+                $this->generateAwsResult(
+                    200,
+                    [
+                        'Versions' => [
+                            0 => [
+                                'Key' => $key,
+                                'VersionId' => 'testVersionId_1',
+                            ],
+                            1 => [
+                                'Key' => $key,
+                                'VersionId' => 'testVersionId_2',
+                            ],
                         ],
-                        1 => [
-                            'Key' => $key,
-                            'VersionId' => 'testVersionId_2',
+                    ]
+                )
+            );
+
+        $awsClient->method('deleteObjects')
+            ->with(
+                [
+                    'Bucket' => 'unit_test_bucket',
+                    'Delete' => [
+                        'Objects' => [
+                            ['Key' => $key, 'VersionId' => 'testVersionId_1'],
+                            ['Key' => $key, 'VersionId' => 'testVersionId_2'],
                         ],
                     ],
                 ]
             )
-        );
+            ->willReturn(
+                $this->generateAwsResult(
+                    200,
+                    [
+                        'Errors' => [
+                            ['Key' => $key, 'VersionId' => 'testVersionId_1', 'Code' => 'AccessDenied', 'Message' => 'Access Denied.'],
+                            ['Key' => $key, 'VersionId' => 'testVersionId_2', 'Code' => 'AccessDenied', 'Message' => 'Access Denied.'],
+                        ],
+                    ]
+                )
+            );
 
-        $awsClient->method('deleteObjects')->with(
-            [
-                'Bucket' => 'unit_test_bucket',
-                'Delete' => [
-                    'Objects' => [
-                        ['Key' => $key, 'VersionId' => 'testVersionId_1'],
-                        ['Key' => $key, 'VersionId' => 'testVersionId_2'],
-                    ],
-                ],
-            ]
-        )->willReturn(
-            $this->generateAwsResult(
-                200,
-                [
-                    'Errors' => [
-                        ['Key' => $key, 'VersionId' => 'testVersionId_1', 'Code' => 'AccessDenied', 'Message' => 'Access Denied.'],
-                        ['Key' => $key, 'VersionId' => 'testVersionId_2', 'Code' => 'AccessDenied', 'Message' => 'Access Denied.'],
-                    ],
-                ]
-            )
-        );
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
 
-        $object = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
+        self::expectException('RuntimeException');
+        self::expectExceptionMessage('Could not remove file');
 
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Could not remove file');
-
-        $result = $object->removeFromS3($key);
-        $this->assertEquals(
+        $result = $sut->removeFromS3($key);
+        self::assertEquals(
             [
                 ['Key' => $key, 'VersionId' => 'testVersionId_1'],
                 ['Key' => $key, 'VersionId' => 'testVersionId_2'],
@@ -277,18 +291,16 @@ class S3StorageTest extends TestCase
             'Prefix' => $key,
         ])->willReturn($this->generateAwsResult(404));
 
-        $awsClient->expects($this->never())->method('deleteObjects');
+        $awsClient->expects(self::never())->method('deleteObjects');
 
-        $object = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
 
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Could not remove file: No results returned');
+        self::expectException('RuntimeException');
+        self::expectExceptionMessage('Could not remove file: No results returned');
 
-        $result = $object->removeFromS3($key);
-        $this->assertEquals(
-            '',
-            $result['objectsToDelete']
-        );
+        $result = $sut->removeFromS3($key);
+
+        self::assertEquals('', $result['objectsToDelete']);
     }
 
     public function testRemoveFromS3WithNoKey(): void
@@ -297,15 +309,16 @@ class S3StorageTest extends TestCase
 
         $awsClient = $this->createAwsMock();
 
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Could not remove file');
+        self::expectException('RuntimeException');
+        self::expectExceptionMessage('Could not remove file');
 
-        $awsClient->expects($this->never())->method('deleteObjects');
+        $awsClient->expects(self::never())->method('deleteObjects');
 
-        $object = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
 
-        $result = $object->removeFromS3($key);
-        $this->assertEquals(
+        $result = $sut->removeFromS3($key);
+
+        self::assertEquals(
             '',
             $result['objectsToDelete']
         );
@@ -315,7 +328,7 @@ class S3StorageTest extends TestCase
     {
         $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
 
-        $awsClient = $this->createAwsMock();
+        $awsClient = self::createAwsMock();
 
         $awsClient->method('listObjectVersions')->with([
             'Bucket' => 'unit_test_bucket',
@@ -324,15 +337,15 @@ class S3StorageTest extends TestCase
             new AwsException('AWS is down', new Command('listObjectVersions'), ['code' => 500])
         );
 
-        $awsClient->expects($this->never())->method('deleteObjects');
+        $awsClient->expects(self::never())->method('deleteObjects');
 
-        $object = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
 
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('Could not remove file');
+        self::expectException('RuntimeException');
+        self::expectExceptionMessage('Could not remove file');
 
-        $result = $object->removeFromS3($key);
-        $this->assertEquals(
+        $result = $sut->removeFromS3($key);
+        self::assertEquals(
             '',
             $result['objectsToDelete']
         );
@@ -343,20 +356,23 @@ class S3StorageTest extends TestCase
         $key = 'nonExistentFile.png';
 
         $awsClient = $this->createAwsMock();
+
         $s3Exception = new S3Exception(
             'The specified key does not exist.',
             new Command('getObject'),
             ['code' => 'NoSuchKey']
         );
 
-        $awsClient->method('getObject')->with(['Bucket' => 'unit_test_bucket', 'Key' => $key])->willThrowException($s3Exception);
+        $awsClient->method('getObject')
+            ->with(['Bucket' => 'unit_test_bucket', 'Key' => $key])
+            ->willThrowException($s3Exception);
 
-        $object = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
 
-        $this->expectException(FileNotFoundException::class);
-        $this->expectExceptionMessage("Cannot find file with reference {$key}");
+        self::expectException(FileNotFoundException::class);
+        self::expectExceptionMessage("Cannot find file with reference {$key}");
 
-        $object->retrieve($key);
+        $sut->retrieve($key);
     }
 
     public function testRetrieveFromS3WhenAccessDenied(): void
@@ -372,12 +388,12 @@ class S3StorageTest extends TestCase
 
         $awsClient->method('getObject')->with(['Bucket' => 'unit_test_bucket', 'Key' => $key])->willThrowException($s3Exception);
 
-        $object = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', new NullLogger());
 
-        $this->expectException(FileNotFoundException::class);
-        $this->expectExceptionMessage("Cannot find file with reference {$key}");
+        self::expectException(FileNotFoundException::class);
+        self::expectExceptionMessage("Cannot find file with reference {$key}");
 
-        $object->retrieve($key);
+        $sut->retrieve($key);
     }
 
     public function testRetrieveFromS3NotMissingFileError(): void
@@ -385,6 +401,7 @@ class S3StorageTest extends TestCase
         $key = 'nonExistentFile.png';
 
         $awsClient = $this->createAwsMock();
+
         $s3Exception = new S3Exception(
             'Some other error message',
             new Command('getObject'),
@@ -393,14 +410,14 @@ class S3StorageTest extends TestCase
 
         $awsClient->method('getObject')->with(['Bucket' => 'unit_test_bucket', 'Key' => $key])->willThrowException($s3Exception);
 
-        $logger = $this->createStub(LoggerInterface::class);
+        $logger = self::createStub(LoggerInterface::class);
 
-        $object = new S3Storage($awsClient, 'unit_test_bucket', $logger);
+        $sut = new S3Storage($awsClient, 'unit_test_bucket', $logger);
 
-        $this->expectException(S3Exception::class);
-        $this->expectExceptionMessage('Some other error message');
+        self::expectException(S3Exception::class);
+        self::expectExceptionMessage('Some other error message');
 
-        $object->retrieve($key);
+        $sut->retrieve($key);
     }
 
     private function createMockStream(string $content): Stream
