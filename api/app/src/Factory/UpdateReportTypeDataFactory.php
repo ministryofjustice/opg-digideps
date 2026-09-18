@@ -1,0 +1,104 @@
+<?php
+
+declare(strict_types=1);
+
+namespace OPG\Digideps\Backend\Factory;
+
+use OPG\Digideps\Common\Report\ReportType;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Backend\Service\ReportTypeService;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
+
+readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
+{
+    public function __construct(
+        public EntityManagerInterface $entityManager,
+        public ReportRepository $reportRepository,
+        public LoggerInterface $logger,
+    ) {
+    }
+
+    public function getName(): string
+    {
+        return 'ReportTypeUpdate';
+    }
+
+    /**
+     * @return \Generator<int>
+     */
+    private function getAllReportIdsOnActiveCourtOrders(): \Generator
+    {
+        $result = $this->entityManager->getConnection()->executeQuery(<<<SQL
+            SELECT DISTINCT r.id FROM report r
+            INNER JOIN court_order co
+                ON co.id = r.pfa_court_order_id AND co.order_type = 'pfa'
+                OR co.id = r.hw_court_order_id AND co.order_type = 'hw'
+            WHERE co.status = 'ACTIVE'
+        SQL);
+
+        foreach ($result->iterateColumn() as $reportId) {
+            if (is_int($reportId)) {
+                yield $reportId;
+            }
+        }
+    }
+
+    public function run(bool $dryRun): DataFactoryResult
+    {
+        $indeterminate = [];
+        $count = 0;
+
+        /** @var ReportRepository $repository */
+        $repository = $this->entityManager->getRepository(Report::class);
+
+        foreach ($this->getAllReportIdsOnActiveCourtOrders() as $reportId) {
+            $this->entityManager->clear();
+
+            $report = $repository->find($reportId) ?? throw new \LogicException("Report with id {$reportId} is proven to exist.");
+
+            $courtOrders = $report->getActiveCourtOrders();
+            $possibleReportType = ReportTypeService::determineReportType($courtOrders);
+            $this->entityManager->clear();
+            $repository->clear();
+            $report = $repository->find($reportId) ?? throw new \LogicException("Report with id {$reportId} is proven to exist.");
+
+            $currentReportType = ReportType::tryFrom($report->getType());
+
+            if ((string) $currentReportType === (string) $possibleReportType) {
+                continue;
+            }
+
+            // ignore if we couldn't figure out a valid report type
+            if ($possibleReportType === null) {
+                $indeterminate[] = $reportId;
+                continue;
+            }
+
+            if (!$dryRun) {
+                $report->setType("{$possibleReportType}");
+                $this->entityManager->persist($report);
+                $this->entityManager->flush();
+                $count++;
+            } else {
+                $this->logger->info(
+                    "DRYRUN[{$this->getName()}]: Report with ID: $reportId; report type change from $currentReportType to $possibleReportType"
+                );
+            }
+        }
+
+        $messages = ['success' => ["Updated $count report types"]];
+
+        // don't treat indeterminate or dangerous report type transitions as errors which will stop the ingest
+        $numIndeterminate = count($indeterminate);
+        if ($numIndeterminate > 0) {
+            $messages['indeterminate'] = ["Unable to determine report type for $numIndeterminate report IDs: " . implode(', ', $indeterminate)];
+        }
+
+        return new DataFactoryResult(
+            messages: $messages,
+            errorMessages: ['errors' => []]
+        );
+    }
+}

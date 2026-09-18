@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder;
 
 use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Repository\CourtOrderRepository;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportReassembler;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 
 final readonly class CourtOrderRelationshipIngester
 {
+    private CourtOrderRelationshipChanges $changes;
+
     public function __construct(private CourtOrderRelationshipReader $relationshipReader, private ReportReassembler $reportReassembler, private EntityManagerInterface $entityManager)
     {
+        $this->changes = new CourtOrderRelationshipChanges();
     }
 
     /**
@@ -34,22 +37,15 @@ final readonly class CourtOrderRelationshipIngester
             ->where("co.status <> 'ACTIVE'")->getDQL())->execute();
     }
 
-    /**
-     * @param EntityRepository<CourtOrder> $repository
-     */
-    private function processRelationship(CourtOrderRelationship $relationship, EntityRepository $repository): ?CourtOrderRelationshipChange
+    private function processRelationship(CourtOrderRelationship $relationship, CourtOrderRepository $repository): void
     {
         $current = $repository->find($relationship->courtOrderId);
         if ($current !== null && ($current->getOrderKind() !== $relationship->kind || $current->getSibling()?->getId() !== $relationship->siblingId)) {
-            return $this->updateCourtOrder($current, $relationship, $repository);
+            $this->updateCourtOrder($current, $relationship, $repository);
         }
-        return null;
     }
 
-    /**
-     * @param EntityRepository<CourtOrder> $repository
-     */
-    private function updateCourtOrder(CourtOrder $current, CourtOrderRelationship $relationship, EntityRepository $repository): CourtOrderRelationshipChange
+    private function updateCourtOrder(CourtOrder $current, CourtOrderRelationship $relationship, CourtOrderRepository $repository): void
     {
         $oldSiblingId = $current->getSibling()?->getId();
         $oldKind = $current->getOrderKind();
@@ -57,7 +53,13 @@ final readonly class CourtOrderRelationshipIngester
         $current->setOrderKind($relationship->kind);
         $this->entityManager->persist($current);
         $this->entityManager->flush();
-        return new CourtOrderRelationshipChange($current, $oldKind, $oldSiblingId);
+        $this->changes->add(new CourtOrderRelationshipChange(
+            $current->getId(),
+            $current->getOrderKind(),
+            $current->getSibling()?->getId(),
+            $oldKind,
+            $oldSiblingId
+        ));
     }
 
     /**
@@ -65,24 +67,18 @@ final readonly class CourtOrderRelationshipIngester
      */
     private function updateCourtOrders(): \Generator
     {
+        /** @var CourtOrderRepository $repository */
         $repository = $this->entityManager->getRepository(CourtOrder::class);
 
         foreach ($this->groupByClientId($this->relationshipReader->read()) as $relationships) {
-            $changes = [];
             foreach ($relationships as $relationship) {
-                $change = $this->processRelationship($relationship, $repository);
-                if ($change !== null) {
-                    $changes[] = $change;
-                }
+                $this->processRelationship($relationship, $repository);
             }
-            $this->entityManager->flush();
-            $results = $this->updateReports($changes);
             $this->entityManager->flush();
             $this->entityManager->clear();
-
-            foreach ($results as $result) {
-                yield $result;
-            }
+        }
+        foreach ($this->changes->drain() as $courtOrderRelationshipChange) {
+            yield $this->reportReassembler->reassembleReport($courtOrderRelationshipChange);
         }
     }
 
@@ -105,21 +101,5 @@ final readonly class CourtOrderRelationshipIngester
             }
         }
         yield $buffer;
-    }
-
-    /**
-     * @param array<CourtOrderRelationshipChange> $courtOrderRelationshipChanges
-     * @return array<CourtOrderRelationshipResult>
-     */
-    private function updateReports(array $courtOrderRelationshipChanges): array
-    {
-        $courtOrderRelationshipResults = [];
-
-        foreach ($courtOrderRelationshipChanges as $courtOrderRelationshipChange) {
-            $courtOrderRelationshipResults[] = $this->reportReassembler->reassembleReport($courtOrderRelationshipChange);
-        }
-        $this->entityManager->flush();
-
-        return $courtOrderRelationshipResults;
     }
 }
