@@ -104,23 +104,13 @@ class TransactionsCsvGenerator
         return '';
     }
 
-    /**
-     * @param Gift|Expense|MoneyTransaction $transaction
-     *
-     * @return string
-     */
-    private function generateBankName($transaction)
+    private function generateBankName(Gift|Expense|MoneyTransaction $transaction): string
     {
-        return !empty($transaction->getBankAccount()) ? $transaction->getBankAccount()->getBank() : '';
+        return $transaction->getBankAccount()?->getBank() ?? '';
     }
 
-    /**
-     * @param Gift|Expense|MoneyTransaction $transaction
-     *
-     * @return string
-     */
-    private function generateBankAccountDetails($transaction)
+    private function generateBankAccountDetails(Gift|Expense|MoneyTransaction $transaction): string
     {
-        return !empty($transaction->getBankAccount()) ? $transaction->getBankAccount()->getDisplayName() : '';
+        return $transaction->getBankAccount()?->getDisplayName() ?? '';
     }
 }

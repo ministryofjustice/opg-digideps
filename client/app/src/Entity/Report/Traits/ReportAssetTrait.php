@@ -1,26 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Report\Asset;
 use OPG\Digideps\Frontend\Entity\Report\AssetProperty;
-use OPG\Digideps\Frontend\Entity\Report\Report;
-use JMS\Serializer\Annotation as JMS;
 
 trait ReportAssetTrait
 {
     /**
      * Titles matching this will be included in the count for "Cash" in summary page
      * Note: it relies on the translation (see report-assets.en.yml form.choices) for historical reasons
+     *
+     * @var string[]
      */
     #[JMS\Exclude]
-    private static $cashAssetTitles = [
+    private static array $cashAssetTitles = [
         'Unit trusts',
         'National Savings certificates',
         'Stocks and shares',
         'Premium Bonds',
     ];
-
 
     /**
      * @var Asset[]
@@ -32,7 +34,7 @@ trait ReportAssetTrait
      * @var float
      */
     #[JMS\Type('double')]
-    private $assetsTotalValue;
+    private float $assetsTotalValue = 0.0;
 
     /**
      * @param Asset[] $assets
@@ -53,21 +55,19 @@ trait ReportAssetTrait
     }
 
     /**
-     * Get assets total value.
-     *
-     * @return float
+     * Get assets total value
      */
-    public function getAssetsTotalValue()
+    public function getAssetsTotalValue(): float
     {
         return $this->assetsTotalValue;
     }
 
     /**
-     * @param string $type property|cash|other
+     * @param string $type 'property'|'cash'|'other'
      */
-    public function getAssetsTotalsSummaryPage($type): float|int
+    public function getAssetsTotalsSummaryPage(string $type): float
     {
-        $ret = 0;
+        $ret = 0.0;
 
         foreach ($this->assets as $asset) {
             $isProperty = $asset instanceof AssetProperty;
@@ -79,7 +79,7 @@ trait ReportAssetTrait
                 || ($type === 'cash' && $isCash)
                 || ($type === 'other' && $isOther)
             ) {
-                $ret += $asset->getValueTotal();
+                $ret += $asset->getValueTotal() ?? 0.0;
             }
         }
 
