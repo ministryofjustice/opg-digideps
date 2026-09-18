@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class StringUtilsTest extends TestCase
 {
-    public static function secondsToHoursMinutesProvider()
+    public static function secondsToHoursMinutesProvider(): array
     {
         return [
             [3900, '1 hour and 5 minutes'],
@@ -26,16 +26,14 @@ class StringUtilsTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @dataProvider secondsToHoursMinutesProvider
      */
-    public function secondsToHoursMinutes($input, $expected)
+    public function secondsToHoursMinutes($input, $expected): void
     {
-        $this->assertEquals($expected, StringUtils::secondsToHoursMinutes($input));
+        self::assertEquals($expected, StringUtils::secondsToHoursMinutes($input));
     }
 
-    public static function implodeWithDifferentLastProvider()
+    public static function implodeWithDifferentLastProvider(): array
     {
         return [
             [[''], ', ', ' and ', ''],
@@ -47,20 +45,18 @@ class StringUtilsTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @dataProvider implodeWithDifferentLastProvider
      */
-    public function implodeWithDifferentLast($strings, $joiner, $lastJoiner, $expected)
+    public function testImplodeWithDifferentLast(array $strings, string $joiner, string $lastJoiner, string $expected): void
     {
-        $this->assertEquals($expected, StringUtils::implodeWithDifferentLast($strings, $joiner, $lastJoiner));
+        self::assertEquals($expected, StringUtils::implodeWithDifferentLast($strings, $joiner, $lastJoiner));
     }
 
-    public function testCleanText()
+    public function testCleanText(): void
     {
         $input = "  Some text\r\n\r\n\twith \rsome \tirregular   spacing\n\n\nand\n\n\nnewlines ";
         $expected = "Some text\n with \nsome irregular spacing\nand\nnewlines";
 
-        $this->assertEquals($expected, StringUtils::cleanText($input));
+        self::assertEquals($expected, StringUtils::cleanText($input));
     }
 }
