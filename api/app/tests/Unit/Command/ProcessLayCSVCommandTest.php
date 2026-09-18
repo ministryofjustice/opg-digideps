@@ -67,7 +67,9 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
 
         $app->add($setUp);
 
-        $command = $app->find(ProcessLayCSVCommand::$defaultName);
+        $commandName = ProcessLayCSVCommand::$defaultName;
+        self::assertIsString($commandName);
+        $command = $app->find($commandName);
         $this->commandTester = new CommandTester($command);
     }
 

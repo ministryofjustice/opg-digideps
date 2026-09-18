@@ -197,6 +197,10 @@ class BankAccountController extends AbstractController
         $dependentRecords = $this->restClient->get("/account/$accountId/dependent-records", 'array');
         $bankAccount = $report->getBankAccountById($accountId);
 
+        if ($bankAccount === null) {
+            return $this->redirect($summaryPageUrl);
+        }
+
         // if money transfer are added, always go to summary page with the error displayed
         if ($dependentRecords['moneyTransfers'] > 0) {
             $translatedMessage = $translator->trans('deletePage.transferPresentError', [], 'report-bank-accounts');

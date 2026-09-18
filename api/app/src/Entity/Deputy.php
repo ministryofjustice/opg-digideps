@@ -127,14 +127,14 @@ class Deputy
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['deputy-user'])]
-    #[ORM\OneToOne(inversedBy: 'deputy', targetEntity: User::class)]
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'deputy')]
     #[ORM\JoinColumn(onDelete: "SET NULL")]
     private ?User $user = null;
 
     /**
      * @var Collection<int, CourtOrderDeputy>
      */
-    #[ORM\OneToMany(mappedBy: 'deputy', targetEntity: CourtOrderDeputy::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: CourtOrderDeputy::class, mappedBy: 'deputy', cascade: ['persist', 'remove'])]
     private Collection $courtOrderDeputyRelationships;
 
     public function __construct(

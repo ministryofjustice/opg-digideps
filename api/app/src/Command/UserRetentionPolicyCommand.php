@@ -19,6 +19,7 @@ class UserRetentionPolicyCommand extends Command
 {
     use ControllerTrait;
 
+    /** @var string|null $defaultName */
     public static $defaultName = 'digideps:delete-inactive-users';
 
     private array $inactiveAdminUserIds = [];

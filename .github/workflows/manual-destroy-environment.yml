@@ -7,18 +7,7 @@ on:
         description: "PR environment to destroy"
         required: true
 
-permissions:
-  id-token: write
-  contents: read
-  security-events: none
-  pull-requests: none
-  actions: none
-  checks: none
-  deployments: none
-  issues: none
-  packages: none
-  repository-projects: none
-  statuses: none
+permissions: {}
 
 defaults:
   run:
@@ -27,9 +16,13 @@ defaults:
 jobs:
   cleanup_workspace:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
 
       - id: terraform_version
         name: get terraform version

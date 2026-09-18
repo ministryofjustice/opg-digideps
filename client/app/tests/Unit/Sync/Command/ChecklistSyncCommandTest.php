@@ -31,9 +31,13 @@ class ChecklistSyncCommandTest extends KernelTestCase
         $this->parameterStore = $this->getMockBuilder(ParameterStoreService::class)->disableOriginalConstructor()->getMock();
         $this->reportApi = $this->getMockBuilder(ReportApi::class)->disableOriginalConstructor()->getMock();
 
-        $app->add(new ChecklistSyncCommand($this->syncService, $this->parameterStore, $this->reportApi));
+        $checklistSyncCommand = new ChecklistSyncCommand($this->syncService, $this->parameterStore, $this->reportApi);
+        $app->add($checklistSyncCommand);
 
-        $command = $app->find(ChecklistSyncCommand::getDefaultName());
+        $commandName = $checklistSyncCommand->getName();
+        self::assertIsString($commandName);
+        $command = $app->find($commandName);
+
         $this->commandTester = new CommandTester($command);
     }
 

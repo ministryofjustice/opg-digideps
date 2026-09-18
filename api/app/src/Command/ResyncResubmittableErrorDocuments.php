@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ResyncResubmittableErrorDocuments extends Command
 {
+    /** @var string|null $defaultName*/
     protected static $defaultName = 'digideps:resync-resubmittable-error-documents';
 
     public function __construct(private readonly DocumentRepository $documentRepository)

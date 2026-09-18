@@ -24,7 +24,7 @@ class Contact
     #[JMS\Type('string')]
     #[JMS\Groups(['contact'])]
     #[Assert\NotBlank(message: 'contact.name.notBlank')]
-    #[Assert\Length(min: 2, max: 255, minMessage: 'contact.name.minMessage', maxMessage: 'contact.name.maxMessage')]
+    #[Assert\Length(min: 2, minMessage: 'contact.name.minMessage', max: 255, maxMessage: 'contact.name.maxMessage')]
     private $contactName;
 
     #[JMS\Type('string')]
@@ -55,13 +55,13 @@ class Contact
     #[JMS\Groups(['contact'])]
     #[Assert\Length(min: 6, minMessage: 'contact.explanation.length')]
     #[Assert\NotBlank(message: 'contact.explanation.notBlank')]
-    private ?string $explanation = null;
+    private $explanation;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['contact'])]
     #[Assert\NotBlank(message: 'contact.relationship.notBlank')]
-    #[Assert\Length(min: 2, max: 100, minMessage: 'contact.relationship.minMessage', maxMessage: 'contact.relationship.maxMessage')]
-    private ?string $relationship = null;
+    #[Assert\Length(min: 2, minMessage: 'contact.relationship.minMessage', max: 100, maxMessage: 'contact.relationship.maxMessage')]
+    private $relationship;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['contact'])]
@@ -159,7 +159,7 @@ class Contact
         return $this;
     }
 
-    public function getExplanation(): ?string
+    public function getExplanation()
     {
         return $this->explanation;
     }
@@ -171,7 +171,7 @@ class Contact
         return $this;
     }
 
-    public function getRelationship(): ?string
+    public function getRelationship()
     {
         return $this->relationship;
     }
