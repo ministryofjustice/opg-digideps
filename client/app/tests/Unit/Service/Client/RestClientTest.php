@@ -491,6 +491,7 @@ class RestClientTest extends TestCase
 
         $object->delete($endpointUrl);
 
+        /** @var array<array<string>> $actual */
         $actual = $object->getHistory();
         self::assertCount(1, $actual);
 
