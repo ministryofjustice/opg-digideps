@@ -18,8 +18,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-use function PHPUnit\Framework\isInstanceOf;
-
 class S3FileUploaderTest extends KernelTestCase
 {
     private string $projectDir;
@@ -68,7 +66,7 @@ class S3FileUploaderTest extends KernelTestCase
 
         $this->restClient->expects(self::once())
             ->method('post')
-            ->with('/document/report/1', isInstanceOf(Document::class), ['document']);
+            ->with('/document/report/1', self::isInstanceOf(Document::class), ['document']);
 
         $doc = $this->sut->uploadFileAndPersistDocument($report, $fileContent, $fileName, false);
 

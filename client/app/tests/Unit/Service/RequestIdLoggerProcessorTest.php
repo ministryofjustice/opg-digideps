@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service;
 
-use OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor;
 use Monolog\Level;
 use Monolog\LogRecord;
+use OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
@@ -21,21 +21,21 @@ class RequestIdLoggerProcessorTest extends TestCase
     private LogRecord $record;
     private Container&MockObject $container;
     private RequestStack&MockObject $reqStack;
-    private RequestIdLoggerProcessor $object;
+    private RequestIdLoggerProcessor $sut;
 
     public function setUp(): void
     {
-        $this->container = $this->createMock(Container::class);
-        $this->reqStack = $this->createMock(RequestStack::class);
+        $this->container = self::createMock(Container::class);
+        $this->reqStack = self::createMock(RequestStack::class);
         $this->record = new LogRecord(new \DateTimeImmutable(), '', Level::Emergency, '', ['key1' => 'abc', 'key2' => 2]);
-        $this->object = new RequestIdLoggerProcessor($this->container);
+        $this->sut = new RequestIdLoggerProcessor($this->container);
     }
 
     public function testProcessRecordNoReqStack(): void
     {
         $this->container->method('has')->with('request_stack')->willReturn(false);
         $this->container->method('get')->with('request_stack')->willReturn(null);
-        $this->assertEquals($this->record, $this->object->processRecord($this->record));
+        self::assertEquals($this->record, $this->sut->processRecord($this->record));
     }
 
     public function testProcessRecordHasNoRequest(): void
@@ -44,20 +44,21 @@ class RequestIdLoggerProcessorTest extends TestCase
         $this->container->method('get')->with('request_stack')->willReturn($this->reqStack);
         $this->container->method('has')->with('request_stack')->willReturn(false);
 
-        $this->assertEquals($this->record, $this->object->processRecord($this->record));
+        self::assertEquals($this->record, $this->sut->processRecord($this->record));
     }
 
     public function testProcessRecordHasNoRequestId(): void
     {
         $request = new Request();
+
         // No headers set here
         $this->reqStack->method('getCurrentRequest')->willReturn($request);
         $this->container->method('get')->with('request_stack')->willReturn($this->reqStack);
         $this->container->method('has')->with('request_stack')->willReturn(false);
 
-        $result = $this->object->processRecord($this->record);
+        $result = $this->sut->processRecord($this->record);
 
-        $this->assertEquals($this->record, $result);
+        self::assertSame($this->record, $result);
     }
 
     public function testProcessRecordHasRequestId(): void
@@ -70,9 +71,10 @@ class RequestIdLoggerProcessorTest extends TestCase
         $this->container->method('get')->with('request_stack')->willReturn($this->reqStack);
         $this->container->method('has')->with('request_stack')->willReturn(true);
 
-        $record = $this->object->processRecord($this->record);
-        $this->assertSame($this->record->context, $record->context);
-        $this->assertSame(['aws_request_id' => 'THIS_IS_THE_REQUEST_ID'], $record->extra);
+        $record = $this->sut->processRecord($this->record);
+
+        self::assertSame($this->record->context, $record->context);
+        self::assertSame(['aws_request_id' => 'THIS_IS_THE_REQUEST_ID'], $record->extra);
     }
 
     public function testProcessRecordHasRequestIdAndSessionSafeId(): void
@@ -92,10 +94,12 @@ class RequestIdLoggerProcessorTest extends TestCase
         $this->container->method('get')->with('request_stack')->willReturn($this->reqStack);
         $this->container->method('has')->with('request_stack')->willReturn(true);
 
-        $record = $this->object->processRecord($this->record);
-        $this->assertSame($this->record->context, $record->context);
+        $record = $this->sut->processRecord($this->record);
+
+        self::assertSame($this->record->context, $record->context);
+
         // Expected record with both values added
-        $this->assertSame([
+        self::assertSame([
             'aws_request_id' => 'THIS_IS_THE_REQUEST_ID',
             'session_safe_id' => 'THIS_IS_THE_SESSION_SAFE_ID',
         ], $record->extra);

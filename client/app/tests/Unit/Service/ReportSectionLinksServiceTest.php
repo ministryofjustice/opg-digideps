@@ -17,11 +17,11 @@ class ReportSectionLinksServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $router = $this->createMock(RouterInterface::class);
+        $router = self::createMock(RouterInterface::class);
         $router->method('generate')->willReturnCallback(function ($a, $b) {
             return $a . http_build_query($b);
         });
-        $this->report = $this->createMock(Report::class);
+        $this->report = self::createMock(Report::class);
 
         $this->report->method('getId')->willReturn(1);
 
@@ -57,10 +57,10 @@ class ReportSectionLinksServiceTest extends TestCase
         ]);
 
         $actual = $this->sut->getSectionParams($this->report, 'debts', 1);
-        $this->assertEquals('actions', $actual['section']);
+        self::assertEquals('actions', $actual['section']);
 
         $actual = $this->sut->getSectionParams($this->report, 'documents', +1);
-        $this->assertEquals([], $actual);
+        self::assertEquals([], $actual);
     }
 
     public function testGetSectionParamsPa(): void
@@ -92,7 +92,7 @@ class ReportSectionLinksServiceTest extends TestCase
         ]);
 
         $actual = $this->sut->getSectionParams($this->report, 'paFeeExpense', +1);
-        $this->assertEquals('gifts', $actual['section']);
+        self::assertEquals('gifts', $actual['section']);
     }
 
     public function testGetSectionParamsProf(): void
@@ -124,6 +124,6 @@ class ReportSectionLinksServiceTest extends TestCase
         ]);
 
         $actual = $this->sut->getSectionParams($this->report, 'profDeputyCosts', +1);
-        $this->assertEquals('profDeputyCostsEstimate', $actual['section']);
+        self::assertEquals('profDeputyCostsEstimate', $actual['section']);
     }
 }
