@@ -21,10 +21,9 @@ class MimeTypeAndExtensionCheckerTest extends KernelTestCase
     }
 
     /**
-     * @test
-     * @dataProvider  fileProvider
+     * @dataProvider fileProvider
      */
-    public function check(string $relativePath, string $fileName, bool $expectedResult)
+    public function testCheck(string $relativePath, string $fileName, bool $expectedResult): void
     {
         $filePath = sprintf('%s/%s', $this->projectDir, $relativePath);
         $uploadedFile = new UploadedFile($filePath, $fileName);
@@ -34,7 +33,7 @@ class MimeTypeAndExtensionCheckerTest extends KernelTestCase
         self::assertEquals($expectedResult, $extensionAndMimeTypeMatch);
     }
 
-    public function fileProvider()
+    public static function fileProvider(): array
     {
         return [
             'matching JPEG' => ['tests/Unit/TestData/jpeg-file.jpeg', 'jpeg-file.jpeg', true],

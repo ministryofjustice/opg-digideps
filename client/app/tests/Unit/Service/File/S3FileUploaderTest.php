@@ -14,48 +14,45 @@ use OPG\Digideps\Frontend\Service\File\Storage\S3Storage;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\DocumentHelpers;
 use OPG\Digideps\Frontend\TestHelpers\ReportHelpers;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+use function PHPUnit\Framework\isInstanceOf;
+
 class S3FileUploaderTest extends KernelTestCase
 {
-    use ProphecyTrait;
-
     private string $projectDir;
-    private ObjectProphecy $storage;
-    private ObjectProphecy $restClient;
+    private S3Storage&MockObject $storage;
+    private RestClient&MockObject $restClient;
+    private FileNameManipulation&MockObject $fileNameFixer;
+    private DateTimeProvider&MockObject $dateTimeProvider;
+    private MimeTypeAndExtensionChecker&MockObject $mimeTypeAndExtensionChecker;
+    private ImageConvertor&MockObject $imageConvertor;
     private S3FileUploader $sut;
-    private ObjectProphecy $fileNameFixer;
-    private ObjectProphecy $dateTimeProvider;
-    private ObjectProphecy $mimeTypeAndExtensionChecker;
-    private ObjectProphecy|ImageConvertor $imageConvertor;
 
     public function setUp(): void
     {
         $this->projectDir = self::bootKernel()->getProjectDir();
 
-        $this->storage = self::prophesize(S3Storage::class);
-        $this->restClient = self::prophesize(RestClient::class);
-        $this->fileNameFixer = self::prophesize(FileNameManipulation::class);
-        $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
-        $this->mimeTypeAndExtensionChecker = self::prophesize(MimeTypeAndExtensionChecker::class);
-        $this->imageConvertor = self::prophesize(ImageConvertor::class);
+        $this->storage = self::createMock(S3Storage::class);
+        $this->restClient = self::createMock(RestClient::class);
+        $this->fileNameFixer = self::createMock(FileNameManipulation::class);
+        $this->dateTimeProvider = self::createMock(DateTimeProvider::class);
+        $this->mimeTypeAndExtensionChecker = self::createMock(MimeTypeAndExtensionChecker::class);
+        $this->imageConvertor = self::createMock(ImageConvertor::class);
 
         $this->sut = new S3FileUploader(
-            $this->storage->reveal(),
-            $this->restClient->reveal(),
-            $this->fileNameFixer->reveal(),
-            $this->dateTimeProvider->reveal(),
-            $this->mimeTypeAndExtensionChecker->reveal(),
-            $this->imageConvertor->reveal()
+            $this->storage,
+            $this->restClient,
+            $this->fileNameFixer,
+            $this->dateTimeProvider,
+            $this->mimeTypeAndExtensionChecker,
+            $this->imageConvertor
         );
     }
 
-    /** @test */
-    public function uploadFileAndPersistDocument()
+    public function testUploadFileAndPersistDocument(): void
     {
         $fileName = 'dd_fileuploadertest.pdf';
         $fileContent = 'testcontent';
@@ -63,23 +60,24 @@ class S3FileUploaderTest extends KernelTestCase
         $report = ReportHelpers::createReport();
         $expectedStorageRef = sprintf('dd_doc_%s_%s%s', $report->getId(), $now->format('U'), $now->format('v'));
 
-        $this->dateTimeProvider->getDateTime()->willReturn($now);
-        $this->storage->store($expectedStorageRef, $fileContent)->shouldBeCalled();
+        $this->dateTimeProvider->method('getDateTime')->willReturn($now);
 
-        $this->restClient
-            ->post('/document/report/1', Argument::type(Document::class), ['document'])
-            ->shouldBeCalled();
+        $this->storage->expects(self::once())
+            ->method('store')
+            ->with($expectedStorageRef, $fileContent);
 
-        /* @var $document Document */
+        $this->restClient->expects(self::once())
+            ->method('post')
+            ->with('/document/report/1', isInstanceOf(Document::class), ['document']);
+
         $doc = $this->sut->uploadFileAndPersistDocument($report, $fileContent, $fileName, false);
 
-        $this->assertStringMatchesFormat($expectedStorageRef, $doc->getStorageReference());
-        $this->assertEquals($fileName, $doc->getFileName());
-        $this->assertEquals(false, $doc->isReportPdf());
+        self::assertStringMatchesFormat($expectedStorageRef, $doc->getStorageReference());
+        self::assertEquals($fileName, $doc->getFileName());
+        self::assertFalse($doc->isReportPdf());
     }
 
-    /** @test */
-    public function uploadSupportingFilesAndPersistDocumentsSingleFile()
+    public function testUploadSupportingFilesAndPersistDocumentsSingleFile(): void
     {
         $filePath = sprintf('%s/tests/Unit/TestData/good-jpeg', $this->projectDir);
         $uploadedFile = new UploadedFile($filePath, 'good-jpeg.jpeg', 'image/jpeg');
@@ -87,22 +85,31 @@ class S3FileUploaderTest extends KernelTestCase
         $report = ReportHelpers::createReport();
         $now = new \DateTime();
 
-        $this->fileNameFixer->addMissingFileExtension($uploadedFile)->shouldBeCalled()->willReturn('good-jpeg.jpeg');
-        $this->imageConvertor->convert('good_jpeg.jpeg', Argument::any())->shouldBeCalled()->willReturn(['body content', 'good_jpeg.jpeg']);
+        $this->fileNameFixer->expects(self::once())
+            ->method('addMissingFileExtension')
+            ->with($uploadedFile)
+            ->willReturn('good-jpeg.jpeg');
 
-        $this->mimeTypeAndExtensionChecker->check(Argument::cetera())->shouldBeCalled()->willReturn(true);
+        $this->imageConvertor->expects(self::once())
+            ->method('convert')
+            ->with('good_jpeg.jpeg', self::anything())
+            ->willReturn(['body content', 'good_jpeg.jpeg']);
 
-        $this->dateTimeProvider->getDateTime()->willReturn($now);
-        $this->storage->store(Argument::cetera())->shouldBeCalled();
-        $this->restClient->post(Argument::cetera())->shouldBeCalled();
+        $this->mimeTypeAndExtensionChecker->expects(self::once())
+            ->method('check')
+            ->willReturn(true);
+
+        $this->dateTimeProvider->method('getDateTime')->willReturn($now);
+
+        $this->storage->expects(self::once())->method('store');
+        $this->restClient->expects(self::once())->method('post');
 
         $files = [$uploadedFile];
 
         $this->sut->uploadSupportingFilesAndPersistDocuments($files, $report);
     }
 
-    /** @test */
-    public function uploadSupportingFilesAndPersistDocumentsMultipleFiles()
+    public function testUploadSupportingFilesAndPersistDocumentsMultipleFiles(): void
     {
         $jpeg = new UploadedFile(sprintf('%s/tests/Unit/TestData/good-jpeg', $this->projectDir), 'good-jpeg');
         $png = new UploadedFile(sprintf('%s/tests/Unit/TestData/good-png.png', $this->projectDir), 'good-png.png');
@@ -110,41 +117,49 @@ class S3FileUploaderTest extends KernelTestCase
         $heic = new UploadedFile(sprintf('%s/tests/Unit/TestData/good-heic.heic', $this->projectDir), 'good-heic.heic');
         $jfif = new UploadedFile(sprintf('%s/tests/Unit/TestData/good-jfif.jfif', $this->projectDir), 'good-jfif.jfif');
         $files = [$jpeg, $png, $pdf, $heic, $jfif];
+        $numFiles = count($files);
 
         $report = ReportHelpers::createReport();
         $now = new \DateTime();
 
-        $this->fileNameFixer->addMissingFileExtension(Argument::cetera())->shouldBeCalledTimes(5)->willReturn('the-fixed-file-name');
-        $this->imageConvertor->convert('the_fixed_file_name', Argument::any())->shouldBeCalledTimes(5)->willReturn(['body content', 'the-fixed-file-name']);
+        $this->fileNameFixer->expects(self::exactly($numFiles))
+            ->method('addMissingFileExtension')
+            ->willReturn('the-fixed-file-name');
 
-        $this->mimeTypeAndExtensionChecker->check(Argument::cetera())->shouldBeCalledTimes(5)->willReturn(true);
+        $this->imageConvertor->expects(self::exactly($numFiles))
+            ->method('convert')
+            ->with('the_fixed_file_name', self::anything())
+            ->willReturn(['body content', 'the-fixed-file-name']);
 
-        $this->dateTimeProvider->getDateTime()->willReturn($now);
-        $this->storage->store(Argument::cetera())->shouldBeCalledTimes(5);
-        $this->restClient->post(Argument::cetera())->shouldBeCalledTimes(5);
+        $this->mimeTypeAndExtensionChecker->expects(self::exactly($numFiles))
+            ->method('check')
+            ->willReturn(true);
+
+        $this->dateTimeProvider->method('getDateTime')->willReturn($now);
+
+        $this->storage->expects(self::exactly($numFiles))->method('store');
+        $this->restClient->expects(self::exactly($numFiles))->method('post');
 
         $this->sut->uploadSupportingFilesAndPersistDocuments($files, $report);
     }
 
-    /** @test */
-    public function removeFileFromS3()
+    public function testRemoveFileFromS3(): void
     {
         $reportPdf = DocumentHelpers::createReportPdfDocument();
 
-        $this->storage->removeFromS3($reportPdf->getStorageReference())->shouldBeCalled();
+        $this->storage->expects(self::once())->method('removeFromS3')->with($reportPdf->getStorageReference());
 
         $this->sut->removeFileFromS3($reportPdf);
     }
 
-    /** @test */
-    public function removeFileFromS3MissingStorageRef()
+    public function testRemoveFileFromS3MissingStorageRef(): void
     {
         self::expectException(\Exception::class);
 
         $reportPdf = DocumentHelpers::createReportPdfDocument();
         $reportPdf->setStorageReference(null);
 
-        $this->storage->removeFromS3($reportPdf->getStorageReference())->shouldNotBeCalled();
+        $this->storage->expects(self::never())->method('removeFromS3');
 
         $this->sut->removeFileFromS3($reportPdf);
     }
