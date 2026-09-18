@@ -12,37 +12,22 @@ use OPG\Digideps\Frontend\Service\File\Verifier\VerifierInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ScannerVerifierTest extends TestCase
 {
-    /** @var VerifierInterface */
-    private $verifier;
-
-    /** @var ClamFileScanner|MockObject */
-    private $scanner;
-
-    /** @var TranslatorInterface|MockObject */
-    private $translator;
-
-    /** @var LoggerInterface|MockObject */
-    private $logger;
-
-    /** @var Document */
-    private $document;
-
-    /** @var Form|MockObject */
-    private $form;
-
-    /** @var bool */
-    private $result;
+    private VerifierInterface $verifier;
+    private ClamFileScanner&MockObject $scanner;
+    private TranslatorInterface&MockObject $translator;
+    private LoggerInterface&MockObject $logger;
+    private Document $document;
+    private VerificationStatus $result;
 
     public function setUp(): void
     {
         $this->scanner = $this->getMockBuilder(ClamFileScanner::class)->disableOriginalConstructor()->getMock();
-        $this->translator = $this->createMock(TranslatorInterface::class);
+        $this->translator = self::createMock(TranslatorInterface::class);
         $this->logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
         $this->verifier = new ScannerVerifier($this->scanner, $this->translator, $this->logger);
 
@@ -51,45 +36,33 @@ class ScannerVerifierTest extends TestCase
         $this->document = new Document()->setFile($file);
     }
 
-    /**
-     * @test
-     */
-    public function verificationPassesWhenGivenValidDocument()
+    public function testVerificationPassesWhenGivenValidDocument(): void
     {
-        $this
-            ->ensureDocumentWillBeValid()
+        $this->ensureDocumentWillBeValid()
             ->invokeTest()
             ->assertStatusIsPassed();
     }
 
-    /**
-     * @test
-     */
-    public function returnsFalseWhenGivenInvalidDocument()
+    public function testReturnsFalseWhenGivenInvalidDocument(): void
     {
-        $this
-            ->ensureDocumentWillBeInvalid()
+        $this->ensureDocumentWillBeInvalid()
             ->ensureErrorWillBeTranslated()
             ->invokeTest()
             ->assertStatusIsFailed();
     }
 
-    private function ensureDocumentWillBeValid(): ScannerVerifierTest
+    private function ensureDocumentWillBeValid(): static
     {
-        $this
-            ->scanner
-            ->expects($this->once())
+        $this->scanner->expects(self::once())
             ->method('scanFile')
             ->with($this->document->getFile());
 
         return $this;
     }
 
-    private function ensureDocumentWillBeInvalid(): ScannerVerifierTest
+    private function ensureDocumentWillBeInvalid(): static
     {
-        $this
-            ->scanner
-            ->expects($this->once())
+        $this->scanner->expects(self::once())
             ->method('scanFile')
             ->with($this->document->getFile())
             ->willThrowException(new \Exception());
@@ -113,13 +86,13 @@ class ScannerVerifierTest extends TestCase
 
     private function assertStatusIsPassed(): void
     {
-        $this->assertEquals(VerificationStatus::PASSED, $this->result->getStatus());
-        $this->assertNull($this->result->getError());
+        self::assertEquals(VerificationStatus::PASSED, $this->result->getStatus());
+        self::assertNull($this->result->getError());
     }
 
     private function assertStatusIsFailed(): void
     {
-        $this->assertEquals(VerificationStatus::FAILED, $this->result->getStatus());
-        $this->assertNotNull($this->result->getError());
+        self::assertEquals(VerificationStatus::FAILED, $this->result->getStatus());
+        self::assertNotNull($this->result->getError());
     }
 }
