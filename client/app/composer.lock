@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7b669fbdf51f0fa9f2b0adb1a7fc7ad9",
+    "content-hash": "49c7088d50a2ad8f13f3acf61304eb1a",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -342,7 +342,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../common",
-                "reference": "fae2a5833c89c965c76c630939360d6e09669cf4"
+                "reference": "9750d3794890ff807a4a23bb8780d54a8bf28dc0"
             },
             "require": {
                 "jms/serializer-bundle": "^5.5.2",
@@ -375,7 +375,7 @@
             },
             "scripts": {
                 "lint:phpstan": [
-                    "phpstan"
+                    "phpstan --memory-limit=512M"
                 ],
                 "tests:unit": [
                     "phpunit"
@@ -12927,7 +12927,9 @@
         "ext-openssl": "*",
         "ext-zip": "*"
     },
-    "platform-dev": {},
+    "platform-dev": {
+        "ext-fileinfo": "*"
+    },
     "platform-overrides": {
         "php": "8.4.21"
     },
