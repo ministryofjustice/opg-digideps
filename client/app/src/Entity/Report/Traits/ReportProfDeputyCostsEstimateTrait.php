@@ -25,7 +25,7 @@ trait ReportProfDeputyCostsEstimateTrait
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     private array $profDeputyEstimateCostTypeIds = [];
 
-    #[JMS\Type('string')]
+    #[JMS\Type('float')]
     #[JMS\Groups(['prof-deputy-estimate-management-costs'])]
     #[Assert\NotBlank(message: 'profDeputyEstimateCost.profDeputyManagementCostAmount.amount.notBlank', groups: ['prof-deputy-estimate-management-costs'])]
     private ?float $profDeputyManagementCostAmount = null;
