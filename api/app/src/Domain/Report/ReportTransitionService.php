@@ -54,44 +54,6 @@ final readonly class ReportTransitionService
             return $result;
         }
 
-        if ($courtOrderChange->oldKind === CourtOrderKind::Single && $courtOrderChange->oldSiblingId !== null) {
-            $courtOrderChange = new CourtOrderRelationshipChange(
-                $courtOrderChange->courtOrderId,
-                $courtOrderChange->currentKind,
-                $courtOrderChange->currentSiblingId,
-                $courtOrderPair->getSharedLatestReport() !== null ? CourtOrderKind::Hybrid : CourtOrderKind::Dual,
-                $courtOrderChange->oldSiblingId,
-            );
-
-            if (!($courtOrderChange->hasKindChange() || $courtOrderChange->hasSiblingIdChange())) {
-                if ($courtOrderChange->currentKind === CourtOrderKind::Dual) {
-                    $result = new ReportTransitionResult();
-                    foreach ($courtOrderPair->pfaCourtOrder->getReports() as $report) {
-                        if (count($report->getCourtOrders()) === 2) {
-                            $report->setCourtOrder($courtOrderPair->pfaCourtOrder);
-                            $courtOrderPair->hwCourtOrder->removeReport($report);
-                            $result->updatedReports[] = $report;
-                            $result->updatedCourtOrders[] = $courtOrderPair->hwCourtOrder;
-                            $result->messages[] = $result->messages[] = "Unlinked {$report->getType()} report {$report->getId()} from court order {$courtOrderPair->hwCourtOrder->getCourtOrderUid()}";
-                        }
-                    }
-                    foreach ($courtOrderPair->hwCourtOrder->getReports() as $report) {
-                        if (count($report->getCourtOrders()) === 2) {
-                            $report->setCourtOrder($courtOrderPair->hwCourtOrder);
-                            $courtOrderPair->pfaCourtOrder->removeReport($report);
-                            $result->updatedReports[] = $report;
-                            $result->updatedCourtOrders[] = $courtOrderPair->pfaCourtOrder;
-                            $result->messages[] = $result->messages[] = "Unlinked {$report->getType()} report {$report->getId()} from court order {$courtOrderPair->pfaCourtOrder->getCourtOrderUid()}";
-                        }
-                    }
-                    if (!empty($result->messages)) {
-                        return $result;
-                    }
-                }
-                return null;
-            }
-        }
-
         // if we are working from a dual or hybrid to hybrid or dual respectively, we only need to work from
         // one side of the pair, so constrain transitions to the PFA side
         $isPfa = ($courtOrder->getOrderType() === CourtOrderType::PFA);
@@ -112,7 +74,31 @@ final readonly class ReportTransitionService
             $result = $this->singleToDual($courtOrderPair);
         }
 
+        $this->cleanReportLinksAsNeeded($courtOrderPair->pfaCourtOrder, $result);
+        $this->cleanReportLinksAsNeeded($courtOrderPair->hwCourtOrder, $result);
+
         return $result;
+    }
+
+    private function cleanReportLinksAsNeeded(CourtOrder $courtOrder, ReportTransitionResult $result): void
+    {
+        $report = $courtOrder->getLatestReport();
+        if ($report === null) {
+            return;
+        }
+        $tooFew = $courtOrder->getOrderKind() === CourtOrderKind::Hybrid && count($report->getCourtOrders()) !== 2;
+        $tooMany = $courtOrder->getOrderKind() !== CourtOrderKind::Hybrid && count($report->getCourtOrders()) === 2;
+        if ($tooFew || $tooMany) {
+            $report->setCourtOrder($courtOrder);
+            $result->updatedCourtOrders[] = $courtOrder;
+            $result->updatedReports[] = $report;
+            if ($tooFew) {
+                $result->messages[] = "Added missing court order to report {$report->getId()}";
+            }
+            if ($tooMany) {
+                $result->messages[] = "Removed superfluous court order from report {$report->getId()}";
+            }
+        }
     }
 
     /**
