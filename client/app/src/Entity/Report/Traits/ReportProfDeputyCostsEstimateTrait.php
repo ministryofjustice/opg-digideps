@@ -25,13 +25,10 @@ trait ReportProfDeputyCostsEstimateTrait
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     private array $profDeputyEstimateCostTypeIds = [];
 
-    /**
-     * @var float
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-estimate-management-costs'])]
     #[Assert\NotBlank(message: 'profDeputyEstimateCost.profDeputyManagementCostAmount.amount.notBlank', groups: ['prof-deputy-estimate-management-costs'])]
-    private $profDeputyManagementCostAmount;
+    private ?float $profDeputyManagementCostAmount = null;
 
     #[JMS\Type('array')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
@@ -181,9 +178,9 @@ trait ReportProfDeputyCostsEstimateTrait
     }
 
     /**
-     * @param float $profDeputyManagementCostAmount
+     * @param float|null $profDeputyManagementCostAmount
      */
-    public function setProfDeputyManagementCostAmount(float $profDeputyManagementCostAmount): static
+    public function setProfDeputyManagementCostAmount(?float $profDeputyManagementCostAmount): static
     {
         $this->profDeputyManagementCostAmount = $profDeputyManagementCostAmount;
 
