@@ -1,0 +1,25 @@
+<twig:GOV:Heading h="2" hidden>
+    {{ 'gov.footer.links.heading'|trans({}, 'twig-components') }}
+</twig:GOV:Heading>
+<ul class="govuk-footer__inline-list">
+    <li class="govuk-footer__inline-list-item">
+        <twig:GOV:Footer:Link href="{{ path('terms') }}">
+            {{ 'gov.footer.links.terms'|trans({}, 'twig-components') }}
+        </twig:GOV:Footer:Link>
+    </li>
+    <li class="govuk-footer__inline-list-item">
+        <twig:GOV:Footer:Link href="{{ path('privacy') }}">
+            {{ 'gov.footer.links.privacy'|trans({}, 'twig-components') }}
+        </twig:GOV:Footer:Link>
+    </li>
+    <li class="govuk-footer__inline-list-item">
+        <twig:GOV:Footer:Link href="{{ path('cookies') }}">
+            {{ 'gov.footer.links.cookies'|trans({}, 'twig-components') }}
+        </twig:GOV:Footer:Link>
+    </li>
+    <li class="govuk-footer__inline-list-item">
+        <twig:GOV:Footer:Link href="{{ path('accessibility') }}">
+            {{ 'gov.footer.links.accessibility'|trans({}, 'twig-components') }}
+        </twig:GOV:Footer:Link>
+    </li>
+</ul>

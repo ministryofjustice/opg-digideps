@@ -2,6 +2,21 @@ gov:
   skipLink: Skip to main content
   backLink: Back
   errorMessage.aria: Error
+  footer:
+    license:
+      pre: All content is available under the
+      link: Open Government Licence v3.0
+      post: ", except where otherwise stated"
+    copyright: "© Crown copyright"
+    built:
+      by: Built by the
+      opg: Office of the Public Guardian
+    links:
+      heading: Support links
+      terms: Terms of use
+      privacy: Privacy notice
+      cookies: Cookies
+      accessibility: Accessibility
 opg:
   renderable:
     bankAccount:
