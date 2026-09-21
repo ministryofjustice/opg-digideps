@@ -405,24 +405,24 @@ final class ReportTest extends TestCase
         );
     }
 
-    public function testNoPreviousReportDataReturnedOutside15Months(): void
+    public function testNoPreviousReportDataLogic(): void
     {
         $client = new Client();
-        $reportTwoYearsAgo = new Report($client, Report::PROF_COMBINED_LOW_ASSETS_TYPE, new \DateTime('2023-01-01'), new \DateTime('2023-12-31'));
-        $reportTwoYearsAgo->setId(8);
-        $reportTwoYearsAgo->setSubmitted(true);
-        $reportTwoYearsAgo->setSubmitDate(new \DateTime('2024-01-01'));
+        $report1 = new Report($client, Report::PROF_COMBINED_LOW_ASSETS_TYPE, new \DateTime('2023-01-01'), new \DateTime('2023-12-31'));
+        $report1->setId(8);
+        $report1->setSubmitted(true);
+        $report1->setSubmitDate(new \DateTime('2024-01-01'));
 
-        $reportLastYear = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
-        $reportLastYear->setId(9);
-        $reportLastYear->setSubmitted(true);
-        $reportLastYear->setSubmitDate(new \DateTime('2026-01-01'));
+        $report2 = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2025-01-01'), new \DateTime('2025-12-31'));
+        $report2->setId(9);
+        $report2->setSubmitted(true);
+        $report2->setSubmitDate(new \DateTime('2026-01-01'));
 
-        $client->addReport($reportTwoYearsAgo);
-        $client->addReport($reportLastYear);
+        $client->addReport($report1);
+        $client->addReport($report2);
 
-        // assert two years ago report is outside the 15-month window, so no previous report data should be returned
-        $this->assertEmpty($reportLastYear->getPreviousReportData());
+        // assert two report do not share a reporting boundary
+        $this->assertEmpty($report2->getPreviousReportData());
 
     }
 

@@ -1176,10 +1176,7 @@ class Report implements StartEndDateComparableInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getPreviousReportData()
+    public function getPreviousReportData(): array
     {
         return $this->previousReportData;
     }

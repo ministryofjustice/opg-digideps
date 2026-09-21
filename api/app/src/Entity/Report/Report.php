@@ -969,25 +969,49 @@ class Report
     #[JMS\Type('array')]
     public function getPreviousReportData(): array
     {
+        $uidPopulateCallback = function (CourtOrder $courtOrder): string {
+            return $courtOrder->getCourtOrderUid();
+        };
+
+        $latestCourtOrderUids = array_map($uidPopulateCallback, $this->getActiveCourtOrders());
+        sort($latestCourtOrderUids);
+
         $orderedSubmittedClientReports = $this->getClient()->getSubmittedReports();
+        $latestStartDate = $this->getStartDate();
 
-        $latestSubmissionDate = $this->getSubmitDate();
-        if ($latestSubmissionDate instanceof \DateTime) {
-            $fifteenMonthsAgo = (clone $latestSubmissionDate)->modify('-15 months');
-            $filteredReports = $orderedSubmittedClientReports->filter(function ($clientReport) use ($fifteenMonthsAgo, $latestSubmissionDate): bool {
-                $submitDate = $clientReport->getSubmitDate();
-                return $submitDate >= $fifteenMonthsAgo && $submitDate < $latestSubmissionDate && $clientReport->isPfa();
-            });
+        $filteredReports = $orderedSubmittedClientReports->filter(function (Report $clientReport) use (
+            $latestStartDate,
+            $latestCourtOrderUids,
+            $uidPopulateCallback,
+        ): bool {
+            $courtOrderUids = array_map($uidPopulateCallback, $clientReport->getActiveCourtOrders());
+            sort($courtOrderUids);
 
-            $report = $filteredReports->first() ?: null;
-            if ($report !== null) {
-                return [
-                    'report-summary' => $report->getReportSummary(),
-                    'financial-summary' => $report->getFinancialSummary(),
-                    'assets-summary' => $report->getAssetsSummary(),
-                    'debts-summary' => $report->getDebtsSummary(),
-                ];
+            $endDate = $clientReport->getEndDate();
+
+            return count(array_diff($latestCourtOrderUids, $courtOrderUids)) === 0 &&
+                $endDate->diff($latestStartDate)->days === 1 &&
+                $clientReport->isPfa();
+        });
+
+        $report = $filteredReports->first();
+
+        if ($report instanceof Report) {
+            if ($filteredReports->count() > 1) {
+                /** @var Report $filteredReport */
+                foreach ($filteredReports as $filteredReport) {
+                    if ($filteredReport->getSubmitDate() > $report->getSubmitDate()) {
+                        $report = $filteredReport;
+                    }
+                }
             }
+
+            return [
+                'report-summary' => $report->getReportSummary(),
+                'financial-summary' => $report->getFinancialSummary(),
+                'assets-summary' => $report->getAssetsSummary(),
+                'debts-summary' => $report->getDebtsSummary(),
+            ];
         }
 
         return [];
