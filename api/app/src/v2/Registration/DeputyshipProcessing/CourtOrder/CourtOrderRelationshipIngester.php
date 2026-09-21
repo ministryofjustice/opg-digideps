@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder;
 
 use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\CourtOrderRepository;
+use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportReassembler;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -67,18 +69,25 @@ final readonly class CourtOrderRelationshipIngester
      */
     private function updateCourtOrders(): \Generator
     {
-        /** @var CourtOrderRepository $repository */
-        $repository = $this->entityManager->getRepository(CourtOrder::class);
+        /** @var CourtOrderRepository $courtOrderRepository */
+        $courtOrderRepository = $this->entityManager->getRepository(CourtOrder::class);
+        /** @var ReportRepository $reportRepository */
+        $reportRepository = $this->entityManager->getRepository(Report::class);
 
         foreach ($this->groupByClientId($this->relationshipReader->read()) as $relationships) {
             foreach ($relationships as $relationship) {
-                $this->processRelationship($relationship, $repository);
+                $this->processRelationship($relationship, $courtOrderRepository);
             }
             $this->entityManager->flush();
             $this->entityManager->clear();
+            $courtOrderRepository->clear();
+            $reportRepository->clear();
         }
         foreach ($this->changes->drain() as $courtOrderRelationshipChange) {
             yield $this->reportReassembler->reassembleReport($courtOrderRelationshipChange);
+            $this->entityManager->clear();
+            $courtOrderRepository->clear();
+            $reportRepository->clear();
         }
     }
 

@@ -129,13 +129,6 @@ final readonly class ReportTransitionService
         ['persistingReportCourtOrder' => $persistingCourtOrder, 'newReportCourtOrder' => $newReportCourtOrder] =
             $this->hybridToDualAssignCourtOrders($courtOrderPair, $courtOrderChange);
 
-        // create a new report on the court order which is the other half of the dual
-        $newReport = $this->reportService->createReportFromOrder($newReportCourtOrder);
-        if ($newReport === null) {
-            $result->errorMessages[] = "Hybrid -> Dual: {$courtOrderPair} - Court order with uid {$newReportCourtOrder->getCourtOrderUid()} was deemed to need a new report but already had a report with id {$newReportCourtOrder->getLatestReport()?->getId()}.";
-            return $result;
-        }
-
         // the persisting court order and the old sibling (which may be the same as the new sibling)
         // should share a report, otherwise they aren't really a hybrid
         $oldPair = CourtOrderPair::create($persistingCourtOrder, $oldSibling);
@@ -150,6 +143,13 @@ final readonly class ReportTransitionService
         if ($persistingReport === null) {
             $result->errorMessages[] = "Hybrid -> Dual: {$courtOrderPair} - "
                 .  'Could not find existing hybrid report to persist';
+            return $result;
+        }
+
+        // create a new report on the court order which is the other half of the dual
+        $newReport = $this->reportService->createReportFromOrder($newReportCourtOrder);
+        if ($newReport === null) {
+            $result->errorMessages[] = "Hybrid -> Dual: {$courtOrderPair} - Court order with uid {$newReportCourtOrder->getCourtOrderUid()} was deemed to need a new report but already had a report with id {$newReportCourtOrder->getLatestReport()?->getId()}.";
             return $result;
         }
 
@@ -324,6 +324,7 @@ final readonly class ReportTransitionService
             }
 
             $result->transitioned = true;
+            $result->updatedReports[] = $newReport;
             $result->updatedCourtOrders = $affectedCourtOrders;
         } else {
             $result->errorMessages[] = "Single -> Dual: {$courtOrderPair} - Unable to add/create reports for dual";
