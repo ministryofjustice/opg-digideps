@@ -29,6 +29,7 @@ output "Tasks" {
     smoke_tests             = module.smoke_tests.render
     end_to_end_tests        = module.end_to_end_tests.render
     resilience_tests        = try(module.resilience_tests[0].render, null)
+    run_migrations          = module.run_migrations.render
     api_task_override       = module.api_task_override.render_with_override
   }
 }

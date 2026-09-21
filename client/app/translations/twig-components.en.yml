@@ -12,6 +12,7 @@ opg:
   review:
     reportHeader:
       header: Deputy report for %reportTypeHeading% decisions
+      infoHeader: Deputy and client information
       reportInformation: Report information
       deputyDetails: Deputy details
       noDeputy: Could not determine deputy. This can happen if the report has not yet been submitted.

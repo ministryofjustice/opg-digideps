@@ -15,6 +15,7 @@ locals {
       target      = module.api_rds_security_group.id
     }
   }
+  db_access_none = {}
 }
 
 module "db_access_task_security_group" {
@@ -30,7 +31,7 @@ module "db_access_task_security_group" {
 module "db_access_task_non_prod_security_group" {
   source      = "./modules/security_group"
   description = "Task Requiring DB Access Non Prod"
-  rules       = local.db_access_task_sg_rules
+  rules       = var.account.environment.is_production == 1 ? local.db_access_none : local.db_access_task_sg_rules
   name        = "db-access-task-non-prod"
   tags        = var.default_tags
   vpc_id      = data.aws_vpc.main.id

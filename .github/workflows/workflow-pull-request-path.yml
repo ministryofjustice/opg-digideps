@@ -334,6 +334,25 @@ jobs:
       timeout: "500"
       retry_on_fail: true
 
+  run_migrations:
+    name: run migrations
+    uses: $/.github/workflows/_run-task.yml
+    permissions:
+      id-token: write
+    needs:
+      - workflow_variables
+      - restart_point
+      - reset_database
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
+      task_name: "run_migrations"
+      timeout: "1800"
+      retry_on_fail: false
+
   smoke_tests:
     name: smoke tests
     uses: $/.github/workflows/_run-task.yml
@@ -361,6 +380,7 @@ jobs:
     needs:
       - workflow_variables
       - reset_database
+      - run_migrations
       - scale_services_up
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
