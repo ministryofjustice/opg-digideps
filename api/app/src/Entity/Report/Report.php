@@ -1270,6 +1270,8 @@ class Report
 
     public function setCourtOrder(CourtOrder $courtOrder): static
     {
+        $this->pfaCourtOrder?->removeReport($this);
+        $this->hwCourtOrder?->removeReport($this);
         $this->pfaCourtOrder = $courtOrder->getOrderType() === CourtOrderType::HW ? $courtOrder->isHybrid() ? $courtOrder->getSibling() : null : $courtOrder;
         $this->hwCourtOrder = $courtOrder->getOrderType() === CourtOrderType::PFA ? $courtOrder->isHybrid() ? $courtOrder->getSibling() : null : $courtOrder;
         $this->pfaCourtOrder?->addReport($this);
