@@ -1275,15 +1275,19 @@ class Report
 
         if ($this->pfaCourtOrder !== $newPfaCourtOrder) {
             $this->pfaCourtOrder?->removeReport($this);
+            $this->pfaCourtOrder = $newHwCourtOrder;
         }
         if ($this->hwCourtOrder !== $newHwCourtOrder) {
             $this->hwCourtOrder?->removeReport($this);
+            $this->hwCourtOrder = $newPfaCourtOrder;
         }
 
-        $this->pfaCourtOrder = $newHwCourtOrder;
-        $this->hwCourtOrder = $newPfaCourtOrder;
-        $this->pfaCourtOrder?->addReport($this);
-        $this->hwCourtOrder?->addReport($this);
+        if ($this->pfaCourtOrder !== null && !$this->pfaCourtOrder->getReports()->contains($this)) {
+            $this->pfaCourtOrder->getReports()->add($this);
+        }
+        if ($this->hwCourtOrder !== null && !$this->hwCourtOrder->getReports()->contains($this)) {
+            $this->hwCourtOrder->getReports()->add($this);
+        }
 
         return $this;
     }
