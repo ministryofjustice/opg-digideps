@@ -540,7 +540,9 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('unsubmit_date', $data)) {
-            $report->setUnSubmitDate($data['unsubmit_date']);
+            /** @var ?DateTime $unsubmitDate */
+            $unsubmitDate = $data['unsubmit_date'];
+            $report->setUnSubmitDate($unsubmitDate);
         }
 
         foreach ($this->updateHandlers as $updateHandler) {
