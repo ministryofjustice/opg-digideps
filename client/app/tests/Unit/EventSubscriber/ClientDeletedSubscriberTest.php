@@ -27,7 +27,7 @@ class ClientDeletedSubscriberTest extends TestCase
     /**
      * @dataProvider deputyProvider
      */
-    public function logEvent(Client $clientWithUsers, $deputy): void
+    public function testLogEvent(Client $clientWithUsers, $deputy): void
     {
         $logger = self::createMock(LoggerInterface::class);
         $dateTimeProvider = self::createMock(DateTimeProvider::class);

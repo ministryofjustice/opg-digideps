@@ -57,7 +57,7 @@ class ClamFileScannerTest extends TestCase
     /**
      * @doesNotPerformAssertions
      */
-    public function tesScanFileMakesMultipleReattemptsIfScanServiceIsUnavailable(): void
+    public function testScanFileMakesMultipleReattemptsIfScanServiceIsUnavailable(): void
     {
         $this->ensureServiceIsTemporarilyUnavailable()
             ->invokeTest('file.pdf');
