@@ -284,12 +284,12 @@ class ReportController extends RestController
             ]);
         }
 
-        /** @var ?string $reasonForNoFees */
-        $reasonForNoFees = $data['reason_for_no_fees'] ?? null;
+        if (array_key_exists('reason_for_no_fees', $data)) {
+            /** @var ?string $reasonForNoFees */
+            $reasonForNoFees = $data['reason_for_no_fees'];
 
-        if ($reasonForNoFees !== null) {
             $report->setReasonForNoFees($reasonForNoFees);
-            if ($data['reason_for_no_fees']) {
+            if (!is_null($reasonForNoFees)) {
                 foreach ($report->getFees() as $fee) {
                     $fee->setAmount(null)
                         ->setMoreDetails(null);
@@ -540,7 +540,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('unsubmit_date', $data)) {
-            $report->setUnSubmitDate($data);
+            $report->setUnSubmitDate($data['unsubmit_date']);
         }
 
         foreach ($this->updateHandlers as $updateHandler) {
