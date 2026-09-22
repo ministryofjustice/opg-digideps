@@ -259,6 +259,7 @@ set-feature-flag: ##@localstack Set a particular feature flags value e.g. set-fe
 	docker compose exec localstack awslocal ssm put-parameter --name "/local/flag/$(name)" --value "$(value)" --type String --overwrite
 
 block-ips-tests: ##@unit-tests Run the unit tests for IP blocking lambda.
+	docker compose -f docker-compose.commands.yml build --progress plain block-ips-tests
 	docker compose -f docker-compose.commands.yml up block-ips-tests
 
 anonymisation-tests: ##@unit-tests Run the unit tests for data anonymisation.

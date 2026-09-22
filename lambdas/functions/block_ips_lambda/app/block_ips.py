@@ -1,10 +1,14 @@
+from __future__ import annotations
 import os
 import re
 import time
 from collections import defaultdict
+from dataclasses import dataclass
+from typing import Final
+from fnmatch import fnmatch
 
 import boto3
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 
 # Initialize boto3 clients
 
@@ -12,114 +16,267 @@ table_name = "BlockedIPs"
 ip_set_name = "BlockedIPs"
 ip_set_scope = "REGIONAL"
 
+QUERY_LOOKBACK_MINUTES: Final[int] = 7
+QUERY_TIMEOUT_SECONDS: Final[int] = 600
+QUERY_POLL_INTERVAL_SECONDS: Final[int] = 1
 
-def query_cloudwatch_logs(log_group_name, log_stream_prefix):
-    cloudwatch_logs = boto3.client("logs", region_name="eu-west-1")
-    end_time = datetime.now()
-    # We choose 7 mins so it overlaps the last run (which is every 5 mins)
-    start_time = end_time - timedelta(minutes=7)
-    start_timestamp = int(start_time.timestamp()) * 1000
-    end_timestamp = int(end_time.timestamp()) * 1000
 
-    response = cloudwatch_logs.start_query(
-        logGroupName=log_group_name,
-        startTime=start_timestamp,
-        endTime=end_timestamp,
-        queryString=f"""
-      fields real_forwarded_for, request_uri, status
-      | filter @logStream like "{log_stream_prefix}"
-      | filter request_uri != "/health-check"
-      | filter request_uri != "/login"
-      | filter request_uri != "/"
-      | filter status > 0
-      | sort @timestamp desc
-      | limit 10000""",
-    )
+@dataclass(slots=True)
+class IpActivitySummary:
+    not_found_with_suffix: int = 0
+    not_found_without_suffix: int = 0
+    forbidden_requests: int = 0
+    successful_requests: int = 0
+    authenticated_requests: int = 0
 
-    # Get the query ID for fetching results
-    query_id = response["queryId"]
+    @property
+    def is_suspicious(self) -> bool:
+        """Indicates probing/scanning behaviour."""
 
-    # Wait for the query to complete
-    seconds_waiting = 0
-    seconds_to_sleep = 1
-    ten_minutes = 600
-    while True:
-        query_status = cloudwatch_logs.get_query_results(queryId=query_id)
-        if query_status["status"] == "Complete" or seconds_waiting > ten_minutes:
-            break
-        time.sleep(seconds_to_sleep)
-        seconds_waiting += seconds_to_sleep
-
-    # Process each query result
-    log_records = []
-    request_uri = ""
-    real_forwarded_for = ""
-    status = ""
-    for result_fields in query_status["results"]:
-        for field_value in result_fields:
-            if field_value["field"] == "real_forwarded_for":
-                real_forwarded_for = field_value["value"]
-            elif field_value["field"] == "request_uri":
-                request_uri = field_value["value"]
-            elif field_value["field"] == "status":
-                status = field_value["value"]
-
-        log_records.append(
-            {
-                "real_forwarded_for": f"{real_forwarded_for}/32",
-                "request_uri": request_uri,
-                "status": status,
-            }
+        return self.not_found_without_suffix > 5 or (
+            self.not_found_with_suffix >= 1 and self.successful_requests == 0
         )
 
-    return log_records
+    @property
+    def has_authenticated_activity(self) -> bool:
+        """Indicates the IP accessed authenticated pages."""
+
+        return self.authenticated_requests > 0
 
 
-def filter_logs(logs):
-    filtered_logs = defaultdict(
-        lambda: {
-            "404_with_suffix": 0,
-            "404_without_suffix": 0,
-            "403_requests": 0,
-            "2xx_or_3xx_not_root": 0,
-        }
+@dataclass(frozen=True, slots=True)
+class LogRecord:
+    real_forwarded_for: str
+    request_uri: str
+    status: int
+
+
+# ==================== RETURN RESULTS LOGIC ====================
+def query_cloudwatch_logs(
+    log_group_name: str,
+    log_stream_prefixes: list[str],
+) -> list[LogRecord]:
+    """Query recent nginx logs from CloudWatch Logs Insights."""
+
+    client = boto3.client("logs", region_name="eu-west-1")
+
+    start_time_ms, end_time_ms = get_query_time_range()
+
+    query_id = start_logs_query(
+        client=client,
+        log_group_name=log_group_name,
+        log_stream_prefixes=log_stream_prefixes,
+        start_time_ms=start_time_ms,
+        end_time_ms=end_time_ms,
     )
 
-    suffix_pattern = re.compile(r".*\.\w+$")
+    results = wait_for_query_results(
+        client=client,
+        query_id=query_id,
+    )
 
-    for log in logs:
-        ip = log["real_forwarded_for"]
-        try:
-            status = int(log["status"])
-        except Exception:
+    return parse_log_records(results)
+
+
+def get_query_time_range() -> tuple[int, int]:
+    """Return the query start and end times in milliseconds."""
+
+    end_time = datetime.now(UTC)
+    start_time = end_time - timedelta(minutes=QUERY_LOOKBACK_MINUTES)
+
+    return (
+        int(start_time.timestamp() * 1000),
+        int(end_time.timestamp() * 1000),
+    )
+
+
+def start_logs_query(
+    client,
+    log_group_name: str,
+    log_stream_prefixes: list[str],
+    start_time_ms: int,
+    end_time_ms: int,
+) -> str:
+    """Start a CloudWatch Logs Insights query."""
+
+    log_stream_filter = " or ".join(
+        f'@logStream like "{prefix}"' for prefix in log_stream_prefixes
+    )
+
+    response = client.start_query(
+        logGroupName=log_group_name,
+        startTime=start_time_ms,
+        endTime=end_time_ms,
+        queryString=f"""
+            fields real_forwarded_for, request_uri, status
+            | filter ({log_stream_filter})
+            | filter request_uri not in ["/health-check", "/login", "/"]
+            | filter status > 0
+            | sort @timestamp desc
+            | limit 10000
+        """,
+    )
+
+    return response["queryId"]
+
+
+def wait_for_query_results(
+    client,
+    query_id: str,
+) -> list[list[dict[str, str]]]:
+    """Wait for a query to complete and return the results."""
+
+    waited_seconds = 0
+
+    while waited_seconds < QUERY_TIMEOUT_SECONDS:
+        response = client.get_query_results(queryId=query_id)
+
+        if response["status"] == "Complete":
+            return response["results"]
+
+        time.sleep(QUERY_POLL_INTERVAL_SECONDS)
+        waited_seconds += QUERY_POLL_INTERVAL_SECONDS
+
+    raise TimeoutError(
+        f"CloudWatch query '{query_id}' timed out after "
+        f"{QUERY_TIMEOUT_SECONDS} seconds"
+    )
+
+
+def parse_log_records(
+    results: list[list[dict[str, str]]],
+) -> list[LogRecord]:
+    """Convert CloudWatch query results into LogRecord objects."""
+
+    records: list[LogRecord] = []
+
+    for result in results:
+        fields = {
+            field["field"]: field["value"]
+            for field in result
+            if "field" in field and "value" in field
+        }
+
+        records.append(
+            LogRecord(
+                real_forwarded_for=f'{fields.get("real_forwarded_for", "")}/32',
+                request_uri=fields.get("request_uri", ""),
+                status=int(fields.get("status", "0")),
+            )
+        )
+
+    return records
+
+
+# ==================== GET LOG TYPE COUNTS LOGIC ====================
+
+PATH_PATTERNS_REQUIRING_LOGIN: Final[list[str]] = [
+    "/report/*",
+    "/admin/*",
+    "/org/*",
+]
+
+FILE_SUFFIX_PATTERN: Final[re.Pattern[str]] = re.compile(r".*\.\w+$")
+
+
+def summarise_log_records(
+    records: list[LogRecord],
+) -> dict[str, IpActivitySummary]:
+    """Group request counts by source IP."""
+
+    summaries: defaultdict[str, IpActivitySummary] = defaultdict(IpActivitySummary)
+
+    for record in records:
+        if should_ignore_request(record.request_uri):
             continue
 
-        request_uri = log["request_uri"]
+        summary = summaries[record.real_forwarded_for]
 
-        # Ignore ACME, security.txt, etc.
-        if request_uri.startswith("/.well-known/"):
+        if record.status == 404:
+            increment_not_found_count(
+                summary=summary,
+                request_uri=record.request_uri,
+            )
             continue
 
-        if status == 404:
-            if suffix_pattern.match(request_uri):
-                filtered_logs[ip]["404_with_suffix"] += 1
-            else:
-                filtered_logs[ip]["404_without_suffix"] += 1
-        elif status == 403:
-            filtered_logs[ip]["403_requests"] += 1
-        elif status < 399 and request_uri != "/":
-            filtered_logs[ip]["2xx_or_3xx_not_root"] += 1
+        if record.status == 403:
+            summary.forbidden_requests += 1
+            continue
 
-    ips = []
-    # We have slightly higher threshold for non suffixed in case they mistype a url
-    # In both cases if they hit a valid endpoint in the time then we don't block them
-    for ip, value in filtered_logs.items():
-        if value["404_without_suffix"] > 5 and value["2xx_or_3xx_not_root"] < 1:
-            ips.append(ip)
-        elif value["404_with_suffix"] >= 1 > value["2xx_or_3xx_not_root"]:
-            ips.append(ip)
+        if is_successful_request(
+            status=record.status,
+            request_uri=record.request_uri,
+        ):
+            summary.successful_requests += 1
 
-    return ips
+            if is_authenticated_route(record.request_uri):
+                summary.authenticated_requests += 1
+
+    return dict(summaries)
+
+
+def should_ignore_request(request_uri: str) -> bool:
+    """Exclude well-known paths from analysis."""
+
+    return request_uri.startswith("/.well-known/")
+
+
+def increment_not_found_count(
+    summary: IpActivitySummary,
+    request_uri: str,
+) -> None:
+    """Increment the appropriate 404 counter."""
+
+    if FILE_SUFFIX_PATTERN.match(request_uri):
+        summary.not_found_with_suffix += 1
+    else:
+        summary.not_found_without_suffix += 1
+
+
+def is_successful_request(
+    status: int,
+    request_uri: str,
+) -> bool:
+    """Return True for non-root successful requests."""
+
+    return status < 399 and request_uri != "/"
+
+
+def is_authenticated_route(
+    request_uri: str,
+) -> bool:
+    """Return True if the URI implies an authenticated user."""
+
+    return any(
+        fnmatch(request_uri, pattern) for pattern in PATH_PATTERNS_REQUIRING_LOGIN
+    )
+
+
+# ==================== GET IPS LOGIC ====================
+
+
+def get_ips_to_block(
+    summaries: dict[str, IpActivitySummary],
+) -> list[str]:
+    """Return suspicious IPs with no authenticated activity."""
+
+    return [
+        ip
+        for ip, summary in summaries.items()
+        if summary.is_suspicious and not summary.has_authenticated_activity
+    ]
+
+
+def get_ips_to_alert_on(
+    summaries: dict[str, IpActivitySummary],
+) -> list[str]:
+    """Return suspicious IPs that also appear to be legitimate users."""
+
+    return [
+        ip
+        for ip, summary in summaries.items()
+        if summary.is_suspicious and summary.has_authenticated_activity
+    ]
 
 
 def update_dynamodb_table(ips):
@@ -240,13 +397,18 @@ def update_waf_ip_set(ip_set_name, ip_set_scope, ips):
 def lambda_handler(event, context):
     environment = os.getenv("ENVIRONMENT", "")
     log_group_name = environment
-    log_stream_prefix = f"front.{environment}.web"
-    logs = query_cloudwatch_logs(log_group_name, log_stream_prefix)
-    filtered_ips = filter_logs(logs)
-    print(f"New Malicious IPs identified: {filtered_ips}")
-    update_dynamodb_table(filtered_ips)
-    blocked_ips = get_blocked_ips()
-    print(f"IPs to block according to dynamodb: {blocked_ips}")
-    response = update_waf_ip_set(ip_set_name, ip_set_scope, blocked_ips)
+    log_stream_prefixes = [f"front.{environment}.web", f"admin.{environment}.web"]
+    logs = query_cloudwatch_logs(log_group_name, log_stream_prefixes)
+    summarised_logs = summarise_log_records(logs)
+    print(summarised_logs)
+    ips_to_block = get_ips_to_block(summarised_logs)
+    print(f"New Malicious IPs identified: {ips_to_block}")
+    ips_to_alert_on = get_ips_to_alert_on(summarised_logs)
+    print(f"New Warning IPs identified: {ips_to_alert_on}")
+    return 0
+    # update_dynamodb_table(ips_to_block)
+    # blocked_ips = get_blocked_ips()
+    # print(f"IPs to block according to dynamodb: {blocked_ips}")
+    # response = update_waf_ip_set(ip_set_name, ip_set_scope, blocked_ips)
 
-    return response
+    # return response

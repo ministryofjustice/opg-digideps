@@ -28,7 +28,7 @@ class TestQueryCloudwatchLogs(unittest.TestCase):
         }
 
         log_group_name = "test-log-group"
-        log_stream_prefix = "test-log-stream"
+        log_stream_prefix = ["test-log-stream"]
 
         expected_output = [
             {
