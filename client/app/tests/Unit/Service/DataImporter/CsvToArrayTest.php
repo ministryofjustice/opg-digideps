@@ -9,87 +9,96 @@ use PHPUnit\Framework\TestCase;
 
 class CsvToArrayTest extends TestCase
 {
-    private $columns = ['Case', 'Surname', 'Deputy No', 'Dep Surname'];
-    private $optionalColumns = ['Dep Postcode'];
+    private array $columns = ['Case', 'Surname', 'Deputy No', 'Dep Surname'];
+    private array $optionalColumns = ['Dep Postcode'];
 
-    public function testgetData1With24Rows()
+    public function testGetData1With24Rows(): void
     {
-        $object = new CsvToArray(__DIR__ . '/csv1.csv', false);
-        $object->setExpectedColumns($this->columns);
-        $object->setOptionalColumns($this->optionalColumns);
-        $data = $object->getData();
-        $this->assertCount(24, $data);
+        $sut = new CsvToArray(__DIR__ . '/csv1.csv', false);
+        $sut->setExpectedColumns($this->columns);
+        $sut->setOptionalColumns($this->optionalColumns);
+        $data = $sut->getData();
+        self::assertCount(24, $data);
 
-        $this->assertEquals(['Case'         => '20000037',
-                             'Surname'      => 'SMITH',
-                             'Deputy No'    => '00063168',
-                             'Dep Surname'  => 'SMITH',
-                             'Dep Postcode' => 'FY8 1FJ',], $data[0]);
+        self::assertEquals([
+            'Case' => '20000037',
+            'Surname' => 'SMITH',
+            'Deputy No' => '00063168',
+            'Dep Surname' => 'SMITH',
+            'Dep Postcode' => 'FY8 1FJ',
+        ], $data[0]);
 
-        $this->assertEquals(['Case'         => '20006813',
-                             'Surname'      => 'HOVIS',
-                             'Deputy No'    => '00000422',
-                             'Dep Surname'  => 'HOVIS',
-                             'Dep Postcode' => '',], $data[8]);
+        self::assertEquals([
+            'Case' => '20006813',
+            'Surname'      => 'HOVIS',
+            'Deputy No'    => '00000422',
+            'Dep Surname'  => 'HOVIS',
+            'Dep Postcode' => '',
+        ], $data[8]);
     }
 
-    public function testgetData2OptionalColumnsMissing()
+    public function testGetData2OptionalColumnsMissing(): void
     {
-        $object = new CsvToArray(__DIR__ . '/csv2.csv', false);
-        $object->setExpectedColumns($this->columns);
-        $object->setOptionalColumns($this->optionalColumns);
-        $data = $object->getData();
+        $sut = new CsvToArray(__DIR__ . '/csv2.csv', false);
+        $sut->setExpectedColumns($this->columns);
+        $sut->setOptionalColumns($this->optionalColumns);
+        $data = $sut->getData();
 
-
-        $this->assertEquals([['Case'        => '20000037',
-                              'Surname'     => 'SMITH',
-                              'Deputy No'   => '00063168',
-                              'Dep Surname' => 'SMITH',
-        ]], $data);
+        self::assertEquals([
+            [
+                'Case'        => '20000037',
+                'Surname'     => 'SMITH',
+                'Deputy No'   => '00063168',
+                'Dep Surname' => 'SMITH',
+            ]
+        ], $data);
     }
 
-    public function testgetDataMissingFile()
+    public function testGetDataMissingFile(): void
     {
-        $this->expectException(\RuntimeException::class);
+        self::expectException(\RuntimeException::class);
 
         new CsvToArray(__DIR__ . '/THISFILEDOESNOTEXIST.csv', false);
     }
 
-    public function testgetDataInvalidFormat()
+    public function testGetDataInvalidFormat(): void
     {
-        $this->expectException(\RuntimeException::class);
-        $object = new CsvToArray(__DIR__ . '/invalid.csv', false);
-        $object->setExpectedColumns($this->columns);
-        $object->getData();
+        self::expectException(\RuntimeException::class);
+        $sut = new CsvToArray(__DIR__ . '/invalid.csv', false);
+        $sut->setExpectedColumns($this->columns);
+        $sut->getData();
     }
 
-    public function testgetDataEmpty()
+    public function testGetDataEmpty(): void
     {
-        $object = new CsvToArray(__DIR__ . '/empty.csv', false);
-        $object->setExpectedColumns($this->columns);
-        $this->assertEquals([], $object->getData());
+        $sut = new CsvToArray(__DIR__ . '/empty.csv', false);
+        $sut->setExpectedColumns($this->columns);
+        self::assertEquals([], $sut->getData());
     }
 
-    public function testgetDataMissingColumns()
+    public function testGetDataMissingColumns(): void
     {
-        $object = new CsvToArray(__DIR__ . '/missing-columns.csv', false);
-        $object->setExpectedColumns($this->columns);
-        $object->setExpectedColumns($this->columns);
+        $sut = new CsvToArray(__DIR__ . '/missing-columns.csv', false);
+        $sut->setExpectedColumns($this->columns);
+        $sut->setExpectedColumns($this->columns);
 
         try {
-            $object->getData();
-            $this->fail(__METHOD__ . ': expected exception');
+            $sut->getData();
+            self::fail(__METHOD__ . ': expected exception');
         } catch (\RuntimeException $e) {
-            $this->assertStringContainsString('Surname', $e->getMessage());
-            $this->assertStringContainsString('Dep Surname', $e->getMessage());
+            self::assertStringContainsString('Surname', $e->getMessage());
+            self::assertStringContainsString('Dep Surname', $e->getMessage());
         }
     }
 
-    public function testOneLineMissesRequiredColumn()
+    public function testOneLineMissesRequiredColumn(): void
     {
-        $this->expectException(\RuntimeException::class);
-        $object = new CsvToArray(__DIR__ . '/broken-new-lines.csv', false);
-        $object->setExpectedColumns($this->columns);
-        $data = $object->getData();
+        self::expectException(\RuntimeException::class);
+
+        $sut = new CsvToArray(__DIR__ . '/broken-new-lines.csv', false);
+        $sut->setExpectedColumns($this->columns);
+
+        // this throws the exception
+        $sut->getData();
     }
 }
