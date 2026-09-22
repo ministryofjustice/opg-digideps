@@ -23,7 +23,7 @@ class TransactionCsvGeneratorTest extends TestCase
 
     public function setUp(): void
     {
-        $mockTranslator = $this->createMock(TranslatorInterface::class);
+        $mockTranslator = self::createMock(TranslatorInterface::class);
         $mockTranslator->method('trans')
             ->with(new IsType(IsType::TYPE_STRING), [], 'report-money-transaction')
             ->willReturn('SomeCategory');
@@ -35,7 +35,7 @@ class TransactionCsvGeneratorTest extends TestCase
     {
         $csvString = $this->sut->generateTransactionsCsv($this->generateMockReport());
 
-        $this->assertStringContainsString('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
+        self::assertStringContainsString('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
     }
 
     public function testGenerateTransactionsCsvWithTransactions(): void
@@ -49,14 +49,14 @@ class TransactionCsvGeneratorTest extends TestCase
 
         $csvString = $this->sut->generateTransactionsCsv($mockReport);
 
-        $this->assertStringContainsString('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
-        $this->assertEquals(20, preg_match_all('/Gift/', $csvString));
-        $this->assertEquals(20, preg_match_all('/Expense/', $csvString));
-        $this->assertEquals(50, preg_match_all('/Money out/', $csvString));
-        $this->assertEquals(10, preg_match_all('/Money in/', $csvString));
+        self::assertStringContainsString('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
+        self::assertEquals(20, preg_match_all('/Gift/', $csvString));
+        self::assertEquals(20, preg_match_all('/Expense/', $csvString));
+        self::assertEquals(50, preg_match_all('/Money out/', $csvString));
+        self::assertEquals(10, preg_match_all('/Money in/', $csvString));
 
-        $this->assertEquals(35, preg_match_all('/Custom bank name/', $csvString));
-        $this->assertEquals(35, preg_match_all('/\(\*\*\*\* 1234\) 12-34-56\)/', $csvString));
+        self::assertEquals(35, preg_match_all('/Custom bank name/', $csvString));
+        self::assertEquals(35, preg_match_all('/\(\*\*\*\* 1234\) 12-34-56\)/', $csvString));
     }
 
     private function generateMockReport(
@@ -65,7 +65,7 @@ class TransactionCsvGeneratorTest extends TestCase
         int $numMoneyOut = 0,
         int $numMoneyIn = 0
     ): Report&MockObject {
-        $mockReport = $this->createMock(Report::class);
+        $mockReport = self::createMock(Report::class);
 
         $mockReport->method('getId')->willReturn(99);
         $mockReport->method('getGifts')->willReturn(
@@ -125,7 +125,7 @@ class TransactionCsvGeneratorTest extends TestCase
      */
     private function generateBankAccount(int $counter): BankAccount&MockObject
     {
-        $mockBankAccount = $this->createMock(BankAccount::class);
+        $mockBankAccount = self::createMock(BankAccount::class);
         $mockBankAccount->method('getDisplayName')->willReturn('(**** 1234) 12-34-56)');
         $mockBankAccount->method('getBank')->willReturn('Custom bank name ' . $counter);
 
@@ -134,7 +134,7 @@ class TransactionCsvGeneratorTest extends TestCase
 
     private function generateMockClient(): Client&MockObject
     {
-        $mockClient = $this->createMock(Client::class);
+        $mockClient = self::createMock(Client::class);
         $mockClient->method('getFirstname')->willReturn('Firstname' . 32);
         $mockClient->method('getLastname')->willReturn('Lastname' . 32);
         $mockClient->method('getCaseNumber')->willReturn("32323232");

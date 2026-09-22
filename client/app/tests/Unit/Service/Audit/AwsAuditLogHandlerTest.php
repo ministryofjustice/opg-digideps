@@ -183,8 +183,7 @@ class AwsAuditLogHandlerTest extends TestCase
     ): void {
         $result = $this->sut->getLogEventsByLogStream($streamName, $startTime, $endTime, self::LOG_GROUP_NAME);
 
-        $this->assertEquals($expected, $result);
-
+        self::assertEquals($expected, $result);
     }
 
     /**
