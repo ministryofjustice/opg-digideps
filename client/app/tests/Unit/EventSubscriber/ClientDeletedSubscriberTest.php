@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Frontend\Unit\EventSubscriber;
 
 use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Deputy;
+use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Event\ClientDeletedEvent;
 use OPG\Digideps\Frontend\EventSubscriber\ClientDeletedSubscriber;
 use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
@@ -27,7 +29,7 @@ class ClientDeletedSubscriberTest extends TestCase
     /**
      * @dataProvider deputyProvider
      */
-    public function testLogEvent(Client $clientWithUsers, $deputy): void
+    public function testLogEvent(Client $clientWithUsers, Deputy|User $deputy): void
     {
         $logger = self::createMock(LoggerInterface::class);
         $dateTimeProvider = self::createMock(DateTimeProvider::class);

@@ -40,8 +40,10 @@ class DUserPasswordValidator extends UserPasswordValidator
 
     private function isOldPasswordValid($user, $password): bool
     {
-        return $this->restClient->post('user/' . $user->getId() . '/is-password-correct', [
+        $result = $this->restClient->post('user/' . $user->getId() . '/is-password-correct', [
             'password' => $password,
         ]);
+
+        return $result === true || $result === 'true';
     }
 }
