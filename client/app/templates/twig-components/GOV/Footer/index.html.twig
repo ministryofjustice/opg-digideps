@@ -1,0 +1,8 @@
+{% props version=null, wider=false %}
+
+<footer class="govuk-footer" role="contentinfo">
+    <div class="govuk-width-container{% if wider%} opg-width-container--wider{% endif %}">
+        <twig:GOV:Footer:Svg:Crown/>
+        <twig:GOV:Footer:Meta version="{{ version }}"/>
+    </div>
+</footer>
