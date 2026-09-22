@@ -30,8 +30,6 @@ class ReportUnsubmittedSubscriberTest extends TestCase
         $logger = self::createMock(LoggerInterface::class);
         $dateTimeProvider = self::createMock(DateTimeProvider::class);
 
-        $now = new \DateTime();
-        $dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($now);
         $currentUser = UserHelpers::createUser();
         $trigger = 'UNSUBMIT_REPORT';
 
