@@ -42,7 +42,7 @@ class ClientBenefitsCheckTest extends TestCase
 
         $result = $validator->validate($sut, null, 'client-benefits-check');
 
-        $this->assertCount($expectedValidationErrorsCount, $result);
+        self::assertCount($expectedValidationErrorsCount, $result);
     }
 
     public static function invalidDataProvider(): array

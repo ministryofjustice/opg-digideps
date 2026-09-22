@@ -13,7 +13,7 @@ class MoneyReceivedOnClientsBehalfTest extends TestCase
     /**
      * @dataProvider invalidDataProvider
      */
-    public function testValidation($moneyType, $amount, $amountDontKnow, $whoReceived, $expectedViolationCount)
+    public function testValidation(?string $moneyType, ?int $amount, bool $amountDontKnow, ?string $whoReceived, int $expectedViolationCount)
     {
         $sut = new MoneyReceivedOnClientsBehalf()
             ->setMoneyType($moneyType)
@@ -27,7 +27,7 @@ class MoneyReceivedOnClientsBehalfTest extends TestCase
 
         $result = $validator->validate($sut, null, 'client-benefits-check');
 
-        $this->assertCount($expectedViolationCount, $result);
+        self::assertCount($expectedViolationCount, $result);
     }
 
     public static function invalidDataProvider(): array

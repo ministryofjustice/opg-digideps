@@ -32,7 +32,7 @@ class RedisStorageTest extends TestCase
 
         $this->redis->method('get')->with($this->workspace . '_' . $this->prefix . $id)->willReturn($value);
 
-        $this->assertEquals($value, $this->object->get($id));
+        self::assertEquals($value, $this->object->get($id));
     }
 
     public function testSet(): void
@@ -43,6 +43,6 @@ class RedisStorageTest extends TestCase
 
         $this->redis->method('set')->with($this->workspace . '_' . $this->prefix . $id, $value)->willReturn($returnValue);
 
-        $this->assertEquals($returnValue, $this->object->set($id, $value));
+        self::assertEquals($returnValue, $this->object->set($id, $value));
     }
 }

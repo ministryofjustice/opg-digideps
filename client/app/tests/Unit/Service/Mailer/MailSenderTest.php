@@ -56,7 +56,7 @@ class MailSenderTest extends WebTestCase
             ->method('sendEmail')
             ->with('to@email.address', MailFactory::ACTIVATION_TEMPLATE_ID, ['param' => 'param value'], '', 'fake-id');
 
-        $this->assertTrue($this->sut->send($email));
+        self::assertTrue($this->sut->send($email));
     }
 
     private function generateEmail(): Email
@@ -77,6 +77,6 @@ class MailSenderTest extends WebTestCase
 
         $this->notifyClient->method('sendEmail')->willThrowException(new NotifyException('Error message'));
 
-        $this->assertFalse($this->sut->send($email));
+        self::assertFalse($this->sut->send($email));
     }
 }
