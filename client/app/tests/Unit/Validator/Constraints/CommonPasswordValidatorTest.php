@@ -11,35 +11,31 @@ use PHPUnit\Framework\TestCase;
 class CommonPasswordValidatorTest extends TestCase
 {
     /**
-     * @param string $expectedMessage the expected message on a validation violation, if any
-     *
-     * @return CommonPasswordValidator
+     * @param ?string $expectedMessage the expected message on a validation violation, if any
      */
-    public function configureValidator($expectedMessage = null)
+    public function configureValidator(?string $expectedMessage = null): CommonPasswordValidator
     {
         // mock the violation builder
         $builder = $this->getMockBuilder('Symfony\Component\Validator\Violation\ConstraintViolationBuilder')
             ->disableOriginalConstructor()
-            ->setMethods(['addViolation'])
+            ->onlyMethods(['addViolation'])
             ->getMock();
 
         // mock the validator context
         $context = $this->getMockBuilder('Symfony\Component\Validator\Context\ExecutionContext')
             ->disableOriginalConstructor()
-            ->setMethods(['buildViolation'])
+            ->onlyMethods(['buildViolation'])
             ->getMock();
 
         if ($expectedMessage) {
-            $builder->expects($this->once())
-                ->method('addViolation');
+            $builder->expects(self::once())->method('addViolation');
 
-            $context->expects($this->once())
+            $context->expects(self::once())
                 ->method('buildViolation')
-                ->with($this->equalTo($expectedMessage))
-                ->will($this->returnValue($builder));
+                ->with(self::equalTo($expectedMessage))
+                ->will(self::returnValue($builder));
         } else {
-            $context->expects($this->never())
-                ->method('buildViolation');
+            $context->expects(self::never())->method('buildViolation');
         }
 
         // initialize the validator with the mocked context
@@ -57,7 +53,7 @@ class CommonPasswordValidatorTest extends TestCase
     /**
      * Verify a constraint message is triggered when value is invalid.
      */
-    public function testValidateOnInvalid()
+    public function testValidateOnInvalid(): void
     {
         $constraint = new CommonPassword();
         $validator = $this->configureValidator($constraint->message);
@@ -68,7 +64,7 @@ class CommonPasswordValidatorTest extends TestCase
     /**
      * Verify no constraint message is triggered when value is valid.
      */
-    public function testValidateOnValid()
+    public function testValidateOnValid(): void
     {
         $constraint = new CommonPassword();
         $validator = $this->configureValidator();
