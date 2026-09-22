@@ -12,34 +12,29 @@ use PHPUnit\Framework\TestCase;
 
 class YearMustBeFourDigitsAndValidValidatorTest extends TestCase
 {
-    /**
-     * @return YearMustBeFourDigitsAndValidValidator
-     */
-    public function configureValidator(?string $expectedMessage = null)
+    private function configureValidator(?string $expectedMessage = null): YearMustBeFourDigitsAndValidValidator
     {
         // mock the violation builder
         $builder = $this->getMockBuilder('Symfony\Component\Validator\Violation\ConstraintViolationBuilder')
             ->disableOriginalConstructor()
-            ->setMethods(['addViolation'])
+            ->onlyMethods(['addViolation'])
             ->getMock();
 
         // mock the validator context
         $context = $this->getMockBuilder('Symfony\Component\Validator\Context\ExecutionContext')
             ->disableOriginalConstructor()
-            ->setMethods(['buildViolation'])
+            ->onlyMethods(['buildViolation'])
             ->getMock();
 
         if ($expectedMessage) {
-            $builder->expects($this->once())
-                ->method('addViolation');
+            $builder->expects(self::once())->method('addViolation');
 
-            $context->expects($this->once())
+            $context->expects(self::once())
                 ->method('buildViolation')
-                ->with($this->equalTo($expectedMessage))
-                ->will($this->returnValue($builder));
+                ->with(self::equalTo($expectedMessage))
+                ->will(self::returnValue($builder));
         } else {
-            $context->expects($this->never())
-                ->method('buildViolation');
+            $context->expects(self::never())->method('buildViolation');
         }
 
         // initialize the validator with the mocked context
@@ -52,7 +47,7 @@ class YearMustBeFourDigitsAndValidValidatorTest extends TestCase
     /**
      * Verify a constraint message is triggered when court date year is invalid.
      */
-    public function testValidateOnInvalidCourtDate()
+    public function testValidateOnInvalidCourtDate(): void
     {
         $constraint = new YearMustBeFourDigitsAndValid();
         $validator = $this->configureValidator($constraint->message);
@@ -66,7 +61,7 @@ class YearMustBeFourDigitsAndValidValidatorTest extends TestCase
     /**
      * Verify no constraint message is triggered when court date year is valid.
      */
-    public function testValidateOnValidCourtDate()
+    public function testValidateOnValidCourtDate(): void
     {
         $constraint = new YearMustBeFourDigitsAndValid();
         $validator = $this->configureValidator();
@@ -80,7 +75,7 @@ class YearMustBeFourDigitsAndValidValidatorTest extends TestCase
     /**
      * Verify a constraint message is triggered when reporting period year is invalid.
      */
-    public function testValidateOnInvalidYear()
+    public function testValidateOnInvalidYear(): void
     {
         $constraint = new YearMustBeFourDigitsAndValid();
         $validator = $this->configureValidator($constraint->message);
@@ -95,7 +90,7 @@ class YearMustBeFourDigitsAndValidValidatorTest extends TestCase
     /**
      * Verify no constraint message is triggered when reporting period year is valid.
      */
-    public function testValidateOnValidYear()
+    public function testValidateOnValidYear(): void
     {
         $constraint = new YearMustBeFourDigitsAndValid();
         $validator = $this->configureValidator();
