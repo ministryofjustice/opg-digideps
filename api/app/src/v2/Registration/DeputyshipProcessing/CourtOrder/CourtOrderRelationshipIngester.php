@@ -83,11 +83,14 @@ final readonly class CourtOrderRelationshipIngester
             $courtOrderRepository->clear();
             $reportRepository->clear();
         }
+        print_r(['MiB' => intdiv(memory_get_usage(), 1024 * 1024)]);
         foreach ($this->changes->drain() as $courtOrderRelationshipChange) {
+            memory_reset_peak_usage();
             yield $this->reportReassembler->reassembleReport($courtOrderRelationshipChange);
             $this->entityManager->clear();
             $courtOrderRepository->clear();
             $reportRepository->clear();
+            print_r(['MiB' => intdiv(memory_get_usage(), 1024 * 1024)]);
         }
     }
 
