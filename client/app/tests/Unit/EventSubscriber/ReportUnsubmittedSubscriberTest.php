@@ -25,7 +25,7 @@ class ReportUnsubmittedSubscriberTest extends TestCase
         );
     }
 
-    public function logReportUnsubmittedEvent(): void
+    public function testLogReportUnsubmittedEvent(): void
     {
         $logger = self::createMock(LoggerInterface::class);
         $dateTimeProvider = self::createMock(DateTimeProvider::class);

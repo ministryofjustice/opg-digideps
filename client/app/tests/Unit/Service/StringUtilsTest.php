@@ -28,7 +28,7 @@ class StringUtilsTest extends TestCase
     /**
      * @dataProvider secondsToHoursMinutesProvider
      */
-    public function secondsToHoursMinutes($input, $expected): void
+    public function testSecondsToHoursMinutes($input, $expected): void
     {
         self::assertEquals($expected, StringUtils::secondsToHoursMinutes($input));
     }
