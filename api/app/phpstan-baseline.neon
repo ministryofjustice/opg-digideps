@@ -8761,12 +8761,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
-			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
-
-		-
 			message: '#^Cannot access an offset on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
@@ -9057,12 +9051,6 @@ parameters:
 		-
 			message: '#^Cannot unset property Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:\$submittedAnswersByFormSections because it might have hooks in a subclass\.$#'
 			identifier: unset.possiblyHookedProperty
-			count: 1
-			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
@@ -10043,6 +10031,18 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 1
+			path: tests/Behat/bootstrap/v2/Common/DebugTrait.php
+
+		-
+			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: tests/Behat/bootstrap/v2/Common/ReportTrait.php
 
 		-
 			message: '#^Cannot call method format\(\) on DateTime\|null\.$#'
@@ -13359,7 +13359,7 @@ parameters:
 		-
 			message: '#^Cannot call method getHtml\(\) on Behat\\Mink\\Element\\NodeElement\|null\.$#'
 			identifier: method.nonObject
-			count: 6
+			count: 5
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
@@ -13623,7 +13623,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 7
+			count: 5
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
@@ -14815,12 +14815,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
 
 		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Reporting\\Sections\\ReportingSectionsFeatureContext\:\:addAnotherClientBenefit\(\) has parameter \$anotherFlag with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -15271,12 +15265,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between true and true will always evaluate to true\.$#'
-			identifier: identical.alwaysTrue
-			count: 1
-			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
-
-		-
 			message: '#^Variable \$foundHtml might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
@@ -15287,6 +15275,18 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
+
+		-
+			message: '#^If condition is always true\.$#'
+			identifier: if.alwaysTrue
+			count: 1
+			path: tests/Behat/bootstrap/v2/Reporting/Sections/VisitsCareSectionTrait.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between true and true will always evaluate to true\.$#'
+			identifier: identical.alwaysTrue
+			count: 1
+			path: tests/Behat/bootstrap/v2/Reporting/Sections/VisitsCareSectionTrait.php
 
 		-
 			message: '#^Access to an undefined static property Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\UserManagement\\UserManagementFeatureContext\:\:\$dbName\.$#'
@@ -15991,21 +15991,9 @@ parameters:
 			path: tests/Integration/ApiIntegrationTestCase.php
 
 		-
-			message: '#^Call to an undefined method Aws\\S3\\S3Client\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
-
-		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipsCSVIngester\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
 			identifier: method.notFound
 			count: 2
-			path: tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
 
 		-
@@ -16341,12 +16329,6 @@ parameters:
 		-
 			message: '#^Cannot access offset 1 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MoneyReceivedOnClientsBehalf\|false\.$#'
-			identifier: method.nonObject
 			count: 2
 			path: tests/Integration/Controller/ClientBenefitsCheckControllerTest.php
 
@@ -18081,25 +18063,13 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 1
 			path: tests/Integration/ControllerReport/AccountControllerTest.php
 
 		-
 			message: '#^Cannot access offset ''sort_code'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
 			path: tests/Integration/ControllerReport/AccountControllerTest.php
 
 		-
@@ -18129,18 +18099,6 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AccountControllerTest\:\:testGetOneById\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/Integration/ControllerReport/AccountControllerTest.php
 
@@ -18511,36 +18469,6 @@ parameters:
 			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
 
 		-
-			message: '#^Cannot access offset ''money_transactions_in'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''money_transactions_out'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Cannot access offset 2 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
 			message: '#^Cannot call method getAmount\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -18557,42 +18485,6 @@ parameters:
 			identifier: method.nonObject
 			count: 2
 			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''money_transactions_short_in'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''money_transactions_short_out'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Cannot access offset 2 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
 
 		-
 			message: '#^Cannot call method getAmount\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransactionShortIn\|null\.$#'
@@ -18639,18 +18531,6 @@ parameters:
 		-
 			message: '#^Cannot call method getMoneyTransactionsShortInExist\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
 			count: 2
 			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
 
@@ -19069,12 +18949,6 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
-			identifier: argument.type
-			count: 7
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 4
@@ -19129,21 +19003,9 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
-			message: '#^Cannot access offset ''created_by'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''created_on'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''documents'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
@@ -19167,7 +19029,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
@@ -19179,7 +19041,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''report'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
@@ -19345,12 +19207,6 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$caseNumber of method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportSubmissionControllerTest\:\:assertResponseIncludesReportWithCaseNumber\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -19503,12 +19359,6 @@ parameters:
 		-
 			message: '#^Cannot call method getOrderType\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Entity/DeputyIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/Integration/Entity/DeputyIntegrationTest.php
 
@@ -20203,12 +20053,6 @@ parameters:
 			path: tests/Integration/Service/CourtOrderServiceIntegrationTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of static method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Service/CourtOrderServiceIntegrationTest.php
-
-		-
 			message: '#^Cannot call method getEmail\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -20259,19 +20103,13 @@ parameters:
 		-
 			message: '#^Offset 0 might not exist on array\|null\.$#'
 			identifier: offsetAccess.notFound
-			count: 4
-			path: tests/Integration/Service/DeputyServiceIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of static method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
-			identifier: argument.type
 			count: 3
 			path: tests/Integration/Service/DeputyServiceIntegrationTest.php
 
 		-
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, array\|null given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: tests/Integration/Service/DeputyServiceIntegrationTest.php
 
 		-
@@ -20368,18 +20206,6 @@ parameters:
 			message: '#^Cannot access offset ''amount'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 4
-			path: tests/Integration/Stats/Query/QueryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Stats/Query/QueryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: tests/Integration/Stats/Query/QueryIntegrationTest.php
 
 		-
@@ -21097,12 +20923,6 @@ parameters:
 			path: tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 5
@@ -21466,18 +21286,6 @@ parameters:
 			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
-			path: tests/Unit/Command/ProcessLayCSVCommandTest.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Command/ProcessOrgCSVCommandTest.php
-
-		-
-			message: '#^Parameter \#1 \$name of method Symfony\\Bundle\\FrameworkBundle\\Console\\Application\:\:find\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Unit/Command/UserRetentionPolicyCommandTest.php
 
 		-
@@ -21487,21 +21295,9 @@ parameters:
 			path: tests/Unit/Entity/ClientTest.php
 
 		-
-			message: '#^Cannot access offset ''accounts'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
 			message: '#^Cannot access offset ''bank'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Cannot access offset ''closing\-balance\-total'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: tests/Unit/Entity/Report/ReportTest.php
 
 		-
@@ -21514,12 +21310,6 @@ parameters:
 			message: '#^Parameter \#1 \$section of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:hasSection\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: tests/Unit/Entity/Report/ReportTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
-			identifier: argument.type
-			count: 3
 			path: tests/Unit/Entity/Report/ReportTest.php
 
 		-
@@ -21625,45 +21415,15 @@ parameters:
 			path: tests/Unit/Repository/SatisfactionRepositoryTest.php
 
 		-
-			message: '#^Cannot access offset ''_timestamp'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Unit/Repository/SatisfactionRepositoryTest.php
-
-		-
-			message: '#^Cannot access offset ''channel'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Unit/Repository/SatisfactionRepositoryTest.php
-
-		-
 			message: '#^Cannot access offset ''count'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 8
-			path: tests/Unit/Repository/SatisfactionRepositoryTest.php
-
-		-
-			message: '#^Cannot access offset ''period'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Unit/Repository/SatisfactionRepositoryTest.php
-
-		-
-			message: '#^Cannot access offset ''service'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 2
 			path: tests/Unit/Repository/SatisfactionRepositoryTest.php
 
 		-
 			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: tests/Unit/Repository/SatisfactionRepositoryTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Unit/Repository/SatisfactionRepositoryTest.php
 
 		-
@@ -21689,12 +21449,6 @@ parameters:
 			identifier: method.nonObject
 			count: 1
 			path: tests/Unit/Search/ClientSearchFilterTest.php
-
-		-
-			message: '#^Parameter \#1 \$string of function strtolower expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Security/HeaderTokenAuthenticatorTest.php
 
 		-
 			message: '#^Dead catch \- OPG\\Digideps\\Backend\\Exception\\UnauthorisedException is never thrown in the try block\.$#'
@@ -22300,12 +22054,6 @@ parameters:
 			message: '#^Cannot call method with\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 6
-			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
-
-		-
-			message: '#^Method PHPUnit\\Framework\\TestCase\:\:createPartialMock\(\) invoked with named argument \$methods, but it''s not allowed because of @no\-named\-arguments\.$#'
-			identifier: argument.named
-			count: 1
 			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
 
 		-
