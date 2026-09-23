@@ -19,60 +19,66 @@ final readonly class CourtOrderRelationshipReader
      */
     public function read(): \Generator
     {
-        $result = $this->connection->executeQuery("
-            WITH data AS (
-                SELECT
-                    d.case_number AS case_number,
-                    d.order_uid AS order_uid,
-                    d.order_type AS order_type,
-                    COUNT(d.is_hybrid) > 0 AS is_hybrid,
-                    ARRAY_AGG(d.deputy_uid ORDER BY d.deputy_uid) AS deputy_uids
-                FROM staging.deputyship d
-                WHERE
-                    d.order_status = 'ACTIVE'
-                    AND d.deputy_status_on_order = 'ACTIVE'
-                GROUP BY d.case_number, d.order_uid, d.order_type
-            ), resolved AS (
-                SELECT
-                    d1.order_uid AS hw_order_uid,
-                    d2.order_uid AS pfa_order_uid,
-                    CASE
-                        WHEN d1.deputy_uids = d2.deputy_uids THEN 'hybrid'
-                        ELSE 'dual'
-                        END AS kind,
-                    d1.is_hybrid AND d2.is_hybrid AS sirius_hybrid
-                FROM data d1
-                    JOIN data d2
-                        ON d1.case_number = d2.case_number
-                        AND d1.order_uid <> d2.order_uid
-                WHERE
-                    d1.order_type = 'hw'
-                    AND d2.order_type = 'pfa'
-            )
-            SELECT
-                co.client_id,
-                co.id AS order_id,
-                sco.id AS sibling_id,
-                COALESCE(r.kind, 'single') AS kind
-            FROM court_order co
-            LEFT JOIN resolved r
-                ON (co.order_type = 'hw' AND co.court_order_uid = r.hw_order_uid)
-                OR (co.order_type = 'pfa' AND co.court_order_uid = r.pfa_order_uid)
-            LEFT JOIN court_order sco
-                ON (co.order_type = 'pfa' AND sco.court_order_uid = r.hw_order_uid)
-                OR (co.order_type = 'hw' AND sco.court_order_uid = r.pfa_order_uid)
-            WHERE
-                co.status = 'ACTIVE'
-            ORDER BY co.client_id
-        ");
-        foreach ($result->iterateAssociative() as $row) {
-            $row = new ValidatingArray($row);
-            yield new CourtOrderRelationship(
-                $row->getIntegerOrDefault('client_id', 0),
-                $row->getIntegerOrThrow('order_id'),
-                $row->getIntegerOrNull('sibling_id'),
-                CourtOrderKind::from($row->getStringOrThrow('kind'))
-            );
-        }
+        yield new CourtOrderRelationship(20259, 15187519, 15126846, CourtOrderKind::Hybrid);
+        yield new CourtOrderRelationship(131305, 15191928, 15191929, CourtOrderKind::Hybrid);
+        yield new CourtOrderRelationship(131305, 15191929, 15191928, CourtOrderKind::Hybrid);
+        yield new CourtOrderRelationship(131966, 15140309, 15187749, CourtOrderKind::Hybrid);
+        yield new CourtOrderRelationship(131966, 15187749, 15140309, CourtOrderKind::Hybrid);
+        yield new CourtOrderRelationship(20259, 15126846, 15187519, CourtOrderKind::Hybrid);
+        //$result = $this->connection->executeQuery("
+        //    WITH data AS (
+        //        SELECT
+        //            d.case_number AS case_number,
+        //            d.order_uid AS order_uid,
+        //            d.order_type AS order_type,
+        //            COUNT(d.is_hybrid) > 0 AS is_hybrid,
+        //            ARRAY_AGG(d.deputy_uid ORDER BY d.deputy_uid) AS deputy_uids
+        //        FROM staging.deputyship d
+        //        WHERE
+        //            d.order_status = 'ACTIVE'
+        //            AND d.deputy_status_on_order = 'ACTIVE'
+        //        GROUP BY d.case_number, d.order_uid, d.order_type
+        //    ), resolved AS (
+        //        SELECT
+        //            d1.order_uid AS hw_order_uid,
+        //            d2.order_uid AS pfa_order_uid,
+        //            CASE
+        //                WHEN d1.deputy_uids = d2.deputy_uids THEN 'hybrid'
+        //                ELSE 'dual'
+        //                END AS kind,
+        //            d1.is_hybrid AND d2.is_hybrid AS sirius_hybrid
+        //        FROM data d1
+        //            JOIN data d2
+        //                ON d1.case_number = d2.case_number
+        //                AND d1.order_uid <> d2.order_uid
+        //        WHERE
+        //            d1.order_type = 'hw'
+        //            AND d2.order_type = 'pfa'
+        //    )
+        //    SELECT
+        //        co.client_id,
+        //        co.id AS order_id,
+        //        sco.id AS sibling_id,
+        //        COALESCE(r.kind, 'single') AS kind
+        //    FROM court_order co
+        //    LEFT JOIN resolved r
+        //        ON (co.order_type = 'hw' AND co.court_order_uid = r.hw_order_uid)
+        //        OR (co.order_type = 'pfa' AND co.court_order_uid = r.pfa_order_uid)
+        //    LEFT JOIN court_order sco
+        //        ON (co.order_type = 'pfa' AND sco.court_order_uid = r.hw_order_uid)
+        //        OR (co.order_type = 'hw' AND sco.court_order_uid = r.pfa_order_uid)
+        //    WHERE
+        //        co.status = 'ACTIVE'
+        //    ORDER BY co.client_id
+        //");
+        //foreach ($result->iterateAssociative() as $row) {
+        //    $row = new ValidatingArray($row);
+        //    yield new CourtOrderRelationship(
+        //        $row->getIntegerOrDefault('client_id', 0),
+        //        $row->getIntegerOrThrow('order_id'),
+        //        $row->getIntegerOrNull('sibling_id'),
+        //        CourtOrderKind::from($row->getStringOrThrow('kind'))
+        //    );
+        //}
     }
 }
