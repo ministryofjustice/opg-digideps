@@ -11,8 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class ClientUpdatedEventTest extends TestCase
 {
-    /** @test */
-    public function eventIsInitialisedCorrectly()
+    public function testEventIsInitialisedCorrectly(): void
     {
         $preUpdateClient = ClientHelpers::createClient();
         $postUpdateClient = ClientHelpers::createClient();

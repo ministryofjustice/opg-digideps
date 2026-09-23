@@ -22,49 +22,38 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?\DateTime $created = null;
 
-    /**
-     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
+    #[CustomAssert\ClientBenefitsCheck(groups: ['client-benefits-check'])]
     private ?string $whenLastCheckedEntitlement = null;
 
-    /**
-     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
-     */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['report', 'client-benefits-check'])]
+    #[CustomAssert\ClientBenefitsCheck(groups: ['client-benefits-check'])]
     private ?\DateTime $dateLastCheckedEntitlement = null;
 
-    /**
-     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
+    #[CustomAssert\ClientBenefitsCheck(groups: ['client-benefits-check'])]
     private ?string $neverCheckedExplanation = null;
 
-    /**
-     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
+    #[CustomAssert\ClientBenefitsCheck(groups: ['client-benefits-check'])]
     private ?string $doOthersReceiveMoneyOnClientsBehalf = '';
 
-    /**
-     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
+    #[CustomAssert\ClientBenefitsCheck(groups: ['client-benefits-check'])]
     private ?string $dontKnowMoneyExplanation = null;
 
     /**
      * @var MoneyReceivedOnClientsBehalf[]|null
-     *
-     * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf>')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     #[Assert\Valid(groups: ['client-benefits-check'])]
+    #[CustomAssert\ClientBenefitsCheck(groups: ['client-benefits-check'])]
     private ?array $typesOfMoneyReceivedOnClientsBehalf = null;
 
     public function getWhenLastCheckedEntitlement(): ?string

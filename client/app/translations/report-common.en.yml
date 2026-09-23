@@ -22,17 +22,17 @@ prevNextLinks:
   next: Next section
   previous: Previous section
   sections:
-    actions: Actions
+    actions: Actions you plan to take
     assets: Assets
-    bankAccounts: Bank accounts
+    bankAccounts: Accounts
     balance: Balance
     clientProfile: Client profile
-    clientBenefitsCheck: Client benefits check
+    clientBenefitsCheck: Benefits check and money others received
     contacts: Contacts
     debts: Debts
     decisions: Decisions
     deputyExpenses: Deputy expenses
-    documents: Documents
+    documents: Supporting documents
     gifts: Gifts
     incomeBenefits: Income and benefits
     lifestyle: Health and lifestyle

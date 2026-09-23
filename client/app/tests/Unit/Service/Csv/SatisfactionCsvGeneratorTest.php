@@ -11,8 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class SatisfactionCsvGeneratorTest extends TestCase
 {
-    /** @test */
-    public function generateSatisfactionResponsesCsv()
+    public function testGenerateSatisfactionResponsesCsv(): void
     {
         $satisfactions = [
             new Satisfaction()

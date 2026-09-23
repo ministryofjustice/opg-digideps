@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Resolver\SubSectionRoute;
 
 use OPG\Digideps\Frontend\Entity\Report\Report;
@@ -20,14 +22,14 @@ class ProfCostsSubSectionRouteResolverTest extends TestCase
     {
         $route = $this->sut->resolve(new Report(), Status::STATE_NOT_STARTED);
 
-        $this->assertNull($route);
+        self::assertNull($route);
     }
 
     public function testReturnsSummaryRouteIfSectionIsComplete(): void
     {
         $route = $this->sut->resolve(new Report(), Status::STATE_DONE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::SUMMARY_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::SUMMARY_ROUTE, $route);
     }
 
 
@@ -38,7 +40,7 @@ class ProfCostsSubSectionRouteResolverTest extends TestCase
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertNull($route);
+        self::assertNull($route);
     }
 
     // Fixed cost route tests
@@ -51,7 +53,7 @@ class ProfCostsSubSectionRouteResolverTest extends TestCase
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::COSTS_RECEIVED_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::COSTS_RECEIVED_ROUTE, $route);
     }
 
     public function testReturnsBreakdownRouteWhenFixedCostsSubsectionIsCompleteAndNoBreakdownCostsEntered(): void
@@ -62,7 +64,7 @@ class ProfCostsSubSectionRouteResolverTest extends TestCase
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::BREAKDOWN_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::BREAKDOWN_ROUTE, $route);
     }
 
     // Non fixed costs route tests
@@ -76,7 +78,7 @@ class ProfCostsSubSectionRouteResolverTest extends TestCase
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::INTERIM_EXISTS_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::INTERIM_EXISTS_ROUTE, $route);
     }
 
     public function testReturnsInterimRouteWhenInterimExistsAndSubsectionIsIncomplete(): void
@@ -88,7 +90,7 @@ class ProfCostsSubSectionRouteResolverTest extends TestCase
         $report->setProfDeputyInterimCosts([]);
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::INTERIM_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::INTERIM_ROUTE, $route);
     }
 
     public function testReturnsCostsReceivedRouteWhenInterimDoesntExistAndFixedCostSubsectionIsIncomplete(): void
@@ -100,7 +102,7 @@ class ProfCostsSubSectionRouteResolverTest extends TestCase
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::COSTS_RECEIVED_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::COSTS_RECEIVED_ROUTE, $route);
     }
 
 
@@ -114,7 +116,7 @@ class ProfCostsSubSectionRouteResolverTest extends TestCase
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::SCCO_AMOUNT_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::SCCO_AMOUNT_ROUTE, $route);
     }
 
     public function testReturnsBreakdownRouteWhenBreakdownCostsIncomplete(): void
@@ -128,6 +130,6 @@ class ProfCostsSubSectionRouteResolverTest extends TestCase
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::BREAKDOWN_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::BREAKDOWN_ROUTE, $route);
     }
 }

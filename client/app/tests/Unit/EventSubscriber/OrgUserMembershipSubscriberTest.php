@@ -11,15 +11,11 @@ use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\OrganisationHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class OrgUserMembershipSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @test */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals(
             [
@@ -30,8 +26,7 @@ class OrgUserMembershipSubscriberTest extends TestCase
         );
     }
 
-    /** @test */
-    public function logUserAddedEvent()
+    public function testLogUserAddedEvent(): void
     {
         $organisation = OrganisationHelpers::createActivatedOrganisation();
         $addedUser = UserHelpers::createUser();
@@ -39,9 +34,9 @@ class OrgUserMembershipSubscriberTest extends TestCase
         $trigger = 'A_TRIGGER';
         $expectedEventName = 'USER_ADDED_TO_ORG';
 
-        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $dateTimeProvider = self::createMock(DateTimeProvider::class);
         $now = new \DateTime();
-        $dateTimeProvider->getDateTime()->willReturn($now);
+        $dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($now);
 
         $expectedAuditEvent = [
             'trigger' => $trigger,
@@ -54,19 +49,16 @@ class OrgUserMembershipSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $logger = self::prophesize(LoggerInterface::class);
-        $logger
-            ->notice('', $expectedAuditEvent)
-            ->shouldBeCalled();
+        $logger = self::createMock(LoggerInterface::class);
+        $logger->expects(self::once())->method('notice')->with('', $expectedAuditEvent);
 
         $userAddedToOrganisationEvent = new UserAddedToOrganisationEvent($organisation, $addedUser, $currentUser, $trigger);
 
-        $sut = new OrgUserMembershipSubscriber($logger->reveal(), $dateTimeProvider->reveal());
+        $sut = new OrgUserMembershipSubscriber($logger, $dateTimeProvider);
         $sut->logUserAddedEvent($userAddedToOrganisationEvent);
     }
 
-    /** @test */
-    public function logUserRemovedEvent()
+    public function testLogUserRemovedEvent(): void
     {
         $organisation = OrganisationHelpers::createActivatedOrganisation();
         $userToRemove = UserHelpers::createUser();
@@ -74,9 +66,9 @@ class OrgUserMembershipSubscriberTest extends TestCase
         $trigger = 'A_TRIGGER';
         $expectedEventName = 'USER_REMOVED_FROM_ORG';
 
-        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $dateTimeProvider = self::createMock(DateTimeProvider::class);
         $now = new \DateTime();
-        $dateTimeProvider->getDateTime()->willReturn($now);
+        $dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($now);
 
         $expectedAuditEvent = [
             'trigger' => $trigger,
@@ -90,14 +82,11 @@ class OrgUserMembershipSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $logger = self::prophesize(LoggerInterface::class);
-        $logger
-            ->notice('', $expectedAuditEvent)
-            ->shouldBeCalled();
+        $logger = self::createMock(LoggerInterface::class);
+        $logger->expects(self::once())->method('notice')->with('', $expectedAuditEvent);
 
         $userAddedToOrganisationEvent = new UserRemovedFromOrganisationEvent($organisation, $userToRemove, $currentUser, $trigger);
 
-        $sut = new OrgUserMembershipSubscriber($logger->reveal(), $dateTimeProvider->reveal());
-        $sut->logUserRemovedEvent($userAddedToOrganisationEvent);
+        new OrgUserMembershipSubscriber($logger, $dateTimeProvider)->logUserRemovedEvent($userAddedToOrganisationEvent);
     }
 }

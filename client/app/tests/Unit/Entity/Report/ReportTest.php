@@ -11,25 +11,21 @@ class ReportTest extends TestCase
 {
     /**
      * @dataProvider typeProvider
-     *
-     * @test
      */
-    public function determineReportType(Report $report, string $expectedType)
+    public function testDetermineReportType(Report $report, string $expectedType): void
     {
         self::assertEquals($expectedType, $report->determineReportType());
     }
 
     /**
      * @dataProvider typeDefinition
-     *
-     * @test
      */
-    public function getReportTypeDefinition(Report $report, string $expectedType)
+    public function testGetReportTypeDefinition(Report $report, string $expectedType): void
     {
         self::assertEquals($expectedType, $report->getReportTypeDefinition());
     }
 
-    public function typeProvider()
+    public static function typeProvider(): array
     {
         return [
             'HW' => [new Report()->setType(Report::TYPE_HEALTH_WELFARE), 'HW'],
@@ -40,7 +36,7 @@ class ReportTest extends TestCase
         ];
     }
 
-    public function typeDefinition()
+    public static function typeDefinition(): array
     {
         return [
             'HW - Lay' => [new Report()->setType(Report::TYPE_HEALTH_WELFARE), 'Health and Welfare Report'],

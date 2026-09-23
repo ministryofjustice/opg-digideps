@@ -18,8 +18,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class JWTServiceTest extends TestCase
 {
-    /** @var HttpClientInterface&MockObject */
-    private HttpClientInterface $httpClient;
+    private HttpClientInterface&MockObject $httpClient;
 
     private mixed $privateKey;
     private string $publicKeyPem;
@@ -105,8 +104,7 @@ class JWTServiceTest extends TestCase
         $mockResponse = $this->createMock(ResponseInterface::class);
         $mockResponse->method('getContent')->willReturn($jwksJson);
 
-        $this->httpClient
-            ->expects(self::once())
+        $this->httpClient->expects(self::once())
             ->method('request')
             ->with('GET', $jkuUrl)
             ->willReturn($mockResponse);

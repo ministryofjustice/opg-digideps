@@ -16,61 +16,68 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
 class DeputyProviderTest extends TestCase
 {
-    private DeputyProvider $object;
-    private MockObject&RestClient $restClient;
-    private MockObject&LoggerInterface $logger;
+    private RestClient&MockObject $restClient;
+    private LoggerInterface&MockObject $logger;
+    private DeputyProvider $sut;
 
     public function setUp(): void
     {
-        $this->restClient = $this->createMock(RestClient::class);
-        $this->logger = $this->createMock(LoggerInterface::class);
+        $this->restClient = self::createMock(RestClient::class);
+        $this->logger = self::createMock(LoggerInterface::class);
 
-        $this->object = new DeputyProvider($this->restClient, $this->logger);
+        $this->sut = new DeputyProvider($this->restClient, $this->logger);
     }
 
     public function testLogin(): void
     {
         $credentials = ['email' => 'Peter', 'password' => 'p'];
 
-        $user = $this->createMock(User::class);
+        $user = self::createMock(User::class);
         $user->method('getId')->willReturn(1);
-        $authToken = 'abc123';
 
-        $this->restClient->expects($this->once())->method('login')->with($credentials)->willReturn([$user, $authToken]);
-        $this->restClient->expects($this->once())->method('setLoggedUserId')->with(1);
+        $this->restClient->expects(self::once())
+            ->method('login')
+            ->with($credentials)
+            ->willReturn([$user, 'abc123']);
 
-        $this->logger->method('info')->willReturnCallback(function ($e) {
-            throw new \Exception($e);
-        });
+        $this->restClient->expects(self::once())->method('setLoggedUserId')->with(1);
 
-        $this->object->login($credentials);
+        $this->logger->expects(self::never())->method('info');
+
+        $this->sut->login($credentials);
     }
 
     public function testLoginFail(): void
     {
-        $this->expectException(UserNotFoundException::class);
+        self::expectException(UserNotFoundException::class);
 
         $credentials = ['email' => 'Peter', 'password' => 'p'];
 
-        $this->restClient->expects($this->once())->method('login')->with($credentials)->willThrowException(new \Exception('e'));
-        $this->logger->expects($this->once())->method('info');
+        $this->restClient->expects(self::once())
+            ->method('login')
+            ->with($credentials)
+            ->willThrowException(new \Exception('e'));
 
-        $this->object->login($credentials);
+        $this->restClient->expects(self::never())->method('setLoggedUserId');
+
+        $this->logger->expects(self::once())->method('info');
+
+        $this->sut->login($credentials);
     }
 
     public function testLoadUserByIdentifier(): void
     {
-        $mockUser = $this->createMock(User::class);
+        $mockUser = self::createMock(User::class);
 
         $this->restClient->method('setLoggedUserId')->with(1)->willReturn($this->restClient);
         $this->restClient->method('get')->with('user/1', 'User', new IsType(IsType::TYPE_ARRAY))->willReturn($mockUser);
 
-        $this->assertEquals($mockUser, $this->object->loadUserByIdentifier('1'));
+        self::assertEquals($mockUser, $this->sut->loadUserByIdentifier('1'));
     }
 
     public function testSupportsClass(): void
     {
-        $this->assertTrue($this->object->supportsClass(User::class));
-        $this->assertFalse($this->object->supportsClass(Report::class));
+        self::assertTrue($this->sut->supportsClass(User::class));
+        self::assertFalse($this->sut->supportsClass(Report::class));
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Validator\Constraints\ProfDeputyCostsEstimate;
 
 use OPG\Digideps\Frontend\Entity\Report\Report;
