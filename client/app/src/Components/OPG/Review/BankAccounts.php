@@ -56,7 +56,7 @@ final class BankAccounts
                     $bankAccount->requiresSortCode() ? $bankAccount->getDisplaySortCode() : null,
                     $bankAccount->requiresBankName() ? $bankAccount->getBank() : null,
                     $bankAccount->getIsJointAccount() === 'yes',
-                    $bankAccount->getIsClosed()
+                    $bankAccount->getIsClosed() === true
                 ),
                 $this->formatBalance($bankAccount->getOpeningBalance()),
                 $this->formatBalance($bankAccount->getClosingBalance())
