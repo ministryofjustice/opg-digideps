@@ -17,7 +17,6 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
 {
     private ExecutionContextInterface&MockObject $context;
     private Report $data;
-    private ConstraintValidator $sut;
 
     private ConstraintValidator $sut;
 
@@ -44,11 +43,11 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
             ->invokeTest();
     }
 
-    public function testValidatorIgnoresConstraintIfBreakdownTotalNotGreaterThanAmountItCanExceed()
+    public function testValidatorIgnoresConstraintIfBreakdownTotalNotGreaterThanAmountItCanExceed(): void
     {
         foreach (['12.99', '13.00'] as $costVariation) {
             $this->setTotalCostEstimate()
-                ->setIndividualBreakdownCosts('30', $costVariation)
+                ->setIndividualBreakdownCosts($costVariation)
                 ->assertConstraintWillNotBeApplied()
                 ->invokeTest();
         }
