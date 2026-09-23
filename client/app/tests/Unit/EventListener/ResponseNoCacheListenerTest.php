@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\EventListener;
 
 use OPG\Digideps\Frontend\EventListener\ResponseNoCacheListener;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -19,76 +19,95 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class ResponseNoCacheListenerTest extends TestCase
 {
-    use ProphecyTrait;
+    private const array EXPECTED_SET_CALLS = [
+        1 => ['Cache-Control', 'no-cache, no-store, must-revalidate'],
+        2 => ['Pragma', 'no-cache'],
+        3 => ['Expires', '0'],
+        4 => ['X-Session-Safe-Id', 'abc123'],
+    ];
 
-    public function testOnKernelResponseSetsNoCacheHeadersAndSessionSafeId()
+    public function testOnKernelResponseSetsNoCacheHeadersAndSessionSafeId(): void
     {
-        /** @var ObjectProphecy|ResponseHeaderBag $headers */
-        $headers = self::prophesize(ResponseHeaderBag::class);
+        $headers = self::createMock(ResponseHeaderBag::class);
 
-        $headers->set('Cache-Control', 'no-cache, no-store, must-revalidate')->shouldBeCalled();
-        $headers->set('Pragma', 'no-cache')->shouldBeCalled();
-        $headers->set('Expires', '0')->shouldBeCalled();
-        $headers->set('X-Session-Safe-Id', 'abc123')->shouldBeCalled();
+        $invocationMatcher = self::exactly(count(self::EXPECTED_SET_CALLS));
+        $headers->expects($invocationMatcher)
+            ->method('set')
+            ->willReturnCallback(function ($name, $value) use ($invocationMatcher) {
+                $invocation = $invocationMatcher->getInvocationCount();
+                self::assertEquals(self::EXPECTED_SET_CALLS[$invocation][0], $name);
+                self::assertEquals(self::EXPECTED_SET_CALLS[$invocation][1], $value);
+            });
 
-        /** @var ObjectProphecy|Response $response */
-        $response = self::prophesize(Response::class);
-        $response->headers = $headers->reveal();
+        $response = self::createMock(Response::class);
+        $response->headers = $headers;
 
-        /** @var ObjectProphecy|SessionInterface $session */
-        $session = self::prophesize(SessionInterface::class);
-        $session->has('session_safe_id')->willReturn(true);
-        $session->get('session_safe_id')->willReturn('abc123');
+        $session = self::createMock(SessionInterface::class);
+        $session->expects(self::once())
+            ->method('has')
+            ->with('session_safe_id')
+            ->willReturn(true);
+        $session->expects(self::once())
+            ->method('get')
+            ->with('session_safe_id')
+            ->willReturn('abc123');
 
-        /** @var ObjectProphecy|Request $request */
-        $request = self::prophesize(Request::class);
-        $request->getSession()->willReturn($session->reveal());
+        $request = self::createMock(Request::class);
+        $request->expects(self::once())
+            ->method('getSession')
+            ->willReturn($session);
 
-        /** @var ObjectProphecy|KernelInterface $kernel */
-        $kernel = self::prophesize(KernelInterface::class);
+        $kernel = self::createMock(KernelInterface::class);
 
         $event = new ResponseEvent(
-            $kernel->reveal(),
-            $request->reveal(),
+            $kernel,
+            $request,
             HttpKernelInterface::MAIN_REQUEST,
-            $response->reveal()
+            $response
         );
 
         $object = new ResponseNoCacheListener();
         $object->onKernelResponse($event);
     }
 
-    public function testOnKernelResponseWithoutSessionSafeIdDoesNotSetHeader()
+    public function testOnKernelResponseWithoutSessionSafeIdDoesNotSetHeader(): void
     {
-        /** @var ObjectProphecy|ResponseHeaderBag $headers */
-        $headers = self::prophesize(ResponseHeaderBag::class);
+        $headers = self::createMock(ResponseHeaderBag::class);
 
-        $headers->set('Cache-Control', 'no-cache, no-store, must-revalidate')->shouldBeCalled();
-        $headers->set('Pragma', 'no-cache')->shouldBeCalled();
-        $headers->set('Expires', '0')->shouldBeCalled();
-        // session_safe_id header should NOT be set
-        $headers->set('X-Session-Safe-Id', 'abc123')->shouldNotBeCalled();
+        // we only expect three headers to be set, not X-Session-Safe-Id
+        $invocationMatcher = self::exactly(count(self::EXPECTED_SET_CALLS) - 1);
+        $headers->expects($invocationMatcher)
+            ->method('set')
+            ->willReturnCallback(function ($name, $value) use ($invocationMatcher) {
+                $invocation = $invocationMatcher->getInvocationCount();
 
-        /** @var ObjectProphecy|Response $response */
-        $response = self::prophesize(Response::class);
-        $response->headers = $headers->reveal();
+                self::assertNotEquals('X-Session-Safe-Id', $name, 'X-Session-Safe-Id should never be set');
 
-        /** @var ObjectProphecy|SessionInterface $session */
-        $session = self::prophesize(SessionInterface::class);
-        $session->has('session_safe_id')->willReturn(false);
+                self::assertEquals(self::EXPECTED_SET_CALLS[$invocation][0], $name);
+                self::assertEquals(self::EXPECTED_SET_CALLS[$invocation][1], $value);
+            });
 
-        /** @var ObjectProphecy|Request $request */
-        $request = self::prophesize(Request::class);
-        $request->getSession()->willReturn($session->reveal());
+        $response = self::createMock(Response::class);
+        $response->headers = $headers;
 
-        /** @var ObjectProphecy|KernelInterface $kernel */
-        $kernel = self::prophesize(KernelInterface::class);
+        $session = self::createMock(SessionInterface::class);
+        $session->expects(self::once())
+            ->method('has')
+            ->with('session_safe_id')
+            ->willReturn(false);
+
+        $request = self::createMock(Request::class);
+        $request->expects(self::once())
+            ->method('getSession')
+            ->willReturn($session);
+
+        $kernel = self::createMock(KernelInterface::class);
 
         $event = new ResponseEvent(
-            $kernel->reveal(),
-            $request->reveal(),
+            $kernel,
+            $request,
             HttpKernelInterface::MAIN_REQUEST,
-            $response->reveal()
+            $response
         );
 
         $object = new ResponseNoCacheListener();

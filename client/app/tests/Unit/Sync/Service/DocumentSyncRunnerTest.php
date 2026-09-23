@@ -1,19 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Sync\Service;
 
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Sync\Model\Sirius\QueuedDocumentData;
 use OPG\Digideps\Frontend\Sync\Service\DocumentSyncRunner;
 use OPG\Digideps\Frontend\Sync\Service\DocumentSyncService;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class DocumentSyncRunnerTest extends KernelTestCase
 {
-    private DocumentSyncService $syncService;
-    private RestClient $restClient;
+    private DocumentSyncService&MockObject $syncService;
+    private RestClient&MockObject $restClient;
+
     private DocumentSyncRunner $sut;
 
     public function setUp(): void
@@ -56,24 +60,20 @@ class DocumentSyncRunnerTest extends KernelTestCase
             ->setReportSubmitDate(new \DateTime('2020-04-29 15:05:23', new \DateTimeZone('Europe/London')))
             ->setReportType('104');
 
-        $this->restClient
-            ->expects(self::once())
+        $this->restClient->expects(self::once())
             ->method('apiCall')
             ->with('get', 'document/queued', ['row_limit' => '100'], 'array', self::isType('array'), false)
             ->willReturn($rawQueuedDocumentData);
 
-        $this->syncService
-            ->expects(self::once())
+        $this->syncService->expects(self::once())
             ->method('syncDocument')
             ->with($queuedDocumentData);
 
-        $this->syncService
-            ->expects(self::once())
+        $this->syncService->expects(self::once())
             ->method('getDocsNotSyncedCount')
             ->willReturn(0);
 
-        $this->syncService
-            ->expects(self::once())
+        $this->syncService->expects(self::once())
             ->method('getSyncErrorSubmissionIds')
             ->willReturn([]);
 
@@ -83,39 +83,33 @@ class DocumentSyncRunnerTest extends KernelTestCase
 
         $content = $output->fetch();
 
-        $this->assertStringContainsString('1 documents to upload', $content);
-        $this->assertStringContainsString('sync_documents_to_sirius - success - Sync command completed', $content);
+        self::assertStringContainsString('1 documents to upload', $content);
+        self::assertStringContainsString('sync_documents_to_sirius - success - Sync command completed', $content);
     }
 
     public function testExecuteWithSyncErrorSubmissionIds(): void
     {
-        $this->restClient
-            ->expects(self::once())
+        $this->restClient->expects(self::once())
             ->method('apiCall')
             ->with('get', 'document/queued', ['row_limit' => '100'], 'array', self::isType('array'), false)
             ->willReturn(json_encode([]));
 
-        $this->syncService
-            ->expects(self::once())
+        $this->syncService->expects(self::once())
             ->method('getSyncErrorSubmissionIds')
             ->willReturn([1]);
 
-        $this->syncService
-            ->expects(self::once())
+        $this->syncService->expects(self::once())
             ->method('setSubmissionsDocumentsToPermanentError');
 
-        $this->syncService
-            ->expects(self::once())
+        $this->syncService->expects(self::once())
             ->method('getDocsNotSyncedCount')
             ->willReturn(6);
 
-        $this->syncService
-            ->expects(self::once())
+        $this->syncService->expects(self::once())
             ->method('setSyncErrorSubmissionIds')
             ->with([]);
 
-        $this->syncService
-            ->expects(self::once())
+        $this->syncService->expects(self::once())
             ->method('setDocsNotSyncedCount')
             ->with(0);
 
@@ -125,7 +119,7 @@ class DocumentSyncRunnerTest extends KernelTestCase
 
         $content = $output->fetch();
 
-        $this->assertStringContainsString('0 documents to upload', $content);
-        $this->assertStringContainsString('sync_documents_to_sirius - success - 6 documents remaining to sync', $content);
+        self::assertStringContainsString('0 documents to upload', $content);
+        self::assertStringContainsString('sync_documents_to_sirius - success - 6 documents remaining to sync', $content);
     }
 }

@@ -10,27 +10,28 @@ use OPG\Digideps\Frontend\Entity\Report\Document;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Security\DocumentVoter;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class DocumentVoterTest extends TestCase
 {
-    private $sut;
-    private $token;
-    private $deputy;
-    private $organisation;
-    private $client;
-    private $report;
-    private $document;
+    private TokenInterface&MockObject $token;
+    private User $user;
+    private Organisation $organisation;
+    private Client $client;
+    private Report $report;
+    private Document $document;
+    private DocumentVoter $sut;
 
     public function setUp(): void
     {
         $this->sut = new DocumentVoter();
-        $this->token = $this->createMock(TokenInterface::class);
+        $this->token = self::createMock(TokenInterface::class);
 
-        $this->deputy = new User()->setId(87);
-        $this->organisation =  new Organisation()->setId(31)->setIsActivated(true);
+        $this->user = new User()->setId(87);
+        $this->organisation = new Organisation()->setId(31)->setIsActivated('yes');
         $this->report = new Report();
         $this->client = new Client();
         $this->document = new Document();
@@ -38,197 +39,172 @@ class DocumentVoterTest extends TestCase
 
     /**
      * @dataProvider getSupportedAttributes
-     * @param string $attribute
-     * @param bool $expected
      */
     public function testSupports(string $attribute, int $expected): void
     {
         $this->token->method('getUser')->willReturn(null);
-        $this->assertEquals($expected, $this->sut->vote($this->token, new Report(), [$attribute]));
+        self::assertEquals($expected, $this->sut->vote($this->token, new Report(), [$attribute]));
     }
 
-    /**
-     * @return array
-     */
-    public function getSupportedAttributes(): array
+    public static function getSupportedAttributes(): array
     {
         return [
-            [DocumentVoter::ADD_DOCUMENT, Voter::ACCESS_DENIED],
-            [DocumentVoter::DELETE_DOCUMENT, Voter::ACCESS_DENIED],
-            ['UNKNOWN', Voter::ACCESS_ABSTAIN],
+            [DocumentVoter::ADD_DOCUMENT, VoterInterface::ACCESS_DENIED],
+            [DocumentVoter::DELETE_DOCUMENT, VoterInterface::ACCESS_DENIED],
+            ['UNKNOWN', VoterInterface::ACCESS_ABSTAIN],
         ];
     }
 
-    /**
-     * @test
-     */
-    public function voteOnAttributeAllowsLayDeputiesToAddDocumentsToTheirOwnReport(): void
+    public function testVoteOnAttributeAllowsLayDeputiesToAddDocumentsToTheirOwnReport(): void
     {
-        $this->token->method('getUser')->willReturn($this->deputy);
+        $this->token->method('getUser')->willReturn($this->user);
 
-        $this
-            ->ensureReportBelongsToClient()
+        $this->ensureReportBelongsToClient()
             ->ensureClientBelongsToDeputy()
             ->assertDeputyCanAddDocument();
     }
 
-    /**
-     * @test
-     */
-    public function voteOnAttributeDeniesLayDeputiesFromAddingDocumentsToAnotherDeputiesReport(): void
+    public function testVoteOnAttributeDeniesLayDeputiesFromAddingDocumentsToAnotherDeputiesReport(): void
     {
-        $this->token->method('getUser')->willReturn($this->deputy);
+        $this->token->method('getUser')->willReturn($this->user);
 
-        $this
-            ->ensureReportBelongsToClient()
+        $this->ensureReportBelongsToClient()
             ->ensureClientBelongsToDifferentDeputy()
             ->assertDeputyCannotAddDocument();
     }
 
-    /**
-     * @test
-     */
-    public function voteOnAttributeAllowsOrgDeputiesToAddDocumentsToReportBelongingToTheirOrg(): void
+    public function testVoteOnAttributeAllowsOrgDeputiesToAddDocumentsToReportBelongingToTheirOrg(): void
     {
-        $this->token->method('getUser')->willReturn($this->deputy);
+        $this->token->method('getUser')->willReturn($this->user);
 
-        $this
-            ->ensureReportBelongsToClient()
+        $this->ensureReportBelongsToClient()
             ->ensureClientAndDeputyBelongToSameOrganisation()
             ->assertDeputyCanAddDocument();
     }
 
-    /**
-     * @test
-     */
-    public function voteOnAttributeDeniesOrgDeputiesToAddDocumentsToReportNotBelongingToTheirOrg(): void
+    public function testVoteOnAttributeDeniesOrgDeputiesToAddDocumentsToReportNotBelongingToTheirOrg(): void
     {
-        $this->token->method('getUser')->willReturn($this->deputy);
+        $this->token->method('getUser')->willReturn($this->user);
 
-        $this
-            ->ensureReportBelongsToClient()
+        $this->ensureReportBelongsToClient()
             ->ensureClientAndDeputyBelongToDifferentOrganisation()
             ->assertDeputyCannotAddDocument();
     }
 
-    /**
-     * @test
-     */
-    public function voteOnAttributeAllowsLayDeputiesToDeleteDocumentsFromTheirOwnReport(): void
+    public function testVoteOnAttributeAllowsLayDeputiesToDeleteDocumentsFromTheirOwnReport(): void
     {
-        $this->token->method('getUser')->willReturn($this->deputy);
+        $this->token->method('getUser')->willReturn($this->user);
 
-        $this
-            ->ensureDocumentBelongsToReport()
+        $this->ensureDocumentBelongsToReport()
             ->ensureReportBelongsToClient()
             ->ensureClientBelongsToDeputy()
             ->assertDeputyCanDeleteDocument();
     }
 
-    /**
-     * @test
-     */
-    public function voteOnAttributeDeniesLayDeputiesFromDeletingDocumentsFromAnotherDeputiesReport(): void
+    public function testVoteOnAttributeDeniesLayDeputiesFromDeletingDocumentsFromAnotherDeputiesReport(): void
     {
-        $this->token->method('getUser')->willReturn($this->deputy);
+        $this->token->method('getUser')->willReturn($this->user);
 
-        $this
-            ->ensureDocumentBelongsToReport()
+        $this->ensureDocumentBelongsToReport()
             ->ensureReportBelongsToClient()
             ->ensureClientBelongsToDifferentDeputy()
             ->assertDeputyCannotDeleteDocument();
     }
 
-    /**
-     * @test
-     */
-    public function voteOnAttributeAllowsOrgDeputiesToDeleteDocumentsFromReportBelongingToTheirOrg(): void
+    public function testVoteOnAttributeAllowsOrgDeputiesToDeleteDocumentsFromReportBelongingToTheirOrg(): void
     {
-        $this->token->method('getUser')->willReturn($this->deputy);
+        $this->token->method('getUser')->willReturn($this->user);
 
-        $this
-            ->ensureDocumentBelongsToReport()
+        $this->ensureDocumentBelongsToReport()
             ->ensureReportBelongsToClient()
             ->ensureClientAndDeputyBelongToSameOrganisation()
             ->assertDeputyCanAddDocument();
     }
 
-    /**
-     * @test
-     */
-    public function voteOnAttributeDeniesOrgDeputiesFromDeletingDocumentsFromReportNotBelongingToTheirOrg(): void
+    public function testVoteOnAttributeDeniesOrgDeputiesFromDeletingDocumentsFromReportNotBelongingToTheirOrg(): void
     {
-        $this->token->method('getUser')->willReturn($this->deputy);
+        $this->token->method('getUser')->willReturn($this->user);
 
-        $this
-            ->ensureDocumentBelongsToReport()
+        $this->ensureDocumentBelongsToReport()
             ->ensureReportBelongsToClient()
             ->ensureClientAndDeputyBelongToDifferentOrganisation()
             ->assertDeputyCannotAddDocument();
     }
 
-    private function ensureReportBelongsToClient()
+    private function ensureReportBelongsToClient(): static
     {
         $this->report->setClient($this->client);
 
         return $this;
     }
 
-    private function ensureDocumentBelongsToReport()
+    private function ensureDocumentBelongsToReport(): static
     {
         $this->document->setReport($this->report);
 
         return $this;
     }
 
-    private function ensureClientBelongsToDeputy()
+    private function ensureClientBelongsToDeputy(): static
     {
-        $this->client->addUser($this->deputy);
+        $this->client->addUser($this->user);
 
         return $this;
     }
 
-    private function ensureClientAndDeputyBelongToSameOrganisation()
+    private function ensureClientAndDeputyBelongToSameOrganisation(): static
     {
-        $this->deputy->setOrganisations([$this->organisation]);
+        $this->user->setOrganisations([$this->organisation]);
         $this->client->setOrganisation($this->organisation);
 
         return $this;
     }
 
-    private function ensureClientAndDeputyBelongToDifferentOrganisation()
+    private function ensureClientAndDeputyBelongToDifferentOrganisation(): static
     {
-        $deputyOrg = new Organisation()->setId(72)->setIsActivated(true);
-        $this->deputy->setOrganisations([$deputyOrg]);
+        $deputyOrg = new Organisation()->setId(72)->setIsActivated('yes');
+        $this->user->setOrganisations([$deputyOrg]);
         $this->client->setOrganisation($this->organisation);
 
         return $this;
     }
 
-    private function ensureClientBelongsToDifferentDeputy()
+    private function ensureClientBelongsToDifferentDeputy(): static
     {
         $this->client->addUser(new User());
 
         return $this;
     }
 
-    private function assertDeputyCanAddDocument()
+    private function assertDeputyCanAddDocument(): void
     {
-        $this->assertEquals(Voter::ACCESS_GRANTED, $this->sut->vote($this->token, $this->report, [DocumentVoter::ADD_DOCUMENT]));
+        self::assertEquals(
+            VoterInterface::ACCESS_GRANTED,
+            $this->sut->vote($this->token, $this->report, [DocumentVoter::ADD_DOCUMENT])
+        );
     }
 
-    private function assertDeputyCannotAddDocument()
+    private function assertDeputyCannotAddDocument(): void
     {
-        $this->assertEquals(Voter::ACCESS_DENIED, $this->sut->vote($this->token, $this->report, [DocumentVoter::ADD_DOCUMENT]));
+        self::assertEquals(
+            VoterInterface::ACCESS_DENIED,
+            $this->sut->vote($this->token, $this->report, [DocumentVoter::ADD_DOCUMENT])
+        );
     }
 
-    private function assertDeputyCanDeleteDocument()
+    private function assertDeputyCanDeleteDocument(): void
     {
-        $this->assertEquals(Voter::ACCESS_GRANTED, $this->sut->vote($this->token, $this->document, [DocumentVoter::DELETE_DOCUMENT]));
+        self::assertEquals(
+            VoterInterface::ACCESS_GRANTED,
+            $this->sut->vote($this->token, $this->document, [DocumentVoter::DELETE_DOCUMENT])
+        );
     }
 
-    private function assertDeputyCannotDeleteDocument()
+    private function assertDeputyCannotDeleteDocument(): void
     {
-        $this->assertEquals(Voter::ACCESS_DENIED, $this->sut->vote($this->token, $this->document, [DocumentVoter::DELETE_DOCUMENT]));
+        self::assertEquals(
+            VoterInterface::ACCESS_DENIED,
+            $this->sut->vote($this->token, $this->document, [DocumentVoter::DELETE_DOCUMENT])
+        );
     }
 }
