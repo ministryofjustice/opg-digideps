@@ -206,7 +206,7 @@ final readonly class ReportTransitionService
             return $result;
         }
 
-        $oldSibling->removeReport($persistingReport);
+        $defunctReport->setCourtOrder($oldSibling);
         $result->updatedCourtOrders[] = $oldSibling;
 
         /**
@@ -219,13 +219,17 @@ final readonly class ReportTransitionService
         foreach ($currentCourtOrders as $courtOrder) {
             $courtOrder->removeReport($defunctReport);
             $courtOrder->addReport($persistingReport);
-
             $result->updatedCourtOrders[] = $courtOrder;
         }
 
         $result->transitioned = true;
         $result->updatedReports[] = $persistingReport;
-        $result->removedReports[] = $defunctReport;
+        $result->defunctReports[] = $defunctReport;
+
+        if (!$courtOrderChange->hasSiblingIdChange()) {
+            $result->errorMessages[] = "Impossible transition {$courtOrderPair}: Report {$defunctReport->getId()} - Will be attached to hw";
+            $defunctReport->setCourtOrder($courtOrderPair->hwCourtOrder);
+        }
         $result->messages[] = "Dual -> Hybrid: {$courtOrderPair} - Merged defunct report {$defunctReport->getId()} " .
             "into hybrid report {$persistingReport->getId()}";
 
