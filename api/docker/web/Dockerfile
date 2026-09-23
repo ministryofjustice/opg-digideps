@@ -20,11 +20,6 @@ RUN envsubst '$APP_HOST $APP_PORT' < /etc/nginx/conf.d/default.conf.tmpl > /etc/
 # Enable nginx to listen on privileged ports
 RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx && apk del libcap
 
-# Copy and secure health-check script
-RUN mkdir /opt/scripts
-COPY api/docker/web/health-check.sh /opt/scripts/health-check.sh
-RUN chown nginx:nginx /opt/scripts/health-check.sh && chmod 550 /opt/scripts/health-check.sh
-
 # Harden nginx security
 COPY scripts/hardening/harden-nginx.sh /opt/scripts/harden-nginx.sh
 RUN /opt/scripts/harden-nginx.sh && rm /opt/scripts/harden-nginx.sh
