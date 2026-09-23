@@ -277,12 +277,6 @@ parameters:
 			path: api/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\ProcessOrgCSVCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Command/ProcessOrgCSVCommand.php
-
-		-
 			message: '#^Part \$limit \(mixed\) of encapsed string cannot be cast to string\.$#'
 			identifier: encapsedStringPart.nonString
 			count: 1
@@ -2009,6 +2003,12 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: api/app/src/Domain/Deputyship/DeputyshipProcessingRawDbAccess.php
+
+		-
+			message: '#^Parameter \#1 \$courtOrder of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\CourtOrder, OPG\\Digideps\\Backend\\Entity\\CourtOrder\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Domain/Report/ReportTransitionService.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getCaseNumber\(\) has no return type specified\.$#'

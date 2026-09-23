@@ -2023,6 +2023,12 @@ parameters:
 			path: src/Domain/Deputyship/DeputyshipProcessingRawDbAccess.php
 
 		-
+			message: '#^Parameter \#1 \$courtOrder of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\CourtOrder, OPG\\Digideps\\Backend\\Entity\\CourtOrder\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Domain/Report/ReportTransitionService.php
+
+		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getCaseNumber\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1

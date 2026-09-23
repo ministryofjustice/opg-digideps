@@ -225,7 +225,15 @@ final readonly class ReportTransitionService
 
         $result->transitioned = true;
         $result->updatedReports[] = $persistingReport;
-        $result->removedReports[] = $defunctReport;
+        if (!$courtOrderChange->hasSiblingIdChange()) {
+            $current = implode(', ', array_map(function (CourtOrder $order) use ($defunctReport) {
+                $onOrder = $order->getReports()->contains($defunctReport) ? 'On order entity' : '';
+                return "{$order->getOrderType()->value}={$order->getCourtOrderUid()};{$onOrder}";
+            }, $defunctReport->getCourtOrders()));
+            $result->errorMessages[] = "Impossible transition: Report {$defunctReport->getId()} - Remaining orders {$current}";
+            $result->removedReports[] = $defunctReport;
+            $defunctReport->setCourtOrder($this->courtOrderRepository->find(15081037));
+        }
         $result->messages[] = "Dual -> Hybrid: {$courtOrderPair} - Merged defunct report {$defunctReport->getId()} " .
             "into hybrid report {$persistingReport->getId()}";
 
