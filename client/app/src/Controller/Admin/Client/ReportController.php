@@ -103,6 +103,7 @@ class ReportController extends AbstractController
         private readonly ReportApi $reportApi,
         private readonly FormFactoryInterface $formFactory,
         private readonly ReportSectionService $reportSectionService,
+        private readonly ParameterStoreService $parameterStore,
     ) {
     }
 
@@ -154,6 +155,9 @@ class ReportController extends AbstractController
             }
 
             if ($button->getName() === ReviewChecklistType::SUBMIT_ACTION) {
+                if ($this->isChecklistSyncEnabled()) {
+                    $this->queueChecklistForSyncing($report);
+                }
                 return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id' => $report->getId()]));
             } else {
                 $this->addFlash('notice', 'Review checklist saved');
@@ -192,6 +196,9 @@ class ReportController extends AbstractController
                 );
             } else {
                 if ($buttonClicked->getName() == 'submitAndContinue') {
+                    if ($this->isChecklistSyncEnabled()) {
+                        $this->queueChecklistForSyncing($report);
+                    }
                     return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id' => $report->getId()]));
                 } else {
                     return $this->redirect($this->generateUrl('admin_report_checklist', ['id' => $report->getId()]) . '#');
@@ -230,27 +237,24 @@ class ReportController extends AbstractController
     #[Route(path: 'checklist-submitted', name: 'admin_report_checklist_submitted')]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
     #[Template('@App/Admin/Client/Report/checklistSubmitted.html.twig')]
-    public function checklistSubmittedAction(int $id, ParameterStoreService $parameterStore): array
+    public function checklistSubmittedAction(int $id): array
     {
         $report = $this->reportApi->getReport($id, ['report-checklist']);
-        $syncFeatureIsEnabled = false;
-
-        if ($parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC) === '1') {
-            $checklist = $report->getChecklist();
-
-            if ($checklist === null) {
-                throw new \DomainException('cannot synchronise checklist for report as checklist does not exist');
-            }
-
-            $syncFeatureIsEnabled = true;
-            $checklist->setSynchronisationStatus(Checklist::SYNC_STATUS_QUEUED);
-            $this->restClient->put("report/{$id}/checked", $checklist, ['synchronisation']);
-        }
 
         return [
             'report' => $report,
-            'syncFeatureIsEnabled' => $syncFeatureIsEnabled,
+            'syncFeatureIsEnabled' => $this->isChecklistSyncEnabled(),
         ];
+    }
+
+    protected function queueChecklistForSyncing(Report $report): void
+    {
+        $checklist = $report->getChecklist();
+        if ($checklist === null) {
+            throw new \DomainException('cannot synchronise checklist for report as checklist does not exist');
+        }
+        $checklist->setSynchronisationStatus(SynchronisableInterface::SYNC_STATUS_QUEUED);
+        $this->restClient->put('report/' . $report->getId() . '/checked', $report->getChecklist(), ['synchronisation']);
     }
 
     /**
@@ -618,5 +622,14 @@ class ReportController extends AbstractController
         $this->restClient->{$httpMethod}('report/' . $report->getId() . '/checked', $checklist, [
             'report-checklist', 'checklist-information',
         ]);
+    }
+
+    private function isChecklistSyncEnabled(): bool
+    {
+        if ($this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC) !== '1') {
+            return false;
+        }
+
+        return true;
     }
 }
