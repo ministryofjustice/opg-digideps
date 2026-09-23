@@ -54,6 +54,7 @@ COPY --chown=www-data:www-data api/app/api.env api.env
 COPY --chown=www-data:www-data api/app/openapi openapi
 COPY --chown=www-data:www-data api/app/postgres.env postgres.env
 COPY --chown=www-data:www-data api/app/scripts/wait-for-db.sh wait-for-db.sh
+COPY --chown=www-data:www-data api/app/scripts/run-migrations.sh run-migrations.sh
 
 COPY --chown=www-data:www-data api/docker/app/config/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY --chown=www-data:www-data api/docker/app/config/generate_parameters_yml.sh generate_parameters_yml.sh
@@ -152,8 +153,7 @@ USER www-data
 
 CMD ["sh", "-c", "/var/www/check_processes.sh & \
     /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
-    && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
-    && php app/console doctrine:migrations:up-to-date \
+    && /var/www/run-migrations.sh \
     && echo 'Image Target: runtime' \
     && exec php-fpm"]
 
@@ -193,8 +193,7 @@ USER www-data
 
 CMD ["sh", "-c", "/var/www/check_processes.sh & \
     /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
-    && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
-    && php app/console doctrine:migrations:up-to-date \
+    && /var/www/run-migrations.sh \
     && echo 'Image Target: devtools' \
     && exec php-fpm"]
 
@@ -207,7 +206,6 @@ USER root
 
 CMD ["sh", "-c", "/var/www/check_processes.sh & \
     /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
-    && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
-    && php app/console doctrine:migrations:up-to-date \
+    && /var/www/run-migrations.sh \
     && echo 'Image Target: devtools-admin' \
     && exec php-fpm"]

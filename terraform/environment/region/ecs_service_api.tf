@@ -98,9 +98,10 @@ locals {
           "CMD-SHELL",
           "curl -f http://127.0.0.1:80/health-check || exit 1"
         ],
-        interval = 30,
-        timeout  = 5,
-        retries  = 3
+        interval    = 30,
+        timeout     = 5,
+        retries     = 3,
+        startPeriod = 300
       },
       volumesFrom = [],
       logConfiguration = {
