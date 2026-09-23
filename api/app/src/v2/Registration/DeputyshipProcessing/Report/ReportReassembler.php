@@ -30,6 +30,10 @@ final readonly class ReportReassembler
             $this->entityManager->persist($updatedReport);
         }
 
+        foreach ($transitionResult->removedReports as $removedReport) {
+            $this->entityManager->remove($removedReport);
+        }
+
         $this->entityManager->flush();
 
         if ($transitionResult->hasErrors()) {
