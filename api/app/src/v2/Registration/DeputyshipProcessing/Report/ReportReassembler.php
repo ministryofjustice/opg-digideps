@@ -29,6 +29,9 @@ final readonly class ReportReassembler
         foreach ($transitionResult->updatedReports as $updatedReport) {
             $this->entityManager->persist($updatedReport);
         }
+        foreach ($transitionResult->defunctReports as $defunctReport) {
+            $this->entityManager->persist($defunctReport);
+        }
 
         $this->entityManager->flush();
 

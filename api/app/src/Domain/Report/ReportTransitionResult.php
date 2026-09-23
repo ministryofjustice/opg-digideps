@@ -21,8 +21,8 @@ final class ReportTransitionResult
         public array $updatedReports = [],
         /** @var array<CourtOrder> $updatedCourtOrders */
         public array $updatedCourtOrders = [],
-        /** @var array<Report> $removedReports */
-        public array $removedReports = [],
+        /** @var array<Report> $defunctReports */
+        public array $defunctReports = [],
     ) {
     }
 

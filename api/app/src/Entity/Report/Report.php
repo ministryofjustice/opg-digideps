@@ -1275,8 +1275,16 @@ class Report
         $this->pfaCourtOrder?->getSibling()?->removeReport($this);
         $this->hwCourtOrder?->getSibling()?->removeReport($this);
 
-        $this->pfaCourtOrder = $courtOrder->getOrderType() === CourtOrderType::HW ? $courtOrder->isHybrid() ? $courtOrder->getSibling() : null : $courtOrder;
-        $this->hwCourtOrder = $courtOrder->getOrderType() === CourtOrderType::PFA ? $courtOrder->isHybrid() ? $courtOrder->getSibling() : null : $courtOrder;
+        $sibling = null;
+        if ($courtOrder->isHybrid()) {
+            $sibling = $courtOrder->getSibling();
+            if ($sibling?->getSibling() !== $courtOrder) {
+                $sibling?->removeReport($this);
+                $sibling = null;
+            }
+        }
+        $this->pfaCourtOrder = $courtOrder->getOrderType() === CourtOrderType::PFA ? $courtOrder : $sibling;
+        $this->hwCourtOrder = $courtOrder->getOrderType() === CourtOrderType::HW ? $courtOrder : $sibling;
 
         if ($this->pfaCourtOrder !== null && !$this->pfaCourtOrder->getReports()->contains($this)) {
             $this->pfaCourtOrder->getReports()->add($this);
