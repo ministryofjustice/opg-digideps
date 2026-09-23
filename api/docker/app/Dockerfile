@@ -198,7 +198,7 @@ USER www-data
 
 CMD ["sh", "-c", "/var/www/check_processes.sh & \
     /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
-    /var/www/run-migrations.sh \
+    && /var/www/run-migrations.sh \
     && echo 'Image Target: devtools' \
     && exec php-fpm"]
 

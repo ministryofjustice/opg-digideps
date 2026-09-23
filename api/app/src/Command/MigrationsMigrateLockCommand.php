@@ -2,103 +2,122 @@
 
 namespace OPG\Digideps\Backend\Command;
 
-use Predis\Client;
+use Doctrine\DBAL\Connection;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * command that launches doctrine migration,
- * using redis to implement locking in order to prevent concurrent execution.
+ * Runs doctrine migrations protected by a PostgreSQL advisory lock.
  *
  * @codeCoverageIgnore
  */
 class MigrationsMigrateLockCommand extends Command
 {
-    public const string LOCK_KEY = 'migration_status';
-    public const string LOCK_VALUE = 'locked';
-    public const int LOCK_EXPIRES_SECONDS = 3600;
+    /**
+     * Arbitrary 64-bit lock key.
+     * Change only if you intentionally want a different lock scope.
+     */
+    private const int LOCK_ID = 0x4449474944455053; // "DIGIDEPS"
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this
             ->setName('doctrine:migrations:migrate-lock')
-            ->setDescription('Same as doctrine:migrations:migrate, but locking the database.')
-            ->setHelp('')
-            ->addOption('release-lock', null, InputOption::VALUE_NONE, 'Release lock and exit.')
-        ;
+            ->setDescription('Same as doctrine:migrations:migrate, but protected by a PostgreSQL advisory lock.')
+            ->addOption(
+                'release-lock',
+                null,
+                InputOption::VALUE_NONE,
+                'Release the advisory lock and exit.'
+            );
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        // release lock and exit
         if ($input->getOption('release-lock')) {
             $this->releaseLock($output);
 
-            return 0;
+            return Command::SUCCESS;
         }
 
+        $connection = $this->getConnection();
+
         try {
-            if ($this->acquireLock($output)) {
-                $returnCode = parent::execute($input, $output);
-                $this->releaseLock($output);
+            if (!$this->acquireLock($output)) {
+                $message = 'Migration lock is already held by another process. Skipping migration.';
+                $this->getLogger()?->warning($message);
+                $output->writeln(sprintf('<comment>%s</comment>', $message));
 
-                return $returnCode;
-            } else {
-                $message = 'Migration is locked by another migration, skipped. Launch with --release-lock if needed.';
-                $this->getService('logger')->warning($message);
-                $output->writeln($message);
-
-                return 0;
+                return Command::SUCCESS;
             }
-        } catch (\Throwable $e) {
-            // in case of exception, delete the lock, then re-throw to keep the parent behaviour
-            $this->releaseLock($output);
 
-            throw $e;
+            $migrationCommand = $this->getApplication()->find('doctrine:migrations:migrate');
+
+            $migrationInput = new ArrayInput([
+                '--allow-no-migration' => true,
+                '--no-interaction' => true,
+            ]);
+
+            $migrationInput->setInteractive(false);
+
+            return $migrationCommand->run($migrationInput, $output);
+        } finally {
+            try {
+                if ($connection->isConnected()) {
+                    $this->releaseLock($output);
+                }
+            } catch (\Throwable $e) {
+                $this->getLogger()?->error(
+                    'Failed to release PostgreSQL advisory lock',
+                    ['exception' => $e]
+                );
+            }
         }
     }
 
-    /**
-     * @return bool true if lock is acquired, false if not (already acquired)
-     */
     private function acquireLock(OutputInterface $output): bool
     {
-        $ret = $this->getRedis()->set(
-            self::LOCK_KEY,
-            self::LOCK_VALUE,
-            'EX',
-            self::LOCK_EXPIRES_SECONDS,
-            'NX'
+        $acquired = (bool) $this->getConnection()->fetchOne(
+            'SELECT pg_try_advisory_lock(?)',
+            [self::LOCK_ID]
         );
 
         $output->writeln(
-            $ret === 'OK'
-                ? 'Lock acquired.'
-                : 'Cannot acquire lock, already acquired.'
+            $acquired
+                ? '<info>Migration advisory lock acquired.</info>'
+                : '<comment>Migration advisory lock already held.</comment>'
         );
 
-        return $ret === 'OK';
+        return $acquired;
     }
 
-    /**
-     * release lock.
-     */
-    private function releaseLock(OutputInterface $output): int
+    private function releaseLock(OutputInterface $output): void
     {
-        $output->writeln('Lock released.');
+        $released = (bool) $this->getConnection()->fetchOne(
+            'SELECT pg_advisory_unlock(?)',
+            [self::LOCK_ID]
+        );
 
-        return $this->getRedis()->del(self::LOCK_KEY);
+        $output->writeln(
+            $released
+                ? '<info>Migration advisory lock released.</info>'
+                : '<comment>No advisory lock held by this session.</comment>'
+        );
     }
 
-    private function getRedis(): Client
+    private function getConnection(): Connection
     {
-        return $this->getService('predis');
+        return $this->getService('doctrine')->getConnection();
+    }
+
+    private function getLogger(): ?object
+    {
+        return $this->getService('logger');
     }
 
     private function getService(string $id): mixed
@@ -109,6 +128,8 @@ class MigrationsMigrateLockCommand extends Command
         /** @var ContainerInterface $container */
         $container = $application->getKernel()->getContainer();
 
-        return $container->get($id);
+        return $container->has($id)
+            ? $container->get($id)
+            : null;
     }
 }

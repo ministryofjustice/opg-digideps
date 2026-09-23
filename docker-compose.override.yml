@@ -3,7 +3,7 @@
 services:
   resources:
     volumes:
-      - ./client/resources/public:/app/public
+      - ./client/resources/public/:/app/public/
 
   frontend-webserver:
     volumes:
