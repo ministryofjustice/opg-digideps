@@ -23,3 +23,5 @@ review:
 submitted:
   htmlTitle: Submitted report - Complete the deputy report | GOV.UK
   pageTitle: Submitted report
+
+pdfDraftSentence: This is a PDF draft of your report. It has not been submitted to the OPG.
