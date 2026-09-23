@@ -1270,17 +1270,13 @@ class Report
 
     public function setCourtOrder(CourtOrder $courtOrder): static
     {
-        $newPfaCourtOrder = $courtOrder->getOrderType() === CourtOrderType::HW ? $courtOrder->isHybrid() ? $courtOrder->getSibling() : null : $courtOrder;
-        $newHwCourtOrder = $courtOrder->getOrderType() === CourtOrderType::PFA ? $courtOrder->isHybrid() ? $courtOrder->getSibling() : null : $courtOrder;
+        $this->pfaCourtOrder?->removeReport($this);
+        $this->hwCourtOrder?->removeReport($this);
+        $this->pfaCourtOrder?->getSibling()?->removeReport($this);
+        $this->hwCourtOrder?->getSibling()?->removeReport($this);
 
-        if ($this->pfaCourtOrder !== $newPfaCourtOrder) {
-            $this->pfaCourtOrder?->removeReport($this);
-            $this->pfaCourtOrder = $newPfaCourtOrder;
-        }
-        if ($this->hwCourtOrder !== $newHwCourtOrder) {
-            $this->hwCourtOrder?->removeReport($this);
-            $this->hwCourtOrder = $newHwCourtOrder;
-        }
+        $this->pfaCourtOrder = $courtOrder->getOrderType() === CourtOrderType::HW ? $courtOrder->isHybrid() ? $courtOrder->getSibling() : null : $courtOrder;
+        $this->hwCourtOrder = $courtOrder->getOrderType() === CourtOrderType::PFA ? $courtOrder->isHybrid() ? $courtOrder->getSibling() : null : $courtOrder;
 
         if ($this->pfaCourtOrder !== null && !$this->pfaCourtOrder->getReports()->contains($this)) {
             $this->pfaCourtOrder->getReports()->add($this);
