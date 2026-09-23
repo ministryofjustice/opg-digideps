@@ -89,15 +89,16 @@ final readonly class ReportTransitionService
         $tooFew = $courtOrder->getOrderKind() === CourtOrderKind::Hybrid && count($report->getCourtOrders()) !== 2;
         $tooMany = $courtOrder->getOrderKind() !== CourtOrderKind::Hybrid && count($report->getCourtOrders()) === 2;
         if ($tooFew || $tooMany) {
-            $uids = implode(', ', array_map(fn (CourtOrder $order): string => "{$order->getOrderType()->value}={$order->getCourtOrderUid()}", $report->getCourtOrders()));
+            $uidsBefore = implode(', ', array_map(fn (CourtOrder $order): string => "{$order->getOrderType()->value}={$order->getCourtOrderUid()}", $report->getCourtOrders()));
             $report->setCourtOrder($courtOrder);
+            $uidsAfter = implode(', ', array_map(fn (CourtOrder $order): string => "{$order->getOrderType()->value}={$order->getCourtOrderUid()}", $report->getCourtOrders()));
             $result->updatedCourtOrders[] = $courtOrder;
             $result->updatedReports[] = $report;
             if ($tooFew) {
-                $result->messages[] = "Added missing court order to report {$report->getId()} - {$debug} - Triggered by {$courtOrder->getOrderType()->value} {$courtOrder->getCourtOrderUid()} - Prev: {$uids}";
+                $result->messages[] = "Added missing court order to report {$report->getId()} - {$debug} - Triggered by {$courtOrder->getOrderType()->value} {$courtOrder->getCourtOrderUid()} - Prev: {$uidsBefore} - After: {$uidsAfter}";
             }
             if ($tooMany) {
-                $result->messages[] = "Removed superfluous court order from report {$report->getId()} - {$debug} - Triggered by {$courtOrder->getOrderType()->value} {$courtOrder->getCourtOrderUid()} - Prev: {$uids}";
+                $result->messages[] = "Removed superfluous court order from report {$report->getId()} - {$debug} - Triggered by {$courtOrder->getOrderType()->value} {$courtOrder->getCourtOrderUid()} - Prev: {$uidsBefore} - After: {$uidsAfter}";
             }
         }
     }
