@@ -13,7 +13,7 @@ Feature: Section navigation - Public Authority (see section-navigation.lay.combi
         Given a Public Authority Deputy has not started a Combined High Assets report
         When I visit the gifts report section
         Then the previous section should be "Deputy fees and expenses"
-        And the next section should be "Actions"
+        And the next section should be "Actions you plan to take"
 
     @pa-admin-combined-high-not-started
     Scenario: Health and lifestyle

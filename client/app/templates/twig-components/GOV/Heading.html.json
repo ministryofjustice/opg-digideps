@@ -8,7 +8,8 @@
             "default": "1",
             "info": "Which header tag to use"
         },
-        { "name": "caption", "type": "string", "default": "null" }
+        { "name": "caption", "type": "string", "default": "null" },
+        { "name": "hidden", "type": "boolean", "default": "false" }
     ],
     "examples": ["heading"]
 }
