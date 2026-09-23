@@ -39,10 +39,11 @@ if ! terraform workspace select "${workspace_name}"; then
 fi
 
 if terraform destroy -auto-approve; then
-  terraform import "module.eu_west_1[0].aws_cloudwatch_log_group.container_insights" "/aws/ecs/containerinsights/${workspace_name}/performance"
-
-  # Second destroy to remove performance log group as first destroy recreates it
-  terraform destroy -auto-approve
+  if terraform import "module.eu_west_1[0].aws_cloudwatch_log_group.container_insights" "/aws/ecs/containerinsights/${workspace_name}/performance"; then
+    terraform destroy -auto-approve
+  else
+    echo "Container Insights log group was not recreated; skipping second destroy."
+  fi
 
   terraform workspace select default
   terraform workspace delete "${workspace_name}"

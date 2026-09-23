@@ -108,6 +108,8 @@ jobs:
   slack_notify_failure:
     name: notify of failure
     uses: $/.github/workflows/_slack-notification.yml
+    permissions:
+      id-token: write
     if: ${{ failure() }}
     needs:
       - terraform_environment_cleanup
