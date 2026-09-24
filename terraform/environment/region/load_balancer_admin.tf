@@ -25,6 +25,23 @@ resource "aws_lb_listener" "admin" {
   certificate_arn   = local.certificate_arn
 
   default_action {
+    type = "authenticate-oidc"
+    authenticate_oidc {
+      authentication_request_extra_params = {}
+      authorization_endpoint              = "${local.admin_cognito_user_pool_domain_name}/oauth2/authorize"
+      client_id                           = aws_cognito_user_pool_client.deputy_reporting_admin.id
+      client_secret                       = aws_cognito_user_pool_client.deputy_reporting_admin.client_secret
+      issuer                              = "https://cognito-idp.eu-west-1.amazonaws.com/${local.admin_cognito_user_pool_id}"
+      on_unauthenticated_request          = "authenticate"
+      scope                               = "openid"
+      session_cookie_name                 = "AWSELBAuthSessionCookie"
+      session_timeout                     = aws_cognito_user_pool_client.deputy_reporting_admin.id_token_validity
+      token_endpoint                      = "${local.admin_cognito_user_pool_domain_name}/oauth2/token"
+      user_info_endpoint                  = "${local.admin_cognito_user_pool_domain_name}/oauth2/userInfo"
+    }
+  }
+
+  default_action {
     target_group_arn = aws_lb_target_group.admin_http.arn
     type             = "forward"
   }
