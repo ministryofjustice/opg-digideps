@@ -34,6 +34,18 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "identity_eu_west_1"
+  default_tags {
+    tags = local.default_tags
+  }
+  assume_role {
+    role_arn     = "arn:aws:iam::631181914621:role/${var.DEFAULT_ROLE}"
+    session_name = "terraform-session"
+  }
+}
+
 # New config
 provider "aws" {
   region = "eu-west-1"
@@ -79,6 +91,18 @@ provider "aws" {
   }
   assume_role {
     role_arn     = "arn:aws:iam::311462405659:role/${var.MANAGEMENT_ROLE}"
+    session_name = "terraform-session"
+  }
+}
+
+provider "aws" {
+  region = "eu-west-2"
+  alias  = "identity_eu_west_2"
+  default_tags {
+    tags = local.default_tags
+  }
+  assume_role {
+    role_arn     = "arn:aws:iam::631181914621:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
 }
