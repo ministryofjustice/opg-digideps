@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use JMS\Serializer\Annotation as JMS;
@@ -7,100 +9,63 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportBalanceTrait
 {
-    /**
-     *
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['balance', 'balance_mismatch_explanation'])]
     #[Assert\NotBlank(message: 'report.balanceMismatchExplanation.notBlank', groups: ['balance'])]
     #[Assert\Length(min: 10, minMessage: 'report.balanceMismatchExplanation.length', groups: ['balance'])]
-    private $balanceMismatchExplanation;
+    private ?string $balanceMismatchExplanation = null;
 
-    /**
-     * @var float
-     */
     #[JMS\Type('double')]
-    private $totalsOffset;
+    private float $totalsOffset = 0.0;
 
-    /**
-     * @var bool
-     */
     #[JMS\Type('boolean')]
-    private $totalsMatch;
+    private bool $totalsMatch = false;
 
-    /**
-     * @return string
-     */
-    public function getBalanceMismatchExplanation()
+    #[JMS\Type('double')]
+    private float $calculatedBalance = 0.0;
+
+    public function getBalanceMismatchExplanation(): ?string
     {
         return $this->balanceMismatchExplanation;
     }
 
-    /**
-     * @param string $balanceMismatchExplanation
-     */
-    public function setBalanceMismatchExplanation($balanceMismatchExplanation): static
+    public function setBalanceMismatchExplanation(?string $balanceMismatchExplanation): static
     {
         $this->balanceMismatchExplanation = $balanceMismatchExplanation;
 
         return $this;
     }
 
-    /**
-     * @var float
-     */
-    #[JMS\Type('double')]
-    private $calculatedBalance;
-
-    /**
-     * @return float
-     */
-    public function getCalculatedBalance()
+    public function getCalculatedBalance(): float
     {
         return $this->calculatedBalance;
     }
 
-    /**
-     * @param float $calculatedBalance
-     */
-    public function setCalculatedBalance($calculatedBalance): static
+    public function setCalculatedBalance(?float $calculatedBalance): static
     {
-        $this->calculatedBalance = $calculatedBalance;
+        $this->calculatedBalance = $calculatedBalance ?? 0.0;
 
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getTotalsOffset()
+    public function getTotalsOffset(): float
     {
         return $this->totalsOffset;
     }
 
-    /**
-     * @param float $totalsOffset
-     */
-    public function setTotalsOffset($totalsOffset): static
+    public function setTotalsOffset(?float $totalsOffset): static
     {
-        $this->totalsOffset = $totalsOffset;
+        $this->totalsOffset = $totalsOffset ?? 0.0;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isTotalsMatch()
+    public function isTotalsMatch(): bool
     {
         return $this->totalsMatch;
     }
 
-    /**
-     * @param bool $totalsMatch
-     */
-    public function setTotalsMatch($totalsMatch): static
+    public function setTotalsMatch(bool $totalsMatch): static
     {
         $this->totalsMatch = $totalsMatch;
 

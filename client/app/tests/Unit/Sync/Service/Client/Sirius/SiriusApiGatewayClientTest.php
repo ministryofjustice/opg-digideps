@@ -28,7 +28,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
 
         $client->expects(self::atLeastOnce())
             ->method('send')
-            ->willReturnCallback(function (RequestInterface $request, array $ignored = []) use ($requestFixture) {
+            ->willReturnCallback(function (RequestInterface $request, array $_ = []) use ($requestFixture) {
                 $validator = new ValidatorBuilder()->fromYamlFile(self::SPEC_PATH)->getRequestValidator();
                 $failure = null;
                 $validationResult = null;
