@@ -5,7 +5,7 @@ import getpass
 from io import BytesIO
 from botocore.response import StreamingBody
 
-import requests
+from urllib import request
 import boto3
 
 
@@ -87,20 +87,30 @@ def get_lambda_client(environment):
 
 class LocalLambdaClient:
     def __init__(
-        self, base_url="http://localhost:9070/2015-03-31/functions/function/invocations"
+        self,
+        base_url="http://localhost:9070/2015-03-31/functions/function/invocations",
     ):
         self.base_url = base_url
 
     def invoke(self, FunctionName, Payload):
-        response = requests.post(self.base_url, data=Payload)
-        realistic_response = {}
-        encoded_message = json.dumps(response.json()).encode("utf-8")
-        payload_stream = BytesIO(encoded_message)
-        realistic_response["Payload"] = StreamingBody(
-            payload_stream, len(encoded_message)
+        req = request.Request(
+            self.base_url,
+            data=Payload.encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
         )
 
-        return realistic_response
+        with request.urlopen(req) as response:
+            parsed_response = json.loads(response.read().decode("utf-8"))
+
+        encoded_message = json.dumps(parsed_response).encode("utf-8")
+
+        return {
+            "Payload": StreamingBody(
+                BytesIO(encoded_message),
+                len(encoded_message),
+            )
+        }
 
 
 def run_insert(

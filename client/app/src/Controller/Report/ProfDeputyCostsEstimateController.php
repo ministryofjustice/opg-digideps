@@ -169,7 +169,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
     /**
      * Retrieves the list of default estimate cost type IDs using virtual property from api
-     * Used to generate the page since with no initial data, we cant display form inputs
+     * Used to generate the page since with no initial data, we can't display form inputs
      * without this list.
      */
     private function generateDefaultEstimateCosts(Report $report): array

@@ -50,11 +50,11 @@ final class Balance
 
         $started = $report->getStatus()->getExpensesState()['state'] !== 'not-started';
         if ($report->hasSection('deputyExpenses')) {
-            $builder->addItem($this->text['deputyExpenses'], $started ? $this->formatMoney(min(-(float)$report->getExpensesTotal(), 0)) : $this->text['notEntered']);
+            $builder->addItem($this->text['deputyExpenses'], $started ? $this->formatMoney(min(-$report->getExpensesTotal(), 0)) : $this->text['notEntered']);
         }
 
         $started = $report->getStatus()->getPaFeesExpensesState()['state'] !== 'not-started';
-        $feesAndExpensesTotal = (float)$report->getFeesTotal() + (float)$report->getExpensesTotal();
+        $feesAndExpensesTotal = (float)$report->getFeesTotal() + $report->getExpensesTotal();
         if ($report->hasSection('paDeputyExpenses')) {
             $builder->addItem($this->text['paDeputyExpenses'], $started ? $this->formatMoney(min(-$feesAndExpensesTotal, 0)) : $this->text['notEntered']);
         }

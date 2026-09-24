@@ -30,6 +30,7 @@ variable "accounts" {
         secondary_region_enabled            = bool
         run_one_off_migrations              = string
         resilience_tests_enabled            = bool
+        entra_enabled                       = bool
       })
       sirius = object({
         environment = string
