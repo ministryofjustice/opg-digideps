@@ -6235,6 +6235,12 @@ parameters:
 			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
 
 		-
+			message: '#^Cannot call method format\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: api/app/src/v2/Transformer/ReportTransformer.php
+
+		-
 			message: '#^Method OPG\\Digideps\\Backend\\v2\\Transformer\\ReportTransformer\:\:transformDate\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -20215,6 +20221,12 @@ parameters:
 			path: api/app/tests/Integration/Service/DeputyServiceIntegrationTest.php
 
 		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: api/app/tests/Integration/Service/JWTServiceTest.php
+
+		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -33827,6 +33839,12 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
+
+		-
+			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\DocumentSyncCommand\:\:getDefaultName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Command\\DocumentSyncCommandTest\:\:testSleepsWhenTurnedOff\(\) has no return type specified\.$#'
