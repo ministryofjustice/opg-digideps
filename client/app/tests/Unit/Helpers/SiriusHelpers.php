@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class SiriusHelpers extends KernelTestCase
 {
     /**
-     * @param string[] $courtOrderUids
+     * @param array<string> $courtOrderUids
      */
     public static function generateSiriusReportPdfDocumentUpload(
         \DateTime $startDate,

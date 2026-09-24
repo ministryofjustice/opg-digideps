@@ -36,7 +36,7 @@ class CourtOrderTest extends TestCase
 
         $result = $this->courtOrder->getActiveReport();
 
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     public function testGetActiveReportsOneActiveReport(): void
@@ -46,7 +46,7 @@ class CourtOrderTest extends TestCase
 
         $result = $this->courtOrder->getActiveReport();
 
-        $this->assertSame($report, $result);
+        self::assertSame($report, $result);
     }
 
     public function testGetFirstActiveReport(): void
@@ -63,7 +63,7 @@ class CourtOrderTest extends TestCase
 
         $result = $this->courtOrder->getActiveReport();
 
-        $this->assertSame($activeReport1, $result);
+        self::assertSame($activeReport1, $result);
     }
 
     public static function unsubmittedReportProvider(): array
@@ -84,7 +84,7 @@ class CourtOrderTest extends TestCase
 
         $result = $this->courtOrder->getUnsubmittedReport();
 
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     public function testGetUnsubmittedReportOneUnsubmittedReport(): void
@@ -94,7 +94,7 @@ class CourtOrderTest extends TestCase
 
         $result = $this->courtOrder->getUnsubmittedReport();
 
-        $this->assertSame($report, $result);
+        self::assertSame($report, $result);
     }
 
     public function testGetFirstUnsubmittedReport(): void
@@ -111,14 +111,14 @@ class CourtOrderTest extends TestCase
 
         $result = $this->courtOrder->getUnsubmittedReport();
 
-        $this->assertSame($unsubmittedReport1, $result);
+        self::assertSame($unsubmittedReport1, $result);
     }
 
     public function testGetSubmittedReportsNoSubmittedReports(): void
     {
         $result = $this->courtOrder->getSubmittedReports();
 
-        $this->assertEquals([], $result);
+        self::assertEquals([], $result);
     }
 
     public function testGetSubmittedReportsOnlySubmittedReportsReturned(): void
@@ -137,7 +137,7 @@ class CourtOrderTest extends TestCase
 
         $result = $this->courtOrder->getSubmittedReports();
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 $submittedReport1,
                 $submittedReport2,
@@ -158,18 +158,18 @@ class CourtOrderTest extends TestCase
     /**
      * @dataProvider hasCoDeputiesProvider
      *
-     * @param Deputy[] $activeDeputies
+     * @param array<Deputy> $activeDeputies
      */
     public function testHasCoDeputiesNoDeputies(array $activeDeputies, bool $expectedResult): void
     {
         $this->courtOrder->setActiveDeputies($activeDeputies);
 
-        $this->assertEquals($expectedResult, $this->courtOrder->hasCoDeputies());
+        self::assertEquals($expectedResult, $this->courtOrder->hasCoDeputies());
     }
 
     public function testGetCoDeputiesWithNoDeputies(): void
     {
-        $this->assertEquals([], $this->courtOrder->getCoDeputies());
+        self::assertEquals([], $this->courtOrder->getCoDeputies());
     }
 
     public function testGetCoDeputiesExcludesLoggedInDeputyAndIsOrderedByFirstname()
@@ -186,7 +186,7 @@ class CourtOrderTest extends TestCase
             ]
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 $loggedInDeputy,
                 $coDeputy2,
@@ -210,7 +210,7 @@ class CourtOrderTest extends TestCase
         $courtOrderTypePfa = $pfaCourtOrder->getActiveReportType();
         $courtOrderTypeHw = $hwCourtOrder->getActiveReportType();
 
-        $this->assertEquals('Property & Affairs with Health & Welfare Report', $courtOrderTypeHw);
-        $this->assertEquals('Property & Affairs with Health & Welfare Report', $courtOrderTypePfa);
+        self::assertEquals('Property & Affairs with Health & Welfare Report', $courtOrderTypeHw);
+        self::assertEquals('Property & Affairs with Health & Welfare Report', $courtOrderTypePfa);
     }
 }

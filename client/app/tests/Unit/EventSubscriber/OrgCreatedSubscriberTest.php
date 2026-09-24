@@ -10,43 +10,33 @@ use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class OrgCreatedSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @test */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals([
             OrgCreatedEvent::NAME => 'auditLog',
         ], OrgCreatedSubscriber::getSubscribedEvents());
     }
 
-    /**
-     * @test
-     */
-    public function auditLog()
+    public function testAuditLog(): void
     {
-        $logger = self::prophesize(LoggerInterface::class);
-        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $logger = self::createMock(LoggerInterface::class);
+        $dateTimeProvider = self::createMock(DateTimeProvider::class);
 
         $now = new \DateTime();
-        $dateTimeProvider->getDateTime()->willReturn($now);
+        $dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($now);
         $trigger = 'ADMIN_MANUAL_ORG_CREATION';
 
-        $sut = new OrgCreatedSubscriber($logger->reveal(), $dateTimeProvider->reveal());
-
         $currentUser = UserHelpers::createSuperAdminUser();
-        $organisation =
-            [
-                'id' => 83,
-                'name' => 'Your Organisation',
-                'email_identifier' => 'mccracken.com',
-                'is_activated' => 'TRUE',
-            ];
+        $organisation = [
+            'id' => 83,
+            'name' => 'Your Organisation',
+            'email_identifier' => 'mccracken.com',
+            'is_activated' => 'TRUE',
+        ];
 
         $orgCreatedEvent = new OrgCreatedEvent($trigger, $currentUser, $organisation);
 
@@ -62,7 +52,8 @@ class OrgCreatedSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $logger->notice('', $expectedEvent)->shouldBeCalled();
-        $sut->auditLog($orgCreatedEvent);
+        $logger->expects(self::once())->method('notice')->with('', $expectedEvent);
+
+        new OrgCreatedSubscriber($logger, $dateTimeProvider)->auditLog($orgCreatedEvent);
     }
 }

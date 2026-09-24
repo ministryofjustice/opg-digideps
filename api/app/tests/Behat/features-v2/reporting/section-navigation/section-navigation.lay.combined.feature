@@ -12,8 +12,8 @@ Feature: Section navigation - Lay combined
     Scenario: Any other information
         Given a Lay Deputy has not started a Combined High Assets report
         When I visit the any other information report section
-        Then the previous section should be "Actions"
-        And the next section should be "Documents"
+        Then the previous section should be "Actions you plan to take"
+        And the next section should be "Supporting documents"
 #
     @lay-combined-high-not-started
     Scenario: Assets
@@ -26,7 +26,7 @@ Feature: Section navigation - Lay combined
     Scenario: Bank Accounts
         Given a Lay Deputy has not started a Combined High Assets report
         When I visit the accounts report section
-        Then the previous section should be "Client benefits check"
+        Then the previous section should be "Benefits check and money others received"
         And the next section should be "Deputy expenses"
 
     @lay-combined-high-not-started
@@ -41,7 +41,7 @@ Feature: Section navigation - Lay combined
         Given a Lay Deputy has not started a Combined High Assets report
         When I visit the debts report section
         Then the previous section should be "Assets"
-        And the next section should be "Actions"
+        And the next section should be "Actions you plan to take"
 
     @lay-combined-high-not-started
     Scenario: Decisions
@@ -54,7 +54,7 @@ Feature: Section navigation - Lay combined
     Scenario: Deputy Expenses
         Given a Lay Deputy has not started a Combined High Assets report
         When I visit the deputy expenses report section
-        Then the previous section should be "Bank accounts"
+        Then the previous section should be "Accounts"
         And the next section should be "Gifts"
 
     @lay-combined-high-not-started
@@ -104,4 +104,4 @@ Feature: Section navigation - Lay combined
         Given a Lay Deputy has not started a Combined High Assets report
         When I visit the health and lifestyle report section
         Then the previous section should be "Visits and care"
-        And the next section should be "Client benefits check"
+        And the next section should be "Benefits check and money others received"
