@@ -1,7 +1,7 @@
 const apiURL = process.env.API_URL ?? "";
 const clientSecret = process.env.ADMIN_API_CLIENT_SECRET ?? "";
 
-type UserType = "Deputy";
+type UserType = "Deputy" | "Admin";
 
 type DeputyType = "LAY" | "PRO" | "PA";
 
@@ -10,12 +10,12 @@ interface UserSpec {
   deputyType: DeputyType;
 }
 
-interface TestUser {
+export interface TestUser {
   email: string;
   password: string;
 }
 
-interface UserDetails {
+export interface UserDetails {
   email: string;
 }
 
