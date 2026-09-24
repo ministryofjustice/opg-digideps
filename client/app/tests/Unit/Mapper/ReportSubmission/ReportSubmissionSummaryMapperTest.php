@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Mapper\ReportSubmission;
 
+use OPG\Digideps\Frontend\Entity\Report\ReportSubmissionSummary;
 use OPG\Digideps\Frontend\Mapper\DateRangeQuery;
 use OPG\Digideps\Frontend\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
@@ -10,17 +13,10 @@ use PHPUnit\Framework\TestCase;
 
 class ReportSubmissionSummaryMapperTest extends TestCase
 {
-    /** @var ReportSubmissionSummaryMapper */
-    private $sut;
-
-    /** @var DateRangeQuery */
-    private $query;
-
-    /** @var RestClient | MockObject */
-    private $restClient;
-
-    /** @var mixed */
-    private $result;
+    private DateRangeQuery $query;
+    private RestClient&MockObject $restClient;
+    private mixed $result;
+    private ReportSubmissionSummaryMapper $sut;
 
     public function setUp(): void
     {
@@ -37,7 +33,7 @@ class ReportSubmissionSummaryMapperTest extends TestCase
 
         $this->assertRestClientIsCalledWithDefaultQueryParameters();
         $this->assertRestClientPopulatesAnArrayOfExpectedEntities();
-        $this->invokeMapper();
+        $this->result = $this->sut->getBy($this->query);
         $this->assertMapperReturnsResultFromRestClient();
     }
 
@@ -51,34 +47,27 @@ class ReportSubmissionSummaryMapperTest extends TestCase
 
         $this->assertRestClientIsCalledWithCustomQueryParameters();
         $this->assertRestClientPopulatesAnArrayOfExpectedEntities();
-        $this->invokeMapper();
+        $this->result = $this->sut->getBy($this->query);
         $this->assertMapperReturnsResultFromRestClient();
     }
 
-    private function assertRestClientIsCalledWithDefaultQueryParameters()
+    private function assertRestClientIsCalledWithDefaultQueryParameters(): void
     {
-        $this
-            ->restClient
-            ->expects($this->once())
+        $this->restClient->expects(self::once())
             ->method('get')
-            ->with('/report-submission/pre-registration-data?orderBy=id&order=DESC', $this->anything())
+            ->with('/report-submission/pre-registration-data?orderBy=id&order=DESC', self::anything())
             ->willReturn('returned-from-rest-client');
     }
 
     private function assertRestClientIsCalledWithCustomQueryParameters()
     {
-        $this
-            ->restClient
-            ->expects($this->once())
+        $this->restClient->expects(self::once())
             ->method('get')
-            ->with($this->buildExpectedUrl(), $this->anything())
+            ->with($this->buildExpectedUrl(), self::anything())
             ->willReturn('returned-from-rest-client');
     }
 
-    /**
-     * @return string
-     */
-    private function buildExpectedUrl()
+    private function buildExpectedUrl(): string
     {
         return sprintf('/report-submission/pre-registration-data?%s', http_build_query([
             'orderBy' => $this->query->getOrderBy(),
@@ -88,22 +77,16 @@ class ReportSubmissionSummaryMapperTest extends TestCase
         ]));
     }
 
-    private function assertRestClientPopulatesAnArrayOfExpectedEntities()
+    private function assertRestClientPopulatesAnArrayOfExpectedEntities(): void
     {
-        $this
-            ->restClient
-            ->expects($this->once())
+        $this->restClient->expects(self::once())
             ->method('get')
-            ->with($this->anything(), 'Report\ReportSubmissionSummary[]');
+            ->with(self::anything(), ReportSubmissionSummary::class . '[]');
     }
 
-    private function assertMapperReturnsResultFromRestClient()
+    private function assertMapperReturnsResultFromRestClient(): void
     {
-        $this->assertEquals($this->result, 'returned-from-rest-client');
+        self::assertEquals('returned-from-rest-client', $this->result);
     }
 
-    private function invokeMapper()
-    {
-        $this->result = $this->sut->getBy($this->query);
-    }
 }

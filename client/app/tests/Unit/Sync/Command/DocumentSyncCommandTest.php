@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Sync\Command;
 
 use OPG\Digideps\Frontend\Service\ParameterStoreService;
 use OPG\Digideps\Frontend\Sync\Command\DocumentSyncCommand;
 use OPG\Digideps\Frontend\Sync\Service\DocumentSyncRunner;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -12,9 +15,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DocumentSyncCommandTest extends KernelTestCase
 {
-    protected static ContainerInterface $container;
-    private ParameterStoreService $parameterStore;
-    private DocumentSyncRunner $documentSyncRunner;
+    protected static ContainerInterface&MockObject $container;
+    private ParameterStoreService&MockObject $parameterStore;
+    private DocumentSyncRunner&MockObject $documentSyncRunner;
     private CommandTester $commandTester;
 
     public function setUp(): void
@@ -30,33 +33,30 @@ class DocumentSyncCommandTest extends KernelTestCase
         $commandName = DocumentSyncCommand::getDefaultName();
         self::assertIsString($commandName);
         $command = $app->find($commandName);
+
         $this->commandTester = new CommandTester($command);
     }
 
     public function testExecute(): void
     {
-        $this->parameterStore
-            ->expects(self::once())
+        $this->parameterStore->expects(self::once())
             ->method('getFeatureFlag')
             ->with(ParameterStoreService::FLAG_DOCUMENT_SYNC)
             ->willReturn('1');
 
-        $this->parameterStore
-            ->expects(self::once())
+        $this->parameterStore->expects(self::once())
             ->method('getParameter')
             ->with(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT)
             ->willReturn('100');
 
-        $this->documentSyncRunner->expects(self::once())
-            ->method('run');
+        $this->documentSyncRunner->expects(self::once())->method('run');
 
         $this->commandTester->execute([]);
     }
 
     public function testSleepsWhenTurnedOff()
     {
-        $this->parameterStore
-            ->expects(self::once())
+        $this->parameterStore->expects(self::once())
             ->method('getFeatureFlag')
             ->with(ParameterStoreService::FLAG_DOCUMENT_SYNC)
             ->willReturn('0');
@@ -64,6 +64,6 @@ class DocumentSyncCommandTest extends KernelTestCase
         $this->commandTester->execute([]);
 
         $output = $this->commandTester->getDisplay();
-        $this->assertStringContainsString('Feature disabled, sleeping', $output);
+        self::assertStringContainsString('Feature disabled, sleeping', $output);
     }
 }

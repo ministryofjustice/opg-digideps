@@ -11,11 +11,9 @@ use Symfony\Component\Validator\Validation;
 class MoneyReceivedOnClientsBehalfTest extends TestCase
 {
     /**
-     * @test
-     *
      * @dataProvider invalidDataProvider
      */
-    public function testValidation($moneyType, $amount, $amountDontKnow, $whoReceived, $expectedViolationCount)
+    public function testValidation(?string $moneyType, ?int $amount, bool $amountDontKnow, ?string $whoReceived, int $expectedViolationCount)
     {
         $sut = new MoneyReceivedOnClientsBehalf()
             ->setMoneyType($moneyType)
@@ -24,16 +22,15 @@ class MoneyReceivedOnClientsBehalfTest extends TestCase
             ->setWhoReceivedMoney($whoReceived);
 
         $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping(true)
-            ->addDefaultDoctrineAnnotationReader()
+            ->enableAttributeMapping()
             ->getValidator();
 
         $result = $validator->validate($sut, null, 'client-benefits-check');
 
-        $this->assertCount($expectedViolationCount, $result);
+        self::assertCount($expectedViolationCount, $result);
     }
 
-    public function invalidDataProvider()
+    public static function invalidDataProvider(): array
     {
         return [
             'Fails when $amountDontKnow is true and $moneyType, $amount and $whoReceived are null' => [

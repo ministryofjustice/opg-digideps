@@ -25,37 +25,40 @@ class SiriusApiGatewayClientTest extends KernelTestCase
     private function makeClient(RequestFixture $requestFixture): Client
     {
         $client = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
-        $client->expects($this->atLeastOnce())->method('send')->willReturnCallback(function (RequestInterface $request, array $options = []) use ($requestFixture) {
-            $validator = new ValidatorBuilder()->fromYamlFile(self::SPEC_PATH)->getRequestValidator();
-            $failure = null;
-            $validationResult = null;
-            try {
-                $validationResult = $validator->validate($request);
-            } catch (ValidationFailed $validationFailed) {
-                $failure = $validationFailed;
-            }
-            $this->assertNull($failure);
-            $this->assertNotNull($validationResult);
-            $this->assertSame($requestFixture->method, $validationResult->method());
-            $this->assertSame($requestFixture->path, $validationResult->path());
-            $this->assertSame($requestFixture->uri, "{$request->getUri()}");
 
-            foreach ($requestFixture->headers as $header => $value) {
-                $this->assertSame($value, $request->getHeaderLine($header));
-            }
-            $this->assertSame($requestFixture->body, "{$request->getBody()}");
+        $client->expects(self::atLeastOnce())
+            ->method('send')
+            ->willReturnCallback(function (RequestInterface $request, array $ignored = []) use ($requestFixture) {
+                $validator = new ValidatorBuilder()->fromYamlFile(self::SPEC_PATH)->getRequestValidator();
+                $failure = null;
+                $validationResult = null;
+                try {
+                    $validationResult = $validator->validate($request);
+                } catch (ValidationFailed $validationFailed) {
+                    $failure = $validationFailed;
+                }
+                self::assertNull($failure);
+                self::assertNotNull($validationResult);
+                self::assertSame($requestFixture->method, $validationResult->method());
+                self::assertSame($requestFixture->path, $validationResult->path());
+                self::assertSame($requestFixture->uri, "{$request->getUri()}");
 
-            return $requestFixture->response;
-        });
+                foreach ($requestFixture->headers as $header => $value) {
+                    self::assertSame($value, $request->getHeaderLine($header));
+                }
+                self::assertSame($requestFixture->body, "{$request->getBody()}");
+
+                return $requestFixture->response;
+            });
+
         return $client;
     }
 
     private function makeSiriusApiGatewayClient(RequestFixture $requestFixture): SiriusApiGatewayClient
     {
         $container = (self::bootKernel(['debug' => false]))->getContainer();
-        /**
-         * @var Serializer $serializer
-         */
+
+        /** @var Serializer $serializer */
         $serializer = $container->get('serializer');
 
         return new SiriusApiGatewayClient(
@@ -63,7 +66,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             new RequestSigner(new DefaultCredentialProvider(), new SignatureV4Signer()),
             '',
             $serializer,
-            $this->createStub(LoggerInterface::class)
+            self::createStub(LoggerInterface::class)
         );
     }
 
@@ -138,7 +141,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             )
         )->sendReportPdfDocument($siriusDocumentUpload, $caseRef);
 
-        $this->assertSame($response, $result);
+        self::assertSame($response, $result);
     }
 
     public function testSendSupportingDocument(): void
@@ -189,7 +192,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             )
         )->sendSupportingDocument($upload, $reportPdfUuid, $caseRef);
 
-        $this->assertSame($response, $result);
+        self::assertSame($response, $result);
     }
 
     public function testPostChecklistPdf(): void
@@ -249,7 +252,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             )
         )->postChecklistPdf($upload, $reportPdfUuid, $caseRef);
 
-        $this->assertSame($response, $result);
+        self::assertSame($response, $result);
     }
 
     public function testGet(): void
@@ -324,6 +327,6 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             )
         )->putChecklistPdf($upload, $reportPdfUuid, $caseRef, $checklistPdfUuid);
 
-        $this->assertSame($response, $result);
+        self::assertSame($response, $result);
     }
 }
