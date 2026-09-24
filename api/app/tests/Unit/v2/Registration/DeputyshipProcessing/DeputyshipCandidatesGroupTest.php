@@ -13,15 +13,15 @@ final class DeputyshipCandidatesGroupTest extends TestCase
     public function testDeputyshipCandidatesGroup(): void
     {
         $expectedInsertOthers = [
-            ['action' => DeputyshipCandidateAction::InsertOrderDeputy, 'orderUid' => '555445566'],
-            ['action' => DeputyshipCandidateAction::InsertOrderDeputy, 'orderUid' => '555445566'],
+            ['action' => DeputyshipCandidateAction::InsertOrderDeputy, 'orderUid' => '555445566', 'deputyId' => '123456', 'deputyStatusOnOrder' => true],
+            ['action' => DeputyshipCandidateAction::InsertOrderDeputy, 'orderUid' => '555445566', 'deputyId' => '789654'],
         ];
 
         $expectedUpdates = [
             ['action' => DeputyshipCandidateAction::UpdateOrderStatus, 'orderUid' => '555445566'],
             ['action' => DeputyshipCandidateAction::UpdateOrderStatus, 'orderUid' => '555445566'],
-            ['action' => DeputyshipCandidateAction::UpdateDeputyStatus, 'orderUid' => '555445566'],
-            ['action' => DeputyshipCandidateAction::UpdateDeputyStatus, 'orderUid' => '555445566'],
+            ['action' => DeputyshipCandidateAction::UpdateDeputyStatus, 'orderUid' => '555445566', 'deputyId' => '456611'],
+            ['action' => DeputyshipCandidateAction::UpdateDeputyStatus, 'orderUid' => '555445566', 'deputyId' => '116578'],
         ];
 
         $expectedInsertOrder = [
@@ -39,7 +39,8 @@ final class DeputyshipCandidatesGroupTest extends TestCase
                 $expectedInsertOrder,
             ],
             $expectedUpdates,
-            $expectedInsertOthers
+            [['action' => DeputyshipCandidateAction::InsertOrderDeputy, 'orderUid' => '555445566', 'deputyId' => '123456', 'deputyStatusOnOrder' => true]],
+            $expectedInsertOthers,
         );
 
         $candidateGroup = DeputyshipCandidatesGroup::create('555445566', $candidates);
@@ -47,8 +48,8 @@ final class DeputyshipCandidatesGroupTest extends TestCase
         self::assertEquals(7, $candidateGroup->totalCandidates());
         self::assertEquals('555445566', $candidateGroup->orderUid);
         self::assertEquals('CLOSED', $candidateGroup->insertOrder['orderStatus']);
-        self::assertEquals($expectedInsertOthers, $candidateGroup->insertOthers);
-        self::assertEquals($expectedUpdates, $candidateGroup->updates);
+        self::assertEquals($expectedInsertOthers, array_values($candidateGroup->insertOthers));
+        self::assertEquals($expectedUpdates, array_values($candidateGroup->updates));
         self::assertEquals($expectedIteratorOrder, iterator_to_array($candidateGroup->getIterator()));
     }
 }
