@@ -21,6 +21,7 @@ interface UserDetails {
 
 interface ReportDetails {
   id: number;
+  submitted: boolean;
 }
 
 interface OrderDetails {

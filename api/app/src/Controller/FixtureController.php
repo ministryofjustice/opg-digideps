@@ -230,6 +230,7 @@ class FixtureController extends AbstractController
                 if ($order !== null) {
                     $reports = array_map(fn ($report) => [
                         'id' => $report->getId(),
+                        'submitted' => $report->getSubmitted(),
                         'documents' => array_map(fn ($document) => ['id' => $document->getId()], $report->getDocuments()->toArray()),
                     ], $order['reports']);
 
