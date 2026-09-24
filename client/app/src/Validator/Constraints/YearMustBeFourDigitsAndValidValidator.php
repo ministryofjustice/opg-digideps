@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
@@ -15,10 +17,8 @@ class YearMustBeFourDigitsAndValidValidator extends ConstraintValidator
         if ($value instanceof StartEndDateComparableInterface) {
             $startAndEndDate = [$value->getStartDate(), $value->getEndDate()];
 
-            foreach ($startAndEndDate as $date) {
-                if (!$date instanceof \DateTime) {
-                    return;
-                }
+            if (array_any($startAndEndDate, fn ($date) => !$date instanceof \DateTime)) {
+                return;
             }
         } else {
             $courtDate = $value->getCourtDate();
@@ -36,7 +36,7 @@ class YearMustBeFourDigitsAndValidValidator extends ConstraintValidator
                 return !preg_match('/^2\d{3}$/', $year);
             }));
 
-            if ($count > 0) {
+            if ($count > 0 && property_exists($constraint, 'message')) {
                 $this->context
                     ->buildViolation($constraint->message)
                     ->addViolation();
@@ -44,7 +44,7 @@ class YearMustBeFourDigitsAndValidValidator extends ConstraintValidator
         } else {
             $year = $courtDate->format('Y');
 
-            if (!preg_match('/^2\d{3}$/', $year) && !preg_match('/^19\d{2}$/', $year)) {
+            if (!preg_match('/^2\d{3}$/', $year) && !preg_match('/^19\d{2}$/', $year) && property_exists($constraint, 'message')) {
                 $this->context
                     ->buildViolation($constraint->message)
                     ->addViolation();

@@ -5,13 +5,11 @@ namespace OPG\Digideps\Frontend\Entity;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Traits\ActiveAudit;
 use OPG\Digideps\Frontend\Entity\Traits\IsSoftDeleteableEntity;
-use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Validator\Constraints\YearMustBeFourDigitsAndValid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @AppAssert\YearMustBeFourDigitsAndValid(groups={"client-court-date"})
- */
+#[YearMustBeFourDigitsAndValid(groups: ['client-court-date'])]
 class Client
 {
     use IsSoftDeleteableEntity;

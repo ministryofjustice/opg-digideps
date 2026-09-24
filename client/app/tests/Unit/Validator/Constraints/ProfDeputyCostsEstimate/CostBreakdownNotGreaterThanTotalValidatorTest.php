@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Validator\Constraints\ProfDeputyCostsEstimate;
 
 use OPG\Digideps\Frontend\Entity\Report\ProfDeputyEstimateCost;
@@ -13,37 +15,30 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
 {
-    /** @var ConstraintValidator */
-    private $sut;
-
-    /** @var ExecutionContextInterface | MockObject */
-    private $context;
-
+    private ExecutionContextInterface&MockObject $context;
     private Report $data;
 
-    /**
-     * {@inheritdoc}
-     */
+    private ConstraintValidator $sut;
+
     public function setUp(): void
     {
         $this->data = new Report();
-
         $this->context = $this->createMock(ExecutionContextInterface::class);
+
         $this->sut = new CostBreakdownNotGreaterThanTotalValidator();
         $this->sut->initialize($this->context);
     }
 
-    public function testThrowsExceptionOnIncorrectDataType()
+    public function testThrowsExceptionOnIncorrectDataType(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        self::expectException(\InvalidArgumentException::class);
         $this->sut->validate(new \stdClass(), new CostBreakdownNotGreaterThanTotal());
     }
 
-    public function testValidatorAddsConstraintIfBreakdownTotalGreaterThanAmountItCanExceed()
+    public function testValidatorAddsConstraintIfBreakdownTotalGreaterThanAmountItCanExceed(): void
     {
-        $this
-            ->setTotalCostEstimate(43.0)
-            ->setIndividualBreakdownCosts(30, 13.01)
+        $this->setTotalCostEstimate()
+            ->setIndividualBreakdownCosts('13.01')
             ->assertConstraintWillBeApplied()
             ->invokeTest();
     }
@@ -51,75 +46,54 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
     /**
      * @dataProvider breakdownCostVariations
      */
-    public function testValidatorIgnoresConstraintIfBreakdownTotalNotGreaterThanAmountItCanExceed($costVariation)
+    public function testValidatorIgnoresConstraintIfBreakdownTotalNotGreaterThanAmountItCanExceed(string $costVariation): void
     {
-        $this
-            ->setTotalCostEstimate(43.0)
-            ->setIndividualBreakdownCosts(30, $costVariation)
+        $this->setTotalCostEstimate()
+            ->setIndividualBreakdownCosts($costVariation)
             ->assertConstraintWillNotBeApplied()
             ->invokeTest();
     }
 
-    /**
-     * @return array
-     */
-    public function breakdownCostVariations()
+    public static function breakdownCostVariations(): array
     {
         return [
-            ['costVariation' => 12.99],
-            ['costVariation' => 13.00]
+            ['costVariation' => '12.99'],
+            ['costVariation' => '13.00']
         ];
     }
 
-    private function setTotalCostEstimate(float $totalCost): static
+    private function setTotalCostEstimate(): static
     {
-        $this->data->setProfDeputyManagementCostAmount($totalCost);
+        $this->data->setProfDeputyManagementCostAmount(43.0);
 
         return $this;
     }
 
-    /**
-     * @param $costAlpha
-     * @param $costBeta
-     * @return CostBreakdownNotGreaterThanTotalValidatorTest
-     */
-    private function setIndividualBreakdownCosts($costAlpha, $costBeta)
+    private function setIndividualBreakdownCosts(string $costBeta): static
     {
-        $breakdownAlpha = new ProfDeputyEstimateCost(1, $costAlpha, false, null);
-        $breakdownBeta = new ProfDeputyEstimateCost(2, $costBeta, false, null);
+        $breakdownAlpha = new ProfDeputyEstimateCost(1, '30', 'yes', null);
+        $breakdownBeta = new ProfDeputyEstimateCost(2, $costBeta, 'yes', null);
 
         $this->data->setProfDeputyEstimateCosts([$breakdownAlpha, $breakdownBeta]);
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    private function assertConstraintWillBeApplied()
+    private function assertConstraintWillBeApplied(): static
     {
-        $this
-            ->context
-            ->expects($this->once())
-            ->method('addViolation');
+        $this->context->expects($this->once())->method('addViolation');
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    private function assertConstraintWillNotBeApplied()
+    private function assertConstraintWillNotBeApplied(): static
     {
-        $this
-            ->context
-            ->expects($this->never())
-            ->method('addViolation');
+        $this->context->expects($this->never())->method('addViolation');
 
         return $this;
     }
 
-    private function invokeTest()
+    private function invokeTest(): void
     {
         $this->sut->validate($this->data, new CostBreakdownNotGreaterThanTotal());
     }

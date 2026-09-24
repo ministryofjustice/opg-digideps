@@ -10,8 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class ActiveLaysCsvGeneratorTest extends TestCase
 {
-    /** @test */
-    public function generateActiveLaysCsv()
+    public function testGenerateActiveLaysCsv(): void
     {
         $laysData = [
             [

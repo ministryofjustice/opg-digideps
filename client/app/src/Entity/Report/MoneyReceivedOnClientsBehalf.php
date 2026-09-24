@@ -22,34 +22,27 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     #[JMS\Groups(['report', 'client-benefits-check'])]
     private ?ClientBenefitsCheck $clientBenefitsCheck = null;
 
-    /**
-     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
+    #[CustomAssert\MoneyReceivedOnClientsBehalf(groups: ['client-benefits-check'])]
     private ?string $moneyType = null;
 
-    /**
-     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
-     */
     #[JMS\Type('float')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
+    #[CustomAssert\MoneyReceivedOnClientsBehalf(groups: ['client-benefits-check'])]
     private ?float $amount = null;
 
     /**
-     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
-     *
      * This will not be persisted - it exists to enable a checkbox in the form
      */
     #[JMS\Type('bool')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
+    #[CustomAssert\MoneyReceivedOnClientsBehalf(groups: ['client-benefits-check'])]
     private ?bool $amountDontKnow = null;
 
-    /**
-     * @CustomAssert\MoneyReceivedOnClientsBehalf(groups={"client-benefits-check"})
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
+    #[CustomAssert\MoneyReceivedOnClientsBehalf(groups: ['client-benefits-check'])]
     private ?string $whoReceivedMoney;
 
     public function getId(): ?string

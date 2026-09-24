@@ -1,76 +1,77 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Service;
 
 use Aws\Result;
 use Aws\Ssm\SsmClient;
 use OPG\Digideps\Frontend\Service\ParameterStoreService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 class ParameterStoreServiceTest extends TestCase
 {
-    use ProphecyTrait;
+    private SsmClient&MockObject $ssmClient;
 
-    /** @test */
-    public function getFeatureFlag()
+    public function setUp(): void
     {
-        $ssmClient = self::prophesize(SsmClient::class);
-        $ssmClient
-            ->getParameter(['Name' => '/flag-prefix/test-flag'])
-            ->shouldBeCalled()
+        $this->ssmClient = $this->getMockBuilder(SsmClient::class)
+            ->disableOriginalConstructor()
+            ->addMethods(['getParameter', 'putParameter'])
+            ->getMock();
+    }
+
+    public function testGetFeatureFlag(): void
+    {
+        $this->ssmClient->expects(self::once())
+            ->method('getParameter')
+            ->with(['Name' => '/flag-prefix/test-flag'])
             ->willReturn(['Parameter' => ['Value' => 'result']]);
 
-        $sut = new ParameterStoreService($ssmClient->reveal(), '/param-prefix/', '/flag-prefix/');
+        $sut = new ParameterStoreService($this->ssmClient, '/param-prefix/', '/flag-prefix/');
 
         self::assertEquals('result', $sut->getFeatureFlag('test-flag'));
     }
 
-    /** @test */
-    public function getParameter()
+    public function testGetParameter(): void
     {
-        $ssmClient = self::prophesize(SsmClient::class);
-        $ssmClient
-            ->getParameter(['Name' => '/param-prefix/test-flag'])
-            ->shouldBeCalled()
+        $this->ssmClient->expects(self::once())
+            ->method('getParameter')
+            ->with(['Name' => '/param-prefix/test-flag'])
             ->willReturn(new Result(['Parameter' => ['Value' => 'result']]));
 
-        $sut = new ParameterStoreService($ssmClient->reveal(), '/param-prefix/', '/flag-prefix/');
+        $sut = new ParameterStoreService($this->ssmClient, '/param-prefix/', '/flag-prefix/');
 
         self::assertEquals('result', $sut->getParameter('test-flag'));
     }
 
     /**
      * @dataProvider parameterDataProvider
-     * @test
      */
-    public function putFeatureFlag($flagName, $flagValue)
+    public function testPutFeatureFlag(string $flagName, string $flagValue): void
     {
-        $ssmClient = self::prophesize(SsmClient::class);
         $flagPrefix = '/flag-prefix/';
-        $ssmClient
-            ->putParameter(
-                ['Name' => $flagPrefix . $flagName,
+
+        $this->ssmClient->expects(self::once())
+            ->method('putParameter')
+            ->with([
+                'Name' => $flagPrefix . $flagName,
                 'Value' => $flagValue,
                 'Overwrite' => true,
-                ]
-            )
-            ->shouldBeCalled()
-            ->willReturn(new Result([
-                'Tier' => 'Standard',
-                'Version' => 10,
-            ]));
+            ])
+            ->willReturn(new Result(['Tier' => 'Standard', 'Version' => 10,]));
 
-        $sut = new ParameterStoreService($ssmClient->reveal(), '/param-prefix/', '/flag-prefix/');
+        $sut = new ParameterStoreService($this->ssmClient, '/param-prefix/', $flagPrefix);
 
         $sut->putFeatureFlag($flagName, $flagValue);
     }
 
-    public function parameterDataProvider()
+    public static function parameterDataProvider(): array
     {
         return [
-            'document sync set to true' => ['document-sync', 1],
-            'checklist sync set to false' => ['checklist-sync', 0],
+            'document sync set to true' => ['document-sync', '1'],
+            'checklist sync set to false' => ['checklist-sync', '0'],
         ];
     }
 }
