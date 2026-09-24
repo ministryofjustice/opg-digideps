@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\TestHelpers;
 
-use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Action;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
-use OPG\Digideps\Backend\Entity\Report\Debt;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Lifestyle;
 use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
@@ -30,19 +29,15 @@ class ReportTestHelper
     }
 
     public static function generateReport(
-        EntityManagerInterface $em,
-        ?Client $client = null,
-        ?string $type = null,
+        CourtOrder $courtOrder,
         ?\DateTime $startDate = null,
         ?\DateTime $endDate = null,
         bool $dateChecks = true
     ): Report {
-        $client = $client ?: ClientTestHelper::generateClient($em);
-        $type = $type ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
         $startDate = $startDate ?: new \DateTime('2 years ago');
         $endDate = $endDate ?: (clone $startDate)->add(new \DateInterval('P1Y'));
 
-        $report = new Report($client, $type, $startDate, $endDate, dateChecks: $dateChecks);
+        $report = new Report($courtOrder, "{$courtOrder->getDesiredReportType()}", $startDate, $endDate, dateChecks: $dateChecks);
         self::completeBankAccounts($report);
 
         return $report;
@@ -50,6 +45,9 @@ class ReportTestHelper
 
     public static function completeReport(Report $report, EntityManagerInterface $em): void
     {
+        $em->persist($report);
+        $em->flush();
+        $em->refresh($report);
         self::completeDecisions($report);
         self::completeContacts($report);
         self::completeVisitsCare($report);
@@ -133,7 +131,7 @@ class ReportTestHelper
         $newReportEndDate->modify('+365 day');
 
         $client = $report->getClient();
-        $newReport = self::generateReport($em, $client, $report->getType(), $newReportStartDate, $newReportEndDate);
+        $newReport = self::generateReport($report->getCourtOrder(), $newReportStartDate, $newReportEndDate);
 
         $client->addReport($newReport);
         $newReport->setClient($client);
@@ -250,13 +248,9 @@ class ReportTestHelper
     private static function completeDebts(Report $report, EntityManagerInterface $em): void
     {
         $report->setHasDebts('yes');
+        $debt = $report->getDebtByTypeId('care-fees') ?? throw new \LogicException('Please persist and flush the report at least once before filling in debts.');
 
-        $debt = new Debt(
-            $report,
-            'care-fees',
-            false,
-            '10.0'
-        );
+        $debt->setAmountAndDetails('10.0', null);
 
         $report->setDebtManagement('Slowly paying it off');
         $report->addDebt($debt);
