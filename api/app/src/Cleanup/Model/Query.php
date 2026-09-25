@@ -112,6 +112,7 @@ final readonly class Query
                     WHERE
                         cc.id > {$from}
                         {$onlyClause}
+                    ORDER BY cc.id
                     LIMIT {$limit}
                 )
                 ORDER BY c.id, r.id
