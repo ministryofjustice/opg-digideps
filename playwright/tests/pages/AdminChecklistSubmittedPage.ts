@@ -11,7 +11,9 @@ export default class AdminChecklistSubmittedPage {
     private page: Page,
     private reportId: number,
   ) {
-    this.url = getAdminURL() + `/admin/report/${String(this.reportId)}/checklist-submitted`
+    this.url =
+      getAdminURL() +
+      `/admin/report/${String(this.reportId)}/checklist-submitted`;
   }
 
   async goto() {

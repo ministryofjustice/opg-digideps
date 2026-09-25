@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 import {
-  createFixtureViaApi, getAdminUserFixture, getUserFixture,
+  createFixtureViaApi,
+  getAdminUserFixture,
+  getUserFixture,
   Scenario,
   setupFixture,
   TestUser,
@@ -18,7 +20,7 @@ test("visiting the checklist submitted page does not resubmit checklist", async 
   const runTest = async (scenario: Scenario, user: TestUser) => {
     // const reportId = scenario.orders[0].reports[0].id;
     const submittedReport = scenario.orders[0].reports.find(
-      (reportDetails) => reportDetails.submitted
+      (reportDetails) => reportDetails.submitted,
     );
 
     if (submittedReport === undefined) {
@@ -26,7 +28,10 @@ test("visiting the checklist submitted page does not resubmit checklist", async 
     }
 
     const adminChecklistPage = new AdminChecklistPage(page, submittedReport.id);
-    const adminChecklistSubmittedPage = new AdminChecklistSubmittedPage(page, submittedReport.id);
+    const adminChecklistSubmittedPage = new AdminChecklistSubmittedPage(
+      page,
+      submittedReport.id,
+    );
 
     // complete checklist as super admin
     const adminLoginPage = new AdminLoginPage(page);
@@ -63,20 +68,16 @@ test("visiting the checklist submitted page does not resubmit checklist", async 
   // create a single unsubmitted, but ready to submit, report, with a document
   // that doesn't have a corresponding S3 object
   const scenarioPromise = setupFixture(
-    createFixtureViaApi(
-      "/fixtures/scenarios/laysimple",
-      {
-        deputyReference: deputyReference,
-      },
-    ),
+    createFixtureViaApi("/fixtures/scenarios/laysimple", {
+      deputyReference: deputyReference,
+    }),
   );
 
   const userPromise = getUserFixture("Admin", "PRO");
 
-  await Promise.all([scenarioPromise, userPromise])
-    .then(
-      async ([scenario, user]) => {
-        await runTest(scenario.data as Scenario, user);
-      }
-    );
+  await Promise.all([scenarioPromise, userPromise]).then(
+    async ([scenario, user]) => {
+      await runTest(scenario.data as Scenario, user);
+    },
+  );
 });
