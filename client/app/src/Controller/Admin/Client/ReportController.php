@@ -156,7 +156,7 @@ class ReportController extends AbstractController
 
             if ($button->getName() === ReviewChecklistType::SUBMIT_ACTION) {
                 if ($this->isChecklistSyncEnabled()) {
-                    $this->queueChecklistForSyncing($report);
+                    $this->queueChecklistForSyncing($report->getId());
                 }
                 return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id' => $report->getId()]));
             } else {
@@ -197,7 +197,7 @@ class ReportController extends AbstractController
             } else {
                 if ($buttonClicked->getName() == 'submitAndContinue') {
                     if ($this->isChecklistSyncEnabled()) {
-                        $this->queueChecklistForSyncing($report);
+                        $this->queueChecklistForSyncing($report->getId());
                     }
                     return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id' => $report->getId()]));
                 } else {
@@ -247,13 +247,12 @@ class ReportController extends AbstractController
         ];
     }
 
-    protected function queueChecklistForSyncing(Report $report): void
+    protected function queueChecklistForSyncing(int $id): void
     {
-        $checklist = $report->getChecklist();
-        if ($checklist === null) {
-            throw new \DomainException('cannot synchronise checklist for report as checklist does not exist');
-        }
-        $checklist->setSynchronisationStatus(SynchronisableInterface::SYNC_STATUS_QUEUED);
+        // reload report from db
+        $report = $this->reportApi->getReport($id, ['report-checklist']);
+
+        $report->getChecklist()->setSynchronisationStatus(SynchronisableInterface::SYNC_STATUS_QUEUED);
         $this->restClient->put('report/' . $report->getId() . '/checked', $report->getChecklist(), ['synchronisation']);
     }
 
