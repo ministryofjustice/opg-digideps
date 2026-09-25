@@ -5,7 +5,7 @@ namespace OPG\Digideps\Backend\v2\Assembler\Report;
 use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
 use OPG\Digideps\Backend\v2\DTO\ReportDto;
 
-class ReportSummaryAssembler implements ReportAssemblerInterface
+class ReportSummaryAssembler
 {
     use DtoPropertySetterTrait;
 
