@@ -11,7 +11,8 @@ export default class AdminChecklistPage {
     private page: Page,
     private reportId: number,
   ) {
-    this.url = getAdminURL() + `/admin/report/${String(this.reportId)}/checklist`;
+    this.url =
+      getAdminURL() + `/admin/report/${String(this.reportId)}/checklist`;
   }
 
   async goto() {
@@ -24,21 +25,33 @@ export default class AdminChecklistPage {
       .getByLabel("Yes")
       .check();
 
-    await this.page.getByRole("checkbox", { name: "Contact details are correct" }).check();
-    await this.page.getByRole("checkbox", { name: "Deputy's full name on Sirius is correct" }).check();
+    await this.page
+      .getByRole("checkbox", { name: "Contact details are correct" })
+      .check();
+    await this.page
+      .getByRole("checkbox", {
+        name: "Deputy's full name on Sirius is correct",
+      })
+      .check();
 
     await this.page
-      .getByRole("group", { name: `L2.1 Have satisfactory responses been provided` })
+      .getByRole("group", {
+        name: `L2.1 Have satisfactory responses been provided`,
+      })
       .getByLabel("Yes")
       .check();
 
     await this.page
-      .getByRole("group", { name: "L3.1 Have satisfactory responses been provided" })
+      .getByRole("group", {
+        name: "L3.1 Have satisfactory responses been provided",
+      })
       .getByLabel("Yes")
       .check();
 
     await this.page
-      .getByRole("group", { name: "L4.1 Have satisfactory responses been provided" })
+      .getByRole("group", {
+        name: "L4.1 Have satisfactory responses been provided",
+      })
       .getByLabel("Yes")
       .check();
 
@@ -53,13 +66,19 @@ export default class AdminChecklistPage {
       .check();
 
     // L7.1
-    await this.page.locator("#report_checklist_clientBenefitsChecked_1").check();
+    await this.page
+      .locator("#report_checklist_clientBenefitsChecked_1")
+      .check();
 
     // L8.1
-    await this.page.locator("#report_checklist_openClosingBalancesMatch_0").check();
+    await this.page
+      .locator("#report_checklist_openClosingBalancesMatch_0")
+      .check();
 
     // L8.3
-    await this.page.locator("#report_checklist_moneyMovementsAcceptable_0").check();
+    await this.page
+      .locator("#report_checklist_moneyMovementsAcceptable_0")
+      .check();
 
     // L9.1
     await this.page.locator("#report_checklist_bondAdequate_0").check();
@@ -68,10 +87,14 @@ export default class AdminChecklistPage {
     await this.page.locator("#report_checklist_bondOrderMatchSirius_0").check();
 
     // L13.1
-    await this.page.locator("#report_checklist_futureSignificantDecisions_0").check();
+    await this.page
+      .locator("#report_checklist_futureSignificantDecisions_0")
+      .check();
 
     // L13.2
-    await this.page.locator("#report_checklist_hasDeputyRaisedConcerns_1").check();
+    await this.page
+      .locator("#report_checklist_hasDeputyRaisedConcerns_1")
+      .check();
 
     await this.page
       .getByRole("textbox", { name: "Lodging summary concerns" })
@@ -90,22 +113,22 @@ export default class AdminChecklistPage {
   }
 
   async getSubmissionDetails() {
-    const syncStatus =
-      await this.page.locator("[data-role='checklist-sync-status']")
-        .textContent();
+    const syncStatus = await this.page
+      .locator("[data-role='checklist-sync-status']")
+      .textContent();
 
-    const submittedBy =
-      await this.page.locator("[data-role='checklist-submitted-by']")
-        .textContent()
+    const submittedBy = await this.page
+      .locator("[data-role='checklist-submitted-by']")
+      .textContent();
 
-    const submittedOn =
-      await this.page.locator("[data-role='checklist-submitted-on']")
-        .textContent()
+    const submittedOn = await this.page
+      .locator("[data-role='checklist-submitted-on']")
+      .textContent();
 
     return Promise.resolve({
       syncStatus: syncStatus,
       submittedBy: submittedBy,
-      submittedOn: submittedOn
-    })
+      submittedOn: submittedOn,
+    });
   }
 }
