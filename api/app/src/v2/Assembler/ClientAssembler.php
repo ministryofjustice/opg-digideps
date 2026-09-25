@@ -4,7 +4,7 @@ namespace OPG\Digideps\Backend\v2\Assembler;
 
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Organisation;
-use OPG\Digideps\Backend\v2\Assembler\Report\ReportAssemblerInterface;
+use OPG\Digideps\Backend\v2\Assembler\Report\ReportSummaryAssembler;
 use OPG\Digideps\Backend\v2\DTO\ClientDto;
 use OPG\Digideps\Backend\v2\DTO\DeputyDto;
 use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
@@ -19,17 +19,19 @@ class ClientAssembler
     use DtoPropertySetterTrait;
 
     public function __construct(
-        private readonly ReportAssemblerInterface $reportDtoAssembler,
+        private readonly ReportSummaryAssembler $reportDtoAssembler,
         private readonly DeputyAssembler $deputyAssembler
     ) {
     }
 
-    public function assembleFromArray(array $data, Organisation|OrganisationDto|array|null $orgDto = null): ClientDto
-    {
+    public function assembleFromArray(
+        array $data,
+        Organisation|OrganisationDto|array|null $orgDto = null,
+    ): ClientDto {
         $dto = new ClientDto();
 
-        $exclude = ['reports', 'deputy'];
-        $this->setPropertiesFromData($dto, $data, $exclude);
+        // exclude reports and deputies as these will be assembled separately
+        $this->setPropertiesFromData($dto, $data, ['reports', 'deputy']);
 
         if (isset($data['reports']) && is_array($data['reports'])) {
             $dto->setReports($this->assembleClientReports($data['reports']));
