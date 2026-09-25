@@ -1,9 +1,14 @@
 #!/bin/sh
 
+# If migrations are running, report healthy immediately
+if [ -f /tmp/migrating ]; then
+    echo "Migration in progress. Reporting healthy."
+    exit 0
+fi
+
 # Define the health check URLs
 HEALTH_CHECK_URL="http://127.0.0.1:80/health-check"
 SERVICE_HEALTH_CHECK_URL="http://127.0.0.1:80/health-check/service"
-DEPENDENCIES_HEALTH_CHECK_URL="http://127.0.0.1:80/health-check/dependencies"
 
 # Define the interval between dependency/service checks (in seconds)
 # 5 minutes = 300 seconds
@@ -16,12 +21,12 @@ LAST_RUN_FILE="/tmp/last_healthcheck_run"
 check_health() {
     local url=$1
     echo "Checking health at $url"
-    curl -fsS $url >/dev/null
+    curl -fsS "$url" >/dev/null
     return $?
 }
 
 # Run the primary health check
-check_health $HEALTH_CHECK_URL
+check_health "$HEALTH_CHECK_URL"
 if [ $? -ne 0 ]; then
     echo "Primary health check failed. Exiting with status 1."
     exit 1
@@ -44,14 +49,9 @@ date +%s > "$LAST_RUN_FILE"
 echo "Running Service Health Check"
 
 # Run secondary health checks (these are allowed to fail)
-check_health $SERVICE_HEALTH_CHECK_URL
+check_health "$SERVICE_HEALTH_CHECK_URL"
 if [ $? -ne 0 ]; then
     echo "Service health check failed, but continuing..."
-fi
-
-check_health $DEPENDENCIES_HEALTH_CHECK_URL
-if [ $? -ne 0 ]; then
-    echo "Dependencies health check failed, but continuing..."
 fi
 
 echo "Health checks completed successfully."

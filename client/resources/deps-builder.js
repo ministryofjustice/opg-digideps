@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 import fsPromises from "node:fs/promises";
 import { fileURLToPath } from "url";
-
+import { execFileSync } from "node:child_process";
 import * as esbuild from "esbuild";
 import * as sass from "sass-embedded";
 
@@ -101,14 +101,21 @@ const imagesToCopy = [
 ]
 
 imagesToCopy.forEach(copySpec => {
-  const destPath = path.resolve(dirname, copySpec.to)
-  fs.mkdirSync(path.dirname(destPath), { recursive: true })
+    const destPath = path.resolve(dirname, copySpec.to)
+    fs.mkdirSync(path.dirname(destPath), { recursive: true })
 
-  if (fs.lstatSync(copySpec.from).isDirectory()) {
-    fs.cpSync(copySpec.from, destPath, { recursive: true })
-  } else {
-    fs.copyFileSync(copySpec.from, copySpec.to)
-  }
+    if (fs.lstatSync(copySpec.from).isDirectory()) {
+      fs.mkdirSync(destPath, { recursive: true });
+
+      execFileSync(
+        "cp",
+        ["-R", `${copySpec.from}/.`, destPath],
+        { stdio: "inherit" }
+      );
+    } else {
+      fs.mkdirSync(path.dirname(destPath), { recursive: true });
+      fs.copyFileSync(copySpec.from, destPath);
+    }
 })
 
 console.log("Finished copying image files")

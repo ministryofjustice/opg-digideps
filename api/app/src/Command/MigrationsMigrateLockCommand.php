@@ -2,103 +2,123 @@
 
 namespace OPG\Digideps\Backend\Command;
 
-use Predis\Client;
-use Psr\Container\ContainerInterface;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Doctrine\DBAL\Connection;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Application;
 
 /**
- * command that launches doctrine migration,
- * using redis to implement locking in order to prevent concurrent execution.
+ * Runs doctrine migrations protected by a PostgreSQL advisory lock.
  *
  * @codeCoverageIgnore
  */
 class MigrationsMigrateLockCommand extends Command
 {
-    public const string LOCK_KEY = 'migration_status';
-    public const string LOCK_VALUE = 'locked';
-    public const int LOCK_EXPIRES_SECONDS = 300;
+    /**
+     * Arbitrary 64-bit lock key.
+     * Change only if you intentionally want a different lock scope.
+     */
+    private const int LOCK_ID = 0x4449474944455053; // "DIGIDEPS"
+
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly LoggerInterface $verboseLogger,
+    ) {
+        parent::__construct();
+    }
+
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this
             ->setName('doctrine:migrations:migrate-lock')
-            ->setDescription('Same as doctrine:migrations:migrate, but locking the database.')
-            ->setHelp('')
-            ->addOption('release-lock', null, InputOption::VALUE_NONE, 'Release lock and exit.')
-        ;
+            ->setDescription('Same as doctrine:migrations:migrate, but protected by a PostgreSQL advisory lock.')
+            ->addOption(
+                'release-lock',
+                null,
+                InputOption::VALUE_NONE,
+                'Release the advisory lock and exit.'
+            );
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        // release lock and exit
         if ($input->getOption('release-lock')) {
             $this->releaseLock($output);
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         try {
-            if ($this->acquireLock($output)) {
-                $returnCode = parent::execute($input, $output);
-                $this->releaseLock($output);
+            if (!$this->acquireLock($output)) {
+                $message = 'Migration lock is already held by another process. Skipping migration.';
+                $this->verboseLogger->warning($message);
+                $output->writeln(sprintf('<comment>%s</comment>', $message));
 
-                return $returnCode;
-            } else {
-                $message = 'Migration is locked by another migration, skipped. Launch with --release-lock if needed.';
-                $this->getService('logger')->warning($message);
-                $output->writeln($message);
-
-                return 0;
+                return Command::SUCCESS;
             }
-        } catch (\Throwable $e) {
-            // in case of exception, delete the lock, then re-throw to keep the parent behaviour
-            $this->releaseLock($output);
 
-            throw $e;
+            $application = $this->getApplication();
+
+            if (!$application instanceof Application) {
+                throw new \RuntimeException('Console application is not available');
+            }
+
+            $migrationCommand = $application->find('doctrine:migrations:migrate');
+
+            $migrationInput = new ArrayInput([
+                '--allow-no-migration' => true,
+                '--no-interaction' => true,
+            ]);
+
+            $migrationInput->setInteractive(false);
+
+            return $migrationCommand->run($migrationInput, $output);
+        } finally {
+            try {
+                if ($this->connection->isConnected()) {
+                    $this->releaseLock($output);
+                }
+            } catch (\Throwable $e) {
+                $this->verboseLogger->error(
+                    'Failed to release PostgreSQL advisory lock',
+                    ['exception' => $e]
+                );
+            }
         }
     }
 
-    /**
-     * @return bool true if lock if acquired, false if not (already acquired)
-     */
     private function acquireLock(OutputInterface $output): bool
     {
-        $ret = $this->getRedis()->setnx(self::LOCK_KEY, self::LOCK_VALUE) == 1;
-        $this->getRedis()->expire(self::LOCK_KEY, self::LOCK_EXPIRES_SECONDS);
-        $output->writeln($ret ? 'Lock acquired.' : 'Cannot acquire lock, already acquired.');
+        $acquired = (bool) $this->connection->fetchOne(
+            'SELECT pg_try_advisory_lock(?)',
+            [self::LOCK_ID]
+        );
 
-        return $ret;
+        $output->writeln(
+            $acquired
+                ? '<info>Migration advisory lock acquired.</info>'
+                : '<comment>Migration advisory lock already held.</comment>'
+        );
+
+        return $acquired;
     }
 
-    /**
-     * release lock.
-     */
-    private function releaseLock(OutputInterface $output): int
+    private function releaseLock(OutputInterface $output): void
     {
-        $output->writeln('Lock released.');
+        $released = (bool) $this->connection->fetchOne(
+            'SELECT pg_advisory_unlock(?)',
+            [self::LOCK_ID]
+        );
 
-        return $this->getRedis()->del(self::LOCK_KEY);
-    }
-
-    private function getRedis(): Client
-    {
-        return $this->getService('predis');
-    }
-
-    private function getService(string $id): mixed
-    {
-        /** @var Application $application */
-        $application = $this->getApplication();
-
-        /** @var ContainerInterface $container */
-        $container = $application->getKernel()->getContainer();
-
-        return $container->get($id);
+        $output->writeln(
+            $released
+                ? '<info>Migration advisory lock released.</info>'
+                : '<comment>No advisory lock held by this session.</comment>'
+        );
     }
 }
