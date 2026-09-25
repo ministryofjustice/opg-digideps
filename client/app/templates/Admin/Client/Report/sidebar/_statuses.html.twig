@@ -23,10 +23,10 @@
 {% if checklist.submittedOn %}
     <p class="govuk-body-s behat-region-{{ checklistDomain }}-last-submitted-by">
         {{ 'lastSubmitted' | trans({}, 'common') }}:
-        {{ checklist.submittedOn | date("j F Y H:i") }}
+        <span data-role="checklist-submitted-on">{{ checklist.submittedOn | date("j F Y H:i") }}</span>
         <br>
         {% if (checklist.submittedBy is defined) and (checklist.submittedBy is not empty) %}
-            {{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}
+            <span data-role="checklist-submitted-by">{{ checklist.submittedBy.fullName}}</span>, {{ checklist.submittedBy.roleFullName }}
         {% else %}
             {{ 'deletedUser' | trans({}, 'common') }}
         {% endif %}
@@ -34,7 +34,7 @@
 
     {% if (syncStatus) %}
         <p class="govuk-body-s">
-            {{ 'synchronisedStatus' | trans({}, 'common') }}: {{ syncStatus }}
+            {{ 'synchronisedStatus' | trans({}, 'common') }}: <span data-role="checklist-sync-status">{{ syncStatus }}</span>
         </p>
     {% endif %}
 {% endif %}

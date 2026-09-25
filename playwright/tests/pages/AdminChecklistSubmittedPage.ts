@@ -1,5 +1,5 @@
 import { getAdminURL } from "../fixtures/fixtures";
-import { Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 
 /**
  * <ADMIN_URL>/admin/report/<reportId>/checklist-submitted
@@ -16,5 +16,9 @@ export default class AdminChecklistSubmittedPage {
 
   async goto() {
     await this.page.goto(this.url);
+  }
+
+  async isExpected() {
+    await expect(this.page).toHaveURL(this.url);
   }
 }
