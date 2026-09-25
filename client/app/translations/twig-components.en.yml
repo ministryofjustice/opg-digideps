@@ -18,6 +18,9 @@ gov:
       cookies: Cookies
       accessibility: Accessibility
 opg:
+  admin:
+    clientDetails:
+      reportsHeading: Reports
   renderable:
     bankAccount:
       sortCode: Sort code
