@@ -18,6 +18,13 @@ gov:
       cookies: Cookies
       accessibility: Accessibility
 opg:
+  admin:
+    clientDetails:
+      actions: Actions
+      dueDate: Due
+      period: Period
+      reportsHeading: Reports
+      type: Type
   renderable:
     bankAccount:
       sortCode: Sort code
@@ -39,6 +46,3 @@ opg:
       caseNumber: Case number
       reportingStart: Reporting start date
       reportingEnd: Reporting end date
-  admin:
-    clientDetails:
-      reportsHeading: Reports
