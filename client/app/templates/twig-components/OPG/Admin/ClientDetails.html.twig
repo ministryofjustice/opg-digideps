@@ -2,7 +2,9 @@
     {{ text.reportsHeading }}
 </twig:GOV:Heading>
 
-<p>TABLES HERE...</p>
+{% if activeReportsTable is not null %}
+    <twig:GOV:Table table="{{ activeReportsTable }}"/>
+{% endif %}
 
 {#
 {% set reportsByGroup = {
@@ -13,7 +15,7 @@ incomplete: client.reports | filter(r => (r.unSubmitDate is defined and r.unSubm
 
 {% for type, reports in reportsByGroup %}
 {% if (reports | length) > 0 %}
-    <table class="govuk-table behat-region-report-group-{{ type }}">
+    <table class="govuk-table">
         <caption class="govuk-table__caption">
             <span class="govuk-tag {{ type | status_to_tag_css }}">
                 {{ type | trans({}, 'admin.label') }}
