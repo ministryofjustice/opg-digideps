@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Components\OPG\Admin;
 
+use OPG\Digideps\Frontend\Components\GOV\Div;
+use OPG\Digideps\Frontend\Components\GOV\Table\Cell;
+use OPG\Digideps\Frontend\Components\GOV\Table\Table;
+use OPG\Digideps\Frontend\Components\GOV\Table\TableBuilder;
 use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
@@ -12,30 +17,39 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent]
 final class ClientDetails
 {
-    /**
-     * @var array<string, string> $text
-     */
+    /** @var array<string, string> $text */
     public array $text = [];
 
     private array $parameters = [];
 
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
+    public ?Table $activeReportsTable = null;
+
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+    ) {
     }
 
     public function mount(Client $client): void
     {
         $this->parameters = [];
         $this->text = $this->makeText();
+
+        $reportsByCategory = $this->categoriseReports($client->getReports());
+
+        $this->activeReportsTable = $this->makeActiveReportsTable($reportsByCategory['active']);
     }
 
     /**
-     * @return  array<string, string>
+     * @return array<string, string>
      */
     private function makeText(): array
     {
         $keys = [
+            'actions',
+            'dueDate',
+            'period',
             'reportsHeading',
+            'type',
         ];
 
         return array_reduce($keys, function (array $sofar, string $key): array {
@@ -51,5 +65,60 @@ final class ClientDetails
         } catch (\Throwable $t) {
             return "$t";
         }
+    }
+
+    /**
+     * @param array<Report> $reports
+     * @return array{active: array<Report>}
+     */
+    private function categoriseReports(array $reports): array
+    {
+        $categorisedReports = ['active' => []];
+
+        foreach ($reports as $report) {
+            $reportSubmitted = ($report->getSubmitted() === true);
+            $reportUnsubmitted = ($report->getUnSubmitDate() !== null);
+            $reportHasActiveCourtOrder = $report->hasActiveCourtOrder();
+
+            error_log(
+                "+++++++ REPORT " . $report->getId() .
+                "\nSUBMITTED? " . ($reportSubmitted ? 'yes' : 'no') .
+                "\nUNSUBMITTED? " . ($reportUnsubmitted ? 'yes' : 'no') .
+                "\nHAS ACTIVE COURT ORDER? " . ($reportHasActiveCourtOrder ? 'yes' : 'no')
+            );
+
+            foreach ($report->getCourtOrders() as $courtOrder) {
+                error_log("    COURT ORDER " . $courtOrder->getCourtOrderUid() . " HAS STATUS " . $courtOrder->getStatus());
+            }
+
+            if (!$reportSubmitted && !$reportUnsubmitted && $reportHasActiveCourtOrder) {
+                $categorisedReports['active'][] = $report;
+            }
+        }
+
+        return $categorisedReports;
+    }
+
+    /**
+     * @param array<Report> $activeReports
+     */
+    private function makeActiveReportsTable(array $activeReports): Table
+    {
+        $actionsCell = new Cell(new Div($this->text['actions'], isVisuallyHidden: true), isHeader: true);
+
+        $tableBuilder = new TableBuilder(caption: 'active')
+            ->addColumns(1, 1, 1, 1)
+            ->addHeader($this->text['period'], $this->text['type'], $this->text['dueDate'], $actionsCell);
+
+        foreach ($activeReports as $activeReport) {
+            $tableBuilder->addRow(
+                str_replace(' to ', '-', $activeReport->getPeriod()),
+                "OPG{$activeReport->getType()}",
+                $activeReport->getDueDate()->format('j F Y'),
+                'link'
+            );
+        }
+
+        return $tableBuilder->makeTable();
     }
 }
