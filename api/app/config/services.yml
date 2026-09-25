@@ -342,9 +342,6 @@ services:
     PlainUserAssembler:
         class: OPG\Digideps\Backend\v2\Assembler\UserAssembler
 
-    OPG\Digideps\Backend\v2\Assembler\Report\ReportSummaryAssembler: ~
-    OPG\Digideps\Backend\v2\Assembler\Report\ReportAssemblerInterface: '@OPG\Digideps\Backend\v2\Assembler\Report\ReportSummaryAssembler'
-
     PlainOrganisationAssembler:
         class: OPG\Digideps\Backend\v2\Assembler\OrganisationAssembler
 
