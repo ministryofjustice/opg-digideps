@@ -84,7 +84,7 @@ class ClientApi
     {
         return $this->restClient->get(
             sprintf(self::GET_CLIENT_BY_ID_V2, $clientId),
-            'Client',
+            Client::class,
             [
                 'client',
                 'client-users',
@@ -104,7 +104,7 @@ class ClientApi
     {
         return $this->restClient->get(
             sprintf(self::GET_CLIENT_BY_ID, $clientId),
-            'Client',
+            Client::class,
             [
                 'client',
                 'client-reports',
