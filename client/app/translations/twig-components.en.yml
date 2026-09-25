@@ -20,7 +20,11 @@ gov:
 opg:
   admin:
     clientDetails:
+      actions: Actions
+      dueDate: Due
+      period: Period
       reportsHeading: Reports
+      type: Type
   renderable:
     bankAccount:
       sortCode: Sort code
