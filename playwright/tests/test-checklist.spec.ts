@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import {
   createFixtureViaApi, getAdminUserFixture, getUserFixture,
   Scenario,
@@ -25,27 +25,39 @@ test("visiting the checklist submitted page does not resubmit checklist", async 
       throw new Error("We shouldn't be here");
     }
 
-    // complete checklist as super admin
-    const adminLoginPage = new AdminLoginPage(page)
-    await adminLoginPage.loginAdmin(getAdminUserFixture())
-
     const adminChecklistPage = new AdminChecklistPage(page, submittedReport.id);
+    const adminChecklistSubmittedPage = new AdminChecklistSubmittedPage(page, submittedReport.id);
+
+    // complete checklist as super admin
+    const adminLoginPage = new AdminLoginPage(page);
+    await adminLoginPage.loginAdmin(getAdminUserFixture());
+
     await adminChecklistPage.goto();
+    await adminChecklistPage.markOPG103SectionsSatisfactory();
+    await adminChecklistPage.submitChecklistAndContinue();
 
-    // store submitter and submit date
+    await adminChecklistSubmittedPage.isExpected();
 
+    // store submitter and submit date shown after submitting checklist
+    await adminChecklistPage.goto();
+    const submissionDetails1 = await adminChecklistPage.getSubmissionDetails();
+
+    // logout as super admin
     const adminLogoutPage = new AdminLogoutPage(page);
     await adminLogoutPage.goto();
 
-    // login second admin user
+    // login as second admin user
     await adminLoginPage.loginAdmin(user);
 
-    // go to checklist-submitted URL for report
-    const adminChecklistSubmittedPage = new AdminChecklistSubmittedPage(page, submittedReport.id);
+    // go to checklist-submitted URL as second admin user
     await adminChecklistSubmittedPage.goto();
 
-    // check submitter and submit date have not changed
-
+    // ensure checklist has not been resubmitted (see DDLS-1694):
+    // check submitter and submit date have not changed; if they have, a GET
+    // to this page has resubmitted the checklist, which means it is non-idempotent (BAD)
+    await adminChecklistPage.goto();
+    const submissionDetails2 = await adminChecklistPage.getSubmissionDetails();
+    expect(submissionDetails1 === submissionDetails2);
   };
 
   // create a single unsubmitted, but ready to submit, report, with a document
