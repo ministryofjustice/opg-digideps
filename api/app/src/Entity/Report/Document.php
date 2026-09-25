@@ -15,11 +15,11 @@ use OPG\Digideps\Backend\Entity\SynchronisableInterface;
 use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
 
 #[ORM\Table(name: 'document')]
-#[ORM\Index(columns: ['report_id'], name: 'ix_document_report_id')]
-#[ORM\Index(columns: ['created_by'], name: 'ix_document_created_by')]
 #[ORM\Entity(repositoryClass: DocumentRepository::class), ORM\HasLifecycleCallbacks]
-#[ORM\Index(columns: ['report_id'], name: 'ix_document_report_id')]
-#[ORM\Index(columns: ['created_by'], name: 'ix_document_created_by')]
+#[ORM\Index(name: 'ix_document_report_id', columns: ['report_id'])]
+#[ORM\Index(name: 'ix_document_created_by', columns: ['created_by'])]
+#[ORM\Index(name: 'ix_document_report_id', columns: ['report_id'])]
+#[ORM\Index(name: 'ix_document_created_by', columns: ['created_by'])]
 class Document implements SynchronisableInterface
 {
     use CreationAudit;
@@ -53,7 +53,7 @@ class Document implements SynchronisableInterface
 
     #[JMS\Groups(['document-report'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
-    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'documents')]
     private Report $report;
 
