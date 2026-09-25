@@ -62,7 +62,7 @@ test("visiting the checklist submitted page does not resubmit checklist", async 
     // to this page has resubmitted the checklist, which means it is non-idempotent (BAD)
     await adminChecklistPage.goto();
     const submissionDetails2 = await adminChecklistPage.getSubmissionDetails();
-    expect(submissionDetails1 === submissionDetails2);
+expect(submissionDetails2).toEqual(submissionDetails1);
   };
 
   // create a single unsubmitted, but ready to submit, report, with a document
