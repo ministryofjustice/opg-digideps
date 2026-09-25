@@ -249,10 +249,15 @@ class ReportController extends AbstractController
 
     protected function queueChecklistForSyncing(int $id): void
     {
-        // reload report from db
+        // reload report from db to ensure checklist is available
         $report = $this->reportApi->getReport($id, ['report-checklist']);
 
-        $report->getChecklist()->setSynchronisationStatus(SynchronisableInterface::SYNC_STATUS_QUEUED);
+        $checklist = $report->getChecklist();
+        if ($checklist === null) {
+            throw new \DomainException('Cannot synchronise checklist for report as it does not have one');
+        }
+
+        $checklist->setSynchronisationStatus(SynchronisableInterface::SYNC_STATUS_QUEUED);
         $this->restClient->put('report/' . $report->getId() . '/checked', $report->getChecklist(), ['synchronisation']);
     }
 
