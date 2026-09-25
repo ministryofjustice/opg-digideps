@@ -82,22 +82,7 @@ class ClientApi
 
     public function getWithUsersV2(int $clientId)
     {
-        return $this->restClient->get(
-            sprintf(self::GET_CLIENT_BY_ID_V2, $clientId),
-            Client::class,
-            [
-                'client',
-                'client-users',
-                'user',
-                'client-reports',
-                'report',
-                'status',
-                'client-deputy',
-                'deputy',
-                'client-organisations',
-                'organisation',
-            ]
-        );
+        return $this->restClient->get(sprintf(self::GET_CLIENT_BY_ID_V2, $clientId), Client::class);
     }
 
     public function getById(int $clientId)
