@@ -15,17 +15,15 @@ RUN mkdir -p ${FUNCTION_DIR}
 COPY run_custom_query.py ${FUNCTION_DIR}/run_custom_query.py
 COPY _verification.sql ${FUNCTION_DIR}/_verification.sql
 COPY _run.sql ${FUNCTION_DIR}/_run.sql
-COPY requirements.txt /requirements.txt
 
 # Install build tools ONLY in this stage
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-# Install dependencies into the function dir
-RUN pip install \
-    --no-cache-dir \
-    --target ${FUNCTION_DIR} \
-    -r /requirements.txt
-
+COPY --from=ghcr.io/astral-sh/uv@sha256:2bb3ebca0a796a155094a27773d290c4b074572e6107f171d88d086682fd2500 /uv /uvx /bin/
+COPY uv.lock .
+COPY pyproject.toml .
+RUN uv export --locked -o requirements.txt \
+    && python -m pip install --no-cache-dir --target ${FUNCTION_DIR} -r requirements.txt
 
 # ===== FINAL IMAGE =====
 FROM python-base AS final

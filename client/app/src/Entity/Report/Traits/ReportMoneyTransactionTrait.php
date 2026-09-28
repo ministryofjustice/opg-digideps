@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
 
 trait ReportMoneyTransactionTrait
 {
     /**
-     *
      * @var MoneyTransaction[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>')]
@@ -16,27 +17,20 @@ trait ReportMoneyTransactionTrait
     private array $moneyTransactionsIn = [];
 
     /**
-     *
      * @var MoneyTransaction[]
      */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>')]
     #[JMS\Groups(['transactionsOut'])]
     private array $moneyTransactionsOut = [];
 
-    /**
-     * @var float
-     */
     #[JMS\Type('double')]
-    private $moneyInTotal;
+    private float $moneyInTotal = 0.0;
+
+    #[JMS\Type('double')]
+    private float $moneyOutTotal = 0.0;
 
     /**
-     * @var float
-     */
-    #[JMS\Type('double')]
-    private $moneyOutTotal;
-
-    /**
-     * @param  MoneyTransaction[] $moneyTransactionsIn
+     * @param MoneyTransaction[] $moneyTransactionsIn
      */
     public function setMoneyTransactionsIn(array $moneyTransactionsIn): static
     {
@@ -54,7 +48,7 @@ trait ReportMoneyTransactionTrait
     }
 
     /**
-     * @param  MoneyTransaction[] $moneyTransactionsOut
+     * @param MoneyTransaction[] $moneyTransactionsOut
      */
     public function setMoneyTransactionsOut(array $moneyTransactionsOut): static
     {
@@ -78,7 +72,7 @@ trait ReportMoneyTransactionTrait
      *
      * @return array array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]
      */
-    public function groupMoneyTransactionsByGroup(array $moneyTransactions)
+    public function groupMoneyTransactionsByGroup(array $moneyTransactions): array
     {
         $ret = [];
 
@@ -94,36 +88,24 @@ trait ReportMoneyTransactionTrait
         return $ret;
     }
 
-    /**
-     * @return float
-     */
-    public function getMoneyInTotal()
+    public function getMoneyInTotal(): float
     {
         return $this->moneyInTotal;
     }
 
-    /**
-     * @param float $moneyInTotal
-     */
-    public function setMoneyInTotal($moneyInTotal): static
+    public function setMoneyInTotal(float $moneyInTotal): static
     {
         $this->moneyInTotal = $moneyInTotal;
 
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getMoneyOutTotal()
+    public function getMoneyOutTotal(): float
     {
         return $this->moneyOutTotal;
     }
 
-    /**
-     * @param float $moneyOutTotal
-     */
-    public function setMoneyOutTotal($moneyOutTotal): static
+    public function setMoneyOutTotal(float $moneyOutTotal): static
     {
         $this->moneyOutTotal = $moneyOutTotal;
 
