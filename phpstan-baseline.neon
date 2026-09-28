@@ -787,12 +787,6 @@ parameters:
 			path: api/app/src/Controller/Report/DocumentController.php
 
 		-
-			message: '#^Variable \$document might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: api/app/src/Controller/Report/DocumentController.php
-
-		-
 			message: '#^Parameter \#1 \$sectionIds of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:updateSectionsStatusCache\(\) expects array\<string\>\|null, array given\.$#'
 			identifier: argument.type
 			count: 3
@@ -5072,12 +5066,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$caseNumber of method OPG\\Digideps\\Backend\\v2\\DTO\\ClientDto\:\:setCaseNumber\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\v2\\Assembler\\Report\\ReportAssemblerInterface\:\:assembleFromArray\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/v2/Assembler/ClientAssembler.php
@@ -14055,7 +14043,7 @@ parameters:
 		-
 			message: '#^Cannot call method getText\(\) on Behat\\Mink\\Element\\NodeElement\|null\.$#'
 			identifier: method.nonObject
-			count: 4
+			count: 2
 			path: api/app/tests/Behat/bootstrap/v2/Reporting/ReportReviewFeatureContext.php
 
 		-
@@ -21181,16 +21169,16 @@ parameters:
 			path: client/app/src/Components/OPG/Review/Lifestyle.php
 
 		-
-			message: '#^Possibly invalid array key type string\|null\.$#'
-			identifier: offsetAccess.invalidOffset
+			message: '#^Offset 1 on array\{non\-falsy\-string, string, non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
 			count: 1
-			path: client/app/src/Components/OPG/Review/MoneyInShort.php
+			path: client/app/src/Components/OPG/RichText/RichTextParser.php
 
 		-
-			message: '#^Possibly invalid array key type string\|null\.$#'
-			identifier: offsetAccess.invalidOffset
+			message: '#^Offset 2 on array\{non\-falsy\-string, string, non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
 			count: 1
-			path: client/app/src/Components/OPG/Review/MoneyOutShort.php
+			path: client/app/src/Components/OPG/RichText/RichTextParser.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
@@ -24241,12 +24229,6 @@ parameters:
 			path: client/app/src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setMentalCapacity\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -25951,12 +25933,6 @@ parameters:
 			path: client/app/src/Form/Report/MoneyTransferType.php
 
 		-
-			message: '#^Possibly invalid array key type string\|null\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: client/app/src/Form/Report/MoneyTransferType.php
-
-		-
 			message: '#^Cannot call method getActionMoreInfo\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -27643,12 +27619,6 @@ parameters:
 			path: client/app/src/Service/CssClassCollector.php
 
 		-
-			message: '#^Cannot use \+\+ on mixed\.$#'
-			identifier: preInc.type
-			count: 1
-			path: client/app/src/Service/CssClassCollector.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\CssClassCollector\:\:getData\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -29331,12 +29301,6 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Service/ReportSubmissionService.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService\:\:assertReportSubmissionIsDownloadable\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: client/app/src/Service/ReportSubmissionService.php
 
@@ -31603,24 +31567,6 @@ parameters:
 			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
 
 		-
-			message: '#^Access to undefined constant PHPUnit\\Framework\\Constraint\\IsType\:\:TYPE_STRING\.$#'
-			identifier: classConstant.notFound
-			count: 2
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:testAssertReportSubmissionIsDownloadable\(\) has parameter \$reportSubmission with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -31630,12 +31576,6 @@ parameters:
 			message: '#^Parameter \#1 \$reportSubmission of method OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService\:\:assertReportSubmissionIsDownloadable\(\) expects OPG\\Digideps\\Frontend\\Entity\\Report\\ReportSubmission, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$type of class PHPUnit\\Framework\\Constraint\\IsType constructor expects PHPUnit\\Framework\\NativeType, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
 
 		-
@@ -31661,6 +31601,12 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
+
+		-
+			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\DocumentSyncCommand\:\:getDefaultName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Command\\DocumentSyncCommandTest\:\:testSleepsWhenTurnedOff\(\) has no return type specified\.$#'

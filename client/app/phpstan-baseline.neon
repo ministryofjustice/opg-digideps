@@ -3469,12 +3469,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setMentalCapacity\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -8553,12 +8547,6 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService\:\:assertReportSubmissionIsDownloadable\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Service/ReportSubmissionService.php
 
