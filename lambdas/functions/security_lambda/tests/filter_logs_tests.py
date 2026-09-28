@@ -1,6 +1,6 @@
 import unittest
 
-from app.block_ips import LogRecord, parse_log_records
+from app.security import LogRecord, parse_log_records
 
 
 class TestParseLogRecords(unittest.TestCase):
