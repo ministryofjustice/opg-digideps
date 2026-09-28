@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\File\Verifier;
 
 use OPG\Digideps\Frontend\Entity\Report\Document;
@@ -15,59 +17,39 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ConstraintVerifierTest extends TestCase
 {
-    /** @var VerifierInterface */
-    private $verifier;
-
-    /** @var ValidatorInterface | MockObject */
-    private $validator;
-
-    /** @var Document */
-    private $document;
-
-    /** @var VerificationStatus */
-    private $result;
+    private VerifierInterface $verifier;
+    private ValidatorInterface&MockObject $validator;
+    private Document $document;
+    private VerificationStatus $result;
 
     public function setUp(): void
     {
-        $this->validator = $this->createMock(ValidatorInterface::class);
+        $this->validator = self::createMock(ValidatorInterface::class);
         $this->verifier = new ConstraintVerifier($this->validator);
 
         $file = $this->getMockBuilder(UploadedFile::class)->disableOriginalConstructor()->getMock();
         $file->method('getClientOriginalName')->willReturn('file.txt');
+
         $this->document = new Document()->setFile($file);
     }
 
-
-    /**
-     * @test
-     */
-    public function verificationPassesWhenGivenValidDocument()
+    public function testVerificationPassesWhenGivenValidDocument(): void
     {
-        $this
-            ->ensureDocumentWillBeValid()
+        $this->ensureDocumentWillBeValid()
             ->invokeTest()
             ->assertStatusIsPassed();
     }
 
-    /**
-     * @test
-     */
-    public function verificationFailsWhenGivenInvalidDocument()
+    public function testVerificationFailsWhenGivenInvalidDocument(): void
     {
-        $this
-            ->ensureDocumentWillBeInvalid()
+        $this->ensureDocumentWillBeInvalid()
             ->invokeTest()
             ->assertStatusIsFailed();
     }
 
-    /**
-     * @return ConstraintVerifierTest
-     */
-    private function ensureDocumentWillBeValid(): ConstraintVerifierTest
+    private function ensureDocumentWillBeValid(): static
     {
-        $this
-            ->validator
-            ->expects($this->once())
+        $this->validator->expects(self::once())
             ->method('validate')
             ->with($this->document, null, ['document'])
             ->willReturn(new ConstraintViolationList());
@@ -75,16 +57,12 @@ class ConstraintVerifierTest extends TestCase
         return $this;
     }
 
-    /**
-     * @return ConstraintVerifierTest
-     */
-    private function ensureDocumentWillBeInvalid(): ConstraintVerifierTest
+    private function ensureDocumentWillBeInvalid(): static
     {
         $validationResult = new ConstraintViolationList();
         $validationResult->add($this->createMock(ConstraintViolationInterface::class));
 
-        $this
-            ->validator
+        $this->validator
             ->expects($this->once())
             ->method('validate')
             ->with($this->document, null, ['document'])
@@ -93,10 +71,7 @@ class ConstraintVerifierTest extends TestCase
         return $this;
     }
 
-    /**
-     * @return ConstraintVerifierTest
-     */
-    private function invokeTest(): ConstraintVerifierTest
+    private function invokeTest(): static
     {
         $this->result = $this->verifier->verify($this->document, new VerificationStatus());
 
@@ -105,13 +80,13 @@ class ConstraintVerifierTest extends TestCase
 
     private function assertStatusIsPassed(): void
     {
-        $this->assertEquals(VerificationStatus::PASSED, $this->result->getStatus());
-        $this->assertNull($this->result->getError());
+        self::assertEquals(VerificationStatus::PASSED, $this->result->getStatus());
+        self::assertNull($this->result->getError());
     }
 
     private function assertStatusIsFailed(): void
     {
-        $this->assertEquals(VerificationStatus::FAILED, $this->result->getStatus());
-        $this->assertNotNull($this->result->getError());
+        self::assertEquals(VerificationStatus::FAILED, $this->result->getStatus());
+        self::assertNotNull($this->result->getError());
     }
 }

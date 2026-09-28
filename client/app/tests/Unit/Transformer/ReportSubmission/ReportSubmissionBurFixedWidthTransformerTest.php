@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Transformer\ReportSubmission;
 
 use OPG\Digideps\Frontend\Entity\Report\ReportSubmissionSummary;
@@ -8,21 +10,17 @@ use PHPUnit\Framework\TestCase;
 
 class ReportSubmissionBurFixedWidthTransformerTest extends TestCase
 {
-    /** @var ReportSubmissionBurFixedWidthTransformer */
-    private $sut;
+    private string $result;
+    private array $formattedResult;
 
-    /** @var string */
-    private $result;
-
-    /** @var array */
-    private $formattedResult;
+    private ReportSubmissionBurFixedWidthTransformer $sut;
 
     public function setUp(): void
     {
         $this->sut = new ReportSubmissionBurFixedWidthTransformer();
     }
 
-    public function testTransformsACollectionOfReportSubmissionSummaryEntities()
+    public function testTransformsACollectionOfReportSubmissionSummaryEntities(): void
     {
         $input = [
             $this->buildAlphaReportSubmissionSummary(),
@@ -38,7 +36,7 @@ class ReportSubmissionBurFixedWidthTransformerTest extends TestCase
         $this->assertResultContainsFooterLine();
     }
 
-    public function testIgnoresInvalidTypesInTheInput()
+    public function testIgnoresInvalidTypesInTheInput(): void
     {
         $input = [
             $this->buildAlphaReportSubmissionSummary(),
@@ -54,10 +52,7 @@ class ReportSubmissionBurFixedWidthTransformerTest extends TestCase
         $this->assertResultContainsFooterLine();
     }
 
-    /**
-     * @return ReportSubmissionSummary
-     */
-    private function buildAlphaReportSubmissionSummary()
+    private function buildAlphaReportSubmissionSummary(): ReportSubmissionSummary
     {
         return new ReportSubmissionSummary()
             ->setId(1)
@@ -69,10 +64,7 @@ class ReportSubmissionBurFixedWidthTransformerTest extends TestCase
             ->setDocumentId('report_one.pdf');
     }
 
-    /**
-     * @return ReportSubmissionSummary
-     */
-    private function buildBetaReportSubmissionSummary()
+    private function buildBetaReportSubmissionSummary(): ReportSubmissionSummary
     {
         return new ReportSubmissionSummary()
             ->setId(2)
@@ -84,56 +76,50 @@ class ReportSubmissionBurFixedWidthTransformerTest extends TestCase
             ->setDocumentId('report_two.pdf');
     }
 
-    /**
-     * @param $input
-     */
-    private function invokeTransformer($input)
+    private function invokeTransformer(array $input): void
     {
         $this->result = $this->sut->transform($input);
     }
 
-    private function formatResultIntoTestable()
+    private function formatResultIntoTestable(): void
     {
         $this->formattedResult = explode("\r\n", $this->result);
         array_pop($this->formattedResult);
     }
 
-    private function assertResultContainsHeaderLine()
+    private function assertResultContainsHeaderLine(): void
     {
-        $this->assertEquals('00000000', $this->formattedResult[0]);
+        self::assertEquals('00000000', $this->formattedResult[0]);
     }
 
-    private function assertResultContainsNdataLines($expectedCount)
+    private function assertResultContainsNdataLines($expectedCount): void
     {
-        $this->assertCount($expectedCount + 2, $this->formattedResult);
+        self::assertCount($expectedCount + 2, $this->formattedResult);
     }
 
-    private function assertEachDataLineIsFixedLength()
+    private function assertEachDataLineIsFixedLength(): void
     {
         $result = $this->formattedResult;
 
         array_shift($result);
         array_pop($result);
 
+        /** @var string $dataLine */
         foreach ($result as $dataLine) {
-            $this->assertEquals(375, strlen($dataLine));
-            $this->assertEquals(325, $this->determineNumFixedSpaces($dataLine));
+            self::assertEquals(375, strlen($dataLine));
+            self::assertEquals(325, $this->determineNumFixedSpaces($dataLine));
         }
     }
 
-    /**
-     * @param $line
-     * @return int
-     */
-    private function determineNumFixedSpaces($line)
+    private function determineNumFixedSpaces(string $line): int
     {
         preg_match_all('/ /', $line, $matches);
 
         return count($matches[0]);
     }
 
-    private function assertResultContainsFooterLine()
+    private function assertResultContainsFooterLine(): void
     {
-        $this->assertEquals('99999999', $this->formattedResult[count($this->formattedResult) - 1]);
+        self::assertEquals('99999999', $this->formattedResult[count($this->formattedResult) - 1]);
     }
 }

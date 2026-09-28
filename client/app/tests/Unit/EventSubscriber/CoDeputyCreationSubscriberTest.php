@@ -10,14 +10,10 @@ use OPG\Digideps\Frontend\EventSubscriber\CoDeputyCreationSubscriber;
 use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 class CoDeputyCreationSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @test */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals(
             [CoDeputyInvitedEvent::NAME => 'sendEmail', CoDeputyCreatedEvent::NAME => 'sendEmail'],
@@ -25,17 +21,17 @@ class CoDeputyCreationSubscriberTest extends TestCase
         );
     }
 
-    /** @test */
-    public function sendEmail()
+    public function testSendEmail(): void
     {
         $invitedCoDeputy = UserHelpers::createUser();
         $inviterDeputy = UserHelpers::createUser();
         $coDeputyInvitedEvent = new CoDeputyInvitedEvent($invitedCoDeputy, $inviterDeputy);
 
-        $mailer = self::prophesize(Mailer::class);
-        $mailer->sendInvitationEmail($invitedCoDeputy, $inviterDeputy->getFullName())->shouldBeCalled();
+        $mailer = self::createMock(Mailer::class);
+        $mailer->expects(self::once())
+            ->method('sendInvitationEmail')
+            ->with($invitedCoDeputy, $inviterDeputy->getFullName());
 
-        $sut = new CoDeputyCreationSubscriber($mailer->reveal());
-        $sut->sendEmail($coDeputyInvitedEvent);
+        new CoDeputyCreationSubscriber($mailer)->sendEmail($coDeputyInvitedEvent);
     }
 }

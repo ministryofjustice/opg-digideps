@@ -23,8 +23,8 @@ class MailerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->mailFactory = $this->createMock(MailFactory::class);
-        $this->mailSender = $this->createMock(MailSender::class);
+        $this->mailFactory = self::createMock(MailFactory::class);
+        $this->mailSender = self::createMock(MailSender::class);
         $this->sut = new Mailer($this->mailFactory, $this->mailSender);
     }
 
@@ -33,8 +33,8 @@ class MailerTest extends TestCase
         $activatedUser = UserHelpers::createUser();
         $activationEmail = $this->createEmail();
 
-        $this->mailFactory->expects($this->once())->method('createActivationEmail')->with($activatedUser)->willReturn($activationEmail);
-        $this->mailSender->expects($this->once())->method('send')->with($activationEmail);
+        $this->mailFactory->expects(self::once())->method('createActivationEmail')->with($activatedUser)->willReturn($activationEmail);
+        $this->mailSender->expects(self::once())->method('send')->with($activationEmail);
 
         $this->sut->sendActivationEmail($activatedUser);
     }
@@ -47,8 +47,8 @@ class MailerTest extends TestCase
         $invitedUser = UserHelpers::createUser();
         $invitationEmail = $this->createEmail();
 
-        $this->mailFactory->expects($this->once())->method('createInvitationEmail')->with($invitedUser)->willReturn($invitationEmail);
-        $this->mailSender->expects($this->once())->method('send')->with($invitationEmail);
+        $this->mailFactory->expects(self::once())->method('createInvitationEmail')->with($invitedUser)->willReturn($invitationEmail);
+        $this->mailSender->expects(self::once())->method('send')->with($invitationEmail);
 
         $this->sut->sendInvitationEmail($invitedUser, $deputyName);
     }
@@ -66,8 +66,8 @@ class MailerTest extends TestCase
         $passwordResetUser = UserHelpers::createUser();
         $passwordResetEmail = $this->createEmail();
 
-        $this->mailFactory->expects($this->once())->method('createResetPasswordEmail')->with($passwordResetUser)->willReturn($passwordResetEmail);
-        $this->mailSender->expects($this->once())->method('send')->with($passwordResetEmail);
+        $this->mailFactory->expects(self::once())->method('createResetPasswordEmail')->with($passwordResetUser)->willReturn($passwordResetEmail);
+        $this->mailSender->expects(self::once())->method('send')->with($passwordResetEmail);
 
         $this->sut->sendResetPasswordEmail($passwordResetUser);
     }
@@ -77,13 +77,12 @@ class MailerTest extends TestCase
         $updatedClient = ClientHelpers::createClient();
         $updatedClientDetailsEmail = $this->createEmail();
 
-        $this->mailFactory
-            ->expects($this->once())
+        $this->mailFactory->expects(self::once())
             ->method('createUpdateClientDetailsEmail')
             ->with($updatedClient)
             ->willReturn($updatedClientDetailsEmail);
 
-        $this->mailSender->expects($this->atLeastOnce())->method('send')->with($updatedClientDetailsEmail);
+        $this->mailSender->expects(self::atLeastOnce())->method('send')->with($updatedClientDetailsEmail);
 
         $this->sut->sendUpdateClientDetailsEmail($updatedClient);
     }
@@ -93,13 +92,12 @@ class MailerTest extends TestCase
         $updatedDeputy = UserHelpers::createUser();
         $updatedDeputyDetailsEmail = $this->createEmail();
 
-        $this->mailFactory
-            ->expects($this->once())
+        $this->mailFactory->expects(self::once())
             ->method('createUpdateDeputyDetailsEmail')
             ->with($updatedDeputy)
             ->willReturn($updatedDeputyDetailsEmail);
 
-        $this->mailSender->expects($this->atLeastOnce())->method('send')->with($updatedDeputyDetailsEmail);
+        $this->mailSender->expects(self::atLeastOnce())->method('send')->with($updatedDeputyDetailsEmail);
 
         $this->sut->sendUpdateDeputyDetailsEmail($updatedDeputy);
     }
@@ -111,13 +109,12 @@ class MailerTest extends TestCase
         $newReport = ReportHelpers::createReport();
         $submittedReportConfirmationEmail = $this->createEmail();
 
-        $this->mailFactory
-            ->expects($this->once())
+        $this->mailFactory->expects(self::once())
             ->method('createReportSubmissionConfirmationEmail')
             ->with($submittedByDeputy, $submittedReport, $newReport)
             ->willReturn($submittedReportConfirmationEmail);
 
-        $this->mailSender->expects($this->atLeastOnce())->method('send')->with($submittedReportConfirmationEmail);
+        $this->mailSender->expects(self::atLeastOnce())->method('send')->with($submittedReportConfirmationEmail);
 
         $this->sut->sendReportSubmissionConfirmationEmail($submittedByDeputy, $submittedReport, $newReport);
     }
@@ -132,6 +129,6 @@ class MailerTest extends TestCase
             ->setFromName($faker->name())
             ->setSubject($faker->realText(35))
             ->setTemplate($faker->uuid())
-            ->setParameters((array)$faker->words(3));
+            ->setParameters((array)$faker->words());
     }
 }

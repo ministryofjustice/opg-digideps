@@ -44,7 +44,7 @@ class DeputyshipCandidatesGroup implements \IteratorAggregate
 
         $group->orderUid = $orderUid;
 
-        /** @var array<string, mixed> $candidate */
+        /** @var array<string, int|string|null> $candidate */
         foreach ($candidatesList as $candidate) {
             if ($candidate['orderUid'] !== $orderUid) {
                 return null;
@@ -55,10 +55,20 @@ class DeputyshipCandidatesGroup implements \IteratorAggregate
                     $group->insertOrder = $candidate;
                     break;
                 case DeputyshipCandidateAction::InsertOrderReport:
+                    $group->insertOthers[(string)$candidate['reportId']] ??= $candidate;
+                    break;
                 case DeputyshipCandidateAction::InsertOrderDeputy:
-                    $group->insertOthers[] = $candidate;
+                    $group->insertOthers[(string)$candidate['deputyId']] ??= $candidate;
+                    if ($candidate['deputyStatusOnOrder'] ?? false) {
+                        $group->insertOthers[(string)$candidate['deputyId']]['deputyStatusOnOrder'] = true;
+                    }
                     break;
                 case DeputyshipCandidateAction::UpdateDeputyStatus:
+                    $group->updates[(string)$candidate['deputyId']] ??= $candidate;
+                    if ($candidate['deputyStatusOnOrder'] ?? false) {
+                        $group->updates[(string)$candidate['deputyId']]['deputyStatusOnOrder'] = true;
+                    }
+                    break;
                 case DeputyshipCandidateAction::UpdateOrderStatus:
                     $group->updates[] = $candidate;
                     break;

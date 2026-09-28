@@ -1,4 +1,4 @@
-@v2 @v2_sequential_3 @deputy-costs
+@v2 @v2_sequential_3 @deputy-costs @deputy-costs.org
 Feature: Deputy costs - Applies to Org users only
 
     @prof-admin-health-welfare-not-started

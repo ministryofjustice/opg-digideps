@@ -114,10 +114,9 @@
         }
     ],
     "require-dev": {
+        "ext-fileinfo": "*",
         "dg/bypass-finals": "^1.10.2",
-        "jangregor/phpstan-prophecy": "^2.3.0",
         "league/openapi-psr7-validator": "^0.24.0",
-        "phpspec/prophecy-phpunit": "^2.5",
         "phpstan/phpstan": "^2.2.2",
         "phpstan/phpstan-phpunit": "^2.0.16",
         "phpunit/phpcov": "^8.2.1",

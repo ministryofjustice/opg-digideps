@@ -10,33 +10,35 @@ use OPG\Digideps\Frontend\Entity\Report\ReviewChecklist;
 use OPG\Digideps\Frontend\Service\HtmlToPdfGenerator;
 use OPG\Digideps\Frontend\Sync\Exception\PdfGenerationFailedException;
 use OPG\Digideps\Frontend\Sync\Service\ChecklistPdfGenerator;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 
 class ChecklistPdfGeneratorTest extends TestCase
 {
-    private Environment $templating;
-    private HtmlToPdfGenerator $htmltopdf;
+    private Environment&MockObject $templating;
+    private HtmlToPdfGenerator&MockObject $htmlToPdf;
+
     private ChecklistPdfGenerator $sut;
 
     public function setUp(): void
     {
         $this->templating = $this->getMockBuilder(Environment::class)->disableOriginalConstructor()->getMock();
-        $this->htmltopdf = $this->getMockBuilder(HtmlToPdfGenerator::class)->disableOriginalConstructor()->getMock();
+        $this->htmlToPdf = $this->getMockBuilder(HtmlToPdfGenerator::class)->disableOriginalConstructor()->getMock();
 
-        $this->sut = new ChecklistPdfGenerator($this->templating, $this->htmltopdf);
+        $this->sut = new ChecklistPdfGenerator($this->templating, $this->htmlToPdf);
     }
 
     public function testRendersHtmlAndConvertsToPdf(): void
     {
         $report = $this->buildReportInput();
 
-        $this
-            ->ensureHtmlRenderWillSucceed($report)
+        $this->ensureHtmlRenderWillSucceed($report)
             ->ensurePdfGenerationWillSucceed();
 
         $result = $this->sut->generate($report);
-        $this->assertEquals('pdf-content', $result);
+
+        self::assertEquals('pdf-content', $result);
     }
 
     public function testThrowsExceptionOnHtmlRenderError(): void
@@ -44,20 +46,18 @@ class ChecklistPdfGeneratorTest extends TestCase
         $report = $this->buildReportInput();
         $expectedException = new PdfGenerationFailedException('Failed to render HTML');
 
-        $this
-            ->ensureHtmlRenderWillFail($report)
+        $this->ensureHtmlRenderWillFail($report)
             ->expectExceptionObject($expectedException);
 
         $this->sut->generate($report);
     }
 
-    public function testThrowsExceptionOnHtmlToPdfError()
+    public function testThrowsExceptionOnHtmlToPdfError(): void
     {
         $report = $this->buildReportInput();
         $expectedException = new PdfGenerationFailedException('Unable to generate PDF using htmltopdf service');
 
-        $this
-            ->ensureHtmlRenderWillSucceed($report)
+        $this->ensureHtmlRenderWillSucceed($report)
             ->ensurePdfGenerationWillFail()
             ->expectExceptionObject($expectedException);
 
@@ -75,11 +75,9 @@ class ChecklistPdfGeneratorTest extends TestCase
         return $report;
     }
 
-    private function ensureHtmlRenderWillSucceed(Report $report): ChecklistPdfGeneratorTest
+    private function ensureHtmlRenderWillSucceed(Report $report): static
     {
-        $this
-            ->templating
-            ->expects($this->once())
+        $this->templating->expects(self::once())
             ->method('render')
             ->with(ChecklistPdfGenerator::TEMPLATE_FILE, [
                 'report' => $report,
@@ -91,11 +89,9 @@ class ChecklistPdfGeneratorTest extends TestCase
         return $this;
     }
 
-    private function ensureHtmlRenderWillFail(Report $report): ChecklistPdfGeneratorTest
+    private function ensureHtmlRenderWillFail(Report $report): static
     {
-        $this
-            ->templating
-            ->expects($this->once())
+        $this->templating->expects(self::once())
             ->method('render')
             ->with(ChecklistPdfGenerator::TEMPLATE_FILE, [
                 'report' => $report,
@@ -109,19 +105,15 @@ class ChecklistPdfGeneratorTest extends TestCase
 
     private function ensurePdfGenerationWillSucceed(): void
     {
-        $this
-            ->htmltopdf
-            ->expects($this->once())
+        $this->htmlToPdf->expects(self::once())
             ->method('getPdfFromHtml')
             ->with('some-html')
             ->willReturn('pdf-content');
     }
 
-    private function ensurePdfGenerationWillFail(): ChecklistPdfGeneratorTest
+    private function ensurePdfGenerationWillFail(): static
     {
-        $this
-            ->htmltopdf
-            ->expects($this->once())
+        $this->htmlToPdf->expects(self::once())
             ->method('getPdfFromHtml')
             ->with('some-html')
             ->willReturn(false);

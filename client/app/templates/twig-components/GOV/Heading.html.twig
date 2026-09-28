@@ -1,7 +1,11 @@
-{% props size = "m", h = "1", caption=null %}
+{% props size = "m", h = "1", caption=null, hidden=false %}
 {% set h_tag = "h" ~ h %}
+{% set className = "govuk-heading-" ~ size %}
+{% if hidden %}
+    {% set className = className ~ ' govuk-visually-hidden' %}
+{% endif %}
 
-<{{ h_tag }} {{ attributes.defaults({class: "govuk-heading-" ~ size}) }}>
+<{{ h_tag }} {{ attributes.defaults({class: className}) }}>
     {% if caption is not null %}
         <span class="{{ "govuk-caption-" ~ size }}">{{ caption }}</span>
     {% endif %}

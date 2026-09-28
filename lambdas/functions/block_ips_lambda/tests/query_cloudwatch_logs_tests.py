@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
-from app.block_ips import query_cloudwatch_logs
+from app.block_ips import query_cloudwatch_logs, LogRecord
 
 
 class TestQueryCloudwatchLogs(unittest.TestCase):
@@ -31,11 +31,11 @@ class TestQueryCloudwatchLogs(unittest.TestCase):
         log_stream_prefix = ["test-log-stream"]
 
         expected_output = [
-            {
-                "real_forwarded_for": "192.0.2.1/32",
-                "request_uri": "/test",
-                "status": "200",
-            }
+            LogRecord(
+                real_forwarded_for="192.0.2.1/32",
+                request_uri="/test",
+                status=200,
+            )
         ]
 
         # Use patch to skip time.sleep calls
@@ -50,8 +50,8 @@ class TestQueryCloudwatchLogs(unittest.TestCase):
         self.assertIn("startTime", kwargs)
         self.assertIn("endTime", kwargs)
         self.assertIn("queryString", kwargs)
-        self.assertIn(log_stream_prefix, kwargs["queryString"])
-
+        for prefix in log_stream_prefix:
+            self.assertIn(prefix, kwargs["queryString"])
         # Check that get_query_results was called
         mock_cloudwatch_logs.get_query_results.assert_called()
 

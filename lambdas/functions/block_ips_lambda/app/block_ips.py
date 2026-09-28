@@ -4,7 +4,7 @@ import re
 import time
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Final
+from typing import Final, Any
 from fnmatch import fnmatch
 
 import boto3
@@ -279,9 +279,10 @@ def get_ips_to_alert_on(
     ]
 
 
-def update_dynamodb_table(ips):
+def update_dynamodb_table(ips: list[str]) -> None:
     dynamodb = boto3.client("dynamodb", region_name="eu-west-1")
-    current_time = datetime.utcnow()
+    current_time = datetime.now(UTC)
+
     timeout_expiry_short = current_time + timedelta(minutes=30)
     timeout_expiry_medium = current_time + timedelta(hours=4)
     timeout_expiry_long = current_time + timedelta(hours=12)
@@ -291,7 +292,7 @@ def update_dynamodb_table(ips):
         response = dynamodb.get_item(TableName=table_name, Key={"IP": {"S": ip}})
         if "Item" in response:
             row_updated_at = datetime.fromtimestamp(
-                int(response["Item"]["UpdatedAt"]["N"])
+                int(response["Item"]["UpdatedAt"]["N"]), tz=UTC
             )
             # As we have overlapping time ranges and an IP would be blocked if it got here,
             # we discount records updated in last 10 minutes.
@@ -333,12 +334,12 @@ def update_dynamodb_table(ips):
             )
 
 
-def get_blocked_ips():
+def get_blocked_ips() -> list[str]:
     dynamodb = boto3.client("dynamodb", region_name="eu-west-1")
     response = dynamodb.scan(
         TableName=table_name, ProjectionExpression="IP, TimeoutExpiry"
     )
-    current_time = datetime.utcnow()
+    current_time = datetime.now(UTC)
     ips = []
     for item in response["Items"]:
         if int(item["TimeoutExpiry"]["N"]) - int(current_time.timestamp()) >= 0:
@@ -347,7 +348,11 @@ def get_blocked_ips():
     return ips
 
 
-def update_waf_ip_set(ip_set_name, ip_set_scope, ips):
+def update_waf_ip_set(
+    ip_set_name: str,
+    ip_set_scope: str,
+    ips: list[str],
+) -> dict[str, Any]:
     waf = boto3.client("wafv2", region_name="eu-west-1")
     response = waf.list_ip_sets(Scope=ip_set_scope)
     ip_set_id = None

@@ -86,7 +86,6 @@
         "friends-of-behat/symfony-extension": "^2.6.2",
         "guzzlehttp/guzzle": "^7.15.4",
         "liuggio/fastest": "^1.14.2",
-        "mockery/mockery": "^1.6.12",
         "osteel/openapi-httpfoundation-testing": "^0.14.0",
         "phpstan/phpstan": "^2.2.5",
         "phpstan/phpstan-phpunit": "^2.0.18",

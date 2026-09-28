@@ -11,36 +11,32 @@ use OPG\Digideps\Frontend\Service\Client\Internal\OrganisationApi;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\TestHelpers\OrganisationHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
 class OrganisationApiTest extends TestCase
 {
-    use ProphecyTrait;
-
-    private ObjectProphecy $restClient;
-    private ObjectProphecy $eventDispatcher;
+    private RestClient&MockObject $restClient;
+    private ObservableEventDispatcher&MockObject $eventDispatcher;
     private OrganisationApi $sut;
 
     public function setUp(): void
     {
-        $this->restClient = self::prophesize(RestClient::class);
-        $this->eventDispatcher = self::prophesize(ObservableEventDispatcher::class);
-        $this->sut = new OrganisationApi($this->restClient->reveal(), $this->eventDispatcher->reveal());
+        $this->restClient = self::createMock(RestClient::class);
+        $this->eventDispatcher = self::createMock(ObservableEventDispatcher::class);
+        $this->sut = new OrganisationApi($this->restClient, $this->eventDispatcher);
     }
 
-    /** @test */
-    public function addUserToOrganisation()
+    public function testAddUserToOrganisation(): void
     {
         $organisation = OrganisationHelpers::createActivatedOrganisation();
-        $userToAdd = (UserHelpers::createUser())->setOrganisations([$organisation]);
+        $userToAdd = UserHelpers::createUser()->setOrganisations([$organisation]);
         $currentUser = UserHelpers::createUser();
         $trigger = 'A_TRIGGER';
 
-        $this->restClient
-            ->put(sprintf('v2/organisation/%s/user/%s', $organisation->getId(), $userToAdd->getId()), '')
-            ->shouldBeCalled();
+        $this->restClient->expects(self::once())
+            ->method('put')
+            ->with(sprintf('v2/organisation/%s/user/%s', $organisation->getId(), $userToAdd->getId()), '');
 
         $userAddedToOrgEvent = new UserAddedToOrganisationEvent(
             $organisation,
@@ -49,24 +45,23 @@ class OrganisationApiTest extends TestCase
             $trigger
         );
 
-        $this->eventDispatcher
-            ->dispatch($userAddedToOrgEvent, 'user.added.to.organisation')
-            ->shouldBeCalled();
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($userAddedToOrgEvent, 'user.added.to.organisation');
 
         $this->sut->addUserToOrganisation($organisation, $userToAdd, $currentUser, $trigger);
     }
 
-    /** @test */
-    public function removeUserFromOrganisation()
+    public function testRemoveUserFromOrganisation(): void
     {
         $organisation = OrganisationHelpers::createActivatedOrganisation();
-        $userToRemove = (UserHelpers::createUser())->setOrganisations([$organisation]);
+        $userToRemove = UserHelpers::createUser()->setOrganisations([$organisation]);
         $currentUser = UserHelpers::createUser();
         $trigger = 'A_TRIGGER';
 
-        $this->restClient
-            ->delete(sprintf('v2/organisation/%s/user/%s', $organisation->getId(), $userToRemove->getId()))
-            ->shouldBeCalled();
+        $this->restClient->expects(self::once())
+            ->method('delete')
+            ->with(sprintf('v2/organisation/%s/user/%s', $organisation->getId(), $userToRemove->getId()));
 
         $userRemovedFromOrgEvent = new UserRemovedFromOrganisationEvent(
             $organisation,
@@ -75,9 +70,9 @@ class OrganisationApiTest extends TestCase
             $trigger
         );
 
-        $this->eventDispatcher
-            ->dispatch($userRemovedFromOrgEvent, 'user.removed.from.organisation')
-            ->shouldBeCalled();
+        $this->eventDispatcher->expects(self::once())
+            ->method('dispatch')
+            ->with($userRemovedFromOrgEvent, 'user.removed.from.organisation');
 
         $this->sut->removeUserFromOrganisation($organisation, $userToRemove, $currentUser, $trigger);
     }

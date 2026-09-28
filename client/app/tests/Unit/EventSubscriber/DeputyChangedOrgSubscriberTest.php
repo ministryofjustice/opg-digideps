@@ -12,15 +12,11 @@ use OPG\Digideps\Frontend\TestHelpers\ClientHelpers;
 use OPG\Digideps\Frontend\TestHelpers\DeputyHelper;
 use OPG\Digideps\Frontend\TestHelpers\OrganisationHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class DeputyChangedOrgSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @test */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals(
             [
@@ -30,18 +26,17 @@ class DeputyChangedOrgSubscriberTest extends TestCase
         );
     }
 
-    /** @test */
-    public function auditLog()
+    public function testAuditLog(): void
     {
-        $logger = self::prophesize(LoggerInterface::class);
-        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $logger = self::createMock(LoggerInterface::class);
+        $dateTimeProvider = self::createMock(DateTimeProvider::class);
 
         $now = new \DateTime();
-        $dateTimeProvider->getDateTime()->willReturn($now);
+        $dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($now);
 
         $trigger = 'DEPUTY_CHANGED_ORG';
 
-        //      Client record currently in database
+        // Client record currently in database
         $client = ClientHelpers::createClient();
         $clientOrg = OrganisationHelpers::createActivatedOrganisation();
         $deputy = DeputyHelper::createDeputy();
@@ -51,13 +46,11 @@ class DeputyChangedOrgSubscriberTest extends TestCase
         $deputyId = $client->getDeputy()->getId();
         $previousOrgId = $client->getOrganisation()->getId();
 
-        //      New organisation linked to client
+        // New organisation linked to client
         $newOrg = OrganisationHelpers::createActivatedOrganisation();
         $client->setOrganisation($newOrg);
         $newOrgId = $client->getOrganisation()->getId();
         $clientId = $client->getId();
-
-        $sut = new DeputyChangedOrgSubscriber($logger->reveal(), $dateTimeProvider->reveal());
 
         $deputyChangedOrgEvent = new DeputyChangedOrgEvent($trigger, $deputyId, $previousOrgId, $newOrgId, $clientId);
 
@@ -72,7 +65,8 @@ class DeputyChangedOrgSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $logger->notice('', $expectedEvent)->shouldBeCalled();
-        $sut->auditLog($deputyChangedOrgEvent);
+        $logger->expects(self::once())->method('notice')->with('', $expectedEvent);
+
+        new DeputyChangedOrgSubscriber($logger, $dateTimeProvider)->auditLog($deputyChangedOrgEvent);
     }
 }

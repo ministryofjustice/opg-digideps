@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\Client\TokenStorage;
 
 use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
@@ -30,7 +32,7 @@ class RedisStorageTest extends TestCase
 
         $this->redis->method('get')->with($this->workspace . '_' . $this->prefix . $id)->willReturn($value);
 
-        $this->assertEquals($value, $this->object->get($id));
+        self::assertEquals($value, $this->object->get($id));
     }
 
     public function testSet(): void
@@ -41,6 +43,6 @@ class RedisStorageTest extends TestCase
 
         $this->redis->method('set')->with($this->workspace . '_' . $this->prefix . $id, $value)->willReturn($returnValue);
 
-        $this->assertEquals($returnValue, $this->object->set($id, $value));
+        self::assertEquals($returnValue, $this->object->set($id, $value));
     }
 }

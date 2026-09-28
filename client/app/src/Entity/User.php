@@ -104,8 +104,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     private $lastname;
 
     /**
-     * @EmailSameDomain( message="user.email.invalidDomain", groups={"email_same_domain"})
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -113,11 +111,10 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     #[Assert\NotBlank(message: 'user.email.notBlank', groups: ['admin_add_user', 'user_details_full', 'user_details_org', 'org_team_add', 'password_reset', 'codeputy_invite', 'verify-codeputy', 'admin_edit_user', 'user_change_email'])]
     #[Assert\Email(message: 'user.email.invalid', groups: ['admin_add_user', 'password_reset', 'user_details_full', 'user_details_org', 'org_team_add', 'codeputy_invite', 'verify-codeputy', 'admin_edit_user', 'user_change_email'])]
     #[Assert\Length(max: 60, maxMessage: 'user.email.maxLength', groups: ['admin_add_user', 'password_reset', 'user_details_full', 'user_details_org', 'org_team_add', 'codeputy_invite', 'verify-codeputy', 'admin_edit_user', 'user_change_email'])]
+    #[EmailSameDomain(options: ['message' => 'user.email.invalidDomain', 'groups' => ['email_same_domain']])]
     private $email;
 
     /**
-     * @CommonPassword(message="user.password.notCommonPassword", groups={"user_set_password", "user_change_password"})
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -126,6 +123,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     #[Assert\Regex(pattern: '/[a-z]/', message: 'user.password.noLowerCaseChars', groups: ['user_set_password', 'user_change_password'])]
     #[Assert\Regex(pattern: '/[A-Z]/', message: 'user.password.noUpperCaseChars', groups: ['user_set_password', 'user_change_password'])]
     #[Assert\Regex(pattern: '/[0-9]/', message: 'user.password.noNumber', groups: ['user_set_password', 'user_change_password'])]
+    #[CommonPassword(options: ['message' => 'user.password.notCommonPassword', 'groups' => ['user_set_password', 'user_change_password']])]
     private $password;
 
     /**

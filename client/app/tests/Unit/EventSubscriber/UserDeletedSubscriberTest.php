@@ -11,15 +11,11 @@ use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class UserDeletedSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @test */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals(
             [UserDeletedEvent::NAME => 'logEvent'],
@@ -29,16 +25,14 @@ class UserDeletedSubscriberTest extends TestCase
 
     /**
      * @dataProvider userProvider
-     * @test
      */
-    public function logEvent(User $deletedUser, string $expectedEventName)
+    public function testLogEvent(User $deletedUser, string $expectedEventName): void
     {
-        $logger = self::prophesize(LoggerInterface::class);
-        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $logger = self::createMock(LoggerInterface::class);
+        $dateTimeProvider = self::createMock(DateTimeProvider::class);
 
         $now = new \DateTime();
-        $dateTimeProvider->getDateTime()->willReturn($now);
-        $sut = new UserDeletedSubscriber($logger->reveal(), $dateTimeProvider->reveal());
+        $dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($now);
 
         $deletedBy = UserHelpers::createUser();
         $trigger = 'A_TRIGGER';
@@ -56,11 +50,12 @@ class UserDeletedSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $logger->notice('', $expectedEvent)->shouldBeCalled();
-        $sut->logEvent($event);
+        $logger->expects(self::once())->method('notice')->with('', $expectedEvent);
+
+        new UserDeletedSubscriber($logger, $dateTimeProvider)->logEvent($event);
     }
 
-    public function userProvider()
+    public static function userProvider(): array
     {
         $deletedUser = UserHelpers::createUser();
 

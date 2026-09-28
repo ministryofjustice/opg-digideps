@@ -6,9 +6,7 @@ namespace OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck;
 
 use Symfony\Component\Validator\Constraint;
 
-/**
- * @Annotation
- */
+#[\Attribute]
 class MoneyReceivedOnClientsBehalf extends Constraint
 {
     public string $moneyDetailsMissingMoneyTypeMessage = 'form.moneyDetails.errors.missingType';
@@ -16,5 +14,5 @@ class MoneyReceivedOnClientsBehalf extends Constraint
     public string $moneyDetailsMissingWhoReceivedMoneyMessage = 'form.moneyDetails.errors.missingWhoReceivedMoney';
     public string $moneyDetailsAmountAndDontKnowMessage = 'form.moneyDetails.errors.amountAndDontKnow';
 
-    public $mode = 'strict'; // If the constraint has configuration options, define them as public properties
+    public string $mode = 'strict'; // If the constraint has configuration options, define them as public properties
 }

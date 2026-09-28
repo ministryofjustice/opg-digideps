@@ -13,12 +13,10 @@ use Symfony\Component\Validator\Validation;
 class ClientBenefitsCheckTest extends TestCase
 {
     /**
-     * @test
-     *
      * @dataProvider invalidDataProvider
      * @param array<MoneyReceivedOnClientsBehalf>|null $moneyTypes
      */
-    public function validation(
+    public function testValidation(
         ?string $whenLastChecked,
         ?\DateTime $dateLastChecked,
         ?string $neverCheckedExplanation,
@@ -26,7 +24,7 @@ class ClientBenefitsCheckTest extends TestCase
         ?string $moneyExplanation,
         ?array $moneyTypes,
         int $expectedValidationErrorsCount
-    ) {
+    ): void {
         $report = ReportHelpers::createReport();
 
         $sut = new ClientBenefitsCheck()
@@ -39,16 +37,15 @@ class ClientBenefitsCheckTest extends TestCase
             ->setReport($report);
 
         $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping(true)
-            ->addDefaultDoctrineAnnotationReader()
+            ->enableAttributeMapping()
             ->getValidator();
 
         $result = $validator->validate($sut, null, 'client-benefits-check');
 
-        $this->assertCount($expectedValidationErrorsCount, $result);
+        self::assertCount($expectedValidationErrorsCount, $result);
     }
 
-    public function invalidDataProvider()
+    public static function invalidDataProvider(): array
     {
         $moneyType = new MoneyReceivedOnClientsBehalf()
         ->setAmountDontKnow(false);

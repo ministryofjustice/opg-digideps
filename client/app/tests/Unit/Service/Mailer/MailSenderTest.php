@@ -50,23 +50,22 @@ class MailSenderTest extends WebTestCase
     {
         $email = $this->generateEmail();
 
-        $this->logger->expects($this->atLeastOnce())->method('notice');
-        $this->notifyClient->expects($this->atLeastOnce())->method('sendEmail')->with('to@email.address', MailFactory::ACTIVATION_TEMPLATE_ID, ['param' => 'param value'], '', 'fake-id');
+        $this->logger->expects(self::atLeastOnce())->method('notice');
 
-        $this->assertTrue($this->sut->send($email));
+        $this->notifyClient->expects(self::atLeastOnce())
+            ->method('sendEmail')
+            ->with('to@email.address', MailFactory::ACTIVATION_TEMPLATE_ID, ['param' => 'param value'], '', 'fake-id');
+
+        self::assertTrue($this->sut->send($email));
     }
 
-    private function generateEmail(
-        string $toEmail = 'to@email.address',
-        string $templateID = MailFactory::ACTIVATION_TEMPLATE_ID,
-        array $parameters = ['param' => 'param value'],
-        string $fromEmailNotifyID = 'fake-id'
-    ): Email {
+    private function generateEmail(): Email
+    {
         return new Email()
-            ->setToEmail($toEmail)
-            ->setTemplate($templateID)
-            ->setParameters($parameters)
-            ->setFromEmailNotifyID($fromEmailNotifyID);
+            ->setToEmail('to@email.address')
+            ->setTemplate(MailFactory::ACTIVATION_TEMPLATE_ID)
+            ->setParameters(['param' => 'param value'])
+            ->setFromEmailNotifyID('fake-id');
     }
 
     public function testSendNotifyExceptionsAreLogged(): void
@@ -78,6 +77,6 @@ class MailSenderTest extends WebTestCase
 
         $this->notifyClient->method('sendEmail')->willThrowException(new NotifyException('Error message'));
 
-        $this->assertFalse($this->sut->send($email));
+        self::assertFalse($this->sut->send($email));
     }
 }

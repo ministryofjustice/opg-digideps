@@ -74,3 +74,9 @@ summaryPage:
     afterMarkupText: "Please note: the SCCO may still query the information you've provided in their assessment of your costs."
   noMoreInfo: "No more information to add"
   breakdownHeading: "General management costs breakdown"
+
+review:
+  notEntered: Not entered
+  yes: Yes
+  no: No
+  breakdownHeading: "Estimated general management costs breakdown"

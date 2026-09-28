@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 
 from app.block_ips import update_dynamodb_table
 
@@ -25,17 +25,17 @@ class TestUpdateDynamoDBTable(unittest.TestCase):
                     "IP": {"S": "192.168.1.1"},
                     "TimeoutExpiry": {
                         "N": str(
-                            int((datetime.utcnow() + timedelta(minutes=20)).timestamp())
+                            int((datetime.now(UTC) + timedelta(minutes=20)).timestamp())
                         )
                     },
                     "UpdatedAt": {
                         "N": str(
-                            int((datetime.utcnow() - timedelta(minutes=20)).timestamp())
+                            int((datetime.now(UTC) - timedelta(minutes=20)).timestamp())
                         )
                     },
                     "ExpiresTTL": {
                         "N": str(
-                            int((datetime.utcnow() - timedelta(hours=12)).timestamp())
+                            int((datetime.now(UTC) - timedelta(hours=12)).timestamp())
                         )
                     },
                     "BlockCounter": {"N": "1"},
@@ -47,17 +47,17 @@ class TestUpdateDynamoDBTable(unittest.TestCase):
                     "IP": {"S": "192.168.1.3"},
                     "TimeoutExpiry": {
                         "N": str(
-                            int((datetime.utcnow() + timedelta(minutes=20)).timestamp())
+                            int((datetime.now(UTC) + timedelta(minutes=20)).timestamp())
                         )
                     },
                     "UpdatedAt": {
                         "N": str(
-                            int((datetime.utcnow() - timedelta(minutes=1)).timestamp())
+                            int((datetime.now(UTC) - timedelta(minutes=1)).timestamp())
                         )
                     },
                     "ExpiresTTL": {
                         "N": str(
-                            int((datetime.utcnow() - timedelta(hours=12)).timestamp())
+                            int((datetime.now(UTC) - timedelta(hours=12)).timestamp())
                         )
                     },
                     "BlockCounter": {"N": "1"},
@@ -71,7 +71,7 @@ class TestUpdateDynamoDBTable(unittest.TestCase):
         dynamodb_mock.get_item.side_effect = lambda **kwargs: get_item_responses.pop(0)
 
         # Mock datetime and timestamp
-        mock_current_time = datetime.utcnow()
+        mock_current_time = datetime.now(UTC)
         mock_datetime = MagicMock()
         mock_datetime.utcnow.return_value = mock_current_time
 

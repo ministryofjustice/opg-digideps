@@ -17,20 +17,12 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 class ReportClientBenefitsCheckValidatorTest extends TestCase
 {
-    /** @var ConstraintValidator */
-    private $reportSut;
-
-    /** @var ExecutionContextInterface | MockObject */
-    private $reportContext;
-
+    private ExecutionContextInterface&MockObject $reportContext;
+    private ConstraintViolationBuilderInterface&MockObject $reportViolationBuilder;
     private ClientBenefitsCheck $reportClientBenefitsCheck;
 
-    /** @var ConstraintViolationBuilderInterface | MockObject */
-    private $reportViolationBuilder;
+    private ConstraintValidator $sut;
 
-    /**
-     * {@inheritdoc}
-     */
     public function setUp(): void
     {
         $report = ReportHelpers::createReport();
@@ -38,72 +30,64 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
             ->setReport($report)
             ->setTypesOfMoneyReceivedOnClientsBehalf([]);
 
-        $this->reportContext = $this->createMock(ExecutionContextInterface::class);
-        $this->reportContext
-            ->expects($this->atLeastOnce())
+        $this->reportContext = self::createMock(ExecutionContextInterface::class);
+        $this->reportContext->expects(self::atLeastOnce())
             ->method('getObject')
             ->willReturn($this->reportClientBenefitsCheck);
 
-        $this->reportViolationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
+        $this->reportViolationBuilder = self::createMock(ConstraintViolationBuilderInterface::class);
 
-        $this->reportSut = new ClientBenefitsCheckValidator();
-        $this->reportSut->initialize($this->reportContext);
+        $this->sut = new ClientBenefitsCheckValidator();
+        $this->sut->initialize($this->reportContext);
     }
 
     /**
      * @dataProvider whenLastCheckedEntitlementValueProvider
-     * @test
      */
-    public function validatorAddsConstraintIfPropertyIsWhenLastCheckedEntitlement($value)
+    public function testValidatorAddsConstraintIfPropertyIsWhenLastCheckedEntitlement(string|int|null $value): void
     {
         $this->setContextPropertyName('whenLastCheckedEntitlement')
             ->expectViolationAdded('form.whenLastChecked.errors.noOptionSelected')
             ->invokeTest($value);
     }
 
-    private function invokeTest($value)
+    private function invokeTest($value): void
     {
-        $this->reportSut->validate($value, new ClientBenefitsCheckConstraint());
+        $this->sut->validate($value, new ClientBenefitsCheckConstraint());
     }
 
-    private function expectViolationAdded(string $transId)
+    private function expectViolationAdded(string $transId): static
     {
-        $this->reportContext
-            ->expects($this->atLeastOnce())
+        $this->reportContext->expects(self::atLeastOnce())
             ->method('buildViolation')
-            ->with($this->equalTo($transId))
+            ->with(self::equalTo($transId))
             ->willReturn($this->reportViolationBuilder);
 
-        $this->reportViolationBuilder
-            ->expects($this->atLeastOnce())
+        $this->reportViolationBuilder->expects(self::atLeastOnce())
             ->method('setTranslationDomain')
-            ->with($this->anything())
+            ->with(self::anything())
             ->willReturn($this->reportViolationBuilder);
 
-        $this->reportViolationBuilder
-            ->expects($this->atLeastOnce())
+        $this->reportViolationBuilder->expects(self::atLeastOnce())
             ->method('setParameter')
-            ->with($this->anything())
+            ->with(self::anything())
             ->willReturn($this->reportViolationBuilder);
 
-        $this->reportViolationBuilder
-            ->expects($this->atLeastOnce())
-            ->method('addViolation');
+        $this->reportViolationBuilder->expects(self::atLeastOnce())->method('addViolation');
 
         return $this;
     }
 
-    private function setContextPropertyName(string $propertyName)
+    private function setContextPropertyName(string $propertyName): static
     {
-        $this->reportContext
-            ->expects($this->atLeastOnce())
+        $this->reportContext->expects(self::atLeastOnce())
             ->method('getPropertyName')
             ->willReturn($propertyName);
 
         return $this;
     }
 
-    public function whenLastCheckedEntitlementValueProvider()
+    public static function whenLastCheckedEntitlementValueProvider(): array
     {
         return [
             'null' => [null],
@@ -114,9 +98,8 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
 
     /**
      * @dataProvider dateLastCheckedEntitlementValueProvider
-     * @test
      */
-    public function validatorAddsConstraintIfPropertyIsDateLastCheckedEntitlement($value, $transId)
+    public function testValidatorAddsConstraintIfPropertyIsDateLastCheckedEntitlement(?\DateTime $value, string $transId): void
     {
         $this->setContextPropertyName('dateLastCheckedEntitlement')
             ->setWhenLastCheckedEntitlementTo('haveChecked')
@@ -124,14 +107,14 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
             ->invokeTest($value);
     }
 
-    private function setWhenLastCheckedEntitlementTo(string $whenLastChecked)
+    private function setWhenLastCheckedEntitlementTo(string $whenLastChecked): static
     {
         $this->reportClientBenefitsCheck->setWhenLastCheckedEntitlement($whenLastChecked);
 
         return $this;
     }
 
-    public function dateLastCheckedEntitlementValueProvider()
+    public static function dateLastCheckedEntitlementValueProvider(): array
     {
         return [
             'null' => [null, 'form.whenLastChecked.errors.missingDate'],
@@ -139,10 +122,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
-    public function validatorAddsConstraintIfPropertyIsDoOthersReceiveMoneyOnClientsBehalf()
+    public function testValidatorAddsConstraintIfPropertyIsDoOthersReceiveMoneyOnClientsBehalf(): void
     {
         $this->setContextPropertyName('doOthersReceiveMoneyOnClientsBehalf')
             ->setWhenLastCheckedEntitlementTo('haveChecked')
@@ -152,9 +132,8 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
 
     /**
      * @dataProvider neverCheckedExplanationValueProvider
-     * @test
      */
-    public function validatorAddsConstraintIfPropertyIsNeverCheckedExplanation($value, $transId)
+    public function testValidatorAddsConstraintIfPropertyIsNeverCheckedExplanation(?string $value, string $transId): void
     {
         $this->setContextPropertyName('neverCheckedExplanation')
             ->setWhenLastCheckedEntitlementTo('neverChecked')
@@ -162,9 +141,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
             ->invokeTest($value);
     }
 
-    //Helpers
-
-    public function neverCheckedExplanationValueProvider()
+    public static function neverCheckedExplanationValueProvider(): array
     {
         return [
             'null' => [null, 'form.whenLastChecked.errors.missingExplanation'],
@@ -174,24 +151,23 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
 
     /**
      * @dataProvider dontKnowMoneyExplanationValueProvider
-     * @test
      */
-    public function validatorAddsConstraintIfPropertyIsDontKnowMoneyExplanation($value, $transId)
+    public function testValidatorAddsConstraintIfPropertyIsDontKnowMoneyExplanation(?string $value, string $transId): void
     {
         $this->setContextPropertyName('dontKnowMoneyExplanation')
-            ->setDoOthersReceiveMoneyOnClientsBehalf('dontKnow')
+            ->setDoOthersReceiveMoneyOnClientsBehalf()
             ->expectViolationAdded($transId)
             ->invokeTest($value);
     }
 
-    private function setDoOthersReceiveMoneyOnClientsBehalf(string $doOthersReceiveMoneyOnClientsBehalf)
+    private function setDoOthersReceiveMoneyOnClientsBehalf(): static
     {
-        $this->reportClientBenefitsCheck->setDoOthersReceiveMoneyOnClientsBehalf($doOthersReceiveMoneyOnClientsBehalf);
+        $this->reportClientBenefitsCheck->setDoOthersReceiveMoneyOnClientsBehalf("dontKnow");
 
         return $this;
     }
 
-    public function dontKnowMoneyExplanationValueProvider()
+    public static function dontKnowMoneyExplanationValueProvider(): array
     {
         return [
             'null' => [null, 'form.moneyOnClientsBehalf.errors.missingExplanation'],
@@ -199,10 +175,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
-    public function validatorAddsConstraintIfPropertyIsTypesOfMoneyReceivedOnClientsBehalf()
+    public function testValidatorAddsConstraintIfPropertyIsTypesOfMoneyReceivedOnClientsBehalf(): void
     {
         $this->setContextPropertyName('typesOfMoneyReceivedOnClientsBehalf')
             ->addEmptyMoneyTypeToClientBenefitsCheck()
@@ -210,7 +183,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
             ->invokeTest(null);
     }
 
-    private function addEmptyMoneyTypeToClientBenefitsCheck()
+    private function addEmptyMoneyTypeToClientBenefitsCheck(): static
     {
         $this->reportClientBenefitsCheck->addTypeOfMoneyReceivedOnClientsBehalf(new MoneyReceivedOnClientsBehalf());
 
