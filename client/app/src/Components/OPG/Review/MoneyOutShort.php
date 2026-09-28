@@ -57,7 +57,7 @@ final class MoneyOutShort
             );
             $builder->addItem(
                 $this->text['moneyTransactionsShortOutExist'],
-                $this->text[$report->getMoneyTransactionsShortOutExist()] ?? $this->text['notEntered']
+                $this->text[$report->getMoneyTransactionsShortOutExist() ?? ''] ?? $this->text['notEntered']
             );
         }
 

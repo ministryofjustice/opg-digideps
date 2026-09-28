@@ -8,15 +8,17 @@ use OPG\Digideps\Frontend\Entity\Report\Document;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Frontend\Exception\ReportSubmissionDocumentsNotDownloadableException;
+use OPG\Digideps\Frontend\Report\ReportSectionService;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Service\Csv\TransactionsCsvGenerator;
 use OPG\Digideps\Frontend\Service\File\S3FileUploader;
 use OPG\Digideps\Frontend\Service\HtmlToPdfGenerator;
 use OPG\Digideps\Frontend\Service\ReportSubmissionService;
-use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class ReportSubmissionServiceTest extends TestCase
@@ -26,7 +28,7 @@ class ReportSubmissionServiceTest extends TestCase
     private Environment&MockObject $mockTemplatingEngine;
     private HtmlToPdfGenerator&MockObject $mockPdfGenerator;
     private TransactionsCsvGenerator&MockObject $mockCsvGenerator;
-    private Report&MockObject $mockReport;
+    private Report $mockReport;
     protected ReportSubmissionService $sut;
 
     public function setUp(): void
@@ -36,7 +38,7 @@ class ReportSubmissionServiceTest extends TestCase
         $this->mockTemplatingEngine = self::createMock(Environment::class);
         $this->mockPdfGenerator = self::createMock(HtmlToPdfGenerator::class);
         $this->mockCsvGenerator = self::createMock(TransactionsCsvGenerator::class);
-        $this->mockReport = self::createMock(Report::class);
+        $this->mockReport = new Report()->setId(42)->setType('102');
 
         $this->sut = new ReportSubmissionService(
             $this->mockCsvGenerator,
@@ -45,6 +47,7 @@ class ReportSubmissionServiceTest extends TestCase
             $this->mockRestClient,
             self::createMock(LoggerInterface::class),
             $this->mockPdfGenerator,
+            new ReportSectionService($this->createStub(TranslatorInterface::class), $this->createStub(RouterInterface::class))
         );
     }
 
@@ -54,7 +57,8 @@ class ReportSubmissionServiceTest extends TestCase
     public function testGenerateReportDocumentsWithoutTransactionCsv(string $reportType): void
     {
         $report = self::createMock(Report::class);
-        $report->expects(self::once())
+        $report->method('getId')->willReturn(42);
+        $report
             ->method('getType')
             ->willReturn($reportType);
 
@@ -65,8 +69,12 @@ class ReportSubmissionServiceTest extends TestCase
 
         $this->mockTemplatingEngine->expects($this->atLeastOnce())
             ->method('render')
-            ->with(new IsType(IsType::TYPE_STRING), ['report' => $report, 'showSummary' => true])
-            ->willReturn('PDF HTML CONTENT');
+            ->willReturnCallback(function (string $_, array $parameters) use ($report) {
+                $this->assertSame($report, $parameters['report']);
+                $this->assertTrue($parameters['showSummary']);
+                $this->assertIsArray($parameters['sections']);
+                return 'PDF HTML CONTENT';
+            });
 
         $this->mockPdfGenerator->expects($this->atLeastOnce())
             ->method('getPdfFromHtml')
@@ -96,7 +104,10 @@ class ReportSubmissionServiceTest extends TestCase
     public function testGenerateReportDocumentsWithTransactionCsv(string $reportType): void
     {
         $report = self::createMock(Report::class);
-        $report->expects(self::once())
+        $report
+            ->method('getId')
+            ->willReturn(42);
+        $report
             ->method('getType')
             ->willReturn($reportType);
         $report->expects(self::once())
@@ -116,8 +127,12 @@ class ReportSubmissionServiceTest extends TestCase
 
         $this->mockTemplatingEngine->expects(self::once())
             ->method('render')
-            ->with(new IsType(IsType::TYPE_STRING), ['report' => $report, 'showSummary' => true])
-            ->willReturn('PDF HTML CONTENT');
+            ->willReturnCallback(function (string $_, array $parameters) use ($report) {
+                $this->assertSame($report, $parameters['report']);
+                $this->assertTrue($parameters['showSummary']);
+                $this->assertIsArray($parameters['sections']);
+                return 'PDF HTML CONTENT';
+            });
 
         $this->mockPdfGenerator->expects(self::once())
             ->method('getPdfFromHtml')
@@ -145,14 +160,13 @@ class ReportSubmissionServiceTest extends TestCase
     public function testGetPdfBinaryContent(): void
     {
         $this->mockTemplatingEngine->method('render')
-            ->with(
-                '@App/Report/Formatted/formatted_standalone.html.twig',
-                [
-                    'report' => $this->mockReport,
-                    'showSummary' => true,
-                ]
-            )
-            ->willReturn('Report HTML');
+            ->willReturnCallback(function (string $template, array $parameters) {
+                $this->assertSame('@App/Report/Rendered/standalone.html.twig', $template);
+                $this->assertSame($this->mockReport, $parameters['report']);
+                $this->assertTrue($parameters['showSummary']);
+                $this->assertIsArray($parameters['sections']);
+                return 'Report HTML';
+            });
 
         $this->mockPdfGenerator->expects(self::once())
             ->method('getPdfFromHtml')
