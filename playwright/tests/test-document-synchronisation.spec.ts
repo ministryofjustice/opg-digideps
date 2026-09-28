@@ -75,6 +75,8 @@ test("admin dashboard shows correct statuses for pending and synchronised docume
       { name: new RegExp(`DigiRep-.+_${caseNumber}\.pdf`), status: "Queued" },
     );
 
+    await loginPage.goto();
+    await loginPage.login({ email: email, password: testPassword });
     // submit another document on the already-submitted report
     await documentsUploadPage.goto();
     await documentsUploadPage.attachFiles(
