@@ -59,7 +59,7 @@ final class MoneyInShort
             );
             $builder->addItem(
                 $this->text['moneyTransactionsShortInExist'],
-                $this->text[$report->getMoneyTransactionsShortInExist()] ?? $this->text['notEntered']
+                $this->text[$report->getMoneyTransactionsShortInExist() ?? ''] ?? $this->text['notEntered']
             );
         }
 

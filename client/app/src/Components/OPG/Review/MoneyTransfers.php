@@ -43,8 +43,12 @@ final class MoneyTransfers
         }
     }
 
-    private function makeList(Report $report): SummaryList
+    private function makeList(Report $report): ?SummaryList
     {
+        if (count($report->getBankAccounts()) < 2) {
+            return null;
+        }
+
         $builder = new SummaryListBuilder();
         $builder->addItem($this->text['noTransfersToAdd'], $report->getNoTransfersToAdd() ? $this->text['no'] : $this->text['yes'] ?? $this->text['notEntered']);
 
