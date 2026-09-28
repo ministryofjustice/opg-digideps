@@ -17,8 +17,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent]
 final class ClientBenefitsCheck
 {
-    private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
-
     public ?SummaryList $list = null;
     public ?Table $table = null;
     /**
@@ -77,11 +75,11 @@ final class ClientBenefitsCheck
             $builder->addRow(
                 $entry->getMoneyType() ?? '',
                 $entry->getWhoReceivedMoney() ?? '',
-                new Cell(($entry->getAmountDontKnow() ?? false) ? $this->text['dontKnowAmount'] : $this->formatMoney((float)($entry->getAmount() ?? 0)), self::NUMERIC_FORMAT)
+                new Cell(($entry->getAmountDontKnow() ?? false) ? $this->text['dontKnowAmount'] : $this->formatMoney((float)($entry->getAmount() ?? 0)), Cell::NUMERIC_FORMAT)
             );
             $total += $entry->getAmount() ?? 0.0;
         }
-        $builder->addRow(new Cell($this->text['paymentTotal'], isHeader: true), '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, isBold: true));
+        $builder->addRow(new Cell($this->text['paymentTotal'], isHeader: true), '', new Cell($this->formatMoney($total), Cell::NUMERIC_FORMAT, isBold: true));
 
         return $builder->makeTable();
     }
