@@ -279,6 +279,15 @@ def get_ips_to_alert_on(
     ]
 
 
+def create_metric_log_record(
+    ips_to_alert_on: list[str],
+) -> None:
+    if len(ips_to_alert_on) > 0:
+        print(
+            f"authentication_breach_detected - success - Count of possible malicious IP addresses: {len(ips_to_alert_on)}"
+        )
+
+
 def update_dynamodb_table(ips: list[str]) -> None:
     dynamodb = boto3.client("dynamodb", region_name="eu-west-1")
     current_time = datetime.now(UTC)
@@ -407,13 +416,13 @@ def lambda_handler(event, context):
     summarised_logs = summarise_log_records(logs)
     print(summarised_logs)
     ips_to_block = get_ips_to_block(summarised_logs)
-    print(f"New Malicious IPs identified: {ips_to_block}")
+    print(f"New malicious IPs identified: {ips_to_block}")
     ips_to_alert_on = get_ips_to_alert_on(summarised_logs)
-    print(f"New Warning IPs identified: {ips_to_alert_on}")
-    return 0
-    # update_dynamodb_table(ips_to_block)
-    # blocked_ips = get_blocked_ips()
-    # print(f"IPs to block according to dynamodb: {blocked_ips}")
-    # response = update_waf_ip_set(ip_set_name, ip_set_scope, blocked_ips)
+    print(f"New breach IPs identified: {ips_to_alert_on}")
+    create_metric_log_record(ips_to_alert_on)
+    update_dynamodb_table(ips_to_block)
+    blocked_ips = get_blocked_ips()
+    print(f"IPs to block according to dynamodb: {blocked_ips}")
+    response = update_waf_ip_set(ip_set_name, ip_set_scope, blocked_ips)
 
-    # return response
+    return response

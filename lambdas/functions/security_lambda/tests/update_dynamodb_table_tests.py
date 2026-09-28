@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 from datetime import datetime, timedelta, UTC
 
-from app.block_ips import update_dynamodb_table
+from app.security import update_dynamodb_table
 
 
 class TestUpdateDynamoDBTable(unittest.TestCase):
