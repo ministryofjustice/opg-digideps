@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch, Mock
 from datetime import datetime, timedelta, UTC
 
-from app.block_ips import get_blocked_ips
+from app.security import get_blocked_ips
 
 
 class TestGetBlockedIps(unittest.TestCase):

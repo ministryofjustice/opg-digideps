@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
-from app.block_ips import query_cloudwatch_logs, LogRecord
+from app.security import query_cloudwatch_logs, LogRecord
 
 
 class TestQueryCloudwatchLogs(unittest.TestCase):
