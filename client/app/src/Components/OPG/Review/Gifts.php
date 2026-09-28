@@ -13,10 +13,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent]
-class Gift
+class Gifts
 {
-    private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
-
     public ?SummaryList $list = null;
     public ?Table $table = null;
 
@@ -77,11 +75,11 @@ class Gift
             $builder->addRow(
                 $explanationText,
                 $bankAccountText,
-                new Cell($this->formatMoney((float)($gift->getAmount() ?? 0)), self::NUMERIC_FORMAT)
+                new Cell($this->formatMoney((float)($gift->getAmount() ?? 0)), Table::NUMERIC_FORMAT)
             );
             $total += (float)($gift->getAmount() ?? 0.0);
         }
-        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, isBold: true));
+        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), '', new Cell($this->formatMoney($total), Table::NUMERIC_FORMAT, isBold: true));
 
         return $builder->makeTable();
     }

@@ -17,8 +17,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent]
 final class MoneyTransfers
 {
-    private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
-
     public ?SummaryList $list = null;
     public ?Table $table = null;
     /**
@@ -43,8 +41,12 @@ final class MoneyTransfers
         }
     }
 
-    private function makeList(Report $report): SummaryList
+    private function makeList(Report $report): ?SummaryList
     {
+        if (count($report->getBankAccounts()) < 2) {
+            return null;
+        }
+
         $builder = new SummaryListBuilder();
         $builder->addItem($this->text['noTransfersToAdd'], $report->getNoTransfersToAdd() ? $this->text['no'] : $this->text['yes'] ?? $this->text['notEntered']);
 
@@ -85,7 +87,7 @@ final class MoneyTransfers
                     $toAccount->getIsClosed() === true,
                 ),
                 $transfer->getDescription() ?? '',
-                new Cell($this->formatMoney((float)($transfer->getAmount() ?? 0)), self::NUMERIC_FORMAT)
+                new Cell($this->formatMoney((float)($transfer->getAmount() ?? 0)), Table::NUMERIC_FORMAT)
             );
         }
 

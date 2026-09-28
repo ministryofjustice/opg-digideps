@@ -14,8 +14,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent]
 class PaDeputyExpenses
 {
-    private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
-
     public ?SummaryList $list = null;
     public ?Table $feesAndExpensesTable = null;
     public ?Table $otherExpensesTable = null;
@@ -78,7 +76,7 @@ class PaDeputyExpenses
             );
         }
 
-        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), '', new Cell($this->formatMoney((float)$report->getFeesTotal()), self::NUMERIC_FORMAT, isBold: true));
+        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), '', new Cell($this->formatMoney((float)$report->getFeesTotal()), Table::NUMERIC_FORMAT, isBold: true));
         return $builder->makeTable();
     }
 
@@ -104,7 +102,7 @@ class PaDeputyExpenses
             );
         }
 
-        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), new Cell($this->formatMoney((float)$report->getExpensesTotal()), self::NUMERIC_FORMAT, isBold: true));
+        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), new Cell($this->formatMoney((float)$report->getExpensesTotal()), Table::NUMERIC_FORMAT, isBold: true));
         return $builder->makeTable();
     }
 

@@ -60,8 +60,7 @@ class DocumentDownloaderTest extends TestCase
             ->with($ids)
             ->willReturn($reportSubmissions);
         $this->reportSubmissionService->expects(self::exactly(count($reportSubmissions)))
-            ->method('assertReportSubmissionIsDownloadable')
-            ->willReturn(null);
+            ->method('assertReportSubmissionIsDownloadable');
 
         $document1 = new RetrievedDocument();
         $document1->setReportSubmission($reportSubmission1);
@@ -104,8 +103,7 @@ class DocumentDownloaderTest extends TestCase
             ->with($ids)
             ->willReturn($reportSubmissions);
         $this->reportSubmissionService->expects(self::exactly(count($ids)))
-            ->method('assertReportSubmissionIsDownloadable')
-            ->willReturn(null);
+            ->method('assertReportSubmissionIsDownloadable');
 
         $document1 = new RetrievedDocument();
         $document1->setReportSubmission($reportSubmission1);

@@ -16,8 +16,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent]
 final class Debts
 {
-    private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
-
     public ?SummaryList $list = null;
     public ?Table $table1 = null;
     public ?Table $table2 = null;
@@ -65,11 +63,11 @@ final class Debts
                 $total += $amount;
                 $builder->addRow(
                     $this->translate("form.entries.{$type}.label"),
-                    new Cell($this->formatMoney($amount), self::NUMERIC_FORMAT)
+                    new Cell($this->formatMoney($amount), Table::NUMERIC_FORMAT)
                 );
             }
         }
-        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, isBold: true));
+        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), new Cell($this->formatMoney($total), Table::NUMERIC_FORMAT, isBold: true));
         return $builder->makeTable();
     }
 
