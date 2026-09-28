@@ -8,30 +8,28 @@ import {
   testPassword,
 } from "./fixtures/fixtures";
 import AdminDocumentsListPage from "./pages/AdminDocumentsListPage";
-import AdminLoginPage from "./pages/AdminLoginPage";
 import DocumentsUploadPage from "./pages/DocumentsUploadPage";
-import LoginPage from "./pages/LoginPage";
 import ReportConfirmContactDetailsPage from "./pages/ReportConfirmContactDetailsPage";
 import ReportDeclarationPage from "./pages/ReportDeclarationPage";
 import ReportOverviewPage from "./pages/ReportOverviewPage";
 import ReportReviewPage from "./pages/ReportReviewPage";
+import { loginAsAdmin, loginAsDeputy } from "./session/factory";
 
 const deputyReference = "document-synchronisation-user";
 
 test("admin dashboard shows correct statuses for pending and synchronised documents", async ({
-  page,
+  browser,
 }) => {
   const runTest = async (scenario: Scenario) => {
     const reportId = scenario.orders[0].reports[0].id;
     const email = scenario.users[deputyReference].email;
     const caseNumber = scenario.orders[0].caseNumber;
 
-    const loginPage = new LoginPage(page);
-    await loginPage.goto();
-    await loginPage.login({ email: email, password: testPassword });
+    const deputySession = await loginAsDeputy(browser, email, testPassword);
+    const deputyPage = deputySession.page;
 
     // append a document to the report
-    const documentsUploadPage = new DocumentsUploadPage(page, reportId);
+    const documentsUploadPage = new DocumentsUploadPage(deputyPage, reportId);
     await documentsUploadPage.goto();
     await documentsUploadPage.attachFiles(
       path.join(__dirname, `/testFiles/testimage1.png`),
@@ -39,34 +37,41 @@ test("admin dashboard shows correct statuses for pending and synchronised docume
     await documentsUploadPage.continue();
 
     // go to report overview in readiness to submit the report
-    const reportOverviewPage = new ReportOverviewPage(page, reportId);
+    const reportOverviewPage = new ReportOverviewPage(deputyPage, reportId);
     await reportOverviewPage.goto();
     await reportOverviewPage.previewAndCheckReport();
 
     // on report preview page, click to confirm contact details
-    const reportReviewPage = new ReportReviewPage(page, reportId);
+    const reportReviewPage = new ReportReviewPage(deputyPage, reportId);
     await reportReviewPage.isExpected();
     await reportReviewPage.confirmContactDetails();
 
     // check contact details, click to continue to declaration
     const reportConfirmContactDetailsPage = new ReportConfirmContactDetailsPage(
-      page,
+      deputyPage,
       reportId,
     );
     await reportConfirmContactDetailsPage.isExpected();
     await reportConfirmContactDetailsPage.continueToDeclaration();
 
     // submit the report
-    const reportDeclarationPage = new ReportDeclarationPage(page, reportId);
+    const reportDeclarationPage = new ReportDeclarationPage(
+      deputyPage,
+      reportId,
+    );
     await reportDeclarationPage.isExpected();
     await reportDeclarationPage.submitReport();
 
     // check documents in admin UI
     const adminUser = getAdminUserFixture();
-    const adminLoginPage = new AdminLoginPage(page);
-    await adminLoginPage.loginAdmin(adminUser);
+    const adminSession = await loginAsAdmin(
+      browser,
+      adminUser.email,
+      adminUser.password,
+    );
+    const adminPage = adminSession.page;
 
-    const adminDocumentsListPage = new AdminDocumentsListPage(page);
+    const adminDocumentsListPage = new AdminDocumentsListPage(adminPage);
     await adminDocumentsListPage.goto();
     await adminDocumentsListPage.openPendingTab();
     await adminDocumentsListPage.search(caseNumber);
@@ -83,8 +88,6 @@ test("admin dashboard shows correct statuses for pending and synchronised docume
     await documentsUploadPage.sendDocuments();
 
     // check newly-uploaded document is also queued
-    await adminLoginPage.loginAdmin(adminUser);
-
     await adminDocumentsListPage.goto();
     await adminDocumentsListPage.openPendingTab();
     await adminDocumentsListPage.search(caseNumber);
@@ -93,6 +96,8 @@ test("admin dashboard shows correct statuses for pending and synchronised docume
       { name: /testimage2\.png/, status: "Queued" },
       { name: new RegExp(`DigiRep-.+_${caseNumber}\.pdf`), status: "Queued" },
     );
+
+    await Promise.all([deputySession.close(), adminSession.close()]);
   };
 
   // create a single unsubmitted, but ready to submit, report
