@@ -17,8 +17,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent]
 final class ProfDeputyCosts
 {
-    private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
-
     public ?SummaryList $list = null;
     public ?Table $table = null;
 
@@ -85,7 +83,7 @@ final class ProfDeputyCosts
 
         foreach ($report->getProfDeputyOtherCosts() as $cost) {
             $label = $report->getProfDeputyOtherCostTypeIds()[$cost->getProfDeputyOtherCostTypeId()]['typeId'];
-            $builder->addRow($this->translate("breakdown.form.entries.{$label}.label"), new Cell($this->tryFormatMoney($cost->getAmount(), '-'), format: self::NUMERIC_FORMAT));
+            $builder->addRow($this->translate("breakdown.form.entries.{$label}.label"), new Cell($this->tryFormatMoney($cost->getAmount(), '-'), format: Cell::NUMERIC_FORMAT));
         }
         $builder->addRow(new Cell($this->text['totalCosts'], isHeader: true), new Cell($this->tryFormatMoney($report->getProfDeputyTotalCosts(), $this->text['incomplete']), isBold: true));
         return $builder->makeTable();

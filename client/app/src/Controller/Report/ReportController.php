@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Controller\Report;
 
+use OPG\Digideps\Frontend\Components\OPG\Review\Section;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\DeputyInterface;
@@ -18,6 +19,7 @@ use OPG\Digideps\Frontend\Form\FeedbackReportType;
 use OPG\Digideps\Frontend\Form\Report\ReportDeclarationType;
 use OPG\Digideps\Frontend\Form\Report\ReportType;
 use OPG\Digideps\Frontend\Model\FeedbackReport;
+use OPG\Digideps\Frontend\Report\ReportSectionService;
 use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
 use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
 use OPG\Digideps\Frontend\Service\Client\Internal\SatisfactionApi;
@@ -105,6 +107,7 @@ class ReportController extends AbstractController
         private readonly TranslatorInterface $translator,
         private readonly ObservableEventDispatcher $eventDispatcher,
         private readonly S3Storage $s3Storage,
+        private readonly ReportSectionService $reportSectionService,
     ) {
     }
 
@@ -351,7 +354,7 @@ class ReportController extends AbstractController
      * @throws \Exception
      */
     #[Route(path: '/report/{reportId}/review', name: 'report_review')]
-    public function reviewAction(Request $request, int $reportId): Response
+    public function reviewAction(int $reportId): Response
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
@@ -376,13 +379,15 @@ class ReportController extends AbstractController
             }
         }
 
-        $template = $request->query->getString('dev-preview') === 'QED'
-            ? '@App/Report/Report/review_new.html.twig'
-            : '@App/Report/Report/review.html.twig';
+        $sections = [];
+        foreach ($this->reportSectionService->getReportMetadata($report)->sections->getIterator() as $section) {
+            $sections[] = new Section($report, $section);
+        }
 
-        return $this->render($template, [
+        return $this->render('@App/Report/Report/review.html.twig', [
             'user' => $this->getUser(),
             'report' => $report,
+            'sections' => $sections,
             'reportStatus' => $status,
             'backLink' => $backLink,
             'feeTotals' => $report->getFeeTotals(),
@@ -432,18 +437,23 @@ class ReportController extends AbstractController
             throw new DisplayableException('Route only visited in debug mode');
         }
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
+        $sections = [];
+        foreach ($this->reportSectionService->getReportMetadata($report)->sections->getIterator() as $section) {
+            $sections[] = new Section($report, $section);
+        }
 
-        return $this->render('@App/Report/Formatted/formatted_standalone.html.twig', [
+        return $this->render('@App/Report/Rendered/standalone.html.twig', [
             'report' => $report,
+            'sections' => $sections,
             'showSummary' => true,
         ]);
     }
 
     #[Route(path: '/report/deputyreport-{reportId}.pdf', name: 'report_pdf')]
-    public function pdfViewAction(Request $request, int $reportId, ReportSubmissionService $reportSubmissionService): Response
+    public function pdfViewAction(int $reportId, ReportSubmissionService $reportSubmissionService): Response
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
-        $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report, devPreview: $request->query->getString('dev-preview') === 'QED');
+        $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report);
 
         if ($pdfBinary === false) {
             // unable to get the PDF for the report
