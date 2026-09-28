@@ -76,6 +76,8 @@ test("admin dashboard shows correct statuses for pending and synchronised docume
     );
 
     // submit another document on the already-submitted report
+    await loginPage.goto();
+    await loginPage.login({ email: email, password: testPassword });
     await documentsUploadPage.goto();
     await documentsUploadPage.attachFiles(
       path.join(__dirname, `/testFiles/testimage2.png`),
