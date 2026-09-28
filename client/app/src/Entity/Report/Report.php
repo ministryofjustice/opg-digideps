@@ -98,12 +98,9 @@ class Report implements StartEndDateComparableInterface
     public const string YES_MONEY_EXISTS = 'Yes';
     public const string NO_MONEY_EXISTS = 'No';
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['visits-care', 'report-id'])]
-    private $id;
+    private int $id;
 
     /**
      * see TYPE_* constant
@@ -381,18 +378,12 @@ class Report implements StartEndDateComparableInterface
     #[JMS\Groups(['report', 'report-with-court-orders'])]
     private array $courtOrders = [];
 
-    /**
-     * @return int $id
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
 
