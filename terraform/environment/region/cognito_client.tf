@@ -13,8 +13,6 @@ locals {
   admin_cognito_user_pool_domain_name = "https://${data.aws_ssm_parameter.deputy_reporting_admin_domain.value}.auth.eu-west-1.amazoncognito.com"
 }
 
-# https://login-admin-digideps.auth.eu-west-1.amazoncognito.com
-
 resource "aws_cognito_user_pool_client" "deputy_reporting_admin" {
   provider                             = aws.identity
   name                                 = "${local.environment}-digideps-admin-auth"
