@@ -55,8 +55,6 @@ COPY --chown=htmltopdf:htmltopdf htmltopdf/clean-tmp /etc/periodic/hourly/clean-
 
 # Static assets
 # NOTE: the resources container has to be built first for these CSS files to exist
-COPY --chown=htmltopdf:htmltopdf client/resources/public/assets/*/stylesheets/formatted-report.css ./tmp/
-COPY --chown=htmltopdf:htmltopdf client/resources/public/assets/*/stylesheets/fonts.css ./tmp/
 COPY --chown=htmltopdf:htmltopdf client/resources/public/assets/*/stylesheets/application.css ./tmp/
 
 # Check processes script
