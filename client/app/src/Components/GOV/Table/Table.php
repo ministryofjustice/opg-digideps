@@ -6,6 +6,8 @@ namespace OPG\Digideps\Frontend\Components\GOV\Table;
 
 final readonly class Table
 {
+    //Should be 'numeric' but that would be inconsistent with other tables currently
+
     /**
      * @var array<Row>
      */
