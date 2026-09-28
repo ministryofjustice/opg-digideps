@@ -60,7 +60,7 @@ final class ReportHeader
         }
         $builder = new SummaryListBuilder();
         $builder->addItem($this->text['firstname'], $deputy->getFirstname());
-        $builder->addItem($this->text['lastname'], $deputy->getFirstname());
+        $builder->addItem($this->text['lastname'], $deputy->getLastname());
         $builder->addItem($this->text['address'], new Address(
             $deputy->getAddress1(),
             $deputy->getAddress2(),
