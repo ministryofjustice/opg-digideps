@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 
 trait HasReportTrait
 {
