@@ -155,7 +155,7 @@ class Client
      * @var Collection<int, CourtOrder>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrder>')]
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: CourtOrder::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: CourtOrder::class, mappedBy: 'client', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $courtOrders;
 

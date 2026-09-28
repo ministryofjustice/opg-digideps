@@ -36,7 +36,7 @@ class RouteValidatorTest extends KernelTestCase
         }
     }
 
-    public function getPossibleRoutes(): array
+    public static function getPossibleRoutes(): array
     {
         return [
             ['path' => '/deputyship-details', 'return' => true],

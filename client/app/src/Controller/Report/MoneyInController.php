@@ -197,7 +197,7 @@ class MoneyInController extends AbstractController
         // create (add mode) or load transaction (edit mode)
         $addingItem = false;
         if ($transactionId) {
-            $transaction = array_filter($report->getMoneyTransactionsIn(), function ($t) use ($transactionId): bool {
+            $transaction = array_filter($report->getMoneyTransactionsIn(), function (MoneyTransaction $t) use ($transactionId): bool {
                 if ($t->getBankAccount() instanceof BankAccount) {
                     $t->setBankAccountId($t->getBankAccount()->getId());
                 }

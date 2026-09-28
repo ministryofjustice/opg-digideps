@@ -77,8 +77,8 @@ class MailFactoryTest extends TestCase
 
     private function assertStaticEmailProperties($email): void
     {
-        $this->assertSame(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
-        $this->assertSame('OPG', $email->getFromName());
+        self::assertSame(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertSame('OPG', $email->getFromName());
     }
 
     private function getContactParameters(): array
@@ -110,12 +110,12 @@ class MailFactoryTest extends TestCase
 
     public function testCreateActivationEmail(): void
     {
-        $this->router->expects($this->once())->method('generate')->with('user_activate', [
+        $this->router->expects(self::once())->method('generate')->with('user_activate', [
             'action' => 'activate',
             'token' => 'regToken',
         ])->willReturn('/activate/regToken');
 
-        $this->translator->expects($this->exactly(3))->method('trans')->willReturnMap([
+        $this->translator->expects(self::exactly(3))->method('trans')->willReturnMap([
             ['layDeputySupportEmail', [], 'common', null, 'help-email@publicguardian.gov.uk'],
             ['helpline', [], 'common', null, '0123456789'],
             ['activation.fromName', [], 'email', null, 'OPG']
@@ -127,21 +127,21 @@ class MailFactoryTest extends TestCase
 
         $email = $this->generateSUT()->createActivationEmail($this->layDeputy);
 
-        $this->assertSame(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
-        $this->assertSame('OPG', $email->getFromName());
-        $this->assertSame('user@digital.justice.gov.uk', $email->getToEmail());
-        $this->assertSame(MailFactory::ACTIVATION_TEMPLATE_ID, $email->getTemplate());
-        $this->assertSame($expectedTemplateParams, $email->getParameters());
+        self::assertSame(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertSame('OPG', $email->getFromName());
+        self::assertSame('user@digital.justice.gov.uk', $email->getToEmail());
+        self::assertSame(MailFactory::ACTIVATION_TEMPLATE_ID, $email->getTemplate());
+        self::assertSame($expectedTemplateParams, $email->getParameters());
     }
 
     public function testProfActivationEmailHasProfContacts(): void
     {
-        $this->router->expects($this->once())->method('generate')->with('user_activate', [
+        $this->router->expects(self::once())->method('generate')->with('user_activate', [
             'action' => 'activate',
             'token' => 'regToken',
         ])->willReturn('/activate/regToken');
 
-        $this->translator->expects($this->exactly(3))->method('trans')->willReturnMap([
+        $this->translator->expects(self::exactly(3))->method('trans')->willReturnMap([
             ['profSupportEmail', [], 'common', null, 'prof-email@publicguardian.gov.uk'],
             ['helpline', [], 'common', null, '07987654321'],
             ['activation.fromName', [], 'email', null, 'OPG']
@@ -151,18 +151,18 @@ class MailFactoryTest extends TestCase
 
         $email = $this->generateSUT()->createActivationEmail($profDeputy);
 
-        $this->assertSame('prof-email@publicguardian.gov.uk', $email->getParameters()['email'] ?? null);
-        $this->assertSame('07987654321', $email->getParameters()['phone'] ?? null);
+        self::assertSame('prof-email@publicguardian.gov.uk', $email->getParameters()['email'] ?? null);
+        self::assertSame('07987654321', $email->getParameters()['phone'] ?? null);
     }
 
     public function testPaActivationEmailHasPaContacts(): void
     {
-        $this->router->expects($this->once())->method('generate')->with('user_activate', [
+        $this->router->expects(self::once())->method('generate')->with('user_activate', [
             'action' => 'activate',
             'token' => 'regToken',
         ])->willReturn('/activate/regToken');
 
-        $this->translator->expects($this->exactly(3))->method('trans')->willReturnMap([
+        $this->translator->expects(self::exactly(3))->method('trans')->willReturnMap([
             ['paSupportEmail', [], 'common', null, 'pa-email@publicguardian.gov.uk'],
             ['helpline', [], 'common', null, '07777777777'],
             ['activation.fromName', [], 'email', null, 'OPG']
@@ -172,18 +172,18 @@ class MailFactoryTest extends TestCase
 
         $email = $this->generateSUT()->createActivationEmail($paDeputy);
 
-        $this->assertSame('pa-email@publicguardian.gov.uk', $email->getParameters()['email'] ?? null);
-        $this->assertSame('07777777777', $email->getParameters()['phone'] ?? null);
+        self::assertSame('pa-email@publicguardian.gov.uk', $email->getParameters()['email'] ?? null);
+        self::assertSame('07777777777', $email->getParameters()['phone'] ?? null);
     }
 
     public function testCreateInvitationEmailLayUser(): void
     {
-        $this->router->expects($this->once())->method('generate')->with('user_activate', [
+        $this->router->expects(self::once())->method('generate')->with('user_activate', [
             'action' => 'activate',
             'token' => 'regToken',
         ])->willReturn('/activate/regToken');
 
-        $this->translator->expects($this->exactly(3))->method('trans')->willReturnMap([
+        $this->translator->expects(self::exactly(3))->method('trans')->willReturnMap([
             ['layDeputySupportEmail', [], 'common', null, 'help-email@publicguardian.gov.uk'],
             ['helpline', [], 'common', null, '0123456789'],
             ['activation.fromName', [], 'email', null, 'OPG']
@@ -196,11 +196,11 @@ class MailFactoryTest extends TestCase
 
         $email = $this->generateSUT()->createInvitationEmail($this->layDeputy, 'Buford Mcfarling');
 
-        $this->assertSame(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
-        $this->assertSame('OPG', $email->getFromName());
-        $this->assertSame('user@digital.justice.gov.uk', $email->getToEmail());
-        $this->assertSame(MailFactory::INVITATION_LAY_TEMPLATE_ID, $email->getTemplate());
-        $this->assertSame($expectedTemplateParams, $email->getParameters());
+        self::assertSame(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertSame('OPG', $email->getFromName());
+        self::assertSame('user@digital.justice.gov.uk', $email->getToEmail());
+        self::assertSame(MailFactory::INVITATION_LAY_TEMPLATE_ID, $email->getTemplate());
+        self::assertSame($expectedTemplateParams, $email->getParameters());
     }
 
     public function testCreateInvitationEmailOrgUser(): void
@@ -209,12 +209,12 @@ class MailFactoryTest extends TestCase
             ->setEmail('l.wolny@somesolicitors.org')
             ->setRoleName('ROLE_PROF_TEAM_MEMBER');
 
-        $this->router->expects($this->once())->method('generate')->with('user_activate', [
+        $this->router->expects(self::once())->method('generate')->with('user_activate', [
             'action' => 'activate',
             'token' => 'regToken',
         ])->willReturn('/activate/regToken');
 
-        $this->translator->expects($this->exactly(3))->method('trans')->willReturnMap([
+        $this->translator->expects(self::exactly(3))->method('trans')->willReturnMap([
             ['profSupportEmail', [], 'common', null, 'prof-email@publicguardian.gov.uk'],
             ['helpline', [], 'common', null, '07987654321'],
             ['activation.fromName', [], 'email', null, 'OPG']
@@ -228,11 +228,11 @@ class MailFactoryTest extends TestCase
 
         $email = $this->generateSUT()->createInvitationEmail($profDeputy);
 
-        $this->assertSame(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
-        $this->assertSame('OPG', $email->getFromName());
-        $this->assertSame('l.wolny@somesolicitors.org', $email->getToEmail());
-        $this->assertSame(MailFactory::INVITATION_ORG_TEMPLATE_ID, $email->getTemplate());
-        $this->assertSame($expectedTemplateParams, $email->getParameters());
+        self::assertSame(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertSame('OPG', $email->getFromName());
+        self::assertSame('l.wolny@somesolicitors.org', $email->getToEmail());
+        self::assertSame(MailFactory::INVITATION_ORG_TEMPLATE_ID, $email->getTemplate());
+        self::assertSame($expectedTemplateParams, $email->getParameters());
     }
 
     public static function getLayReportTypes(): array
@@ -253,17 +253,17 @@ class MailFactoryTest extends TestCase
     {
         $this->router->method('generate')->with('homepage', [])->willReturn('');
 
-        $this->translator->expects($this->once())->method('trans')->willReturnMap([
+        $this->translator->expects(self::once())->method('trans')->willReturnMap([
             ['reportSubmissionConfirmation.fromName', [], 'email', null, 'OPG']
         ]);
 
         $this->submittedReport->setType($reportType);
         $email = $this->generateSUT()->createReportSubmissionConfirmationEmail($this->layDeputy, $this->submittedReport, $this->newReport);
 
-        $this->assertSame(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
-        $this->assertSame(MailFactory::REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID, $email->getTemplate());
-        $this->assertSame('OPG', $email->getFromName());
-        $this->assertSame('user@digital.justice.gov.uk', $email->getToEmail());
+        self::assertSame(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertSame(MailFactory::REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID, $email->getTemplate());
+        self::assertSame('OPG', $email->getFromName());
+        self::assertSame('user@digital.justice.gov.uk', $email->getToEmail());
 
         $expectedTemplateParams = [
             'clientFullname' => 'Joanne Bloggs',
@@ -279,7 +279,7 @@ class MailFactoryTest extends TestCase
             'lay' => 'yes',
         ];
 
-        $this->assertSame($expectedTemplateParams, $email->getParameters());
+        self::assertSame($expectedTemplateParams, $email->getParameters());
     }
 
     public static function getOrgReportTypes(): array
@@ -308,7 +308,7 @@ class MailFactoryTest extends TestCase
 
         $this->router->method('generate')->with('homepage', [])->willReturn('');
 
-        $this->translator->expects($this->exactly(2))->method('trans')->willReturnMap([
+        $this->translator->expects(self::exactly(2))->method('trans')->willReturnMap([
             ['reportSubmissionConfirmation.fromName', [], 'email', null, 'OPG'],
             ['caseDetails', ['%fullClientName%' => $clientFullName, '%caseNumber%' => $caseNumber], 'email-report-submission-confirm', null, 'Client: Joanne Bloggs Case number: 12345678']
         ]);
@@ -317,10 +317,10 @@ class MailFactoryTest extends TestCase
         $deputy = $this->generateUser($role);
         $email = $this->generateSUT()->createReportSubmissionConfirmationEmail($deputy, $this->submittedReport, $this->newReport);
 
-        $this->assertSame(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
-        $this->assertSame(MailFactory::REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID, $email->getTemplate());
-        $this->assertSame('OPG', $email->getFromName());
-        $this->assertSame('user@digital.justice.gov.uk', $email->getToEmail());
+        self::assertSame(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertSame(MailFactory::REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID, $email->getTemplate());
+        self::assertSame('OPG', $email->getFromName());
+        self::assertSame('user@digital.justice.gov.uk', $email->getToEmail());
 
         $expectedTemplateParams = [
             'clientFullname' => 'Joanne Bloggs',
@@ -336,17 +336,17 @@ class MailFactoryTest extends TestCase
             'lay' => 'no',
         ];
 
-        $this->assertSame($expectedTemplateParams, $email->getParameters());
+        self::assertSame($expectedTemplateParams, $email->getParameters());
     }
 
     public function testCreateResetPasswordEmail(): void
     {
-        $this->router->expects($this->exactly(2))->method('generate')->willReturnMap([
+        $this->router->expects(self::exactly(2))->method('generate')->willReturnMap([
             ['user_activate', ['action' => 'password-reset', 'token' => 'regToken'], UrlGeneratorInterface::ABSOLUTE_PATH, '/reset-password/regToken'],
             ['password_forgotten', [], UrlGeneratorInterface::ABSOLUTE_PATH, '/password-managing/forgotten']
         ]);
 
-        $this->translator->expects($this->exactly(3))->method('trans')->willReturnMap([
+        $this->translator->expects(self::exactly(3))->method('trans')->willReturnMap([
             ['layDeputySupportEmail', [], 'common', null, 'help-email@publicguardian.gov.uk'],
             ['helpline', [], 'common', null, '0123456789'],
             ['resetPassword.fromName', [], 'email', null, 'OPG']
@@ -359,16 +359,16 @@ class MailFactoryTest extends TestCase
 
         $email = $this->generateSUT()->createResetPasswordEmail($this->layDeputy);
 
-        $this->assertSame(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
-        $this->assertSame('OPG', $email->getFromName());
-        $this->assertSame('user@digital.justice.gov.uk', $email->getToEmail());
-        $this->assertSame(MailFactory::RESET_PASSWORD_TEMPLATE_ID, $email->getTemplate());
-        $this->assertSame($expectedTemplateParams, $email->getParameters());
+        self::assertSame(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
+        self::assertSame('OPG', $email->getFromName());
+        self::assertSame('user@digital.justice.gov.uk', $email->getToEmail());
+        self::assertSame(MailFactory::RESET_PASSWORD_TEMPLATE_ID, $email->getTemplate());
+        self::assertSame($expectedTemplateParams, $email->getParameters());
     }
 
     public function testCreateUpdateClientDetailsEmail(): void
     {
-        $this->translator->expects($this->exactly(2))->method('trans')->willReturnMap([
+        $this->translator->expects(self::exactly(2))->method('trans')->willReturnMap([
             ['client.fromName', [], 'email', null, 'OPG'],
             ['client.subject', [], 'email', null, 'A subject'],
         ]);
@@ -379,8 +379,8 @@ class MailFactoryTest extends TestCase
 
         $this->assertStaticEmailProperties($email);
 
-        $this->assertSame('updateAddress@digital.justice.gov.uk', $email->getToEmail());
-        $this->assertSame(MailFactory::CLIENT_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
+        self::assertSame('updateAddress@digital.justice.gov.uk', $email->getToEmail());
+        self::assertSame(MailFactory::CLIENT_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = [
             'caseNumber' => '12345678',
@@ -393,12 +393,12 @@ class MailFactoryTest extends TestCase
             'phone' => '01215553333',
         ];
 
-        $this->assertSame($expectedTemplateParams, $email->getParameters());
+        self::assertSame($expectedTemplateParams, $email->getParameters());
     }
 
     public function testCreateUpdateClientDetailsEmailCountryNotSet()
     {
-        $this->translator->expects($this->exactly(2))->method('trans')->willReturnMap([
+        $this->translator->expects(self::exactly(2))->method('trans')->willReturnMap([
             ['client.fromName', [], 'email', null, 'OPG'],
             ['client.subject', [], 'email', null, 'A subject'],
         ]);
@@ -409,8 +409,8 @@ class MailFactoryTest extends TestCase
 
         $this->assertStaticEmailProperties($email);
 
-        $this->assertSame('updateAddress@digital.justice.gov.uk', $email->getToEmail());
-        $this->assertSame(MailFactory::CLIENT_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
+        self::assertSame('updateAddress@digital.justice.gov.uk', $email->getToEmail());
+        self::assertSame(MailFactory::CLIENT_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = [
             'caseNumber' => '12345678',
@@ -423,12 +423,12 @@ class MailFactoryTest extends TestCase
             'phone' => '01215553333',
         ];
 
-        $this->assertSame($expectedTemplateParams, $email->getParameters());
+        self::assertSame($expectedTemplateParams, $email->getParameters());
     }
 
     public function testCreateUpdateDeputyDetailsEmail()
     {
-        $this->translator->expects($this->exactly(2))->method('trans')->willReturnMap([
+        $this->translator->expects(self::exactly(2))->method('trans')->willReturnMap([
             ['client.fromName', [], 'email', null, 'OPG'],
             ['client.subject', [], 'email', null, 'A subject'],
         ]);
@@ -437,8 +437,8 @@ class MailFactoryTest extends TestCase
 
         $this->assertStaticEmailProperties($email);
 
-        $this->assertSame('updateAddress@digital.justice.gov.uk', $email->getToEmail());
-        $this->assertSame(MailFactory::DEPUTY_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
+        self::assertSame('updateAddress@digital.justice.gov.uk', $email->getToEmail());
+        self::assertSame(MailFactory::DEPUTY_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = [
             'caseNumber' => '12345678',
@@ -453,12 +453,12 @@ class MailFactoryTest extends TestCase
             'email' => 'user@digital.justice.gov.uk',
         ];
 
-        $this->assertSame($expectedTemplateParams, $email->getParameters());
+        self::assertSame($expectedTemplateParams, $email->getParameters());
     }
 
     public function testCreateUpdateDeputyDetailsEmailCountryNotSet()
     {
-        $this->translator->expects($this->exactly(2))->method('trans')->willReturnMap([
+        $this->translator->expects(self::exactly(2))->method('trans')->willReturnMap([
             ['client.fromName', [], 'email', null, 'OPG'],
             ['client.subject', [], 'email', null, 'A subject'],
         ]);
@@ -467,8 +467,8 @@ class MailFactoryTest extends TestCase
 
         $this->assertStaticEmailProperties($email);
 
-        $this->assertSame('updateAddress@digital.justice.gov.uk', $email->getToEmail());
-        $this->assertSame(MailFactory::DEPUTY_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
+        self::assertSame('updateAddress@digital.justice.gov.uk', $email->getToEmail());
+        self::assertSame(MailFactory::DEPUTY_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = [
             'caseNumber' => '12345678',
@@ -483,6 +483,6 @@ class MailFactoryTest extends TestCase
             'email' => 'user@digital.justice.gov.uk',
         ];
 
-        $this->assertSame($expectedTemplateParams, $email->getParameters());
+        self::assertSame($expectedTemplateParams, $email->getParameters());
     }
 }

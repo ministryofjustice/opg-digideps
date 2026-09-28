@@ -11,8 +11,8 @@ use OPG\Digideps\Frontend\Security\UserVoter;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
+// WARNING: phpstorm incorrectly marks variables in this file as "unused local"; they are, in fact, used
 class UserVoterTest extends TestCase
 {
     /**
@@ -20,15 +20,14 @@ class UserVoterTest extends TestCase
      */
     public function testDetermineDeletePermission(User $deletor, User $deletee, int $expectedPermission): void
     {
-        $dm = $this->createStub(AccessDecisionManagerInterface::class);
-        $sut = new UserVoter($dm);
+        $sut = new UserVoter();
 
         $token = new UsernamePasswordToken($deletor, 'firewall', $deletor->getRoles());
 
         self::assertEquals($expectedPermission, $sut->vote($token, $deletee, [UserVoter::DELETE_USER]));
     }
 
-    public static function deleteUserProvider()
+    public static function deleteUserProvider(): array
     {
         $clientNoReports = new Client();
         $clientWithReport = new Client()->setReports([new Report()]);

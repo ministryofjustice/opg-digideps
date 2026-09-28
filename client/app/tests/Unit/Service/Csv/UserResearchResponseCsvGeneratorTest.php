@@ -10,8 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class UserResearchResponseCsvGeneratorTest extends TestCase
 {
-    /** @test */
-    public function generateUserResearchResponseCsv()
+    public function testGenerateUserResearchResponseCsv(): void
     {
         $urArray = [
             '0' => [

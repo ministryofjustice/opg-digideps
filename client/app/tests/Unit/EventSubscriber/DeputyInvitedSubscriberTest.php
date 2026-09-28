@@ -9,14 +9,10 @@ use OPG\Digideps\Frontend\EventSubscriber\DeputyInvitedSubscriber;
 use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 class DeputyInvitedSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @test */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals(
             [DeputyInvitedEvent::NAME => 'sendEmail'],
@@ -24,17 +20,14 @@ class DeputyInvitedSubscriberTest extends TestCase
         );
     }
 
-    /** @test */
-    public function sendEmail()
+    public function testSendEmail(): void
     {
         $invitedDeputy = UserHelpers::createUser();
         $deputyInvitedEvent = new DeputyInvitedEvent($invitedDeputy);
 
-        $mailer = self::prophesize(Mailer::class);
-        $mailer->sendInvitationEmail($invitedDeputy)->shouldBeCalled();
+        $mailer = self::createMock(Mailer::class);
+        $mailer->expects(self::once())->method('sendInvitationEmail')->with($invitedDeputy);
 
-        $sut = new DeputyInvitedSubscriber($mailer->reveal());
-
-        $sut->sendEmail($deputyInvitedEvent);
+        new DeputyInvitedSubscriber($mailer)->sendEmail($deputyInvitedEvent);
     }
 }

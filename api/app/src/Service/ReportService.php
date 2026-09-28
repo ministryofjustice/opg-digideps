@@ -8,6 +8,8 @@ use OPG\Digideps\Backend\Entity\Report\Asset;
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\Contact;
+use OPG\Digideps\Backend\Entity\Report\Debt;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
@@ -114,28 +116,32 @@ class ReportService
         $fromAssets = $fromReport->getAssets();
         foreach ($fromAssets as $asset) {
             // Check that the target report doesn't already have a matching asset
-            $assetExists = $this->checkAssetExists($toReport, $asset);
-
-            if (!$assetExists) {
-                $newAsset = $this->cloneAsset($asset, $toReport);
-                $toReport->addAsset($newAsset);
-                $this->em->detach($newAsset);
-                $this->em->persist($newAsset);
+            if (!$this->checkAssetExists($toReport, $asset)) {
+                $this->em->persist($this->cloneAsset($asset, $toReport));
             }
         }
 
         // copy bank accounts (opening balance = closing balance, opening date = closing date)
         foreach ($fromReport->getBankAccounts() as $account) {
             // Check that the target report doesn't already have a bank account with that account number
-            $accountExists = $this->checkBankAccountExists($toReport, $account);
-
-            if (!$accountExists) {
-                $newAccount = $this->cloneBankAccount($account, $toReport);
-                $newAccount->setReport($toReport);
-                $toReport->addAccount($newAccount);
-                $this->em->persist($newAccount);
+            if (!$this->checkBankAccountExists($toReport, $account)) {
+                $this->em->persist($this->cloneBankAccount($account, $toReport));
             }
         }
+
+        foreach ($fromReport->getContacts() as $contact) {
+            if (!$this->checkContactExists($toReport, $contact)) {
+                $this->em->persist($this->cloneContact($contact, $toReport));
+            }
+        }
+
+        foreach ($fromReport->getDebts() as $debt) {
+            if (!$this->checkDebtExists($toReport, $debt)) {
+                $this->em->persist($this->cloneDebt($debt, $toReport));
+                $toReport->setHasDebts('yes');
+            }
+        }
+        $toReport->setDebtManagement($toReport->getDebtManagement() ?? $fromReport->getDebtManagement());
     }
 
     private function checkAssetExists(Report $toReport, Asset $asset): bool
@@ -219,6 +225,59 @@ class ReportService
         $newAccount->setIsJointAccount($account->getIsJointAccount());
 
         return $newAccount;
+    }
+
+    private function checkContactExists(Report $toReport, Contact $contact): bool
+    {
+        foreach ($toReport->getContacts() as $existingContact) {
+            if (
+                $existingContact->getContactName() === $contact->getContactName()
+                && $existingContact->getAddress() === $contact->getAddress()
+                && $existingContact->getAddress2() === $contact->getAddress2()
+                && $existingContact->getCounty() === $contact->getCounty()
+                && $existingContact->getPostcode() === $contact->getPostcode()
+                && $existingContact->getCountry() === $contact->getCountry()
+                && $existingContact->getRelationship() === $contact->getRelationship()
+                && $existingContact->getPhone1() === $contact->getPhone1()
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function cloneContact(Contact $contact, Report $toReport): Contact
+    {
+        $newContact = new Contact($toReport)
+            ->setContactName($contact->getContactName())
+            ->setAddress($contact->getAddress())
+            ->setAddress2($contact->getAddress2())
+            ->setCounty($contact->getCounty())
+            ->setPostcode($contact->getPostcode())
+            ->setCountry($contact->getCountry())
+            ->setRelationship($contact->getRelationship())
+            ->setPhone1($contact->getPhone1());
+        $toReport->addContact($newContact);
+        return $newContact;
+    }
+
+    private function checkDebtExists(Report $toReport, Debt $debt): bool
+    {
+        foreach ($toReport->getDebts() as $existingDebt) {
+            if (
+                $existingDebt->getAmount() === $debt->getAmount()
+                && $existingDebt->getDebtTypeId() === $debt->getDebtTypeId()
+                && (!$existingDebt->getHasMoreDetails() || $existingDebt->getMoreDetails() === $debt->getMoreDetails())
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function cloneDebt(Debt $debt, Report $toReport): Debt
+    {
+        return new Debt($toReport, $debt->getDebtTypeId(), $debt->getHasMoreDetails(), $debt->getAmount(), $debt->getMoreDetails());
     }
 
     /**

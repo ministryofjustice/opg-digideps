@@ -7,7 +7,7 @@ variable "DEFAULT_ROLE" {
 variable "MANAGEMENT_ROLE" {
   type        = string
   description = "Management role to use for providers"
-  default     = "digideps-ci"
+  default     = "digideps-ci-boundary"
 }
 
 variable "OPG_DOCKER_TAG" {

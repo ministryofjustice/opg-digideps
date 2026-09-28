@@ -99,6 +99,7 @@ final class ReportHeader
     {
         $keys = [
             'header',
+            'infoHeader',
             'reportInformation',
             'deputyDetails',
             'noDeputy',

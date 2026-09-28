@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Controller\Report;
 
+use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Report\BankAccount;
 use OPG\Digideps\Frontend\Entity\Report\Status;
@@ -83,18 +84,44 @@ class BankAccountController extends AbstractController
             $account->setReport($report);
         } else {
             /** @var BankAccount $account */
-            $account = $this->restClient->get('report/account/' . $accountId, 'Report\\BankAccount');
+            $account = $this->restClient->get('report/account/' . $accountId, BankAccount::class);
         }
 
         // add URL-data into model
-        isset($dataFromRequest['type']) && $account->setAccountType($dataFromRequest['type']);
-        isset($dataFromRequest['bank']) && $account->setBank($dataFromRequest['bank']);
-        isset($dataFromRequest['number']) && $account->setAccountNumber($dataFromRequest['number']);
-        isset($dataFromRequest['sort-code']) && $account->setSortCode($dataFromRequest['sort-code']);
-        isset($dataFromRequest['is-joint']) && $account->setIsJointAccount($dataFromRequest['is-joint']);
-        isset($dataFromRequest['closing-balance']) && $account->setOpeningBalance($dataFromRequest['closing-balance']);
-        isset($dataFromRequest['opening-balance']) && $account->setClosingBalance($dataFromRequest['opening-balance']);
-        isset($dataFromRequest['is-closed']) && $account->setIsClosed($dataFromRequest['is-closed']);
+        $validatedRequestData = new ValidatingArray($dataFromRequest);
+        $type = $validatedRequestData->getStringOrNull('type');
+        if (!empty($type)) {
+            $account->setAccountType($type);
+        }
+        $bank = $validatedRequestData->getStringOrNull('bank');
+        if (!empty($bank)) {
+            $account->setBank($bank);
+        }
+        $accountNumber = $validatedRequestData->getStringOrNull('number');
+        if (!empty($accountNumber)) {
+            $account->setAccountNumber($accountNumber);
+        }
+        $sortCode = $validatedRequestData->getStringOrNull('sort-code');
+        if (!empty($sortCode)) {
+            $account->setSortCode($sortCode);
+        }
+        $isJoint = $validatedRequestData->getStringOrNull('is-joint');
+        if (!empty($isJoint)) {
+            $account->setIsJointAccount($isJoint);
+        }
+        $closingBalance = $validatedRequestData->getStringOrNull('closing-balance');
+        if ($closingBalance !== null) {
+            $account->setClosingBalance($closingBalance);
+        }
+        $openingBalance = $validatedRequestData->getStringOrNull('opening-balance');
+        if ($openingBalance !== null) {
+            $account->setClosingBalance($openingBalance);
+        }
+        $isClosed = $validatedRequestData->getBooleanOrNull('is-closed');
+        if ($isClosed !== null) {
+            $account->setIsClosed($isClosed);
+        }
+
         $stepRedirector->setStepUrlAdditionalParams(['data' => $dataFromRequest]);
 
         // create and handle form

@@ -11,17 +11,11 @@ use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\ReportHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class ReportUnsubmittedSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @test
-     */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals(
             [
@@ -31,22 +25,15 @@ class ReportUnsubmittedSubscriberTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function logReportUnsubmittedEvent()
+    public function testLogReportUnsubmittedEvent(): void
     {
-        $logger = self::prophesize(LoggerInterface::class);
-        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $logger = self::createMock(LoggerInterface::class);
+        $dateTimeProvider = self::createMock(DateTimeProvider::class);
 
-        $now = new \DateTime();
-        $dateTimeProvider->getDateTime()->willReturn($now);
         $currentUser = UserHelpers::createUser();
         $trigger = 'UNSUBMIT_REPORT';
 
         $submittedReport = ReportHelpers::createSubmittedReport();
-
-        $sut = new ReportUnsubmittedSubscriber($logger->reveal(), $dateTimeProvider->reveal());
 
         $reportUnsubmittedEvent = new ReportUnsubmittedEvent($submittedReport, $currentUser, $trigger);
 
@@ -59,7 +46,8 @@ class ReportUnsubmittedSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $logger->notice('', $expectedEvent)->shouldBeCalled();
-        $sut->logReportUnsubmittedEvent($reportUnsubmittedEvent);
+        $logger->expects(self::once())->method('notice')->with('', $expectedEvent);
+
+        new ReportUnsubmittedSubscriber($logger, $dateTimeProvider)->logReportUnsubmittedEvent($reportUnsubmittedEvent);
     }
 }

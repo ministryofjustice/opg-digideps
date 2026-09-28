@@ -9,14 +9,10 @@ use OPG\Digideps\Frontend\EventSubscriber\UserPasswordResetSubscriber;
 use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 class UserPasswordResetSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @test */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals(
             [UserPasswordResetEvent::NAME => 'sendEmail'],
@@ -24,16 +20,14 @@ class UserPasswordResetSubscriberTest extends TestCase
         );
     }
 
-    /** @test */
-    public function sendEmail()
+    public function testSendEmail(): void
     {
         $passwordResetUser = UserHelpers::createUser();
         $passwordResetEvent = new UserPasswordResetEvent($passwordResetUser);
 
-        $mailer = self::prophesize(Mailer::class);
-        $mailer->sendResetPasswordEmail($passwordResetUser)->shouldBeCalled();
+        $mailer = self::createMock(Mailer::class);
+        $mailer->expects(self::once())->method('sendResetPasswordEmail')->with($passwordResetUser);
 
-        $sut = new UserPasswordResetSubscriber($mailer->reveal());
-        $sut->sendEmail($passwordResetEvent);
+        new UserPasswordResetSubscriber($mailer)->sendEmail($passwordResetEvent);
     }
 }

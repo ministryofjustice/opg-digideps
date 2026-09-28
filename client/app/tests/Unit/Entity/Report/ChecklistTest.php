@@ -24,7 +24,7 @@ class ChecklistTest extends KernelTestCase
     /**
      * @dataProvider submitProfDeputyCostsChecklistValuesProvider
      */
-    public function tesValidationsSubmitProfDeputyCostsChecklist(
+    public function testValidationsSubmitProfDeputyCostsChecklist(
         ?string $profCostsReasonableAndProportionate,
         ?string $paymentsMatchCostCertificate,
         ?string $hasDeputyOverchargedFromPreviousEstimates,
@@ -41,7 +41,7 @@ class ChecklistTest extends KernelTestCase
         self::assertEquals($expectedCountErrors, count($errors));
     }
 
-    public function submitProfDeputyCostsChecklistValuesProvider(): array
+    public static function submitProfDeputyCostsChecklistValuesProvider(): array
     {
         return [
             'one missing value' => [null, 'yes', 'no', 1],

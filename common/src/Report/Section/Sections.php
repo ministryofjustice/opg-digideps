@@ -47,9 +47,16 @@ final readonly class Sections implements \IteratorAggregate
             $sections = [
                 ...$sections,
                 ReportSection::CLIENT_BENEFITS_CHECK,
-                ReportSection::BANK_ACCOUNTS,
-                ReportSection::GIFTS
+                ReportSection::BANK_ACCOUNTS
             ];
+        }
+
+        if ($type->deputyType === DeputyType::LAY) {
+            $sections[] = ReportSection::DEPUTY_EXPENSES;
+        }
+
+        if ($pfa) {
+            $sections[] = ReportSection::GIFTS;
         }
 
         if ($type->courtOrderReportType === CourtOrderReportType::OPG102) {
@@ -76,9 +83,7 @@ final readonly class Sections implements \IteratorAggregate
             ];
         }
 
-        if ($type->deputyType === DeputyType::LAY) {
-            $sections[] = ReportSection::DEPUTY_EXPENSES;
-        } elseif ($type->deputyType === DeputyType::PRO) {
+        if ($type->deputyType === DeputyType::PRO) {
             $sections = [
                 ...$sections,
                 ReportSection::PROF_DEPUTY_COSTS,

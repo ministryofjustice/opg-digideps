@@ -52,12 +52,13 @@ class Satisfaction
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
-    #[ORM\OneToOne(mappedBy: 'satisfaction', targetEntity: UserResearchResponse::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: UserResearchResponse::class, mappedBy: 'satisfaction', cascade: ['persist', 'remove'])]
     private ?UserResearchResponse $userResearchResponse = null;
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
-    #[ORM\OneToOne(inversedBy: 'satisfaction', targetEntity: Report::class, cascade: ['persist'])]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ORM\OneToOne(targetEntity: Report::class, inversedBy: 'satisfaction', cascade: ['persist'])]
     private ?Report $report = null;
 
     public function __construct(int $score, ?string $comments = null)

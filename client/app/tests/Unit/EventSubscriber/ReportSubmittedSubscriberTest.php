@@ -13,18 +13,11 @@ use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\ReportHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class ReportSubmittedSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @test
-     */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals(
             [
@@ -37,83 +30,60 @@ class ReportSubmittedSubscriberTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function sendEmail()
+    public function testSendEmail(): void
     {
-        $reportApi = self::prophesize(ReportApi::class);
-        $mailer = self::prophesize(Mailer::class);
-        $logger = self::prophesize(LoggerInterface::class);
-        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $reportApi = self::createMock(ReportApi::class);
+        $mailer = self::createMock(Mailer::class);
+        $logger = self::createMock(LoggerInterface::class);
+        $dateTimeProvider = self::createMock(DateTimeProvider::class);
         $submittedBy = UserHelpers::createUser();
         $submittedReport = ReportHelpers::createReport();
         $nextYearReport = ReportHelpers::createReport();
         $nextYearReportId = '5';
 
-        $reportApi
-            ->getReport(5, ['submit'])
-            ->shouldBeCalled()
-            ->willReturn($nextYearReport);
+        $reportApi->expects(self::once())->method('getReport')->with(5, ['submit'])->willReturn($nextYearReport);
 
-        $mailer
-            ->sendReportSubmissionConfirmationEmail($submittedBy, $submittedReport, $nextYearReport)
-            ->shouldBeCalled();
+        $mailer->expects(self::once())
+            ->method('sendReportSubmissionConfirmationEmail')
+            ->with($submittedBy, $submittedReport, $nextYearReport);
 
-        $sut = new ReportSubmittedSubscriber($reportApi->reveal(), $mailer->reveal(), $logger->reveal(), $dateTimeProvider->reveal());
         $event = new ReportSubmittedEvent($submittedReport, $submittedBy, $nextYearReportId);
 
-        $sut->sendEmail($event);
+        new ReportSubmittedSubscriber($reportApi, $mailer, $logger, $dateTimeProvider)->sendEmail($event);
     }
 
-    /**
-     * @test
-     */
-    public function sendEmailEmailNotSentForResubmissions()
+    public function testSendEmailEmailNotSentForResubmissions(): void
     {
-        $reportApi = self::prophesize(ReportApi::class);
-        $mailer = self::prophesize(Mailer::class);
-        $logger = self::prophesize(LoggerInterface::class);
-        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $reportApi = self::createMock(ReportApi::class);
+        $mailer = self::createMock(Mailer::class);
+        $logger = self::createMock(LoggerInterface::class);
+        $dateTimeProvider = self::createMock(DateTimeProvider::class);
         $submittedBy = UserHelpers::createUser();
         $submittedReport = ReportHelpers::createReport();
         $nextYearReportId = null;
 
-        $reportApi
-            ->getReport(Argument::cetera())
-            ->shouldNotBeCalled();
+        $reportApi->expects(self::never())->method('getReport');
 
-        $mailer
-            ->sendReportSubmissionConfirmationEmail(Argument::cetera())
-            ->shouldNotBeCalled();
+        $mailer->expects(self::never())->method('sendReportSubmissionConfirmationEmail');
 
-        $sut = new ReportSubmittedSubscriber($reportApi->reveal(), $mailer->reveal(), $logger->reveal(), $dateTimeProvider->reveal());
         $event = new ReportSubmittedEvent($submittedReport, $submittedBy, $nextYearReportId);
 
-        $sut->sendEmail($event);
+        new ReportSubmittedSubscriber($reportApi, $mailer, $logger, $dateTimeProvider)->sendEmail($event);
     }
 
-    /**
-     * @test
-     */
-    public function log()
+    public function testLog(): void
     {
-        $logger = self::prophesize(LoggerInterface::class);
-        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
-        $reportApi = self::prophesize(ReportApi::class);
-        $mailer = self::prophesize(Mailer::class);
+        $logger = self::createMock(LoggerInterface::class);
+        $dateTimeProvider = self::createMock(DateTimeProvider::class);
+        $reportApi = self::createMock(ReportApi::class);
+        $mailer = self::createMock(Mailer::class);
 
-        $submittedReport = ReportHelpers::createReport()
-            ->setUnSubmitDate(new \DateTime());
+        $submittedReport = ReportHelpers::createReport()->setUnSubmitDate(new \DateTime());
 
         $nextYearReport = ReportHelpers::createReport();
 
-        $now = new \DateTime();
-        $dateTimeProvider->getDateTime()->willReturn($now);
         $submittedBy = UserHelpers::createUser();
         $trigger = 'RESUBMIT_REPORT';
-
-        $sut = new ReportSubmittedSubscriber($reportApi->reveal(), $mailer->reveal(), $logger->reveal(), $dateTimeProvider->reveal());
 
         $reportResubmittedEvent = new ReportSubmittedEvent($submittedReport, $submittedBy, $nextYearReport);
 
@@ -126,7 +96,9 @@ class ReportSubmittedSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $logger->notice('', $expectedEvent)->shouldBeCalled();
-        $sut->logResubmittedReport($reportResubmittedEvent);
+        $logger->expects(self::once())->method('notice')->with('', $expectedEvent);
+
+        new ReportSubmittedSubscriber($reportApi, $mailer, $logger, $dateTimeProvider)
+            ->logResubmittedReport($reportResubmittedEvent);
     }
 }

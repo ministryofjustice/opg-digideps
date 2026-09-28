@@ -11,9 +11,8 @@ class QueuedDocumentDataTest extends TestCase
 {
     /**
      * @dataProvider supportingDocumentProvider
-     * @test
      */
-    public function supportingDocumentCanBeSynced(?string $uuid, bool $expectedResult)
+    public function testSupportingDocumentCanBeSynced(?string $uuid, bool $expectedResult): void
     {
         $supportingDocument = new QueuedDocumentData()
             ->setIsReportPdf(false)
@@ -22,7 +21,7 @@ class QueuedDocumentDataTest extends TestCase
         self::assertEquals($expectedResult, $supportingDocument->supportingDocumentCanBeSynced());
     }
 
-    public function supportingDocumentProvider()
+    public static function supportingDocumentProvider(): array
     {
         return [
             'Can be synced' => ['abc-123-def-456', true],

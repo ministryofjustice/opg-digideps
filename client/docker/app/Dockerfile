@@ -119,7 +119,7 @@ RUN apk add --no-cache \
     "php84-pecl-igbinary==3.2.17_rc1-r0" \
     "php84-pecl-redis==6.3.0-r0" \
     "php84-pecl-imagick==3.8.1-r0" \
-    "libheif==1.23.0-r0" \
+    "libheif==1.23.4-r0" \
     "libde265==1.0.18-r0" \
     "ffmpeg==8.1.2-r0" \
     "wget==1.25.0-r3"

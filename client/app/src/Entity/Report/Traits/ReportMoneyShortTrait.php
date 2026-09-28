@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory;
 use OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort;
-use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportMoneyShortTrait
@@ -36,20 +38,20 @@ trait ReportMoneyShortTrait
     private array $moneyTransactionsShortOut = [];
 
     /**
-     * @var string 'yes'|'no'|null
+     * 'yes'|'no'|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['money-transactions-short-in-exist'])]
     #[Assert\NotBlank(message: 'moneyTransactionShort.exist.notBlank', groups: ['exist'])]
-    private $moneyTransactionsShortInExist;
+    private ?string $moneyTransactionsShortInExist = null;
 
     /**
-     * @var string 'yes'|'no'|null
+     * 'yes'|'no'|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['money-transactions-short-out-exist'])]
     #[Assert\NotBlank(message: 'moneyTransactionShort.exist.notBlank', groups: ['exist'])]
-    private $moneyTransactionsShortOutExist;
+    private ?string $moneyTransactionsShortOutExist = null;
 
     /**
      * @return MoneyShortCategory[]
@@ -143,36 +145,24 @@ trait ReportMoneyShortTrait
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMoneyTransactionsShortInExist()
+    public function getMoneyTransactionsShortInExist(): ?string
     {
         return $this->moneyTransactionsShortInExist;
     }
 
-    /**
-     * @param string $moneyTransactionsShortInExist
-     */
-    public function setMoneyTransactionsShortInExist($moneyTransactionsShortInExist): static
+    public function setMoneyTransactionsShortInExist(?string $moneyTransactionsShortInExist): static
     {
         $this->moneyTransactionsShortInExist = $moneyTransactionsShortInExist;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMoneyTransactionsShortOutExist()
+    public function getMoneyTransactionsShortOutExist(): ?string
     {
         return $this->moneyTransactionsShortOutExist;
     }
 
-    /**
-     * @param string $moneyTransactionsShortOutExist
-     */
-    public function setMoneyTransactionsShortOutExist($moneyTransactionsShortOutExist): static
+    public function setMoneyTransactionsShortOutExist(?string $moneyTransactionsShortOutExist): static
     {
         $this->moneyTransactionsShortOutExist = $moneyTransactionsShortOutExist;
 
@@ -181,9 +171,8 @@ trait ReportMoneyShortTrait
 
     /**
      * @param  MoneyTransactionShort[] $records
-     * @return int
      */
-    public function getTotalValue(array $records)
+    public function getTotalValue(array $records): float
     {
         $ret = 0;
         foreach ($records as $expense) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Form\Report\Asset;
 
 use OPG\Digideps\Frontend\Form\Report\Asset\AssetTypeTitle;
@@ -14,11 +16,11 @@ class AssetTypeTitleTest extends TestCase
 
     public function setUp(): void
     {
-        $this->translator = $this->createMock('Symfony\Contracts\Translation\TranslatorInterface');
+        $this->translator = self::createMock('Symfony\Contracts\Translation\TranslatorInterface');
         $this->translator->method('trans')->with(new IsType(IsType::TYPE_STRING), [], 'domain')->willReturnCallback(fn (string $a) => "{$a}-TRANSLATED");
     }
 
-    public function titleChoices(): array
+    public static function titleChoices(): array
     {
         return [
             [[], []],
@@ -34,6 +36,6 @@ class AssetTypeTitleTest extends TestCase
     {
         $object = new AssetTypeTitle($input, $this->translator, 'domain');
 
-        $this->assertEquals($expectedOutput, $object->getTitleChoices());
+        self::assertEquals($expectedOutput, $object->getTitleChoices());
     }
 }
