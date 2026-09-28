@@ -10,6 +10,7 @@ All commands are designed to run inside Docker to ensure a consistent and reprod
 All commands are exposed via the `Makefile` and wrap Docker Compose.
 
 ### Run tests
+
 ```bash
 make playwright-test
 ```
@@ -19,6 +20,7 @@ Runs the full Playwright test suite in a container.
 ---
 
 ### View test report
+
 ```bash
 make playwright-report
 ```
@@ -26,6 +28,7 @@ make playwright-report
 Serves the HTML report from the last test run.
 
 Once running, open:
+
 ```
 http://localhost:9323
 ```
@@ -33,6 +36,7 @@ http://localhost:9323
 ---
 
 ### Run linter
+
 ```bash
 make playwright-lint
 ```
@@ -42,6 +46,7 @@ Runs ESLint against all test files.
 ---
 
 ### Run Playwright UI (interactive mode)
+
 ```bash
 make playwright-ui
 ```
@@ -49,6 +54,7 @@ make playwright-ui
 Starts the Playwright UI for interactive debugging.
 
 Once running, open:
+
 ```
 http://localhost:9525
 ```
@@ -56,6 +62,7 @@ http://localhost:9525
 Important - the link it gives you to 0.0.0.0 won't work. It only resolves on localhost!
 
 This allows you to:
+
 - Run tests individually
 - Debug test steps
 - Inspect browser behaviour
@@ -63,6 +70,7 @@ This allows you to:
 ---
 
 ### Check formatting
+
 ```bash
 make playwright-check-format
 ```
@@ -72,6 +80,7 @@ Checks code formatting using Prettier.
 ---
 
 ### Format code
+
 ```bash
 make playwright-format
 ```
@@ -97,6 +106,7 @@ make playwright-check-format
 ```
 
 This ensures:
+
 - Your code meets linting rules
 - Your formatting matches project standards
 - CI does not fail unnecessarily
