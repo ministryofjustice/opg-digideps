@@ -17,8 +17,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent]
 final class MoneyInShort
 {
-    private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
-
     public ?SummaryList $list = null;
     public ?Table $table = null;
     /**
@@ -59,7 +57,7 @@ final class MoneyInShort
             );
             $builder->addItem(
                 $this->text['moneyTransactionsShortInExist'],
-                $this->text[$report->getMoneyTransactionsShortInExist()] ?? $this->text['notEntered']
+                $this->text[$report->getMoneyTransactionsShortInExist() ?? ''] ?? $this->text['notEntered']
             );
         }
 
@@ -95,11 +93,11 @@ final class MoneyInShort
             $builder->addRow(
                 $entry->getDescription() ?? '',
                 $date,
-                new Cell($this->formatMoney((float)($entry->getAmount() ?? 0)), self::NUMERIC_FORMAT)
+                new Cell($this->formatMoney((float)($entry->getAmount() ?? 0)), Cell::NUMERIC_FORMAT)
             );
             $total += $entry->getAmount() ?? 0.0;
         }
-        $builder->addRow(new Cell($this->text['above£1kTransactionsTotal'], isHeader: true), '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, isBold: true));
+        $builder->addRow(new Cell($this->text['above£1kTransactionsTotal'], isHeader: true), '', new Cell($this->formatMoney($total), Cell::NUMERIC_FORMAT, isBold: true));
 
         return $builder->makeTable();
     }
