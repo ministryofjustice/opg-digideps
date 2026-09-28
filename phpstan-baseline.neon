@@ -145,6 +145,12 @@ parameters:
 			path: api/app/src/Command/ApiComparison.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\ApiComparison\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: api/app/src/Command/ApiComparison.php
+
+		-
 			message: '#^Binary operation "\+\=" between mixed and int\<0, max\> results in an error\.$#'
 			identifier: assignOp.invalid
 			count: 1
@@ -14043,7 +14049,7 @@ parameters:
 		-
 			message: '#^Cannot call method getText\(\) on Behat\\Mink\\Element\\NodeElement\|null\.$#'
 			identifier: method.nonObject
-			count: 4
+			count: 2
 			path: api/app/tests/Behat/bootstrap/v2/Reporting/ReportReviewFeatureContext.php
 
 		-
@@ -21169,18 +21175,6 @@ parameters:
 			path: client/app/src/Components/OPG/Review/Lifestyle.php
 
 		-
-			message: '#^Possibly invalid array key type string\|null\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: client/app/src/Components/OPG/Review/MoneyInShort.php
-
-		-
-			message: '#^Possibly invalid array key type string\|null\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: client/app/src/Components/OPG/Review/MoneyOutShort.php
-
-		-
 			message: '#^Offset 1 on array\{non\-falsy\-string, string, non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
@@ -21913,19 +21907,7 @@ parameters:
 			path: client/app/src/Controller/Admin/StatsController.php
 
 		-
-			message: '#^Parameter \#1 \$satisfactions of method OPG\\Digideps\\Frontend\\Service\\Csv\\SatisfactionCsvGenerator\:\:generateSatisfactionResponsesCsv\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/StatsController.php
-
-		-
 			message: '#^Parameter \#1 \$userResearchResponses of method OPG\\Digideps\\Frontend\\Service\\Csv\\UserResearchResponseCsvGenerator\:\:generateUserResearchResponsesCsv\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/StatsController.php
-
-		-
-			message: '#^Parameter \#2 \$csvContent of method OPG\\Digideps\\Frontend\\Controller\\Admin\\StatsController\:\:csvResponseGeneration\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/src/Controller/Admin/StatsController.php
@@ -24241,12 +24223,6 @@ parameters:
 			path: client/app/src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setMentalCapacity\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -25935,12 +25911,6 @@ parameters:
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 1
-			path: client/app/src/Form/Report/MoneyTransferType.php
-
-		-
-			message: '#^Possibly invalid array key type string\|null\.$#'
-			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: client/app/src/Form/Report/MoneyTransferType.php
 
@@ -27895,48 +27865,6 @@ parameters:
 			path: client/app/src/Service/Csv/ReportImbalanceCsvGenerator.php
 
 		-
-			message: '#^Cannot call method format\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getComments\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getCreated\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getDeputyrole\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getReporttype\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getScore\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Csv\\SatisfactionCsvGenerator\:\:generateSatisfactionResponsesCsv\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -29317,12 +29245,6 @@ parameters:
 			path: client/app/src/Service/ReportSubmissionService.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService\:\:assertReportSubmissionIsDownloadable\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Service/ReportSubmissionService.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService\:\:getReportSubmissionById\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -29533,12 +29455,6 @@ parameters:
 			path: client/app/src/TestHelpers/ReportHelpers.php
 
 		-
-			message: '#^Parameter \#1 \$deputyRole of method OPG\\Digideps\\Frontend\\Entity\\Report\\Satisfaction\:\:setDeputyRole\(\) expects string, int\|string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/TestHelpers/SatisfactionHelpers.php
-
-		-
 			message: '#^Argument of an invalid type array\|object supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -29639,18 +29555,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: client/app/src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Parameter \#1 \$deputyshipLength of method OPG\\Digideps\\Frontend\\Entity\\UserResearch\\UserResearchResponse\:\:setDeputyshipLength\(\) expects string, int\|string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/TestHelpers/UserResearchResponseHelpers.php
-
-		-
-			message: '#^Parameter \#1 \$user of method OPG\\Digideps\\Frontend\\Entity\\UserResearch\\UserResearchResponse\:\:setUser\(\) expects OPG\\Digideps\\Frontend\\Entity\\User\|null, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/TestHelpers/UserResearchResponseHelpers.php
 
 		-
 			message: '#^Cannot call method format\(\) on mixed\.$#'
@@ -31585,24 +31489,6 @@ parameters:
 			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
 
 		-
-			message: '#^Access to undefined constant PHPUnit\\Framework\\Constraint\\IsType\:\:TYPE_STRING\.$#'
-			identifier: classConstant.notFound
-			count: 2
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:testAssertReportSubmissionIsDownloadable\(\) has parameter \$reportSubmission with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -31612,12 +31498,6 @@ parameters:
 			message: '#^Parameter \#1 \$reportSubmission of method OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService\:\:assertReportSubmissionIsDownloadable\(\) expects OPG\\Digideps\\Frontend\\Entity\\Report\\ReportSubmission, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$type of class PHPUnit\\Framework\\Constraint\\IsType constructor expects PHPUnit\\Framework\\NativeType, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
 
 		-
