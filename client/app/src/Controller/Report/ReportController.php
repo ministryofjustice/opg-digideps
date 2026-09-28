@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Controller\Report;
 
+use OPG\Digideps\Frontend\Components\OPG\Review\Section;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\DeputyInterface;
@@ -18,6 +19,7 @@ use OPG\Digideps\Frontend\Form\FeedbackReportType;
 use OPG\Digideps\Frontend\Form\Report\ReportDeclarationType;
 use OPG\Digideps\Frontend\Form\Report\ReportType;
 use OPG\Digideps\Frontend\Model\FeedbackReport;
+use OPG\Digideps\Frontend\Report\ReportSectionService;
 use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
 use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
 use OPG\Digideps\Frontend\Service\Client\Internal\SatisfactionApi;
@@ -38,63 +40,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ReportController extends AbstractController
 {
-    /**
-     * JMS groups used for report preview and PDF.
-     */
-    private static array $reportGroupsAll = [
-        'account',
-        'action-more-info',
-        'action',
-        'asset',
-        'balance',
-        'balance-state',
-        'client',
-        'client-benefits-check',
-        'client-deputy',
-        'contact',
-        'debt',
-        'debts',
-        'decision',
-        'debt-management',
-        'deputy',
-        'documents',
-        'expenses',
-        'fee',
-        'gifts',
-        'lifestyle',
-        'moneyShortCategoriesIn',
-        'moneyShortCategoriesOut',
-        'moneyTransactionsShortIn',
-        'moneyTransactionsShortOut',
-        'mental-capacity',
-        'money-transfer',
-        'prof-deputy-costs-estimate-how-charged',
-        'prof-deputy-costs-estimate-more-info',
-        'prof-deputy-costs-how-charged',
-        'prof-deputy-costs-interim',
-        'prof-deputy-costs-prev',
-        'prof-deputy-estimate-costs',
-        'prof-deputy-estimate-management-costs',
-        'prof-deputy-other-costs',
-        'prof-service-fees',
-        'report',
-        'report-documents',
-        'report-prof-deputy-costs',
-        'report-prof-deputy-costs-interim',
-        'report-prof-deputy-costs-prev',
-        'report-prof-deputy-costs-scco',
-        'report-prof-deputy-fixed-cost',
-        'report-prof-service-fees',
-        'report-submitted-by',
-        'status',
-        'transaction',
-        'transactionsIn',
-        'transactionsOut',
-        'unsubmitted-reports-count',
-        'visits-care',
-        'wish-to-provide-documentation',
-    ];
-
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
@@ -105,6 +50,7 @@ class ReportController extends AbstractController
         private readonly TranslatorInterface $translator,
         private readonly ObservableEventDispatcher $eventDispatcher,
         private readonly S3Storage $s3Storage,
+        private readonly ReportSectionService $reportSectionService,
     ) {
     }
 
@@ -246,7 +192,7 @@ class ReportController extends AbstractController
     #[Template('@App/Report/Report/confirm-details.html.twig')]
     public function confirmDetailsAction(int $reportId): array|RedirectResponse
     {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, ReportApi::$reportGroupsAll);
 
         // check status
         $status = $report->getStatus();
@@ -272,7 +218,7 @@ class ReportController extends AbstractController
     #[Template('@App/Report/Report/declaration.html.twig')]
     public function declarationAction(Request $request, int $reportId, ReportSubmissionService $reportSubmissionService): RedirectResponse|array
     {
-        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
+        $report = $this->reportApi->getReport($reportId, ReportApi::$reportGroupsAll);
 
         // check status
         $status = $report->getStatus();
@@ -351,9 +297,9 @@ class ReportController extends AbstractController
      * @throws \Exception
      */
     #[Route(path: '/report/{reportId}/review', name: 'report_review')]
-    public function reviewAction(Request $request, int $reportId): Response
+    public function reviewAction(int $reportId): Response
     {
-        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
+        $report = $this->reportApi->getReport($reportId, ReportApi::$reportGroupsAll);
 
         // check status
         $status = $report->getStatus();
@@ -376,13 +322,15 @@ class ReportController extends AbstractController
             }
         }
 
-        $template = $request->query->getString('dev-preview') === 'QED'
-            ? '@App/Report/Report/review_new.html.twig'
-            : '@App/Report/Report/review.html.twig';
+        $sections = [];
+        foreach ($this->reportSectionService->getReportMetadata($report)->sections->getIterator() as $section) {
+            $sections[] = new Section($report, $section);
+        }
 
-        return $this->render($template, [
+        return $this->render('@App/Report/Report/review.html.twig', [
             'user' => $this->getUser(),
             'report' => $report,
+            'sections' => $sections,
             'reportStatus' => $status,
             'backLink' => $backLink,
             'feeTotals' => $report->getFeeTotals(),
@@ -431,19 +379,24 @@ class ReportController extends AbstractController
         if (!$this->getParameter('kernel.debug')) {
             throw new DisplayableException('Route only visited in debug mode');
         }
-        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
+        $report = $this->reportApi->getReport($reportId, ReportApi::$reportGroupsAll);
+        $sections = [];
+        foreach ($this->reportSectionService->getReportMetadata($report)->sections->getIterator() as $section) {
+            $sections[] = new Section($report, $section);
+        }
 
-        return $this->render('@App/Report/Formatted/formatted_standalone.html.twig', [
+        return $this->render('@App/Report/Rendered/standalone.html.twig', [
             'report' => $report,
+            'sections' => $sections,
             'showSummary' => true,
         ]);
     }
 
     #[Route(path: '/report/deputyreport-{reportId}.pdf', name: 'report_pdf')]
-    public function pdfViewAction(Request $request, int $reportId, ReportSubmissionService $reportSubmissionService): Response
+    public function pdfViewAction(int $reportId, ReportSubmissionService $reportSubmissionService): Response
     {
-        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
-        $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report, devPreview: $request->query->getString('dev-preview') === 'QED');
+        $report = $this->reportApi->getReport($reportId, ReportApi::$reportGroupsAll);
+        $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report);
 
         if ($pdfBinary === false) {
             // unable to get the PDF for the report
@@ -479,7 +432,7 @@ class ReportController extends AbstractController
     #[Route(path: '/report/transactions-{reportId}.csv', name: 'report_transactions_csv')]
     public function transactionsCsvViewAction(int $reportId, TransactionsCsvGenerator $csvGenerator): Response
     {
-        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
+        $report = $this->reportApi->getReport($reportId, ReportApi::$reportGroupsAll);
 
         // restrict access to only 102, 102-4 reports
         $reportType = $report->getType();

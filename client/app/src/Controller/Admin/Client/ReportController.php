@@ -42,62 +42,6 @@ use Twig\Error\Error;
 #[Route(path: '/admin/report/{id}/', requirements: ['id' => '\d+'])]
 class ReportController extends AbstractController
 {
-    /**
-     * JMS groups used for report preview and PDF
-     * TODO consider take/merge the value from ReportController::$reportGroupsAll.
-     */
-    private static array $reportGroupsAll = [
-        'report',
-        'client',
-        'account',
-        'expenses',
-        'fee',
-        'gifts',
-        'prof-deputy-other-costs',
-        'prof-deputy-costs-how-charged',
-        'report-prof-deputy-costs',
-        'report-prof-deputy-costs-prev', 'prof-deputy-costs-prev',
-        'report-prof-deputy-costs-interim', 'prof-deputy-costs-interim',
-        'report-prof-deputy-costs-scco',
-        'report-prof-deputy-fixed-cost',
-        'prof-deputy-estimate-costs',
-        'prof-deputy-costs-estimate-how-charged',
-        'prof-deputy-estimate-management-costs',
-        'prof-deputy-costs-estimate-more-info',
-        'action',
-        'action-more-info',
-        'asset',
-        'debt',
-        'debt-management',
-        'fee',
-        'balance',
-        'contact',
-        'debts',
-        'decision',
-        'visits-care',
-        'lifestyle',
-        'mental-capacity',
-        'money-transfer',
-        'transaction',
-        'transactionsIn',
-        'transactionsOut',
-        'moneyShortCategoriesIn',
-        'moneyShortCategoriesOut',
-        'moneyTransactionsShortIn',
-        'moneyTransactionsShortOut',
-        'status',
-        'report-submitted-by',
-        'wish-to-provide-documentation',
-        'report-documents',
-        'balance-state',
-        'documents',
-        'report-prof-service-fees',
-        'prof-service-fees',
-        'client-deputy',
-        'client-benefits-check',
-        'client-benefits-check-state',
-    ];
-
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
@@ -115,7 +59,7 @@ class ReportController extends AbstractController
         $report = $this->reportApi->getReport(
             intval($id),
             array_merge(
-                self::$reportGroupsAll,
+                ReportApi::$reportGroupsAll,
                 [
                     'report-checklist', 'checklist-information', 'last-modified', 'user', 'previous-report-data', 'action', 'report-submitted-by', 'synchronisation',
                 ]
@@ -268,7 +212,7 @@ class ReportController extends AbstractController
     #[IsGranted(attribute: 'ROLE_ADMIN')]
     public function checklistPDFViewAction(int $id, ReportSubmissionService $reportSubmissionService): Response
     {
-        $report = $this->reportApi->getReport($id, array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
+        $report = $this->reportApi->getReport($id, array_merge(ReportApi::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
 
         if ($report->getEndDate() === null) {
             throw $this->createNotFoundException();
@@ -312,7 +256,7 @@ class ReportController extends AbstractController
     #[Template('@App/Admin/ReportSubmission/regenerate-pdf.html.twig')]
     public function regeneratePDF(int $id, ReportSubmissionService $reportSubmissionService): array
     {
-        $report = $this->reportApi->getReport($id, self::$reportGroupsAll);
+        $report = $this->reportApi->getReport($id, ReportApi::$reportGroupsAll);
         $reportSubmissionService->generateReportPdf($report, true);
 
         return [
@@ -326,7 +270,7 @@ class ReportController extends AbstractController
         int $id,
         ReportSubmissionService $reportSubmissionService,
     ): Response {
-        $report = $this->reportApi->getReport($id, self::$reportGroupsAll);
+        $report = $this->reportApi->getReport($id, ReportApi::$reportGroupsAll);
 
         $html = $reportSubmissionService->getPdfHtml($report);
 
