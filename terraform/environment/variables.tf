@@ -10,6 +10,12 @@ variable "MANAGEMENT_ROLE" {
   default     = "digideps-ci-boundary"
 }
 
+variable "IDENTITY_ROLE" {
+  type        = string
+  description = "Identity role to use for providers"
+  default     = "digideps-ci-boundary"
+}
+
 variable "OPG_DOCKER_TAG" {
   description = "docker tag to deploy"
   type        = string

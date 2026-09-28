@@ -41,7 +41,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::631181914621:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::631181914621:role/${var.IDENTITY_ROLE}"
     session_name = "terraform-session"
   }
 }
@@ -102,7 +102,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::631181914621:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::631181914621:role/${var.IDENTITY_ROLE}"
     session_name = "terraform-session"
   }
 }
