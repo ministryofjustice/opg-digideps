@@ -26,6 +26,9 @@ final class ClientDetails
     private array $parameters = [];
 
     public ?Table $activeReportsTable = null;
+    public ?Table $submittedReportsTable = null;
+    public ?Table $incompleteReportsTable = null;
+    public ?Table $closedReportsTable = null;
 
     public function __construct(
         private readonly TranslatorInterface $translator,
@@ -39,7 +42,10 @@ final class ClientDetails
 
         $reportsByCategory = $this->categoriseReports($client->getReports());
 
-        $this->activeReportsTable = $this->makeActiveReportsTable($reportsByCategory['active']);
+        $this->activeReportsTable = $this->makeReportsTable($reportsByCategory['active'], 'reportStatus.active');
+        $this->submittedReportsTable = $this->makeReportsTable($reportsByCategory['submitted'], 'reportStatus.submitted');
+        $this->incompleteReportsTable = $this->makeReportsTable($reportsByCategory['incomplete'], 'reportStatus.incomplete');
+        $this->closedReportsTable = $this->makeReportsTable($reportsByCategory['closed'], 'reportStatus.closed', needsManageLink: false);
     }
 
     /**
@@ -49,12 +55,15 @@ final class ClientDetails
     {
         $keys = [
             'actions',
+            'checklist',
             'dueDate',
             'manage',
             'period',
             'report',
             'reportsHeading',
             'reportStatus.active',
+            'reportStatus.incomplete',
+            'reportStatus.submitted',
             'type',
         ];
 
@@ -75,19 +84,30 @@ final class ClientDetails
 
     /**
      * @param array<Report> $reports
-     * @return array{active: array<Report>}
+     * @return array{active: array<Report>, submitted: array<Report>, incomplete: array<Report>, closed: array<Report>}
      */
     private function categoriseReports(array $reports): array
     {
-        $categorisedReports = ['active' => []];
+        $categorisedReports = [
+            'submitted' => [],
+            'incomplete' => [],
+            'active' => [],
+            'closed' => [],
+        ];
 
         foreach ($reports as $report) {
             $reportSubmitted = ($report->getSubmitted() === true);
             $reportUnsubmitted = ($report->getUnSubmitDate() !== null);
             $reportHasActiveCourtOrder = $report->hasActiveCourtOrder();
 
-            if (!$reportSubmitted && !$reportUnsubmitted && $reportHasActiveCourtOrder) {
+            if ($reportSubmitted) {
+                $categorisedReports['submitted'][] = $report;
+            } elseif ($reportUnsubmitted) {
+                $categorisedReports['incomplete'][] = $report;
+            } elseif ($reportHasActiveCourtOrder) {
                 $categorisedReports['active'][] = $report;
+            } else {
+                $categorisedReports['closed'][] = $report;
             }
         }
 
@@ -95,36 +115,46 @@ final class ClientDetails
     }
 
     /**
-     * @param array<Report> $activeReports
+     * @param array<Report> $reports
      */
-    private function makeActiveReportsTable(array $activeReports): Table
+    private function makeReportsTable(array $reports, string $captionKey, bool $needsManageLink = true): ?Table
     {
-        $caption = new Caption(text: $this->text['reportStatus.active'], size: 's', tag: Filters::statusToTagCss('active'));
+        if (empty($reports)) {
+            return null;
+        }
 
-        $actionsCell = new Cell(new Div($this->text['actions'], isVisuallyHidden: true), isHeader: true);
+        $caption = new Caption(text: $this->text[$captionKey], size: 's', tag: Filters::statusToTagCss($captionKey));
+
+        $actionsCell = new Cell(new Div([$this->text['actions']], isVisuallyHidden: true), isHeader: true);
 
         $tableBuilder = new TableBuilder(caption: $caption)
             ->addColumns(1, 1, 1, 1)
             ->addHeader($this->text['period'], $this->text['type'], $this->text['dueDate'], $actionsCell);
 
-        foreach ($activeReports as $activeReport) {
-            $manageUrl = $this->urlGenerator->generate('admin_report_manage', ['id' => $activeReport->getId()]);
+        foreach ($reports as $report) {
+            $links = [];
+            $period = str_replace(' to ', '-', $report->getPeriod());
 
-            $period = str_replace(' to ', '-', $activeReport->getPeriod());
+            if ($needsManageLink) {
+                $manageUrl = $this->urlGenerator->generate('admin_report_manage', ['id' => $report->getId()]);
+                $accessText = "{$period} {$this->text['report']}";
+                $links[] = new Link(href: $manageUrl, text: $this->text['manage'], accessibilityText: $accessText);
+            }
 
-            $link = new Link(
-                href: $manageUrl,
-                text: [
-                    $this->text['manage'],
-                    new Div(" {$period} {$this->text['report']}", isVisuallyHidden: true)
-                ]
-            );
+            if ($report->isCheckable()) {
+                $checklistUrl = $this->urlGenerator->generate('admin_report_checklist', ['id' => $report->getId()]);
+                $links[] = new Link(href: $checklistUrl, text: $this->text['checklist']);
+            }
+
+            if ($report->isDownloadable()) {
+
+            }
 
             $tableBuilder->addRow(
                 $period,
-                "OPG{$activeReport->getType()}",
-                $activeReport->getDueDate()->format('j F Y'),
-                $link
+                "OPG{$report->getType()}",
+                $report->getDueDate()->format('j F Y'),
+                new Div($links)
             );
         }
 

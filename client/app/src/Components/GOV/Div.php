@@ -8,8 +8,11 @@ use OPG\Digideps\Frontend\Components\RenderableInterface;
 
 class Div implements RenderableInterface
 {
+    /**
+     * @param array<string|RenderableInterface> $text
+     */
     public function __construct(
-        private readonly string $text,
+        private readonly array $text = [],
         private readonly bool $isVisuallyHidden = false,
     ) {
     }
@@ -21,7 +24,7 @@ class Div implements RenderableInterface
     public array $props {
         get => [
             'text' => $this->text,
-            'className' => $this->isVisuallyHidden ? 'govuk-visually-hidden' : '',
+            'isVisuallyHidden' => $this->isVisuallyHidden,
         ];
     }
 }
