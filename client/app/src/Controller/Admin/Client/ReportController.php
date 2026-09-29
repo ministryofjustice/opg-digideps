@@ -155,9 +155,7 @@ class ReportController extends AbstractController
             }
 
             if ($button->getName() === ReviewChecklistType::SUBMIT_ACTION) {
-                if ($this->isChecklistSyncEnabled()) {
-                    $this->queueChecklistForSyncing($report->getId());
-                }
+                $this->queueChecklistForSyncing($report->getId());
                 return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id' => $report->getId()]));
             } else {
                 $this->addFlash('notice', 'Review checklist saved');
@@ -196,9 +194,7 @@ class ReportController extends AbstractController
                 );
             } else {
                 if ($buttonClicked->getName() == 'submitAndContinue') {
-                    if ($this->isChecklistSyncEnabled()) {
-                        $this->queueChecklistForSyncing($report->getId());
-                    }
+                    $this->queueChecklistForSyncing($report->getId());
                     return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id' => $report->getId()]));
                 } else {
                     return $this->redirect($this->generateUrl('admin_report_checklist', ['id' => $report->getId()]) . '#');
@@ -247,8 +243,12 @@ class ReportController extends AbstractController
         ];
     }
 
-    protected function queueChecklistForSyncing(int $id): void
+    private function queueChecklistForSyncing(int $id): void
     {
+        if (!$this->isChecklistSyncEnabled()) {
+            return;
+        }
+
         // reload report from db to ensure checklist is available
         $report = $this->reportApi->getReport($id, ['report-checklist']);
 
@@ -630,10 +630,6 @@ class ReportController extends AbstractController
 
     private function isChecklistSyncEnabled(): bool
     {
-        if ($this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC) !== '1') {
-            return false;
-        }
-
-        return true;
+        return $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC) === '1';
     }
 }
