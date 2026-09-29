@@ -21,6 +21,7 @@ opg:
   admin:
     clientDetails:
       actions: Actions
+      checklist: Checklist
       dueDate: Due
       manage: Manage
       period: Period
@@ -28,6 +29,9 @@ opg:
       reportsHeading: Reports
       reportStatus:
         active: active
+        submitted: submitted
+        incomplete: incomplete
+        closed: unsubmitted (closed court orders)
       type: Type
   renderable:
     bankAccount:
