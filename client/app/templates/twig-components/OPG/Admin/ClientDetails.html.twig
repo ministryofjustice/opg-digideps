@@ -6,6 +6,18 @@
     <twig:GOV:Table table="{{ activeReportsTable }}"/>
 {% endif %}
 
+{% if submittedReportsTable is not null %}
+    <twig:GOV:Table table="{{ submittedReportsTable }}"/>
+{% endif %}
+
+{% if incompleteReportsTable is not null %}
+    <twig:GOV:Table table="{{ incompleteReportsTable }}"/>
+{% endif %}
+
+{% if closedReportsTable is not null %}
+    <twig:GOV:Table table="{{ closedReportsTable }}"/>
+{% endif %}
+
 {#
 {% set reportsByGroup = {
 active: client.reports | filter(r => not r.submitted and (r.unSubmitDate is not defined or not r.unSubmitDate)),
@@ -38,10 +50,8 @@ incomplete: client.reports | filter(r => (r.unSubmitDate is defined and r.unSubm
         <tbody class="govuk-table__body">
         {% for report in reports %}
             {% set isProfReport = report.hasSection('profCurrentFees') %}
-            {% set enableManageLink = true %}
             {% set enableChecklistLink = (report.submitted or report.submitDate) and not isProfReport %}
             {% set enableDownloadLink = (report.submitted or report.submitDate) %}
-            {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() | replace({' ': '-'}) %}
 
             <tr class="govuk-table__row {{ behatRegionPrefix }}">
                 <td class="govuk-table__cell">
