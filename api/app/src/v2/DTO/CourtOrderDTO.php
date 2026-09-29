@@ -23,11 +23,11 @@ class CourtOrderDTO
     {
         return [
             'id' => $this->id,
-            'courtOrderUid' => $this->courtOrderUid,
-            'orderType' => $this->orderType->value,
-            'orderReportType' => $this->orderReportType->value,
+            'court_order_uid' => $this->courtOrderUid,
+            'order_type' => $this->orderType->value,
+            'order_report_type' => $this->orderReportType->value,
             'status' => $this->status,
-            'orderMadeDate' => $this->orderMadeDate->format('Y-m-d'),
+            'order_made_date' => $this->orderMadeDate->format('Y-m-d'),
         ];
     }
 }
