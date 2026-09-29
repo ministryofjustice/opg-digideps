@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Components\OPG\Admin;
 
+use OPG\Digideps\Frontend\Components\GOV\Caption;
 use OPG\Digideps\Frontend\Components\GOV\Div;
 use OPG\Digideps\Frontend\Components\GOV\Table\Cell;
 use OPG\Digideps\Frontend\Components\GOV\Table\Table;
 use OPG\Digideps\Frontend\Components\GOV\Table\TableBuilder;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Twig\Filters;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
@@ -95,7 +97,9 @@ final class ClientDetails
     {
         $actionsCell = new Cell(new Div($this->text['actions'], isVisuallyHidden: true), isHeader: true);
 
-        $tableBuilder = new TableBuilder(caption: 'active')
+        $caption = new Caption(text: 'active', size: 's', tag: Filters::statusToTagCss('active'));
+
+        $tableBuilder = new TableBuilder(caption: $caption)
             ->addColumns(1, 1, 1, 1)
             ->addHeader($this->text['period'], $this->text['type'], $this->text['dueDate'], $actionsCell);
 
