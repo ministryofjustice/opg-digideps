@@ -6,10 +6,8 @@ use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\v2\Assembler\Report\ReportSummaryAssembler;
 use OPG\Digideps\Backend\v2\DTO\ClientDto;
-use OPG\Digideps\Backend\v2\DTO\DeputyDto;
 use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
 use OPG\Digideps\Backend\v2\DTO\OrganisationDto;
-use OPG\Digideps\Backend\v2\DTO\ReportDto;
 use OPG\Digideps\Backend\v2\DTO\UserDto;
 use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
@@ -34,8 +32,12 @@ class ClientAssembler
         $this->setPropertiesFromData($dto, $data, ['reports', 'deputy']);
 
         if (isset($data['reports']) && is_array($data['reports'])) {
-            $dto->setReports($this->assembleClientReports($data['reports']));
-            $dto->setReportCount(count($data['reports']));
+            $dtos = array_map(
+                fn (array $report) => $this->reportDtoAssembler->assembleFromArray($report),
+                $data['reports']
+            );
+            $dto->setReports($dtos);
+            $dto->setReportCount(count($dtos));
         }
 
         if (isset($data['organisation']) && is_array($data['organisation'])) {
@@ -43,7 +45,7 @@ class ClientAssembler
         }
 
         if (isset($data['deputy']) && is_array($data['deputy'])) {
-            $dto->setDeputy($this->assembleClientDeputy($data['deputy']));
+            $dto->setDeputy($this->deputyAssembler->assembleFromArray($data['deputy']));
         }
 
         if (isset($data['users']) && is_array($data['users'])) {
@@ -64,25 +66,6 @@ class ClientAssembler
         $dto->setReportCount($client->getTotalReportCount());
 
         return $dto;
-    }
-
-    /**
-     * @return array<ReportDto>
-     */
-    private function assembleClientReports(array $reports): array
-    {
-        $dtos = [];
-
-        foreach ($reports as $report) {
-            $dtos[] = $this->reportDtoAssembler->assembleFromArray($report);
-        }
-
-        return $dtos;
-    }
-
-    private function assembleClientDeputy(array $deputy): DeputyDto
-    {
-        return $this->deputyAssembler->assembleFromArray($deputy);
     }
 
     public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto): Client
