@@ -110,8 +110,11 @@ def start_logs_query(
         queryString=f"""
             fields real_forwarded_for, request_uri, status
             | filter ({log_stream_filter})
-            | filter request_uri not in ["/health-check", "/login", "/"]
+            | filter request_uri not in ["/health-check", "/health-check/service", "/health-check/dependencies"]
+            | filter request_uri not in ["/robots.txt", "/feedback", "/login", "/"]
+            | filter request_uri not like "/.well-known"
             | filter status > 0
+            | filter real_forwarded_for != ""
             | sort @timestamp desc
             | limit 10000
         """,
@@ -157,6 +160,11 @@ def parse_log_records(
             if "field" in field and "value" in field
         }
 
+        ip = fields.get("real_forwarded_for")
+
+        if not ip:
+            continue
+
         records.append(
             LogRecord(
                 real_forwarded_for=f'{fields.get("real_forwarded_for", "")}/32',
@@ -172,6 +180,7 @@ def parse_log_records(
 
 PATH_PATTERNS_REQUIRING_LOGIN: Final[list[str]] = [
     "/report/*",
+    "/courtorder/*",
     "/admin/*",
     "/org/*",
 ]
@@ -282,6 +291,7 @@ def get_ips_to_alert_on(
 def create_metric_log_record(
     ips_to_alert_on: list[str],
 ) -> None:
+    """Create a log entry that can be used to create a metric used for alerts."""
     if len(ips_to_alert_on) > 0:
         print(
             f"authentication_breach_detected - success - Count of possible malicious IP addresses: {len(ips_to_alert_on)}"
@@ -289,6 +299,7 @@ def create_metric_log_record(
 
 
 def update_dynamodb_table(ips: list[str]) -> None:
+    """Put IPs that we want to block into dynamodb which acts as our block list."""
     dynamodb = boto3.client("dynamodb", region_name="eu-west-1")
     current_time = datetime.now(UTC)
 
@@ -344,6 +355,7 @@ def update_dynamodb_table(ips: list[str]) -> None:
 
 
 def get_blocked_ips() -> list[str]:
+    """Get a list of currently blocked IPs from dynamodb."""
     dynamodb = boto3.client("dynamodb", region_name="eu-west-1")
     response = dynamodb.scan(
         TableName=table_name, ProjectionExpression="IP, TimeoutExpiry"
@@ -362,6 +374,7 @@ def update_waf_ip_set(
     ip_set_scope: str,
     ips: list[str],
 ) -> dict[str, Any]:
+    """Update the WAF IP set for blocked IPs based on provided list."""
     waf = boto3.client("wafv2", region_name="eu-west-1")
     response = waf.list_ip_sets(Scope=ip_set_scope)
     ip_set_id = None

@@ -33,7 +33,7 @@ class ReportSubmission
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[JMS\Groups(['report-submission'])]
-    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, cascade: ['persist'], inversedBy: 'reportSubmissions')]
     private Report $report;
 
@@ -43,7 +43,7 @@ class ReportSubmission
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Document>')]
     #[JMS\Groups(['report-submission', 'report-submission-documents'])]
     #[ORM\JoinColumn(name: 'report_submission_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\OneToMany(mappedBy: 'reportSubmission', targetEntity: Document::class, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'reportSubmission', cascade: ['persist'])]
     #[ORM\OrderBy(['createdBy' => 'ASC'])]
     private Collection $documents;
 

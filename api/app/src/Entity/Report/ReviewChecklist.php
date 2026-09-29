@@ -26,7 +26,7 @@ class ReviewChecklist
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[JMS\Groups(['checklist'])]
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    #[ORM\OneToOne(inversedBy: 'reviewChecklist', targetEntity: Report::class)]
+    #[ORM\OneToOne(targetEntity: Report::class, inversedBy: 'reviewChecklist')]
     private Report $report;
 
     #[JMS\Groups(['checklist'])]

@@ -439,11 +439,14 @@ resource "aws_cloudwatch_metric_alarm" "document_permanent_error" {
 }
 
 # ========== Authentication breach detected ==========
+data "aws_cloudwatch_log_group" "security_lambda" {
+  name = "/aws/lambda/security"
+}
 
 resource "aws_cloudwatch_log_metric_filter" "authentication_breach" {
   name           = "AuthenticationBreach.${local.environment}"
   pattern        = "authentication_breach_detected"
-  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
+  log_group_name = data.aws_cloudwatch_log_group.security_lambda.name
 
   metric_transformation {
     name          = "AuthenticationBreach.${local.environment}"
