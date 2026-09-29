@@ -25,6 +25,7 @@ variable "accounts" {
         is_production                       = number
         fixtures_enabled                    = bool
         alarms_active                       = bool
+        resource_alarms_active              = bool
         fault_injection_experiments_enabled = bool
         sleep_mode_enabled                  = bool
         secondary_region_enabled            = bool
