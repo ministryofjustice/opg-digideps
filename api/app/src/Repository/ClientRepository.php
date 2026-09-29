@@ -73,12 +73,13 @@ class ClientRepository extends ServiceEntityRepository
 
         $table = Client::class;
         $dql = <<<DQL
-        SELECT c, r, o, nd, u
+        SELECT c, r, o, nd, u, co
         FROM {$table} c
         LEFT JOIN c.reports r
         LEFT JOIN c.deputy nd
         LEFT JOIN c.organisation o
         LEFT JOIN c.users u
+        LEFT JOIN r.courtOrders co
         WHERE c.id = ?1
         DQL;
 
