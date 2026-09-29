@@ -80,17 +80,6 @@ final class ClientDetails
             $reportUnsubmitted = ($report->getUnSubmitDate() !== null);
             $reportHasActiveCourtOrder = $report->hasActiveCourtOrder();
 
-            error_log(
-                "+++++++ REPORT " . $report->getId() .
-                "\nSUBMITTED? " . ($reportSubmitted ? 'yes' : 'no') .
-                "\nUNSUBMITTED? " . ($reportUnsubmitted ? 'yes' : 'no') .
-                "\nHAS ACTIVE COURT ORDER? " . ($reportHasActiveCourtOrder ? 'yes' : 'no')
-            );
-
-            foreach ($report->getCourtOrders() as $courtOrder) {
-                error_log("    COURT ORDER " . $courtOrder->getCourtOrderUid() . " HAS STATUS " . $courtOrder->getStatus());
-            }
-
             if (!$reportSubmitted && !$reportUnsubmitted && $reportHasActiveCourtOrder) {
                 $categorisedReports['active'][] = $report;
             }

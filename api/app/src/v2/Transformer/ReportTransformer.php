@@ -29,7 +29,7 @@ class ReportTransformer
             $transformed['status'] = $dto->getStatus()->asArray();
         }
 
-        $transformed['courtOrders'] = array_map(
+        $transformed['court_orders'] = array_map(
             fn (CourtOrderDTO $courtOrder) => $courtOrder->asArray(),
             $dto->getCourtOrders()
         );
