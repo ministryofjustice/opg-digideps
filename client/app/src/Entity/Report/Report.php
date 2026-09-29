@@ -390,7 +390,7 @@ class Report implements StartEndDateComparableInterface
 
     /** @var array<CourtOrder> */
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\CourtOrder>')]
-    #[JMS\Groups(['report-with-court-orders'])]
+    #[JMS\Groups(['report', 'report-with-court-orders'])]
     private array $courtOrders = [];
 
     /**
