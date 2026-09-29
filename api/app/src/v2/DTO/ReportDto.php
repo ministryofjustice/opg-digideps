@@ -11,10 +11,15 @@ class ReportDto
     private ?\DateTime $unSubmitDate = null;
     private ?\DateTime $startDate = null;
     private ?\DateTime $endDate = null;
+
     /** @var ?String[] $availableSections  */
     private ?array $availableSections = null;
+
     private ?StatusDto $status = null;
     private ?string $type = null;
+
+    /** @var array<CourtOrderDTO> */
+    private array $courtOrders = [];
 
     public function getId(): ?int
     {
@@ -134,5 +139,20 @@ class ReportDto
         $this->type = $type;
 
         return $this;
+    }
+
+    public function setCourtOrders(array $courtOrderDTOs): static
+    {
+        $this->courtOrders = $courtOrderDTOs;
+
+        return $this;
+    }
+
+    /**
+     * @return array<CourtOrderDTO>
+     */
+    public function getCourtOrders(): array
+    {
+        return $this->courtOrders;
     }
 }
