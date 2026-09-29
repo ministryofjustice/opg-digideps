@@ -22,6 +22,7 @@ opg:
     clientDetails:
       actions: Actions
       checklist: Checklist
+      download: Download
       dueDate: Due
       manage: Manage
       period: Period
