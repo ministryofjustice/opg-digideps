@@ -12,8 +12,11 @@ use OPG\Digideps\Frontend\Components\GOV\Table\Table;
 use OPG\Digideps\Frontend\Components\GOV\Table\TableBuilder;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Twig\Filters;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
@@ -23,8 +26,6 @@ final class ClientDetails
     /** @var array<string, string> $text */
     public array $text = [];
 
-    private array $parameters = [];
-
     public ?Table $activeReportsTable = null;
     public ?Table $submittedReportsTable = null;
     public ?Table $incompleteReportsTable = null;
@@ -33,19 +34,21 @@ final class ClientDetails
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly Security $security,
     ) {
     }
 
     public function mount(Client $client): void
     {
+        $user = $this->security->getUser();
         $this->text = $this->makeText();
 
         $reportsByCategory = $this->categoriseReports($client->getReports());
 
-        $this->activeReportsTable = $this->makeReportsTable($reportsByCategory['active'], 'reportStatus.active');
-        $this->submittedReportsTable = $this->makeReportsTable($reportsByCategory['submitted'], 'reportStatus.submitted');
-        $this->incompleteReportsTable = $this->makeReportsTable($reportsByCategory['incomplete'], 'reportStatus.incomplete');
-        $this->closedReportsTable = $this->makeReportsTable($reportsByCategory['closed'], 'reportStatus.closed', needsManageLink: false);
+        $this->activeReportsTable = $this->makeReportsTable($reportsByCategory['active'], 'active', $user);
+        $this->submittedReportsTable = $this->makeReportsTable($reportsByCategory['submitted'], 'submitted', $user);
+        $this->incompleteReportsTable = $this->makeReportsTable($reportsByCategory['incomplete'], 'incomplete', $user);
+        $this->closedReportsTable = $this->makeReportsTable($reportsByCategory['closed'], 'closed', $user, needsManageLink: false);
     }
 
     /**
@@ -56,12 +59,14 @@ final class ClientDetails
         $keys = [
             'actions',
             'checklist',
+            'download',
             'dueDate',
             'manage',
             'period',
             'report',
             'reportsHeading',
             'reportStatus.active',
+            'reportStatus.closed',
             'reportStatus.incomplete',
             'reportStatus.submitted',
             'type',
@@ -76,7 +81,7 @@ final class ClientDetails
     private function translate(string $key): string
     {
         try {
-            return $this->translator->trans("opg.admin.clientDetails.{$key}", $this->parameters, 'twig-components');
+            return $this->translator->trans("opg.admin.clientDetails.{$key}", [], 'twig-components');
         } catch (\Throwable $t) {
             return "$t";
         }
@@ -117,19 +122,25 @@ final class ClientDetails
     /**
      * @param array<Report> $reports
      */
-    private function makeReportsTable(array $reports, string $captionKey, bool $needsManageLink = true): ?Table
-    {
+    private function makeReportsTable(
+        array $reports,
+        string $captionKey,
+        ?UserInterface $user,
+        bool $needsManageLink = true
+    ): ?Table {
         if (empty($reports)) {
             return null;
         }
 
-        $caption = new Caption(text: $this->text[$captionKey], size: 's', tag: Filters::statusToTagCss($captionKey));
+        $caption = new Caption(text: $this->text["reportStatus.{$captionKey}"], size: 's', tag: Filters::statusToTagCss($captionKey));
 
         $actionsCell = new Cell(new Div([$this->text['actions']], isVisuallyHidden: true), isHeader: true);
 
         $tableBuilder = new TableBuilder(caption: $caption)
             ->addColumns(1, 1, 1, 1)
             ->addHeader($this->text['period'], $this->text['type'], $this->text['dueDate'], $actionsCell);
+
+        $userIsSuperAdmin = in_array(User::ROLE_SUPER_ADMIN, $user?->getRoles() ?? []);
 
         foreach ($reports as $report) {
             $links = [];
@@ -146,8 +157,9 @@ final class ClientDetails
                 $links[] = new Link(href: $checklistUrl, text: $this->text['checklist']);
             }
 
-            if ($report->isDownloadable()) {
-
+            if ($report->isDownloadable() && $userIsSuperAdmin) {
+                $downloadUrl = $this->urlGenerator->generate('report_pdf', ['reportId' => $report->getId()]);
+                $links[] = new Link(href: $downloadUrl, text: $this->text['download']);
             }
 
             $tableBuilder->addRow(
