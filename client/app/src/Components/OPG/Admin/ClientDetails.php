@@ -6,16 +6,17 @@ namespace OPG\Digideps\Frontend\Components\OPG\Admin;
 
 use OPG\Digideps\Frontend\Components\GOV\Caption;
 use OPG\Digideps\Frontend\Components\GOV\Div;
+use OPG\Digideps\Frontend\Components\GOV\Link;
 use OPG\Digideps\Frontend\Components\GOV\Table\Cell;
 use OPG\Digideps\Frontend\Components\GOV\Table\Table;
 use OPG\Digideps\Frontend\Components\GOV\Table\TableBuilder;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Twig\Filters;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-// this will eventually contain the whole client page, but currently just renders the report tables at the bottom
 #[AsTwigComponent]
 final class ClientDetails
 {
@@ -28,12 +29,12 @@ final class ClientDetails
 
     public function __construct(
         private readonly TranslatorInterface $translator,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
     public function mount(Client $client): void
     {
-        $this->parameters = [];
         $this->text = $this->makeText();
 
         $reportsByCategory = $this->categoriseReports($client->getReports());
@@ -49,8 +50,10 @@ final class ClientDetails
         $keys = [
             'actions',
             'dueDate',
+            'manage',
             'period',
             'reportsHeading',
+            'reportStatus.active',
             'type',
         ];
 
@@ -95,20 +98,22 @@ final class ClientDetails
      */
     private function makeActiveReportsTable(array $activeReports): Table
     {
-        $actionsCell = new Cell(new Div($this->text['actions'], isVisuallyHidden: true), isHeader: true);
+        $caption = new Caption(text: $this->text['reportStatus.active'], size: 's', tag: Filters::statusToTagCss('active'));
 
-        $caption = new Caption(text: 'active', size: 's', tag: Filters::statusToTagCss('active'));
+        $actionsCell = new Cell(new Div($this->text['actions'], isVisuallyHidden: true), isHeader: true);
 
         $tableBuilder = new TableBuilder(caption: $caption)
             ->addColumns(1, 1, 1, 1)
             ->addHeader($this->text['period'], $this->text['type'], $this->text['dueDate'], $actionsCell);
 
         foreach ($activeReports as $activeReport) {
+            $manageUrl = $this->urlGenerator->generate('admin_report_manage', ['id' => $activeReport->getId()]);
+
             $tableBuilder->addRow(
                 str_replace(' to ', '-', $activeReport->getPeriod()),
                 "OPG{$activeReport->getType()}",
                 $activeReport->getDueDate()->format('j F Y'),
-                'link'
+                new Link(href: $manageUrl, text: $this->text['manage'])
             );
         }
 
