@@ -1385,4 +1385,16 @@ class Report implements StartEndDateComparableInterface
     {
         return array_any($this->courtOrders, fn (CourtOrder $courtOrder) => $courtOrder->isActive());
     }
+
+    // true if the report PDF can be downloaded
+    public function isDownloadable(): bool
+    {
+        return $this->submitted || $this->submitDate !== null;
+    }
+
+    // true if checklist exists for this report
+    public function isCheckable(): bool
+    {
+        return ($this->submitted || $this->submitDate !== null) && !$this->isProfReport();
+    }
 }
