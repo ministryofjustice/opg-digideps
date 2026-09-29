@@ -24,6 +24,7 @@ opg:
       dueDate: Due
       manage: Manage
       period: Period
+      report: report
       reportsHeading: Reports
       reportStatus:
         active: active

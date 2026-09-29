@@ -52,6 +52,7 @@ final class ClientDetails
             'dueDate',
             'manage',
             'period',
+            'report',
             'reportsHeading',
             'reportStatus.active',
             'type',
@@ -109,11 +110,21 @@ final class ClientDetails
         foreach ($activeReports as $activeReport) {
             $manageUrl = $this->urlGenerator->generate('admin_report_manage', ['id' => $activeReport->getId()]);
 
+            $period = str_replace(' to ', '-', $activeReport->getPeriod());
+
+            $link = new Link(
+                href: $manageUrl,
+                text: [
+                    $this->text['manage'],
+                    new Div(" {$period} {$this->text['report']}", isVisuallyHidden: true)
+                ]
+            );
+
             $tableBuilder->addRow(
-                str_replace(' to ', '-', $activeReport->getPeriod()),
+                $period,
                 "OPG{$activeReport->getType()}",
                 $activeReport->getDueDate()->format('j F Y'),
-                new Link(href: $manageUrl, text: $this->text['manage'])
+                $link
             );
         }
 
