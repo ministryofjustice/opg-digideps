@@ -1,7 +1,7 @@
 .opg-tag {
   &--small {
     white-space: nowrap;
-    @include govuk-font(14, $weight: bold);
+    @include govuk-font($size: 16, $weight: bold);
   }
 }
 
