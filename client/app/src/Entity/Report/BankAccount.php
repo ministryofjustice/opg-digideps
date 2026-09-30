@@ -87,7 +87,7 @@ class BankAccount implements BankAccountInterface
 
     #[JMS\Type('boolean')]
     #[JMS\Groups(['account'])]
-    #[Assert\NotBlank(message: 'account.isClosed.notBlank', groups: ['bank-account-is-closed'])]
+    #[Assert\NotNull(message: 'account.isClosed.notBlank', groups: ['bank-account-is-closed'])]
     private ?bool $isClosed = null;
 
     /**
