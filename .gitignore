@@ -16,6 +16,7 @@
 **.crt
 **.ca
 **.key
+**.zip
 ecs-helper
 opg-ecs-helper_*.tar.gz
 /composer.lock
