@@ -118,7 +118,7 @@ services:
         APP_HOST: api-app
         APP_PORT: 9000
     ports:
-      - 8072:80
+      - 8072:8080
     depends_on:
       - api-app
     restart: always
