@@ -150,7 +150,6 @@ const bundleCSS = async function (entryPath, outFile) {
 Promise
   .all([
     bundleCSS("./assets/scss/application.scss", "application.css"),
-    bundleCSS("./assets/scss/fonts.scss", "fonts.css"),
     bundleCSS("./assets/scss/formatted-report.scss", "formatted-report.css")
   ])
   .then(r => {
