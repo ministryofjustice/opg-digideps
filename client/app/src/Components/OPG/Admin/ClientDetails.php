@@ -71,10 +71,13 @@ final class ClientDetails
             'type',
         ];
 
-        return array_reduce($keys, function (array $sofar, string $key): array {
+        /** @var array<string, string> $translations */
+        $translations = array_reduce($keys, function (array $sofar, string $key): array {
             $sofar[$key] = $this->translate($key);
             return $sofar;
         }, []);
+
+        return $translations;
     }
 
     private function translate(string $key): string
@@ -163,7 +166,7 @@ final class ClientDetails
             $tableBuilder->addRow(
                 $period,
                 "OPG{$report->getType()}",
-                $report->getDueDate()->format('j F Y'),
+                $report->getDueDate()?->format('j F Y') ?? '',
                 new Div($links)
             );
         }
