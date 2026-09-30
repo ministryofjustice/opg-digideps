@@ -3,7 +3,7 @@ name = "custom-sql-lambda"
 version = "0.0.0"
 requires-python = "==3.14.7"
 dependencies = [
-    "boto3==1.43.89",
+    "boto3==1.43.105",
     "awslambdaric==4.0.2",
     "psycopg2==2.9.12"
 ]
