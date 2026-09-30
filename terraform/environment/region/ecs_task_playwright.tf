@@ -40,7 +40,7 @@ locals {
       target      = "0.0.0.0/0"
     }
     api_access = {
-      port        = 80
+      port        = 8080
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
@@ -100,7 +100,7 @@ locals {
     environment = [
       { name = "ADMIN_URL", value = "https://${var.admin_fully_qualified_domain_name}" },
       { name = "FRONT_URL", value = "https://${var.front_fully_qualified_domain_name}" },
-      { name = "API_URL", value = "http://${aws_service_discovery_service.api_ecs.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}" },
+      { name = "API_URL", value = "http://${aws_service_discovery_service.api_ecs.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}:8080" },
       { name = "ENVIRONMENT", value = var.secrets_prefix }
     ]
   })
