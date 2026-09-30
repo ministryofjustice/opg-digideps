@@ -16,7 +16,6 @@ use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Twig\Filters;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
@@ -24,7 +23,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 final class ClientDetails
 {
     /** @var array<string, string> $text */
-    public array $text = [];
+    public array $text;
 
     public ?Table $activeReportsTable = null;
     public ?Table $submittedReportsTable = null;
@@ -36,19 +35,19 @@ final class ClientDetails
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly Security $security,
     ) {
+        $this->text = $this->makeText();
     }
 
     public function mount(Client $client): void
     {
-        $user = $this->security->getUser();
-        $this->text = $this->makeText();
+        $userIsSuperAdmin = in_array(User::ROLE_SUPER_ADMIN, $this->security->getUser()?->getRoles() ?? []);
 
         $reportsByCategory = $this->categoriseReports($client->getReports());
 
-        $this->activeReportsTable = $this->makeReportsTable($reportsByCategory['active'], 'active', $user);
-        $this->submittedReportsTable = $this->makeReportsTable($reportsByCategory['submitted'], 'submitted', $user);
-        $this->incompleteReportsTable = $this->makeReportsTable($reportsByCategory['incomplete'], 'incomplete', $user);
-        $this->closedReportsTable = $this->makeReportsTable($reportsByCategory['closed'], 'closed', $user, needsManageLink: false);
+        $this->activeReportsTable = $this->makeReportsTable($reportsByCategory['active'], 'active', $userIsSuperAdmin);
+        $this->submittedReportsTable = $this->makeReportsTable($reportsByCategory['submitted'], 'submitted', $userIsSuperAdmin);
+        $this->incompleteReportsTable = $this->makeReportsTable($reportsByCategory['incomplete'], 'incomplete', $userIsSuperAdmin);
+        $this->closedReportsTable = $this->makeReportsTable($reportsByCategory['closed'], 'closed', $userIsSuperAdmin, needsManageLink: false);
     }
 
     /**
@@ -57,11 +56,11 @@ final class ClientDetails
     private function makeText(): array
     {
         $keys = [
-            'actions',
-            'checklist',
-            'download',
+            'actionsHeader',
+            'actions.checklist',
+            'actions.download',
+            'actions.manage',
             'dueDate',
-            'manage',
             'period',
             'report',
             'reportsHeading',
@@ -125,7 +124,7 @@ final class ClientDetails
     private function makeReportsTable(
         array $reports,
         string $captionKey,
-        ?UserInterface $user,
+        bool $userIsSuperAdmin = false,
         bool $needsManageLink = true
     ): ?Table {
         if (empty($reports)) {
@@ -134,32 +133,31 @@ final class ClientDetails
 
         $caption = new Caption(text: $this->text["reportStatus.{$captionKey}"], size: 's', tag: Filters::statusToTagCss($captionKey));
 
-        $actionsCell = new Cell(new Div([$this->text['actions']], isVisuallyHidden: true), isHeader: true);
+        $actionsCell = new Cell(new Div([$this->text['actionsHeader']], isVisuallyHidden: true), isHeader: true);
 
         $tableBuilder = new TableBuilder(caption: $caption)
             ->addColumns(1, 1, 1, 1)
             ->addHeader($this->text['period'], $this->text['type'], $this->text['dueDate'], $actionsCell);
 
-        $userIsSuperAdmin = in_array(User::ROLE_SUPER_ADMIN, $user?->getRoles() ?? []);
-
         foreach ($reports as $report) {
-            $links = [];
             $period = str_replace(' to ', '-', $report->getPeriod());
+
+            $links = [];
 
             if ($needsManageLink) {
                 $manageUrl = $this->urlGenerator->generate('admin_report_manage', ['id' => $report->getId()]);
                 $accessText = "{$period} {$this->text['report']}";
-                $links[] = new Link(href: $manageUrl, text: $this->text['manage'], accessibilityText: $accessText);
+                $links[] = new Link(href: $manageUrl, text: $this->text['actions.manage'], accessibilityText: $accessText);
             }
 
             if ($report->isCheckable()) {
                 $checklistUrl = $this->urlGenerator->generate('admin_report_checklist', ['id' => $report->getId()]);
-                $links[] = new Link(href: $checklistUrl, text: $this->text['checklist']);
+                $links[] = new Link(href: $checklistUrl, text: $this->text['actions.checklist']);
             }
 
             if ($report->isDownloadable() && $userIsSuperAdmin) {
                 $downloadUrl = $this->urlGenerator->generate('report_pdf', ['reportId' => $report->getId()]);
-                $links[] = new Link(href: $downloadUrl, text: $this->text['download']);
+                $links[] = new Link(href: $downloadUrl, text: $this->text['actions.download']);
             }
 
             $tableBuilder->addRow(
