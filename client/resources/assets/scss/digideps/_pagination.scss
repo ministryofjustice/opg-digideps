@@ -67,7 +67,7 @@
   }
 
   &__link-text {
-    @include govuk-font(27);
+    @include govuk-font($size: 27);
     display: block;
   }
 }
