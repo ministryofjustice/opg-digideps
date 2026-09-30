@@ -3,7 +3,7 @@ name = "dr-restore"
 version = "0.0.0"
 requires-python = "==3.14.7"
 dependencies = [
-    "boto3==1.43.89",
+    "boto3==1.43.105",
     "click==8.3.0",
 ]
 [tool.uv]
