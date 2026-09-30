@@ -44,7 +44,7 @@ class ProfCostsEstimateSubSectionRouteResolverTest extends TestCase
 
     public function testReturnsMoreInfoRouteIfSectionIsIncompleteAndBreakdownCostsEnteredAndMoreInfoNotEntered()
     {
-        $cost = new ProfDeputyEstimateCost('foo', '1', 'yes', 'yes');
+        $cost = new ProfDeputyEstimateCost('foo', '1', true, 'yes');
         $report = new Report()->setProfDeputyEstimateCosts([$cost]);
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
