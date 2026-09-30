@@ -55,7 +55,7 @@ final class TableBuilder
     {
         $caption = $this->caption;
         if (is_string($caption)) {
-            $caption = new Caption($this->caption);
+            $caption = new Caption($caption);
         }
 
         return new Table($caption, $this->columns, $this->header, ...$this->rows);
