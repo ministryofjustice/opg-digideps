@@ -32,7 +32,7 @@ locals {
       target      = data.aws_security_group.redis_front_sg.id
     }
     api = {
-      port        = 80
+      port        = 8080
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
