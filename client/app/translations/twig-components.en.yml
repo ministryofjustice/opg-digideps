@@ -20,11 +20,12 @@ gov:
 opg:
   admin:
     clientDetails:
-      actions: Actions
-      checklist: Checklist
-      download: Download
+      actions:
+        checklist: Checklist
+        download: Download
+        manage: Manage
+      actionsHeader: Actions
       dueDate: Due
-      manage: Manage
       period: Period
       report: report
       reportsHeading: Reports
