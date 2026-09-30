@@ -4,7 +4,14 @@ namespace OPG\Digideps\Backend\v2\DTO;
 
 class StatusDto
 {
-    public string $status;
+    private string $status;
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
 
     public function asArray(): array
     {
