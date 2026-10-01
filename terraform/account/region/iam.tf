@@ -3,6 +3,10 @@ locals {
   sirius_env_lambda = "arn:aws:iam::${var.account.sirius_account_id}:role/deputy-reporting-${var.account.name}-v2"
 }
 
+data "aws_iam_policy" "default_boundary" {
+  name = "digideps-non-ci-boundary"
+}
+
 # ===== Integrations Lambda S3 Access Role =====
 # INFO - This role is assumed by the opg-data-deputy-reporting integration lambda to move documents to sirius
 resource "aws_iam_role" "integrations_s3_read" {
