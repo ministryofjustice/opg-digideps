@@ -45,7 +45,7 @@ final class ClientDetails
         $reportsByCategory = $this->categoriseReports($client->getReports());
 
         $this->activeReportsTable = $this->makeReportsTable($reportsByCategory['active'], 'active', $userIsSuperAdmin);
-        $this->submittedReportsTable = $this->makeReportsTable($reportsByCategory['submitted'], 'submitted', $userIsSuperAdmin);
+        $this->submittedReportsTable = $this->makeReportsTable($reportsByCategory['submitted'], 'submitted', $userIsSuperAdmin, needsSubmittedColumn: true);
         $this->incompleteReportsTable = $this->makeReportsTable($reportsByCategory['incomplete'], 'incomplete', $userIsSuperAdmin);
         $this->closedReportsTable = $this->makeReportsTable($reportsByCategory['closed'], 'closed', $userIsSuperAdmin, needsManageLink: false);
     }
@@ -68,6 +68,7 @@ final class ClientDetails
             'reportStatus.closed',
             'reportStatus.incomplete',
             'reportStatus.submitted',
+            'submitted',
             'type',
         ];
 
@@ -128,19 +129,34 @@ final class ClientDetails
         array $reports,
         string $captionKey,
         bool $userIsSuperAdmin = false,
-        bool $needsManageLink = true
+        bool $needsManageLink = true,
+        bool $needsSubmittedColumn = false
     ): ?Table {
         if (empty($reports)) {
             return null;
         }
 
-        $caption = new Caption(text: $this->text["reportStatus.{$captionKey}"], size: 's', tag: Filters::statusToTagCss($captionKey));
+        $caption = new Caption(
+            text: $this->text["reportStatus.{$captionKey}"],
+            size: 's',
+            tag: Filters::statusToTagCss($captionKey)
+        );
 
         $actionsCell = new Cell(new Div([$this->text['actionsHeader']], isVisuallyHidden: true), isHeader: true);
 
+        $columns = [1, 1, 1, 1];
+        $header = [$this->text['period'], $this->text['type'], $this->text['dueDate']];
+
+        if ($needsSubmittedColumn) {
+            $columns[] = 1;
+            $header[] = $this->text['submitted'];
+        }
+
+        $header[] = $actionsCell;
+
         $tableBuilder = new TableBuilder(caption: $caption)
-            ->addColumns(1, 1, 1, 1)
-            ->addHeader($this->text['period'], $this->text['type'], $this->text['dueDate'], $actionsCell);
+            ->addColumns(...$columns)
+            ->addHeader(...$header);
 
         foreach ($reports as $report) {
             $period = str_replace(' to ', '-', $report->getPeriod());
@@ -163,12 +179,19 @@ final class ClientDetails
                 $links[] = new Link(href: $downloadUrl, text: $this->text['actions.download']);
             }
 
-            $tableBuilder->addRow(
+            $cells = [
                 $period,
                 "OPG{$report->getType()}",
-                $report->getDueDate()?->format('j F Y') ?? '',
-                new Div($links)
-            );
+                $report->getDueDate()?->format('j F Y') ?? ''
+            ];
+
+            if ($needsSubmittedColumn) {
+                $cells[] = $report->getSubmitDate()?->format('j F Y') ?? '';
+            }
+
+            $cells[] = new Div($links);
+
+            $tableBuilder->addRow(...$cells);
         }
 
         return $tableBuilder->makeTable();
