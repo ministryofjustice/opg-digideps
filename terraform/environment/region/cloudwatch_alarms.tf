@@ -437,3 +437,37 @@ resource "aws_cloudwatch_metric_alarm" "document_permanent_error" {
   actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
+
+# ========== Authentication breach detected ==========
+data "aws_cloudwatch_log_group" "security_lambda" {
+  name = "/aws/lambda/security"
+}
+
+resource "aws_cloudwatch_log_metric_filter" "authentication_breach" {
+  name           = "AuthenticationBreach.${local.environment}"
+  pattern        = "authentication_breach_detected"
+  log_group_name = data.aws_cloudwatch_log_group.security_lambda.name
+
+  metric_transformation {
+    name          = "AuthenticationBreach.${local.environment}"
+    namespace     = "DigiDeps/Error"
+    value         = "1"
+    default_value = "0"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "authentication_breach" {
+  alarm_name          = "${local.environment}-authentication-breach"
+  statistic           = "Sum"
+  metric_name         = aws_cloudwatch_log_metric_filter.authentication_breach.metric_transformation[0].name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  datapoints_to_alarm = 5
+  evaluation_periods  = 5
+  threshold           = 1
+  period              = 60
+  namespace           = aws_cloudwatch_log_metric_filter.authentication_breach.metric_transformation[0].namespace
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
+  actions_enabled     = var.account.environment.alarms_active
+  tags                = var.default_tags
+}

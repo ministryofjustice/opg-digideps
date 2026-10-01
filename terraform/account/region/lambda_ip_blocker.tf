@@ -1,15 +1,15 @@
 locals {
-  block_ips_lambda_function_name = "block-ips"
+  security_lambda_function_name = "security"
 }
 
 # INFO - Lambda used to manage blocking of IP addresses on the WAF
-resource "aws_lambda_function" "block_ips_lambda" {
-  filename      = data.archive_file.block_ips_zip.output_path
-  function_name = local.block_ips_lambda_function_name
-  role          = aws_iam_role.lambda_block_ips.arn
-  handler       = "block_ips.lambda_handler"
+resource "aws_lambda_function" "security_lambda" {
+  filename      = data.archive_file.security_zip.output_path
+  function_name = local.security_lambda_function_name
+  role          = aws_iam_role.lambda_security.arn
+  handler       = "security.lambda_handler"
   runtime       = "python3.14"
-  depends_on    = [aws_cloudwatch_log_group.block_ips_lambda]
+  depends_on    = [aws_cloudwatch_log_group.security_lambda]
   timeout       = 300
   environment {
     variables = {
@@ -20,30 +20,30 @@ resource "aws_lambda_function" "block_ips_lambda" {
     mode = "Active"
   }
 
-  source_code_hash = filebase64sha256(data.archive_file.block_ips_zip.output_path)
+  source_code_hash = filebase64sha256(data.archive_file.security_zip.output_path)
   tags = merge(
     var.default_tags,
-    { Name = "block-ip-${var.account.name}" },
+    { Name = "security-${var.account.name}" },
   )
 }
 
-resource "aws_cloudwatch_log_group" "block_ips_lambda" {
-  name              = "/aws/lambda/${local.block_ips_lambda_function_name}"
+resource "aws_cloudwatch_log_group" "security_lambda" {
+  name              = "/aws/lambda/${local.security_lambda_function_name}"
   retention_in_days = 14
   kms_key_id        = module.logs_kms.eu_west_1_target_key_arn
   tags = merge(
     var.default_tags,
-    { Name = "${var.account.name}-block_ips-log-group" },
+    { Name = "${var.account.name}-security-log-group" },
   )
 }
 
-resource "aws_iam_role" "lambda_block_ips" {
-  assume_role_policy = data.aws_iam_policy_document.lambda_block_ips_policy.json
-  name               = "lambda-block-ips"
+resource "aws_iam_role" "lambda_security" {
+  assume_role_policy = data.aws_iam_policy_document.lambda_security_policy.json
+  name               = "lambda-security"
   tags               = var.default_tags
 }
 
-data "aws_iam_policy_document" "lambda_block_ips_policy" {
+data "aws_iam_policy_document" "lambda_security_policy" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -55,19 +55,19 @@ data "aws_iam_policy_document" "lambda_block_ips_policy" {
   }
 }
 
-resource "aws_iam_role_policy" "lambda_block_ips" {
-  name   = "lambda-block-ips"
-  policy = data.aws_iam_policy_document.lambda_block_ips.json
-  role   = aws_iam_role.lambda_block_ips.id
+resource "aws_iam_role_policy" "lambda_security" {
+  name   = "lambda-security"
+  policy = data.aws_iam_policy_document.lambda_security.json
+  role   = aws_iam_role.lambda_security.id
 }
 
-data "aws_iam_policy_document" "lambda_block_ips" {
+data "aws_iam_policy_document" "lambda_security" {
   statement {
     sid    = "allowLogging"
     effect = "Allow"
     resources = [
-      aws_cloudwatch_log_group.block_ips_lambda.arn,
-      "${aws_cloudwatch_log_group.block_ips_lambda.arn}:*"
+      aws_cloudwatch_log_group.security_lambda.arn,
+      "${aws_cloudwatch_log_group.security_lambda.arn}:*"
     ]
     actions = [
       "logs:CreateLogStream",
@@ -135,21 +135,21 @@ data "aws_iam_policy_document" "lambda_block_ips" {
   }
 }
 
-data "archive_file" "block_ips_zip" {
+data "archive_file" "security_zip" {
   type        = "zip"
-  source_dir  = "../../lambdas/functions/block_ips_lambda/app"
-  output_path = "../../lambdas/functions/block_ips_lambda/block_ips.zip"
+  source_dir  = "../../lambdas/functions/security_lambda/app"
+  output_path = "../../lambdas/functions/security_lambda/security.zip"
 }
 
-resource "aws_lambda_permission" "scheduled_block_ip_rule" {
+resource "aws_lambda_permission" "scheduled_security_rule" {
   statement_id  = "AllowExecutionFromScheduledCheck"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.block_ips_lambda.function_name
+  function_name = aws_lambda_function.security_lambda.function_name
   principal     = "events.amazonaws.com"
-  source_arn    = "arn:aws:events:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rule/block-ips-*"
+  source_arn    = "arn:aws:events:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rule/security-*"
   lifecycle {
     replace_triggered_by = [
-      aws_lambda_function.block_ips_lambda
+      aws_lambda_function.security_lambda
     ]
   }
 }
