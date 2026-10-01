@@ -34,6 +34,7 @@ opg:
         submitted: submitted
         incomplete: incomplete
         closed: unsubmitted (closed court orders)
+      submitted: Submitted
       type: Type
   renderable:
     bankAccount:
