@@ -37,3 +37,8 @@ output "cluster_resource_id" {
   description = "Resource ID for the Aurora cluster."
   value       = var.aurora_serverless ? aws_rds_cluster.cluster_serverless[0].cluster_resource_id : aws_rds_cluster.cluster[0].cluster_resource_id
 }
+
+output "instance_identifiers" {
+  description = "Identifiers of the Aurora database instances."
+  value       = var.aurora_serverless ? toset(aws_rds_cluster_instance.serverless_instances[*].identifier) : toset(aws_rds_cluster_instance.cluster_instances[*].identifier)
+}

@@ -115,7 +115,7 @@ class BankAccountController extends AbstractController
         }
         $openingBalance = $validatedRequestData->getStringOrNull('opening-balance');
         if ($openingBalance !== null) {
-            $account->setClosingBalance($openingBalance);
+            $account->setOpeningBalance($openingBalance);
         }
         $isClosed = $validatedRequestData->getBooleanOrNull('is-closed');
         if ($isClosed !== null) {
