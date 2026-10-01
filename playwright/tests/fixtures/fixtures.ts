@@ -10,6 +10,23 @@ interface UserSpec {
   deputyType: DeputyType;
 }
 
+interface ReportSpec {
+  startDate: Date;
+  submitDate?: Date;
+}
+
+interface DeputySpec {
+  ref: string;
+  type: string;
+}
+
+interface OrderSpec {
+  reportType: string;
+  active?: boolean;
+  reports: ReportSpec[];
+  deputies: DeputySpec[];
+}
+
 export interface TestUser {
   email: string;
   password: string;
@@ -22,6 +39,8 @@ export interface UserDetails {
 interface ReportDetails {
   id: number;
   submitted: boolean;
+  startDate: Date;
+  submitDate: Date;
 }
 
 interface OrderDetails {
@@ -65,7 +84,7 @@ async function getAuthToken(user: TestUser): Promise<string | null> {
 // path should include leading "/"
 export function createFixtureViaApi(
   path: string,
-  body: UserSpec[] | { [key: string]: string | string[] },
+  body: UserSpec[] | OrderSpec | { [key: string]: string | string[] },
 ): FixtureCallback {
   return async (authToken: string): Promise<Fixture> => {
     const res = await fetch(
