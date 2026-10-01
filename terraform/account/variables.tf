@@ -19,13 +19,14 @@ variable "OPG_DOCKER_TAG" {
 variable "accounts" {
   type = map(
     object({
-      account_id         = string
-      name               = string
-      pagerduty_enabled  = bool
-      ip_block_workspace = string
-      db_subnet_group    = string
-      ec_subnet_group    = string
-      environments       = set(string)
+      account_id             = string
+      name                   = string
+      pagerduty_enabled      = bool
+      resource_alarms_active = bool
+      ip_block_workspace     = string
+      db_subnet_group        = string
+      ec_subnet_group        = string
+      environments           = set(string)
       network = object({
         enabled        = bool
         cidr_eu_west_1 = string

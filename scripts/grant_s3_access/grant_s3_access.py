@@ -19,10 +19,7 @@ def build_policy(bucket_name: str, object_key: str, expires: datetime) -> dict:
             {
                 "Sid": "TemporaryObjectAccess",
                 "Effect": "Allow",
-                "Action": [
-                    "s3:GetObject",
-                    "s3:PutObject",
-                ],
+                "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
                 "Resource": f"arn:aws:s3:::{bucket_name}/{object_key}",
                 "Condition": {
                     "DateLessThan": {
