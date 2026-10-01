@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import patch, Mock
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 
-from app.block_ips import get_blocked_ips
+from app.security import get_blocked_ips
 
 
 class TestGetBlockedIps(unittest.TestCase):
@@ -13,7 +13,7 @@ class TestGetBlockedIps(unittest.TestCase):
         mock_boto_client.return_value = mock_dynamodb
 
         # Current time for testing
-        current_time = datetime.utcnow()
+        current_time = datetime.now(UTC)
 
         # Setup the mock response
         mock_response = {
