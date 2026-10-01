@@ -38,11 +38,6 @@ variable "account_id" {
   type        = string
 }
 
-variable "db" {
-  description = "The database configuration."
-  type        = map(any)
-}
-
 variable "common_sg_rules" {
   description = "Common security group rules."
   type = map(object({
@@ -76,6 +71,11 @@ variable "task_runner_arn" {
 
 variable "cross_account_role_name" {
   description = "The name of the cross-account role."
+  type        = string
+}
+
+variable "rds_encryption_key_arn" {
+  description = "The ARN of the rds encryption key."
   type        = string
 }
 

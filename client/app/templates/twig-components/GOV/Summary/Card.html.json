@@ -1,0 +1,15 @@
+{
+    "link": "https://design-system.service.gov.uk/components/summary-list/",
+    "info": "A single list can be passed via prop. For multiple, or a non list, elements pass them via the body instead.",
+    "props": [
+        {
+            "name": "h",
+            "type": "1 | 2 | 3 | 4 | 5 | 6",
+            "default": "1",
+            "info": "Which header tag to use"
+        },
+        { "name": "list", "type": "SummaryList", "default": "null" },
+        { "name": "header", "type": "string" }
+    ],
+    "examples": ["summary-card", "summary-card-table", "summary-card-many"]
+}

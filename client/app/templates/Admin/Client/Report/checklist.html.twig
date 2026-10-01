@@ -62,7 +62,7 @@
                 {% include '@App/Admin/Client/Report/partials/_document-summary.html.twig' %}
             {% endif %}
 
-            {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-checklist-form', class: 'js-autosave' }}) }}
+            {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-checklist-form' }}) }}
 
             {# Deputy and client information #}
             {% include '@App/Admin/Client/Report/partials/_deputy-and-client-info.html.twig' %}

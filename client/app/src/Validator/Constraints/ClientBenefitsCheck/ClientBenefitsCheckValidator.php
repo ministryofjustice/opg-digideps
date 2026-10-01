@@ -7,7 +7,6 @@ namespace OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck;
 use OPG\Digideps\Frontend\Entity\ClientBenefitsCheckInterface;
 use OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck;
 use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -55,12 +54,12 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function whenLastCheckedEntitlementValid($value, ClientBenefitsCheckConstraint $constraint)
+    private function whenLastCheckedEntitlementValid($value, ClientBenefitsCheckConstraint $constraint): void
     {
         $expectedValues = [
-            ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED,
-            ClientBenefitsCheck::WHEN_CHECKED_IM_CURRENTLY_CHECKING,
-            ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED,
+            ClientBenefitsCheckInterface::WHEN_CHECKED_I_HAVE_CHECKED,
+            ClientBenefitsCheckInterface::WHEN_CHECKED_IM_CURRENTLY_CHECKING,
+            ClientBenefitsCheckInterface::WHEN_CHECKED_IVE_NEVER_CHECKED,
         ];
 
         if (!in_array($value, $expectedValues)) {
@@ -72,9 +71,9 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function dateLastCheckedEntitlementValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
+    private function dateLastCheckedEntitlementValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint): void
     {
-        if (is_null($value) && $object->getWhenLastCheckedEntitlement() === ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED) {
+        if (is_null($value) && $object->getWhenLastCheckedEntitlement() === ClientBenefitsCheckInterface::WHEN_CHECKED_I_HAVE_CHECKED) {
             $this->context
                 ->buildViolation($constraint->whenLastCheckedMissingDate)
                 ->setTranslationDomain($this->translationDomain)
@@ -91,9 +90,9 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function neverCheckedExplanationValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
+    private function neverCheckedExplanationValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint): void
     {
-        if (is_null($value) && $object->getWhenLastCheckedEntitlement() === ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED) {
+        if (is_null($value) && $object->getWhenLastCheckedEntitlement() === ClientBenefitsCheckInterface::WHEN_CHECKED_IVE_NEVER_CHECKED) {
             $this->context
                 ->buildViolation($constraint->whenLastCheckedNeverCheckedEntitlementMissingExplanation)
                 ->setTranslationDomain($this->translationDomain)
@@ -110,7 +109,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function moneyOnClientsBehalfValid($value, ClientBenefitsCheckConstraint $constraint)
+    private function moneyOnClientsBehalfValid($value, ClientBenefitsCheckConstraint $constraint): void
     {
         if (is_null($value)) {
             $this->context
@@ -121,9 +120,9 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function dontKnowMoneyExplanationValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
+    private function dontKnowMoneyExplanationValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint): void
     {
-        if (is_null($value) && $object->getDoOthersReceiveMoneyOnClientsBehalf() === ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW) {
+        if (is_null($value) && $object->getDoOthersReceiveMoneyOnClientsBehalf() === ClientBenefitsCheckInterface::OTHER_MONEY_DONT_KNOW) {
             $this->context
                 ->buildViolation($constraint->moneyOnClientsBehalfNeverCheckedMoneyMissingExplanation)
                 ->setTranslationDomain($this->translationDomain)
@@ -140,10 +139,10 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function typesOfMoneyReceivedOnClientsBehalfValid(ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
+    private function typesOfMoneyReceivedOnClientsBehalfValid(ClientBenefitsCheck $object, ClientBenefitsCheckConstraint $constraint): void
     {
-        if ($object->getTypesOfMoneyReceivedOnClientsBehalf() instanceof ArrayCollection && $object->getTypesOfMoneyReceivedOnClientsBehalf()->count() === 1) {
-            $money = $object->getTypesOfMoneyReceivedOnClientsBehalf()->first();
+        if (!is_null($object->getTypesOfMoneyReceivedOnClientsBehalf()) && count($object->getTypesOfMoneyReceivedOnClientsBehalf()) === 1) {
+            $money = $object->getTypesOfMoneyReceivedOnClientsBehalf()[0];
 
             if (is_null($money->getAmount()) && is_null($money->getMoneyType()) && $money->getAmountDontKnow() === false) {
                 $this->context

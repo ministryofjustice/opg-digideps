@@ -37,10 +37,14 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
 
         // order by is required for paged queries, to prevent duplicate rows being returned
         $pageQueryBuilder = $em->createQueryBuilder()
-            ->select('ssc')
+            ->select(
+                'ssc.action, ssc.orderUid, ssc.deputyUid, ssc.status, ssc.orderType, ' .
+                'ssc.reportType, ssc.orderMadeDate, ssc.deputyType, ssc.deputyStatusOnOrder, ' .
+                'ssc.orderId, ssc.reportId, ssc.clientId, ssc.deputyId, ssc.courtOrderKind'
+            )
             ->from(StagingSelectedCandidate::class, 'ssc')
             ->distinct()
-            ->orderBy('ssc.id', 'ASC');
+            ->orderBy('ssc.orderUid', 'ASC');
 
         $queryPager = new QueryPager($pageQueryBuilder);
 

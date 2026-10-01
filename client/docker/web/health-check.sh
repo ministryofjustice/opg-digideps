@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # Define the health check URLs
-HEALTH_CHECK_URL="http://127.0.0.1:80/health-check"
-SERVICE_HEALTH_CHECK_URL="http://127.0.0.1:80/health-check/service"
-DEPENDENCIES_HEALTH_CHECK_URL="http://127.0.0.1:80/health-check/dependencies"
+HEALTH_CHECK_URL="http://127.0.0.1:8080/health-check"
+SERVICE_HEALTH_CHECK_URL="http://127.0.0.1:8080/health-check/service"
+DEPENDENCIES_HEALTH_CHECK_URL="http://127.0.0.1:8080/health-check/dependencies"
 
 # Define the interval between dependency/service checks (in seconds)
 # 5 minutes = 300 seconds

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Uploader;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Exception;
+use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
@@ -14,9 +17,6 @@ use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use OPG\Digideps\Backend\v2\Registration\Uploader\ClientMatch;
 use OPG\Digideps\Backend\v2\Registration\Uploader\LayClientMatcher;
 use OPG\Digideps\Backend\v2\Registration\Uploader\LayDeputyshipProcessor;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\DBAL\Exception;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -82,23 +82,9 @@ final class LayDeputyshipProcessorTest extends TestCase
     public function testProcessRowMatchingClientAndReport(): void
     {
         // Expectations
-        $orderDate = new \DateTime('2025-02-14');
-
         $layDeputyshipDto = new LayDeputyshipDto();
-        $layDeputyshipDto->setDeputyUid('222222222')
-            ->setCaseNumber('88888888')
-            ->setOrderType('pfa')
-            ->setTypeOfReport('OPG102')
-            ->setOrderDate($orderDate);
-
-        $user = new User();
-        $user->setDeputyUid(222222222);
-
         $existingClient = $this->createMock(Client::class);
-
-        $mockReportClass = $this->createPartialMock(Report::class, methods: ['getId']);
-        $existingReport = new $mockReportClass($existingClient, '102', new \DateTime(), new \DateTime(), false);
-        $existingReport->expects($this->once())->method('getId')->willReturn(1);
+        $existingReport = $this->createMock(Report::class);
 
         $clientMatch = new ClientMatch(
             client: $existingClient,
@@ -138,7 +124,7 @@ final class LayDeputyshipProcessorTest extends TestCase
             ->setTypeOfReport('OPG102')
             ->setOrderDate($orderDate);
 
-        $user = new User();
+        $user = new User('Mike', 'Smith', 'mike.smith@example.com');
         $user->setDeputyUid(222222222);
 
         $this->mockEm->expects($this->once())->method('getRepository')->willReturn($this->mockUserRepository);

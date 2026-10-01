@@ -1,48 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
 
 trait ReportMoneyTransactionTrait
 {
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>")
-     * @JMS\Groups({"transactionsIn"})
-     *
      * @var MoneyTransaction[]
      */
-    private $moneyTransactionsIn = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>')]
+    #[JMS\Groups(['transactionsIn'])]
+    private array $moneyTransactionsIn = [];
 
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>")
-     * @JMS\Groups({"transactionsOut"})
-     *
      * @var MoneyTransaction[]
      */
-    private $moneyTransactionsOut = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>')]
+    #[JMS\Groups(['transactionsOut'])]
+    private array $moneyTransactionsOut = [];
+
+    #[JMS\Type('double')]
+    private float $moneyInTotal = 0.0;
+
+    #[JMS\Type('double')]
+    private float $moneyOutTotal = 0.0;
 
     /**
-     * @JMS\Type("double")
-     *
-     * @var float
+     * @param MoneyTransaction[] $moneyTransactionsIn
      */
-    private $moneyInTotal;
-
-    /**
-     * @JMS\Type("double")
-     *
-     * @var float
-     */
-    private $moneyOutTotal;
-
-    /**
-     * @param  MoneyTransaction[] $moneyTransactionsIn
-     * @return Report
-     */
-    public function setMoneyTransactionsIn($moneyTransactionsIn)
+    public function setMoneyTransactionsIn(array $moneyTransactionsIn): static
     {
         $this->moneyTransactionsIn = $moneyTransactionsIn;
 
@@ -52,16 +42,15 @@ trait ReportMoneyTransactionTrait
     /**
      * @return MoneyTransaction[]
      */
-    public function getMoneyTransactionsIn()
+    public function getMoneyTransactionsIn(): array
     {
         return $this->moneyTransactionsIn;
     }
 
     /**
-     * @param  MoneyTransaction[] $moneyTransactionsOut
-     * @return Report
+     * @param MoneyTransaction[] $moneyTransactionsOut
      */
-    public function setMoneyTransactionsOut($moneyTransactionsOut)
+    public function setMoneyTransactionsOut(array $moneyTransactionsOut): static
     {
         $this->moneyTransactionsOut = $moneyTransactionsOut;
 
@@ -71,7 +60,7 @@ trait ReportMoneyTransactionTrait
     /**
      * @return MoneyTransaction[]
      */
-    public function getMoneyTransactionsOut()
+    public function getMoneyTransactionsOut(): array
     {
         return $this->moneyTransactionsOut;
     }
@@ -83,7 +72,7 @@ trait ReportMoneyTransactionTrait
      *
      * @return array array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]
      */
-    public function groupMoneyTransactionsByGroup(array $moneyTransactions)
+    public function groupMoneyTransactionsByGroup(array $moneyTransactions): array
     {
         $ret = [];
 
@@ -93,46 +82,30 @@ trait ReportMoneyTransactionTrait
                 $ret[$group] = ['entries' => [], 'amountTotal' => 0];
             }
             $ret[$group]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
-            $ret[$group]['amountTotal'] += $transaction->getAmount();
+            $ret[$group]['amountTotal'] += (float)$transaction->getAmount();
         }
 
         return $ret;
     }
 
-    /**
-     * @return float
-     */
-    public function getMoneyInTotal()
+    public function getMoneyInTotal(): float
     {
         return $this->moneyInTotal;
     }
 
-    /**
-     * @param float $moneyInTotal
-     *
-     * @return Report
-     */
-    public function setMoneyInTotal($moneyInTotal)
+    public function setMoneyInTotal(float $moneyInTotal): static
     {
         $this->moneyInTotal = $moneyInTotal;
 
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getMoneyOutTotal()
+    public function getMoneyOutTotal(): float
     {
         return $this->moneyOutTotal;
     }
 
-    /**
-     * @param float $moneyOutTotal
-     *
-     * @return Report
-     */
-    public function setMoneyOutTotal($moneyOutTotal)
+    public function setMoneyOutTotal(float $moneyOutTotal): static
     {
         $this->moneyOutTotal = $moneyOutTotal;
 

@@ -7,36 +7,32 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Debt
 {
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['debt'])]
     private $debtTypeId;
 
     /**
      * @var string decimal
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt"})
-     * @Assert\Type(type="numeric", message="debt.amount.notNumeric", groups={"debts"})
-     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "debt.amount.notInRangeMessage", groups={"debts"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['debt'])]
+    #[Assert\Type(type: 'numeric', message: 'debt.amount.notNumeric', groups: ['debts'])]
+    #[Assert\Range(notInRangeMessage: 'debt.amount.notInRangeMessage', min: 0, max: 100000000000, groups: ['debts'])]
     private $amount;
 
     /**
      * @var string
-     * @JMS\Groups({"debt"})
-     * @JMS\Type("boolean")
      */
+    #[JMS\Groups(['debt'])]
+    #[JMS\Type('boolean')]
     private $hasMoreDetails;
 
     /**
      * @var string
-     * @JMS\Groups({"debt"})
-     * @JMS\Type("string")
-     *
-     * @Assert\NotBlank(message="debt.moreDetails.notEmpty", groups={"debts-more-details"})
      */
+    #[JMS\Groups(['debt'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'debt.moreDetails.notEmpty', groups: ['debts-more-details'])]
     private $moreDetails;
 
     /**
@@ -66,9 +62,11 @@ class Debt
     /**
      * @param mixed $debtTypeId
      */
-    public function setDebtTypeId($debtTypeId)
+    public function setDebtTypeId($debtTypeId): static
     {
         $this->debtTypeId = $debtTypeId;
+
+        return $this;
     }
 
     /**
@@ -82,9 +80,11 @@ class Debt
     /**
      * @param string $amount decimal
      */
-    public function setAmount($amount)
+    public function setAmount($amount): static
     {
         $this->amount = $amount;
+
+        return $this;
     }
 
     /**
@@ -98,9 +98,11 @@ class Debt
     /**
      * @param string $hasMoreDetails
      */
-    public function setHasMoreDetails($hasMoreDetails)
+    public function setHasMoreDetails($hasMoreDetails): static
     {
         $this->hasMoreDetails = $hasMoreDetails;
+
+        return $this;
     }
 
     /**
@@ -114,8 +116,10 @@ class Debt
     /**
      * @param string $moreDetails
      */
-    public function setMoreDetails($moreDetails)
+    public function setMoreDetails($moreDetails): static
     {
         $this->moreDetails = $moreDetails;
+
+        return $this;
     }
 }

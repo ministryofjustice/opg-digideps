@@ -21,34 +21,38 @@ on:
         description: "The latest version image tag"
         value: ${{ jobs.export_image_tag.outputs.image_tag }}
 
+permissions:
+  id-token: write
+
 jobs:
   export_image_tag:
     runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.export_tag.outputs.image_tag }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          persist-credentials: false
           fetch-depth: "0"
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/actions/terraform-version@3a15a16fcc221821c2869eecd8822c5d62af2984 # v4.7.0
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@9e8b7c2fb29c11e77b12913f74459fa48b11829f # v4.8.2
         with:
           terraform_directory: terraform/${{ inputs.terraform_path }}
 
-      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4
         with:
           terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
 
       - id: deploy-key
-        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@83663a5235330cc2193319b25d559885610c6bd5 # v4.8.4
+        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@2ad72748485e27f590599a7e9768b9fc0d5b8e03 # v4.8.7
         with:
           deploy_key: ${{ secrets.ssh_private_key }}
 
       - name: configure OIDC AWS credentials for latest deployment
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6
         with:
           role-to-assume: arn:aws:iam::${{ vars.IDENTITY_ACCOUNT }}:role/oidc-digideps-${{ inputs.account_name }}
           role-session-name: github-actions-slack-notifier

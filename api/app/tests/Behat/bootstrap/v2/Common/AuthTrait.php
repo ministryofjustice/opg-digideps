@@ -233,24 +233,6 @@ trait AuthTrait
     }
 
     /**
-     * @Then their password hash should automatically be upgraded
-     */
-    public function theirPasswordHashShouldAutomaticallyBeUpgraded(): void
-    {
-        $id = $this->interactingWithUserDetails->getUserId();
-
-        $user = $this->em->getRepository(User::class)->find($id);
-
-        $this->em->refresh($user);
-
-        $this->assertStringDoesNotEqualString(
-            $this->fixtureHelper->getLegacyPasswordHash(),
-            $user->getPassword(),
-            'Asserting current password hash does not match legacy password hash'
-        );
-    }
-
-    /**
      * @Then /^the user sends a request to reset their password$/
      */
     public function theUserSendsARequestToResetTheirPassword(): void

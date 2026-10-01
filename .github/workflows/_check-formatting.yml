@@ -1,0 +1,27 @@
+name: "[Style] PHP-CS-Fixer"
+
+on:
+  workflow_call:
+
+permissions: {}
+
+jobs:
+  php-cs-fixer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Detect changed PHP files to see if we should skip
+        run: |
+          {
+            echo "CHANGED_PHP_FILES<<EOF"
+            git diff --diff-filter=d --name-only origin/main... -- '**/*.php'
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Run php-cs-fixer
+        if: env.CHANGED_PHP_FILES != ''
+        run: make check-php-cs-fixer

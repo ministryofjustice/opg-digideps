@@ -2,39 +2,34 @@ name: "[Scheduled] Run test restores on Preproduction"
 
 on:
   schedule:
-    # First Saturday of the Month
-    - cron: "0 14 * * 6#1"
+    # 2pm every Saturday
+    - cron: "0 14 * * 6"
 
-permissions:
-  id-token: write
-  contents: read
-  security-events: none
-  pull-requests: none
-  actions: none
-  checks: none
-  deployments: none
-  issues: none
-  packages: none
-  repository-projects: none
-  statuses: none
+permissions: {}
 
 jobs:
   restore_from_local_restore_point:
     runs-on: ubuntu-latest
     name: restore to a point in time
+    permissions:
+      id-token: write
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: SLSA
-        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          requirements-file: disaster-recovery/restore/requirements.txt
+          persist-credentials: false
 
-      - name: Install requirements
-        run: pip install -r disaster-recovery/restore/requirements.txt
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.10"
+          enable-cache: true
+
+      - name: Install dependencies
+        working-directory: disaster-recovery/restore
+        run: uv sync --locked
 
       - name: configure OIDC AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6
         with:
           role-to-assume: "arn:aws:iam::${{ vars.IDENTITY_ACCOUNT }}:role/oidc-digideps-preproduction"
           role-session-name: github-actions-terraform-run-task
@@ -62,21 +57,27 @@ jobs:
   restore_from_remote_restore_point:
     runs-on: ubuntu-latest
     name: restore from cross account backup
+    permissions:
+      id-token: write
     needs:
-      - restore_to_point_in_time
+      - restore_from_local_restore_point
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: SLSA
-        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          requirements-file: disaster-recovery/restore/requirements.txt
+          persist-credentials: false
 
-      - name: Install requirements
-        run: pip install -r disaster-recovery/restore/requirements.txt
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.10"
+          enable-cache: true
+
+      - name: Install dependencies
+        working-directory: disaster-recovery/restore
+        run: uv sync --locked
 
       - name: configure OIDC AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6
         with:
           role-to-assume: "arn:aws:iam::${{ vars.IDENTITY_ACCOUNT }}:role/oidc-digideps-preproduction"
           role-session-name: github-actions-terraform-run-task
@@ -104,9 +105,11 @@ jobs:
 
   slack_notify_success:
     name: notify of result
-    uses: ./.github/workflows/_slack-notification.yml
+    uses: $/.github/workflows/_slack-notification.yml
+    permissions:
+      id-token: write
     needs:
-      - restore_from_remote_backup
+      - restore_from_remote_restore_point
     with:
       success: yes
       branch: integration
@@ -114,10 +117,12 @@ jobs:
 
   slack_notify_failure:
     name: notify of failure
-    uses: ./.github/workflows/_slack-notification.yml
+    uses: $/.github/workflows/_slack-notification.yml
+    permissions:
+      id-token: write
     if: ${{ failure() }}
     needs:
-      - restore_from_remote_backup
+      - restore_from_remote_restore_point
     with:
       success: no
       branch: integration

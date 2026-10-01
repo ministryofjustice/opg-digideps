@@ -39,9 +39,13 @@ resource "aws_ecs_service" "api" {
       port_name      = "api-port"
       client_alias {
         dns_name = "api"
-        port     = 80
+        port     = 8080
       }
     }
+  }
+
+  service_registries {
+    registry_arn = aws_service_discovery_service.api_ecs.arn
   }
 
   capacity_provider_strategy {
@@ -59,6 +63,22 @@ resource "aws_ecs_service" "api" {
   }
 }
 
+resource "aws_service_discovery_service" "api_ecs" {
+  name = "api"
+
+  dns_config {
+    namespace_id = aws_service_discovery_private_dns_namespace.internal_ecs.id
+
+    dns_records {
+      ttl  = 10
+      type = "A"
+    }
+
+    routing_policy = "MULTIVALUE"
+  }
+}
+
+
 locals {
   api_web = jsonencode(
     {
@@ -67,21 +87,13 @@ locals {
       image       = local.images.api-webserver,
       mountPoints = [],
       name        = "api_web",
+      user        = "nginx"
       portMappings = [{
         name          = "api-port",
-        containerPort = 80,
-        hostPort      = 80,
+        containerPort = 8080,
+        hostPort      = 8080,
         protocol      = "tcp"
       }],
-      healthCheck = {
-        command : [
-          "CMD-SHELL",
-          "curl -f http://127.0.0.1:80/health-check || exit 1"
-        ],
-        interval = 30,
-        timeout  = 5,
-        retries  = 3
-      },
       volumesFrom = [],
       logConfiguration = {
         logDriver = "awslogs",
@@ -104,11 +116,21 @@ locals {
       image       = local.images.api,
       mountPoints = [],
       name        = "api_app",
+      user        = "www-data"
       portMappings = [{
         containerPort = 9000,
         hostPort      = 9000,
         protocol      = "tcp"
       }],
+      healthCheck = {
+        command : [
+          "CMD-SHELL",
+          "/opt/scripts/health-check.sh"
+        ],
+        interval = 30,
+        timeout  = 5,
+        retries  = 3
+      },
       volumesFrom = [],
       stopTimeout = 60,
       logConfiguration = {

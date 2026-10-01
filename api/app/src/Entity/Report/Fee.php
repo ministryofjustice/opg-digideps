@@ -29,155 +29,115 @@ class Fee
         'specialist-service' => true,
     ];
 
-    /**
-     * @var int
-     */
     #[JMS\Groups(['fee'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'fee_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'fees')]
-    private $report;
+    private Report $report;
 
     /**
-     * @var string a value in self:$feeTypeIds
+     * @see self::$feeTypeIds
      */
     #[JMS\Groups(['fee'])]
     #[ORM\Column(name: 'fee_type_id', type: 'string', nullable: false)]
-    private $feeTypeId;
+    private string $feeTypeId;
 
-    /**
-     * @var ?string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['fee'])]
     #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
-    private $amount;
+    private ?string $amount = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['fee'])]
     #[ORM\Column(name: 'more_details', type: 'text', nullable: true)]
-    private $moreDetails;
+    private ?string $moreDetails = null;
 
-    /**
-     * @param string      $feeTypeId
-     * @param string|null $amount
-     */
-    public function __construct(Report $report, $feeTypeId, $amount = null)
+    public function __construct(Report $report, string $feeTypeId, string|int|float|null $amount = null)
     {
         $this->report = $report;
         $report->addFee($this);
 
         $this->feeTypeId = $feeTypeId;
-        $this->amount = $amount;
+        $this->setAmount($amount);
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
-        $this->id = $id;
-    }
-
-    /**
-     * @return Report
-     */
-    public function getReport()
-    {
-        return $this->report;
-    }
-
-    /**
-     * @param Report $report
-     */
-    public function setReport($report)
-    {
-        $this->report = $report;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFeeTypeId()
-    {
-        return $this->feeTypeId;
-    }
-
-    /**
-     * @param string $feeTypeId
-     */
-    public function setFeeTypeId($feeTypeId)
-    {
-        $this->feeTypeId = $feeTypeId;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
-
-    /**
-     * @param string $amount
-     *
-     * @return Fee
-     */
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMoreDetails()
+    public function getReport(): Report
+    {
+        return $this->report;
+    }
+
+    public function setReport(Report $report): static
+    {
+        $this->report = $report;
+        return $this;
+    }
+
+    public function getFeeTypeId(): string
+    {
+        return $this->feeTypeId;
+    }
+
+    public function setFeeTypeId(string $feeTypeId): static
+    {
+        $this->feeTypeId = $feeTypeId;
+        return $this;
+    }
+
+    public function getAmount(): ?string
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(null|int|float|string $amount): static
+    {
+        $this->amount = $amount !== null ? (string)$amount : null;
+
+        return $this;
+    }
+
+    public function getMoreDetails(): ?string
     {
         return $this->moreDetails;
     }
 
-    /**
-     * @param string $moreDetails
-     */
-    public function setMoreDetails($moreDetails)
+    public function setMoreDetails(?string $moreDetails): static
     {
         $this->moreDetails = $moreDetails;
+        return $this;
     }
 
-    /**
-     * @return bool
-     */
     #[JMS\Type('boolean')]
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('has_more_details')]
     #[JMS\Groups(['fee'])]
-    public function getHasMoreDetails()
+    public function getHasMoreDetails(): bool
     {
         return self::$feeTypeIds[$this->getFeeTypeId()];
     }
 
-    public function setAmountAndDetails($amount, $details)
+    public function setAmountAndDetails(null|int|float|string $amount, ?string $details): static
     {
         $this->setAmount($amount);
 
@@ -187,5 +147,6 @@ class Fee
         }
 
         $this->setMoreDetails($details);
+        return $this;
     }
 }

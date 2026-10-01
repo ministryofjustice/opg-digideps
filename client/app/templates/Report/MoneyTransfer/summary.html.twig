@@ -32,8 +32,9 @@
 
     {# Items list #}
     {% include '@App/Report/MoneyTransfer/_list.html.twig' with {
-    'report': report,
-    'transDomain': translationDomain
+        'report': report,
+        'moneyTransfers': moneyTransfers,
+        'transDomain': translationDomain
     } %}
 
     {# Pagination #}

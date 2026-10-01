@@ -11,17 +11,9 @@ on:
         required: true
 
 permissions:
-  actions: none
-  checks: none
-  contents: write
-  deployments: none
-  id-token: write
-  issues: none
-  packages: none
-  pull-requests: read
-  repository-projects: none
   security-events: write
-  statuses: none
+  id-token: write
+  pull-requests: read
 
 jobs:
   snyk_iac_scan:
@@ -38,17 +30,19 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
 
       - name: Configure OIDC AWS Credentials Pull
-        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5
         with:
           aws-region: eu-west-1
           role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-pull
           role-duration-seconds: 900
           role-session-name: ga-ecr-pull-digideps
 
-      - uses: aws-actions/amazon-ecr-login@19d944daaa35f0fa1d3f7f8af1d3f2e5de25c5b7 # v2.1.4
+      - uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
         id: login-ecr
         with:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
@@ -56,15 +50,15 @@ jobs:
 
       - name: Snyk IaC ${{ matrix.name }}
         id: snyk_iac
-        uses: ministryofjustice/opg-github-actions/actions/snyk-iac@83663a5235330cc2193319b25d559885610c6bd5 # v4.8.4
+        uses: ministryofjustice/opg-github-actions/actions/snyk-iac@2ad72748485e27f590599a7e9768b9fc0d5b8e03 # v4.8.7
         with:
           iac_test_directory: "${{ matrix.terraform_configuration_path }}"
           SNYK_TOKEN: ${{ secrets.snyk_token }}
-          snyk_test_args: "--severity-threshold=high"
+          snyk_test_args: "--severity-threshold=low"
           snyk_policy_path: "${{ matrix.terraform_configuration_path }}.snyk"
 
       - name: Upload Snyk IaC results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@c6f931105cb2c34c8f901cc885ba1e2e259cf745 # v4.34.0
+        uses: github/codeql-action/upload-sarif@c10b8064de6f491fea524254123dbe5e09572f13 # v4.35.1
         if: always()
         with:
           category: "IaC-${{matrix.name}}"

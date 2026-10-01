@@ -1,67 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory;
 use OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort;
-use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportMoneyShortTrait
 {
     /**
      * @var MoneyShortCategory[]
-     *
-     * @JMS\Groups({"moneyShortCategoriesIn"})
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory>")
      */
-    private $moneyShortCategoriesIn = [];
+    #[JMS\Groups(['moneyShortCategoriesIn'])]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory>')]
+    private array $moneyShortCategoriesIn = [];
 
     /**
      * @var MoneyShortCategory[]
-     *
-     * @JMS\Groups({"moneyShortCategoriesOut"})
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory>")
      */
-    private $moneyShortCategoriesOut = [];
+    #[JMS\Groups(['moneyShortCategoriesOut'])]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory>')]
+    private array $moneyShortCategoriesOut = [];
 
     /**
      * @var MoneyTransactionShort[]
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort>")
      */
-    private $moneyTransactionsShortIn = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort>')]
+    private array $moneyTransactionsShortIn = [];
 
     /**
      * @var MoneyTransactionShort[]
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort>")
      */
-    private $moneyTransactionsShortOut = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort>')]
+    private array $moneyTransactionsShortOut = [];
 
     /**
-     * @var string yes|no|null
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"money-transactions-short-in-exist"})
-     *
-     * @Assert\NotBlank(message="moneyTransactionShort.exist.notBlank", groups={"exist"})
+     * 'yes'|'no'|null
      */
-    private $moneyTransactionsShortInExist;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['money-transactions-short-in-exist'])]
+    #[Assert\NotBlank(message: 'moneyTransactionShort.exist.notBlank', groups: ['exist'])]
+    private ?string $moneyTransactionsShortInExist = null;
 
     /**
-     * @var string yes|no|null
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"money-transactions-short-out-exist"})
-     *
-     * @Assert\NotBlank(message="moneyTransactionShort.exist.notBlank", groups={"exist"})
+     * 'yes'|'no'|null
      */
-    private $moneyTransactionsShortOutExist;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['money-transactions-short-out-exist'])]
+    #[Assert\NotBlank(message: 'moneyTransactionShort.exist.notBlank', groups: ['exist'])]
+    private ?string $moneyTransactionsShortOutExist = null;
 
     /**
      * @return MoneyShortCategory[]
      */
-    public function getMoneyShortCategoriesIn()
+    public function getMoneyShortCategoriesIn(): array
     {
         return $this->moneyShortCategoriesIn;
     }
@@ -69,9 +64,9 @@ trait ReportMoneyShortTrait
     /**
      * @return MoneyShortCategory[]
      */
-    public function getMoneyShortCategoriesInPresent()
+    public function getMoneyShortCategoriesInPresent(): array
     {
-        return array_filter($this->moneyShortCategoriesIn ?: [], function ($st) {
+        return array_filter($this->moneyShortCategoriesIn ?: [], function ($st): bool {
             return method_exists($st, 'isPresent') && $st->isPresent();
         });
     }
@@ -79,15 +74,17 @@ trait ReportMoneyShortTrait
     /**
      * @param MoneyShortCategory[] $moneyShortCategoriesIn
      */
-    public function setMoneyShortCategoriesIn($moneyShortCategoriesIn)
+    public function setMoneyShortCategoriesIn(array $moneyShortCategoriesIn): static
     {
         $this->moneyShortCategoriesIn = $moneyShortCategoriesIn;
+
+        return $this;
     }
 
     /**
      * @return MoneyShortCategory[]
      */
-    public function getMoneyShortCategoriesOut()
+    public function getMoneyShortCategoriesOut(): array
     {
         return $this->moneyShortCategoriesOut;
     }
@@ -95,9 +92,9 @@ trait ReportMoneyShortTrait
     /**
      * @return MoneyShortCategory[]
      */
-    public function getMoneyShortCategoriesOutPresent()
+    public function getMoneyShortCategoriesOutPresent(): array
     {
-        return array_filter($this->moneyShortCategoriesOut ?: [], function ($st) {
+        return array_filter($this->moneyShortCategoriesOut ?: [], function ($st): bool {
             return method_exists($st, 'isPresent') && $st->isPresent();
         });
     }
@@ -105,15 +102,17 @@ trait ReportMoneyShortTrait
     /**
      * @param MoneyShortCategory[] $moneyShortCategoriesOut
      */
-    public function setMoneyShortCategoriesOut($moneyShortCategoriesOut)
+    public function setMoneyShortCategoriesOut(array $moneyShortCategoriesOut): static
     {
         $this->moneyShortCategoriesOut = $moneyShortCategoriesOut;
+
+        return $this;
     }
 
     /**
      * @return MoneyTransactionShort[]
      */
-    public function getMoneyTransactionsShortIn()
+    public function getMoneyTransactionsShortIn(): array
     {
         return $this->moneyTransactionsShortIn;
     }
@@ -121,13 +120,15 @@ trait ReportMoneyShortTrait
     /**
      * @param MoneyTransactionShort[] $moneyTransactionsShortIn
      */
-    public function setMoneyTransactionsShortIn($moneyTransactionsShortIn)
+    public function setMoneyTransactionsShortIn(array $moneyTransactionsShortIn): static
     {
         $this->moneyTransactionsShortIn = $moneyTransactionsShortIn;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return MoneyTransactionShort[]
      */
     public function getMoneyTransactionsShortOut()
     {
@@ -135,50 +136,43 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @param mixed $moneyTransactionsShortOut
+     * @param MoneyTransactionShort[] $moneyTransactionsShortOut
      */
-    public function setMoneyTransactionsShortOut($moneyTransactionsShortOut)
+    public function setMoneyTransactionsShortOut(array $moneyTransactionsShortOut): static
     {
         $this->moneyTransactionsShortOut = $moneyTransactionsShortOut;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMoneyTransactionsShortInExist()
+    public function getMoneyTransactionsShortInExist(): ?string
     {
         return $this->moneyTransactionsShortInExist;
     }
 
-    /**
-     * @param string $moneyTransactionsShortInExist
-     */
-    public function setMoneyTransactionsShortInExist($moneyTransactionsShortInExist)
+    public function setMoneyTransactionsShortInExist(?string $moneyTransactionsShortInExist): static
     {
         $this->moneyTransactionsShortInExist = $moneyTransactionsShortInExist;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMoneyTransactionsShortOutExist()
+    public function getMoneyTransactionsShortOutExist(): ?string
     {
         return $this->moneyTransactionsShortOutExist;
     }
 
-    /**
-     * @param string $moneyTransactionsShortOutExist
-     */
-    public function setMoneyTransactionsShortOutExist($moneyTransactionsShortOutExist)
+    public function setMoneyTransactionsShortOutExist(?string $moneyTransactionsShortOutExist): static
     {
         $this->moneyTransactionsShortOutExist = $moneyTransactionsShortOutExist;
+
+        return $this;
     }
 
     /**
      * @param  MoneyTransactionShort[] $records
-     * @return int
      */
-    public function getTotalValue(array $records)
+    public function getTotalValue(array $records): float
     {
         $ret = 0;
         foreach ($records as $expense) {

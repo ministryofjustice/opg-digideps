@@ -49,6 +49,7 @@ summaryPage:
   contact: Contact
   relationship: Relationship
   reasonForContact: Reason for contact
+  reasonForContactRequired: Enter a reason for contact
 
 deletePage:
   htmlTitle: "Remove contact - Complete the deputy report | GOV.UK"
@@ -86,3 +87,8 @@ form:
     defaultOption: Please select ...
   save:
     label: Save and continue
+
+review:
+  notEntered: Not entered
+  yes: Yes
+  no: No

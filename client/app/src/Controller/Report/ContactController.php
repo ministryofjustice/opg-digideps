@@ -26,6 +26,7 @@ class ContactController extends AbstractController
     private static array $jmsGroups = [
         'contact',
         'contact-status',
+        'created-at',
     ];
 
     public function __construct(
@@ -180,6 +181,7 @@ class ContactController extends AbstractController
 
         return [
             'report' => $report,
+            'contacts' => $report->getContacts(),
         ];
     }
 

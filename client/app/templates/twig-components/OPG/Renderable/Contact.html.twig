@@ -1,0 +1,20 @@
+{% props contact %}
+
+<twig:GOV:Paragraph size="m" noMargin>
+    {{ contact.name }}
+</twig:GOV:Paragraph>
+{% if contact.address1 %}<twig:GOV:Paragraph size="s" noMargin>
+    {{ contact.address1 }}
+</twig:GOV:Paragraph>{% endif %}
+{% if contact.address2 %}<twig:GOV:Paragraph size="s" noMargin>
+    {{ contact.address2 }}
+</twig:GOV:Paragraph>{% endif %}
+{% if contact.county %}<twig:GOV:Paragraph size="s" noMargin>
+    {{ contact.county }}
+</twig:GOV:Paragraph>{% endif %}
+{% if contact.postcode %}<twig:GOV:Paragraph size="s" noMargin>
+    {{ contact.postcode }}
+</twig:GOV:Paragraph>{% endif %}
+{% if contact.country %}<twig:GOV:Paragraph size="s" noMargin>
+    {{ contact.country | country_name }}
+</twig:GOV:Paragraph>{% endif %}

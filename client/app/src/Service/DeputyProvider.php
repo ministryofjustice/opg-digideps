@@ -59,7 +59,7 @@ class DeputyProvider implements UserProviderInterface
             $user = $this->loadUserByIdentifierUnsafe($identifier);
         }
 
-            return $user;
+        return $user;
     }
 
     private function loadUserByIdentifierUnsafe(string $identifier): User

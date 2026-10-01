@@ -13,6 +13,7 @@ locals {
 }
 
 resource "aws_iam_role" "resilience_tests" {
+  count                = var.account.environment.resilience_tests_enabled ? 1 : 0
   assume_role_policy   = data.aws_iam_policy_document.ecs_task_assume_policy.json
   name                 = "resilience-tests.${local.environment}"
   permissions_boundary = data.aws_iam_policy.default_boundary.arn
@@ -62,8 +63,9 @@ data "aws_iam_policy_document" "resilience_tests" {
 }
 
 resource "aws_iam_role_policy" "resilience_tests" {
+  count  = var.account.environment.resilience_tests_enabled ? 1 : 0
   name   = "resilience-tests.${local.environment}"
-  role   = aws_iam_role.resilience_tests.id
+  role   = aws_iam_role.resilience_tests[0].id
   policy = data.aws_iam_policy_document.resilience_tests.json
 }
 
@@ -87,6 +89,8 @@ locals {
 
 #trivy:ignore:avd-aws-0104 - Currently needed in as no domain egress filtering
 module "resilience_tests_security_group" {
+  count = var.account.environment.resilience_tests_enabled ? 1 : 0
+
   source      = "./modules/security_group"
   name        = "resilience-tests"
   description = "Resilience Test SG Rules"
@@ -98,6 +102,8 @@ module "resilience_tests_security_group" {
 
 # Needs a reasonable amount of resource for multi-threaded on the browser
 module "resilience_tests" {
+  count = var.account.environment.resilience_tests_enabled ? 1 : 0
+
   source = "./modules/task"
   name   = "resilience-tests"
 
@@ -109,10 +115,10 @@ module "resilience_tests" {
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role.arn
   subnet_ids            = data.aws_subnet.application[*].id
-  task_role_arn         = aws_iam_role.resilience_tests.arn
+  task_role_arn         = aws_iam_role.resilience_tests[0].arn
   architecture          = "ARM64"
   os                    = "LINUX"
-  security_group_id     = module.resilience_tests_security_group.id
+  security_group_id     = module.resilience_tests_security_group[0].id
 }
 
 locals {

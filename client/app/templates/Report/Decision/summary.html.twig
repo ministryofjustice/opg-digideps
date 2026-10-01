@@ -42,8 +42,9 @@
 
     {# Items list #}
     {% include '@App/Report/Decision/_list.html.twig' with {
-    'report': report,
-    'transDomain': translationDomain
+        'report': report,
+        'decisions': decisions,
+        'transDomain': translationDomain
     } %}
 
     {# Pagination #}

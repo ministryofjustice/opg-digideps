@@ -18,7 +18,7 @@ class UserActivatedSubscriber implements EventSubscriberInterface
         $this->mailer = $mailer;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             UserActivatedEvent::NAME => 'sendEmail',

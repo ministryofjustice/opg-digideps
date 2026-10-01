@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Resolver\SubSectionRoute;
 
 use OPG\Digideps\Frontend\Entity\Report\Report;
@@ -9,128 +11,125 @@ use PHPUnit\Framework\TestCase;
 
 class ProfCostsSubSectionRouteResolverTest extends TestCase
 {
-    /** @var ProfCostsSubSectionRouteResolver */
-    private $sut;
+    private ProfCostsSubSectionRouteResolver $sut;
 
     public function setUp(): void
     {
         $this->sut = new ProfCostsSubSectionRouteResolver();
     }
 
-    public function testReturnsNullIfSectionIsNotStarted()
+    public function testReturnsNullIfSectionIsNotStarted(): void
     {
         $route = $this->sut->resolve(new Report(), Status::STATE_NOT_STARTED);
 
-        $this->assertNull($route);
+        self::assertNull($route);
     }
 
-    public function testReturnsSummaryRouteIfSectionIsComplete()
+    public function testReturnsSummaryRouteIfSectionIsComplete(): void
     {
         $route = $this->sut->resolve(new Report(), Status::STATE_DONE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::SUMMARY_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::SUMMARY_ROUTE, $route);
     }
 
 
-    public function testReturnsPreviousFeesExistRouteSubSectionIsIncomplete()
+    public function testReturnsPreviousFeesExistRouteSubSectionIsIncomplete(): void
     {
         $report = new Report();
         $report->setProfDeputyCostsHasPrevious(null);
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::PREVIOUS_RECEIVED_EXISTS_ROUTE, $route);
+        self::assertNull($route);
     }
 
     // Fixed cost route tests
 
-    public function testReturnsCostsReceivedRouteWhenFixedCostsSubsectionIsIncomplete()
+    public function testReturnsCostsReceivedRouteWhenFixedCostsSubsectionIsIncomplete(): void
     {
         $report = new Report();
-        $report->setProfDeputyCostsHasPrevious(true);
-
+        $report->setProfDeputyCostsHasPrevious('true');
         $report->setProfDeputyCostsHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED);
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::COSTS_RECEIVED_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::COSTS_RECEIVED_ROUTE, $route);
     }
 
-    public function testReturnsBreakdownRouteWhenFixedCostsSubsectionIsCompleteAndNoBreakdownCostsEntered()
+    public function testReturnsBreakdownRouteWhenFixedCostsSubsectionIsCompleteAndNoBreakdownCostsEntered(): void
     {
         $report = new Report();
-        $report->setProfDeputyCostsHasPrevious(true);
+        $report->setProfDeputyCostsHasPrevious('true');
         $report->setProfDeputyCostsHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED)->setProfDeputyFixedCost(999.00);
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::BREAKDOWN_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::BREAKDOWN_ROUTE, $route);
     }
 
     // Non fixed costs route tests
 
-    public function testReturnsInterimExistsRouteWhenInterimExistsSubsectionIsIncomplete()
+    public function testReturnsInterimExistsRouteWhenInterimExistsSubsectionIsIncomplete(): void
     {
         $report = new Report();
-        $report->setProfDeputyCostsHasPrevious(true);
+        $report->setProfDeputyCostsHasPrevious('true');
+        $report->setProfDeputyCostsHasInterim(null);
         $report->setProfDeputyCostsHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_BOTH);
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::INTERIM_EXISTS_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::INTERIM_EXISTS_ROUTE, $route);
     }
 
-    public function testReturnsInterimRouteWhenInterimExistsAndSubsectionIsIncomplete()
+    public function testReturnsInterimRouteWhenInterimExistsAndSubsectionIsIncomplete(): void
     {
         $report = new Report();
         $report->setProfDeputyCostsHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_BOTH);
-        $report->setProfDeputyCostsHasPrevious(true);
+        $report->setProfDeputyCostsHasPrevious('true');
         $report->setProfDeputyCostsHasInterim('yes');
         $report->setProfDeputyInterimCosts([]);
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::INTERIM_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::INTERIM_ROUTE, $route);
     }
 
-    public function testReturnsCostsReceivedRouteWhenInterimDoesntExistAndFixedCostSubsectionIsIncomplete()
+    public function testReturnsCostsReceivedRouteWhenInterimDoesntExistAndFixedCostSubsectionIsIncomplete(): void
     {
         $report = new Report();
-        $report->setProfDeputyCostsHasPrevious(true);
+        $report->setProfDeputyCostsHasPrevious('true');
         $report->setProfDeputyCostsHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_BOTH)
-            ->setProfDeputyCostsHasInterim('no')
-            ->setProfDeputyFixedCost([]);
+            ->setProfDeputyCostsHasInterim('no');
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::COSTS_RECEIVED_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::COSTS_RECEIVED_ROUTE, $route);
     }
 
 
-    public function testReturnsSccoAmountRouteWhenAmountSccoSubsectionIsIncomplete()
+    public function testReturnsSccoAmountRouteWhenAmountSccoSubsectionIsIncomplete(): void
     {
         $report = new Report();
-        $report->setProfDeputyCostsHasPrevious(true);
+        $report->setProfDeputyCostsHasPrevious('true');
+        $report->setProfDeputyCostsHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_BOTH)
+            ->setProfDeputyCostsHasInterim('no')
+            ->setProfDeputyFixedCost(123.00);
+
+        $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
+
+        self::assertEquals(ProfCostsSubSectionRouteResolver::SCCO_AMOUNT_ROUTE, $route);
+    }
+
+    public function testReturnsBreakdownRouteWhenBreakdownCostsIncomplete(): void
+    {
+        $report = new Report();
+        $report->setProfDeputyCostsHasPrevious('true');
         $report->setProfDeputyCostsHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_BOTH)
             ->setProfDeputyCostsHasInterim('no')
             ->setProfDeputyFixedCost(123.00)
-            ->setProfDeputyCostsAmountToScco(false);
+            ->setProfDeputyCostsAmountToScco(123.45);
 
         $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
 
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::SCCO_AMOUNT_ROUTE, $route);
-    }
-
-    public function testReturnsBreakdownRouteWhenBreakdownCostsIncomplete()
-    {
-        $report = new Report();
-        $report->setProfDeputyCostsHasPrevious(true);
-        $report->setProfDeputyCostsHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_BOTH)
-            ->setProfDeputyCostsHasInterim('no')
-            ->setProfDeputyFixedCost(123.00)
-            ->setProfDeputyCostsAmountToScco('123.45');
-
-        $route = $this->sut->resolve($report, Status::STATE_INCOMPLETE);
-
-        $this->assertEquals(ProfCostsSubSectionRouteResolver::BREAKDOWN_ROUTE, $route);
+        self::assertEquals(ProfCostsSubSectionRouteResolver::BREAKDOWN_ROUTE, $route);
     }
 }

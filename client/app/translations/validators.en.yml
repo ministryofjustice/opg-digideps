@@ -181,6 +181,8 @@ addAnotherThing:
 decision:
   reasonForNoDecisions.notBlank: |
     Please explain why you have not had to make any significant decisions for the client
+  noDecisionChoice:
+    notBlank: Please select either 'Yes' or 'No'
   description:
     notBlank: Enter some details about this decision
     length: This description must be at least {{ limit }} letters long

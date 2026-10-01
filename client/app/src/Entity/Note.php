@@ -19,9 +19,8 @@ class Note
      * Keep in sync with API.
      *
      * Possible refactor would be moving some entities data into a shared library
-     *
-     * @JMS\Exclude
      */
+    #[JMS\Exclude]
     public static $categories = [
         // categoryId | categoryTranslationKey
         'To Do' => 'todo',
@@ -35,44 +34,39 @@ class Note
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
      */
+    #[JMS\Type('integer')]
     private $id;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"add_note"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['add_note'])]
     private $category;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
-     * @JMS\Groups({"add_note"})
      *
-     * @Assert\NotBlank( message="note.form.title.notBlank", groups={"add_note", "edit_note"})
-     * @Assert\Length(max=150, maxMessage="note.form.title.maxLength",
-     *     groups={"add_note", "edit_note"} )
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['add_note'])]
+    #[Assert\NotBlank(message: 'note.form.title.notBlank', groups: ['add_note', 'edit_note'])]
+    #[Assert\Length(max: 150, maxMessage: 'note.form.title.maxLength', groups: ['add_note', 'edit_note'])]
     private $title;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"add_note"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['add_note'])]
     private $content;
 
     /**
      * @var Client
-     *
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Client")
      */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Client')]
     private $client;
 
     /**
@@ -96,10 +90,8 @@ class Note
 
     /**
      * @param int $id
-     *
-     * @return $this
      */
-    public function setId($id)
+    public function setId($id): static
     {
         $this->id = $id;
 
@@ -116,10 +108,8 @@ class Note
 
     /**
      * @param string $category
-     *
-     * @return $this
      */
-    public function setCategory($category)
+    public function setCategory($category): static
     {
         $this->category = $category;
 
@@ -136,10 +126,8 @@ class Note
 
     /**
      * @param string $title
-     *
-     * @return $this
      */
-    public function setTitle($title)
+    public function setTitle($title): static
     {
         $this->title = $title;
 
@@ -156,10 +144,8 @@ class Note
 
     /**
      * @param string $content
-     *
-     * @return $this
      */
-    public function setContent($content)
+    public function setContent($content): static
     {
         $this->content = $content;
 
@@ -174,10 +160,7 @@ class Note
         return $this->client;
     }
 
-    /**
-     * @return $this
-     */
-    public function setClient(Client $client)
+    public function setClient(Client $client): static
     {
         $this->client = $client;
 

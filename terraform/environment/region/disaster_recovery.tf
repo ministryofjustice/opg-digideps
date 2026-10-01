@@ -9,12 +9,12 @@ module "disaster_recovery_backup" {
   images                  = local.images
   aws_ecs_cluster_arn     = aws_ecs_cluster.main.arn
   aws_subnet_ids          = data.aws_subnet.application[*].id
-  db                      = local.database
   aws_vpc_id              = data.aws_vpc.main.id
   logs_kms_key_arn        = data.aws_kms_alias.cloudwatch_application_logs_encryption.arn
   log_retention           = 30
   common_sg_rules         = local.common_sg_rules
   task_role_assume_policy = data.aws_iam_policy_document.task_role_assume_policy
   environment             = local.environment
+  rds_encryption_key_arn  = data.aws_kms_alias.rds_encryption_key.target_key_arn
   default_tags            = var.default_tags
 }

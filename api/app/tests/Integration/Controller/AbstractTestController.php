@@ -3,6 +3,7 @@
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
 use Doctrine\ORM\EntityManager;
+use OPG\Digideps\Backend\Fixture\FixtureService;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
 use OPG\Digideps\Backend\Service\JWT\JWTService;
@@ -11,7 +12,6 @@ use Osteel\OpenApi\Testing\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
-use Tests\OPG\Digideps\Backend\Fixture\FixtureService;
 use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 abstract class AbstractTestController extends WebTestCase
@@ -42,7 +42,11 @@ abstract class AbstractTestController extends WebTestCase
         self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
 
         self::$em = static::getContainer()->get('em');
-        self::$fixtureService = static::getContainer()->get(FixtureService::class);
+
+        /** @var FixtureService $fixtureService */
+        $fixtureService = static::getContainer()->get(FixtureService::class);
+        self::$fixtureService = $fixtureService;
+
         self::$fixtures = new Fixtures(self::$em);
         self::$em->clear();
 

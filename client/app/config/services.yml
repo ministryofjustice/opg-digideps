@@ -333,6 +333,7 @@ services:
           name: kernel.event_listener,
           event: kernel.exception,
           method: onKernelException,
+          priority: 0,
         }
 
   OPG\Digideps\Frontend\EventListener\ForbiddenExceptionListener:
@@ -341,6 +342,16 @@ services:
           name: kernel.event_listener,
           event: kernel.exception,
           method: onKernelException,
+          priority: 0,
+        }
+
+  OPG\Digideps\Frontend\EventListener\ApplicationExceptionListener:
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: kernel.exception,
+          method: onKernelException,
+          priority: -256,
         }
 
   OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor:

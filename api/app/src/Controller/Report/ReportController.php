@@ -284,12 +284,12 @@ class ReportController extends RestController
             ]);
         }
 
-        /** @var ?string $reasonForNoFees */
-        $reasonForNoFees = $data['reason_for_no_fees'] ?? null;
+        if (array_key_exists('reason_for_no_fees', $data)) {
+            /** @var ?string $reasonForNoFees */
+            $reasonForNoFees = $data['reason_for_no_fees'];
 
-        if ($reasonForNoFees !== null) {
             $report->setReasonForNoFees($reasonForNoFees);
-            if ($data['reason_for_no_fees']) {
+            if (!is_null($reasonForNoFees)) {
                 foreach ($report->getFees() as $fee) {
                     $fee->setAmount(null)
                         ->setMoreDetails(null);
@@ -451,8 +451,8 @@ class ReportController extends RestController
             foreach ($data['money_short_categories_in'] as $row) {
                 $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
                 if ($e instanceof MoneyShortCategory) {
-                    $e
-                        ->setPresent($row['present']);
+                    $row['present'] = ($row['present'] ?? null) === null ? null : !empty($row['present']);
+                    $e->setPresent($row['present']);
                     $this->em->flush($e);
                 }
             }
@@ -467,8 +467,8 @@ class ReportController extends RestController
             foreach ($data['money_short_categories_out'] as $row) {
                 $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
                 if ($e instanceof MoneyShortCategory) {
-                    $e
-                        ->setPresent($row['present']);
+                    $row['present'] = ($row['present'] ?? null) === null ? null : !empty($row['present']);
+                    $e->setPresent($row['present']);
                     $this->em->flush($e);
                 }
             }
@@ -535,27 +535,14 @@ class ReportController extends RestController
             ]);
         }
 
-        if (array_key_exists('current_prof_payments_received', $data)) {
-            if ($data['current_prof_payments_received'] == 'no') { // reset whole section
-                foreach ($report->getCurrentProfServiceFees() as $f) {
-                    $this->em->remove($f);
-                }
-                $report->setPreviousProfFeesEstimateGiven(null);
-                $report->setProfFeesEstimateSccoReason(null);
-            }
-            $report->setCurrentProfPaymentsReceived($data['current_prof_payments_received']);
-            $this->em->flush();
-            $report->updateSectionsStatusCache([
-                Report::SECTION_PROF_CURRENT_FEES,
-            ]);
-        }
-
         if (array_key_exists('submitted', $data)) {
             $report->setSubmitted($data['submitted']);
         }
 
         if (array_key_exists('unsubmit_date', $data)) {
-            $report->setUnSubmitDate($data);
+            /** @var ?\DateTime $unsubmitDate */
+            $unsubmitDate = $data['unsubmit_date'];
+            $report->setUnSubmitDate($unsubmitDate);
         }
 
         foreach ($this->updateHandlers as $updateHandler) {
@@ -782,6 +769,13 @@ class ReportController extends RestController
 
     private function populateChecklistEntity(Checklist $checklist, array $checklistData): Checklist
     {
+        if (($checklistData['contact_details_upto_date'] ?? null) !== null) {
+            $checklistData['contact_details_upto_date'] = $checklistData['contact_details_upto_date'] ? 'yes' : 'no';
+        }
+        if (($checklistData['deputy_full_name_accurate_in_sirius'] ?? null) !== null) {
+            $checklistData['deputy_full_name_accurate_in_sirius'] = $checklistData['deputy_full_name_accurate_in_sirius'] ? 'yes' : 'no';
+        }
+
         $this->hydrateEntityWithArrayData($checklist, $checklistData, [
             'accounts_balance' => 'setAccountsBalance',
             'assets_declared_and_managed' => 'setAssetsDeclaredAndManaged',

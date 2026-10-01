@@ -1,0 +1,24 @@
+{% props table, captionSize="m" %}
+
+<table class="govuk-table">
+    {% if table.caption is not null %}
+        <caption class="govuk-table__caption govuk-table__caption--{{ captionSize }}">{{ table.caption }}</caption>
+    {% endif %}
+    {% if table.columns %}
+        <colgroup>
+            {% for column in table.columns %}
+                <col{% if column.width is not null %} class="govuk-!-width-{{ column.width }}"{% endif %}/>
+            {% endfor %}
+        </colgroup>
+    {% endif %}
+    {% if table.header is not null %}
+        <thead class="govuk-table__head{% if table.header.isHidden %} govuk-visually-hidden{% endif %}">
+            <twig:GOV:Table:Row scope="col" row="{{ table.header.row }}"/>
+        </thead>
+    {% endif %}
+    <tbody class="govuk-table__body">
+        {% for row in table.rows %}
+            <twig:GOV:Table:Row scope="row" row="{{ row }}"/>
+        {% endfor %}
+    </tbody>
+</table>

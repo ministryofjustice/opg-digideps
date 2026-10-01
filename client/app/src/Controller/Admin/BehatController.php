@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Controller\Admin;
 
 use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Service\ParameterStoreService;
 use OPG\Digideps\Frontend\Sync\Command\ChecklistSyncCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,7 +19,30 @@ class BehatController extends AbstractController
     public function __construct(
         private readonly KernelInterface $kernel,
         private readonly bool $fixturesEnabled,
+        private readonly ParameterStoreService $parameterStoreService
     ) {
+    }
+
+    #[Route(path: '/admin/behat/enable-document-sync', name: 'behat_admin_enable_document_sync', methods: ['GET'])]
+    public function enableDocumentSync(): Response
+    {
+        if (!$this->fixturesEnabled) {
+            throw $this->createNotFoundException();
+        }
+
+        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, '1');
+        return new Response('document sync is on');
+    }
+
+    #[Route(path: '/admin/behat/disable-document-sync', name: 'behat_admin_disable_document_sync', methods: ['GET'])]
+    public function disableDocumentSync(): Response
+    {
+        if (!$this->fixturesEnabled) {
+            throw $this->createNotFoundException();
+        }
+
+        $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, '0');
+        return new Response('document sync is off');
     }
 
     /**
@@ -32,15 +55,18 @@ class BehatController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        $this->enableDocumentSync();
+
         $application = new Application($this->kernel);
         $application->setAutoExit(false);
 
         $input = new ArrayInput(['command' => 'digideps:document-sync']);
-        $output = new NullOutput();
 
-        $application->run($input, $output);
+        $application->run($input);
 
-        return new Response('');
+        $this->disableDocumentSync();
+
+        return new Response('sync done');
     }
 
     /**

@@ -1,0 +1,11 @@
+{
+    "link": "https://design-system.service.gov.uk/components/tag/",
+    "props": [
+        { "name": "text", "type": "string" },
+        {
+            "name": "colour",
+            "type": "'grey' | 'green' | 'teal' | 'blue' | 'purple' | 'magenta' | 'red' | 'orange' | 'yellow'"
+        }
+    ],
+    "examples": ["tag"]
+}

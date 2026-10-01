@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\Uploader;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Organisation;
@@ -541,8 +542,8 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
     }
 
     /**
-     * @dataProvider errorProvider
      */
+    #[DataProvider('errorProvider')]
     public function testUploadErrorsAreAddedToErrorArray(OrgDeputyshipDto $dto, array $expectedErrorStrings)
     {
         $uploadResults = $this->sut->upload([$dto]);

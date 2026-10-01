@@ -33,7 +33,7 @@ repos:
   - repo: https://github.com/digitalpulp/pre-commit-php.git
     rev: f9f30f819d34faa2375e7000822efab0ef677200 # frozen: 1.4.0
     hooks:
-      - id: php-cbf
+      - id: php-cs-fixer
         files: \.(php)$
       - id: php-stan
         files: \.(php)$

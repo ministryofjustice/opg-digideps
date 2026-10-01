@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\TestHelpers;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
@@ -27,14 +27,15 @@ class CourtOrderTestHelper
         \DateTime $orderDate = (new \DateTime()),
         CourtOrderKind $courtOrderKind = CourtOrderKind::Single,
     ): CourtOrder {
-        $courtOrder = new CourtOrder()
-            ->setCourtOrderUid($courtOrderUid)
-            ->setClient($client)
-            ->setOrderKind($courtOrderKind)
-            ->setOrderType($type)
-            ->setOrderReportType($type === CourtOrderType::PFA || $courtOrderKind === CourtOrderKind::Hybrid ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104)
-            ->setStatus($status)
-            ->setOrderMadeDate($orderDate);
+        $courtOrder = new CourtOrder(
+            $courtOrderUid,
+            $type,
+            $type === CourtOrderType::PFA || $courtOrderKind === CourtOrderKind::Hybrid ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104,
+            $courtOrderKind,
+            $orderDate,
+            $client,
+            $status
+        );
 
         if (!is_null($report)) {
             $courtOrder->addReport($report);

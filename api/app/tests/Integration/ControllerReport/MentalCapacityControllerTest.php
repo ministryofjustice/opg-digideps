@@ -4,7 +4,7 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
 use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use Tests\OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class MentalCapacityControllerTest extends AbstractTestController

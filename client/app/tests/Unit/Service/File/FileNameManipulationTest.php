@@ -22,19 +22,18 @@ class FileNameManipulationTest extends KernelTestCase
 
     /**
      * @dataProvider missingExtensionFilesProvider
-     *
-     * @test
      */
-    public function addMissingFileExtension(string $relativeFilePath, string $fileName, string $expectedFilename)
+    public function testAddMissingFileExtension(string $relativeFilePath, string $fileName, string $expectedFilename): void
     {
         $filePath = sprintf('%s/%s', $this->projectDir, $relativeFilePath);
         $uploadedFile = new UploadedFile($filePath, $fileName);
+
         $alteredFileName = $this->sut->addMissingFileExtension($uploadedFile);
 
         self::assertEquals($expectedFilename, $alteredFileName);
     }
 
-    public function missingExtensionFilesProvider()
+    public static function missingExtensionFilesProvider(): array
     {
         return [
             'jpeg' => ['tests/Unit/TestData/good-jpeg', 'good-jpeg', 'good-jpeg.jpeg'],

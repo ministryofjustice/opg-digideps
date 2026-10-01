@@ -1,0 +1,7 @@
+{% props id="accordion", h="1", accordion %}
+
+<div class="govuk-accordion" data-module="govuk-accordion" id="{{ id }}">
+    {% for section in accordion.sections %}
+        <twig:GOV:Accordion:Section id="{{ id }}" n="{{ loop.index }}" h="{{ h }}" section="{{ section }}"/>
+    {% endfor %}
+</div>

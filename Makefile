@@ -95,8 +95,8 @@ api-integration-tests: reset-database-integration-tests ##@integration-tests Run
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh ${INTEGRATION_SELECTION}
 
 api-integration-tests-solo: reset-database-integration-tests ##@integration-tests Run individual api integration test
-#Example command: make api-integration-test-solo suite=Controller/AuthControllerTest.php test_case=testBruteForceSameEmail (test case argument is optional)
-	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh selection-solo Controller/AuthControllerTest.php testBruteForceSameEmail
+	# Example command: make api-integration-test-solo suite=Controller/AuthControllerTest.php test_case=testBruteForceSameEmail (test case argument is optional)
+	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh selection-solo $(suite) $(test_case)
 
 reset-database-integration-tests: ##@database Resets the DB schema and runs migrations
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm api-integration-tests sh scripts/reset_db_structure.sh local
@@ -160,13 +160,42 @@ get-audit-logs: ##@localstack Get audit log groups by passing event name e.g. ge
 	docker compose exec localstack awslocal logs get-log-events --log-group-name audit-local --log-stream-name $(event_name)
 
 composer-api: ##@application Runs composer on Api
-	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/api/app:/app --volume ${PWD}/common:/common composer ${COMPOSER_ARGS}
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/api/app:/app --volume ${PWD}/common:/common composer install ${COMPOSER_ARGS}
 
 composer-client: ##@application Runs composer on Client
-	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client/app:/app --volume ${PWD}/common:/common composer ${COMPOSER_ARGS}
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client/app:/app --volume ${PWD}/common:/common composer install ${COMPOSER_ARGS}
 
 composer-common: ##@application Runs composer on Common
-	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/common:/app composer ${COMPOSER_ARGS}
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/common:/app composer install ${COMPOSER_ARGS}
+
+composer-api-audit: ##@application Runs audit composer on Api
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/api/app:/app --volume ${PWD}/common:/common composer audit ${COMPOSER_ARGS}
+
+composer-client-audit: ##@application Runs audit composer on Client
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client/app:/app --volume ${PWD}/common:/common composer audit ${COMPOSER_ARGS}
+
+composer-common-audit: ##@application Runs audit composer on Common
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/common:/app composer audit ${COMPOSER_ARGS}
+
+composer-client-fix: ##@application Runs fix composer package on Client (eg make composer-client-fix package=mypackage)
+	docker compose run --rm \
+	--volume ~/.composer:/tmp \
+	--volume ${PWD}/client/app:/app \
+	--volume ${PWD}/common:/common \
+	composer sh -c 'composer update $(package) --with-all-dependencies --no-scripts && composer bump'
+
+composer-api-fix: ##@application Runs fix composer package on Api (eg make composer-api-fix package=mypackage)
+	docker compose run --rm \
+	--volume ~/.composer:/tmp \
+	--volume ${PWD}/api/app:/app \
+	--volume ${PWD}/common:/common \
+	composer sh -c 'composer update $(package) --with-all-dependencies --no-scripts && composer bump'
+
+composer-common-fix: ##@application Runs fix composer package on Common (eg make composer-common-fix package=mypackage)
+	docker compose run --rm \
+	--volume ~/.composer:/tmp \
+	--volume ${PWD}/common:/app \
+	composer sh -c 'composer update $(package) --with-all-dependencies --no-scripts && composer bump'
 
 js-lint: ##@javascript Lint JS resources
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm node-js npm run lint
@@ -229,8 +258,9 @@ sql-custom-command-revoke: ##@sql-custom-command Run SQL revoke custom command
 set-feature-flag: ##@localstack Set a particular feature flags value e.g. set-feature-flag name=multi-accounts value=1
 	docker compose exec localstack awslocal ssm put-parameter --name "/local/flag/$(name)" --value "$(value)" --type String --overwrite
 
-block-ips-tests: ##@unit-tests Run the unit tests for IP blocking lambda.
-	docker compose -f docker-compose.commands.yml up block-ips-tests
+security-tests: ##@unit-tests Run the unit tests for IP blocking lambda.
+	docker compose -f docker-compose.commands.yml build --progress plain security-tests
+	docker compose -f docker-compose.commands.yml up security-tests
 
 anonymisation-tests: ##@unit-tests Run the unit tests for data anonymisation.
 	docker compose -f docker-compose.commands.yml up anonymisation-tests
@@ -264,6 +294,10 @@ playwright-lint: ##@playwright Runs eslint on all tests.
 	docker compose build playwright-tests
 	docker compose run --rm playwright-tests lint
 
+playwright-lint-fix: ##@playwright Runs eslint on all tests and fixes any fixable issues.
+	docker compose build playwright-tests
+	docker compose run --rm playwright-tests lint-fix
+
 playwright-ui: ##@playwright Runs tests in UI interface for debugging.
 	docker compose build playwright-tests
 	docker compose run --rm -p 9525:9525 playwright-tests ui
@@ -279,3 +313,26 @@ playwright-format: ##@playwright Formats the tests.
 playwright-typecheck: ##@playwright Typechecks the tests.
 	docker compose build playwright-tests
 	docker compose run --rm playwright-tests typecheck
+
+audit-ga: ##@github_actions Audit github actions
+	docker compose -f docker-compose.commands.yml build audit-ga
+	docker compose -f docker-compose.commands.yml up audit-ga
+
+frontend-apk-upgrade: ##@apk_upgrades Upgrade pinned frontend apk versions
+	docker compose -f docker-compose.commands.yml build --no-cache frontend-apk-upgrade
+	docker compose -f docker-compose.commands.yml up frontend-apk-upgrade
+	docker cp opg-digideps-frontend-apk-upgrade:/var/www/Dockerfile ./client/docker/app/Dockerfile
+
+api-apk-upgrade: ##@apk_upgrades Upgrade pinned api apk versions
+	docker compose -f docker-compose.commands.yml build --no-cache api-apk-upgrade
+	docker compose -f docker-compose.commands.yml up api-apk-upgrade
+	docker cp opg-digideps-api-apk-upgrade:/var/www/Dockerfile ./api/docker/app/Dockerfile
+
+htmltopdf-apk-upgrade: ##@apk_upgrades Upgrade pinned htmltopdf apk versions
+	docker compose -f docker-compose.commands.yml build --no-cache htmltopdf-apk-upgrade
+	docker compose -f docker-compose.commands.yml up htmltopdf-apk-upgrade
+	docker cp opg-digideps-htmltopdf-apk-upgrade:/Dockerfile ./htmltopdf/Dockerfile
+
+check-php-cs-fixer: ##@php-cs-fixer Check php-cs-fixer
+	CHANGED_PHP_FILES="$(shell git diff --diff-filter=d --name-only origin/main... -- '**/*.php' | xargs)" \
+	docker compose -f docker-compose.commands.yml up --build --exit-code-from php-cs-fixer php-cs-fixer

@@ -1,4 +1,4 @@
-FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:808f7846d21a9c94cf53833e8807a00a33fd0b65cc47fb05b79efe366c2d201f
+FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:44e36330f74d4f3a1d4e222acca9e23b401fb87811a7597024502bb759c4dd49
 
 ARG PLATFORM=${PLATFORM:-amd64}
 ARG APP_HOST=${APP_HOST:-127.0.0.1}
@@ -19,11 +19,6 @@ RUN envsubst '$APP_HOST $APP_PORT' < /etc/nginx/conf.d/default.conf.tmpl > /etc/
 
 # Enable nginx to listen on privileged ports
 RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx && apk del libcap
-
-# Copy and secure health-check script
-RUN mkdir /opt/scripts
-COPY api/docker/web/health-check.sh /opt/scripts/health-check.sh
-RUN chown nginx:nginx /opt/scripts/health-check.sh && chmod 550 /opt/scripts/health-check.sh
 
 # Harden nginx security
 COPY scripts/hardening/harden-nginx.sh /opt/scripts/harden-nginx.sh

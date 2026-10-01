@@ -1,0 +1,11 @@
+{
+    "link": "https://design-system.service.gov.uk/components/breadcrumbs/",
+    "props": [
+        {
+            "name": "breadcrumbs",
+            "type": "Breadcrumbs",
+            "info": "Build it inside PHP with BreadcrumbsBuilder"
+        }
+    ],
+    "examples": ["breadcrumbs"]
+}

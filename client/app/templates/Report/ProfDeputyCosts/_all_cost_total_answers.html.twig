@@ -15,7 +15,7 @@
         </dt>
         <dd class="govuk-summary-list__value">
             {% if report.profDeputyCostsHasInterim is null %}
-                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                <twig:GOV:ErrorMessage message="{{ 'pleaseAnswer' | trans({}, 'common' ) }}"/>
             {% else %}
                 {{ report.profDeputyCostsHasInterim | capitalize }}
             {% endif %}
@@ -59,7 +59,7 @@
             </dt>
             <dd class="govuk-summary-list__value">
                 {% if report.profDeputyFixedCost is null %}
-                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                    <twig:GOV:ErrorMessage message="{{ 'pleaseAnswer' | trans({}, 'common' ) }}"/>
                 {% else %}
                     £{{ report.profDeputyFixedCost | money_format }}
                 {% endif %}
@@ -83,7 +83,7 @@
             </dt>
             <dd class="govuk-summary-list__value">
                 {% if report.profDeputyCostsAmountToScco is null %}
-                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                    <twig:GOV:ErrorMessage message="{{ 'pleaseAnswer' | trans({}, 'common' ) }}"/>
                 {% else %}
                     £{{ report.profDeputyCostsAmountToScco | money_format }}
                 {% endif %}

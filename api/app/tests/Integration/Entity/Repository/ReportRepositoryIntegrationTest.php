@@ -2,8 +2,8 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Checklist;
@@ -107,10 +107,7 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
         $endDate = $startDate->add(new \DateInterval('P1D'));
         $report = new Report($client, Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS, $startDate, $endDate);
 
-        $user = new User()
-            ->setFirstname('firstname')
-            ->setLastname('lastname')
-            ->setEmail(sprintf('email%s@test.com', rand(1, 100000)))
+        $user = new User('firstname', 'lastname', sprintf('email%s@test.com', rand(1, 100000)))
             ->setPassword('password')
             ->setRoleName('ROLE_LAY');
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Stats;
 
-use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class StatsQueryParametersTest extends TestCase

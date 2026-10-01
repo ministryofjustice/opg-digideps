@@ -1,4 +1,3 @@
-import math
 import sys
 
 import boto3
@@ -115,6 +114,93 @@ class SnapshotManagement:
             },
         ]
         self.AutoMinorVersionUpgrade = True
+
+    def cleanup_existing_temp_resources(self):
+        """
+        Remove any previous failed restore artifacts before creating a new temp
+        cluster. Safe to call even if nothing exists.
+        """
+
+        temp_cluster = f"{self.db_cluster_identifier_source}-temp"
+
+        print(f"Checking for existing temp cluster {temp_cluster}")
+
+        try:
+            response = self.client.describe_db_clusters(
+                DBClusterIdentifier=temp_cluster
+            )
+
+            cluster = response["DBClusters"][0]
+
+            print(f"Found existing temp cluster {temp_cluster}")
+
+            #
+            # Delete cluster members first
+            #
+            for member in cluster.get("DBClusterMembers", []):
+                instance_id = member["DBInstanceIdentifier"]
+
+                print(f"Deleting existing temp instance {instance_id}")
+
+                self.client.delete_db_instance(
+                    DBInstanceIdentifier=instance_id,
+                    SkipFinalSnapshot=True,
+                    DeleteAutomatedBackups=False,
+                )
+
+            #
+            # Wait for instances to disappear
+            #
+            for member in cluster.get("DBClusterMembers", []):
+                instance_id = member["DBInstanceIdentifier"]
+
+                while True:
+                    try:
+                        self.client.describe_db_instances(
+                            DBInstanceIdentifier=instance_id
+                        )
+                        print(f"Waiting for {instance_id} to delete...")
+                        time.sleep(30)
+                    except self.client.exceptions.DBInstanceNotFoundFault:
+                        print(f"{instance_id} deleted")
+                        break
+
+            #
+            # Delete cluster
+            #
+            print(f"Deleting temp cluster {temp_cluster}")
+
+            self.client.delete_db_cluster(
+                DBClusterIdentifier=temp_cluster,
+                SkipFinalSnapshot=True,
+            )
+
+            self.wait_on_cluster_deleted(temp_cluster)
+
+            print(f"Cleanup completed for {temp_cluster}")
+
+        except self.client.exceptions.DBClusterNotFoundFault:
+            print(f"No existing temp cluster found")
+
+        #
+        # Belt-and-braces cleanup for orphaned temp instances
+        #
+        response = self.client.describe_db_instances()
+
+        for instance in response["DBInstances"]:
+            instance_id = instance["DBInstanceIdentifier"]
+
+            if instance_id.endswith("-temp"):
+                print(f"Deleting orphaned temp instance {instance_id}")
+
+                try:
+                    self.client.delete_db_instance(
+                        DBInstanceIdentifier=instance_id,
+                        SkipFinalSnapshot=True,
+                        DeleteAutomatedBackups=False,
+                    )
+                except Exception as e:
+                    print(f"Unable to delete {instance_id}: {e}")
 
     def get_latest_recovery_point_same_account(self):
         cluster_name = self.db_cluster_identifier_source
@@ -239,6 +325,8 @@ class SnapshotManagement:
             self.do_point_in_time_restore = True
 
         self.KmsKeyIdLocal = self.get_kms_key(key_alias_local)
+
+        self.cleanup_existing_temp_resources()
 
         if self.AWSBackup:
             self.restore_from_recovery_point()

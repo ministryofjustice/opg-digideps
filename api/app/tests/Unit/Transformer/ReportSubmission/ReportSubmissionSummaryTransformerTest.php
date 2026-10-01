@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Transformer\ReportSubmission;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -12,13 +11,13 @@ use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Service\DateTimeProvider;
 use OPG\Digideps\Backend\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class ReportSubmissionSummaryTransformerTest extends TestCase
 {
     private ReportSubmissionSummaryTransformer $sut;
     private DateTimeProvider&MockObject $dateTimeProvider;
-    private ReportSubmission&MockObject $reportSubmission;
     private array $result;
 
     public function setUp(): void
@@ -37,7 +36,6 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
 
         $reportSubmission = $this->buildReportSubmissionWith([
             'id' => 2,
-            'report_type' => Report::class,
             'created_on' => new \DateTime('2012-01-02'),
             'report' => [
                 'client' => ['case_number' => '133'],
@@ -72,7 +70,6 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
 
         $reportSubmission = $this->buildReportSubmissionWith([
             'id' => 3,
-            'report_type' => Report::class,
             'created_on' => new \DateTime('2012-01-01'),
             'report' => [
                 'client' => ['case_number' => '132'],
@@ -98,10 +95,13 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
         $this->assertRowsContain($expectedRows);
     }
 
+    /**
+     * @param array{'report': array, 'documents': array, 'id': int, 'created_on': ?\DateTime} $data
+     */
     private function buildReportSubmissionWith(array $data): ReportSubmission
     {
-        $report = $this->buildReportOfType($data['report_type'], $data['report']);
-        $reportSubmission = new ReportSubmission($report, new User());
+        $report = $this->buildReportOfType($data['report']);
+        $reportSubmission = new ReportSubmission($report, new User('', '', ''));
 
         foreach ($data['documents'] as $document) {
             $reportSubmission->addDocument($this->buildDocumentWith($document));
@@ -113,10 +113,11 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
         return $reportSubmission;
     }
 
-    private function buildReportOfType(string $type, array $data): MockObject
+    private function buildReportOfType(array $data): MockObject&Report
     {
+        /** @var Report&MockObject $report */
         $report = $this
-            ->getMockBuilder($type)
+            ->getMockBuilder(Report::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -128,10 +129,10 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
 
     private function buildDocumentWith(array $document): Document
     {
+        /** @var Report&MockObject $report */
         $report = $this->getMockBuilder(Report::class)->disableOriginalConstructor()->getMock();
 
-        return new Document($report)
-            ->setFileName($document['filename'])
+        return new Document($report, $document['filename'])
             ->setIsReportPdf($document['is_report_pdf']);
     }
 

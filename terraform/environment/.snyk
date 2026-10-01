@@ -1,0 +1,13 @@
+ignore:
+    SNYK-CC-TF-48:
+    - '*':
+        reason: "Admin and Front load balancer intentionally internet-facing for external access"
+    SNYK-CC-TF-127:
+    - '*':
+        reason: "MFA delete intentionally disabled to not break service account access"
+    SNYK-CC-AWS-710:
+    - '*':
+        reason: "IAM database authentication intentionally disabled. Enabling may cause issues."
+    SNYK-CC-TF-56:
+    - '*':
+        reason: "Security group descriptions intentionally omitted because adding descriptions would force replacement of existing security groups"

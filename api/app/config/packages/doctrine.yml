@@ -33,6 +33,8 @@ doctrine:
         default_entity_manager: default
         auto_generate_proxy_classes: "%kernel.debug%"
         proxy_dir: "%kernel.cache_dir%/doctrine/orm/Proxies"
+        enable_native_lazy_objects: true
+        enable_lazy_ghost_objects: true
         entity_managers:
             default:
                 connection: default

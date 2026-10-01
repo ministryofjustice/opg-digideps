@@ -10,18 +10,16 @@ locals {
       }
     }
     preproduction = {
-      network_firewall_enabled      = true
-      none_matching_traffic_action  = "drop"
-      shared_firewall_configuration = null
+      network_firewall_enabled     = true
+      none_matching_traffic_action = "drop"
       shared_firewall_configuration = {
         account_id   = "997462338508"
         account_name = "production"
       }
     }
     production = {
-      network_firewall_enabled      = true
-      none_matching_traffic_action  = "drop"
-      shared_firewall_configuration = null
+      network_firewall_enabled     = true
+      none_matching_traffic_action = "drop"
       shared_firewall_configuration = {
         account_id   = "997462338508"
         account_name = "production"
@@ -44,7 +42,7 @@ locals {
 }
 
 module "network" {
-  source                                                  = "git@github.com:ministryofjustice/opg-terraform-aws-firewalled-network.git?ref=v1.3.0"
+  source                                                  = "git@github.com:ministryofjustice/opg-terraform-aws-firewalled-network.git?ref=v1.3.2"
   cidr                                                    = data.aws_region.current.name == "eu-west-1" ? var.account.network.cidr_eu_west_1 : var.account.network.cidr_eu_west_2
   default_security_group_ingress                          = []
   default_security_group_egress                           = []

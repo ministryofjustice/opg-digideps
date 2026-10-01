@@ -32,22 +32,28 @@ class DocumentSyncCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        ini_set('memory_limit', '512M');
+        try {
+            ini_set('memory_limit', '512M');
 
-        $isFeatureEnabled = ($this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC) === '1');
+            $isFeatureEnabled = ($this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC) === '1');
 
-        if (!$isFeatureEnabled) {
-            $output->writeln('Feature disabled, sleeping');
-            return 0;
+            if (!$isFeatureEnabled) {
+                $output->writeln('Feature disabled, sleeping');
+                return 0;
+            }
+
+            $syncRowLimit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT);
+
+            if (is_null($syncRowLimit)) {
+                $syncRowLimit = self::FALLBACK_ROW_LIMITS;
+            }
+
+            $this->documentSyncRunner->run($output, intval($syncRowLimit));
+        } catch (\Throwable $e) {
+            $output->writeln("++++++++++++++ EXCEPTION DURING DOC SYNC COMMAND EXECUTION\n");
+            $output->writeln($e->getMessage() . "\n");
+            $output->writeln($e->getTraceAsString() . "\n");
         }
-
-        $syncRowLimit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT);
-
-        if (is_null($syncRowLimit)) {
-            $syncRowLimit = self::FALLBACK_ROW_LIMITS;
-        }
-
-        $this->documentSyncRunner->run($output, intval($syncRowLimit));
 
         return 0;
     }

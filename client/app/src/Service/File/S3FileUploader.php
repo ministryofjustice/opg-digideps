@@ -58,8 +58,6 @@ class S3FileUploader
 
     /**
      * Uploads a file into S3 + create and persist a Document entity using that reference.
-     *
-     * @return Document
      */
     public function uploadFileAndPersistDocument(
         Report $report,
@@ -67,7 +65,7 @@ class S3FileUploader
         string $fileName,
         bool $isReportPdf,
         bool $overwrite = false
-    ) {
+    ): Document {
         $storageReference = sprintf(
             'dd_doc_%s_%s%s',
             $report->getId(),

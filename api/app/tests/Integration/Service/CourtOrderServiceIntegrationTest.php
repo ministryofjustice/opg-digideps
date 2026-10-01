@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Integration\Service;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderService;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\CourtOrderTestHelper;
 use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
@@ -92,6 +92,7 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
         // Reports
         self::assertIsArray($result['reports']);
         self::assertCount(1, $result['reports'], 'Expect exactly 1 report');
+        /** @var array<string, mixed> $reportRow */
         $reportRow = $result['reports'][0];
 
         // Status mapping: ['status']['status'] comes from 'report_status_cached'

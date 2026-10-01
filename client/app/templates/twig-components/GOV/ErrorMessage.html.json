@@ -1,0 +1,5 @@
+{
+    "link": "https://design-system.service.gov.uk/components/error-message/",
+    "props": [{ "name": "message", "type": "string | array<string>" }],
+    "examples": ["error-message"]
+}

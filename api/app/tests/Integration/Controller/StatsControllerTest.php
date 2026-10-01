@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
+use PHPUnit\Framework\Attributes\Test;
+
 class StatsControllerTest extends AbstractTestController
 {
     private $entityManager;
@@ -24,7 +26,7 @@ class StatsControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    /** @test */
+    #[Test]
     public function activeLayDeputies()
     {
         $response = $this->assertJsonRequest(
@@ -40,7 +42,7 @@ class StatsControllerTest extends AbstractTestController
         self::assertIsArray($response);
     }
 
-    /** @test */
+    #[Test]
     public function activeLayDeputiesOnlySuperAdminsCanAccess()
     {
         $unauthorisedUserTokens = [
@@ -62,7 +64,7 @@ class StatsControllerTest extends AbstractTestController
         }
     }
 
-    /** @test */
+    #[Test]
     public function benefitsReportMetricsOnlySuperAdminsCanAccess()
     {
         $unauthorisedUserTokens = [
@@ -84,7 +86,7 @@ class StatsControllerTest extends AbstractTestController
         }
     }
 
-    /** @test */
+    #[Test]
     public function oldAdminUsersOnlySuperAdminsCanAccess()
     {
         $unauthorisedUserTokens = [
@@ -106,7 +108,7 @@ class StatsControllerTest extends AbstractTestController
         }
     }
 
-    /** @test */
+    #[Test]
     public function imbalanceReportOnlySuperAdminsCanAccess()
     {
         $unauthorisedUserTokens = [

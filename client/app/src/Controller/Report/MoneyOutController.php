@@ -155,7 +155,7 @@ class MoneyOutController extends AbstractController
             $answer = $validatingForm->getStringOrNull('reasonForNoMoneyOut');
 
             $report->setReasonForNoMoneyOut($answer);
-            $report->getStatus()->setMoneyOutState(Status::STATE_DONE);
+            $report->getStatus()->setMoneyOutState(['state' => Status::STATE_DONE]);
             $this->restClient->put('report/' . $reportId, $report, ['reasonForNoMoneyOut']);
 
             return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]);
@@ -427,7 +427,7 @@ class MoneyOutController extends AbstractController
     private function acquireTransactions(?int $transactionId, Report $report): MoneyTransaction
     {
         if ($transactionId !== null) {
-            $transaction = array_filter($report->getMoneyTransactionsOut(), function ($t) use ($transactionId): bool {
+            $transaction = array_filter($report->getMoneyTransactionsOut(), function (MoneyTransaction $t) use ($transactionId): bool {
                 if ($t->getBankAccount() instanceof BankAccount) {
                     $t->setBankAccountId($t->getBankAccount()->getId());
                 }

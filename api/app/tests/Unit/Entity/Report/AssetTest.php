@@ -6,6 +6,7 @@ namespace Tests\OPG\Digideps\Backend\Unit\Entity\Report;
 
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use PHPUnit\Framework\TestCase;
 
 final class AssetTest extends TestCase
@@ -15,13 +16,12 @@ final class AssetTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->object = new AssetOther();
-        $this->property = new AssetProperty();
+        $this->object = new AssetOther($this->createStub(Report::class));
+        $this->property = new AssetProperty($this->createStub(Report::class));
     }
 
     public function testSetterGetters(): void
     {
-        //        $this->assertEquals('123456', $this->object->setExplanation('123456')->getExplanation());
         $this->assertEquals('123456', $this->object->setTitle('123456')->getTitle());
         $this->assertEquals('123456', $this->object->setValue('123456')->getValue());
 
@@ -30,13 +30,13 @@ final class AssetTest extends TestCase
 
     public function testgetValueTotal(): void
     {
-        $this->object->setValue(1.2);
+        $this->object->setValue('1.2');
         $this->assertEquals(1.2, $this->object->getValueTotal());
 
-        $this->property->setOwned(AssetProperty::OWNED_FULLY)->setValue(100);
+        $this->property->setOwned(AssetProperty::OWNED_FULLY)->setValue('100');
         $this->assertEquals(100, $this->property->getValueTotal());
 
-        $this->property->setOwned(AssetProperty::OWNED_PARTLY)->setOwnedPercentage(50)->setValue(1000);
+        $this->property->setOwned(AssetProperty::OWNED_PARTLY)->setOwnedPercentage(50)->setValue('1000');
         $this->assertEquals(500, $this->property->getValueTotal());
     }
 }

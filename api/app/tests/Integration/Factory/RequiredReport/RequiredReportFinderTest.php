@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Integration\Factory\RequiredReport;
 
 use Doctrine\ORM\Id\AbstractIdGenerator;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -47,16 +47,15 @@ class RequiredReportFinderTest extends ApiIntegrationTestCase
 
     private function persistCourtOrder(int $id, Client $client, Report ...$reports): void
     {
-        $courtOrder = new CourtOrder();
-        $courtOrder->setId($id);
-        $courtOrder->setClient($client);
-        $courtOrder->setCourtOrderUid("UID-{$id}");
-        $courtOrder->setOrderKind(CourtOrderKind::Single);
-        $courtOrder->setOrderType(CourtOrderType::PFA);
-        $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate(new \DateTime());
-        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
-        $courtOrder->setSibling(null);
+        $courtOrder = new CourtOrder(
+            "UID-{$id}",
+            CourtOrderType::PFA,
+            CourtOrderReportType::OPG102,
+            CourtOrderKind::Single,
+            new \DateTime(),
+            $client
+        )->setId($id);
+
         foreach ($reports as $report) {
             $courtOrder->addReport($report);
         }

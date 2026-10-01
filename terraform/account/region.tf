@@ -7,6 +7,7 @@ module "eu_west_1" {
 
   account      = local.account
   default_tags = local.default_tags
+  docker_tag   = var.OPG_DOCKER_TAG
 
   providers = {
     aws            = aws.digideps_eu_west_1
@@ -24,6 +25,7 @@ module "eu_west_2" {
 
   account      = local.account
   default_tags = local.default_tags
+  docker_tag   = var.OPG_DOCKER_TAG
 
   providers = {
     aws            = aws.digideps_eu_west_2

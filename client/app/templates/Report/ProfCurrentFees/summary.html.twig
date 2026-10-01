@@ -237,7 +237,7 @@
                     {% if answerGiven %}
                         {{ report.previousProfFeesEstimateGiven | trans({}, 'common') }}
                     {% else %}
-                        <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                        <twig:GOV:ErrorMessage message="{{ 'pleaseAnswer' | trans({}, 'common' ) }}"/>
                     {% endif %}
                 </dd>
                 <dd class="govuk-summary-list__actions">

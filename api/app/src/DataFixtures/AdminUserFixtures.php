@@ -2,81 +2,80 @@
 
 namespace OPG\Digideps\Backend\DataFixtures;
 
-use OPG\Digideps\Backend\Entity\User;
-use Doctrine\Persistence\ObjectManager;
+use OPG\Digideps\Backend\Fixture\FixtureService;
+use OPG\Digideps\Backend\Fixture\UserType;
+use OPG\Digideps\Common\Deputy\DeputyType;
 
+/**
+ * @phpstan-type FixtureData array{'firstName': string, 'lastName': string, 'email': string, 'roleType': UserType}
+ */
 class AdminUserFixtures extends AbstractDataFixture
 {
+    /**
+     * @var array<FixtureData>
+     */
     private array $adminData = [
         [
             'firstName' => 'Admin',
             'lastName' => 'User',
             'email' => 'admin@publicguardian.gov.uk',
-            'roleType' => 'ROLE_ADMIN',
+            'roleType' => UserType::Admin,
         ],
         [
             'firstName' => 'Admin Manager',
             'lastName' => 'User',
             'email' => 'admin-manager@publicguardian.gov.uk',
-            'roleType' => 'ROLE_ADMIN_MANAGER',
+            'roleType' => UserType::AdminManager,
         ],
         [
             'firstName' => 'Super Admin',
             'lastName' => 'User',
             'email' => 'super-admin@publicguardian.gov.uk',
-            'roleType' => 'ROLE_SUPER_ADMIN',
+            'roleType' => UserType::SuperAdmin,
         ],
         [
             'firstName' => 'Case',
             'lastName' => 'Manager1',
             'email' => 'casemanager1@publicguardian.gov.uk',
-            'roleType' => 'ROLE_ADMIN',
+            'roleType' => UserType::Admin,
         ],
         [
             'firstName' => 'Case',
             'lastName' => 'Manager2',
             'email' => 'casemanager2@publicguardian.gov.uk',
-            'roleType' => 'ROLE_ADMIN',
+            'roleType' => UserType::Admin,
         ],
         [
             'firstName' => 'Case',
             'lastName' => 'Manager3',
             'email' => 'casemanager3@publicguardian.gov.uk',
-            'roleType' => 'ROLE_ADMIN',
-        ],
-        [
-            'firstName' => 'SmokeyJoe',
-            'lastName' => 'SmokeTest',
-            'email' => 'smoketestddadmin@smoketest.com',
-            'roleType' => 'ROLE_ADMIN',
+            'roleType' => UserType::Admin,
         ],
     ];
 
-    public function doLoad(ObjectManager $manager): void
+    public function doLoad(FixtureService $fixtureService): void
     {
         // Add admin users
         foreach ($this->adminData as $data) {
-            $this->addUser($data, $manager);
+            $this->addUser($fixtureService, $data);
         }
 
-        $manager->flush();
+        $fixtureService->flush();
     }
 
-    private function addUser(array $data, ObjectManager $manager): void
+    /**
+     * @param FixtureData $data
+     */
+    private function addUser(FixtureService $fixtureService, array $data): void
     {
-        $user = new User()
+        $fixtureService->instantiateOnlyUser($data['roleType'], DeputyType::LAY, flush: false)
             ->setFirstname($data['firstName'])
             ->setLastname($data['lastName'])
-            ->setEmail($data['email'])
-            ->setActive(true)
-            ->setRoleName($data['roleType']);
-
-        $manager->persist($user);
+            ->setEmail($data['email']);
     }
 
-    /** @return String[] */
-    protected function getEnvironments(): array
+    protected function shouldLoad(string $workspace, string $environment): bool
     {
-        return ['dev', 'local'];
+        return !in_array($workspace, ['production', 'preproduction']) && in_array($environment, ['dev', 'local']);
     }
 }

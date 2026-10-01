@@ -151,3 +151,10 @@ notices:
     added: "Cost added"
     edited: "Cost edited"
     deleted: "Cost deleted"
+
+review:
+  receivedFor: Received for
+  costForInterim: Cost for interim
+  yes: Yes
+  no: No
+  notEntered: Not entered

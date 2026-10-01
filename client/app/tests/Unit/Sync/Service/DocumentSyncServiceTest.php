@@ -37,7 +37,7 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     private function makeDocument(): Document
     {
-        $report = $this->createStub(Report::class);
+        $report = self::createStub(Report::class);
         $report->method('getId')->willReturn(123456789);
         return new Document()->setReport($report);
     }
@@ -52,16 +52,12 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->fileName = 'test.pdf';
         $this->s3Reference = 'dd_doc_98765_01234567890123';
 
-        /* @var SiriusApiGatewayClient&MockObject $siriusApiGatewayClient */
         $this->siriusApiGatewayClient = self::createMock(SiriusApiGatewayClient::class);
-
-        /* @var RestClient&MockObject $restClient */
         $this->restClient = self::createMock(RestClient::class);
 
-        /* @var SiriusApiErrorTranslator&MockObject $errorTranslator */
         $this->errorTranslator = self::createMock(SiriusApiErrorTranslator::class);
 
-        /* @var SerializerInterface $serializer */
+        /** @var SerializerInterface $serializer */
         $serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('jms_serializer');
         $this->serializer = $serializer;
     }
@@ -71,10 +67,9 @@ class DocumentSyncServiceTest extends KernelTestCase
      */
     public function testSyncDocumentReportPdfSyncSuccess(string $reportTypeCode, string $expectedReportType): void
     {
-        $reportPdfReportSubmission =
-            new ReportSubmission()
-                ->setId($this->reportSubmissionId)
-                ->setUuid($this->reportPdfSubmissionUuid);
+        $reportPdfReportSubmission = new ReportSubmission()
+            ->setId($this->reportSubmissionId)
+            ->setUuid($this->reportPdfSubmissionUuid);
 
         $queuedDocumentData = new QueuedDocumentData()
             ->setReportType($reportTypeCode)
@@ -505,14 +500,12 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->s3Reference
         );
 
-        $this->siriusApiGatewayClient
-            ->expects(self::once())
+        $this->siriusApiGatewayClient->expects(self::once())
             ->method('sendSupportingDocument')
             ->with($siriusDocumentUpload, $expectedUuidUsedToSyncDoc, $expectedCaseRefUsedForSync)
             ->willReturn($successResponse);
 
-        $this->restClient
-            ->expects(self::once())
+        $this->restClient->expects(self::once())
             ->method('apiCall')
             ->with(
                 'put',
@@ -553,12 +546,9 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setCaseNumber('1234567t')
             ->setStorageReference($this->s3Reference);
 
-        $this->siriusApiGatewayClient
-            ->expects(self::never())
-            ->method('sendSupportingDocument');
+        $this->siriusApiGatewayClient->expects(self::never())->method('sendSupportingDocument');
 
-        $this->restClient
-            ->expects(self::once())
+        $this->restClient->expects(self::once())
             ->method('apiCall')
             ->with(
                 'put',
@@ -592,13 +582,12 @@ class DocumentSyncServiceTest extends KernelTestCase
      */
     private function setRestClientExpectations(array $expectations): void
     {
-        $matcher = self::exactly(count($expectations));
+        $invocationMatcher = self::exactly(count($expectations));
 
-        $this->restClient
-            ->expects($matcher)
+        $this->restClient->expects($invocationMatcher)
             ->method('apiCall')
-            ->willReturnCallback(function (array $parameters) use ($matcher, $expectations) {
-                $invocation = $matcher->getInvocationCount();
+            ->willReturnCallback(function (array $parameters) use ($invocationMatcher, $expectations) {
+                $invocation = $invocationMatcher->getInvocationCount();
 
                 if (!isset($expectations[$invocation])) {
                     throw new \LogicException('Unexpected number of invocations');

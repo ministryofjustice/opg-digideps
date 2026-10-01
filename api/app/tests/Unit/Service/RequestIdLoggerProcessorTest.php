@@ -4,75 +4,69 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use OPG\Digideps\Backend\Service\RequestIdLoggerProcessor;
-use Mockery as m;
 use Monolog\Level;
 use Monolog\LogRecord;
+use OPG\Digideps\Backend\Service\RequestIdLoggerProcessor;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 final class RequestIdLoggerProcessorTest extends TestCase
 {
-    private Container $container;
-    private RequestStack $reqStack;
-    private RequestIdLoggerProcessor $object;
+    private Container&MockObject $container;
+    private RequestStack&MockObject $reqStack;
     private LogRecord $record;
+    private RequestIdLoggerProcessor $sut;
 
     public function setUp(): void
     {
-        $this->container = m::mock(Container::class);
-        $this->reqStack = m::mock(RequestStack::class);
+        $this->container = self::createMock(Container::class);
+        $this->reqStack = self::createMock(RequestStack::class);
         $this->record = new LogRecord(new \DateTimeImmutable(), '', Level::Emergency, '', ['key1' => 'abc', 'key2' => 2]);
-        $this->object = new RequestIdLoggerProcessor($this->container);
+        $this->sut = new RequestIdLoggerProcessor($this->container);
     }
 
     public function testProcessRecordNoReqStack(): void
     {
-        $this->container->shouldReceive('has')->with('request_stack')->andReturn(false);
-        $this->container->shouldReceive('get')->with('request_stack')->andReturn(null);
-
-        $this->assertEquals($this->record, $this->object->processRecord($this->record));
+        $this->container->expects(self::once())->method('has')->with('request_stack')->willReturn(false);
+        $this->assertEquals($this->record, $this->sut->processRecord($this->record));
     }
 
     public function testProcessRecordHasNoRequest(): void
     {
-        $this->reqStack->shouldReceive('getCurrentRequest')->andReturn(null);
-        $this->container->shouldReceive('has')->with('request_stack')->andReturn(false);
-        $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
+        $this->reqStack->expects(self::once())->method('getCurrentRequest')->willReturn(null);
+        $this->container->expects(self::once())->method('has')->with('request_stack')->willReturn(true);
+        $this->container->expects(self::once())->method('get')->with('request_stack')->willReturn($this->reqStack);
 
-        $this->assertEquals($this->record, $this->object->processRecord($this->record));
+        $this->assertEquals($this->record, $this->sut->processRecord($this->record));
     }
 
     public function testProcessRecordHasNoRequestId(): void
     {
         $request = new Request();
-        $request->headers = new ParameterBag();
+        $request->headers = new ParameterBag(['x-request-id' => 'abc']);
 
-        $this->reqStack->shouldReceive('getCurrentRequest')->andReturn($request);
-        $this->reqStack->shouldReceive('has')->with('x-request-id')->andReturn(false);
-        $this->container->shouldReceive('has')->with('request_stack')->andReturn(true);
-        $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
+        $this->reqStack->expects(self::once())->method('getCurrentRequest')->willReturn($request);
+        $this->container->expects(self::once())->method('has')->with('request_stack')->willReturn(true);
+        $this->container->expects(self::once())->method('get')->with('request_stack')->willReturn($this->reqStack);
 
-        $this->assertEquals($this->record, $this->object->processRecord($this->record));
+        $this->assertEquals($this->record, $this->sut->processRecord($this->record));
     }
 
     public function testProcessRecordHasRequestId(): void
     {
         $request = new Request();
-        $request->headers = new ParameterBag();
-        $request->headers->set('x-aws-request-id', 'THIS_IS_THE_REQUEST_ID');
+        $request->headers = new HeaderBag(['x-aws-request-id' => 'THIS_IS_THE_REQUEST_ID']);
 
-        $this->reqStack->shouldReceive('getCurrentRequest')->andReturn($request);
-        $this->reqStack->shouldReceive('has')->with('x-aws-request-id')->andReturn(true);
-        $this->reqStack->shouldReceive('get')->with('x-aws-request-id')->andReturn('THIS_IS_THE_REQUEST_ID');
-        $this->reqStack->shouldReceive('get')->with('x-aws-request-id')->andReturn('THIS_IS_THE_REQUEST_ID');
-        $this->container->shouldReceive('has')->with('request_stack')->andReturn(true);
-        $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
+        $this->reqStack->expects(self::once())->method('getCurrentRequest')->willReturn($request);
+        $this->container->expects(self::once())->method('has')->with('request_stack')->willReturn(true);
+        $this->container->expects(self::once())->method('get')->with('request_stack')->willReturn($this->reqStack);
 
-        $record = $this->object->processRecord($this->record);
+        $record = $this->sut->processRecord($this->record);
         $this->assertSame($this->record->context, $record->context);
         $this->assertSame(['aws_request_id' => 'THIS_IS_THE_REQUEST_ID'], $record->extra);
     }
@@ -80,17 +74,13 @@ final class RequestIdLoggerProcessorTest extends TestCase
     public function testProcessRecordHasSafeId(): void
     {
         $request = new Request();
-        $request->headers = new ParameterBag();
-        $request->headers->set('x-session-safe-id', 'THIS_IS_THE_SAFE_ID');
+        $request->headers = new HeaderBag(['x-session-safe-id' => 'THIS_IS_THE_SAFE_ID']);
 
-        $this->reqStack->shouldReceive('getCurrentRequest')->andReturn($request);
-        $this->reqStack->shouldReceive('has')->with('x-session-safe-id')->andReturn(true);
-        $this->reqStack->shouldReceive('get')->with('x-session-safe-id')->andReturn('THIS_IS_THE_SAFE_ID');
-        $this->reqStack->shouldReceive('get')->with('x-session-safe-id')->andReturn('THIS_IS_THE_SAFE_ID');
-        $this->container->shouldReceive('has')->with('request_stack')->andReturn(true);
-        $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
+        $this->reqStack->expects(self::once())->method('getCurrentRequest')->willReturn($request);
+        $this->container->expects(self::once())->method('has')->with('request_stack')->willReturn(true);
+        $this->container->expects(self::once())->method('get')->with('request_stack')->willReturn($this->reqStack);
 
-        $record = $this->object->processRecord($this->record);
+        $record = $this->sut->processRecord($this->record);
         $this->assertSame($this->record->context, $record->context);
         $this->assertSame(['session_safe_id' => 'THIS_IS_THE_SAFE_ID'], $record->extra);
     }
@@ -98,19 +88,12 @@ final class RequestIdLoggerProcessorTest extends TestCase
     public function testProcessRecordHasNullSafeId(): void
     {
         $request = new Request();
+        $request->headers = new HeaderBag(['x-session-safe-id' => null]);
 
-        $this->reqStack->shouldReceive('getCurrentRequest')->andReturn($request);
-        $this->reqStack->shouldReceive('has')->with('x-session-safe-id')->andReturn(true);
-        $this->reqStack->shouldReceive('get')->with('x-session-safe-id')->andReturn(null);
-        $this->reqStack->shouldReceive('get')->with('x-session-safe-id')->andReturn(null);
-        $this->container->shouldReceive('has')->with('request_stack')->andReturn(true);
-        $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
+        $this->reqStack->expects(self::once())->method('getCurrentRequest')->willReturn($request);
+        $this->container->expects(self::once())->method('has')->with('request_stack')->willReturn(true);
+        $this->container->expects(self::once())->method('get')->with('request_stack')->willReturn($this->reqStack);
 
-        $this->assertEquals($this->record, $this->object->processRecord($this->record));
-    }
-
-    public function tearDown(): void
-    {
-        m::close();
+        $this->assertEquals($this->record, $this->sut->processRecord($this->record));
     }
 }

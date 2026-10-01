@@ -4,7 +4,14 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report;
 
+use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\Deputy\DeputyType;
+use OPG\Digideps\Common\Report\ReportType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Traits\AssetTrait;
@@ -19,7 +26,6 @@ use OPG\Digideps\Backend\Entity\Report\Traits\MoneyShortTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\MoneyTransactionTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\MoneyTransferTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\MoreInfoTrait;
-use OPG\Digideps\Backend\Entity\Report\Traits\ProfServiceFeesTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\ReportProfDeputyCostsEstimateTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\ReportProfDeputyCostsTrait;
 use OPG\Digideps\Backend\Entity\Report\Traits\StatusTrait;
@@ -33,10 +39,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Common\Report\Section\ReportSection;
+use OPG\Digideps\Common\Report\Section\Sections;
 
-/**
- * Reports.
- */
 #[ORM\Table(name: 'report')]
 #[ORM\Index(columns: ['end_date'], name: 'end_date_idx')]
 #[ORM\Index(columns: ['submit_date'], name: 'submit_date_idx')]
@@ -59,7 +64,6 @@ class Report
     use MoneyTransferTrait;
     use MoreInfoTrait;
     use DebtTrait;
-    use ProfServiceFeesTrait;
     use ReportProfDeputyCostsTrait;
     use ReportProfDeputyCostsEstimateTrait;
     use StatusTrait;
@@ -69,9 +73,6 @@ class Report
      * Threshold under which reports should be 103, and not 102.
      */
     public const int ASSETS_TOTAL_VALUE_103_THRESHOLD = 21000;
-
-    public const int HEALTH_WELFARE = 1;
-    public const int PROPERTY_AND_AFFAIRS = 2;
 
     public const string STATUS_NOT_STARTED = 'notStarted';
     public const string STATUS_READY_TO_SUBMIT = 'readyToSubmit';
@@ -100,11 +101,6 @@ class Report
 
     public const string TYPE_HEALTH_WELFARE = '104';
     public const string TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
-    public const string TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS = '103';
-    public const string TYPE_COMBINED_HIGH_ASSETS = '102-4';
-    public const string TYPE_COMBINED_LOW_ASSETS = '103-4';
-
-    public const bool ENABLE_FEE_SECTIONS = false;
 
     public const string SECTION_DECISIONS = 'decisions';
     public const string SECTION_CONTACTS = 'contacts';
@@ -141,51 +137,8 @@ class Report
 
     // Applies to both costs and estimate costs
     public const string PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
-    public const string PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
-    public const string PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
 
     public const int BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS = 60;
-
-    // Decisions
-    public const string SIGNIFICANT_DECISION_MADE = 'Yes';
-    public const string SIGNIFICANT_DECISION_NOT_MADE = 'No';
-
-    /**
-     * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations.
-     *
-     * @return array<string, array<string>>
-     */
-    public static function getSectionsSettings(): array
-    {
-        return [
-            self::SECTION_DECISIONS => self::allRolesAllReportTypes(),
-            self::SECTION_CONTACTS => self::allRolesAllReportTypes(),
-            self::SECTION_VISITS_CARE => self::allRolesAllReportTypes(),
-            self::SECTION_LIFESTYLE => self::allRolesHwAndCombinedReportTypes(),
-            // money
-            self::SECTION_BANK_ACCOUNTS => self::allRolesPfaAndCombinedReportTypes(),
-            self::SECTION_MONEY_TRANSFERS => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
-            self::SECTION_MONEY_IN => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
-            self::SECTION_MONEY_OUT => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
-            self::SECTION_MONEY_IN_SHORT => self::allRolesPfaAndCombinedLowAssetsReportTypes(),
-            self::SECTION_MONEY_OUT_SHORT => self::allRolesPfaAndCombinedLowAssetsReportTypes(),
-            self::SECTION_ASSETS => self::allRolesPfaAndCombinedReportTypes(),
-            self::SECTION_DEBTS => self::allRolesPfaAndCombinedReportTypes(),
-            self::SECTION_GIFTS => self::allRolesPfaAndCombinedReportTypes(),
-            self::SECTION_BALANCE => self::allRolesPfaAndCombinedHighAssetsReportTypes(),
-            self::SECTION_CLIENT_BENEFITS_CHECK => self::allRolesPfaAndCombinedReportTypes(),
-            // end money
-            self::SECTION_ACTIONS => self::allRolesAllReportTypes(),
-            self::SECTION_OTHER_INFO => self::allRolesAllReportTypes(),
-            self::SECTION_DEPUTY_EXPENSES => self::layPfaAndCombinedReportTypes(),
-            self::SECTION_PA_DEPUTY_EXPENSES => self::paPfaAndCombinedReportTypes(),
-            self::SECTION_PROF_CURRENT_FEES => self::ENABLE_FEE_SECTIONS ? self::profPfaAndCombinedReportTypes() : [],
-            self::SECTION_PROF_DEPUTY_COSTS => self::allProfReportTypes(),
-            // add when ready
-            self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => self::allProfReportTypes(),
-            self::SECTION_DOCUMENTS => self::allRolesAllReportTypes(),
-        ];
-    }
 
     /**
      * @return array<string>
@@ -229,6 +182,24 @@ class Report
         ];
     }
 
+    public static function allRolesHwAndCombinedReportTypes(): array
+    {
+        return [
+            self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
+            self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
+            self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
+        ];
+    }
+
+    public static function allRolesPfaAndCombinedReportTypes(): array
+    {
+        return [
+            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
+            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
+            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
+        ];
+    }
+
     #[JMS\Groups(['report', 'report-id'])]
     #[JMS\Type('integer')]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
@@ -247,7 +218,7 @@ class Report
 
     #[JMS\Groups(['report-client'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Client')]
-    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Client::class, cascade: ['persist'], inversedBy: 'reports')]
     private Client $client;
 
@@ -266,7 +237,6 @@ class Report
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: Action::class, cascade: ['persist', 'remove'])]
     private ?Action $action = null;
 
-
     #[JMS\Groups(['mental-capacity'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\MentalCapacity')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: MentalCapacity::class, cascade: ['persist', 'remove'])]
@@ -277,7 +247,7 @@ class Report
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: ClientBenefitsCheck::class, cascade: ['persist', 'remove'])]
     private ?ClientBenefitsCheck $clientBenefitsCheck = null;
 
-    #[JMS\Groups(['report', 'report-period'])]
+    #[JMS\Groups(['report', 'report-period','startEndDates'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[ORM\Column(name: 'start_date', type: 'date', nullable: true)]
     private \DateTime $startDate;
@@ -287,7 +257,7 @@ class Report
     #[ORM\Column(name: 'due_date', type: 'date', nullable: true)]
     private \DateTime $dueDate;
 
-    #[JMS\Groups(['report', 'report-period'])]
+    #[JMS\Groups(['report', 'report-period','startEndDates'])]
     #[JMS\Accessor(getter: 'getEndDate')]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[ORM\Column(name: 'end_date', type: 'date', nullable: true)]
@@ -451,7 +421,8 @@ class Report
     #[ORM\ManyToMany(targetEntity: CourtOrder::class, mappedBy: 'reports', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private Collection $courtOrders;
 
-    private array $excludeSections = [];
+    private ReportType $reportType;
+    private Sections $sections;
     private ?\DateTime $benefitsSectionReleaseDate = null;
 
     /**
@@ -459,11 +430,14 @@ class Report
      *
      * @param bool $dateChecks if true, perform checks around multiple reports and dates. Useful for PA upload
      */
-    public function __construct(Client $client, string $type, \DateTime $startDate, \DateTime $endDate, $dateChecks = true)
+    public function __construct(Client $client, string $type, \DateTime $startDate, \DateTime $endDate, bool $dateChecks = true)
     {
-        if (!in_array($type, self::allRolesAllReportTypes())) {
+        $reportType = ReportType::tryFrom($type);
+        if ($reportType === null) {
             throw new \InvalidArgumentException("$type not a valid report type");
         }
+        $this->reportType = $reportType;
+        $this->sections = Sections::new($this->reportType);
         $this->type = $type;
         $this->client = $client;
         $this->startDate = new \DateTime($startDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
@@ -508,7 +482,6 @@ class Report
         $this->reportSubmissions = new ArrayCollection();
         $this->wishToProvideDocumentation = null;
         $this->currentProfPaymentsReceived = null;
-        $this->profServiceFees = new ArrayCollection();
         $this->checklist = null;
         $this->profDeputyPreviousCosts = new ArrayCollection();
         $this->profDeputyInterimCosts = new ArrayCollection();
@@ -546,19 +519,18 @@ class Report
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
     /**
-     * @param string $type See TYPE_ constants
+     * See TYPE_ constants
      */
     public function setType(string $type): static
     {
+        $this->reportType = ReportType::from($type);
+        $this->sections = Sections::new($this->reportType);
         $this->type = $type;
 
         return $this;
@@ -584,32 +556,16 @@ class Report
     #[JMS\Type('array')]
     public function getAvailableSections(): array
     {
-        if (!$this->requiresBenefitsCheckSection()) {
-            $this->excludeSections = [Report::SECTION_CLIENT_BENEFITS_CHECK];
-        } else {
-            $this->excludeSections = [];
-        }
-
-        $ret = [];
-        foreach (self::getSectionsSettings() as $sectionId => $reportTypes) {
-            if (in_array($sectionId, $this->excludeSections)) {
-                continue;
-            }
-
-            if (in_array($this->getType(), $reportTypes)) {
-                $ret[] = $sectionId;
-            }
-        }
-
-        return $ret;
+        return array_map(fn (ReportSection $section) => $section->value, [...$this->sections->getIterator()]);
     }
 
     /**
-     * @param string $section See SECTION_ constants
+     * See SECTION_ constants
      */
     public function hasSection(string $section): bool
     {
-        return in_array($section, $this->getAvailableSections());
+        $enum = ReportSection::tryFrom($section);
+        return $enum !== null && $this->sections->hasSection($enum);
     }
 
     public function setStartDate(\DateTime $startDate): static
@@ -634,15 +590,6 @@ class Report
     public function getEndDate(): \DateTime
     {
         return $this->endDate;
-    }
-
-    /**
-     * For check reasons.
-     */
-    public function hasSamePeriodAs(Report $report): bool
-    {
-        return $this->startDate->format('Ymd') === $report->getStartDate()->format('Ymd')
-            && $this->endDate->format('Ymd') === $report->getEndDate()->format('Ymd');
     }
 
     public function setSubmitDate(?\DateTime $submitDate): static
@@ -844,7 +791,7 @@ class Report
     #[JMS\Groups(['report', 'report-106-flag'])]
     public function has106Flag(): bool
     {
-        return str_ends_with($this->type, '-6');
+        return $this->isPAreport();
     }
 
     /**
@@ -1014,7 +961,7 @@ class Report
     }
 
     /**
-     * Previous report data. Just return id and type for second api call to allo new JMS groups.
+     * Previous report data. Just return id and type for second api call to allow new JMS groups.
      */
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('previous_report_data')]
@@ -1022,46 +969,52 @@ class Report
     #[JMS\Type('array')]
     public function getPreviousReportData(): array
     {
-        $previousReport = $this->getPreviousReport();
+        $uidPopulateCallback = function (CourtOrder $courtOrder): string {
+            return $courtOrder->getCourtOrderUid();
+        };
 
-        if ($previousReport === null) {
-            return [];
+        $latestCourtOrderUids = array_map($uidPopulateCallback, $this->getActiveCourtOrders());
+        sort($latestCourtOrderUids);
+
+        $orderedSubmittedClientReports = $this->getClient()->getSubmittedReports();
+        $latestStartDate = $this->getStartDate();
+
+        $filteredReports = $orderedSubmittedClientReports->filter(function (Report $clientReport) use (
+            $latestStartDate,
+            $latestCourtOrderUids,
+            $uidPopulateCallback,
+        ): bool {
+            $courtOrderUids = array_map($uidPopulateCallback, $clientReport->getActiveCourtOrders());
+            sort($courtOrderUids);
+
+            $endDate = $clientReport->getEndDate();
+
+            return count(array_diff($latestCourtOrderUids, $courtOrderUids)) === 0 &&
+                $endDate->diff($latestStartDate)->days === 1 &&
+                $clientReport->isPfa();
+        });
+
+        $report = $filteredReports->first();
+
+        if ($report instanceof Report) {
+            if ($filteredReports->count() > 1) {
+                /** @var Report $filteredReport */
+                foreach ($filteredReports as $filteredReport) {
+                    if ($filteredReport->getSubmitDate() > $report->getSubmitDate()) {
+                        $report = $filteredReport;
+                    }
+                }
+            }
+
+            return [
+                'report-summary' => $report->getReportSummary(),
+                'financial-summary' => $report->getFinancialSummary(),
+                'assets-summary' => $report->getAssetsSummary(),
+                'debts-summary' => $report->getDebtsSummary(),
+            ];
         }
 
-        return [
-            'report-summary' => $previousReport->getReportSummary(),
-            'financial-summary' => $previousReport->getFinancialSummary(),
-        ];
-    }
-
-    /**
-     * Method to identify and return previous report.
-     */
-    private function getPreviousReport(): ?Report
-    {
-        $clientReports = $this->getClient()->getReports();
-
-        // ensure order is correct most recent first
-        $values = $clientReports->getValues();
-
-        uasort(
-            $values,
-            function ($a, $b): int {
-                return ($a->getId() > $b->getId()) ? -1 : 1;
-            }
-        );
-
-        $orderedClientReports = new ArrayCollection($values);
-
-        // try previous reports
-        foreach ($orderedClientReports as $clientReport) {
-            if ($clientReport->getId() < $this->getId()) {
-                // less than should imply their previous report
-                return $clientReport;
-            }
-        }
-
-        return null;
+        return [];
     }
 
     /**
@@ -1071,7 +1024,6 @@ class Report
     {
         $accounts = [];
         $openingBalanceTotal = 0;
-        /** @var BankAccount $ba */
         foreach ($this->getBankAccounts() as $ba) {
             $accounts[$ba->getId()]['nameOneLine'] = $ba->getNameOneLine();
             $accounts[$ba->getId()]['bank'] = $ba->getBank();
@@ -1081,7 +1033,7 @@ class Report
             $accounts[$ba->getId()]['isClosed'] = $ba->getIsClosed();
             $accounts[$ba->getId()]['isJointAccount'] = $ba->getIsJointAccount();
 
-            $openingBalanceTotal += $ba->getOpeningBalance();
+            $openingBalanceTotal += (float)$ba->getOpeningBalance();
         }
 
         return [
@@ -1098,7 +1050,28 @@ class Report
     public function getReportSummary(): array
     {
         return [
+            'id' => $this->getId(),
             'type' => $this->getType(),
+        ];
+    }
+
+    public function getAssetsSummary(): array
+    {
+        return [
+            'assetsTotal' => $this->getAssetsTotalValue(),
+            'startDate' => $this->getStartDate(),
+            'endDate' => $this->getEndDate(),
+            'noAssetsToAdd' => $this->getNoAssetToAdd(),
+        ];
+    }
+
+    public function getDebtsSummary(): array
+    {
+        return [
+            'debtsTotal' => $this->getDebtsTotalAmount(),
+            'startDate' => $this->getStartDate(),
+            'endDate' => $this->getEndDate(),
+            'hasDebts' => $this->getHasDebts(),
         ];
     }
 
@@ -1111,45 +1084,28 @@ class Report
     #[JMS\Type('string')]
     public function getReportTitle(): string
     {
-        $titleTranslationKeys = [
-            self::LAY_PFA_LOW_ASSETS_TYPE => 'propertyAffairsMinimal',
-            self::LAY_PFA_HIGH_ASSETS_TYPE => 'propertyAffairsGeneral',
-            self::LAY_HW_TYPE => 'healthWelfare',
-            self::LAY_COMBINED_LOW_ASSETS_TYPE => 'propertyAffairsMinimalHealthWelfare',
-            self::LAY_COMBINED_HIGH_ASSETS_TYPE => 'propertyAffairsGeneralHealthWelfare',
+        $hybrid = $this->reportType->courtOrderKind === CourtOrderKind::Hybrid ? 'HealthWelfare' : '';
 
-            self::PA_PFA_LOW_ASSETS_TYPE => 'propertyAffairsMinimal',
-            self::PA_PFA_HIGH_ASSETS_TYPE => 'propertyAffairsGeneral',
-            self::PA_HW_TYPE => 'healthWelfare',
-            self::PA_COMBINED_LOW_ASSETS_TYPE => 'propertyAffairsMinimalHealthWelfare',
-            self::PA_COMBINED_HIGH_ASSETS_TYPE => 'propertyAffairsGeneralHealthWelfare',
-
-            self::PROF_PFA_LOW_ASSETS_TYPE => 'propertyAffairsMinimal',
-            self::PROF_PFA_HIGH_ASSETS_TYPE => 'propertyAffairsGeneral',
-            self::PROF_HW_TYPE => 'healthWelfare',
-            self::PROF_COMBINED_LOW_ASSETS_TYPE => 'propertyAffairsMinimalHealthWelfare',
-            self::PROF_COMBINED_HIGH_ASSETS_TYPE => 'propertyAffairsGeneralHealthWelfare',
-        ];
-
-        return $titleTranslationKeys[$this->getType()];
+        return match ($this->reportType->courtOrderReportType) {
+            CourtOrderReportType::OPG102 => "propertyAffairsGeneral{$hybrid}",
+            CourtOrderReportType::OPG103 => "propertyAffairsMinimal{$hybrid}",
+            CourtOrderReportType::OPG104 => 'healthWelfare',
+        };
     }
 
-    /**
-     * @return bool true if report is lay type, otherwise false
-     */
     public function isLayReport(): bool
     {
-        return in_array($this->getType(), [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE]);
+        return $this->reportType->deputyType === DeputyType::LAY;
     }
 
     public function isPAreport(): bool
     {
-        return in_array($this->getType(), [self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE]);
+        return $this->reportType->deputyType === DeputyType::PA;
     }
 
     public function isProfReport(): bool
     {
-        return in_array($this->getType(), [self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE]);
+        return $this->reportType->deputyType === DeputyType::PRO;
     }
 
     public function getSatisfaction(): ?Satisfaction
@@ -1177,10 +1133,10 @@ class Report
     }
 
     /**
-     * The client benefits check section of the report should be required for:.
+     * The client benefits check section of the report should be required for:
      *
-     * Reports with an unsubmit date that had originally completed the section
-     * Reports without an unsubmit date and a due date more than 60 days after the client benefits section release date
+     * Reports with an unsubmit date that had originally completed the section.
+     * Reports without an unsubmit date and a due date more than 60 days after the client benefits section release date.
      */
     public function requiresBenefitsCheckSection(): bool
     {
@@ -1188,22 +1144,10 @@ class Report
             return $this->getClientBenefitsCheck() instanceof ClientBenefitsCheck;
         } else {
             // Provides a positive or negative string showing days between feature flag and due date
-            $diffInDays = $this->getBenefitsSectionReleaseDate()->diff($this->getDueDate())->format('%R%a');
+            $diffInDays = (int)$this->getBenefitsSectionReleaseDate()?->diff($this->getDueDate())?->format('%R%a');
 
-            return intval($diffInDays) > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
+            return $diffInDays > self::BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS;
         }
-    }
-
-    public function getExcludeSections(): array
-    {
-        return $this->excludeSections;
-    }
-
-    public function setExcludeSections(array $excludeSections): Report
-    {
-        $this->excludeSections = $excludeSections;
-
-        return $this;
     }
 
     public function getBenefitsSectionReleaseDate(): ?\DateTime
@@ -1216,79 +1160,6 @@ class Report
         $this->benefitsSectionReleaseDate = $benefitsSectionReleaseDate;
 
         return $this;
-    }
-
-    public static function allRolesAllReportTypes(): array
-    {
-        return [
-            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
-            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
-            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
-        ];
-    }
-
-    public static function allRolesHwAndCombinedReportTypes(): array
-    {
-        return [
-            self::LAY_HW_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
-            self::PA_HW_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
-            self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
-        ];
-    }
-
-    public static function allRolesPfaAndCombinedReportTypes(): array
-    {
-        return [
-            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
-            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
-            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
-        ];
-    }
-
-    public static function allProfReportTypes(): array
-    {
-        return [
-            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
-        ];
-    }
-
-    public static function allRolesPfaAndCombinedHighAssetsReportTypes(): array
-    {
-        return [
-            self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
-            self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
-            self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
-        ];
-    }
-
-    public static function allRolesPfaAndCombinedLowAssetsReportTypes(): array
-    {
-        return [
-            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE,
-            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE,
-            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE,
-        ];
-    }
-
-    public static function layPfaAndCombinedReportTypes(): array
-    {
-        return [
-            self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE,
-        ];
-    }
-
-    public static function paPfaAndCombinedReportTypes(): array
-    {
-        return [
-            self::PA_PFA_LOW_ASSETS_TYPE, self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE,
-        ];
-    }
-
-    public static function profPfaAndCombinedReportTypes(): array
-    {
-        return [
-            self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE,
-        ];
     }
 
     public function getMoneyInExists(): ?string
@@ -1341,44 +1212,17 @@ class Report
 
     public function isHybrid(): bool
     {
-        return in_array(
-            $this->type,
-            [
-                self::LAY_COMBINED_LOW_ASSETS_TYPE,
-                self::LAY_COMBINED_HIGH_ASSETS_TYPE,
-                self::PA_COMBINED_LOW_ASSETS_TYPE,
-                self::PA_COMBINED_HIGH_ASSETS_TYPE,
-                self::PROF_COMBINED_LOW_ASSETS_TYPE,
-                self::PROF_COMBINED_HIGH_ASSETS_TYPE,
-            ]
-        );
+        return $this->reportType->courtOrderKind === CourtOrderKind::Hybrid;
     }
 
     public function isPfa(): bool
     {
-        return in_array(
-            $this->type,
-            [
-                self::LAY_PFA_LOW_ASSETS_TYPE,
-                self::LAY_PFA_HIGH_ASSETS_TYPE,
-                self::PA_PFA_LOW_ASSETS_TYPE,
-                self::PA_PFA_HIGH_ASSETS_TYPE,
-                self::PROF_PFA_LOW_ASSETS_TYPE,
-                self::PROF_PFA_HIGH_ASSETS_TYPE,
-            ],
-        );
+        return $this->reportType->courtOrderType === CourtOrderType::PFA;
     }
 
     public function isHw(): bool
     {
-        return in_array(
-            $this->type,
-            [
-                self::LAY_HW_TYPE,
-                self::PA_HW_TYPE,
-                self::PA_HW_TYPE,
-            ]
-        );
+        return $this->reportType->courtOrderType === CourtOrderType::HW;
     }
 
     /**
@@ -1413,6 +1257,13 @@ class Report
         }
     }
 
+    #[ORM\PostLoad]
+    public function onPostLoad(PostLoadEventArgs $_): void
+    {
+        $this->reportType = ReportType::from($this->type);
+        $this->sections = Sections::new($this->reportType);
+    }
+
     private function addMissingChildEntities(): void
     {
         if ($this->getDebts()->isEmpty()) {
@@ -1432,5 +1283,31 @@ class Report
                 $this->moneyShortCategories->add(new MoneyShortCategory($this, $typeId, false));
             }
         }
+    }
+
+    public function getReportType(): ReportType
+    {
+        return $this->reportType;
+    }
+
+    #[JMS\VirtualProperty]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Deputy')]
+    #[JMS\Groups(['deputy'])]
+    public function getPrimaryDeputy(): ?Deputy
+    {
+        $candidate = $this->submittedBy?->getDeputy();
+        if ($candidate !== null) {
+            return $candidate;
+        }
+
+        foreach ($this->getCourtOrders() as $courtOrder) {
+            foreach ($courtOrder->getActiveDeputies() as $deputy) {
+                $candidate ??= $deputy;
+                if ($candidate->getDeputyType() === DeputyType::LAY && $deputy->getDeputyType() !== DeputyType::LAY) {
+                    $candidate = $deputy;
+                }
+            }
+        }
+        return $candidate;
     }
 }

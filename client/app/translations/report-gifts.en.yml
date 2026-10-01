@@ -89,3 +89,9 @@ form:
     hint: ""
   save:
     label: Save gift
+
+review:
+  notEntered: Not entered
+  yes: Yes
+  no: No
+  totalAmount: Total Amount

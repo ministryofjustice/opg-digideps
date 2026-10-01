@@ -8,11 +8,22 @@ variable "default_tags" {
   type        = any
 }
 
+variable "docker_tag" {
+  type        = string
+  description = "The docker_tag"
+}
+
 data "aws_region" "current" {}
 
 data "aws_caller_identity" "current" {}
 
 locals {
-  current_main_region = data.aws_region.current.name
-  s3_bucket           = var.account.name
+  current_main_region   = data.aws_region.current.name
+  s3_bucket             = var.account.name
+  default_allow_list    = concat(module.allow_list.palo_alto_prisma_access, module.allow_list.moj_sites)
+  management_account_id = 311462405659
+}
+
+module "allow_list" {
+  source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git?ref=v3.0.3"
 }

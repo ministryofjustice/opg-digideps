@@ -19,6 +19,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class IngestDeputyshipsCSVCommand extends Command
 {
+    /** @var string|null $defaultName */
     public static $defaultName = 'digideps:api:ingest-deputyships-csv';
     private const string JOB_NAME = 'deputyships_csv_processing';
 

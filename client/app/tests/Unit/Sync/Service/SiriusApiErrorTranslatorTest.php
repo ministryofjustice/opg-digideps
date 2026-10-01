@@ -12,20 +12,14 @@ use Symfony\Component\Serializer\Serializer;
 
 class SiriusApiErrorTranslatorTest extends KernelTestCase
 {
-    /**
-     * @var Serializer
-     */
-    private $serializer;
+    private Serializer $serializer;
 
     public function setUp(): void
     {
         $this->serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
     }
 
-    /**
-     * @test
-     */
-    public function translateApiErrorsUnexpectedFormat()
+    public function testTranslateApiErrorsUnexpectedFormat(): void
     {
         $sut = new SiriusApiErrorTranslator($this->serializer);
         $unexpectedErrorJson = '{"An error occurred"}';
@@ -34,10 +28,7 @@ class SiriusApiErrorTranslatorTest extends KernelTestCase
         self::assertEquals($unexpectedErrorJson, $translation);
     }
 
-    /**
-     * @test
-     */
-    public function translateApiError()
+    public function testTranslateApiError(): void
     {
 
         $sut = new SiriusApiErrorTranslator($this->serializer);

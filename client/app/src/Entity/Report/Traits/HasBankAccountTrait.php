@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use JMS\Serializer\Annotation as JMS;
@@ -7,52 +9,32 @@ use OPG\Digideps\Frontend\Entity\Report\BankAccount;
 
 trait HasBankAccountTrait
 {
-    /**
-     * @var BankAccount
-     * @JMS\SerializedName("bankAccount")
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\BankAccount")
-     *
-     * @JMS\Groups({"account"})
-     */
-    private $bankAccount;
+    #[JMS\SerializedName('bankAccount')]
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\BankAccount')]
+    #[JMS\Groups(['account'])]
+    private ?BankAccount $bankAccount = null;
 
-    /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"account"})
-     **/
-    private $bankAccountId;
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['account'])]
+    private ?int $bankAccountId = null;
 
-    /**
-     * @return mixed
-     */
-    public function getBankAccount()
+    public function getBankAccount(): ?BankAccount
     {
         return $this->bankAccount;
     }
 
-    /**
-     * @param $bankAccount
-     * @return $this
-     */
-    public function setBankAccount($bankAccount)
+    public function setBankAccount(?BankAccount $bankAccount): static
     {
         $this->bankAccount = $bankAccount;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getBankAccountId()
+    public function getBankAccountId(): ?int
     {
         return $this->bankAccountId;
     }
 
-    /**
-     * @param $bankAccountId
-     * @return $this
-     */
-    public function setBankAccountId($bankAccountId)
+    public function setBankAccountId(?int $bankAccountId): static
     {
         $this->bankAccountId = $bankAccountId;
         return $this;

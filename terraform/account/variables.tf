@@ -7,18 +7,26 @@ variable "DEFAULT_ROLE" {
 variable "MANAGEMENT_ROLE" {
   type        = string
   description = "Management role to use for providers"
-  default     = "digideps-ci"
+  default     = "digideps-ci-boundary"
+}
+
+variable "OPG_DOCKER_TAG" {
+  description = "docker tag to deploy"
+  type        = string
+  default     = "latest"
 }
 
 variable "accounts" {
   type = map(
     object({
-      account_id         = string
-      name               = string
-      ip_block_workspace = string
-      db_subnet_group    = string
-      ec_subnet_group    = string
-      environments       = set(string)
+      account_id             = string
+      name                   = string
+      pagerduty_enabled      = bool
+      resource_alarms_active = bool
+      ip_block_workspace     = string
+      db_subnet_group        = string
+      ec_subnet_group        = string
+      environments           = set(string)
       network = object({
         enabled        = bool
         cidr_eu_west_1 = string
@@ -38,6 +46,7 @@ locals {
   default_tags = {
     business-unit          = "OPG"
     application            = "Digideps"
+    service-area           = "Supervision"
     environment-name       = terraform.workspace
     owner                  = "OPG Supervision"
     infrastructure-support = "OPG WebOps: opgteam+digideps@digital.justice.gov.uk"

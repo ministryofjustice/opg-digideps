@@ -3,12 +3,13 @@
 namespace OPG\Digideps\Backend\Service;
 
 use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Asset;
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\Contact;
+use OPG\Digideps\Backend\Entity\Report\Debt;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
@@ -62,7 +63,6 @@ class ReportService
 
         $this->em->persist($submission);
 
-        /** @var CourtOrder[] $courtOrders */
         $courtOrders = $currentReport->getCourtOrders()->toArray();
         $client = $currentReport->getClient();
         $clientId = $client->getId();
@@ -71,8 +71,6 @@ class ReportService
 
         // Set user to active once they have submitted a report
         $user->setActive(true);
-
-        $newYearReport = null;
 
         if ($currentReport->getUnSubmitDate()) {
             $this->logger->warning("Creating next year report for client $clientId (existing unsubmitted report) at $now");
@@ -118,30 +116,32 @@ class ReportService
         $fromAssets = $fromReport->getAssets();
         foreach ($fromAssets as $asset) {
             // Check that the target report doesn't already have a matching asset
-            $assetExists = $this->checkAssetExists($toReport, $asset);
-
-            if (!$assetExists) {
-                $newAsset = $this->cloneAsset($asset);
-                $newAsset->setReport($toReport);
-
-                $toReport->addAsset($newAsset);
-                $this->em->detach($newAsset);
-                $this->em->persist($newAsset);
+            if (!$this->checkAssetExists($toReport, $asset)) {
+                $this->em->persist($this->cloneAsset($asset, $toReport));
             }
         }
 
         // copy bank accounts (opening balance = closing balance, opening date = closing date)
         foreach ($fromReport->getBankAccounts() as $account) {
             // Check that the target report doesn't already have a bank account with that account number
-            $accountExists = $this->checkBankAccountExists($toReport, $account);
-
-            if (!$accountExists) {
-                $newAccount = $this->cloneBankAccount($account);
-                $newAccount->setReport($toReport);
-                $toReport->addAccount($newAccount);
-                $this->em->persist($newAccount);
+            if (!$this->checkBankAccountExists($toReport, $account)) {
+                $this->em->persist($this->cloneBankAccount($account, $toReport));
             }
         }
+
+        foreach ($fromReport->getContacts() as $contact) {
+            if (!$this->checkContactExists($toReport, $contact)) {
+                $this->em->persist($this->cloneContact($contact, $toReport));
+            }
+        }
+
+        foreach ($fromReport->getDebts() as $debt) {
+            if (!$this->checkDebtExists($toReport, $debt)) {
+                $this->em->persist($this->cloneDebt($debt, $toReport));
+                $toReport->setHasDebts('yes');
+            }
+        }
+        $toReport->setDebtManagement($toReport->getDebtManagement() ?? $fromReport->getDebtManagement());
     }
 
     private function checkAssetExists(Report $toReport, Asset $asset): bool
@@ -149,10 +149,8 @@ class ReportService
         $toAssets = $toReport->getAssets();
 
         foreach ($toAssets as $toAsset) {
-            if ($toAsset->getType() === $asset->getType()) {
-                if ($asset->isEqual($toAsset)) {
-                    return true;
-                }
+            if ($asset->isEqual($toAsset)) {
+                return true;
             }
         }
 
@@ -162,10 +160,10 @@ class ReportService
     /**
      * Convert asset into Report Asset.
      */
-    private function cloneAsset(Asset $asset): Asset
+    private function cloneAsset(Asset $asset, Report $toReport): Asset
     {
         if ($asset instanceof AssetProperty) {
-            $newAsset = new AssetProperty();
+            $newAsset = new AssetProperty($toReport);
 
             $newAsset->setAddress($asset->getAddress());
             $newAsset->setAddress2($asset->getAddress2());
@@ -182,7 +180,7 @@ class ReportService
             $newAsset->setRentAgreementEndDate($asset->getRentAgreementEndDate());
             $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
         } elseif ($asset instanceof AssetOther) {
-            $newAsset = new AssetOther();
+            $newAsset = new AssetOther($toReport);
             $newAsset->setTitle($asset->getTitle());
             $newAsset->setDescription($asset->getDescription());
             $newAsset->setValuationDate($asset->getValuationDate());
@@ -195,9 +193,6 @@ class ReportService
         return $newAsset;
     }
 
-    /**
-     * @return bool
-     */
     private function checkBankAccountExists(Report $toReport, BankAccount $account): bool
     {
         foreach ($toReport->getBankAccounts() as $toAccount) {
@@ -218,9 +213,9 @@ class ReportService
     /**
      * Clones instance of Report and returns new Report Bank Account.
      */
-    private function cloneBankAccount(BankAccount $account): BankAccount
+    private function cloneBankAccount(BankAccount $account, Report $toReport): BankAccount
     {
-        $newAccount = new BankAccount();
+        $newAccount = new BankAccount($toReport);
 
         $newAccount->setBank($account->getBank());
         $newAccount->setAccountType($account->getAccountType());
@@ -230,6 +225,59 @@ class ReportService
         $newAccount->setIsJointAccount($account->getIsJointAccount());
 
         return $newAccount;
+    }
+
+    private function checkContactExists(Report $toReport, Contact $contact): bool
+    {
+        foreach ($toReport->getContacts() as $existingContact) {
+            if (
+                $existingContact->getContactName() === $contact->getContactName()
+                && $existingContact->getAddress() === $contact->getAddress()
+                && $existingContact->getAddress2() === $contact->getAddress2()
+                && $existingContact->getCounty() === $contact->getCounty()
+                && $existingContact->getPostcode() === $contact->getPostcode()
+                && $existingContact->getCountry() === $contact->getCountry()
+                && $existingContact->getRelationship() === $contact->getRelationship()
+                && $existingContact->getPhone1() === $contact->getPhone1()
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function cloneContact(Contact $contact, Report $toReport): Contact
+    {
+        $newContact = new Contact($toReport)
+            ->setContactName($contact->getContactName())
+            ->setAddress($contact->getAddress())
+            ->setAddress2($contact->getAddress2())
+            ->setCounty($contact->getCounty())
+            ->setPostcode($contact->getPostcode())
+            ->setCountry($contact->getCountry())
+            ->setRelationship($contact->getRelationship())
+            ->setPhone1($contact->getPhone1());
+        $toReport->addContact($newContact);
+        return $newContact;
+    }
+
+    private function checkDebtExists(Report $toReport, Debt $debt): bool
+    {
+        foreach ($toReport->getDebts() as $existingDebt) {
+            if (
+                $existingDebt->getAmount() === $debt->getAmount()
+                && $existingDebt->getDebtTypeId() === $debt->getDebtTypeId()
+                && (!$existingDebt->getHasMoreDetails() || $existingDebt->getMoreDetails() === $debt->getMoreDetails())
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function cloneDebt(Debt $debt, Report $toReport): Debt
+    {
+        return new Debt($toReport, $debt->getDebtTypeId(), $debt->getHasMoreDetails(), $debt->getAmount(), $debt->getMoreDetails());
     }
 
     /**
@@ -350,11 +398,9 @@ class ReportService
 
     /**
      * If the report is ready to submit, but is not yet due, return notFinished instead
-     * In all the the cases, return original $status.
+     * In all the cases, return original $status.
      *
      * @param string $status
-     *
-     * @return string
      */
     public function adjustReportStatus($status, \DateTime $endDate): string
     {

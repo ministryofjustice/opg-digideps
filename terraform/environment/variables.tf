@@ -7,7 +7,13 @@ variable "DEFAULT_ROLE" {
 variable "MANAGEMENT_ROLE" {
   type        = string
   description = "Management role to use for providers"
-  default     = "digideps-ci"
+  default     = "digideps-ci-boundary"
+}
+
+variable "IDENTITY_ROLE" {
+  type        = string
+  description = "Identity role to use for providers"
+  default     = "digideps-ci-boundary"
 }
 
 variable "OPG_DOCKER_TAG" {
@@ -25,10 +31,13 @@ variable "accounts" {
         is_production                       = number
         fixtures_enabled                    = bool
         alarms_active                       = bool
+        resource_alarms_active              = bool
         fault_injection_experiments_enabled = bool
         sleep_mode_enabled                  = bool
         secondary_region_enabled            = bool
         run_one_off_migrations              = string
+        resilience_tests_enabled            = bool
+        entra_enabled                       = bool
       })
       sirius = object({
         environment = string
@@ -89,16 +98,18 @@ data "aws_ssm_parameter" "env_vars_production" {
 }
 
 locals {
-  primary_region_name = "eu-west-1"
-  account             = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
-  secrets_prefix      = contains(keys(var.accounts), local.environment) ? local.environment : "default"
-  subdomain           = local.account.dns.subdomain_enabled ? local.environment : ""
+  primary_region_name    = "eu-west-1"
+  account                = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
+  default_secrets_prefix = contains(keys(var.accounts), local.environment) ? local.environment : "default"
+  secrets_prefix         = local.environment == "preproduction2" ? "preproduction" : local.default_secrets_prefix
+  subdomain              = local.account.dns.subdomain_enabled ? local.environment : ""
 
   environment = lower(terraform.workspace)
 
   default_tags = {
     business-unit          = "OPG"
     application            = "Digideps"
+    service-area           = "Supervision"
     environment-name       = local.environment
     owner                  = "OPG Supervision"
     infrastructure-support = "OPG WebOps: opgteam@digital.justice.gov.uk"

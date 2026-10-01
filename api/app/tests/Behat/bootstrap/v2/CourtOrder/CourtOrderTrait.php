@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\CourtOrder;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
@@ -437,6 +437,33 @@ trait CourtOrderTrait
         $this->courtOrders = [$this->courtOrder];
 
         $this->em->persist($this->courtOrder);
+        $this->em->flush();
+    }
+
+    /**
+     * @Given the client with court order :courtOrderUid is associated with a :orderType report
+     */
+    public function clientAssociatedWithCourtOrderHasReport(string $courtOrderUid, string $orderType): void
+    {
+        $courtOrder = $this->em->getRepository(CourtOrder::class)->findOneBy(['courtOrderUid' => $courtOrderUid]);
+
+        if (!$courtOrder instanceof CourtOrder) {
+            throw new BehatException("Unable to find any CourtOrder with courtOrderUid {$courtOrderUid}");
+        }
+        $client = $courtOrder->getClient();
+
+        // create a new report
+        $type = ($orderType === CourtOrderType::PFA->value) ?
+            Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS :
+            Report::TYPE_HEALTH_WELFARE;
+
+        $now = new \DateTime();
+        $report = new Report($client, $type, $now, $now, false);
+        $report->setClient($client);
+
+        $courtOrder->addReport($report);
+
+        $this->em->persist($report);
         $this->em->flush();
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service;
 
-use Mockery\MockInterface;
 use OPG\Digideps\Frontend\Entity\Report\Document;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
@@ -13,111 +12,76 @@ use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Service\Csv\TransactionsCsvGenerator;
 use OPG\Digideps\Frontend\Service\File\S3FileUploader;
 use OPG\Digideps\Frontend\Service\HtmlToPdfGenerator;
-use OPG\Digideps\Frontend\Service\Mailer\MailFactory;
-use OPG\Digideps\Frontend\Service\Mailer\MailSender;
-use Tests\OPG\Digideps\Frontend\Unit\MockeryStub as m;
 use OPG\Digideps\Frontend\Service\ReportSubmissionService;
+use PHPUnit\Framework\Constraint\IsType;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Container;
 use Twig\Environment;
 
 class ReportSubmissionServiceTest extends TestCase
 {
-    use ProphecyTrait;
+    private S3FileUploader&MockObject $mockFileUploader;
+    private RestClient&MockObject $mockRestClient;
+    private Environment&MockObject $mockTemplatingEngine;
+    private HtmlToPdfGenerator&MockObject $mockPdfGenerator;
+    private TransactionsCsvGenerator&MockObject $mockCsvGenerator;
+    private Report&MockObject $mockReport;
+    protected ReportSubmissionService $sut;
 
-    /**
-     * @var ReportSubmissionService
-     */
-    protected $sut;
-
-    private $mockFileUploader;
-    private $mockRestClient;
-    private $mockTemplatingEngine;
-    private $mockPdfGenerator;
-    private $mockLogger;
-    private $mockCsvGenerator;
-    private MockInterface&Report $mockReport;
-
-    /** @var ObjectProphecy&S3FileUploader */
-    private $fileUploader;
-    /** @var ObjectProphecy&RestClient */
-    private $restClient;
-    /** @var ObjectProphecy&MailSender */
-    private $mailSender;
-    /** @var ObjectProphecy&MailFactory */
-    private $mailFactory;
-    /** @var ObjectProphecy&Environment */
-    private $twig;
-    /** @var ObjectProphecy&HtmlToPdfGenerator */
-    private $pdfGenerator;
-    /** @var ObjectProphecy&LoggerInterface */
-    private $logger;
-    /** @var ObjectProphecy&TransactionsCsvGenerator */
-    private $csvGenerator;
-
-    /**
-     * Set up the mockservies.
-     */
     public function setUp(): void
     {
-        $this->mockFileUploader = m::mock(S3FileUploader::class);
-        $this->mockRestClient = m::mock(RestClient::class);
-        $this->mockTemplatingEngine = m::mock(Environment::class);
-        $this->mockPdfGenerator = m::mock(HtmlToPdfGenerator::class);
-        $this->mockLogger = m::mock(LoggerInterface::class);
-        $this->mockCsvGenerator = m::mock(TransactionsCsvGenerator::class);
+        $this->mockFileUploader = self::createMock(S3FileUploader::class);
+        $this->mockRestClient = self::createMock(RestClient::class);
+        $this->mockTemplatingEngine = self::createMock(Environment::class);
+        $this->mockPdfGenerator = self::createMock(HtmlToPdfGenerator::class);
+        $this->mockCsvGenerator = self::createMock(TransactionsCsvGenerator::class);
+        $this->mockReport = self::createMock(Report::class);
 
-        $this->mockReport = m::mock(Report::class);
-
-        $this->fileUploader = self::prophesize(S3FileUploader::class);
-        $this->restClient = self::prophesize(RestClient::class);
-        $this->twig = self::prophesize(Environment::class);
-        $this->pdfGenerator = self::prophesize(HtmlToPdfGenerator::class);
-        $this->logger = self::prophesize(LoggerInterface::class);
-        $this->csvGenerator = self::prophesize(TransactionsCsvGenerator::class);
-    }
-
-    /**
-     * @test
-     *
-     * @dataProvider lowOrNoAssetsReportTypeProvider
-     */
-    public function generateReportDocumentsWithoutTransactionCsv(string $reportType): void
-    {
-        $report = self::prophesize(Report::class);
-        $report->getType()->willReturn($reportType);
-        $report->createAttachmentName('DigiRep-%s_%s_%s.pdf')->shouldBeCalled()->willReturn('reportFileName');
-
-        $this->twig->render(Argument::type('string'), ['report' => $report, 'showSummary' => Argument::type('bool')])
-            ->shouldBeCalled()
-            ->willReturn('PDF HTML CONTENT');
-
-        $this->pdfGenerator->getPdfFromHtml('PDF HTML CONTENT')->shouldBeCalled()->willReturn('PDF CONTENT');
-
-        $this->fileUploader->uploadFileAndPersistDocument($report, 'PDF CONTENT', 'reportFileName', true, false)->shouldBeCalled();
-        $this->fileUploader->uploadFileAndPersistDocument($report, Argument::type('string'), Argument::type('string'), false, false)->shouldNotBeCalled();
-
-        $sut = $this->generateProphecySut();
-        $sut->generateReportDocuments($report->reveal());
-    }
-
-    private function generateProphecySut(): ReportSubmissionService
-    {
-        return new ReportSubmissionService(
-            $this->csvGenerator->reveal(),
-            $this->twig->reveal(),
-            $this->fileUploader->reveal(),
-            $this->restClient->reveal(),
-            $this->logger->reveal(),
-            $this->pdfGenerator->reveal(),
+        $this->sut = new ReportSubmissionService(
+            $this->mockCsvGenerator,
+            $this->mockTemplatingEngine,
+            $this->mockFileUploader,
+            $this->mockRestClient,
+            self::createMock(LoggerInterface::class),
+            $this->mockPdfGenerator,
         );
     }
 
-    public function lowOrNoAssetsReportTypeProvider(): array
+    /**
+     * @dataProvider lowOrNoAssetsReportTypeProvider
+     */
+    public function testGenerateReportDocumentsWithoutTransactionCsv(string $reportType): void
+    {
+        $report = self::createMock(Report::class);
+        $report->expects(self::once())
+            ->method('getType')
+            ->willReturn($reportType);
+
+        $report->expects(self::atLeastOnce())
+            ->method('createAttachmentName')
+            ->with('DigiRep-%s_%s_%s.pdf')
+            ->willReturn('reportFileName');
+
+        $this->mockTemplatingEngine->expects($this->atLeastOnce())
+            ->method('render')
+            ->with(new IsType(IsType::TYPE_STRING), ['report' => $report, 'showSummary' => true])
+            ->willReturn('PDF HTML CONTENT');
+
+        $this->mockPdfGenerator->expects($this->atLeastOnce())
+            ->method('getPdfFromHtml')
+            ->with('PDF HTML CONTENT')
+            ->willReturn('PDF CONTENT');
+
+        $this->mockFileUploader->method('uploadFileAndPersistDocument')
+            ->willReturnMap([
+                [$report, 'PDF CONTENT', 'reportFileName', true, false, $this->createStub(Document::class)]
+            ]);
+
+        $this->sut->generateReportDocuments($report);
+    }
+
+    public static function lowOrNoAssetsReportTypeProvider(): array
     {
         return [
             'Health and Welfare' => [Report::TYPE_HEALTH_WELFARE],
@@ -131,28 +95,46 @@ class ReportSubmissionServiceTest extends TestCase
      */
     public function testGenerateReportDocumentsWithTransactionCsv(string $reportType): void
     {
-        $report = self::prophesize(Report::class);
-        $report->getType()->willReturn($reportType);
-        $report->getGifts()->shouldBeCalled()->willReturn(['a gift']);
-        $report->createAttachmentName('DigiRep-%s_%s_%s.pdf')->shouldBeCalled()->willReturn('reportFileName');
-        $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv')->shouldBeCalled()->willReturn('transactionCSVName');
+        $report = self::createMock(Report::class);
+        $report->expects(self::once())
+            ->method('getType')
+            ->willReturn($reportType);
+        $report->expects(self::once())
+            ->method('getGifts')
+            ->willReturn(['a gift']);
+        $report->expects(self::exactly(2))
+            ->method('createAttachmentName')
+            ->willReturnMap([
+                ['DigiRep-%s_%s_%s.pdf', 'reportFileName'],
+                ['DigiRepTransactions-%s_%s_%s.csv', 'transactionCSVName'],
+            ]);
 
-        $this->csvGenerator->generateTransactionsCsv($report)->shouldBeCalled()->willReturn('CSV CONTENT');
+        $this->mockCsvGenerator->expects(self::once())
+            ->method('generateTransactionsCsv')
+            ->with($report)
+            ->willReturn('CSV CONTENT');
 
-        $this->twig->render(Argument::type('string'), ['report' => $report, 'showSummary' => Argument::type('bool')])
-            ->shouldBeCalled()
+        $this->mockTemplatingEngine->expects(self::once())
+            ->method('render')
+            ->with(new IsType(IsType::TYPE_STRING), ['report' => $report, 'showSummary' => true])
             ->willReturn('PDF HTML CONTENT');
 
-        $this->pdfGenerator->getPdfFromHtml('PDF HTML CONTENT')->shouldBeCalled()->willReturn('PDF CONTENT');
+        $this->mockPdfGenerator->expects(self::once())
+            ->method('getPdfFromHtml')
+            ->with('PDF HTML CONTENT')
+            ->willReturn('PDF CONTENT');
 
-        $this->fileUploader->uploadFileAndPersistDocument($report, 'PDF CONTENT', 'reportFileName', true, false)->shouldBeCalled();
-        $this->fileUploader->uploadFileAndPersistDocument($report, 'CSV CONTENT', 'transactionCSVName', false)->shouldBeCalled();
+        $this->mockFileUploader->expects(self::exactly(2))
+            ->method('uploadFileAndPersistDocument')
+            ->willReturnMap([
+                [$report, 'PDF CONTENT', 'reportFileName', true, false, $this->createStub(Document::class)],
+                [$report, 'CSV CONTENT', 'transactionCSVName', false, false, $this->createStub(Document::class)],
+            ]);
 
-        $sut = $this->generateProphecySut();
-        $sut->generateReportDocuments($report->reveal());
+        $this->sut->generateReportDocuments($report);
     }
 
-    public function highAssetsReportTypeProvider(): array
+    public static function highAssetsReportTypeProvider(): array
     {
         return [
             'Property and Affairs - High asserts' => [Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS],
@@ -162,7 +144,7 @@ class ReportSubmissionServiceTest extends TestCase
 
     public function testGetPdfBinaryContent(): void
     {
-        $this->mockTemplatingEngine->shouldReceive('render')
+        $this->mockTemplatingEngine->method('render')
             ->with(
                 '@App/Report/Formatted/formatted_standalone.html.twig',
                 [
@@ -170,53 +152,24 @@ class ReportSubmissionServiceTest extends TestCase
                     'showSummary' => true,
                 ]
             )
-            ->andReturn('Report HTML');
+            ->willReturn('Report HTML');
 
-        $this->mockPdfGenerator->shouldReceive('getPdfFromHtml')->with('Report HTML')->once()->andReturn('PDF CONTENT');
+        $this->mockPdfGenerator->expects(self::once())
+            ->method('getPdfFromHtml')
+            ->with('Report HTML')
+            ->willReturn('PDF CONTENT');
 
-        $this->sut = $this->generateSut();
-
-        $this->assertEquals('PDF CONTENT', $this->sut->getPdfBinaryContent($this->mockReport, true));
+        self::assertEquals('PDF CONTENT', $this->sut->getPdfBinaryContent($this->mockReport, true));
     }
 
-    /**
-     * Generates System Under Test.
-     *
-     * @return ReportSubmissionService
-     */
-    private function generateSut(): ReportSubmissionService
-    {
-        $mockContainer = m::mock(Container::class);
-
-        $mockContainer->shouldReceive('get')->with('file_uploader')->andReturn($this->mockFileUploader);
-        $mockContainer->shouldReceive('get')->with('rest_client')->andReturn($this->mockRestClient);
-        $mockContainer->shouldReceive('get')->with('templating')->andReturn($this->mockTemplatingEngine);
-        $mockContainer->shouldReceive('get')->with('logger')->andReturn($this->mockLogger);
-        $mockContainer->shouldReceive('get')->with('csv_generator_service')->andReturn($this->mockCsvGenerator);
-
-        return new ReportSubmissionService(
-            $this->mockCsvGenerator,
-            $this->mockTemplatingEngine,
-            $this->mockFileUploader,
-            $this->mockRestClient,
-            $this->mockLogger,
-            $this->mockPdfGenerator
-        );
-    }
-
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testGetReportSubmissionById(): void
     {
         $id = '123';
 
-        $this->mockRestClient->shouldReceive('get')->once()->with(
-            "report-submission/{$id}",
-            'Report\\ReportSubmission'
-        );
+        $this->mockRestClient->expects(self::once())
+            ->method('get')
+            ->with("report-submission/{$id}", ReportSubmission::class);
 
-        $this->sut = $this->generateSut();
         $this->sut->getReportSubmissionById($id);
     }
 
@@ -230,17 +183,12 @@ class ReportSubmissionServiceTest extends TestCase
         $reportSubmission2 = new ReportSubmission();
         $reportSubmission2->setId(456);
 
-        $this->mockRestClient->shouldReceive('get')->with(
-            'report-submission/123',
-            'Report\\ReportSubmission'
-        )->andReturn($reportSubmission1);
+        $this->mockRestClient->method('get')
+            ->willReturnMap([
+                ['report-submission/123', ReportSubmission::class, [], [], $reportSubmission1],
+                ['report-submission/456', ReportSubmission::class, [], [], $reportSubmission2],
+            ]);
 
-        $this->mockRestClient->shouldReceive('get')->with(
-            'report-submission/456',
-            'Report\\ReportSubmission'
-        )->andReturn($reportSubmission2);
-
-        $this->sut = $this->generateSut();
         $reportSubmissions = $this->sut->getReportSubmissionsByIds($ids);
 
         self::assertContains($reportSubmission1, $reportSubmissions);
@@ -254,11 +202,10 @@ class ReportSubmissionServiceTest extends TestCase
     {
         self::expectException(ReportSubmissionDocumentsNotDownloadableException::class);
 
-        $this->sut = $this->generateSut();
         $this->sut->assertReportSubmissionIsDownloadable($reportSubmission);
     }
 
-    public function downloadableProvider(): array
+    public static function downloadableProvider(): array
     {
         $unDownloadable = new ReportSubmission();
         $unDownloadable->setDownloadable(false);

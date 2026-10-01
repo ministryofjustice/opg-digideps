@@ -4,6 +4,9 @@ defaults:
   run:
     shell: bash
 
+permissions:
+  id-token: write
+  security-events: write
 on:
   workflow_call:
     inputs:
@@ -27,6 +30,8 @@ on:
 
 jobs:
   prewarm_snyk_scanner:
+    permissions:
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
@@ -40,7 +45,9 @@ jobs:
       opg_actions_ref: ${{ steps.opg_actions_ref.outputs.ref }}
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
 
       - name: get opg github actions ref
         id: opg_actions_ref
@@ -55,14 +62,14 @@ jobs:
 
       - name: cache snyk scanner image
         id: cache-snyk-scanner
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: /tmp/snyk-scanner-cache
           key: snyk-scanner-image-${{ matrix.runs_on }}-${{ steps.opg_actions_ref.outputs.ref }}
 
       - name: configure OIDC AWS credentials for ECR pull
         if: steps.cache-snyk-scanner.outputs.cache-hit != 'true'
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6
         with:
           role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-pull
           role-session-name: github-actions-ecr-pull
@@ -71,7 +78,7 @@ jobs:
 
       - name: login to ECR for snyk scanner pull
         if: steps.cache-snyk-scanner.outputs.cache-hit != 'true'
-        uses: aws-actions/amazon-ecr-login@fa648b43de3d4d023bcb3f89ed6940096949c419 # v2.1.5
+        uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
         with:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
           mask-password: "true"
@@ -194,13 +201,15 @@ jobs:
 
     runs-on: ${{ matrix.runs_on }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
 
       - name: set up docker buildx
-        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
         id: buildx_setup
         with:
-          version: v0.15.1
+          version: v0.16.2
           platforms: linux/${{ matrix.platform }}
 
       - name: export dates
@@ -211,7 +220,7 @@ jobs:
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: /tmp/.buildx-cache
           key: ${{ matrix.svc_name }}-${{ inputs.branch_name }}-${{ steps.cache-dates.outputs.cache_date_today }}-${{ github.sha }}
@@ -222,7 +231,7 @@ jobs:
             ${{ matrix.svc_name }}-main-${{ steps.cache-dates.outputs.cache_date_yesterday }}
 
       - name: download resources artifact
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: web-distribution
           path: client/resources/public
@@ -287,14 +296,14 @@ jobs:
           echo "Branch checksum tag: ${BRANCH_NAME}-checksum-${CHECKSUM}"
 
       - name: configure OIDC AWS credentials for ECR pull
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6
         with:
           role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-pull
           role-session-name: github-actions-ecr-pull
           role-duration-seconds: 900
           aws-region: eu-west-1
 
-      - uses: aws-actions/amazon-ecr-login@fa648b43de3d4d023bcb3f89ed6940096949c419 # v2.1.5
+      - uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
         id: login_ecr_pull
         with:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
@@ -369,7 +378,7 @@ jobs:
 
       - name: restore snyk scanner image cache
         if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: /tmp/snyk-scanner-cache
           key: snyk-scanner-image-${{ matrix.runs_on }}-${{ needs.prewarm_snyk_scanner.outputs.opg_actions_ref }}
@@ -405,7 +414,7 @@ jobs:
       - name: Run Snyk Scan
         id: snyk_scan
         if: matrix.svc_name != 'mock-sirius' && matrix.svc_name != 'test' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
-        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@83663a5235330cc2193319b25d559885610c6bd5 # v4.8.4
+        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@2ad72748485e27f590599a7e9768b9fc0d5b8e03 # v4.8.7
         with:
           SNYK_TEST_IMAGE: ${{ matrix.svc_name }}:latest
           SNYK_TOKEN: ${{ secrets.snyk_token }}
@@ -416,7 +425,7 @@ jobs:
 
       - name: Upload SNYK scan results to GitHub Security tab
         if: steps.snyk_scan.outcome == 'success' && hashFiles('test-results/snyk-results.sarif') != ''
-        uses: github/codeql-action/upload-sarif@b8bb9f28b8d3f992092362369c57161b755dea45 # v4.35.0
+        uses: github/codeql-action/upload-sarif@e46ed2cbd01164d986452f91f178727624ae40d7 # v4.35.3
         with:
           sarif_file: test-results/snyk-results.sarif
           category: ${{ matrix.svc_name }}
@@ -427,14 +436,14 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       - name: configure OIDC AWS credentials for ECR push
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6
         with:
           role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-push
           role-session-name: github-actions-ecr-push
           role-duration-seconds: 900
           aws-region: eu-west-1
 
-      - uses: aws-actions/amazon-ecr-login@fa648b43de3d4d023bcb3f89ed6940096949c419 # v2.1.5
+      - uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
         id: login_ecr
         with:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}

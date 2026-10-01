@@ -15,115 +15,94 @@ class Decision
 {
     use CreateUpdateTimestamps;
 
-    /**
-     * @var int
-     */
     #[JMS\Groups(['decision'])]
     #[JMS\Type('integer')]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'decision_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['decision'])]
     #[JMS\Type('string')]
     #[ORM\Column(type: 'text')]
-    private $description;
+    private string $description;
 
-    /**
-     * @var bool
-     */
     #[JMS\Groups(['decision'])]
     #[JMS\Type('boolean')]
     #[ORM\Column(name: 'client_involved_boolean', type: 'boolean')]
-    private $clientInvolvedBoolean;
+    private bool $clientInvolvedBoolean;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['decision'])]
     #[JMS\Type('string')]
     #[ORM\Column(name: 'client_involved_details', type: 'text', nullable: true)]
-    private $clientInvolvedDetails;
+    private ?string $clientInvolvedDetails = null;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'decisions')]
-    private $report;
+    private Report $report;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function __construct(Report $report, bool $clientInvolvedBoolean = false, string $description = '')
     {
-        return $this->id;
+        $this->report = $report;
+        $this->clientInvolvedBoolean = $clientInvolvedBoolean;
+        $this->description = $description;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getId(): int
+    {
+        return $this->id ?? 0;
+    }
+
+    public function setId(int $id): static
+    {
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
+    }
+
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
 
-    /**
-     * @param bool
-     */
-    public function setClientInvolvedBoolean($clientInvolvedBoolean)
+    public function setClientInvolvedBoolean(bool $clientInvolvedBoolean): void
     {
-        $this->clientInvolvedBoolean = (bool) $clientInvolvedBoolean;
+        $this->clientInvolvedBoolean = $clientInvolvedBoolean;
     }
 
-    /**
-     * @return bool
-     */
-    public function getClientInvolvedBoolean()
+    public function getClientInvolvedBoolean(): bool
     {
         return $this->clientInvolvedBoolean;
     }
 
-    /**
-     * @param $clientInvolvedDetails string
-     */
-    public function setClientInvolvedDetails($clientInvolvedDetails)
+    public function setClientInvolvedDetails(?string $clientInvolvedDetails): void
     {
         $this->clientInvolvedDetails = $clientInvolvedDetails;
     }
 
-    /**
-     * @return string
-     */
-    public function getClientInvolvedDetails()
+    public function getClientInvolvedDetails(): ?string
     {
         return $this->clientInvolvedDetails;
     }
 
-    public function setReport(Report $report)
+    public function setReport(Report $report): void
     {
         $this->report = $report;
     }
 
-    /**
-     * Get report.
-     *
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): Report
     {
         return $this->report;
     }

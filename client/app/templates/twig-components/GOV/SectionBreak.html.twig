@@ -1,0 +1,9 @@
+{% props visible=false, size="m" %}
+
+{% set className = "govuk-section-break govuk-section-break--" ~ size %}
+
+{% if visible %}
+    {% set className = className ~ " govuk-section-break--visible" %}
+{% endif %}
+
+<hr class="{{ className }}">

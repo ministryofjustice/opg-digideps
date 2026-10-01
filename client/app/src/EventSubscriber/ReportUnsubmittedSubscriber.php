@@ -22,7 +22,7 @@ class ReportUnsubmittedSubscriber implements EventSubscriberInterface
         $this->dateTimeProvider = $dateTimeProvider;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ReportUnsubmittedEvent::NAME => 'logReportUnsubmittedEvent',

@@ -1,0 +1,69 @@
+{% import '@App/Macros/macros.html.twig' as macros %}
+
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {
+    '%client%': report.client.firstname | striptags,
+    '%startDate%': report.startDate | date("j M Y"),
+    '%endDate%': report.endDate | date("j M Y"),
+    '%previousStartDate%': report.previousReportData['assets-summary']['startDate'] | date("j M Y"),
+    '%previousEndDate%': report.previousReportData['assets-summary']['endDate'] | date("j M Y")
+} %}
+{% set page = 'summaryPage' %}
+
+{# "client own assets" question #}
+<dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row behat-region-has-assets">
+        <dt class="govuk-summary-list__key">
+            {{ 'existPage.form.noAssetToAdd.label' | trans(transOptions)  }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ report.noAssetToAdd ? 'No' : 'Yes' }}
+        </dd>
+    </div>
+    {% if report.noAssetToAdd and report.previousReportData['assets-summary']['noAssetsToAdd'] is defined %}
+        <div class="govuk-summary-list__row behat-region-has-assets">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.prevNoAssetToAdd.label') | trans(transOptions)  }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.previousReportData['assets-summary']['noAssetsToAdd'] ? 'No' : 'Yes' }}
+            </dd>
+        </div>
+    {% endif %}
+</dl>
+
+{# display title if assets are present #}
+{% if report.assets %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-l">{{ (page ~ '.listOfAssets') | trans }}</h2>
+        </div>
+    </div>
+{% endif %}
+
+{# display assets in groups #}
+{% for groupId, assetsInGroup in report.assetsGroupedByTitle %}
+    {% if (groupId | lower) == 'property' %}
+        {% include '@App/Report/Asset/Property/_list_item.html.twig' %}
+    {% else %}
+        {% include '@App/Report/Asset/Other/_list_item.html.twig' %}
+    {% endif %}
+{% endfor %}
+
+{# Total #}
+{% if report.assets %}
+    <div class="govuk-heading-m text--right behat-region-asset-total">
+        {{ (page ~ '.totalValueOfAssetsWithDates') | trans(transOptions, translationDomain) }}: £{{ report.assetsTotalValue | money_format }}
+    </div>
+
+    {% if report.previousReportData['assets-summary'] is defined %}
+        <div class="govuk-heading-m text--right behat-region-asset-total">
+            {{ (page ~ '.totalValueOfPreviousAssets') | trans(transOptions, translationDomain) }}: £{{ report.previousReportData['assets-summary']['assetsTotal'] | money_format }}
+        </div>
+    {% else %}
+        <div class="govuk-heading-m text--right behat-region-asset-total">
+            {{ (page ~ '.assetsPrevReportMissing') | trans(transOptions, translationDomain) }}
+        </div>
+    {% endif %}
+{% endif %}

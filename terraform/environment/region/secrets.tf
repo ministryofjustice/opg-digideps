@@ -51,7 +51,8 @@ data "aws_secretsmanager_secret" "custom_sql_db_password" {
 }
 
 data "aws_secretsmanager_secret" "anonymise-default-pw" {
-  name = "anonymisation-default-user-pw"
+  count = var.account.environment.name == "preproduction" ? 1 : 0
+  name  = "anonymisation-default-user-pw"
 }
 
 ##### Shared Application KMS key for logs #####

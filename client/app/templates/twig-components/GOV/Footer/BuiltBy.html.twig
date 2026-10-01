@@ -1,0 +1,11 @@
+{% props version=null %}
+
+<div class="govuk-footer__meta-custom">
+    {{ 'gov.footer.built.by'|trans({}, 'twig-components') }}
+    <twig:GOV:Footer:Link href="https://www.gov.uk/government/organisations/office-of-the-public-guardian">
+        {{ 'gov.footer.built.opg'|trans({}, 'twig-components') }}
+    </twig:GOV:Footer:Link>
+    {% if version is not null %}
+        &nbsp;<span>({{ version }})</span>
+    {% endif %}
+</div>

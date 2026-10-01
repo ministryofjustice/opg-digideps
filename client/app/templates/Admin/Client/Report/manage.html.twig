@@ -24,15 +24,15 @@
     {{ (page ~ '.form.endDate.label') | trans }}
     {{ form_known_date(form.endDate, 'endDate') }}
     {% if report.isSubmitted %}
-        <fieldset class="govuk-form-group {% if not form.unsubmittedSection.vars.valid %}govuk-form-group--error{% endif %}">
+        <fieldset class="govuk-form-group {% if not form.unsubmittedSections.vars.valid %}govuk-form-group--error{% endif %}">
             <legend>
                 <h2 class="govuk-heading-s flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>
             </legend>
             <div class="govuk-checkboxes govuk-checkboxes--small">
-                {% for section in form.unsubmittedSection  %}
+                {% for section in form.unsubmittedSections %}
                     {{ form_row(section.id) }}
                     {{ form_checkbox(section.present, '', {
-                        'labelText': ('prevNextLinks.sections.' ~ section.id.vars.value) | trans({}, 'report-common'),
+                        'labelText': section.vars.value.title,
                         'useFormGroup': false
                     }) }}
                 {% endfor %}

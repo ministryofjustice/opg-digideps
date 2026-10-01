@@ -8,37 +8,33 @@ use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Frontend\Model\RetrievedDocument;
 use OPG\Digideps\Frontend\Service\File\DocumentsZipFileCreator;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
 class DocumentZipFileCreatorTest extends TestCase
 {
-    use ProphecyTrait;
-
     public function testCreateZipFilesFromRetrievedDocuments()
     {
-        /** @var ObjectProphecy|ReportSubmission $reportSubmission1 */
-        $reportSubmission1 = self::prophesize(ReportSubmission::class);
-        $reportSubmission1->getZipName()->shouldBeCalled()->willReturn('zip-file-1.zip');
+        $reportSubmission1 = self::createMock(ReportSubmission::class);
+        $reportSubmission1->method('getZipName')->willReturn('zip-file-1.zip');
 
-        /** @var ObjectProphecy|ReportSubmission $reportSubmission2 */
-        $reportSubmission2 = self::prophesize(ReportSubmission::class);
-        $reportSubmission2->getZipName()->shouldBeCalled()->willReturn('zip-file-2.zip');
+        $reportSubmission2 = self::createMock(ReportSubmission::class);
+        $reportSubmission2->expects(self::once())
+            ->method('getZipName')
+            ->willReturn('zip-file-2.zip');
 
         $expectedRetrievedDoc1 = new RetrievedDocument();
         $expectedRetrievedDoc1->setFileName('file-name1.pdf');
         $expectedRetrievedDoc1->setContent('doc1 contents');
-        $expectedRetrievedDoc1->setReportSubmission($reportSubmission1->reveal());
+        $expectedRetrievedDoc1->setReportSubmission($reportSubmission1);
 
         $expectedRetrievedDoc2 = new RetrievedDocument();
         $expectedRetrievedDoc2->setFileName('file-name2.pdf');
         $expectedRetrievedDoc2->setContent('doc2 contents');
-        $expectedRetrievedDoc2->setReportSubmission($reportSubmission1->reveal());
+        $expectedRetrievedDoc2->setReportSubmission($reportSubmission1);
 
         $expectedRetrievedDoc3 = new RetrievedDocument();
         $expectedRetrievedDoc3->setFileName('file-name3.pdf');
         $expectedRetrievedDoc3->setContent('doc3 contents');
-        $expectedRetrievedDoc3->setReportSubmission($reportSubmission2->reveal());
+        $expectedRetrievedDoc3->setReportSubmission($reportSubmission2);
 
         $retrievedDocuments = [$expectedRetrievedDoc1, $expectedRetrievedDoc2, $expectedRetrievedDoc3];
 
@@ -83,7 +79,7 @@ class DocumentZipFileCreatorTest extends TestCase
         $zip->close();
     }
 
-    protected function generateTestZipFiles(\ZipArchive $zip, array $zipFileContent)
+    protected function generateTestZipFiles(\ZipArchive $zip, array $zipFileContent): array
     {
         $zipFiles = [];
 

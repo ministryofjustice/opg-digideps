@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 
 final readonly class CourtOrderRelationship
 {

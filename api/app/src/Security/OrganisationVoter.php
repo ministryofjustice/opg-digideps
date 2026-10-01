@@ -4,9 +4,9 @@ namespace OPG\Digideps\Backend\Security;
 
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * @extends Voter<string, Organisation>
@@ -37,14 +37,10 @@ class OrganisationVoter extends Voter
             return false;
         }
 
-        switch ($attribute) {
-            case self::VIEW:
-            case self::EDIT:
-                return $this->canManage($subject, $user);
-
-            default:
-                throw new \LogicException('This code should not be reached!');
-        }
+        return match ($attribute) {
+            self::VIEW, self::EDIT => $this->canManage($subject, $user),
+            default => throw new \LogicException('This code should not be reached!'),
+        };
     }
 
     private function canManage(Organisation $organisation, User $user): bool

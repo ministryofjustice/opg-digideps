@@ -26,3 +26,8 @@ form:
     hint: For example, activity programmes provided by a care home or a regular visit to a park.
   activityDetailsNo:
     label: Tell us about why %client% does not take part in any leisure or social activities.
+
+review:
+  notEntered: Not entered
+  yes: Yes
+  no: No

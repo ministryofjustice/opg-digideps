@@ -4,7 +4,7 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
 use OPG\Digideps\Backend\Entity\Report\Gift;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use Tests\OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class GiftControllerTest extends AbstractTestController
@@ -23,8 +23,8 @@ class GiftControllerTest extends AbstractTestController
         ['persons' => ['users' => ['lay1' => $user1]], 'orders' => [['pfa' => ['reports' => [self::$report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
         ['orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        self::$gift1 = new Gift(self::$report1)->setExplanation('e1')->setAmount('1.10');
-        self::$gift2 = new Gift(self::$report2)->setExplanation('e2')->setAmount('2.20');
+        self::$gift1 = new Gift(self::$report1, 'e1')->setAmount('1.10');
+        self::$gift2 = new Gift(self::$report2, 'e2')->setAmount('2.20');
 
         self::fixtures()->persist(self::$gift1, self::$gift2);
         self::fixtures()->flush()->clear();

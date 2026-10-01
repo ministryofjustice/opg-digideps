@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProcessing;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use PHPUnit\Framework\Attributes\DataProvider;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -114,9 +115,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         ];
     }
 
-    /**
-     * @dataProvider compatibleReportDataProvider
-     */
+    #[DataProvider('compatibleReportDataProvider')]
     public function testCreateCompatibleReportCandidates(
         string $deputyType,
         string $orderType,
@@ -221,14 +220,14 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
 
         // create order and associate with report; this report is a potential candidate,
         // but should be ignored as a candidate because a relationship already exists
-        $courtOrder = new CourtOrder();
-        $courtOrder->setCourtOrderUid($deputyship->orderUid);
-        $courtOrder->setOrderType(CourtOrderType::PFA);
-        $courtOrder->setOrderKind(CourtOrderKind::Single);
-        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
-        $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate($orderMadeDate);
-        $courtOrder->addReport($report);
+        $courtOrder = new CourtOrder(
+            $deputyship->orderUid,
+            CourtOrderType::PFA,
+            CourtOrderReportType::OPG102,
+            CourtOrderKind::Single,
+            $orderMadeDate,
+            $client
+        )->addReport($report);
 
         self::$entityManager->persist($courtOrder);
 

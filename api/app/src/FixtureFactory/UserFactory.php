@@ -14,16 +14,17 @@ class UserFactory
     }
 
     /**
-     * @throws \Exception
+     * @param array<string, string> $data
      */
     public function create(array $data): User
     {
         $roleName = $this->convertRoleName($data['deputyType']);
 
-        $user = new User()
-            ->setFirstname($data['firstName'] ?? ucfirst($data['deputyType']) . ' Deputy ' . $data['id'])
-            ->setLastname($data['lastName'] ?? 'User')
-            ->setEmail($data['email'] ?? 'behat-' . strtolower($data['deputyType']) . '-deputy-' . $data['id'] . '@publicguardian.gov.uk')
+        $user = new User(
+            $data['firstName'] ?? ucfirst($data['deputyType']) . ' Deputy ' . $data['id'],
+            $data['lastName'] ?? 'User',
+            $data['email'] ?? 'behat-' . strtolower($data['deputyType']) . '-deputy-' . $data['id'] . '@publicguardian.gov.uk'
+        )
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setCoDeputyClientConfirmed(isset($data['codeputyEnabled']))
@@ -59,14 +60,15 @@ class UserFactory
     }
 
     /**
-     * @throws \Exception
+     * @param array<string, string> $data
      */
     public function createAdmin(array $data): User
     {
-        $user = new User()
-            ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['adminType']) . ' Admin ' . $data['email'])
-            ->setLastname(isset($data['lastName']) ? $data['lastName'] : 'User')
-            ->setEmail($data['email'])
+        $user = new User(
+            isset($data['firstName']) ? $data['firstName'] : ucfirst($data['adminType']) . ' Admin ' . $data['email'],
+            isset($data['lastName']) ? $data['lastName'] : 'User',
+            $data['email']
+        )
             ->setRegistrationDate(new \DateTime())
             ->setRoleName($data['adminType']);
 
@@ -82,10 +84,11 @@ class UserFactory
         $email = sprintf('%s.%s.%s.%s@%s', 'Test', 'Org', rand(1, 100000), $number, $organisation->getEmailIdentifier());
         $trimmedEmail = substr($email, 0, 59);
 
-        $user = new User()
-            ->setFirstname('Bill')
-            ->setLastname('Bonds')
-            ->setEmail($trimmedEmail)
+        $user = new User(
+            'Bill',
+            'Bonds',
+            $trimmedEmail
+        )
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setPhoneMain('07911111111111')

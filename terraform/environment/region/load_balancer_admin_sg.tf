@@ -11,11 +11,18 @@ module "admin_elb_security_group" {
 locals {
   admin_elb_sg_rules = {
     admin_service_http = {
-      port        = 80
+      port        = 8080
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
       target      = module.admin_service_security_group.id
+    }
+    admin_entra_auth_outbound = {
+      port        = 443
+      type        = "egress"
+      protocol    = "tcp"
+      target_type = "cidr_block"
+      target      = "0.0.0.0/0"
     }
   }
 }

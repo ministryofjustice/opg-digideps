@@ -24,8 +24,8 @@ trait AssertTrait
         $found,
         string $comparisonSubject,
     ): void {
-        $foundFormatted = strval(trim(strtolower((string) $found)));
-        $expectedFormatted = strval(trim(strtolower((string) $expected)));
+        $foundFormatted = trim(strtolower((string) $found));
+        $expectedFormatted = trim(strtolower((string) $expected));
         assert(
             $foundFormatted == $expectedFormatted,
             $this->getAssertMessage($expectedFormatted, $foundFormatted, $comparisonSubject)
@@ -162,18 +162,15 @@ MESSAGE;
         $actual,
         string $comparisonSubject,
     ): void {
-        if (is_null($actual)) {
-            assert(
-                false,
-                $this->getAssertMessage($expectedClassName, 'null', $comparisonSubject)
-            );
-        }
+        $this->assertIsNotNull(
+            $actual,
+            $this->getAssertMessage($expectedClassName, 'null', $comparisonSubject)
+        );
 
         $actualClass = get_class($actual);
-        $isExpectedClass = $actualClass === $expectedClassName;
 
         assert(
-            $isExpectedClass,
+            $actualClass === $expectedClassName,
             $this->getAssertMessage($expectedClassName, $actualClass, $comparisonSubject)
         );
     }
@@ -186,7 +183,7 @@ MESSAGE;
         string $comparisonSubject,
     ): void {
         assert(
-            is_null($actual),
+            $actual === null,
             $this->getAssertMessage('null', gettype($actual), $comparisonSubject)
         );
     }
@@ -199,7 +196,7 @@ MESSAGE;
         string $comparisonSubject,
     ): void {
         assert(
-            !is_null($actual),
+            $actual !== null,
             $this->getAssertMessage('null', gettype($actual), $comparisonSubject)
         );
     }
@@ -211,17 +208,14 @@ MESSAGE;
             "//a[normalize-space() = '$linkText']"
         );
 
-        if (is_null($linkElement)) {
-            $expected = sprintf('Anchor element with text value \'%s\'', $linkText);
-
-            $message = $this->getAssertMessage(
-                $expected,
+        $this->assertIsNotNull(
+            $linkElement,
+            $this->getAssertMessage(
+                sprintf('Anchor element with text value \'%s\'', $linkText),
                 'Could not find specified anchor element',
                 $this->getSession()->getPage()->getHtml()
-            );
-
-            assert(false, $message);
-        }
+            )
+        );
     }
 
     public function assertLinkWithTextIsNotOnPage(string $linkText): void
@@ -231,17 +225,14 @@ MESSAGE;
             "//a[text() = '$linkText']"
         );
 
-        if (!is_null($linkElement)) {
-            $expected = sprintf('Not to find anchor element with text value \'%s\'', $linkText);
-
-            $message = $this->getAssertMessage(
-                $expected,
+        $this->assertIsNull(
+            $linkElement,
+            $this->getAssertMessage(
+                sprintf('Not to find anchor element with text value \'%s\'', $linkText),
                 'The element appeared on the page',
                 $this->getSession()->getPage()->getHtml()
-            );
-
-            assert(false, $message);
-        }
+            )
+        );
     }
 
     public function assertEntitiesAreTheSame(
@@ -249,21 +240,17 @@ MESSAGE;
         $actualEntity,
         string $comparisonSubject,
     ): void {
-        if (is_null($actualEntity)) {
-            assert(
-                false,
-                $this->getAssertMessage(
-                    sprintf('id: %s', $expectedEntity->getId()),
-                    'null',
-                    $comparisonSubject
-                )
-            );
-        }
-
-        $objectsAreTheSame = $expectedEntity->getId() === $actualEntity->getId();
+        $this->assertIsNotNull(
+            $actualEntity,
+            $this->getAssertMessage(
+                sprintf('id: %s', $expectedEntity->getId()),
+                'null',
+                $comparisonSubject
+            )
+        );
 
         assert(
-            $objectsAreTheSame,
+            $expectedEntity->getId() === $actualEntity->getId(),
             $this->getAssertMessage(
                 sprintf('Expected %s id: %s', get_class($expectedEntity), $expectedEntity->getId()),
                 sprintf('Actual %s id: %s', get_class($actualEntity), $actualEntity->getId()),
@@ -277,21 +264,17 @@ MESSAGE;
         $actualEntity,
         string $comparisonSubject,
     ): void {
-        if (is_null($actualEntity)) {
-            assert(
-                false,
-                $this->getAssertMessage(
-                    sprintf('id: %s', $expectedEntity->getId()),
-                    'null',
-                    $comparisonSubject
-                )
-            );
-        }
-
-        $objectsAreNotTheSame = $expectedEntity->getId() !== $actualEntity->getId();
+        $this->assertIsNotNull(
+            $actualEntity,
+            $this->getAssertMessage(
+                sprintf('id: %s', $expectedEntity->getId()),
+                'null',
+                $comparisonSubject
+            )
+        );
 
         assert(
-            $objectsAreNotTheSame,
+            $expectedEntity->getId() !== $actualEntity->getId(),
             $this->getAssertMessage(
                 sprintf('Expected %s id: %s', get_class($expectedEntity), $expectedEntity->getId()),
                 sprintf('Actual %s id: %s', get_class($actualEntity), $actualEntity->getId()),

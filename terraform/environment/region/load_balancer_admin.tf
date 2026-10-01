@@ -6,6 +6,12 @@ resource "aws_lb" "admin" {
   idle_timeout               = 300
   drop_invalid_header_fields = true
 
+  access_logs {
+    bucket  = data.aws_s3_bucket.alb_access.bucket
+    prefix  = "admin-${local.environment}"
+    enabled = true
+  }
+
   security_groups = [module.admin_elb_security_group.id, module.admin_elb_security_group_route53_hc.id]
 
   tags = merge(var.default_tags, { "Name" = "admin-${local.environment}" }, )
@@ -13,14 +19,36 @@ resource "aws_lb" "admin" {
 
 resource "aws_lb_listener" "admin" {
   load_balancer_arn = aws_lb.admin.arn
-  port              = "443"
+  port              = 443
   protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-FS-1-2-Res-2020-10"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
   certificate_arn   = local.certificate_arn
 
+  dynamic "default_action" {
+    for_each = var.account.environment.entra_enabled ? [1] : []
+
+    content {
+      type = "authenticate-oidc"
+
+      authenticate_oidc {
+        authentication_request_extra_params = {}
+        authorization_endpoint              = "${local.admin_cognito_user_pool_domain_name}/oauth2/authorize"
+        client_id                           = aws_cognito_user_pool_client.deputy_reporting_admin.id
+        client_secret                       = aws_cognito_user_pool_client.deputy_reporting_admin.client_secret
+        issuer                              = "https://cognito-idp.eu-west-1.amazonaws.com/${local.admin_cognito_user_pool_id}"
+        on_unauthenticated_request          = "authenticate"
+        scope                               = "openid"
+        session_cookie_name                 = "AWSELBAuthSessionCookie"
+        session_timeout                     = aws_cognito_user_pool_client.deputy_reporting_admin.id_token_validity
+        token_endpoint                      = "${local.admin_cognito_user_pool_domain_name}/oauth2/token"
+        user_info_endpoint                  = "${local.admin_cognito_user_pool_domain_name}/oauth2/userInfo"
+      }
+    }
+  }
+
   default_action {
-    target_group_arn = aws_lb_target_group.admin.arn
     type             = "forward"
+    target_group_arn = aws_lb_target_group.admin_http.arn
   }
 }
 
@@ -60,7 +88,7 @@ resource "aws_lb_listener_rule" "admin_maintenance" {
 
   condition {
     path_pattern {
-      values = [local.maintenance_mode]
+      values = ["/dd-maintenance"]
     }
   }
 }
@@ -81,9 +109,9 @@ resource "aws_lb_listener" "admin_http" {
   }
 }
 
-resource "aws_lb_target_group" "admin" {
-  name                 = "admin-tg-${local.environment}"
-  port                 = 80
+resource "aws_lb_target_group" "admin_http" {
+  name                 = "admin-target-${local.environment}"
+  port                 = 8080
   protocol             = "HTTP"
   target_type          = "ip"
   vpc_id               = data.aws_vpc.main.id

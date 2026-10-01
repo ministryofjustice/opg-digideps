@@ -2,15 +2,11 @@
 
 namespace OPG\Digideps\Frontend\Entity\Report;
 
-use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @JMS\Discriminator(field = "fee_type_id", map = {
- *    "current": "OPG\Digideps\Frontend\Entity\Report\ProfServiceFeeCurrent"
- * })
- */
+#[JMS\Discriminator(field: 'fee_type_id', map: ['current' => 'OPG\Digideps\Frontend\Entity\Report\ProfServiceFeeCurrent'])]
 abstract class ProfServiceFee
 {
     use HasReportTrait;
@@ -22,13 +18,9 @@ abstract class ProfServiceFee
     public const string TYPE_CURRENT_FEE = 'current';
     public const string TYPE_ESTIMATED_FEE = 'estimated';
 
-    /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"prof-service-fees"})
-     *
-     * @var int
-     */
-    private $id;
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['prof-service-fees'])]
+    private ?int $id = null;
 
     /**
      * Hold service type.
@@ -36,9 +28,9 @@ abstract class ProfServiceFee
      * If the order or any key is added, update the ReportControllerTest, hardcoded on position and number
      *  in order to keep it simple
      *
-     * @var array
+     * @var array<string, bool>
      */
-    public static $serviceTypeIds = [
+    public static array $serviceTypeIds = [
         'annual-report' => false,
         'annual-management-interim' => false,
         'annual-management-final' => false,
@@ -50,239 +42,162 @@ abstract class ProfServiceFee
     ];
 
     /**
-     * @JMS\Type("string")
-     *
-     * @var string fixed|assessed
-     *
-     * @JMS\Groups({"prof-service-fees"})
-     *
-     * @Assert\NotBlank(message="profServiceFee.assessedOrFixed.notBlank", groups={"prof-service-fee-details-type"})
+     * @var ?string 'fixed'|'assessed'|null
      */
-    private $assessedOrFixed;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-service-fees'])]
+    #[Assert\NotBlank(message: 'profServiceFee.assessedOrFixed.notBlank', groups: ['prof-service-fee-details-type'])]
+    private ?string $assessedOrFixed = null;
+
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-service-fees'])]
+    #[Assert\NotBlank(message: 'fee.otherFeeDetails.notBlank', groups: ['other-prof-service-fees'])]
+    private ?string $otherFeeDetails = null;
 
     /**
-     * @JMS\Exclude
+     * @var ?string a value in self:$serviceTypeIds
      */
-    private $feeTypeId;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-service-fees', 'prof-service-fee-serviceType'])]
+    #[Assert\NotBlank(message: 'profServiceFee.serviceType.notBlank', groups: ['prof-service-fee-type'])]
+    private ?string $serviceTypeId = null;
+
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-service-fees'])]
+    #[Assert\NotBlank(message: 'profServiceFee.amountCharged.notBlank', groups: ['prof-service-fee-details-type'])]
+    #[Assert\Range(notInRangeMessage: 'fee.amount.notInRangeMessage', min: 0, max: 100000000000, groups: ['prof-service-fee-details-type'])]
+    private ?float $amountCharged = null;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"prof-service-fees"})
-     *
-     * @Assert\NotBlank(message="fee.otherFeeDetails.notBlank", groups={"other-prof-service-fees"})
+     * @var ?string 'yes'|'no'|null
      */
-    private $otherFeeDetails;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-service-fees'])]
+    #[Assert\NotBlank(message: 'profServiceFee.paymentReceived.notBlank', groups: ['prof-service-fee-details-type'])]
+    private ?string $paymentReceived = null;
 
-    /**
-     * @JMS\Type("string")
-     *
-     * @var string a value in self:$serviceTypeIds
-     *
-     * @Assert\NotBlank(message="profServiceFee.serviceType.notBlank", groups={"prof-service-fee-type"})
-     * @JMS\Groups({"prof-service-fees", "prof-service-fee-serviceType"})
-     */
-    private $serviceTypeId;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-service-fees'])]
+    #[Assert\NotBlank(message: 'profServiceFee.amountReceived.notBlank', groups: ['prof-service-fee-details-type-payment-received'])]
+    #[Assert\Range(notInRangeMessage: 'fee.amount.notInRangeMessage', min: 0, max: 100000000000, groups: ['prof-service-fee-details-type-payment-received'])]
+    private ?float $amountReceived = null;
 
-    /**
-     * @var float
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"prof-service-fees"})
-     * @Assert\NotBlank(message="profServiceFee.amountCharged.notBlank", groups={"prof-service-fee-details-type"})
-     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "fee.amount.notInRangeMessage", groups={"prof-service-fee-details-type"})
-     */
-    private $amountCharged;
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['prof-service-fees'])]
+    #[Assert\Type(type: 'DateTimeInterface', message: 'profServiceFee.paymentReceivedDate.invalidMessage', groups: ['prof-service-fee-details-type-payment-received'])]
+    #[Assert\LessThanOrEqual('today', message: 'profServiceFee.paymentReceivedDate.notInTheFuture', groups: ['prof-service-fee-details-type-payment-received'])]
+    #[Assert\NotBlank(message: 'profServiceFee.paymentReceivedDate.notBlank', groups: ['prof-service-fee-details-type-payment-received'])]
+    private ?\DateTime $paymentReceivedDate = null;
 
-    /**
-     * @var string yes|no
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"prof-service-fees"})
-     * @Assert\NotBlank(message="profServiceFee.paymentReceived.notBlank", groups={"prof-service-fee-details-type"})
-     */
-    private $paymentReceived;
-
-    /**
-     * @var float
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"prof-service-fees"})
-     * @Assert\NotBlank(message="profServiceFee.amountReceived.notBlank", groups={"prof-service-fee-details-type-payment-received"})
-     * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "fee.amount.notInRangeMessage", groups={"prof-service-fee-details-type-payment-received"})
-     */
-    private $amountReceived;
-
-    /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"prof-service-fees"})
-     *
-     * @Assert\Type(type="DateTimeInterface",message="profServiceFee.paymentReceivedDate.invalidMessage", groups={"prof-service-fee-details-type-payment-received"})
-     * @Assert\LessThanOrEqual("today", message="profServiceFee.paymentReceivedDate.notInTheFuture", groups={"prof-service-fee-details-type-payment-received"})
-     * @Assert\NotBlank(message="profServiceFee.paymentReceivedDate.notBlank", groups={"prof-service-fee-details-type-payment-received"})
-     *
-     * @var \DateTime
-     */
-    private $paymentReceivedDate;
-
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
+    public function setId(?int $id): static
     {
         $this->id = $id;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAssessedOrFixed()
+    public function getAssessedOrFixed(): ?string
     {
         return $this->assessedOrFixed;
     }
 
-    /**
-     * @param string $assessedOrFixed
-     */
-    public function setAssessedOrFixed($assessedOrFixed)
+    public function setAssessedOrFixed(?string $assessedOrFixed): static
     {
         $this->assessedOrFixed = $assessedOrFixed;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    abstract public function getFeeTypeId();
+    abstract public function getFeeTypeId(): string;
 
-    /**
-     * @return mixed
-     */
-    public function getOtherFeeDetails()
+    public function getOtherFeeDetails(): ?string
     {
         return $this->otherFeeDetails;
     }
 
-    /**
-     * @param mixed $otherFeeDetails
-     */
-    public function setOtherFeeDetails($otherFeeDetails)
+    public function setOtherFeeDetails(?string $otherFeeDetails): static
     {
         $this->otherFeeDetails = $otherFeeDetails;
+
+        return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getAmountCharged()
+    public function getAmountCharged(): ?float
     {
         return $this->amountCharged;
     }
 
-    /**
-     * @param float $amountCharged
-     */
-    public function setAmountCharged($amountCharged)
+    public function setAmountCharged(?float $amountCharged): static
     {
         $this->amountCharged = $amountCharged;
+
+        return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getAmountReceived()
+    public function getAmountReceived(): ?float
     {
         return $this->amountReceived;
     }
 
-    /**
-     * @param float $amountReceived
-     */
-    public function setAmountReceived($amountReceived)
+    public function setAmountReceived(?float $amountReceived): static
     {
         $this->amountReceived = $amountReceived;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPaymentReceivedDate()
+    public function getPaymentReceivedDate(): ?\DateTime
     {
         return $this->paymentReceivedDate;
     }
 
-    /**
-     * @param mixed $paymentReceivedDate
-     */
-    public function setPaymentReceivedDate($paymentReceivedDate)
+    public function setPaymentReceivedDate(?\DateTime $paymentReceivedDate): static
     {
         $this->paymentReceivedDate = $paymentReceivedDate;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPaymentReceived()
+    public function getPaymentReceived(): ?string
     {
         return $this->paymentReceived;
     }
 
-    /**
-     * @param string $paymentReceived
-     */
-    public function setPaymentReceived($paymentReceived)
+    public function setPaymentReceived(?string $paymentReceived): static
     {
         $this->paymentReceived = $paymentReceived;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getServiceTypeId()
+    public function getServiceTypeId(): ?string
     {
         return $this->serviceTypeId;
     }
 
-    /**
-     * @param string $serviceTypeId
-     */
-    public function setServiceTypeId($serviceTypeId)
+    public function setServiceTypeId(?string $serviceTypeId): static
     {
         $this->serviceTypeId = $serviceTypeId;
+
+        return $this;
     }
 
-    /**
-     * Is a current Fee?
-     *
-     * @return bool
-     */
-    public function isCurrentFee()
+    public function isCurrentFee(): bool
     {
         return $this->getFeeTypeId() == self::TYPE_CURRENT_FEE;
     }
 
-    /**
-     * Is a previous Fee?
-     *
-     * @return bool
-     */
-    public function isPreviousFee()
+    public function isPreviousFee(): bool
     {
         return $this->getFeeTypeId() == self::TYPE_PREVIOUS_FEE;
     }
 
-    /**
-     * Is a estimated Fee?
-     *
-     * @return bool
-     */
-    public function isEstimatedFee()
+    public function isEstimatedFee(): bool
     {
         return $this->getFeeTypeId() == self::TYPE_ESTIMATED_FEE;
     }

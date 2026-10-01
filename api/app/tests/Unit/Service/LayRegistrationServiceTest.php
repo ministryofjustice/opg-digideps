@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
+use Doctrine\ORM\EntityManager;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ClientRepository;
 use OPG\Digideps\Backend\Service\LayRegistrationService;
 use OPG\Digideps\Backend\Service\ReportService;
-use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -60,16 +60,16 @@ class LayRegistrationServiceTest extends TestCase
                 return [self::createMock(Report::class)];
             });
 
-        $this->mockEntityManager->expects(self::any())
+        $this->mockEntityManager
             ->method('persist')
             ->willReturnCallback(function ($entity): void {
                 self::assertTrue(is_a($entity, Report::class) || is_a($entity, Client::class));
             });
 
-        $this->mockEntityManager->expects(self::any())
+        $this->mockEntityManager
             ->method('flush');
 
-        $this->mockEntityManager->expects(self::any())
+        $this->mockEntityManager
             ->method('clear');
 
         $numReports = $this->sut->addMissingReports(batchSize: 2);

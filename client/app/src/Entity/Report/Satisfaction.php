@@ -19,10 +19,10 @@ class Satisfaction
     private string $comments;
 
     #[JMS\Type('string')]
-    private string $deputyrole;
+    private string $deputyRole;
 
     #[JMS\Type('string')]
-    private string $reporttype;
+    private string $reportType;
 
     #[JMS\Type('DateTime')]
     private \DateTime $created;
@@ -38,7 +38,7 @@ class Satisfaction
         return $this->id;
     }
 
-    public function setId(int $id): Satisfaction
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -50,7 +50,7 @@ class Satisfaction
         return $this->score;
     }
 
-    public function setScore(int $score): Satisfaction
+    public function setScore(int $score): static
     {
         $this->score = $score;
 
@@ -62,33 +62,33 @@ class Satisfaction
         return $this->comments;
     }
 
-    public function setComments(string $comments): Satisfaction
+    public function setComments(string $comments): static
     {
         $this->comments = $comments;
 
         return $this;
     }
 
-    public function getDeputyrole(): string
+    public function getDeputyRole(): string
     {
-        return $this->deputyrole;
+        return $this->deputyRole;
     }
 
-    public function setDeputyrole(string $deputyrole): Satisfaction
+    public function setDeputyRole(string $deputyRole): static
     {
-        $this->deputyrole = $deputyrole;
+        $this->deputyRole = $deputyRole;
 
         return $this;
     }
 
-    public function getReporttype(): string
+    public function getReportType(): string
     {
-        return $this->reporttype;
+        return $this->reportType;
     }
 
-    public function setReporttype(string $reporttype): Satisfaction
+    public function setReportType(string $reportType): static
     {
-        $this->reporttype = $reporttype;
+        $this->reportType = $reportType;
 
         return $this;
     }
@@ -110,7 +110,7 @@ class Satisfaction
         return $this->userResearchResponse;
     }
 
-    public function setUserResearchResponse(UserResearchResponse $userResearchResponse): Satisfaction
+    public function setUserResearchResponse(UserResearchResponse $userResearchResponse): static
     {
         $this->userResearchResponse = $userResearchResponse;
 
@@ -122,7 +122,7 @@ class Satisfaction
         return $this->report;
     }
 
-    public function setReport(?Report $report): Satisfaction
+    public function setReport(?Report $report): static
     {
         $this->report = $report;
 

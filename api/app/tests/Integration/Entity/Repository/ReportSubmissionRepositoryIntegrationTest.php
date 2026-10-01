@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
@@ -41,8 +42,8 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
     }
 
     /**
-     * @dataProvider updateArchivedStatusDataProvider
      */
+    #[DataProvider('updateArchivedStatusDataProvider')]
     public function testUpdateArchivedStatus($isArchived, $docStatuses, $shouldArchive)
     {
         $client = new Client();
@@ -54,9 +55,8 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
         self::$entityManager->persist($submission);
 
         foreach ($docStatuses as $docStatus) {
-            $doc = new Document($report);
+            $doc = new Document($report, 'a file.pdf');
             $doc->setSynchronisationStatus($docStatus);
-            $doc->setFileName('a file.pdf');
             self::$entityManager->persist($doc);
 
             $submission->addDocument($doc);
@@ -83,8 +83,7 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
             self::$entityManager->persist($report);
             self::$entityManager->persist($report->getClient());
 
-            $doc = new Document($report);
-            $doc->setFileName('a file.pdf');
+            $doc = new Document($report, 'a file.pdf');
             self::$entityManager->persist($doc);
 
             $submission->addDocument($doc);

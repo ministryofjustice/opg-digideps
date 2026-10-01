@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Model;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipProcessingRawDbAccess;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use Tests\OPG\Digideps\Backend\Integration\Fixtures;

@@ -47,9 +47,16 @@
 {# display assets in groups #}
 {% for groupId, assetsInGroup in report.assetsGroupedByTitle %}
     {% if (groupId | lower) == 'property' %}
-        {% include '@App/Report/Asset/Property/_list_item.html.twig' %}
+        {% include '@App/Report/Asset/Property/_list_item.html.twig' with {
+            'assetsInGroup': assetsInGroup,
+            'reportId': report.id,
+            'clientFirstName': report.client.firstname
+        } %}
     {% else %}
-        {% include '@App/Report/Asset/Other/_list_item.html.twig' %}
+        {% include '@App/Report/Asset/Other/_list_item.html.twig' with {
+            'assetsInGroup': assetsInGroup,
+            'reportId': report.id
+        } %}
     {% endif %}
 {% endfor %}
 

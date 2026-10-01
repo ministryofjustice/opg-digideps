@@ -14,8 +14,6 @@ trait ReportTrait
     private string $reportAlreadySubmittedError = 'Report has already been submitted';
 
     /**
-     * @Then I should be able to submit my :currentOrPrevious report without completing the client benefits check section
-     *
      * @Given I follow the submission process to the declaration page for :currentOrPrevious report
      */
     public function iSubmitCurrentOrPreviousTheReport(string $currentOrPrevious): void

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Frontend\Unit\EventSubscriber;
 
 use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Deputy;
+use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Event\ClientDeletedEvent;
 use OPG\Digideps\Frontend\EventSubscriber\ClientDeletedSubscriber;
 use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
@@ -13,15 +15,11 @@ use OPG\Digideps\Frontend\TestHelpers\ClientHelpers;
 use OPG\Digideps\Frontend\TestHelpers\DeputyHelper;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 
 class ClientDeletedSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @test */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals([
             ClientDeletedEvent::NAME => 'logEvent',
@@ -30,17 +28,14 @@ class ClientDeletedSubscriberTest extends TestCase
 
     /**
      * @dataProvider deputyProvider
-     *
-     * @test
      */
-    public function logEvent(Client $clientWithUsers, $deputy)
+    public function testLogEvent(Client $clientWithUsers, Deputy|User $deputy): void
     {
-        $logger = self::prophesize(LoggerInterface::class);
-        $dateTimeProvider = self::prophesize(DateTimeProvider::class);
+        $logger = self::createMock(LoggerInterface::class);
+        $dateTimeProvider = self::createMock(DateTimeProvider::class);
 
         $now = new \DateTime();
-        $dateTimeProvider->getDateTime()->willReturn($now);
-        $sut = new ClientDeletedSubscriber($logger->reveal(), $dateTimeProvider->reveal());
+        $dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($now);
 
         $currentUser = UserHelpers::createUser();
         $trigger = 'A_TRIGGER';
@@ -58,11 +53,12 @@ class ClientDeletedSubscriberTest extends TestCase
             'type' => 'audit',
         ];
 
-        $logger->notice('', $expectedEvent)->shouldBeCalled();
-        $sut->logEvent($clientDeletedEvent);
+        $logger->expects(self::once())->method('notice')->with('', $expectedEvent);
+
+        new ClientDeletedSubscriber($logger, $dateTimeProvider)->logEvent($clientDeletedEvent);
     }
 
-    public function deputyProvider()
+    public static function deputyProvider(): array
     {
         $clientWithUsers = ClientHelpers::createClient();
         $layDeputy = UserHelpers::createUser()->setRoleName('ROLE_LAY_DEPUTY');

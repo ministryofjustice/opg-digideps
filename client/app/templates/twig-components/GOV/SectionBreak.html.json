@@ -1,0 +1,8 @@
+{
+    "link": "https://design-system.service.gov.uk/styles/section-break/",
+    "props": [
+        { "name": "visible", "type": "bool", "default": "false" },
+        { "name": "size", "type": "'m' | 'l' | 'xl'", "default": "'m'" }
+    ],
+    "examples": ["section-break"]
+}

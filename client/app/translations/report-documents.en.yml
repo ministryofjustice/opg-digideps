@@ -111,3 +111,10 @@ reUploadPage:
   removeDocumentAction: |
     The option to save and continue will appear once all documents listed under 'Documents to remove and re-upload' have been removed. Please ensure that you re-upload the documents before you save and continue.
   uploadDocumentReminder: Please remember to re-upload your document(s) before you save and continue.
+
+review:
+  question: Question
+  answer: Answer
+  yes: Yes
+  no: No
+  notEntered: Not entered

@@ -5,17 +5,18 @@
   "license": "MIT",
   "minimum-stability": "stable",
   "scripts": {
-    "reformat": "./vendor/bin/phpcbf -p .",
-    "reformat:check": "./vendor/bin/phpcs -p .",
-    "lint:phpstan": "phpstan",
-    "lint:phpstan:baseline": "phpstan && phpstan --generate-baseline",
-    "lint:phpstan:baseline:force": "phpstan --generate-baseline"
+    "reformat": "php-cs-fixer fix -v",
+    "reformat:check": "php-cs-fixer check -v",
+    "lint:phpstan": "phpstan --memory-limit=512M",
+    "lint:phpstan:baseline": "phpstan --memory-limit=512M && phpstan --memory-limit=512M --generate-baseline",
+    "lint:phpstan:baseline:force": "phpstan --memory-limit=512M --generate-baseline"
+  },
+  "require": {
+    "php": "^8.4.4"
   },
   "require-dev": {
-    "phpstan/phpstan": "^2.1.5",
-    "squizlabs/php_codesniffer": "^4.0.1",
-    "phpstan/phpstan-mockery": "^2.0",
-    "phpstan/phpstan-phpunit": "^2.0.5",
-    "jangregor/phpstan-prophecy": "^2.3"
+    "phpstan/phpstan": "^2.2.6",
+    "phpstan/phpstan-phpunit": "^2.0.18",
+    "friendsofphp/php-cs-fixer": "^3.95.16"
   }
 }

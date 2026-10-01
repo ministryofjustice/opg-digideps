@@ -1,0 +1,9 @@
+[project]
+name = "github-actions-audit"
+version = "0.0.0"
+requires-python = "==3.14.7"
+dependencies = [
+    "zizmor==1.30.0",
+]
+[tool.uv]
+package = false

@@ -4,60 +4,41 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Factory;
 
+use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
 use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Factory\ClientBenefitsCheckFactory;
 use OPG\Digideps\Backend\Repository\ReportRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 final class ClientBenefitsCheckFactoryTest extends TestCase
 {
-    use ProphecyTrait;
-
-    private ?ClientBenefitsCheck $moneyClientBenefitsCheck;
-
-    private ?float $moneyAmount;
-
-    private ?int $reportId;
-
-    private ?string $id;
-    private ?string $created;
-    private ?string $whenLastCheckedEntitlement;
-    private ?string $dateLastCheckedEntitlement;
-    private ?string $neverCheckedExplanation;
-    private ?string $doOthersReceiveMoneyOnClientsBehalf;
-    private ?string $dontKnowMoneyExplanation;
-    private ?string $moneyId;
-    private ?string $moneyCreated;
-    private ?string $moneyType;
-    private ?string $moneyAmountDontKnow;
-    private ?string $whoReceivedMoney;
+    private float $moneyAmount = 100.5;
+    private int $reportId = 1436;
+    private string $id = '8e3aaf2c-3145-4e07-b64b-37702323c6f9';
+    private string $whenLastCheckedEntitlement = 'haveChecked';
+    private string $doOthersReceiveMoneyOnClientsBehalf = 'yes';
+    private string $moneyId = '5d80a2f3-4f2c-4e0f-9709-2d201102cb13';
+    private string $moneyType = 'Universal Credit';
+    private string $whoReceivedMoney = 'Some organisation';
+    private ?ClientBenefitsCheck $moneyClientBenefitsCheck = null;
+    private ?string $moneyAmountDontKnow = null;
+    private ?string $dontKnowMoneyExplanation = null;
+    private ?string $dateLastCheckedEntitlement = null;
+    private ?string $neverCheckedExplanation = null;
+    private ?string $moneyCreated = null;
+    private ?string $created = null;
 
     public function setUp(): void
     {
-        $this->reportId = 1436;
-        $this->id = '8e3aaf2c-3145-4e07-b64b-37702323c6f9';
         $this->created = new \DateTime()->format('Y-m-d');
-        $this->whenLastCheckedEntitlement = 'haveChecked';
         $this->dateLastCheckedEntitlement = new \DateTime()->format('Y-m-d');
-        $this->neverCheckedExplanation = null;
-        $this->doOthersReceiveMoneyOnClientsBehalf = 'yes';
-        $this->dontKnowMoneyExplanation = null;
-
-        $this->moneyId = '5d80a2f3-4f2c-4e0f-9709-2d201102cb13';
         $this->moneyCreated = new \DateTime()->format('Y-m-d');
-        $this->moneyClientBenefitsCheck = null;
-        $this->moneyType = 'Universal Credit';
-        $this->moneyAmount = 100.5;
-        $this->moneyAmountDontKnow = null;
-        $this->whoReceivedMoney = 'Some organisation';
     }
 
     #[Test]
@@ -66,14 +47,17 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $validData = $this->generateValidFormData(true);
 
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
-        $this->set($report, $this->reportId);
+        $report->setId($this->reportId);
 
-        $reportRepo = self::prophesize(ReportRepository::class);
-        $em = self::prophesize(EntityManagerInterface::class);
+        $reportRepo = self::createMock(ReportRepository::class);
+        $em = self::createMock(EntityManagerInterface::class);
 
-        $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
+        $reportRepo->expects(self::once())
+            ->method('find')
+            ->with($this->reportId)
+            ->willReturn($report);
 
-        $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $em->reveal());
+        $sut = new ClientBenefitsCheckFactory($reportRepo, $em);
 
         $existingMoney = new MoneyReceivedOnClientsBehalf()
             ->setId(Uuid::fromString($this->moneyId));
@@ -89,7 +73,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
 
         self::assertEquals($this->reportId, $processedClientBenefitsCheck->getReport()->getId());
         self::assertEquals($this->id, $processedClientBenefitsCheck->getId()->toString());
-        self::assertEquals($this->created, $processedClientBenefitsCheck->getCreated()->format('Y-m-d'));
+        self::assertEquals($this->created, $processedClientBenefitsCheck->getCreated()?->format('Y-m-d'));
         self::assertEquals($this->whenLastCheckedEntitlement, $processedClientBenefitsCheck->getWhenLastCheckedEntitlement());
         self::assertEquals($this->dateLastCheckedEntitlement, $processedClientBenefitsCheck->getDateLastCheckedEntitlement()->format('Y-m-d'));
         self::assertEquals($this->neverCheckedExplanation, $processedClientBenefitsCheck->getNeverCheckedExplanation());
@@ -132,37 +116,31 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         ];
     }
 
-    private function set(Report $entity, ?int $value, $propertyName = 'id'): void
-    {
-        $class = new \ReflectionClass($entity);
-        $property = $class->getProperty($propertyName);
-        $property->setAccessible(true);
-
-        $property->setValue($entity, $value);
-    }
-
     #[Test]
     public function createFromFormDataNewEntity(): void
     {
         $validData = $this->generateValidFormData(false);
 
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
-        $this->set($report, $this->reportId);
+        $report->setId($this->reportId);
 
-        $reportRepo = self::prophesize(ReportRepository::class);
-        $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
+        $reportRepo = self::createMock(ReportRepository::class);
+        $reportRepo->expects(self::once())
+            ->method('find')
+            ->with($this->reportId)
+            ->willReturn($report);
 
-        $em = self::prophesize(EntityManagerInterface::class);
+        $em = self::createMock(EntityManagerInterface::class);
 
-        $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $em->reveal());
+        $sut = new ClientBenefitsCheckFactory($reportRepo, $em);
 
         $processedClientBenefitsCheck = $sut->createFromFormData($validData);
 
         self::assertEquals($this->reportId, $processedClientBenefitsCheck->getReport()->getId());
         self::assertEquals(true, $processedClientBenefitsCheck->getId() instanceof UuidInterface);
-        self::assertEquals($this->created, $processedClientBenefitsCheck->getCreated()->format('Y-m-d'));
+        self::assertEquals($this->created, $processedClientBenefitsCheck->getCreated()?->format('Y-m-d'));
         self::assertEquals($this->whenLastCheckedEntitlement, $processedClientBenefitsCheck->getWhenLastCheckedEntitlement());
-        self::assertEquals($this->dateLastCheckedEntitlement, $processedClientBenefitsCheck->getDateLastCheckedEntitlement()->format('Y-m-d'));
+        self::assertEquals($this->dateLastCheckedEntitlement, $processedClientBenefitsCheck->getDateLastCheckedEntitlement()?->format('Y-m-d'));
         self::assertEquals($this->neverCheckedExplanation, $processedClientBenefitsCheck->getNeverCheckedExplanation());
         self::assertEquals($this->doOthersReceiveMoneyOnClientsBehalf, $processedClientBenefitsCheck->getDoOthersReceiveMoneyOnClientsBehalf());
         self::assertEquals($this->dontKnowMoneyExplanation, $processedClientBenefitsCheck->getDontKnowMoneyExplanation());
@@ -183,10 +161,13 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $validData = $this->generateValidFormDataRemoveMoneys();
 
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
-        $this->set($report, $this->reportId);
+        $report->setId($this->reportId);
 
-        $reportRepo = self::prophesize(ReportRepository::class);
-        $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
+        $reportRepo = self::createMock(ReportRepository::class);
+        $reportRepo->expects(self::once())
+            ->method('find')
+            ->with($this->reportId)
+            ->willReturn($report);
 
         $existingMoney = new MoneyReceivedOnClientsBehalf()
             ->setId(Uuid::fromString($this->moneyId))
@@ -200,11 +181,14 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
 
         $existingMoney->setClientBenefitsCheck($existingClientBenefitsCheck);
 
-        $em = self::prophesize(EntityManagerInterface::class);
-        $em->remove($existingMoney)->shouldBeCalled();
-        $em->flush()->shouldBeCalled();
+        $em = self::createMock(EntityManagerInterface::class);
+        $em->expects(self::once())
+            ->method('remove')
+            ->with($existingMoney);
+        $em->expects(self::once())
+            ->method('flush');
 
-        $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $em->reveal());
+        $sut = new ClientBenefitsCheckFactory($reportRepo, $em);
 
         $processedClientBenefitsCheck = $sut->createFromFormData(
             $validData,

@@ -11,62 +11,37 @@ use OPG\Digideps\Backend\Entity\User;
 
 trait ModifyAudit
 {
-    /**
-     * Last modified by.
-     *
-     * @var User
-     */
     #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['last-modified'])]
     #[ORM\JoinColumn(name: 'last_modified_by', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
-    protected $lastModifiedBy;
+    protected ?User $lastModifiedBy = null;
 
-    /**
-     * Last modified on.
-     *
-     * @var \DateTime
-     */
     #[JMS\Type('DateTime')]
     #[JMS\Groups(['last-modified'])]
     #[ORM\Column(name: 'last_modified_on', type: 'datetime', nullable: true)]
     #[Gedmo\Timestampable(on: 'update')]
-    protected $lastModifiedOn;
+    protected ?\DateTime $lastModifiedOn = null;
 
-    /**
-     * @return User
-     */
-    public function getLastModifiedBy()
+    public function getLastModifiedBy(): ?User
     {
         return $this->lastModifiedBy;
     }
 
-    /**
-     * @param User $lastModifiedBy
-     *
-     * @return $this
-     */
-    public function setLastModifiedBy($lastModifiedBy)
+    public function setLastModifiedBy(?User $lastModifiedBy): static
     {
         $this->lastModifiedBy = $lastModifiedBy;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getLastModifiedOn()
+    public function getLastModifiedOn(): ?\DateTime
     {
         return $this->lastModifiedOn;
     }
 
-    /**
-     * @param \DateTime $lastModifiedOn
-     *
-     * @return $this
-     */
-    public function setLastModifiedOn($lastModifiedOn)
+
+    public function setLastModifiedOn(?\DateTime $lastModifiedOn): static
     {
         $this->lastModifiedOn = $lastModifiedOn;
 

@@ -1,165 +1,107 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\Debt;
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Debt;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 trait ReportDebtsTrait
 {
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Debt>")
-     * @JMS\Groups({"debt"})
-     *
      * @var Debt[]
      */
-    private $debts = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Debt>')]
+    #[JMS\Groups(['debt'])]
+    private array $debts = [];
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt"})
-     *
-     * @Assert\NotBlank(message="report.hasDebts.notBlank", groups={"debts"})
-     *
-     * @var string
-     */
-    private $hasDebts;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['debt'])]
+    #[Assert\NotBlank(message: 'report.hasDebts.notBlank', groups: ['debts'])]
+    private ?string $hasDebts = null;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt-management"})
-     *
-     * @Assert\NotBlank(message="report.debts-management.notBlank", groups={"debt-management"})
-     *
-     * @var string
-     */
-    private $debtManagement;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['debt-management'])]
+    #[Assert\NotBlank(message: 'report.debts-management.notBlank', groups: ['debt-management'])]
+    private ?string $debtManagement = null;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"debt"})
-     *
-     * @var string $debtsTotalAmount
-     */
-    private $debtsTotalAmount;
+    #[JMS\Type('double')]
+    #[JMS\Groups(['debt'])]
+    private float $debtsTotalAmount = 0.0;
 
-    /**
-     * Get debts total value.
-     *
-     * @return float
-     */
-    public function getDebtsTotalValue()
+    public function getDebtsTotalValue(): float
     {
-        $ret = 0;
+        $ret = 0.0;
         foreach ($this->getDebts() as $debt) {
-            $ret += $debt->getAmount();
+            $ret += (float) $debt->getAmount();
         }
 
         return $ret;
     }
 
-    /**
-     * @param $debtId
-     *
-     * @return Debt|null
-     */
-    public function getDebtById($debtId)
+    public function getDebtById(string $debtId): ?Debt
     {
-        foreach ($this->getDebts() as $debt) {
-            if ($debt->getDebtTypeId() == $debtId) {
-                return $debt;
-            }
-        }
-
-        return null;
+        return array_find($this->getDebts(), fn ($debt) => $debt->getDebtTypeId() == $debtId);
     }
 
     /**
      * @return Debt[]
      */
-    public function getDebts()
+    public function getDebts(): array
     {
         return $this->debts;
     }
 
     /**
      * @param Debt[] $debts
-     *
-     * @return Report
      */
-    public function setDebts($debts)
+    public function setDebts(array $debts): static
     {
         $this->debts = $debts;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDebtsTotalAmount()
+    public function getDebtsTotalAmount(): float
     {
         return $this->debtsTotalAmount;
     }
 
-    /**
-     * @param string $debtsTotalAmount
-     */
-    public function setDebtsTotalAmount($debtsTotalAmount)
+    public function setDebtsTotalAmount(?float $debtsTotalAmount): static
     {
-        $this->debtsTotalAmount = $debtsTotalAmount;
+        $this->debtsTotalAmount = $debtsTotalAmount ?? 0.0;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getHasDebts()
+    public function getHasDebts(): ?string
     {
         return $this->hasDebts;
     }
 
-    /**
-     * @param $hasDebts bool
-     *
-     * @return Report
-     */
-    public function setHasDebts($hasDebts)
+    public function setHasDebts(?string $hasDebts): static
     {
         $this->hasDebts = $hasDebts;
 
         return $this;
     }
 
-    /**
-     * Get debt management text.
-     *
-     * @return string
-     */
-    public function getDebtManagement()
+    public function getDebtManagement(): ?string
     {
         return $this->debtManagement;
     }
 
-    /**
-     * Set debt management text.
-     *
-     * @param string $debtManagement
-     *
-     * @return $this
-     */
-    public function setDebtManagement($debtManagement)
+    public function setDebtManagement(?string $debtManagement): static
     {
         $this->debtManagement = $debtManagement;
 
         return $this;
     }
 
-    public function debtsValid(ExecutionContextInterface $context)
+    public function debtsValid(ExecutionContextInterface $context): void
     {
         if ($this->getHasDebts() == 'yes' && count($this->getDebtsWithValidAmount()) === 0) {
             $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
@@ -169,12 +111,10 @@ trait ReportDebtsTrait
     /**
      * @return Debt[]
      */
-    public function getDebtsWithValidAmount()
+    public function getDebtsWithValidAmount(): array
     {
-        $debtsWithAValidAmount = array_filter($this->debts, function ($debt) {
+        return array_filter($this->debts, function ($debt): bool {
             return !empty($debt->getAmount());
         });
-
-        return $debtsWithAValidAmount;
     }
 }

@@ -14,10 +14,7 @@ class QueryIntegrationTest extends ApiIntegrationTestCase
     private function addUserWithRegistrationDate(string $date): User
     {
         $id = mt_rand();
-        $user = new User();
-        $user->setFirstname('Firstname');
-        $user->setLastname('Lastname');
-        $user->setEmail("metric-test-$id@publicguardian.gov.uk");
+        $user = new User('Firstname', 'Lastname', "metric-test-$id@publicguardian.gov.uk");
         $user->setRoleName('ROLE_PROF_ADMIN');
         $user->setRegistrationDate(new \DateTime($date));
 
@@ -33,12 +30,13 @@ class QueryIntegrationTest extends ApiIntegrationTestCase
 
         $this->addUserWithRegistrationDate('2020-01-01');
 
+        /** @var array<int, array<string, mixed>> $result */
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'users',
             'dimension' => ['roleName'],
         ]));
 
-        $this->assertContainsOnly('array', $result);
+        $this->assertContainsOnlyArray($result);
 
         $this->assertCount(2, $result[0]);
         $this->assertArrayHasKey('amount', $result[0]);
@@ -49,6 +47,7 @@ class QueryIntegrationTest extends ApiIntegrationTestCase
     {
         $query = new UsersQuery($this::$entityManager);
 
+        /** @var array<int, array<string, mixed>> $result */
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'users',
         ]));

@@ -1,5 +1,5 @@
 # Use the official Nginx base image
-FROM nginx:1.30@sha256:55d1fb0944aafb8534b253e486c6cf57d3e0c785c4f6a7b3e9f02c5a080fb2ce
+FROM nginx:1.31@sha256:b34848eff6db786b6b1282d3a9c3fd0b5563dfb6d261df4923378b419e0d24f0
 
 # Copy the nginx.conf file to the container
 COPY nginx.conf /etc/nginx/nginx.conf

@@ -9,8 +9,8 @@
             {% if report.profDeputyCostsHasPrevious is null %}</span>{% endif %}
     </dt>
     <dd class="govuk-summary-list__value">
-        {% if  report.profDeputyCostsHasPrevious is null %}
-            <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+        {% if report.profDeputyCostsHasPrevious is null %}
+            <twig:GOV:ErrorMessage message="{{ 'pleaseAnswer' | trans({}, 'common' ) }}"/>
         {% else %}
             {{ report.profDeputyCostsHasPrevious | capitalize }}
         {% endif %}

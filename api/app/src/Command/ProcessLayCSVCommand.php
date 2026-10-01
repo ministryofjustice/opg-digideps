@@ -22,6 +22,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ProcessLayCSVCommand extends Command
 {
+    /** @var string|null $defaultName*/
     public static $defaultName = 'digideps:api:process-lay-csv';
 
     private const string JOB_NAME = 'lay_csv_processing';

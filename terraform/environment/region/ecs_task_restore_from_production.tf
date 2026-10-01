@@ -17,6 +17,22 @@ module "restore_from_production" {
 }
 
 locals {
+  restore_from_prod_secrets = [
+    {
+      name      = "POSTGRES_PASSWORD",
+      valueFrom = data.aws_secretsmanager_secret.database_password.arn
+    }
+  ]
+  restore_from_prod_secrets_pre = concat(
+    local.restore_from_prod_secrets,
+    [
+      {
+        name      = "DEFAULT_USER_PASSWORD",
+        valueFrom = var.account.environment.name == "preproduction" ? data.aws_secretsmanager_secret.anonymise-default-pw[0].arn : ""
+      }
+    ]
+  )
+
   restore_from_production_container = jsonencode(
     {
       name    = "restore",
@@ -30,16 +46,7 @@ locals {
           awslogs-stream-prefix = "restore"
         }
       },
-      secrets = [
-        {
-          name      = "POSTGRES_PASSWORD",
-          valueFrom = data.aws_secretsmanager_secret.database_password.arn
-        },
-        {
-          name      = "DEFAULT_USER_PASSWORD",
-          valueFrom = data.aws_secretsmanager_secret.anonymise-default-pw.arn
-        }
-      ],
+      secrets = var.account.environment.name == "preproduction" ? local.restore_from_prod_secrets_pre : local.restore_from_prod_secrets,
       environment = concat(local.api_single_db_tasks_base_variables,
         [
           {

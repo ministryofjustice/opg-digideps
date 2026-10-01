@@ -50,11 +50,6 @@ const uploadFile = {
   },
 
   init: function (document) {
-    // hide any submit buttons inside file chooser forms
-    document.querySelectorAll('[data-role=file-chooser-form-submit]').forEach(btn => {
-      btn.classList.add('visually-hidden')
-    })
-
     document.addEventListener('change', event => {
       this.handleChangeEvent(event, window)
     })

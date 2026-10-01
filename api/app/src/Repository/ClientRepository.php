@@ -173,8 +173,8 @@ class ClientRepository extends ServiceEntityRepository
 
     public function findByFiltersWithCounts(
         $q,
-        $offset,
-        $limit,
+        int $offset,
+        int $limit,
         $id,
     ): array {
         // BASE QUERY BUILDER with filters (for both count and results)

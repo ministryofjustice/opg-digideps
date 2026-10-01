@@ -29,6 +29,8 @@ typePage:
   backLink: Back
 
 stepPageProperty:
+  editHtmlTitle: "Edit an asset: property - Complete the deputy report | GOV.UK"
+  editPageTitle: "Edit an asset: property"
   htmlTitle: "Add an asset: property - Complete the deputy report | GOV.UK"
   pageTitle: "Add an asset: property"
   supportTitle: Assets
@@ -51,7 +53,12 @@ summaryPage:
   listOfAssets: List of assets
   property: Property
   addButton: Add an asset
+  totalValueOfPreviousAssets: Total value of assets %previousStartDate% to %previousEndDate%
+  totalValueOfAssetsWithDates: Total value of assets %startDate% to %endDate%
   totalValueOfAssets: Total value of assets
+  prevNoAssetToAdd:
+    label: Does %client% own any assets in %previousStartDate% to %previousEndDate%?
+  assetsPrevReportMissing: No previous reports on record to show previous assets balance
 
 deletePage:
   htmlTitle: "Remove asset - Complete the deputy report | GOV.UK"

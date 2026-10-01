@@ -1,83 +1,65 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\MoneyTransfer;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\MoneyTransfer;
 
 trait ReportTransfersTrait
 {
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransfer>")
-     *
      * @var MoneyTransfer[]
      */
-    private $moneyTransfers = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\MoneyTransfer>')]
+    private array $moneyTransfers = [];
+
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['money-transfers-no-transfers'])]
+    private ?bool $noTransfersToAdd = false;
 
     /**
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"money-transfers-no-transfers"})
+     * Return list of money transfers by ID (as a proxy for creation date). Does not alter the ordering of the
+     * underlying $this->moneyTransfers property.
      *
-     * @var bool
-     */
-    private $noTransfersToAdd;
-
-    /**
      * @return MoneyTransfer[]
      */
-    public function getMoneyTransfers()
+    public function getMoneyTransfers(): array
     {
-        return $this->moneyTransfers;
+        $moneyTransfers = [...$this->moneyTransfers];
+        uasort($moneyTransfers, fn ($mt1, $mt2) => $mt1->getId() <=> $mt2->getId());
+        return $moneyTransfers;
+    }
+
+    public function getMoneyTransferWithId($id): ?MoneyTransfer
+    {
+        return array_find($this->moneyTransfers, fn ($t) => $t->getId() == $id);
     }
 
     /**
-     * @return MoneyTransfer|null
+     * @param MoneyTransfer[] $transfers
      */
-    public function getMoneyTransferWithId($id)
-    {
-        foreach ($this->moneyTransfers as $t) {
-            if ($t->getId() == $id) {
-                return $t;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setMoneyTransfers(array $transfers)
+    public function setMoneyTransfers(array $transfers): static
     {
         $this->moneyTransfers = $transfers;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getNoTransfersToAdd()
+    public function getNoTransfersToAdd(): ?bool
     {
         return $this->noTransfersToAdd;
     }
 
-    /**
-     * @param bool $noTransfersToAdd
-     *
-     * @return $this
-     */
-    public function setNoTransfersToAdd($noTransfersToAdd)
+    public function setNoTransfersToAdd(?bool $noTransfersToAdd): static
     {
         $this->noTransfersToAdd = $noTransfersToAdd;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function enoughBankAccountForTransfers()
+    public function enoughBankAccountForTransfers(): bool
     {
         return count($this->getBankAccounts()) >= 2;
     }

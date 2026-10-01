@@ -1,0 +1,45 @@
+name: "[Scheduled] Weekly Pinned Update Checks"
+
+on:
+  schedule:
+    # 9am on Wednesdays
+    - cron: "0 9 * * 3"
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: none
+  security-events: none
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  run_weekly_update:
+    runs-on: ubuntu-latest
+    name: run pinned version updates
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: update pinned platform versions
+        run: python update_platform_versions.py
+        working-directory: scripts/pipeline/update_versions
+
+      - name: update pinned apk versions
+        run: |
+          make frontend-apk-upgrade
+          make api-apk-upgrade
+          make htmltopdf-apk-upgrade
+
+      - name: Create a signed commit
+        uses: ministryofjustice/modernisation-platform-github-actions/signed-commit@2988728879704953e739f82ac926d37931c6d01b # v6.1.9
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: "Update pinned versions"
+          pr_body: "This PR was created automatically to update pinned versions not available to update by renovate."

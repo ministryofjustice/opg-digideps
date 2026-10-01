@@ -10,7 +10,7 @@ use OPG\Digideps\Backend\Security\RedisUserProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Tests\OPG\Digideps\Backend\Unit\Service\PredisMock;
+use Tests\OPG\Digideps\Backend\Unit\PredisMock;
 
 final class UserProviderTest extends TestCase
 {
@@ -40,7 +40,7 @@ final class UserProviderTest extends TestCase
     public function testloadUserByUsernameDbNotFound(): void
     {
         $this->redis->set('token', 1);
-        $this->repo->method('find')->with(1)->willReturn(null);
+        $this->repo->expects($this->once())->method('find')->with(1)->willReturn(null);
         $this->logger->expects($this->once())->method('warning')->with($this->matchesRegularExpression('/not found/'));
         $this->expectException(\RuntimeException::class);
 
@@ -51,7 +51,7 @@ final class UserProviderTest extends TestCase
     {
         $user = $this->createMock(User::class);
         $this->redis->set('token', 1);
-        $this->repo->method('find')->with(1)->willReturn($user);
+        $this->repo->expects($this->once())->method('find')->with(1)->willReturn($user);
         $this->logger->expects($this->never())->method('warning');
 
         $this->assertEquals($user, $this->userProvider->loadUserByUsername('token'));
@@ -90,7 +90,7 @@ final class UserProviderTest extends TestCase
     {
         $this->userProvider->removeToken('token');
 
-        $setCalls = array_filter($this->redis->calls, fn ($c) => $c[0] === 'set' && $c[1] === 'token' && $c[2] === null);
+        $setCalls = array_filter($this->redis->calls, fn ($c) => $c[0] === 'set' && $c[1] === 'token');
         $this->assertCount(1, $setCalls);
     }
 }

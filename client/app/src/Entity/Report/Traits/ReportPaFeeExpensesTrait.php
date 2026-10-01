@@ -1,51 +1,42 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\Fee;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Fee;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 trait ReportPaFeeExpensesTrait
 {
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Fee>")
-     * @JMS\Groups({"fee"})
-     *
      * @var Fee[]
      */
-    private $fees = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Fee>')]
+    #[JMS\Groups(['fee'])]
+    private array $fees = [];
+
+    #[JMS\Type('string')]
+    #[JMS\Groups(['reasonForNoFees'])]
+    #[Assert\NotBlank(message: 'fee.reasonForNoFees.notBlank', groups: ['reasonForNoFees'])]
+    private ?string $reasonForNoFees = null;
 
     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"reasonForNoFees"})
-     *
-     * @Assert\NotBlank(message="fee.reasonForNoFees.notBlank", groups={"reasonForNoFees"})
-     *
-     * @var string
+     * 'yes'|'no'|null
      */
-    private $reasonForNoFees;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['fee'])]
+    private ?string $hasFees = null;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"fee"})
-     *
-     * @var string $hasFees
-     */
-    private $hasFees;
-
-    /**
-     * @JMS\Type("double")
-     *
-     * @var string $feesTotal
-     */
-    private $feesTotal;
+    #[JMS\Type('double')]
+    private float $feesTotal = 0.0;
 
     /**
      * @return Fee[]
      */
-    public function getFees()
+    public function getFees(): array
     {
         return $this->fees;
     }
@@ -53,84 +44,72 @@ trait ReportPaFeeExpensesTrait
     /**
      * @param Fee[] $fees
      */
-    public function setFees($fees)
+    public function setFees(array $fees): static
     {
         $this->fees = $fees;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getReasonForNoFees()
+    public function getReasonForNoFees(): ?string
     {
         return $this->reasonForNoFees;
     }
 
-    /**
-     * @param string $reasonForNoFees
-     */
-    public function setReasonForNoFees($reasonForNoFees)
+    public function setReasonForNoFees(?string $reasonForNoFees): static
     {
         $this->reasonForNoFees = $reasonForNoFees;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFeesTotal()
+    public function getFeesTotal(): float
     {
         return $this->feesTotal;
     }
 
-    /**
-     * @param string $feesTotal
-     */
-    public function setFeesTotal($feesTotal)
+    public function setFeesTotal(float $feesTotal): static
     {
         $this->feesTotal = $feesTotal;
+
+        return $this;
     }
 
-    public function feesValid(ExecutionContextInterface $context)
+    public function feesValid(ExecutionContextInterface $context): void
     {
         if (empty($this->getReasonForNoFees()) && count($this->getFeesWithValidAmount()) === 0) {
             $context->addViolation('fee.mustHaveAtLeastOneFee');
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getHasFees()
+    public function getHasFees(): ?string
     {
         return $this->hasFees;
     }
 
-    /**
-     * @param string $hasFees
-     */
-    public function setHasFees($hasFees)
+    public function setHasFees(?string $hasFees): static
     {
         $this->hasFees = $hasFees;
+
+        return $this;
     }
 
     /**
      * @return Fee[]
      */
-    public function getFeesWithValidAmount()
+    public function getFeesWithValidAmount(): array
     {
-        return array_filter($this->fees, function ($fee) {
+        return array_filter($this->fees, function ($fee): bool {
             return !empty($fee->getAmount());
         });
     }
 
     /**
      * Used to improve the section flow. see usage in Controller.
-     *
-     * @return bool
      */
-    public function isOtherFeesSectionComplete()
+    public function isOtherFeesSectionComplete(): bool
     {
         return $this->getPaidForAnything() === 'no'
-        || ($this->getPaidForAnything() === 'yes' && count($this->getExpenses()));
+        || ($this->getPaidForAnything() === 'yes' && count($this->getExpenses())) > 0;
     }
 }

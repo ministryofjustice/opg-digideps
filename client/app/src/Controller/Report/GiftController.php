@@ -25,6 +25,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 class GiftController extends AbstractController
 {
     private static array $jmsGroups = [
+        'created-at',
         'gifts',
         'gifts-state',
         'account',
@@ -200,6 +201,7 @@ class GiftController extends AbstractController
 
         return [
             'report' => $report,
+            'gifts' => $report->getGifts(),
         ];
     }
 
