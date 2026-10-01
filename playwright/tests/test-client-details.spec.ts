@@ -5,21 +5,25 @@ import {
   setupFixture,
 } from "./fixtures/fixtures";
 
-const deputyReference = "client-details-user";
-
 test("reports are displayed in tables according to their status", async ({ page }) => {
   const runTest = async (scenario: Scenario) => {
-    console.log(scenario);
+    console.log(JSON.stringify(scenario, null, 2));
     return Promise.resolve();
   };
 
-  // create multiple reports in different states
   await setupFixture(
     createFixtureViaApi(
       "/fixtures/scenarios/generic",
-      {
-        "deputies": []
-      },
+       {
+         reportType: "OPG102",
+         reports: [
+           {startDate: new Date()},
+           {startDate: new Date(), submitDate: new Date()}
+         ],
+         deputies: [
+           {ref: "client-details-user-1", type: "LAY"}
+         ]
+      }
     ),
   ).then((fixture) => runTest(fixture.data as Scenario));
 });
