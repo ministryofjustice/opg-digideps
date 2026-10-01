@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * @phpstan-type FixtureReport array{id: int, documents: array<FixtureDocument>}
+ * @phpstan-type FixtureReport array{id: int, submitDate: ?\DateTime, startDate: \DateTime, documents: array<FixtureDocument>}
  * @phpstan-type FixtureDocument array{id: int}
  * @phpstan-type FixtureOrder array{courtOrderUid: string, caseNumber: ?string, reports: array<FixtureReport>}
  * @phpstan-type FixtureUser array{email: string}
@@ -200,50 +200,44 @@ class FixtureController extends AbstractController
     {
         $this->checkIfAccessible();
 
-        $payload = new ValidatingArray($request->getPayload()->all());
+        $startDate = new \DateTimeImmutable()->sub(new \DateInterval('P1Y'));
 
-        // TODO get from request; set default start date if not provided, but leave submitDate null if not present
-        $now = new \DateTimeImmutable();
-        $startDate = $now->sub(new \DateInterval('P1Y'));
-
-        $courtOrderPayload = [
-            'reportType' => 'OPG102',
-            'reports' => [['startDate' => $startDate]],
-            'deputies' => [
-                ['ref' => 'foo1', 'type' => 'LAY'],
-                ['ref' => 'foo2', 'type' => 'PRO']
-            ]
-        ];
+        $courtOrderPayload = new ValidatingArray($request->getPayload()->all());
 
         $deputyDescriptors = array_map(
             function (array $deputyPayload) {
-                $deputyType = DeputyType::tryFrom($deputyPayload['type']) ?? DeputyType::LAY;
-                return new DeputyDescriptor($deputyPayload['ref'], $deputyType);
+                $deputy = new ValidatingArray($deputyPayload);
+                $deputyType = DeputyType::tryFrom($deputy->getStringOrNull('type')) ?? DeputyType::LAY;
+                return new DeputyDescriptor($deputy->getStringOrThrow('ref'), $deputyType);
             },
-            $courtOrderPayload['deputies']
+            $courtOrderPayload->getArrayOrDefault('deputies', [])
         );
 
-        $reportType = CourtOrderReportType::tryFrom($courtOrderPayload['reportType']) ?? CourtOrderReportType::OPG102;
+        $reportType = CourtOrderReportType::tryFrom($courtOrderPayload->getStringOrDefault('reportType', '')) ?? CourtOrderReportType::OPG102;
 
         $reportDescriptors = array_map(
-            fn (array $reportPayload) => new ReportDescriptor(
-                $reportPayload['startDate'],
-                submitDate: $reportPayload['submitDate'] ?? null
-            ),
-            $courtOrderPayload['reports']
+            function (array $reportPayload) use ($startDate) {
+                $report = new ValidatingArray($reportPayload);
+                return new ReportDescriptor(
+                    $report->getObjectOrNull('startDate', \DateTimeImmutable::class) ?? $startDate,
+                    submitDate: $report->getObjectOrNull('submitDate', \DateTimeImmutable::class)
+                );
+            },
+            $courtOrderPayload->getArrayOrDefault('reports', [])
         );
 
         $courtOrder = new CourtOrderDescriptor(
             deputySet: new DeputySet(...$deputyDescriptors),
             reportType: $reportType,
+            active: $courtOrderPayload->getBooleanOrDefault('active', true),
             reportList: new ReportList(true, ...$reportDescriptors)
         );
 
-        $scenario = $this->fixtureService->instantiateScenario(
-            new Scenario($courtOrder)
-        );
+        $scenario = $this->fixtureService->instantiateScenario(new Scenario($courtOrder));
 
-        return $this->jsonifyScenario($scenario);
+        $response = $this->jsonifyScenario($scenario);
+        error_log(print_r($response, true));
+        return $response;
     }
 
     /**
@@ -283,6 +277,8 @@ class FixtureController extends AbstractController
                     $reports = array_map(fn ($report) => [
                         'id' => $report->getId(),
                         'submitted' => $report->getSubmitted(),
+                        'submitDate' => $report->getSubmitDate()?->format('Y-m-d') ?? null,
+                        'startDate' => $report->getStartDate()->format('Y-m-d'),
                         'documents' => array_map(fn ($document) => ['id' => $document->getId()], $report->getDocuments()->toArray()),
                     ], $order['reports']);
 
