@@ -38,9 +38,10 @@ resource "aws_cloudwatch_log_group" "security_lambda" {
 }
 
 resource "aws_iam_role" "lambda_security" {
-  assume_role_policy = data.aws_iam_policy_document.lambda_security_policy.json
-  name               = "lambda-security"
-  tags               = var.default_tags
+  assume_role_policy   = data.aws_iam_policy_document.lambda_security_policy.json
+  name                 = "lambda-security"
+  permissions_boundary = data.aws_iam_policy.default_boundary.arn
+  tags                 = var.default_tags
 }
 
 data "aws_iam_policy_document" "lambda_security_policy" {
