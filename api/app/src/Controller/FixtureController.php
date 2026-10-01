@@ -194,6 +194,58 @@ class FixtureController extends AbstractController
         return $this->jsonifyScenario($details);
     }
 
+    #[Route('/fixtures/scenarios/generic', name: 'fixtures_scenarios_generic', methods: ['POST'])]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function scenarioGeneric(Request $request): array
+    {
+        $this->checkIfAccessible();
+
+        $payload = new ValidatingArray($request->getPayload()->all());
+
+        // TODO get from request; set default start date if not provided, but leave submitDate null if not present
+        $now = new \DateTimeImmutable();
+        $startDate = $now->sub(new \DateInterval('P1Y'));
+
+        $courtOrderPayload = [
+            'reportType' => 'OPG102',
+            'reports' => [['startDate' => $startDate]],
+            'deputies' => [
+                ['ref' => 'foo1', 'type' => 'LAY'],
+                ['ref' => 'foo2', 'type' => 'PRO']
+            ]
+        ];
+
+        $deputyDescriptors = array_map(
+            function (array $deputyPayload) {
+                $deputyType = DeputyType::tryFrom($deputyPayload['type']) ?? DeputyType::LAY;
+                return new DeputyDescriptor($deputyPayload['ref'], $deputyType);
+            },
+            $courtOrderPayload['deputies']
+        );
+
+        $reportType = CourtOrderReportType::tryFrom($courtOrderPayload['reportType']) ?? CourtOrderReportType::OPG102;
+
+        $reportDescriptors = array_map(
+            fn (array $reportPayload) => new ReportDescriptor(
+                $reportPayload['startDate'],
+                submitDate: $reportPayload['submitDate'] ?? null
+            ),
+            $courtOrderPayload['reports']
+        );
+
+        $courtOrder = new CourtOrderDescriptor(
+            deputySet: new DeputySet(...$deputyDescriptors),
+            reportType: $reportType,
+            reportList: new ReportList(true, ...$reportDescriptors)
+        );
+
+        $scenario = $this->fixtureService->instantiateScenario(
+            new Scenario($courtOrder)
+        );
+
+        return $this->jsonifyScenario($scenario);
+    }
+
     /**
      * @return FixtureJson
      */
