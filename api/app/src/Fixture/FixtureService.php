@@ -432,7 +432,7 @@ final class FixtureService
             ->setSubmitDate(null);
 
         if ($reportDescriptor->unSubmitDate !== null) {
-            $report->setUnSubmitDate($reportDescriptor->unSubmitDate);
+            $report->setUnSubmitDate(\DateTime::createFromImmutable($reportDescriptor->unSubmitDate));
         }
 
         $order->addReport($report);
