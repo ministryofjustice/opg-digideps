@@ -26,9 +26,9 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * @phpstan-type FixtureReport array{id: int, documents: array<FixtureDocument>}
+ * @phpstan-type FixtureReport array{id: int, submitDate: ?string, unSubmitDate: ?string, startDate: string, documents: array<FixtureDocument>}
  * @phpstan-type FixtureDocument array{id: int}
- * @phpstan-type FixtureOrder array{courtOrderUid: string, caseNumber: ?string, reports: array<FixtureReport>}
+ * @phpstan-type FixtureOrder array{courtOrderUid: string, caseNumber: ?string, clientId: int, reports: array<FixtureReport>}
  * @phpstan-type FixtureUser array{email: string}
  * @phpstan-type Order array{order: CourtOrder, reports: array<Report>}
  * @phpstan-type OrderPair array<'pfa'|'hw', Order>
@@ -194,6 +194,61 @@ class FixtureController extends AbstractController
         return $this->jsonifyScenario($details);
     }
 
+    #[Route('/fixtures/scenarios/generic', name: 'fixtures_scenarios_generic', methods: ['POST'])]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function scenarioGeneric(Request $request): array
+    {
+        $this->checkIfAccessible();
+
+        $startDate = new \DateTimeImmutable()->sub(new \DateInterval('P1Y'));
+
+        $courtOrderPayload = new ValidatingArray($request->getPayload()->all());
+
+        $deputyDescriptors = [];
+        /** @var array $deputyPayload */
+        foreach ($courtOrderPayload->getArrayOrDefault('deputies', []) as $deputyPayload) {
+            $deputy = new ValidatingArray($deputyPayload);
+            $deputyType = DeputyType::tryFrom($deputy->getStringOrDefault('type', '')) ?? DeputyType::LAY;
+            $deputyDescriptors[] = new DeputyDescriptor($deputy->getStringOrThrow('ref'), $deputyType);
+        }
+
+        $reportType = CourtOrderReportType::tryFrom($courtOrderPayload->getStringOrDefault('reportType', '')) ?? CourtOrderReportType::OPG102;
+
+        $reportDescriptors = [];
+        /** @var array $reportPayload */
+        foreach ($courtOrderPayload->getArrayOrDefault('reports', []) as $reportPayload) {
+            $report = new ValidatingArray($reportPayload);
+
+            $startDateStr = $report->getStringOrNull('startDate');
+            if ($startDateStr !== null) {
+                $startDate = new \DateTimeImmutable($startDateStr);
+            }
+
+            $submitDateStr = $report->getStringOrNull('submitDate');
+            $submitDate = $submitDateStr === null ? null : new \DateTimeImmutable($submitDateStr);
+
+            $unSubmitDateStr = $report->getStringOrNull('unSubmitDate');
+            $unSubmitDate = $unSubmitDateStr === null ? null : new \DateTimeImmutable($unSubmitDateStr);
+
+            $reportDescriptors[] = new ReportDescriptor(
+                startDate: $startDate,
+                submitDate: $submitDate,
+                unSubmitDate: $unSubmitDate
+            );
+        }
+
+        $courtOrder = new CourtOrderDescriptor(
+            deputySet: new DeputySet(...$deputyDescriptors),
+            reportType: $reportType,
+            active: $courtOrderPayload->getBooleanOrDefault('active', true),
+            reportList: new ReportList(true, ...$reportDescriptors)
+        );
+
+        $scenario = $this->fixtureService->instantiateScenario(new Scenario($courtOrder));
+
+        return $this->jsonifyScenario($scenario);
+    }
+
     /**
      * @return FixtureJson
      */
@@ -231,6 +286,9 @@ class FixtureController extends AbstractController
                     $reports = array_map(fn ($report) => [
                         'id' => $report->getId(),
                         'submitted' => $report->getSubmitted(),
+                        'submitDate' => $report->getSubmitDate()?->format('Y-m-d') ?? null,
+                        'unSubmitDate' => $report->getUnSubmitDate()?->format('Y-m-d') ?? null,
+                        'startDate' => $report->getStartDate()->format('Y-m-d'),
                         'documents' => array_map(fn ($document) => ['id' => $document->getId()], $report->getDocuments()->toArray()),
                     ], $order['reports']);
 
@@ -240,6 +298,7 @@ class FixtureController extends AbstractController
                     $fixtureOrders[] = [
                         'courtOrderUid' => $courtOrder->getCourtOrderUid(),
                         'caseNumber' => $client->getCaseNumber(),
+                        'clientId' => $client->getId(),
                         'reports' => $reports,
                     ];
                 }

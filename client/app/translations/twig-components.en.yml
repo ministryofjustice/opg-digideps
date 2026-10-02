@@ -18,6 +18,24 @@ gov:
       cookies: Cookies
       accessibility: Accessibility
 opg:
+  admin:
+    clientDetails:
+      actions:
+        checklist: Checklist
+        download: Download
+        manage: Manage
+      actionsHeader: Actions
+      dueDate: Due
+      period: Period
+      report: report
+      reportsHeading: Reports
+      reportStatus:
+        active: active
+        submitted: submitted
+        incomplete: incomplete
+        closed: unsubmitted (closed court orders)
+      submitted: Submitted
+      type: Type
   renderable:
     bankAccount:
       sortCode: Sort code

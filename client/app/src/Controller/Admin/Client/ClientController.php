@@ -30,6 +30,7 @@ class ClientController extends AbstractController
     public function detailsAction(int $id): RedirectResponse|array
     {
         $client = $this->clientApi->getWithUsersV2($id);
+
         if ($client->getArchivedAt() !== null) {
             return $this->redirectToRoute('admin_client_archived', ['id' => $client->getId()]);
         }

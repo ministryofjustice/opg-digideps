@@ -1,4 +1,4 @@
-{% props href, noVisitedState=false, inverse=false, inNewTab=false %}
+{% props href, text=null, noVisitedState=false, inverse=false, inNewTab=false, accessibilityText=null %}
 
 {% set className = "govuk-link" %}
 {% if noVisitedState %}
@@ -9,5 +9,12 @@
 {% endif %}
 
 <a href="{{ href }}" class="{{ className }}"{% if inNewTab %} rel="noreferrer noopener" target="_blank"{% endif %}>
-    {% with outerScope %}{% block content %}{% endblock %}{% endwith %}
+    {% if text is null %}
+        {% with outerScope %}{% block content %}{% endblock %}{% endwith %}
+    {% else %}
+        <twig:Render self="{{ text }}"/>
+    {% endif %}
+    {% if accessibilityText is not null %}
+        <twig:GOV:Div isVisuallyHidden="true"> {{ accessibilityText }}</twig:GOV:Div>
+    {% endif %}
 </a>

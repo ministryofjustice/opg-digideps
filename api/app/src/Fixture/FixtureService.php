@@ -430,6 +430,11 @@ final class FixtureService
             ->setDueDate(\DateTime::createFromImmutable($reportDescriptor->dueDate))
             ->setSubmitted(false)
             ->setSubmitDate(null);
+
+        if ($reportDescriptor->unSubmitDate !== null) {
+            $report->setUnSubmitDate(\DateTime::createFromImmutable($reportDescriptor->unSubmitDate));
+        }
+
         $order->addReport($report);
         foreach ($reportDescriptor->supportingDocumentsWithoutS3Objects as $supportingDocumentWithoutS3Object) {
             $this->addSupportingDocumentWithoutS3Object($report, $supportingDocumentWithoutS3Object);
