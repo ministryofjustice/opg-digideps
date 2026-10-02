@@ -9,7 +9,6 @@ import AdminClientDetailsPage from "./pages/AdminClientDetailsPage";
 
 test("reports are organised according to their status", async ({ page }) => {
   const runTest = async (scenario: Scenario) => {
-    console.log(JSON.stringify(scenario, null, 2));
     const clientId = scenario["orders"][0]["clientId"];
 
     const adminLoginPage = new AdminLoginPage(page);
@@ -17,6 +16,10 @@ test("reports are organised according to their status", async ({ page }) => {
 
     const adminClientDetailsPage = new AdminClientDetailsPage(page, clientId);
     await adminClientDetailsPage.goto()
+
+    await adminClientDetailsPage.expectReportsTable('active', '2026-2027')
+    await adminClientDetailsPage.expectReportsTable('submitted', '2024-2025')
+    await adminClientDetailsPage.expectReportsTable('incomplete', '2025-2026')
 
     return Promise.resolve();
   };
