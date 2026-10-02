@@ -13,6 +13,7 @@ interface UserSpec {
 interface ReportSpec {
   startDate: Date;
   submitDate?: Date;
+  unSubmitDate?: Date;
 }
 
 interface DeputySpec {

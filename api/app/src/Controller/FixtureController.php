@@ -220,7 +220,8 @@ class FixtureController extends AbstractController
                 $report = new ValidatingArray($reportPayload);
                 return new ReportDescriptor(
                     $report->getObjectOrNull('startDate', \DateTimeImmutable::class) ?? $startDate,
-                    submitDate: $report->getObjectOrNull('submitDate', \DateTimeImmutable::class)
+                    submitDate: $report->getObjectOrNull('submitDate', \DateTimeImmutable::class),
+                    unSubmitDate: $report->getObjectOrNull('unSubmitDate', \DateTimeImmutable::class)
                 );
             },
             $courtOrderPayload->getArrayOrDefault('reports', [])
