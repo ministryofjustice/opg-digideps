@@ -18,7 +18,7 @@ export default class AdminClientDetailsPage {
     await this.page.goto(this.url);
   }
 
-  async expectReportsTable(caption: string, period: string) {
+  async expectReportsTable(caption: string, period: string, countPeriod: number = 2) {
     const table = this.page.locator('table.govuk-table')
       .filter({
         has: this.page.locator('caption').filter({ hasText: caption})
@@ -31,6 +31,6 @@ export default class AdminClientDetailsPage {
 
     // NB there is a visually hidden cell which contains the period, as
     // well as the visible "Period" cell
-    await expect(periodCell).toHaveCount(2)
+    await expect(periodCell).toHaveCount(countPeriod)
   }
 }
