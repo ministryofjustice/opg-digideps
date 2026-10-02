@@ -388,13 +388,6 @@ services:
       - { name: security.voter }
     # small performance boost
     public: false
-  app.client_contact_voter:
-    class: OPG\Digideps\Frontend\Security\ClientContactVoter
-    arguments: ["@security.access.decision_manager"]
-    tags:
-      - { name: security.voter }
-    # small performance boost
-    public: false
   app.document_voter:
     class: OPG\Digideps\Frontend\Security\DocumentVoter
     arguments: ["@security.access.decision_manager"]
