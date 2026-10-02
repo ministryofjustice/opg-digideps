@@ -109,9 +109,11 @@ final class ClientDetails
             $reportHasActiveCourtOrder = $report->hasActiveCourtOrder();
 
             if ($reportSubmitted) {
-                $categorisedReports['submitted'][] = $report;
-            } elseif ($reportUnsubmitted) {
-                $categorisedReports['incomplete'][] = $report;
+                if ($reportUnsubmitted) {
+                    $categorisedReports['incomplete'][] = $report;
+                } else {
+                    $categorisedReports['submitted'][] = $report;
+                }
             } elseif ($reportHasActiveCourtOrder) {
                 $categorisedReports['active'][] = $report;
             } else {

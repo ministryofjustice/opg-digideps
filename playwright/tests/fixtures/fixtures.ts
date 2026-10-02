@@ -42,10 +42,12 @@ interface ReportDetails {
   submitted: boolean;
   startDate: Date;
   submitDate: Date;
+  unSubmitDate: Date;
 }
 
 interface OrderDetails {
-  courtOrderUid: string;
+  courtOrderUid: string|null;
+  clientId: number;
   caseNumber: string;
   reports: ReportDetails[];
 }
