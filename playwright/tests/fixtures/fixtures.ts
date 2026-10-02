@@ -46,7 +46,7 @@ interface ReportDetails {
 }
 
 interface OrderDetails {
-  courtOrderUid: string|null;
+  courtOrderUid: string | null;
   clientId: number;
   caseNumber: string;
   reports: ReportDetails[];

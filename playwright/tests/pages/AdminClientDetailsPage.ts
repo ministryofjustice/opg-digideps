@@ -18,19 +18,21 @@ export default class AdminClientDetailsPage {
     await this.page.goto(this.url);
   }
 
-  async expectReportsTable(caption: string, period: string, countPeriod: number = 2) {
-    const table = this.page.locator('table.govuk-table')
-      .filter({
-        has: this.page.locator('caption').filter({ hasText: caption})
-      })
+  async expectReportsTable(
+    caption: string,
+    period: string,
+    countPeriod: number = 2,
+  ) {
+    const table = this.page.locator("table.govuk-table").filter({
+      has: this.page.locator("caption").filter({ hasText: caption }),
+    });
 
-    await expect(table).toHaveCount(1)
+    await expect(table).toHaveCount(1);
 
-    const periodCell = table.locator('td')
-      .filter({ hasText: period})
+    const periodCell = table.locator("td").filter({ hasText: period });
 
     // NB there is a visually hidden cell which contains the period, as
     // well as the visible "Period" cell
-    await expect(periodCell).toHaveCount(countPeriod)
+    await expect(periodCell).toHaveCount(countPeriod);
   }
 }
