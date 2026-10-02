@@ -26,9 +26,9 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * @phpstan-type FixtureReport array{id: int, submitDate: ?\DateTime, startDate: \DateTime, documents: array<FixtureDocument>}
+ * @phpstan-type FixtureReport array{id: int, submitDate: ?\DateTime, unSubmitDate: ?\DateTime, startDate: \DateTime, documents: array<FixtureDocument>}
  * @phpstan-type FixtureDocument array{id: int}
- * @phpstan-type FixtureOrder array{courtOrderUid: string, caseNumber: ?string, reports: array<FixtureReport>}
+ * @phpstan-type FixtureOrder array{courtOrderUid: string, caseNumber: ?string, clientId: int, reports: array<FixtureReport>}
  * @phpstan-type FixtureUser array{email: string}
  * @phpstan-type Order array{order: CourtOrder, reports: array<Report>}
  * @phpstan-type OrderPair array<'pfa'|'hw', Order>
@@ -218,10 +218,22 @@ class FixtureController extends AbstractController
         $reportDescriptors = array_map(
             function (array $reportPayload) use ($startDate) {
                 $report = new ValidatingArray($reportPayload);
+
+                $startDateStr = $report->getStringOrNull('startDate');
+                if ($startDateStr !== null) {
+                    $startDate = new \DateTimeImmutable($startDateStr);
+                }
+
+                $submitDateStr = $report->getStringOrNull('submitDate');
+                $submitDate = $submitDateStr === null ? null : new \DateTimeImmutable($submitDateStr);
+
+                $unSubmitDateStr = $report->getStringOrNull('unSubmitDate');
+                $unSubmitDate = $unSubmitDateStr === null ? null : new \DateTimeImmutable($unSubmitDateStr);
+
                 return new ReportDescriptor(
-                    $report->getObjectOrNull('startDate', \DateTimeImmutable::class) ?? $startDate,
-                    submitDate: $report->getObjectOrNull('submitDate', \DateTimeImmutable::class),
-                    unSubmitDate: $report->getObjectOrNull('unSubmitDate', \DateTimeImmutable::class)
+                    startDate: $startDate,
+                    submitDate: $submitDate,
+                    unSubmitDate: $unSubmitDate
                 );
             },
             $courtOrderPayload->getArrayOrDefault('reports', [])
@@ -236,9 +248,7 @@ class FixtureController extends AbstractController
 
         $scenario = $this->fixtureService->instantiateScenario(new Scenario($courtOrder));
 
-        $response = $this->jsonifyScenario($scenario);
-        error_log(print_r($response, true));
-        return $response;
+        return $this->jsonifyScenario($scenario);
     }
 
     /**
@@ -279,6 +289,7 @@ class FixtureController extends AbstractController
                         'id' => $report->getId(),
                         'submitted' => $report->getSubmitted(),
                         'submitDate' => $report->getSubmitDate()?->format('Y-m-d') ?? null,
+                        'unSubmitDate' => $report->getUnSubmitDate()?->format('Y-m-d') ?? null,
                         'startDate' => $report->getStartDate()->format('Y-m-d'),
                         'documents' => array_map(fn ($document) => ['id' => $document->getId()], $report->getDocuments()->toArray()),
                     ], $order['reports']);
@@ -289,6 +300,7 @@ class FixtureController extends AbstractController
                     $fixtureOrders[] = [
                         'courtOrderUid' => $courtOrder->getCourtOrderUid(),
                         'caseNumber' => $client->getCaseNumber(),
+                        'clientId' => $client->getId(),
                         'reports' => $reports,
                     ];
                 }
