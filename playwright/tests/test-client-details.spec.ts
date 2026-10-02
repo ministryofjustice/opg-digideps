@@ -28,19 +28,19 @@ test("reports are organised according to their status", async ({ page }) => {
          reportType: "OPG102",
          reports: [
            // submitted and complete
-           { startDate: new Date(), submitDate: new Date() },
+           { startDate: new Date('2024-01-02'), submitDate: new Date('2025-01-01') },
 
            // submitted but incomplete
            {
-             startDate: new Date(),
-             submitDate: new Date(),
-             unSubmitDate: new Date()
+             startDate: new Date('2025-01-02'),
+             submitDate: new Date('2026-01-01'),
+             unSubmitDate: new Date('2026-01-03')
            },
 
            // active (note this has to be last in this list otherwise
-           // it does not become the current report, due to how the FixtureService
-           // works)
-           { startDate: new Date() }
+           // it does not become the current report, due to how the
+           // FixtureService processes the ReportList)
+           { startDate: new Date('2026-01-02') }
          ],
          deputies: [
            { ref: "client-details-user-1", type: "LAY" }
