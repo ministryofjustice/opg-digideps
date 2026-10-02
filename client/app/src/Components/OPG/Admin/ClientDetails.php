@@ -10,6 +10,7 @@ use OPG\Digideps\Frontend\Components\GOV\Link;
 use OPG\Digideps\Frontend\Components\GOV\Table\Cell;
 use OPG\Digideps\Frontend\Components\GOV\Table\Table;
 use OPG\Digideps\Frontend\Components\GOV\Table\TableBuilder;
+use OPG\Digideps\Frontend\Components\OPG\Renderable\ActionsList;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
@@ -191,7 +192,7 @@ final class ClientDetails
                 $cells[] = $report->getSubmitDate()?->format('j F Y') ?? '';
             }
 
-            $cells[] = new Div($links);
+            $cells[] = new ActionsList($links);
 
             $tableBuilder->addRow(...$cells);
         }

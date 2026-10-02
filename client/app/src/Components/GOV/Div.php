@@ -13,7 +13,7 @@ class Div implements RenderableInterface
      */
     public function __construct(
         private readonly array $text = [],
-        private readonly bool $isVisuallyHidden = false,
+        private readonly bool $isVisuallyHidden = false
     ) {
     }
 
@@ -24,7 +24,7 @@ class Div implements RenderableInterface
     public array $props {
         get => [
             'text' => $this->text,
-            'isVisuallyHidden' => $this->isVisuallyHidden,
+            'isVisuallyHidden' => $this->isVisuallyHidden
         ];
     }
 }
