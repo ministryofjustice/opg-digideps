@@ -121,6 +121,8 @@ final readonly class Query
             $rows = [];
             $this->logger->error(sprintf("Database error '%s': %s", $throwable::class, $throwable->getMessage()));
         }
+        $count = count($rows);
+        $this->logger->notice("Paged {$limit} clients from id greater than {$from}. Rows: {$count}");
         return $rows;
     }
 }
