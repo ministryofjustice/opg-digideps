@@ -32,10 +32,11 @@ class ClientAssembler
         $this->setPropertiesFromData($dto, $data, ['reports', 'deputy']);
 
         if (isset($data['reports']) && is_array($data['reports'])) {
-            $dtos = array_map(
-                fn (array $report) => $this->reportDtoAssembler->assembleFromArray($report),
-                $data['reports']
-            );
+            $dtos = [];
+            /** @var array $report */
+            foreach ($data['reports'] as $report) {
+                $dtos[] = $this->reportDtoAssembler->assembleFromArray($report);
+            }
             $dto->setReports($dtos);
             $dto->setReportCount(count($dtos));
         }
