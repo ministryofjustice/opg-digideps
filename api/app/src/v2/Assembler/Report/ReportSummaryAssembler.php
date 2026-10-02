@@ -20,10 +20,15 @@ class ReportSummaryAssembler
         // exclude court orders, as we will process these separately
         $this->setPropertiesFromData($dto, $data, ['courtOrders']);
 
-        $courtOrders = array_map(function (array $courtOrderData) {
+        $courtOrders = [];
+        /** @var array $courtOrdersRaw */
+        $courtOrdersRaw = $data['courtOrders'];
+
+        /** @var array $courtOrderData */
+        foreach ($courtOrdersRaw as $courtOrderData) {
             $courtOrderDataValidated = new ValidatingArray($courtOrderData);
 
-            return new CourtOrderDTO(
+            $courtOrders[] = new CourtOrderDTO(
                 $courtOrderDataValidated->getIntegerOrThrow('id'),
                 $courtOrderDataValidated->getStringOrThrow('courtOrderUid'),
                 CourtOrderType::tryFrom($courtOrderDataValidated->getStringOrThrow('orderType')),
@@ -31,7 +36,7 @@ class ReportSummaryAssembler
                 $courtOrderDataValidated->getStringOrThrow('status'),
                 $courtOrderDataValidated->getObjectOrThrow('orderMadeDate', \DateTime::class)
             );
-        }, $data['courtOrders']);
+        }
 
         $dto->setCourtOrders($courtOrders);
 
