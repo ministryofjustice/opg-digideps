@@ -141,6 +141,9 @@ class ReportDto
         return $this;
     }
 
+    /**
+     * @param array<CourtOrderDTO> $courtOrderDTOs
+     */
     public function setCourtOrders(array $courtOrderDTOs): static
     {
         $this->courtOrders = $courtOrderDTOs;

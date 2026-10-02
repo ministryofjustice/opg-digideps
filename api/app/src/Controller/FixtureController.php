@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * @phpstan-type FixtureReport array{id: int, submitDate: ?\DateTime, unSubmitDate: ?\DateTime, startDate: \DateTime, documents: array<FixtureDocument>}
+ * @phpstan-type FixtureReport array{id: int, submitDate: ?string, unSubmitDate: ?string, startDate: string, documents: array<FixtureDocument>}
  * @phpstan-type FixtureDocument array{id: int}
  * @phpstan-type FixtureOrder array{courtOrderUid: string, caseNumber: ?string, clientId: int, reports: array<FixtureReport>}
  * @phpstan-type FixtureUser array{email: string}
@@ -204,40 +204,38 @@ class FixtureController extends AbstractController
 
         $courtOrderPayload = new ValidatingArray($request->getPayload()->all());
 
-        $deputyDescriptors = array_map(
-            function (array $deputyPayload) {
-                $deputy = new ValidatingArray($deputyPayload);
-                $deputyType = DeputyType::tryFrom($deputy->getStringOrNull('type')) ?? DeputyType::LAY;
-                return new DeputyDescriptor($deputy->getStringOrThrow('ref'), $deputyType);
-            },
-            $courtOrderPayload->getArrayOrDefault('deputies', [])
-        );
+        $deputyDescriptors = [];
+        /** @var array $deputyPayload */
+        foreach ($courtOrderPayload->getArrayOrDefault('deputies', []) as $deputyPayload) {
+            $deputy = new ValidatingArray($deputyPayload);
+            $deputyType = DeputyType::tryFrom($deputy->getStringOrDefault('type', '')) ?? DeputyType::LAY;
+            $deputyDescriptors[] = new DeputyDescriptor($deputy->getStringOrThrow('ref'), $deputyType);
+        }
 
         $reportType = CourtOrderReportType::tryFrom($courtOrderPayload->getStringOrDefault('reportType', '')) ?? CourtOrderReportType::OPG102;
 
-        $reportDescriptors = array_map(
-            function (array $reportPayload) use ($startDate) {
-                $report = new ValidatingArray($reportPayload);
+        $reportDescriptors = [];
+        /** @var array $reportPayload */
+        foreach ($courtOrderPayload->getArrayOrDefault('reports', []) as $reportPayload) {
+            $report = new ValidatingArray($reportPayload);
 
-                $startDateStr = $report->getStringOrNull('startDate');
-                if ($startDateStr !== null) {
-                    $startDate = new \DateTimeImmutable($startDateStr);
-                }
+            $startDateStr = $report->getStringOrNull('startDate');
+            if ($startDateStr !== null) {
+                $startDate = new \DateTimeImmutable($startDateStr);
+            }
 
-                $submitDateStr = $report->getStringOrNull('submitDate');
-                $submitDate = $submitDateStr === null ? null : new \DateTimeImmutable($submitDateStr);
+            $submitDateStr = $report->getStringOrNull('submitDate');
+            $submitDate = $submitDateStr === null ? null : new \DateTimeImmutable($submitDateStr);
 
-                $unSubmitDateStr = $report->getStringOrNull('unSubmitDate');
-                $unSubmitDate = $unSubmitDateStr === null ? null : new \DateTimeImmutable($unSubmitDateStr);
+            $unSubmitDateStr = $report->getStringOrNull('unSubmitDate');
+            $unSubmitDate = $unSubmitDateStr === null ? null : new \DateTimeImmutable($unSubmitDateStr);
 
-                return new ReportDescriptor(
-                    startDate: $startDate,
-                    submitDate: $submitDate,
-                    unSubmitDate: $unSubmitDate
-                );
-            },
-            $courtOrderPayload->getArrayOrDefault('reports', [])
-        );
+            $reportDescriptors[] = new ReportDescriptor(
+                startDate: $startDate,
+                submitDate: $submitDate,
+                unSubmitDate: $unSubmitDate
+            );
+        }
 
         $courtOrder = new CourtOrderDescriptor(
             deputySet: new DeputySet(...$deputyDescriptors),
