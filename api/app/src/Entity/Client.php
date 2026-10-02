@@ -133,15 +133,6 @@ class Client
     private Collection $notes;
 
     /**
-     * @var Collection<int, ClientContact>
-     */
-    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\ClientContact>')]
-    #[JMS\Groups(['client-clientcontacts'])]
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: ClientContact::class, cascade: ['persist', 'remove'])]
-    #[ORM\OrderBy(['lastName' => 'ASC'])]
-    private Collection $clientContacts;
-
-    /**
      * Holds the deputy the client belongs to
      * Loaded from the CSV upload.
      */
@@ -174,7 +165,6 @@ class Client
         $this->users = new ArrayCollection();
         $this->reports = new ArrayCollection();
         $this->notes = new ArrayCollection();
-        $this->clientContacts = new ArrayCollection();
         $this->courtOrders = new ArrayCollection();
     }
 
@@ -536,24 +526,6 @@ class Client
     public function setNotes(Collection $notes): static
     {
         $this->notes = $notes;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ClientContact>
-     */
-    public function getClientContacts(): Collection
-    {
-        return $this->clientContacts;
-    }
-
-    /**
-     * @param Collection<int, ClientContact> $clientContacts
-     */
-    public function setClientContacts(Collection $clientContacts): static
-    {
-        $this->clientContacts = $clientContacts;
 
         return $this;
     }

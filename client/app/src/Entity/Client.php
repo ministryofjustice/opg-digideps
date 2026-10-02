@@ -180,13 +180,6 @@ class Client
     private array $notes;
 
     /**
-     * @var array<ClientContact>
-     */
-    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\ClientContact>')]
-    #[JMS\Groups(['clientcontacts'])]
-    private array $clientContacts = [];
-
-    /**
      * @var int
      */
     #[JMS\Type('integer')]
@@ -656,24 +649,6 @@ class Client
     public function setNotes(array $notes): static
     {
         $this->notes = $notes;
-
-        return $this;
-    }
-
-    /**
-     * @return array<ClientContact>
-     */
-    public function getClientContacts(): array
-    {
-        return $this->clientContacts;
-    }
-
-    /**
-     * @param array<ClientContact> $clientContacts
-     */
-    public function setClientContacts(array $clientContacts): static
-    {
-        $this->clientContacts = $clientContacts;
 
         return $this;
     }
