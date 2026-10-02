@@ -18,7 +18,8 @@ test("reports are displayed in tables according to their status", async ({ page 
          reportType: "OPG102",
          reports: [
            {startDate: new Date()},
-           {startDate: new Date(), submitDate: new Date()}
+           {startDate: new Date(), submitDate: new Date()},
+           {startDate: new Date(), unSubmitDate: new Date()}
          ],
          deputies: [
            {ref: "client-details-user-1", type: "LAY"}
