@@ -1,7 +1,7 @@
-SELECT COUNT(co.id)
+SELECT COUNT(r.id)
 FROM client c1
-INNER JOIN court_order co
-ON co.client_id = c1.id
+INNER JOIN report r
+ON r.client_id = c1.id
 INNER JOIN client c2
 ON c2.case_number = c1.case_number
 WHERE

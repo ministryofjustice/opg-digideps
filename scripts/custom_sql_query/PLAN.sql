@@ -21,7 +21,7 @@ WHERE
     AND id = co_updates.court_order_id
 ;
 
---
+-- 7602 - 2180
 UPDATE report
 SET client_id = r_updates.new_client_id
 FROM (
