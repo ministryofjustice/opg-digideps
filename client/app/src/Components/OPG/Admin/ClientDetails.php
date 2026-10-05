@@ -109,14 +109,12 @@ final class ClientDetails
             $reportUnsubmitted = ($report->getUnSubmitDate() !== null);
             $reportHasActiveCourtOrder = $report->hasActiveCourtOrder();
 
-            if ($reportSubmitted) {
-                if ($reportUnsubmitted) {
-                    $categorisedReports['incomplete'][] = $report;
-                } else {
-                    $categorisedReports['submitted'][] = $report;
-                }
-            } elseif ($reportHasActiveCourtOrder) {
+            if (!$reportSubmitted && !$reportUnsubmitted && $reportHasActiveCourtOrder) {
                 $categorisedReports['active'][] = $report;
+            } elseif ($reportSubmitted) {
+                $categorisedReports['submitted'][] = $report;
+            } elseif ($reportUnsubmitted) {
+                $categorisedReports['incomplete'][] = $report;
             } else {
                 $categorisedReports['closed'][] = $report;
             }
