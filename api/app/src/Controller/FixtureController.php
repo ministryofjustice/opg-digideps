@@ -230,10 +230,13 @@ class FixtureController extends AbstractController
             $unSubmitDateStr = $report->getStringOrNull('unSubmitDate');
             $unSubmitDate = $unSubmitDateStr === null ? null : new \DateTimeImmutable($unSubmitDateStr);
 
+            $submitted = $report->getBooleanOrDefault('submitted', $submitDate !== null);
+
             $reportDescriptors[] = new ReportDescriptor(
                 startDate: $startDate,
                 submitDate: $submitDate,
-                unSubmitDate: $unSubmitDate
+                unSubmitDate: $unSubmitDate,
+                submitted: $submitted
             );
         }
 
