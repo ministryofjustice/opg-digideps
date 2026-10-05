@@ -1395,6 +1395,6 @@ class Report implements StartEndDateComparableInterface
     // true if checklist exists for this report
     public function isCheckable(): bool
     {
-        return ($this->submitted || $this->submitDate !== null) && !$this->isProfReport();
+        return ($this->submitted || $this->submitDate !== null) && !$this->hasSection('profCurrentFees');
     }
 }
