@@ -113,6 +113,7 @@ def start_logs_query(
             | filter request_uri not in ["/health-check", "/health-check/service", "/health-check/dependencies"]
             | filter request_uri not in ["/robots.txt", "/feedback", "/login", "/"]
             | filter request_uri not like "/.well-known"
+            | filter request_uri not like "/user/activate/"
             | filter status > 0
             | filter real_forwarded_for != ""
             | sort @timestamp desc
@@ -160,7 +161,7 @@ def parse_log_records(
             if "field" in field and "value" in field
         }
 
-        ip = fields.get("real_forwarded_for")
+        ip = extract_client_ip(fields.get("real_forwarded_for", ""))
 
         if not ip:
             continue
@@ -176,11 +177,23 @@ def parse_log_records(
     return records
 
 
+def extract_client_ip(value: str) -> str | None:
+    if not value:
+        return None
+
+    ips = [ip.strip() for ip in value.split(",")]
+
+    for ip in reversed(ips):
+        if ip != "127.0.0.1":
+            return f"{ip}/32"
+
+    return None
+
+
 # ==================== GET LOG TYPE COUNTS LOGIC ====================
 
 PATH_PATTERNS_REQUIRING_LOGIN: Final[list[str]] = [
     "/report/*",
-    "/courtorder/*",
     "/admin/*",
     "/org/*",
 ]
@@ -427,15 +440,17 @@ def lambda_handler(event, context):
     log_stream_prefixes = [f"front.{environment}.web", f"admin.{environment}.web"]
     logs = query_cloudwatch_logs(log_group_name, log_stream_prefixes)
     summarised_logs = summarise_log_records(logs)
-    print(summarised_logs)
     ips_to_block = get_ips_to_block(summarised_logs)
-    print(f"New malicious IPs identified: {ips_to_block}")
+    if len(ips_to_block) > 0:
+        print(f"New malicious IPs identified: {ips_to_block}")
     ips_to_alert_on = get_ips_to_alert_on(summarised_logs)
-    print(f"New breach IPs identified: {ips_to_alert_on}")
+    if len(ips_to_alert_on) > 0:
+        print(f"New breach IPs identified: {ips_to_alert_on}")
     create_metric_log_record(ips_to_alert_on)
     update_dynamodb_table(ips_to_block)
     blocked_ips = get_blocked_ips()
-    print(f"IPs to block according to dynamodb: {blocked_ips}")
+    if len(blocked_ips) > 0:
+        print(f"IPs to block according to dynamodb: {blocked_ips}")
     response = update_waf_ip_set(ip_set_name, ip_set_scope, blocked_ips)
 
     return response

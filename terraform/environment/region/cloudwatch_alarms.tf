@@ -282,6 +282,48 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
   }
 }
 
+# ========== Hit max task count alarms ==========
+
+resource "aws_cloudwatch_metric_alarm" "api_task_count_max" {
+  alarm_name          = "${local.environment}-api-task-count-max"
+  alarm_description   = "API ECS task has hit maximum scaling ${local.environment}."
+  actions_enabled     = var.account.environment.alarms_active
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
+  comparison_operator = "GreaterThanThreshold"
+  dimensions = {
+    "ServiceName" = "api-${local.environment}"
+  }
+  evaluation_periods = 1
+  metric_name        = "LiveTaskCount"
+  namespace          = "AWS/ECS"
+  period             = 60
+  statistic          = "Sum"
+  tags               = var.default_tags
+  threshold          = var.account.ecs.scale_max == 0 ? 20 : var.account.ecs.scale_max
+  treat_missing_data = "notBreaching"
+}
+
+resource "aws_cloudwatch_metric_alarm" "front_task_count_max" {
+  alarm_name          = "${local.environment}-front-task-count-max"
+  alarm_description   = "API ECS task has hit maximum scaling ${local.environment}."
+  actions_enabled     = var.account.environment.alarms_active
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
+  comparison_operator = "GreaterThanThreshold"
+  dimensions = {
+    "ServiceName" = "front-${local.environment}"
+  }
+  evaluation_periods = 1
+  metric_name        = "LiveTaskCount"
+  namespace          = "AWS/ECS"
+  period             = 60
+  statistic          = "Sum"
+  tags               = var.default_tags
+  threshold          = var.account.ecs.scale_max == 0 ? 20 : var.account.ecs.scale_max
+  treat_missing_data = "notBreaching"
+}
+
 # ========== DDOS Alarms ==========
 
 resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
