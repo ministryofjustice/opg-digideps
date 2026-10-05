@@ -4,3 +4,7 @@ ignore:
     - '*':
         reason: 'Accepted after review'
         expires: '2027-01-01T00:00:00.000Z'
+  SNYK-JS-ZOD-20510278:
+    - '*':
+        reason: "No fix currently, not accessible in production"
+        expires: '2026-11-05T00:00:00.000Z'
