@@ -32,14 +32,15 @@ test("reports are organised according to their status", async ({ page }) => {
         // submitted and complete
         {
           startDate: new Date("2024-01-02"),
-          submitDate: new Date("2025-01-01"),
+          submitDate: new Date("2025-01-01")
         },
 
-        // submitted but incomplete
+        // submitted but incomplete (hence submitted property set to false)
         {
           startDate: new Date("2025-01-02"),
           submitDate: new Date("2026-01-01"),
           unSubmitDate: new Date("2026-01-03"),
+          submitted: false
         },
 
         // active (note this has to be last in this list otherwise

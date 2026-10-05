@@ -14,6 +14,7 @@ interface ReportSpec {
   startDate: Date;
   submitDate?: Date;
   unSubmitDate?: Date;
+  submitted?: boolean;
 }
 
 interface DeputySpec {
