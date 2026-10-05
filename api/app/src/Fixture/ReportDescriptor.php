@@ -13,12 +13,13 @@ final readonly class ReportDescriptor
      * @param array<string> $supportingDocumentsWithoutS3Objects
      */
     public function __construct(
-        public \DateTimeImmutable  $startDate,
+        public \DateTimeImmutable $startDate,
         ?\DateTimeImmutable $endDate = null,
         ?\DateTimeImmutable $dueDate = null,
         public ?\DateTimeImmutable $submitDate = null,
         public ?\DateTimeImmutable $unSubmitDate = null,
         public array $supportingDocumentsWithoutS3Objects = [],
+        public bool $submitted = false
     ) {
         $this->endDate = $endDate ?? $this->startDate->add(new \DateInterval('P12M'))->sub(new \DateInterval('P1D'));
         $this->dueDate = $dueDate ?? $this->endDate->add(new \DateInterval('P1M'));
