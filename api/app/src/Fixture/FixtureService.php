@@ -249,14 +249,16 @@ final class FixtureService
         if ($reports === null) {
             /** @var array<Report> $reports */
             $reports = [];
-            $count = count($descriptor->reportList->reportDescriptors);
             foreach ($descriptor->reportList->reportDescriptors as $reportDescriptor) {
-                $reports[] = $this->makeReport($courtOrder, $reportDescriptor);
-                if (count($reports) !== $count || !$first) {
-                    $this->makeReportSubmitted($reports[count($reports) - 1], $reportDescriptor, $primary);
-                } elseif ($descriptor->reportList->currentIsSubmittable) {
-                    $this->makeReportSubmittable($reports[count($reports) - 1]);
+                $report = $this->makeReport($courtOrder, $reportDescriptor);
+
+                if ($report->getSubmitDate() !== null) {
+                    $this->makeReportSubmitted($report, $reportDescriptor, $primary);
+                } elseif ($descriptor->reportList->currentIsSubmittable && $first) {
+                    $this->makeReportSubmittable($report);
                 }
+
+                $reports[] = $report;
             }
         }
 
@@ -428,8 +430,11 @@ final class FixtureService
         )
             ->setId($this->counter->nextInt())
             ->setDueDate(\DateTime::createFromImmutable($reportDescriptor->dueDate))
-            ->setSubmitted(false)
-            ->setSubmitDate(null);
+            ->setSubmitted($reportDescriptor->submitted);
+
+        if ($reportDescriptor->submitDate !== null) {
+            $report->setSubmitDate(\DateTime::createFromImmutable($reportDescriptor->submitDate));
+        }
 
         if ($reportDescriptor->unSubmitDate !== null) {
             $report->setUnSubmitDate(\DateTime::createFromImmutable($reportDescriptor->unSubmitDate));
@@ -443,11 +448,9 @@ final class FixtureService
         return $this->persist($report);
     }
 
+    // this is only called if the report has a non-null submitDate
     private function makeReportSubmitted(Report $report, ReportDescriptor $reportDescriptor, ?User $submitter): void
     {
-        $date = $reportDescriptor->submitDate ?? \DateTimeImmutable::createFromMutable($report->getEndDate())->add(new \DateInterval('P15D'));
-        $report->setSubmitted(true);
-        $report->setSubmitDate(\DateTime::createFromImmutable($date));
         $report->setSubmittedBy($submitter);
 
         $document = new Document($report, "DigiRep-{$this->counter->nextString(8)}.pdf");
@@ -458,7 +461,7 @@ final class FixtureService
 
         $reportSubmission = new ReportSubmission($report, $submitter);
         $reportSubmission->setUuid($this->counter->nextString(20));
-        $reportSubmission->setCreatedOn(\DateTime::createFromImmutable($date));
+        $reportSubmission->setCreatedOn(\DateTime::createFromImmutable($reportDescriptor->submitDate) ?? new \DateTime());
         $this->persist($reportSubmission);
     }
 
