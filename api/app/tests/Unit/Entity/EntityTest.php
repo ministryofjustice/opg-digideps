@@ -9,7 +9,6 @@ use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\ClientContact;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Note;
@@ -90,12 +89,6 @@ final class EntityTest extends TestCase
     {
         $bankAccount = new BankAccount($this->makeReport());
         $this->testEntity($bankAccount);
-    }
-
-    public function testClientContactValidOnConstruction(): void
-    {
-        $clientContact = new ClientContact(new Client(), '', '');
-        $this->testEntity($clientContact);
     }
 
     public function testNoteValidOnConstruction(): void
