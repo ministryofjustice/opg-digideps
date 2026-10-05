@@ -461,7 +461,9 @@ final class FixtureService
 
         $reportSubmission = new ReportSubmission($report, $submitter);
         $reportSubmission->setUuid($this->counter->nextString(20));
-        $reportSubmission->setCreatedOn(\DateTime::createFromImmutable($reportDescriptor->submitDate) ?? new \DateTime());
+
+        $createdDate = $reportDescriptor->submitDate ?? new \DateTimeImmutable();
+        $reportSubmission->setCreatedOn(\DateTime::createFromImmutable($createdDate));
         $this->persist($reportSubmission);
     }
 
