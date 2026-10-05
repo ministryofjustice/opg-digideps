@@ -204,7 +204,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayNotHasKey('fees', $clientReportData);
         $this->assertEquals(self::$report1->getId(), $clientReportData['id']);
         $this->assertEquals(self::$client1->getId(), $clientReportData['client']['id']);
-        $this->assertEquals(true, $clientReportData['submitted']);
+        $this->assertTrue($clientReportData['submitted']);
         $this->assertArrayHasKey('start_date', $clientReportData);
         $this->assertArrayHasKey('end_date', $clientReportData);
 
