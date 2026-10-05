@@ -98,21 +98,6 @@
             "require": "6.*"
         }
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://govuk-frontend-toolkit.appspot.com"
-        },
-        {
-            "type": "path",
-            "url": "../../common",
-            "options": {
-                "versions": {
-                    "digideps/common": "1.0.0"
-                }
-            }
-        }
-    ],
     "require-dev": {
         "ext-fileinfo": "*",
         "dg/bypass-finals": "^1.10.2",
