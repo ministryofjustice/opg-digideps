@@ -40,7 +40,6 @@ resource "aws_cloudwatch_metric_alarm" "redis_high_evictions" {
   comparison_operator = "GreaterThanUpperThreshold"
   evaluation_periods  = 3
   datapoints_to_alarm = 3
-  period              = 300
   threshold_metric_id = "expected_evictions"
   treat_missing_data  = "notBreaching"
 
