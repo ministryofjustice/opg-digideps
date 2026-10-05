@@ -264,13 +264,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     private $deputyUid;
 
     /**
-     * @var bool|null
-     */
-    #[JMS\Type('boolean')]
-    #[JMS\Groups(['ad_managed', 'ad_add_user'])]
-    private $adManaged;
-
-    /**
      * @var string|null
      */
     #[JMS\Type('string')]
@@ -805,22 +798,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         }
 
         return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAdManaged()
-    {
-        return $this->adManaged;
-    }
-
-    /**
-     * @param bool $adManaged
-     */
-    public function setAdManaged($adManaged): void
-    {
-        $this->adManaged = $adManaged;
     }
 
     /**

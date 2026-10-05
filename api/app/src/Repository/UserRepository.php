@@ -64,7 +64,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $this
             ->handleRoleNameFilter($request)
-            ->handleAdManagedFilter($request)
             ->handleSearchTermFilter($request);
 
         $order_by = $request->get('order_by', 'id');
@@ -95,15 +94,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->qb
             ->andWhere(sprintf('u.roleName %s :role', $operand))
             ->setParameter('role', $roleName);
-
-        return $this;
-    }
-
-    private function handleAdManagedFilter(Request $request): UserRepository
-    {
-        if ($request->get('ad_managed')) {
-            $this->qb->andWhere('u.adManaged = true');
-        }
 
         return $this;
     }
