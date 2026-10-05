@@ -1,7 +1,7 @@
-SELECT COUNT(r.id)
+SELECT COUNT(dc.user_id)
 FROM client c1
-INNER JOIN report r
-ON r.client_id = c1.id
+INNER JOIN deputy_case dc
+ON dc.client_id = c1.id
 INNER JOIN client c2
 ON c2.case_number = c1.case_number
 WHERE

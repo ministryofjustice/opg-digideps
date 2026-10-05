@@ -44,7 +44,7 @@ WHERE
     AND id = r_updates.report_id
 ;
 
---
+-- 380 - 2212
 UPDATE deputy_case
 SET client_id = dc_updates.new_client_id
 FROM (
