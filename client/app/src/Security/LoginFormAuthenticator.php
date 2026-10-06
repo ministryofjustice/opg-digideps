@@ -8,6 +8,7 @@ use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
 use OPG\Digideps\Frontend\Service\Redirector;
 use OPG\Digideps\Frontend\Validator\RouteValidator;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +32,8 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         private RestClient $restClient,
         private Redirector $redirector,
         private RedisStorage $tokenStorage,
-        private RouterInterface $router
+        private RouterInterface $router,
+        private readonly LoggerInterface $verboseLogger,
     ) {
     }
 
@@ -87,9 +89,18 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
         // Add it to the session as we will use this for adding to logs (no real need to add to redis)
         $session->set('session_safe_id', $sessionSafeId);
+        $user = $token->getUser();
+        $userId = method_exists($user, 'getId') ? (string) $user->getId() : 'unknown';
+
+        $this->verboseLogger->notice(
+            'Session correlation IDs',
+            [
+                'session_safe_id' => $sessionSafeId,
+                'user_id' => $userId,
+            ]
+        );
 
         $redirectUrl = $this->redirector->getFirstPageAfterLogin($session);
-
         if ($request->query->has('lastPage')) {
             /** @var string $lastPage */
             $lastPage = $request->query->get('lastPage');
