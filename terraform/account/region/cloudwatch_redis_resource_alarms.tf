@@ -32,23 +32,39 @@ resource "aws_cloudwatch_metric_alarm" "redis_high_cpu" {
   tags                      = var.default_tags
 }
 
-resource "aws_cloudwatch_metric_alarm" "redis_high_memory" {
+resource "aws_cloudwatch_metric_alarm" "redis_high_evictions" {
   for_each = local.redis_replication_groups
 
-  alarm_name          = "${var.account.name}-${each.key}-redis-high-memory"
-  alarm_description   = "Redis replication group ${each.value} has used at least 85% of its available database capacity for 45 minutes."
-  namespace           = "AWS/ElastiCache"
-  metric_name         = "DatabaseCapacityUsageCountedForEvictPercentage"
-  statistic           = "Average"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  threshold           = 85
-  period              = 300
-  evaluation_periods  = 9
-  datapoints_to_alarm = 9
+  alarm_name          = "${var.account.name}-${each.key}-redis-high-evictions"
+  alarm_description   = "Redis replication group ${each.value} has experienced unusually high key evictions for 15 minutes."
+  comparison_operator = "GreaterThanUpperThreshold"
+  evaluation_periods  = 3
+  datapoints_to_alarm = 3
+  threshold_metric_id = "expected_evictions"
   treat_missing_data  = "notBreaching"
 
-  dimensions = {
-    ReplicationGroupId = each.value
+  metric_query {
+    id          = "expected_evictions"
+    expression  = "ANOMALY_DETECTION_BAND(evictions, 4)"
+    label       = "Expected eviction range"
+    return_data = true
+  }
+
+  metric_query {
+    id          = "evictions"
+    return_data = true
+
+    metric {
+      namespace   = "AWS/ElastiCache"
+      metric_name = "Evictions"
+      period      = 300
+      stat        = "Sum"
+
+      dimensions = {
+        ReplicationGroupId = each.value
+        Role               = "Primary"
+      }
+    }
   }
 
   alarm_actions             = [aws_sns_topic.alerts.arn]
