@@ -5,8 +5,6 @@
     {% if text is empty %}
         {% with outerScope %}{% block content %}{% endblock %}{% endwith %}
     {% else %}
-        {% for t in text %}
-            <twig:Render self="{{ t }}"/>
-        {% endfor %}
+        <twig:Render self="{{ text }}"/>
     {% endif %}
 </div>

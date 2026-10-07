@@ -9,10 +9,12 @@ use OPG\Digideps\Frontend\Components\RenderableInterface;
 
 class ActionsList implements RenderableInterface
 {
-    public function __construct(
-        /** @var array<Link> $links */
-        private readonly array $links
-    ) {
+    /** @var array<Link> $links */
+    private readonly array $links;
+
+    public function __construct(Link ...$links)
+    {
+        $this->links = $links;
     }
 
     public string $componentName {
