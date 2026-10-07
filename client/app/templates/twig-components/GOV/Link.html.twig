@@ -15,6 +15,6 @@
         <twig:Render self="{{ text }}"/>
     {% endif %}
     {% if accessibilityText is not null %}
-        <twig:GOV:Div isVisuallyHidden="true"> {{ accessibilityText }}</twig:GOV:Div>
+        <span class="govuk-visually-hidden"> {{ accessibilityText }}</span>
     {% endif %}
 </a>

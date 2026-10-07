@@ -4,7 +4,6 @@ namespace OPG\Digideps\Backend\v2\Transformer;
 
 use OPG\Digideps\Backend\v2\DTO\ReportDto;
 use OPG\Digideps\Backend\v2\DTO\StatusDto;
-use OPG\Digideps\Common\CourtOrder\CourtOrderDto;
 
 class ReportTransformer
 {
@@ -26,13 +25,10 @@ class ReportTransformer
         }
 
         if ($dto->getStatus() instanceof StatusDto) {
-            $transformed['status'] = $dto->getStatus()->asArray();
+            $transformed['status'] = $dto->getStatus();
         }
 
-        $transformed['court_orders'] = array_map(
-            fn (CourtOrderDto $courtOrder) => $courtOrder->asArray(),
-            $dto->getCourtOrders()
-        );
+        $transformed['court_orders'] = $dto->getCourtOrders();
 
         return $transformed;
     }

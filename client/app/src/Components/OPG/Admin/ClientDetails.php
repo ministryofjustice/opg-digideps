@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Components\OPG\Admin;
 
-use OPG\Digideps\Frontend\Components\GOV\Caption;
 use OPG\Digideps\Frontend\Components\GOV\Div;
 use OPG\Digideps\Frontend\Components\GOV\Link;
+use OPG\Digideps\Frontend\Components\GOV\Table\Caption;
 use OPG\Digideps\Frontend\Components\GOV\Table\Cell;
 use OPG\Digideps\Frontend\Components\GOV\Table\Table;
 use OPG\Digideps\Frontend\Components\GOV\Table\TableBuilder;
@@ -26,10 +26,10 @@ final class ClientDetails
     /** @var array<string, string> $text */
     public array $text;
 
-    public ?Table $activeReportsTable = null;
-    public ?Table $submittedReportsTable = null;
-    public ?Table $incompleteReportsTable = null;
-    public ?Table $closedReportsTable = null;
+    public ?Table $activeReportsTable;
+    public ?Table $submittedReportsTable;
+    public ?Table $incompleteReportsTable;
+    public ?Table $closedReportsTable;
 
     public function __construct(
         private readonly TranslatorInterface $translator,
@@ -190,7 +190,7 @@ final class ClientDetails
                 $cells[] = $report->getSubmitDate()?->format('j F Y') ?? '';
             }
 
-            $cells[] = new ActionsList($links);
+            $cells[] = new ActionsList(...$links);
 
             $tableBuilder->addRow(...$cells);
         }

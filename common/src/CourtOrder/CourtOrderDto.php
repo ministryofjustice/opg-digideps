@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Common\CourtOrder;
 
-class CourtOrderDto
+class CourtOrderDto implements \JsonSerializable
 {
     public function __construct(
         public readonly int $id,
@@ -16,7 +16,7 @@ class CourtOrderDto
     ) {
     }
 
-    public function asArray(): array
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,
