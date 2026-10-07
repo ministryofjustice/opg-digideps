@@ -2,9 +2,9 @@
 
 namespace OPG\Digideps\Backend\v2\Transformer;
 
-use OPG\Digideps\Backend\v2\DTO\CourtOrderDTO;
 use OPG\Digideps\Backend\v2\DTO\ReportDto;
 use OPG\Digideps\Backend\v2\DTO\StatusDto;
+use OPG\Digideps\Common\CourtOrder\CourtOrderDto;
 
 class ReportTransformer
 {
@@ -30,7 +30,7 @@ class ReportTransformer
         }
 
         $transformed['court_orders'] = array_map(
-            fn (CourtOrderDTO $courtOrder) => $courtOrder->asArray(),
+            fn (CourtOrderDto $courtOrder) => $courtOrder->asArray(),
             $dto->getCourtOrders()
         );
 

@@ -2,9 +2,9 @@
 
 namespace OPG\Digideps\Backend\v2\Assembler\Report;
 
-use OPG\Digideps\Backend\v2\DTO\CourtOrderDTO;
 use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
 use OPG\Digideps\Backend\v2\DTO\ReportDto;
+use OPG\Digideps\Common\CourtOrder\CourtOrderDto;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Common\Validating\ValidatingArray;
@@ -28,7 +28,7 @@ class ReportSummaryAssembler
         foreach ($courtOrdersRaw as $courtOrderData) {
             $courtOrderDataValidated = new ValidatingArray($courtOrderData);
 
-            $courtOrders[] = new CourtOrderDTO(
+            $courtOrders[] = new CourtOrderDto(
                 $courtOrderDataValidated->getIntegerOrThrow('id'),
                 $courtOrderDataValidated->getStringOrThrow('courtOrderUid'),
                 CourtOrderType::tryFrom($courtOrderDataValidated->getStringOrThrow('orderType')),
