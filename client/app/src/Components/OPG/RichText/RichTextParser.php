@@ -13,6 +13,19 @@ use OPG\Digideps\Frontend\Components\OPG\Renderable\RenderableArray;
 use OPG\Digideps\Frontend\Components\RenderableInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * This class allows to interpret text in the translation files as a limited subset of Markdown.
+ * The limitation that the source Markdown comes from a translation file is to preempt any XSS vulnerability,
+ * that said all outputs are still escaped by twig. (But this has known limitations, particularly with URLs.)
+ *
+ * Every line is considered a block by itself, this differs from standard Markdown.
+ *
+ * The exception is an unordered list where each consecutive line starting with `- ` is an entry in that list.
+ * Note that neither ordered nor nested lists are supported.
+ *
+ * Only one header level (a line starting with `# `) is supported. The tag to use is controlled with the `$h` parameter.
+ * Inline links are supported inside plain paragraphs. Pass `$linkResolver` to handle them in a special way.
+ */
 final readonly class RichTextParser
 {
     /**
