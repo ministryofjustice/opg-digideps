@@ -172,7 +172,7 @@ services:
     restart: always
 
   redis-api:
-    image: redis:6.2.22@sha256:e608fb94319e1aa53cecadbb051faa36d5c495f1142b99ca6673b41c2b428c0a
+    image: redis:6.2.23@sha256:a873de27e877d8ea401f530a4c7571bae34882a7178a0a0f3df12263bfba14a5
     restart: always
 
   file-scanner-rest:
