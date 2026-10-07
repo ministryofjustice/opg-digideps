@@ -9,9 +9,11 @@ use OPG\Digideps\Frontend\Components\RenderableInterface;
 final class Caption implements RenderableInterface
 {
     public function __construct(
-        private readonly string $text,
-        private readonly string $size = "m",
-        private readonly ?string $tag = null,
+        private readonly string  $text,
+        private readonly string  $size = "m",
+
+        // GOV:Tag colour constant
+        private readonly ?string $tagColour = null,
     ) {
     }
 
@@ -23,7 +25,7 @@ final class Caption implements RenderableInterface
         get => [
             'text' => $this->text,
             'size' => $this->size,
-            'tag' => $this->tag,
+            'tagColour' => $this->tagColour,
         ];
     }
 }

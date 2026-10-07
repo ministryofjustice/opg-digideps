@@ -140,7 +140,7 @@ final class ClientDetails
         $caption = new Caption(
             text: $this->text["reportStatus.{$captionKey}"],
             size: 's',
-            tag: Filters::statusToTagCss($captionKey)
+            tagColour: Filters::statusToTagColour($captionKey)
         );
 
         $actionsCell = new Cell(new Div([$this->text['actionsHeader']], isVisuallyHidden: true), isHeader: true);
