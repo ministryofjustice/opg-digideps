@@ -2,12 +2,9 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Backend\v2\DTO;
+namespace OPG\Digideps\Common\CourtOrder;
 
-use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Common\CourtOrder\CourtOrderType;
-
-class CourtOrderDTO
+class CourtOrderDto
 {
     public function __construct(
         public readonly int $id,
