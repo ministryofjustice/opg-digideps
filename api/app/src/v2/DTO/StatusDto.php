@@ -2,7 +2,7 @@
 
 namespace OPG\Digideps\Backend\v2\DTO;
 
-class StatusDto
+class StatusDto implements \JsonSerializable
 {
     private string $status;
 
@@ -13,7 +13,7 @@ class StatusDto
         return $this;
     }
 
-    public function asArray(): array
+    public function jsonSerialize(): array
     {
         return [
             'status' => $this->status,

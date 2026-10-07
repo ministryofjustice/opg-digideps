@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Components\GOV\Table;
 
-use OPG\Digideps\Frontend\Components\RenderableInterface;
-
 final readonly class Table
 {
     /**
@@ -14,7 +12,7 @@ final readonly class Table
     public array $rows;
 
     public function __construct(
-        public string|RenderableInterface|null $caption,
+        public string|Caption|null $caption,
         /**
          * @var array<Column>|null
          */

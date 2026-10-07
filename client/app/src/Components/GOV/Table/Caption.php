@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Frontend\Components\GOV;
+namespace OPG\Digideps\Frontend\Components\GOV\Table;
 
 use OPG\Digideps\Frontend\Components\RenderableInterface;
 
@@ -16,7 +16,7 @@ final class Caption implements RenderableInterface
     }
 
     public string $componentName {
-        get => 'GOV:Caption';
+        get => 'GOV:Table:Caption';
     }
 
     public array $props {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Components\GOV\Table;
 
-use OPG\Digideps\Frontend\Components\GOV\Caption;
 use OPG\Digideps\Frontend\Components\RenderableInterface;
 
 final class TableBuilder
@@ -23,7 +22,7 @@ final class TableBuilder
 
     public function __construct(
         private readonly bool $firstColumnIsHeader = false,
-        private readonly RenderableInterface|string|null $caption = null,
+        private readonly string|Caption|null $caption = null,
         private readonly bool $isHeaderHidden = false,
     ) {
         $this->header = null;
@@ -53,12 +52,7 @@ final class TableBuilder
 
     public function makeTable(): Table
     {
-        $caption = $this->caption;
-        if (is_string($caption)) {
-            $caption = new Caption($caption);
-        }
-
-        return new Table($caption, $this->columns, $this->header, ...$this->rows);
+        return new Table($this->caption, $this->columns, $this->header, ...$this->rows);
     }
 
     public function addColumns(int ...$sizes): TableBuilder
