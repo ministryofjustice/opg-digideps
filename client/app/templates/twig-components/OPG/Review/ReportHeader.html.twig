@@ -1,14 +1,16 @@
 <twig:GOV:Heading size="l" h="1">
+    {{ text.title }}
+</twig:GOV:Heading>
+
+<twig:GOV:Heading size="m" h="2">
     {{ text.header }}
 </twig:GOV:Heading>
-<twig:GOV:Heading size="m" h="2">{{ text.infoHeader }}</twig:GOV:Heading>
-<twig:GOV:Summary:Card h="2" header="{{ text.reportInformation }}" list="{{ reportInformation }}"/>
-<twig:GOV:Summary:Card h="2" header="{{ text.deputyDetails }}">
+<twig:GOV:Summary:Card h="3" header="{{ text.reportInformation }}" list="{{ reportInformation }}"/>
+<twig:GOV:Summary:Card h="3" header="{{ text.deputyDetails }}">
     {% if deputyDetails is not null %}
         <twig:GOV:Summary:List list="{{ deputyDetails }}"/>
     {% else %}
         <twig:GOV:Warning noMargin>{{ text.noDeputy }}</twig:GOV:Warning>
     {% endif %}
 </twig:GOV:Summary:Card>
-
-<twig:GOV:Summary:Card h="2" header="{{ text.clientDetails }}" list="{{ clientDetails }}"/>
+<twig:GOV:Summary:Card h="3" header="{{ text.clientDetails }}" list="{{ clientDetails }}"/>

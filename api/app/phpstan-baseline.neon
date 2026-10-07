@@ -145,18 +145,6 @@ parameters:
 			path: src/Command/ApiComparison.php
 
 		-
-			message: '#^Cannot call method warning\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Command/MigrationsMigrateLockCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Command\\MigrationsMigrateLockCommand\:\:getRedis\(\) should return Predis\\Client but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Command/MigrationsMigrateLockCommand.php
-
-		-
 			message: '#^Binary operation "\+\=" between mixed and int\<0, max\> results in an error\.$#'
 			identifier: assignOp.invalid
 			count: 1
@@ -1388,12 +1376,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$typeId of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getProfDeputyOtherCostByTypeId\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Parameter \#1 \$unSubmitDate of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setUnSubmitDate\(\) expects DateTime\|null, array given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/ReportController.php
