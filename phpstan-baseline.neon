@@ -265,6 +265,12 @@ parameters:
 			path: api/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\ProcessOrgCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: api/app/src/Command/ProcessOrgCSVCommand.php
+
+		-
 			message: '#^Part \$limit \(mixed\) of encapsed string cannot be cast to string\.$#'
 			identifier: encapsedStringPart.nonString
 			count: 1
@@ -789,12 +795,6 @@ parameters:
 		-
 			message: '#^Variable \$document in PHPDoc tag @var does not match assigned variable \$documentRepository\.$#'
 			identifier: varTag.differentVariable
-			count: 1
-			path: api/app/src/Controller/Report/DocumentController.php
-
-		-
-			message: '#^Variable \$document might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: api/app/src/Controller/Report/DocumentController.php
 
@@ -6215,12 +6215,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: '#^Cannot call method format\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/v2/Transformer/ReportTransformer.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\v2\\Transformer\\ReportTransformer\:\:transformDate\(\) has no return type specified\.$#'
@@ -22531,12 +22525,6 @@ parameters:
 			path: client/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Command\\ProcessOrgCSVCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Command/ProcessOrgCSVCommand.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Command\\ProcessOrgCSVCommand\:\:\$redis is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
@@ -22697,6 +22685,18 @@ parameters:
 			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: client/app/src/Components/OPG/Review/MoneyOutShort.php
+
+		-
+			message: '#^Offset 1 on array\{non\-falsy\-string, string, non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: client/app/src/Components/OPG/RichText/RichTextParser.php
+
+		-
+			message: '#^Offset 2 on array\{non\-falsy\-string, string, non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: client/app/src/Components/OPG/RichText/RichTextParser.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
@@ -24775,18 +24775,6 @@ parameters:
 			path: client/app/src/Entity/Client.php
 
 		-
-			message: '#^Parameter \#1 \$client of method OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:setClient\(\) expects string, OPG\\Digideps\\Frontend\\Entity\\Client given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Entity/ClientContact.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:\$id is never written, only read\.$#'
-			identifier: property.onlyRead
-			count: 1
-			path: client/app/src/Entity/ClientContact.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\CourtOrder\:\:\$client is never written, only read\.$#'
 			identifier: property.onlyRead
 			count: 1
@@ -26107,12 +26095,6 @@ parameters:
 			path: client/app/src/Entity/User.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:isAdManaged\(\) should return bool but returns bool\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/User.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:isEnabled\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -26447,12 +26429,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: client/app/src/EventDispatcher/ObservableEventDispatcher.php
-
-		-
-			message: '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\Session\\SessionInterface\:\:setFlash\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/EventListener/AuthenticationHandler.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\EventListener\\ForbiddenExceptionListener\:\:onKernelException\(\) has no return type specified\.$#'
@@ -27443,12 +27419,6 @@ parameters:
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: client/app/src/Form/Report/MentalAssessment.php
-
-		-
-			message: '#^Cannot call method getHasCapacityChanged\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Form/Report/MentalCapacityType.php
 
 		-
 			message: '#^Parameter \#1 \$child of method Symfony\\Component\\Form\\FormBuilderInterface\:\:add\(\) expects string\|Symfony\\Component\\Form\\FormBuilderInterface, mixed given\.$#'
@@ -29163,12 +29133,6 @@ parameters:
 		-
 			message: '#^Call to function array_key_exists\(\) with non\-empty\-string and array\{\} will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 1
-			path: client/app/src/Service/CssClassCollector.php
-
-		-
-			message: '#^Cannot use \+\+ on mixed\.$#'
-			identifier: preInc.type
 			count: 1
 			path: client/app/src/Service/CssClassCollector.php
 
@@ -33185,6 +33149,12 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
+
+		-
+			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\DocumentSyncCommand\:\:getDefaultName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Command\\DocumentSyncCommandTest\:\:testSleepsWhenTurnedOff\(\) has no return type specified\.$#'

@@ -102,7 +102,6 @@ final class ReportStatusServiceTest extends TestCase
             'getMoneyTransactionsShortOut' => new ArrayCollection([]),
             'getType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
             // 106
-            'has106Flag' => false,
             'paFeesExpensesNotStarted' => false,
             'paFeesExpensesCompleted' => false,
             'getProfDeputyCostsHowCharged' => null,
@@ -279,7 +278,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function paFeeExpenses(array $mocks, string $state): void
     {
-        $report = $this->getReportMocked(['has106Flag' => true] + $mocks);
+        $report = $this->getReportMocked(['isPAreport' => true] + $mocks);
         $object = new ReportStatusService($report);
         $this->assertEquals($state, $object->getPaFeesExpensesState()['state']);
     }

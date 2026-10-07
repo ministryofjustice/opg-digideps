@@ -67,7 +67,7 @@
                     <td class="grey numeric">&pound;{{ report.moneyOutTotal | money_format}}</td>
                 </tr>
                 <tr>
-                    {% if report.has106flag %}
+                    {% if report.isPAreport %}
                     <td>Total deputy fees and expenses:</td>
                     <td class="grey numeric">&pound;{{ (report.getExpensesTotal + report.getFeesTotal) | money_format}}</td>
                     {% else %}

@@ -114,12 +114,6 @@ class Report implements StartEndDateComparableInterface
     private $type;
 
     /**
-     * @var bool
-     */
-    #[JMS\Type('boolean')]
-    private $has106flag;
-
-    /**
      * @var \DateTime|null
      */
     #[JMS\Type("DateTime<'Y-m-d'>")]
@@ -271,12 +265,6 @@ class Report implements StartEndDateComparableInterface
      * @var bool
      */
     #[JMS\Type('boolean')]
-    private $reportSeen;
-
-    /**
-     * @var bool
-     */
-    #[JMS\Type('boolean')]
     #[Assert\IsTrue(message: 'report.agree', groups: ['declare'])]
     private $agree;
 
@@ -419,24 +407,6 @@ class Report implements StartEndDateComparableInterface
     public function setType($type): static
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getHas106flag()
-    {
-        return $this->has106flag;
-    }
-
-    /**
-     * @param bool $has106flag
-     */
-    public function setHas106flag($has106flag): static
-    {
-        $this->has106flag = $has106flag;
 
         return $this;
     }
@@ -898,21 +868,6 @@ class Report implements StartEndDateComparableInterface
         $this->submitted = $submitted;
 
         return $this;
-    }
-
-    public function setReportSeen(bool $reportSeen): static
-    {
-        $this->reportSeen = $reportSeen;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getReportSeen()
-    {
-        return $this->reportSeen;
     }
 
     /**

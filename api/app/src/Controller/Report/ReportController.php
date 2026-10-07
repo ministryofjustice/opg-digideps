@@ -102,7 +102,6 @@ class ReportController extends RestController
         // report type is taken from Sirius. In case that's not available (shouldn't happen unless pre registration table is dropped), use a 102
         $reportType = $this->reportService->getReportTypeBasedOnSirius($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
         $report = new Report($client, $reportType, $amendedOrderStartDate, $endDate->add(new \DateInterval('P12M'))->sub(new \DateInterval('P1D')));
-        $report->setReportSeen(true);
 
         $report->updateSectionsStatusCache($report->getAvailableSections());
 
@@ -342,10 +341,6 @@ class ReportController extends RestController
 
         if (array_key_exists('due_date', $data)) {
             $report->setDueDate(new \DateTime($data['due_date']));
-        }
-
-        if (array_key_exists('report_seen', $data)) {
-            $report->setReportSeen((bool) $data['report_seen']);
         }
 
         if (array_key_exists('reason_for_no_contacts', $data)) {
