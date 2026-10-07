@@ -287,14 +287,6 @@ class Report
     private ?User $submittedBy = null;
 
     /**
-     * @deprecated client shouldn't need this anymore
-     */
-    #[JMS\Groups(['report'])]
-    #[JMS\Type('boolean')]
-    #[ORM\Column(name: 'report_seen', type: 'boolean', options: ['default' => true])]
-    private bool $reportSeen = true;
-
-    /**
      * not_deputy|only_deputy|more_deputies_behalf|more_deputies_not_behalf
      */
     #[JMS\Type('string')]
@@ -476,7 +468,6 @@ class Report
         $this->assets = new ArrayCollection();
         $this->noAssetToAdd = null;
         $this->noTransfersToAdd = null;
-        $this->reportSeen = true;
         $this->expenses = new ArrayCollection();
         $this->gifts = new ArrayCollection();
         $this->documents = new ArrayCollection();
@@ -703,18 +694,6 @@ class Report
         return $this;
     }
 
-    public function setReportSeen(bool $reportSeen): static
-    {
-        $this->reportSeen = $reportSeen;
-
-        return $this;
-    }
-
-    public function getReportSeen(): bool
-    {
-        return $this->reportSeen;
-    }
-
     public function belongsToUser(User $user): bool
     {
         return in_array($user->getId(), $this->getClient()->getUserIds());
@@ -774,24 +753,6 @@ class Report
     {
         return !$this->hasAccounts()
         || count($this->getBankAccountsIncomplete()) > 0;
-    }
-
-    /**
-     * Temporary until specs gets more clear around report types
-     * This value could be set at creation time if needed in the future.
-     * Until now, 106 is for all the PAs, so we get this value from the (only) user accessing the report.
-     * Not sure if convenient to implement a 106 separate report, as 106 is also both an 102 AND an 103.
-     *
-     * if it has the 106 flag, the deputy expense section is replaced with a more detailed "PA deputy expense" section
-     * //TODO remove from mocks
-     */
-    #[JMS\VirtualProperty]
-    #[JMS\Type('boolean')]
-    #[JMS\SerializedName('has106flag')]
-    #[JMS\Groups(['report', 'report-106-flag'])]
-    public function has106Flag(): bool
-    {
-        return $this->isPAreport();
     }
 
     /**
