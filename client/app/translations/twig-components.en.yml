@@ -26,8 +26,8 @@ opg:
       closed: Closed
   review:
     reportHeader:
-      header: Deputy report for %reportTypeHeading% decisions
-      infoHeader: Deputy and client information
+      title: Deputy report for %reportTypeHeading% decisions
+      header: Deputy and client information
       reportInformation: Report information
       deputyDetails: Deputy details
       noDeputy: Could not determine deputy. This can happen if the report has not yet been submitted.
@@ -39,3 +39,21 @@ opg:
       caseNumber: Case number
       reportingStart: Reporting start date
       reportingEnd: Reporting end date
+    reportFooter:
+      header: Deputy's declaration
+      declaration: Declaration
+      declarationTime: Declaration time
+      submittedBy: Submitted by
+      not_deputy: "I am submitting on behalf of the deputy"
+      only_deputy: "I am the only deputy"
+      more_deputies_behalf: "There is more than one deputy, and I'm signing on everyone's behalf"
+      more_deputies_not_behalf: "There is more than one deputy, but I'm not signing on everyone's behalf"
+      whyNot: Tell us why you are not signing on behalf of all deputies
+      notEntered: Not entered
+      info: |-
+        I confirm the information I have given in this report is true and correct to the best of my knowledge and belief.
+        I understand I have obligations to the Court of Protection and the Office of the Public Guardian, and that if I knowingly provide false or misleading information there may be legal consequences.
+        I am submitting this report as either:
+        - a deputy, and on behalf of any other deputies named in the court order (unless I have stated otherwise and provided reasons)
+        - someone authorised by the named deputies, and confirm they are aware of the contents of this report
+        I confirm I have had regard to the Mental Capacity Act 2005, its Code of Practice, the [Deputy standards (opens in new tab)](https://www.gov.uk/government/publications/opg-deputy-standards-guidance-for-lay-deputies/guidance-for-lay-deputies), and the court order in this case. I understand the duties and obligations placed on me.

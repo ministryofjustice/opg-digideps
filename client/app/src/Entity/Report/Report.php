@@ -289,7 +289,7 @@ class Report implements StartEndDateComparableInterface
     private $agreedBehalfDeputy;
 
     /**
-     * @var string
+     * @var ?string
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'submit', 'submit_agreed'])]
@@ -947,7 +947,7 @@ class Report implements StartEndDateComparableInterface
     }
 
     /**
-     * @return string
+     * @return ?string
      */
     public function getAgreedBehalfDeputyExplanation()
     {
