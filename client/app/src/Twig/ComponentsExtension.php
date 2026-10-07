@@ -93,7 +93,7 @@ class ComponentsExtension extends AbstractExtension
             }),
             'status_to_tag_css' => new TwigFilter(
                 'status_to_tag_css',
-                fn (string $status) => Filters::statusToTagCss($status)
+                fn (string $status) => 'govuk-tag--' . Filters::statusToTagColour($status)
             ),
             'account_balance_status_to_tag_css' => new TwigFilter('account_balance_status_to_tag_css', function ($status) {
                 return match ($status) {
