@@ -292,10 +292,6 @@ class ReportController extends RestController
             $report->setDueDate(new \DateTime($data['due_date']));
         }
 
-        if (array_key_exists('report_seen', $data)) {
-            $report->setReportSeen((bool) $data['report_seen']);
-        }
-
         if (array_key_exists('reason_for_no_contacts', $data)) {
             $report->setReasonForNoContacts($data['reason_for_no_contacts']);
             $report->updateSectionsStatusCache([
