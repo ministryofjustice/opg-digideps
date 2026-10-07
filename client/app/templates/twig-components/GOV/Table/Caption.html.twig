@@ -1,9 +1,9 @@
-{% props text, size="m", tag="" %}
+{% props text, size="m", tagColour=null %}
 {% set className = "govuk-table__caption govuk-table__caption--" ~ size %}
 
 <caption class="{{ className }}">
-    {% if tag %}
-        <span class="{{ tag }} govuk-!-padding-1">{{ text }}</span>
+    {% if tagColour is not null %}
+        <twig:GOV:Tag text="{{ text }}" colour="{{ tagColour }}"/>
     {% else %}
         {{ text }}
     {% endif %}
