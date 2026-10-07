@@ -126,7 +126,7 @@ final class ReportTest extends TestCase
     public function testGetCalculatedBalance(): void
     {
         $report = new Report(new Client(), Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
-        self::assertFalse($report->has106Flag());
+        self::assertFalse($report->isPAreport());
 
         self::assertEquals(0, $report->getCalculatedBalance());
 

@@ -43,10 +43,10 @@ use OPG\Digideps\Common\Report\Section\ReportSection;
 use OPG\Digideps\Common\Report\Section\Sections;
 
 #[ORM\Table(name: 'report')]
-#[ORM\Index(columns: ['end_date'], name: 'end_date_idx')]
-#[ORM\Index(columns: ['submit_date'], name: 'submit_date_idx')]
-#[ORM\Index(columns: ['submitted'], name: 'submitted_idx')]
-#[ORM\Index(columns: ['report_status_cached'], name: 'report_status_cached_idx')]
+#[ORM\Index(name: 'end_date_idx', columns: ['end_date'])]
+#[ORM\Index(name: 'submit_date_idx', columns: ['submit_date'])]
+#[ORM\Index(name: 'submitted_idx', columns: ['submitted'])]
+#[ORM\Index(name: 'report_status_cached_idx', columns: ['report_status_cached'])]
 #[ORM\Entity(repositoryClass: ReportRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Report
@@ -224,27 +224,27 @@ class Report
 
     #[JMS\Groups(['visits-care'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\VisitsCare')]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: VisitsCare::class, cascade: ['persist', 'remove'], fetch: 'LAZY')]
+    #[ORM\OneToOne(targetEntity: VisitsCare::class, mappedBy: 'report', cascade: ['persist', 'remove'], fetch: 'LAZY')]
     private ?VisitsCare $visitsCare = null;
 
     #[JMS\Groups(['lifestyle'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Lifestyle')]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: Lifestyle::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Lifestyle::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?Lifestyle $lifestyle = null;
 
     #[JMS\Groups(['action'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Action')]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: Action::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Action::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?Action $action = null;
 
     #[JMS\Groups(['mental-capacity'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\MentalCapacity')]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: MentalCapacity::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: MentalCapacity::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?MentalCapacity $mentalCapacity = null;
 
     #[JMS\Groups(['client-benefits-check'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck')]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: ClientBenefitsCheck::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: ClientBenefitsCheck::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?ClientBenefitsCheck $clientBenefitsCheck = null;
 
     #[JMS\Groups(['report', 'report-period','startEndDates'])]
@@ -287,14 +287,6 @@ class Report
     private ?User $submittedBy = null;
 
     /**
-     * @deprecated client shouldn't need this anymore
-     */
-    #[JMS\Groups(['report'])]
-    #[JMS\Type('boolean')]
-    #[ORM\Column(name: 'report_seen', type: 'boolean', options: ['default' => true])]
-    private bool $reportSeen = true;
-
-    /**
      * not_deputy|only_deputy|more_deputies_behalf|more_deputies_not_behalf
      */
     #[JMS\Type('string')]
@@ -315,7 +307,7 @@ class Report
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Document>')]
     #[JMS\Groups(['report-documents'])]
-    #[ORM\OneToMany(mappedBy: 'report', targetEntity: Document::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'report', cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
     #[ORM\OrderBy(['createdOn' => 'DESC', 'fileName' => 'ASC'])]
     private Collection $documents;
 
@@ -324,7 +316,7 @@ class Report
      */
     #[JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\ReportSubmission>")]
     #[JMS\Groups(['document-sync'])]
-    #[ORM\OneToMany(mappedBy: 'report', targetEntity: ReportSubmission::class, fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(targetEntity: ReportSubmission::class, mappedBy: 'report', fetch: 'EXTRA_LAZY')]
     private Collection $reportSubmissions;
 
     #[JMS\Groups(['report', 'wish-to-provide-documentation'])]
@@ -368,17 +360,17 @@ class Report
 
     #[JMS\Groups(['report', 'report-checklist'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Checklist')]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: Checklist::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Checklist::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?Checklist $checklist = null;
 
     #[JMS\Groups(['report', 'report-checklist'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\ReviewChecklist')]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: ReviewChecklist::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: ReviewChecklist::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?ReviewChecklist $reviewChecklist = null;
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\Satisfaction')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
-    #[ORM\OneToOne(mappedBy: 'report', targetEntity: Satisfaction::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Satisfaction::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     private ?Satisfaction $satisfaction = null;
 
     /**
@@ -475,7 +467,6 @@ class Report
         $this->assets = new ArrayCollection();
         $this->noAssetToAdd = null;
         $this->noTransfersToAdd = null;
-        $this->reportSeen = true;
         $this->expenses = new ArrayCollection();
         $this->gifts = new ArrayCollection();
         $this->documents = new ArrayCollection();
@@ -703,18 +694,6 @@ class Report
         return $this;
     }
 
-    public function setReportSeen(bool $reportSeen): static
-    {
-        $this->reportSeen = $reportSeen;
-
-        return $this;
-    }
-
-    public function getReportSeen(): bool
-    {
-        return $this->reportSeen;
-    }
-
     public function belongsToUser(User $user): bool
     {
         return in_array($user->getId(), $this->getClient()->getUserIds());
@@ -774,24 +753,6 @@ class Report
     {
         return !$this->hasAccounts()
         || count($this->getBankAccountsIncomplete()) > 0;
-    }
-
-    /**
-     * Temporary until specs gets more clear around report types
-     * This value could be set at creation time if needed in the future.
-     * Until now, 106 is for all the PAs, so we get this value from the (only) user accessing the report.
-     * Not sure if convenient to implement a 106 separate report, as 106 is also both an 102 AND an 103.
-     *
-     * if it has the 106 flag, the deputy expense section is replaced with a more detailed "PA deputy expense" section
-     * //TODO remove from mocks
-     */
-    #[JMS\VirtualProperty]
-    #[JMS\Type('boolean')]
-    #[JMS\SerializedName('has106flag')]
-    #[JMS\Groups(['report', 'report-106-flag'])]
-    public function has106Flag(): bool
-    {
-        return $this->isPAreport();
     }
 
     /**

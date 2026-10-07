@@ -2497,18 +2497,6 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: '#^Parameter \#1 \$client of method OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:setClient\(\) expects string, OPG\\Digideps\\Frontend\\Entity\\Client given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:\$id is never written, only read\.$#'
-			identifier: property.onlyRead
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\CourtOrder\:\:\$client is never written, only read\.$#'
 			identifier: property.onlyRead
 			count: 1
@@ -3829,12 +3817,6 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:isAdManaged\(\) should return bool but returns bool\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:isEnabled\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -4169,12 +4151,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: src/EventDispatcher/ObservableEventDispatcher.php
-
-		-
-			message: '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\Session\\SessionInterface\:\:setFlash\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/EventListener/AuthenticationHandler.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\EventListener\\ForbiddenExceptionListener\:\:onKernelException\(\) has no return type specified\.$#'
@@ -5165,12 +5141,6 @@ parameters:
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Form/Report/MentalAssessment.php
-
-		-
-			message: '#^Cannot call method getHasCapacityChanged\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Form/Report/MentalCapacityType.php
 
 		-
 			message: '#^Parameter \#1 \$child of method Symfony\\Component\\Form\\FormBuilderInterface\:\:add\(\) expects string\|Symfony\\Component\\Form\\FormBuilderInterface, mixed given\.$#'
