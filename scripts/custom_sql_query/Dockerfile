@@ -3,6 +3,9 @@ ARG FUNCTION_DIR="/function"
 # ===== BASE IMAGE =====
 FROM python:3.14.8-alpine3.24@sha256:f6a589d43c42b9e7f7dc67a12d37132491f362859a5d750607710cc56da3bc72 AS python-base
 
+# TODO Remove this once alpine upgrade available as it patches a vulnerability
+RUN apk update && apk add --upgrade "zlib==1.3.2-r1"
+
 RUN apk update && apk upgrade
 
 # ===== Build Image =====
