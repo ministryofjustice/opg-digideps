@@ -112,23 +112,6 @@ public,client_benefits_check,id,uuid,,PRIMARY KEY,NA
 public,client_benefits_check,never_checked_explanation,text,,,Lorem
 public,client_benefits_check,report_id,integer,,FOREIGN KEY,NA
 public,client_benefits_check,when_last_checked_entitlement,character varying,255,,Lorem
-public,client_contact,address1,character varying,200,,Lorem
-public,client_contact,address2,character varying,200,,Lorem
-public,client_contact,address3,character varying,200,,Lorem
-public,client_contact,address4,character varying,200,,Lorem
-public,client_contact,address5,character varying,200,,Lorem
-public,client_contact,address_country,character varying,10,,Lorem
-public,client_contact,address_postcode,character varying,10,,PostCode
-public,client_contact,client_id,integer,,FOREIGN KEY,NA
-public,client_contact,created_by,integer,,FOREIGN KEY,NA
-public,client_contact,created_on,timestamp without time zone,,,NA
-public,client_contact,email,character varying,60,,Email
-public,client_contact,firstname,character varying,100,,FirstName
-public,client_contact,id,integer,,PRIMARY KEY,NA
-public,client_contact,job_title,character varying,150,,Lorem
-public,client_contact,lastname,character varying,100,,LastName
-public,client_contact,org_name,character varying,150,,Lorem
-public,client_contact,phone,character varying,20,,PhoneNumber
 public,contact,address,character varying,200,,Lorem
 public,contact,address2,character varying,200,,Lorem
 public,contact,contact_name,character varying,255,,Lorem
@@ -165,7 +148,6 @@ public,court_order_report,court_order_id,integer,,FOREIGN KEY,NA
 public,court_order_report,report_id,integer,,PRIMARY KEY,NA
 public,court_order_report,report_id,integer,,FOREIGN KEY,NA
 public,dd_user,active,boolean,,,NA
-public,dd_user,ad_managed,boolean,,,NA
 public,dd_user,address1,character varying,200,,Lorem
 public,dd_user,address2,character varying,200,,Lorem
 public,dd_user,address3,character varying,200,,Lorem
@@ -234,8 +216,8 @@ public,deputy,updated_at,timestamp without time zone,,,NA
 public,deputy,user_id,integer,,FOREIGN KEY,NA
 public,deputy_case,client_id,integer,,FOREIGN KEY,NA
 public,deputy_case,client_id,integer,,PRIMARY KEY,NA
-public,deputy_case,user_id,integer,,PRIMARY KEY,NA
 public,deputy_case,user_id,integer,,FOREIGN KEY,NA
+public,deputy_case,user_id,integer,,PRIMARY KEY,NA
 public,document,created_by,integer,,FOREIGN KEY,NA
 public,document,created_on,timestamp without time zone,,,NA
 public,document,filename,character varying,255,,Lorem
@@ -374,16 +356,6 @@ public,prof_deputy_prev_cost,end_date,timestamp without time zone,,,NA
 public,prof_deputy_prev_cost,id,integer,,PRIMARY KEY,NA
 public,prof_deputy_prev_cost,report_id,integer,,FOREIGN KEY,NA
 public,prof_deputy_prev_cost,start_date,timestamp without time zone,,,NA
-public,prof_service_fee,amount_charged,numeric,,,NA
-public,prof_service_fee,amount_received,numeric,,,NA
-public,prof_service_fee,assessed_or_fixed,character varying,255,,Lorem
-public,prof_service_fee,fee_type_id,character varying,255,,Lorem
-public,prof_service_fee,id,integer,,PRIMARY KEY,NA
-public,prof_service_fee,other_fee_details,character varying,255,,Lorem
-public,prof_service_fee,payment_received,character varying,255,,Lorem
-public,prof_service_fee,payment_received_date,timestamp without time zone,,,NA
-public,prof_service_fee,report_id,integer,,FOREIGN KEY,NA
-public,prof_service_fee,service_type_id,character varying,255,,Lorem
 public,report,action_more_info,character varying,3,,NA
 public,report,action_more_info_details,text,,,Lorem
 public,report,agreed_behalf_deputy,character varying,50,,Lorem
@@ -435,6 +407,13 @@ public,report,un_submit_date,timestamp without time zone,,,NA
 public,report,unsubmitted_sections_list,text,,,NA
 public,report,updated_at,timestamp without time zone,,,NA
 public,report,wish_to_provide_documentation,character varying,255,,Lorem
+public,report_cleanup_action,keep,boolean,,,NA
+public,report_cleanup_action,order_id,integer,,PRIMARY KEY,NA
+public,report_cleanup_action,report_id,integer,,PRIMARY KEY,NA
+public,report_cleanup_problem,client_id,integer,,,NA
+public,report_cleanup_problem,id,integer,,PRIMARY KEY,NA
+public,report_cleanup_problem,problem,integer,,,NA
+public,report_cleanup_problem,report_id,integer,,,NA
 public,report_submission,archived,boolean,,,NA
 public,report_submission,archived_by,integer,,FOREIGN KEY,NA
 public,report_submission,created_by,integer,,FOREIGN KEY,NA
