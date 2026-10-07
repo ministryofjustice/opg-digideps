@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Components\GOV\Accordion;
 
-use OPG\Digideps\Frontend\Components\GOV\BodyText;
+use OPG\Digideps\Frontend\Components\GOV\Renderable\Paragraph;
 use OPG\Digideps\Frontend\Components\RenderableInterface;
 
 final class AccordionBuilder
@@ -39,6 +39,6 @@ final class AccordionBuilder
      */
     private function processContent(RenderableInterface|string ...$content): array
     {
-        return array_map(fn (RenderableInterface|string $element): RenderableInterface => is_string($element) ? new BodyText($element) : $element, $content);
+        return array_map(fn (RenderableInterface|string $element): RenderableInterface => is_string($element) ? new Paragraph($element) : $element, $content);
     }
 }
