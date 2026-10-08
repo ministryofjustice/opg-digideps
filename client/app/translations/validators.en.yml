@@ -624,8 +624,10 @@ userResearchResponse:
 
 opg:
   register:
-    firstName:
-      errorMessage: Please enter your first name
+    deputyFirstName:
+      notBlank: Please enter your first name
+    deputyLastName:
+      notBlank: Please enter your last name
 
 #       COMMON ELEMENTS
 # ====================================================================================================

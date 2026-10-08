@@ -9,32 +9,37 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatableMessage;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('firstname', TextType::class, [
-                'label' => 'opg.register.firstName.label',
+            ->add('deputyFirstName', TextType::class, [
+                'label' => 'opg.register.deputyFirstName.label',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank([
-                        'message' => new TranslatableMessage('opg.register.firstName.errorMessage', [], 'twig-components')
-                    ])
+                    new NotBlank(['message' => 'opg.register.deputyFirstName.notBlank'])
                 ]
             ])
-            ->add('lastname', TextType::class)
-            ->add('postcode', TextType::class)
-            ->add('email', RepeatedType::class, [
+            ->add('deputyLastName', TextType::class, [
+                'label' => 'opg.register.deputyLastName.label',
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(['message' => 'opg.register.deputyLastName.notBlank'])
+                ]
+            ])
+            ->add('deputyPostCode', TextType::class)
+            ->add('deputyEmail', RepeatedType::class, [
                 'type' => EmailType::class,
                 'invalid_message' => 'user.email.doesNotMatch',
             ])
-            ->add('clientLastname', TextType::class)
+            ->add('clientLastName', TextType::class)
             ->add('caseNumber', TextType::class)
+
+            // TO BE REMOVED WHEN WE HAVE THE REAL REGISTRATION SERVICE
             ->add('mockDetails', ChoiceType::class, [
                 'choices' => [
                     'verified' => 'Valid details entered',
@@ -43,13 +48,16 @@ class RegistrationType extends AbstractType
                     'alreadyregistered' => 'Email is already registered'
                 ]
             ])
-            ->add('save', SubmitType::class);
+
+            ->add('signUp', SubmitType::class, [
+                'label' => 'opg.register.signUp.label'
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'translation_domain' => 'twig-components',
+            'translation_domain' => 'twig-components'
         ]);
     }
 }

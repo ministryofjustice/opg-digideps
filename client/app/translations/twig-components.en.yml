@@ -20,9 +20,12 @@ gov:
 opg:
   optional: (optional)
   register:
-    firstName:
+    deputyFirstName:
       label: Your first name
-      errorMessage: Enter your first name
+    deputyLastName:
+      label: Your last name
+    signUp:
+      label: Sign up
   renderable:
     bankAccount:
       sortCode: Sort code
