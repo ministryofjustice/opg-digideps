@@ -2,7 +2,7 @@
     <twig:GOV:Layout:Column d="3">
         <twig:GOV:Heading size="l" caption="{{ path }}">
             {% if link is not null %}
-                <twig:GOV:Link href="{{ link }}" accessibilityText="(visually hidden text for screen readers)">
+                <twig:GOV:Link href="{{ link }}">
                     {{ name }}
                 </twig:GOV:Link>
             {% else %}
