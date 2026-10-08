@@ -89,7 +89,7 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
         $this->assertEmpty($reportSubmissions);
 
         $reportSubmissionIds = [];
-        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $yesterday), new ReportDescriptor($madeDate))));
+        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $yesterday, submitted: true), new ReportDescriptor($madeDate))));
         ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
         $reportSubmissionIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
         ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
@@ -110,7 +110,7 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
         $madeDate = new \DateTimeImmutable('-2 year');
 
         $todaysReportSubmissionIds = [];
-        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $today), new ReportDescriptor($madeDate))));
+        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $today, submitted: true), new ReportDescriptor($madeDate))));
         ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
         $todaysReportSubmissionIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
         ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
@@ -119,7 +119,7 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
         $todaysReportSubmissionIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
 
         $yesterdaysReportSubmissionIds = [];
-        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $yesterday), new ReportDescriptor($madeDate))));
+        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $yesterday, submitted: true), new ReportDescriptor($madeDate))));
         ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
         $yesterdaysReportSubmissionIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
         ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
@@ -149,7 +149,7 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
         $madeDate = new \DateTimeImmutable('-2 year');
 
         $yesterdaysReportSubmissionsIds = [];
-        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $yesterday), new ReportDescriptor($madeDate))));
+        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $yesterday, submitted: true), new ReportDescriptor($madeDate))));
         ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
         $yesterdaysReportSubmissionsIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
         ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
@@ -158,7 +158,7 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
         $yesterdaysReportSubmissionsIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
 
         $lastWeekReportSubmissionsIds = [];
-        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $lastWeek), new ReportDescriptor($madeDate))));
+        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), madeDate: $madeDate, reportList: new ReportList(false, new ReportDescriptor($madeDate->add(new \DateInterval('P1Y')), submitDate: $lastWeek, submitted: true), new ReportDescriptor($madeDate))));
         ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
         $lastWeekReportSubmissionsIds[] = ($report->getReportSubmissions()->first() ?: throw new \LogicException("This must exist"))->getId();
         ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario($scenario);
