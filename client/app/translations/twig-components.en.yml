@@ -19,6 +19,10 @@ gov:
       accessibility: Accessibility
 opg:
   optional: (optional)
+  register:
+    firstName:
+      label: Your first name
+      errorMessage: Enter your first name
   renderable:
     bankAccount:
       sortCode: Sort code

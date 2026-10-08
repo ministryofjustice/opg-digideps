@@ -9,7 +9,9 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RegistrationType extends AbstractType
 {
@@ -17,9 +19,12 @@ class RegistrationType extends AbstractType
     {
         $builder
             ->add('firstname', TextType::class, [
-                'label' => 'First name',
+                'label' => 'opg.register.firstName.label',
+                'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'firstname must not be blank'])
+                    new NotBlank([
+                        'message' => new TranslatableMessage('opg.register.firstName.errorMessage', [], 'twig-components')
+                    ])
                 ]
             ])
             ->add('lastname', TextType::class)
@@ -39,5 +44,12 @@ class RegistrationType extends AbstractType
                 ]
             ])
             ->add('save', SubmitType::class);
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'translation_domain' => 'twig-components',
+        ]);
     }
 }

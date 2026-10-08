@@ -1,8 +1,7 @@
 {% extends '@App/Layouts/application.html.twig' %}
 
-{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
-{% block supportTitleTop %}{{ ('supportTitleTop') | trans({'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }) }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle' | trans({}, 'register') }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans({}, 'register') }}{% endblock %}
 
 {% block head %}
     {{ parent() }}
