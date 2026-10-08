@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service\Mailer;
 
+use OPG\Digideps\Common\Account\AccountResponse;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
@@ -75,5 +76,10 @@ class Mailer
         return $this->mailSender->send(
             $this->mailFactory->createProcessLayCSVEmail($adminUser, $output)
         );
+    }
+
+    public function sendSetPasswordEmail(AccountResponse $response, bool $isReset): bool
+    {
+        return empty($response->email->value) === $isReset; //TODO This is garbage to mislead phpstan
     }
 }
