@@ -35,7 +35,7 @@ RUN apk add --no-cache \
     "gdk-pixbuf==2.44.7-r1" \
     "jpeg==9f-r0" \
     "libwebp==1.6.0-r0" \
-    "tiff==4.7.1-r0" \
+    "tiff==4.7.2-r0" \
     "fontconfig==2.17.1-r1" \
     "ttf-freefont==20120503-r4" \
     "font-noto==2026.06.01-r0" \
