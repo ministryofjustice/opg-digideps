@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\Client\Internal;
 
+use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Event\ClientDeletedEvent;
 use OPG\Digideps\Frontend\Event\ClientUpdatedEvent;
 use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
@@ -50,7 +51,7 @@ class ClientApiTest extends TestCase
 
         $this->restClient->expects(self::once())
             ->method('get')
-            ->with(sprintf('v2/client/%s', $clientWithUsers->getId()), 'Client', self::anything(), self::anything())
+            ->with(sprintf('v2/client/%s', $clientWithUsers->getId()), Client::class, self::anything(), self::anything())
             ->willReturn($clientWithUsers);
 
         $usernamePasswordToken = new UsernamePasswordToken($currentUser, 'firewall', $currentUser->getRoles());

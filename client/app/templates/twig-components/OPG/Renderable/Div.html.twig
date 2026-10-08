@@ -1,0 +1,10 @@
+{% props text=[], isVisuallyHidden=false %}
+{% set className = isVisuallyHidden ? 'govuk-visually-hidden' : '' %}
+
+<div {{ attributes.defaults({class: className}) }}>
+    {% if text is empty %}
+        {% with outerScope %}{% block content %}{% endblock %}{% endwith %}
+    {% else %}
+        <twig:Render self="{{ text }}"/>
+    {% endif %}
+</div>

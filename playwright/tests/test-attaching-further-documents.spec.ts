@@ -16,7 +16,7 @@ test("a user sends further documents", async ({ page }) => {
 
   const runTest = async (scenario: Scenario) => {
     const email = scenario.users[deputyReference].email;
-    const courtOrderUid = scenario.orders[0].courtOrderUid;
+    const courtOrderUid = scenario.orders[0].courtOrderUid ?? "";
     const clientCaseNumber = scenario.orders[0].caseNumber;
     const submittedReportId = scenario.orders[0].reports[0].id;
 
@@ -45,6 +45,7 @@ test("a user sends further documents", async ({ page }) => {
       await documentsUploadPage.sendDocuments();
 
       // check we're redirected to the court order page with success message
+      expect(courtOrderUid).not.toBe("");
       await expect(page).toHaveURL(`/courtorder/${courtOrderUid}`);
       await expect(page.locator("div.moj-banner--success")).toContainText(
         "Your uploaded files are now attached to this report",
