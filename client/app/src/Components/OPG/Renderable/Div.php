@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Frontend\Components\GOV;
+namespace OPG\Digideps\Frontend\Components\OPG\Renderable;
 
 use OPG\Digideps\Frontend\Components\RenderableInterface;
 

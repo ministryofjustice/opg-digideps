@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Components\OPG\Admin;
 
-use OPG\Digideps\Frontend\Components\GOV\Div;
 use OPG\Digideps\Frontend\Components\GOV\Link;
 use OPG\Digideps\Frontend\Components\GOV\Table\Caption;
 use OPG\Digideps\Frontend\Components\GOV\Table\Cell;
 use OPG\Digideps\Frontend\Components\GOV\Table\Table;
 use OPG\Digideps\Frontend\Components\GOV\Table\TableBuilder;
 use OPG\Digideps\Frontend\Components\OPG\Renderable\ActionsList;
+use OPG\Digideps\Frontend\Components\OPG\Renderable\Div;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
