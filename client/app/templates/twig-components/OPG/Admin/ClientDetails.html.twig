@@ -1,0 +1,19 @@
+<twig:GOV:Heading size="l" h="2">
+    {{ text.reportsHeading }}
+</twig:GOV:Heading>
+
+{% if activeReportsTable is not null %}
+    <twig:GOV:Table table="{{ activeReportsTable }}"/>
+{% endif %}
+
+{% if submittedReportsTable is not null %}
+    <twig:GOV:Table table="{{ submittedReportsTable }}"/>
+{% endif %}
+
+{% if incompleteReportsTable is not null %}
+    <twig:GOV:Table table="{{ incompleteReportsTable }}"/>
+{% endif %}
+
+{% if closedReportsTable is not null %}
+    <twig:GOV:Table table="{{ closedReportsTable }}"/>
+{% endif %}
