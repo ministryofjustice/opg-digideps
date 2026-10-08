@@ -20,14 +20,21 @@ final class TableBuilder
      */
     private ?array $columns;
 
+    private ?Caption $caption;
+
     public function __construct(
         private readonly bool $firstColumnIsHeader = false,
-        private readonly string|Caption|null $caption = null,
+        string|Caption|null $caption = null,
         private readonly bool $isHeaderHidden = false,
     ) {
         $this->header = null;
         $this->rows = [];
         $this->columns = null;
+
+        if (is_string($caption)) {
+            $caption = new Caption($caption, 'm');
+        }
+        $this->caption = $caption;
     }
 
     /**

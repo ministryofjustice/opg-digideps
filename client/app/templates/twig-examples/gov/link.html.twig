@@ -1,5 +1,8 @@
-{% set url="https://www.gov.uk" %}{% set text="GOV.UK" %}
+{% set url="https://www.gov.uk" %}{% set text="GOV.UK" %}{% set accessibilityText="(external link)" %}
 
-<twig:GOV:Link href="{{ url }}">
+<twig:GOV:Link href="{{ url }}" accessibilityText="{{ accessibilityText }}">
     {{ text }}
 </twig:GOV:Link>
+
+<!-- alternative syntax, useful for programmatically constructing links -->
+<twig:GOV:Link href="{{ url }}" accessibilityText="{{ accessibilityText }}" text="{{ text }}"/>
