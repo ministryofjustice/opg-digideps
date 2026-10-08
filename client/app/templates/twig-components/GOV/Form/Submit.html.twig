@@ -1,0 +1,10 @@
+{% props element, buttonClass='', disabled=false %}
+{% set className = 'govuk-button' %}
+{% if buttonClass is not null %}{% set className = className ~ ' ' ~ buttonClass %}{% endif %}
+{% set options = {
+    'label': element.label,
+    'attr': { 'class': className, 'data-module': 'govuk-button', 'data-prevent-double-click': true },
+    'disabled': disabled,
+    'translation_domain': 'twig-components'
+} %}
+{{ form_widget(element, options) }}
