@@ -36,6 +36,7 @@ opg:
         closed: unsubmitted (closed court orders)
       submitted: Submitted
       type: Type
+  optional: (optional)
   renderable:
     bankAccount:
       sortCode: Sort code
