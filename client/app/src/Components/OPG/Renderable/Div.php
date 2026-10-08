@@ -18,7 +18,7 @@ class Div implements RenderableInterface
     }
 
     public string $componentName {
-        get => 'GOV:Div';
+        get => 'OPG:Renderable:Div';
     }
 
     public array $props {

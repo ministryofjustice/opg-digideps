@@ -4,7 +4,9 @@
         { "name": "href", "type": "string" },
         { "name": "noVisitedState", "type": "bool", "default": "false" },
         { "name": "inverse", "type": "bool", "default": "false" },
-        { "name": "inNewTab", "type": "bool", "default": "false" }
+        { "name": "inNewTab", "type": "bool", "default": "false" },
+        { "name": "accessibilityText", "type": "string", "default": null },
+        { "name": "text", "type": "string", "default": null }
     ],
     "examples": ["link"]
 }
