@@ -10,6 +10,8 @@
 
 {% block pageContent %}
     <twig:GOV:Form form="{{ form }}">
-        <twig:GOV:Form:TextInput element="{{ form.firstname }}"/>
+        <twig:GOV:Form:TextInput element="{{ form.deputyFirstName }}"/>
+        <twig:GOV:Form:TextInput element="{{ form.deputyLastName }}"/>
+        <twig:GOV:Form:Submit element="{{ form.signUp }}"/>
     </twig:GOV:Form>
 {% endblock %}

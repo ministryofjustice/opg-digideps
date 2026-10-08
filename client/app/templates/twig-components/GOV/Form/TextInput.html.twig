@@ -2,7 +2,7 @@
 <div class="govuk-form-group">
     {% set label = element.vars.label %}
     {% if not element.vars.required %}
-        {% set label = label ~ ('opg.optional' | trans({}, 'twig-components')) %}
+        {% set label = (label | trans({}, 'twig-components')) ~ ' ' ~ ('opg.optional' | trans({}, 'twig-components')) %}
     {% endif %}
     {{ form_label(element, label, { label_attr: { class: "govuk-label govuk-label" } }) }}
     {{ form_errors(element) }}
