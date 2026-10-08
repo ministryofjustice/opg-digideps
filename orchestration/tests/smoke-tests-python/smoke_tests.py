@@ -3,9 +3,73 @@ import sys
 import json
 import time
 
-import requests
 from bs4 import BeautifulSoup
 import boto3
+import http.cookiejar
+import urllib.error
+import urllib.parse
+import urllib.request
+
+# -----------------------------------------------------------
+# Lightweight requests replacement using urllib
+# -----------------------------------------------------------
+
+
+class Response:
+    def __init__(self, response):
+        self.status_code = response.getcode()
+        self.url = response.geturl()
+
+        content_type = response.headers.get_content_charset()
+        encoding = content_type or "utf-8"
+
+        self.text = response.read().decode(encoding, errors="replace")
+
+
+class Session:
+    def __init__(self):
+        cookie_jar = http.cookiejar.CookieJar()
+
+        self.headers = {
+            "User-Agent": "SmokeTestBot/1.0",
+        }
+
+        self.opener = urllib.request.build_opener(
+            urllib.request.HTTPCookieProcessor(cookie_jar)
+        )
+
+    def request(
+        self,
+        method,
+        url,
+        *,
+        data=None,
+        params=None,
+        timeout=10,
+        allow_redirects=True,
+    ):
+        if params:
+            query = urllib.parse.urlencode(params, doseq=True)
+            separator = "&" if "?" in url else "?"
+            url = f"{url}{separator}{query}"
+
+        body = None
+
+        if data is not None:
+            body = urllib.parse.urlencode(data).encode("utf-8")
+
+        request = urllib.request.Request(
+            url=url,
+            data=body,
+            method=method.upper(),
+        )
+
+        for header, value in self.headers.items():
+            request.add_header(header, value)
+
+        response = self.opener.open(request, timeout=timeout)
+
+        return Response(response)
 
 
 # -----------------------------------------------------------
@@ -64,13 +128,21 @@ def extract_form_inputs(form):
 def http(session, method, url, *, retries=3, backoff=1, timeout=10, **kwargs):
     """
     Simple retry wrapper.
-    Retries on ANY exception.
+    Retries on network failures.
     """
+
     for attempt in range(1, retries + 1):
         try:
             return session.request(
-                method, url, timeout=timeout, allow_redirects=True, **kwargs
+                method,
+                url,
+                timeout=timeout,
+                allow_redirects=True,
+                **kwargs,
             )
+
+        except urllib.error.HTTPError as exc:
+            return Response(exc)
 
         except Exception:
             if attempt == retries:
@@ -116,9 +188,7 @@ def get_secret(environment, endpoint):
 # Session Setup
 # -----------------------------------------------------------
 def new_session():
-    s = requests.Session()
-    s.headers.update({"User-Agent": "SmokeTestBot/1.0"})
-    return s
+    return Session()
 
 
 # -----------------------------------------------------------
