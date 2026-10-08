@@ -7,7 +7,7 @@ WORKDIR /
 COPY app /app
 COPY tests /tests
 
-COPY --from=ghcr.io/astral-sh/uv@sha256:2bb3ebca0a796a155094a27773d290c4b074572e6107f171d88d086682fd2500 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv@sha256:61d393e44e249f2e4b526b6c7ddcecce245946826e608e11c93ad4f5bba55b21 /uv /uvx /bin/
 COPY uv.lock .
 COPY pyproject.toml .
 RUN uv export --locked -o requirements.txt && python -m pip install --no-cache-dir -r /requirements.txt
