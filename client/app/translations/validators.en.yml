@@ -622,6 +622,11 @@ userResearchResponse:
   hasAccessToVideoCallDevice:
     notBlank: Please select either 'Yes' or 'No'
 
+opg:
+  register:
+    firstName:
+      errorMessage: Please enter your first name
+
 #       COMMON ELEMENTS
 # ====================================================================================================
 
