@@ -29,12 +29,16 @@ do
         echo "cleaning up workspace $workspace..."
         terraform workspace select $workspace
         terraform destroy -auto-approve
+
         if [ $? != 0 ]; then
           export TF_EXIT_CODE="1"
         else
-          terraform import "module.eu_west_1[0].aws_cloudwatch_log_group.container_insights" "/aws/ecs/containerinsights/${workspace}/performance"
-          # Second destroy to remove performance log group as first destroy recreates it
-          terraform destroy -auto-approve
+		  if terraform import "module.eu_west_1[0].aws_cloudwatch_log_group.container_insights" "/aws/ecs/containerinsights/${workspace}/performance"
+		  then
+		    terraform destroy -auto-approve
+	      else
+		    echo "Log group not found, skipping second destroy"
+		  fi
           terraform workspace select default
           terraform workspace delete $workspace
         fi
