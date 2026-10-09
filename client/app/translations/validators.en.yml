@@ -626,17 +626,26 @@ opg:
   register:
     deputyFirstName:
       notBlank: Please enter your first name
+      tooShort: Please enter a first name at least {{ limit }} letters long
+      tooLong: Please enter a first name no more than {{ limit }} letters long
     deputyLastName:
       notBlank: Please enter your last name
+      tooShort: Please enter a last name at least {{ limit }} letters long
+      tooLong: Please enter a last name no more than {{ limit }} letters long
     deputyEmail:
       doesNotMatch: Please ensure your email addresses match
       notBlank: Please enter and confirm your email address
+      invalidFormat: Please enter an email address in the correct format
+      tooLong: Please enter an email address no more than {{ limit }} letters long
     deputyPostCode:
       notBlank: Please enter your post code
+      tooLong: Please enter a post code no more than {{ limit }} characters long
     clientLastName:
       notBlank: Please enter the client's last name
+      tooShort: Please enter a client last name at least {{ limit }} letters long
+      tooLong: Please enter a client last name no more than {{ limit }} letters long
     caseNumber:
-      notBlank: Please enter the case number
+      wrongLength: Please enter an 8 or 10 character case number
 
 #       COMMON ELEMENTS
 # ====================================================================================================
