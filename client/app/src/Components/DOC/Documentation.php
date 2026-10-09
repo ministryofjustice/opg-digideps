@@ -119,7 +119,8 @@ final class Documentation
             ->addRow('Hello', 'Hello World', 'World')
             ->addRow('Quod', 'Erat', 'Demonstrandum')
             ->makeTable();
-        $tableWithCaption = new TableBuilder(caption: 'The quick brown fox jumps over the lazy dog')->addColumns(1, 1, 2)
+        $tableWithCaption = new TableBuilder(caption: 'The quick brown fox jumps over the lazy dog')
+            ->addColumns(1, 1, 2)
             ->addRow('Fii', 'Foo', 'Fuu')
             ->addHeader('Quod', 'Erat', 'Demonstrandum')
             ->addRow($unorderedList, $orderedList, 'World')

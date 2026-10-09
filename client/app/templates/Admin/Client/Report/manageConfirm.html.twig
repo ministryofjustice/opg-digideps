@@ -34,24 +34,25 @@
                 </td>
             </tr>
 
-                <tr>
-                    <td>{{ (page ~ '.form.startDate.label') | trans }}</td>
-                    <td>{{ submitted.startDate | date("j F Y")  }}</td>
-                    <td>
-                        <a href="{{ url('admin_report_manage', { 'id': report.id, 'data': submitted }) }}">
-                            {{ 'edit'|trans({}, 'common') }}
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>{{ (page ~ '.form.endDate.label') | trans }}</td>
-                    <td>{{ submitted.endDate | date("j F Y")  }}</td>
-                    <td>
-                        <a href="{{ url('admin_report_manage', { 'id': report.id, 'data': submitted }) }}">
-                            {{ 'edit'|trans({}, 'common') }}
-                        </a>
-                    </td>
-                </tr>
+            <tr>
+                <td>{{ (page ~ '.form.startDate.label') | trans }}</td>
+                <td>{{ submitted.startDate | date("j F Y")  }}</td>
+                <td>
+                    <a href="{{ url('admin_report_manage', { 'id': report.id, 'data': submitted }) }}">
+                        {{ 'edit'|trans({}, 'common') }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ (page ~ '.form.endDate.label') | trans }}</td>
+                <td>{{ submitted.endDate | date("j F Y")  }}</td>
+                <td>
+                    <a href="{{ url('admin_report_manage', { 'id': report.id, 'data': submitted }) }}">
+                        {{ 'edit'|trans({}, 'common') }}
+                    </a>
+                </td>
+            </tr>
+
             {% if report.isSubmitted %}
                 <tr>
                     <td>{{ (page ~ '.form.markSections.label') | trans }}</td>

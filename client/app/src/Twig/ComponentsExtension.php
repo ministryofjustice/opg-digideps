@@ -91,35 +91,10 @@ class ComponentsExtension extends AbstractExtension
 
                 return lcfirst($string);
             }),
-            'status_to_tag_css' => new TwigFilter('status_to_tag_css', function ($status) {
-                switch ($status) {
-                    case 'notStarted':
-                    case 'not-started':
-                        return 'govuk-tag--grey';
-
-                    case 'notFinished':
-                    case 'active':
-                    case 'incomplete':
-                        return 'govuk-tag--yellow';
-
-                    case 'needs-attention':
-                    case 'unsubmitted':
-                        return 'govuk-tag--red';
-
-                    case 'not-matching':
-                    case 'explained':
-                        return 'govuk-tag--blue';
-
-                    case 'done':
-                    case 'low-assets-done':
-                    case 'submitted':
-                    case 'readyToSubmit':
-                        return 'govuk-tag--green';
-
-                    default:
-                        return '';
-                }
-            }),
+            'status_to_tag_css' => new TwigFilter(
+                'status_to_tag_css',
+                fn (string $status) => 'govuk-tag--' . Filters::statusToTagColour($status)
+            ),
             'account_balance_status_to_tag_css' => new TwigFilter('account_balance_status_to_tag_css', function ($status) {
                 return match ($status) {
                     'notMatched' => 'govuk-tag--red',

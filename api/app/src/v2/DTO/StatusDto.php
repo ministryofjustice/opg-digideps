@@ -2,19 +2,21 @@
 
 namespace OPG\Digideps\Backend\v2\DTO;
 
-class StatusDto
+class StatusDto implements \JsonSerializable
 {
     private string $status;
-
-    public function getStatus(): string
-    {
-        return $this->status;
-    }
 
     public function setStatus(string $status): static
     {
         $this->status = $status;
 
         return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'status' => $this->status,
+        ];
     }
 }

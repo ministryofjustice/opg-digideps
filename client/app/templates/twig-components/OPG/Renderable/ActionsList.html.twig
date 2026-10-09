@@ -1,0 +1,7 @@
+{% props links %}
+
+{% for l in links %}
+    <twig:OPG:Renderable:Div class="text--right govuk-!-margin-0">
+        <twig:Render self="{{ l }}"/>
+    </twig:OPG:Renderable:Div>
+{% endfor %}

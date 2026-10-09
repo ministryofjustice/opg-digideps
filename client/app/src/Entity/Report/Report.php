@@ -4,6 +4,7 @@ namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\CourtOrder;
 use OPG\Digideps\Frontend\Entity\Deputy;
 use OPG\Digideps\Frontend\Entity\Report\Traits as ReportTraits;
 use OPG\Digideps\Frontend\Entity\User;
@@ -386,6 +387,11 @@ class Report implements StartEndDateComparableInterface
     #[JMS\Groups(['report', 'reasonForNoMoneyOut'])]
     #[Assert\NotBlank(message: 'moneyOut.reasonForNoMoneyOut.notBlank', groups: ['reasonForNoMoneyOut'])]
     private $reasonForNoMoneyOut;
+
+    /** @var array<CourtOrder> */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\CourtOrder>')]
+    #[JMS\Groups(['report', 'report-with-court-orders'])]
+    private array $courtOrders = [];
 
     /**
      * @return int $id
@@ -1355,5 +1361,40 @@ class Report implements StartEndDateComparableInterface
     public function getPrimaryDeputy(): ?Deputy
     {
         return $this->primaryDeputy;
+    }
+
+    /**
+     * @return array<CourtOrder>
+     */
+    public function getCourtOrders(): array
+    {
+        return $this->courtOrders;
+    }
+
+    /**
+     * @param array<CourtOrder> $courtOrders
+     */
+    public function setCourtOrders(array $courtOrders): static
+    {
+        $this->courtOrders = $courtOrders;
+
+        return $this;
+    }
+
+    public function hasActiveCourtOrder(): bool
+    {
+        return array_any($this->courtOrders, fn (CourtOrder $courtOrder) => $courtOrder->isActive());
+    }
+
+    // true if the report PDF can be downloaded
+    public function isDownloadable(): bool
+    {
+        return $this->submitted || $this->submitDate !== null;
+    }
+
+    // true if checklist exists for this report
+    public function isCheckable(): bool
+    {
+        return ($this->submitted || $this->submitDate !== null) && !$this->hasSection('profCurrentFees');
     }
 }
