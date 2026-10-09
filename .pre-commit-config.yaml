@@ -37,6 +37,7 @@ repos:
         files: \.(php)$
       - id: php-stan
         files: \.(php)$
+        args: ["-d memory_limit=512M"]
 
   - repo: https://github.com/ministryofjustice/opg-pre-commit-hooks.git
     rev: 9fdc6ee83ab7a8083dc1e2308be685cc393c0eff # frozen: v0.2.0

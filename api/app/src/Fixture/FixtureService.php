@@ -137,6 +137,9 @@ final class FixtureService
                 CourtOrderType::PFA,
                 $persons
             );
+            if ($flush) {
+                $this->flush();
+            }
 
             $hw = $this->instantiateCourtOrder(
                 $client,
@@ -146,6 +149,9 @@ final class FixtureService
                 $persons,
                 $pfa,
             );
+            if ($flush) {
+                $this->flush();
+            }
 
             $orders[] = array_filter([
                 'pfa' => $pfa,
@@ -215,6 +221,8 @@ final class FixtureService
                 }
                 $user = $deputy->getUser();
                 $this->persist($deputy);
+                $this->persist($courtOrder);
+                $this->flush();
             }
             if ($organisation !== null) {
                 $persons['organisations'][$deputyDescriptor->emailDomain] = $organisation;

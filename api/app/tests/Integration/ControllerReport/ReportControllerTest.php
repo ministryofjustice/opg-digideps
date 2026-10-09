@@ -53,8 +53,11 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->persist(self::$report1, $document);
 
         $result = self::$fixtureService->instantiateScenario(Scenario::newSimplePaScenario(reportType: CourtOrderReportType::OPG102));
+        self::$fixtureService->flush();
         self::$fixtureService->instantiateScenario(Scenario::newSimplePaScenario(reportType: CourtOrderReportType::OPG102), $result['persons']);
+        self::$fixtureService->flush();
         self::$fixtureService->instantiateScenario(Scenario::newSimplePaScenario(reportType: CourtOrderReportType::OPG102), $result['persons']);
+        self::$fixtureService->flush();
         ['persons' => ['users' => ['pa1' => $pa1]], 'orders' => [['pfa' => ['reports' => [self::$pa1Client1Report1]]]]] = $result;
         ['persons' => ['users' => ['admin1' => $pa2Admin]], 'orders' => [['pfa' => ['reports' => [self::$pa2Client1Report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleAdminPaScenario(reportType: CourtOrderReportType::OPG102));
         ['persons' => ['users' => ['team1' => $pa3TeamMember]], 'orders' => [['pfa' => ['reports' => [self::$pa3Client1Report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleTeamMemberPaScenario(reportType: CourtOrderReportType::OPG102));
