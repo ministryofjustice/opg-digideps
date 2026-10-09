@@ -1,0 +1,24 @@
+{% if text.accountCreationErrorMessage is not null %}
+    <twig:GOV:Paragraph>{{ text.accountCreationErrorMessage }}</twig:GOV:Paragraph>
+{% elseif text.accountCreatedMessage is not null %}
+    <twig:GOV:Paragraph>{{ text.accountCreatedMessage }}</twig:GOV:Paragraph>
+
+{% else %}
+    <div class="text"><twig:GOV:Paragraph>{{ text.intro }}</twig:GOV:Paragraph></div>
+
+    <twig:GOV:Paragraph>
+        {{ text.ifYouAlreadyHaveAnAccount }},
+        <twig:GOV:Link href="{{ path('login') }}">{{ text.signIn }}</twig:GOV:Link>.
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Form form="{{ form }}">
+        <twig:GOV:Form:TextInput element="{{ form.deputyFirstName }}"/>
+        <twig:GOV:Form:TextInput element="{{ form.deputyLastName }}"/>
+        <twig:GOV:Form:TextInput element="{{ form.deputyEmail.first }}"/>
+        <twig:GOV:Form:TextInput element="{{ form.deputyEmail.second }}"/>
+        <twig:GOV:Form:TextInput element="{{ form.deputyPostCode }}"/>
+        <twig:GOV:Form:TextInput element="{{ form.clientLastName }}"/>
+        <twig:GOV:Form:TextInput element="{{ form.caseNumber }}"/>
+        <twig:GOV:Form:Submit element="{{ form.signUp }}"/>
+    </twig:GOV:Form>
+{% endif %}

@@ -93,10 +93,11 @@ class RegistrationType extends AbstractType
             // TO BE REMOVED WHEN WE HAVE THE REAL ACCOUNT SERVICE
             ->add('mockDetails', ChoiceType::class, [
                 'choices' => [
-                    'verified' => 'Valid details entered',
-                    'invalid' => 'Details not provided on form',
-                    'nomatch' => 'Details not matched',
-                    'alreadyregistered' => 'Email is already registered'
+                    'Valid details entered' => 'verified',
+                    'Details not matched' => 'nomatch',
+                    'Email is already registered' => 'alreadyregistered',
+                    'Notify failed to send "set password" email' => 'setpasswordemailfail',
+                    'Error contacting API' => 'networkerror'
                 ]
             ])
 
