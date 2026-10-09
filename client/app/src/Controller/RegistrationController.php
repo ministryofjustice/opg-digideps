@@ -49,8 +49,7 @@ class RegistrationController extends SymfonyAbstractController
                     $businessLogicError = 'Data could not be verified against our records';
                 } elseif ($data === 'verified') {
                     // if verified, create user record, and send user an activation link (to password reset page),
-                    // and forward user to confirmation page ("go and check your email");
-                    // otherwise, show holding message (either because verification failed, or user's data is unavailable)
+                    // and forward user to confirmation page ("go and check your email")
                     $success = true;
                 } else {
                     $businessLogicError = 'Unable to process submitted registration data';
