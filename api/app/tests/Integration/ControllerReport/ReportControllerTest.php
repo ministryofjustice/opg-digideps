@@ -88,9 +88,9 @@ class ReportControllerTest extends AbstractTestController
     /**
      * clear fixtures.
      */
-    public static function tearDownAfterClass(): void
+    public function tearDown(): void
     {
-        parent::tearDownAfterClass();
+        parent::tearDown();
 
         self::fixtures()->clear();
     }
