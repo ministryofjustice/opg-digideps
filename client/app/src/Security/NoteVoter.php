@@ -42,11 +42,11 @@ class NoteVoter extends Voter
      */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        /** @var User $loggedInUser */
+        /** @var ?User $loggedInUser */
         $loggedInUser = $token->getUser();
 
-        if (!$loggedInUser instanceof User && $loggedInUser->isPaDeputy()) {
-            // the loggedUser must be logged in PA user; if not, deny access
+        // the loggedUser must be logged in PA user; if not, deny access
+        if ($loggedInUser === null || !$loggedInUser->isDeputyPa()) {
             return false;
         }
 

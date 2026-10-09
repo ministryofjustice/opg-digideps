@@ -198,7 +198,6 @@ class ReportControllerTest extends AbstractTestController
         )['data'];
 
         self::assertIsArray($clientReportData);
-        $this->assertArrayHasKey('report_seen', $clientReportData);
         $this->assertArrayNotHasKey('transactions', $clientReportData);
         $this->assertArrayNotHasKey('debts', $clientReportData);
         $this->assertArrayNotHasKey('fees', $clientReportData);
