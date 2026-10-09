@@ -24,6 +24,18 @@ opg:
       label: Your first name
     deputyLastName:
       label: Your last name
+    deputyEmail:
+      first:
+        label: Your email address
+      second:
+        label: Confirm your email address
+    deputyPostCode:
+      label: Your post code
+    clientLastName:
+      label: Client's last name
+    caseNumber:
+      label: Case number
+      help: This is 8 or 10 characters long and can be found on your court order
     signUp:
       label: Sign up
   renderable:

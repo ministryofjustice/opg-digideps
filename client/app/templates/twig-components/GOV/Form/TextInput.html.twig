@@ -6,6 +6,6 @@
     {% endif %}
     {{ form_label(element, label, { label_attr: { class: "govuk-label govuk-label" } }) }}
     {{ form_errors(element) }}
+    {{ form_help(element, { help_attr: { class: "govuk-hint" } }) }}
     {{ form_widget(element, { attr: { class: "govuk-input govuk-!-width-one-half" } }) }}
-    {{ form_help(element) }}
 </div>

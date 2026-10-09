@@ -25,9 +25,6 @@ class RegistrationController extends SymfonyAbstractController
     // user gets an email with a link; this link has no discriminating data
     // (any user can land on this page and register, providing their details match an existing deputy/client)
 
-
-
-
     #[Route('/register_ng', name: 'register_ng', methods: ['GET', 'POST'])]
     public function registerNgAction(Request $request): Response|array
     {

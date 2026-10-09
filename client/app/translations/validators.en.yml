@@ -628,6 +628,15 @@ opg:
       notBlank: Please enter your first name
     deputyLastName:
       notBlank: Please enter your last name
+    deputyEmail:
+      doesNotMatch: Please ensure your email addresses match
+      notBlank: Please enter and confirm your email address
+    deputyPostCode:
+      notBlank: Please enter your post code
+    clientLastName:
+      notBlank: Please enter the client's last name
+    caseNumber:
+      notBlank: Please enter the case number
 
 #       COMMON ELEMENTS
 # ====================================================================================================

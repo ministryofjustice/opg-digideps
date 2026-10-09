@@ -1,0 +1,12 @@
+{% props form, caseNumberHint=null %}
+
+<twig:GOV:Form form="{{ form }}">
+    <twig:GOV:Form:TextInput element="{{ form.deputyFirstName }}"/>
+    <twig:GOV:Form:TextInput element="{{ form.deputyLastName }}"/>
+    <twig:GOV:Form:TextInput element="{{ form.deputyEmail.first }}"/>
+    <twig:GOV:Form:TextInput element="{{ form.deputyEmail.second }}"/>
+    <twig:GOV:Form:TextInput element="{{ form.deputyPostCode }}"/>
+    <twig:GOV:Form:TextInput element="{{ form.clientLastName }}"/>
+    <twig:GOV:Form:TextInput element="{{ form.caseNumber }}"/>
+    <twig:GOV:Form:Submit element="{{ form.signUp }}"/>
+</twig:GOV:Form>
