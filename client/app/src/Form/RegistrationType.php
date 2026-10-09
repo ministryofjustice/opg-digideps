@@ -31,15 +31,40 @@ class RegistrationType extends AbstractType
                     new NotBlank(['message' => 'opg.register.deputyLastName.notBlank'])
                 ]
             ])
-            ->add('deputyPostCode', TextType::class)
             ->add('deputyEmail', RepeatedType::class, [
                 'type' => EmailType::class,
-                'invalid_message' => 'user.email.doesNotMatch',
+                'required' => true,
+                'first_options'  => ['label' => 'opg.register.deputyEmail.first.label'],
+                'second_options' => ['label' => 'opg.register.deputyEmail.second.label'],
+                'invalid_message' => 'opg.register.deputyEmail.doesNotMatch',
+                'constraints' => [
+                    new NotBlank(['message' => 'opg.register.deputyEmail.notBlank'])
+                ]
             ])
-            ->add('clientLastName', TextType::class)
-            ->add('caseNumber', TextType::class)
+            ->add('deputyPostCode', TextType::class, [
+                'label' => 'opg.register.deputyPostCode.label',
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(['message' => 'opg.register.deputyPostCode.notBlank'])
+                ]
+            ])
+            ->add('clientLastName', TextType::class, [
+                'label' => 'opg.register.clientLastName.label',
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(['message' => 'opg.register.clientLastName.notBlank'])
+                ]
+            ])
+            ->add('caseNumber', TextType::class, [
+                'label' => 'opg.register.caseNumber.label',
+                'required' => true,
+                'help' => 'opg.register.caseNumber.help',
+                'constraints' => [
+                    new NotBlank(['message' => 'opg.register.caseNumber.notBlank'])
+                ]
+            ])
 
-            // TO BE REMOVED WHEN WE HAVE THE REAL REGISTRATION SERVICE
+            // TO BE REMOVED WHEN WE HAVE THE REAL REGISTRATION SERVICE IN THE API
             ->add('mockDetails', ChoiceType::class, [
                 'choices' => [
                     'verified' => 'Valid details entered',
