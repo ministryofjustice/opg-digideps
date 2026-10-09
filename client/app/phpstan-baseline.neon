@@ -2497,18 +2497,6 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: '#^Parameter \#1 \$client of method OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:setClient\(\) expects string, OPG\\Digideps\\Frontend\\Entity\\Client given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\ClientContact\:\:\$id is never written, only read\.$#'
-			identifier: property.onlyRead
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\CourtOrder\:\:\$client is never written, only read\.$#'
 			identifier: property.onlyRead
 			count: 1
@@ -3481,12 +3469,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setMentalCapacity\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -3824,12 +3806,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:getTokenDate\(\) should return DateTime but returns DateTime\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\User\:\:isAdManaged\(\) should return bool but returns bool\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Entity/User.php
@@ -8571,12 +8547,6 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService\:\:assertReportSubmissionIsDownloadable\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Service/ReportSubmissionService.php
 

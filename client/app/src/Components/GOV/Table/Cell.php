@@ -8,6 +8,8 @@ use OPG\Digideps\Frontend\Components\RenderableInterface;
 
 final readonly class Cell
 {
+    public const string NUMERIC_FORMAT = '';
+
     public string $className;
 
     public function __construct(
