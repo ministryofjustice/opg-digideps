@@ -10,6 +10,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\AtLeastOneOf;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationType extends AbstractType
@@ -21,14 +24,26 @@ class RegistrationType extends AbstractType
                 'label' => 'opg.register.deputyFirstName.label',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'opg.register.deputyFirstName.notBlank'])
+                    new NotBlank(['message' => 'opg.register.deputyFirstName.notBlank']),
+                    new Length(
+                        min: 2,
+                        max: 50,
+                        minMessage: 'opg.register.deputyFirstName.tooShort',
+                        maxMessage: 'opg.register.deputyFirstName.tooLong'
+                    )
                 ]
             ])
             ->add('deputyLastName', TextType::class, [
                 'label' => 'opg.register.deputyLastName.label',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'opg.register.deputyLastName.notBlank'])
+                    new NotBlank(['message' => 'opg.register.deputyLastName.notBlank']),
+                    new Length(
+                        min: 2,
+                        max: 50,
+                        minMessage: 'opg.register.deputyLastName.tooShort',
+                        maxMessage: 'opg.register.deputyLastName.tooLong'
+                    )
                 ]
             ])
             ->add('deputyEmail', RepeatedType::class, [
@@ -38,21 +53,30 @@ class RegistrationType extends AbstractType
                 'second_options' => ['label' => 'opg.register.deputyEmail.second.label'],
                 'invalid_message' => 'opg.register.deputyEmail.doesNotMatch',
                 'constraints' => [
-                    new NotBlank(['message' => 'opg.register.deputyEmail.notBlank'])
+                    new NotBlank(message: 'opg.register.deputyEmail.notBlank'),
+                    new Length(max: 60, maxMessage: 'opg.register.deputyEmail.tooLong'),
+                    new Email(message: 'opg.register.deputyEmail.invalidFormat')
                 ]
             ])
             ->add('deputyPostCode', TextType::class, [
                 'label' => 'opg.register.deputyPostCode.label',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'opg.register.deputyPostCode.notBlank'])
+                    new NotBlank(['message' => 'opg.register.deputyPostCode.notBlank']),
+                    new Length(max: 60, maxMessage: 'opg.register.deputyPostCode.tooLong')
                 ]
             ])
             ->add('clientLastName', TextType::class, [
                 'label' => 'opg.register.clientLastName.label',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'opg.register.clientLastName.notBlank'])
+                    new NotBlank(['message' => 'opg.register.clientLastName.notBlank']),
+                    new Length(
+                        min: 2,
+                        max: 50,
+                        minMessage: 'opg.register.clientLastName.tooShort',
+                        maxMessage: 'opg.register.clientLastName.tooLong'
+                    )
                 ]
             ])
             ->add('caseNumber', TextType::class, [
@@ -60,11 +84,13 @@ class RegistrationType extends AbstractType
                 'required' => true,
                 'help' => 'opg.register.caseNumber.help',
                 'constraints' => [
-                    new NotBlank(['message' => 'opg.register.caseNumber.notBlank'])
+                    new AtLeastOneOf([
+                        new Length(8), new Length(10)
+                    ], message: 'opg.register.caseNumber.wrongLength', includeInternalMessages: false)
                 ]
             ])
 
-            // TO BE REMOVED WHEN WE HAVE THE REAL REGISTRATION SERVICE IN THE API
+            // TO BE REMOVED WHEN WE HAVE THE REAL ACCOUNT SERVICE
             ->add('mockDetails', ChoiceType::class, [
                 'choices' => [
                     'verified' => 'Valid details entered',
@@ -81,6 +107,8 @@ class RegistrationType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        // label and help translations are automatically done using this translation file;
+        // note that validation messages are translated using the validators.en.yml file instead
         $resolver->setDefaults([
             'translation_domain' => 'twig-components'
         ]);
