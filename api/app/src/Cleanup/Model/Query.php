@@ -36,9 +36,10 @@ final readonly class Query
     private function execute(CourtOrderType $type, array $clientIds): \Generator
     {
         $lastId = 0;
+        $cursor = 0;
         $rows = true;
-        while (!empty($rows)) {
-            $rows = $this->fetch($lastId, $type, $this->limit, $clientIds);
+        while ($cursor <= 140000) {
+            $rows = $this->fetch($cursor, $type, $this->limit, $clientIds);
             $buffer = [];
             foreach ($rows as $row) {
                 $clientId = (int)$row['client_id'];
@@ -61,6 +62,7 @@ final readonly class Query
                     yield $client;
                 }
             }
+            $cursor += 1024;
         }
     }
 
@@ -113,10 +115,10 @@ final readonly class Query
                 WHERE c.id IN (
                     SELECT id FROM client cc
                     WHERE
-                        cc.id > {$from}
+                        cc.id >= {$from}
+                        AND cc.id < ({$from} + 1024)
                         {$onlyClause}
                     ORDER BY cc.id
-                    LIMIT {$limit}
                 )
                 ORDER BY c.id, r.id
             ")->fetchAllAssociative();
