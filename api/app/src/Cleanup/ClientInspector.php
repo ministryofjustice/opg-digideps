@@ -8,7 +8,6 @@ use OPG\Digideps\Backend\Cleanup\Model\Client;
 use OPG\Digideps\Backend\Cleanup\Model\Report;
 use OPG\Digideps\Backend\Entity\Cleanup\ReportCleanupAction;
 use OPG\Digideps\Backend\Entity\Cleanup\ReportCleanupProblem;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Exclude;
 
 #[Exclude]
@@ -19,7 +18,7 @@ final readonly class ClientInspector
      */
     private array $reportInspectors;
 
-    public function __construct(public Client $client, private LoggerInterface $logger)
+    public function __construct(public Client $client)
     {
         $inspectors = [];
         foreach ($this->client->reports as $report) {
@@ -45,10 +44,6 @@ final readonly class ClientInspector
                 } else {
                     $actions = array_merge($actions, $reportInspector->getCleaningActions(true));
                 }
-            }
-            if ($this->client->caseNumber === '10241932') {
-                $this->logger->error(print_r($this->client, true));
-                $this->logger->error(print_r($actions, true));
             }
         }
         return $actions;

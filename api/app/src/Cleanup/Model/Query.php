@@ -69,9 +69,6 @@ final readonly class Query
     private function hydrate(int $clientId, array $rows): ?Client
     {
         try {
-            if ($rows[0]['case_number'] === '10241932') {
-                $this->logger->error(print_r($rows, true));
-            }
             return new Client(
                 $clientId,
                 $rows[0]['case_number'],

@@ -83,7 +83,7 @@ final readonly class ReportCleaner
     private function cleanClient(Client $client): bool
     {
         try {
-            $inspector = new ClientInspector($client, $this->verboseLogger);
+            $inspector = new ClientInspector($client);
             $actions = $inspector->getCleaningActions();
             if (empty($actions)) {
                 return false;
