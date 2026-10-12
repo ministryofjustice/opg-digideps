@@ -1,5 +1,4 @@
-import { expect, test } from "@playwright/test";
-/*
+import { test } from "@playwright/test";
 import {
   createFixtureViaApi,
   getAdminUserFixture,
@@ -8,13 +7,7 @@ import {
 } from "./fixtures/fixtures";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminClientDetailsPage from "./pages/AdminClientDetailsPage";
-*/
 
-test("temporarily disabled for release", () => {
-  expect(true).toBeTruthy();
-});
-
-/*
 test("reports are organised according to their status", async ({ page }) => {
   const runTest = async (scenario: Scenario) => {
     const clientId = scenario["orders"][0]["clientId"];
@@ -97,4 +90,3 @@ test("active reports on closed orders are displayed separately", async ({
     }),
   ).then((fixture) => runTest(fixture.data as Scenario));
 });
-*/
