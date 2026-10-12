@@ -21,11 +21,13 @@ class ReportSummaryAssembler
         $this->setPropertiesFromData($dto, $data, ['courtOrders']);
 
         $courtOrders = [];
-        /** @var array $courtOrdersRaw */
-        $courtOrdersRaw = $data['courtOrders'];
 
         /** @var array $courtOrderData */
-        foreach ($courtOrdersRaw as $courtOrderData) {
+        foreach ([$data['pfaCourtOrder'] ?? null, $data['hwCourtOrder'] ?? null] as $courtOrderData) {
+            if ($courtOrderData === null) {
+                continue;
+            }
+
             $courtOrderDataValidated = new ValidatingArray($courtOrderData);
 
             $courtOrders[] = new CourtOrderDto(
