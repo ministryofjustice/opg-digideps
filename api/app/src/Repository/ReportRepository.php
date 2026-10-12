@@ -13,7 +13,6 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
-use OPG\Digideps\Backend\Entity\Report\Debt;
 use OPG\Digideps\Backend\Entity\Report\Fee;
 use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -27,32 +26,16 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class ReportRepository extends ServiceEntityRepository
 {
     public function __construct(
-        ManagerRegistry $registry,
+        private readonly ManagerRegistry $registry,
         private readonly ClientSearchFilter $filter,
         private readonly ReportAccessService $reportAccessService,
     ) {
-        parent::__construct($registry, Report::class);
+        parent::__construct($this->registry, Report::class);
     }
 
-    /**
-     * add empty Debts to Report.
-     * Called from doctrine listener.
-     */
-    public function addDebtsToReportIfMissing(Report $report): int
+    public function clear(): void
     {
-        $ret = 0;
-
-        // skips if already added
-        if (count($report->getDebts()) > 0) {
-            return $ret;
-        }
-
-        foreach (Debt::$debtTypeIds as $row) {
-            new Debt($report, $row[0], $row[1], null);
-            ++$ret;
-        }
-
-        return $ret;
+        $this->registry->getManager()->clear();
     }
 
     public function addFeesToReportIfMissing(Report $report): ?int
@@ -98,7 +81,10 @@ class ReportRepository extends ServiceEntityRepository
         return $missingCategories;
     }
 
-    public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, string $role)
+    /**
+     * @return array<Report>
+     */
+    public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, string $role): array
     {
         $caseNumbers = array_map('strtolower', $caseNumbers);
 
@@ -109,7 +95,11 @@ class ReportRepository extends ServiceEntityRepository
             ->setParameter('caseNumbers', $caseNumbers, Connection::PARAM_STR_ARRAY)
             ->setParameter('roleName', $role);
 
-        return $qb->getQuery()->getResult();
+        /**
+         * @var array<Report>|never $result
+         */
+        $result = $qb->getQuery()->getResult();
+        return is_array($result) ? $result : [];
     }
 
     private function getAllByUserIdQuery(int $userId, ParameterBag $query, string $select, string $status): ?QueryBuilder
@@ -123,7 +113,6 @@ class ReportRepository extends ServiceEntityRepository
             ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c,o')
             ->leftJoin('r.client', 'c')
             ->leftJoin('c.organisation', 'o')
-            ->where('o.isActivated = true')
             ->andWhere('r.submitted = false OR r.submitted is null');
         $qb->andWhere($qb->expr()->in('r.id', $reportIds));
 
@@ -388,8 +377,9 @@ END deputy_type";
         SELECT DISTINCT r.*
         FROM court_order co
         INNER JOIN court_order_deputy cod ON cod.court_order_id = co.id
-        INNER JOIN court_order_report cor ON cor.court_order_id = co.id
-        INNER JOIN report r ON r.id = cor.report_id
+        INNER JOIN report r
+            ON co.id = r.pfa_court_order_id AND co.order_type = 'pfa'
+            OR co.id = r.hw_court_order_id AND co.order_type = 'hw'
         WHERE co.court_order_uid = :courtOrderUid
         AND cod.is_active = TRUE;
         SQL;

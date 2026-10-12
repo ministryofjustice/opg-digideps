@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
+use OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
-use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Checklist;
-use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\ChecklistRepository;
@@ -28,22 +27,8 @@ class ChecklistRepositoryIntegrationTest extends ApiIntegrationTestCase
     private function createAndSubmitReportWithChecklist($status, $error): Checklist
     {
         $firstJulyAm = \DateTime::createFromFormat('d/m/Y', '01/07/2020', new \DateTimeZone('UTC')) ?: throw new \LogicException('Bad Fixture');
+        ['orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        // Create Client
-        $client = new Client()->setCaseNumber('abc-123');
-        self::$entityManager->persist($client);
-
-        // Create report
-        $report = (
-            new Report(
-                $client,
-                Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
-                $firstJulyAm,
-                $firstJulyAm->add(new \DateInterval('P364D'))
-            )
-        );
-
-        self::$entityManager->persist($report);
 
         // Submit Report
         $submittedOn = $firstJulyAm;
@@ -92,7 +77,7 @@ class ChecklistRepositoryIntegrationTest extends ApiIntegrationTestCase
         self::$entityManager->refresh($checklistSuccess);
         self::$entityManager->refresh($checklistPermanentWrongError);
 
-        self::assertEquals(count($checklists), 1);
+        self::assertCount(1, $checklists);
         self::assertEquals(Checklist::SYNC_STATUS_QUEUED, $checklistPermanent->getSynchronisationStatus());
         self::assertEquals(Checklist::SYNC_STATUS_SUCCESS, $checklistSuccess->getSynchronisationStatus());
         self::assertEquals(Checklist::SYNC_STATUS_PERMANENT_ERROR, $checklistPermanentWrongError->getSynchronisationStatus());

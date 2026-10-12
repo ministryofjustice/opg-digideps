@@ -295,7 +295,6 @@ class LayPaProCsvUploadDataFactory implements DataFactoryInterface
                 $value = "{$user}@{$domain}";
             } else {
                 $value = $this->anonymise($value);
-                $value[0] = strtoupper($value[0]);
             }
         }
 
@@ -304,11 +303,27 @@ class LayPaProCsvUploadDataFactory implements DataFactoryInterface
 
     private function anonymise(string $value): string
     {
-        return str_replace(
+        $hash = str_replace(
             ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
             ['g', 'h', 'k', 'l', 'm', 'p', 'q', 'r', 's', 't'],
             hash('md5', hash('sha512', $value))
         );
+
+        if (strlen($value) > strlen($hash)) {
+            return $hash;
+        }
+
+        $anonymised = [];
+
+        foreach (mb_str_split($value) as $i => $character) {
+            $anonymised[] = match (true) {
+                $character === ' ' => ' ',
+                mb_strtoupper($character) === $character => mb_strtoupper($hash[$i]),
+                default => $hash[$i]
+            };
+        }
+
+        return implode('', $anonymised);
     }
 
     private function runLay(string $layPath, bool $dryRun): int

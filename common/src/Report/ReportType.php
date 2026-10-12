@@ -17,6 +17,9 @@ final readonly class ReportType implements \Stringable
         public CourtOrderKind $courtOrderKind,
         public DeputyType $deputyType,
     ) {
+        if ($this->courtOrderKind === CourtOrderKind::Hybrid && $this->courtOrderReportType === CourtOrderReportType::OPG104) {
+            throw new \DomainException("Hybrid reports require either CourtOrderReportType::OPG102 or CourtOrderReportType::OPG103");
+        }
     }
 
     public function __toString(): string

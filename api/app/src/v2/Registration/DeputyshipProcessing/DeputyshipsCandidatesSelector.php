@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing;
 
-use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
 use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
@@ -18,7 +17,6 @@ class DeputyshipsCandidatesSelector
         private readonly EntityManagerInterface $em,
         private readonly StagingDeputyshipRepository $stagingDeputyshipRepository,
         private readonly CourtOrderAndDeputyCandidatesFactory $courtOrderAndDeputyCandidatesFactory,
-        private readonly CourtOrderReportCandidatesFactory $courtOrderReportsCandidateFactory,
         private readonly StagingSelectedCandidateRepository $stagingSelectedCandidateRepository,
         private readonly LoggerInterface $logger,
     ) {
@@ -67,18 +65,6 @@ class DeputyshipsCandidatesSelector
             $candidates = $this->courtOrderAndDeputyCandidatesFactory->create($csvDeputyship);
             $numCandidates += count($candidates);
             $this->saveCandidates($candidates, $numDeputyships, $numCandidates);
-        }
-
-        try {
-            $candidates = $this->courtOrderReportsCandidateFactory->createCompatibleReportCandidates();
-            foreach ($candidates as $candidate) {
-                ++$numCandidates;
-                $this->saveCandidates([$candidate], $numDeputyships, $numCandidates);
-            }
-        } catch (Exception $e) {
-            $this->logger->error("ERROR while selecting candidates from deputyships: {$e->getMessage()}");
-
-            return new DeputyshipCandidatesSelectorResult(new \ArrayIterator([]), 0, $e);
         }
 
         $this->logger->info(

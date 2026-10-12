@@ -192,7 +192,7 @@ class RestClient implements RestClientInterface
 
         if (!empty($url['query'])) {
             parse_str($url['query'], $additionalQs);
-            $options['query'] = isset($options['query']) ? $options['query'] : [];
+            $options['query'] = $options['query'] ?? [];
             $options['query'] += $additionalQs;
         }
 

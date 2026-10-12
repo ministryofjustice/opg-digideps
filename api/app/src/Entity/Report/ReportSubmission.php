@@ -13,7 +13,7 @@ use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
 
 #[ORM\Table(name: 'report_submission')]
-#[ORM\Index(columns: ['created_on'], name: 'rs_created_on_idx')]
+#[ORM\Index(name: 'rs_created_on_idx', columns: ['created_on'])]
 #[ORM\Entity(repositoryClass: ReportSubmissionRepository::class)]
 class ReportSubmission
 {
@@ -96,7 +96,7 @@ class ReportSubmission
         return $this;
     }
 
-    public function getReport(): ?Report
+    public function getReport(): Report
     {
         return $this->report;
     }

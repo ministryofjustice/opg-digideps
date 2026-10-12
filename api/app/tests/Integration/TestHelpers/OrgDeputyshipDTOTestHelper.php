@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\TestHelpers;
 
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
@@ -20,6 +23,7 @@ use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use Faker\Provider\en_GB\Address;
+use OPG\Digideps\Common\Report\ReportType;
 
 class OrgDeputyshipDTOTestHelper
 {
@@ -171,7 +175,7 @@ class OrgDeputyshipDTOTestHelper
     {
         $client = $clientRepo->findByCaseNumber($caseNumber);
 
-        return $client->getReports()->first()->getType() == $reportType;
+        return $client->getReports()->first()->getType() === $reportType;
     }
 
     public static function reportTypeHasChanged(string $oldReportType, Client $client, ReportRepository $reportRepo): bool
@@ -274,7 +278,17 @@ class OrgDeputyshipDTOTestHelper
         string $startDate = '2019-11-01',
         string $endDate = '2020-10-31',
     ): Report {
-        $report = new Report($client, $reportType, new \DateTime($startDate), new \DateTime($endDate));
+        $type = ReportType::from($reportType);
+        $courtOrder = new CourtOrder(
+            "456{$client->getCaseNumber()}7827",
+            $type->courtOrderType,
+            CourtOrderReportType::OPG104,
+            CourtOrderKind::Single,
+            new \DateTime($startDate),
+            $client
+        );
+        $em->persist($courtOrder);
+        $report = new Report($courtOrder, $reportType, new \DateTime($startDate), new \DateTime($endDate));
         $client->addReport($report);
 
         $em->persist($report);
