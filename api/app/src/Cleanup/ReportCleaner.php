@@ -40,26 +40,26 @@ final readonly class ReportCleaner
 
     private function cleanType(CourtOrderType $type, array $clientIds): void
     {
+        $i = 0;
+        $count = count($clientIds);
+        if ($count === 0) {
+            $count = (int)$this->connection->executeQuery('SELECT COUNT(id) FROM client')->fetchFirstColumn()[0];
+        }
+        $startTime = microtime(true);
+        $this->entityManager->clear();
+
         try {
-            $count = count($clientIds);
-            if ($count === 0) {
-                $count = (int)$this->connection->executeQuery('SELECT COUNT(id) FROM client')->fetchFirstColumn()[0];
-            }
-            $startTime = microtime(true);
-            $this->entityManager->clear();
-
-            foreach ($this->query->run($type, ...$clientIds) as $i => $client) {
+            foreach ($this->query->run($type, ...$clientIds) as $client) {
                 memory_reset_peak_usage();
-
-                $this->cleanClient($client);
-
-                if ($this->counter->nextInt() > 256) {
+                $actions = $this->cleanClient($client);
+                $i++;
+                if ($actions && $this->counter->nextInt() > 256) {
                     $this->counter->reset();
                     $this->entityManager->flush();
                     $this->entityManager->clear();
 
                     $elapsed = microtime(true) - $startTime;
-                    $expected = (int)round($elapsed * $count / ($i + 1));
+                    $expected = (int)round(($elapsed * $count) / $i);
                     $elapsed = (int)round($elapsed);
                     $peekMemory = (int)round(memory_get_peak_usage() / 1024 / 1024);
                     $this->verboseLogger->notice("[{$i}/{$count}][{$elapsed}s/{$expected}s][{$peekMemory}MiB] CaseNumber {$client->caseNumber}");
@@ -68,22 +68,35 @@ final readonly class ReportCleaner
         } catch (\Throwable $throwable) {
             $this->verboseLogger->error(sprintf("Unexpected error '%s': %s", $throwable::class, $throwable->getMessage()));
         }
+
         $this->counter->reset();
         $this->entityManager->flush();
         $this->entityManager->clear();
+
+        $elapsed = microtime(true) - $startTime;
+        $expected = (int)round(($elapsed * $count) / $i);
+        $elapsed = (int)round($elapsed);
+        $peekMemory = (int)round(memory_get_peak_usage() / 1024 / 1024);
+        $this->verboseLogger->notice("[{$i}/{$count}][{$elapsed}s/{$expected}s][{$peekMemory}MiB]");
     }
 
-    private function cleanClient(Client $client): void
+    private function cleanClient(Client $client): bool
     {
         try {
             $inspector = new ClientInspector($client);
-            foreach ($inspector->getCleaningActions() as $action) {
+            $actions = $inspector->getCleaningActions();
+            if (empty($actions)) {
+                return false;
+            }
+            foreach ($actions as $action) {
                 $this->entityManager->persist($action);
                 $this->counter->nextInt();
             }
         } catch (\Throwable $throwable) {
             $this->verboseLogger->error(sprintf("Unexpected error '%s' for client with id %s: %s", $throwable::class, $client->clientId, $throwable->getMessage()));
         }
+
+        return true;
     }
 
     public function executeActions(): int
