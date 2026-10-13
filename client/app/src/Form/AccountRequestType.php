@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class RegistrationType extends AbstractType
+class AccountRequestType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -90,8 +90,8 @@ class RegistrationType extends AbstractType
                 ]
             ])
 
-            // TO BE REMOVED WHEN WE HAVE THE REAL ACCOUNT SERVICE
-            ->add('mockDetails', ChoiceType::class, [
+            // TODO REMOVE WHEN WE HAVE THE REAL ACCOUNT SERVICE
+            ->add('mockResponseToReceive', ChoiceType::class, [
                 'choices' => [
                     'Valid details entered' => 'verified',
                     'Details not matched' => 'nomatch',

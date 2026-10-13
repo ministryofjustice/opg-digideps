@@ -1,14 +1,24 @@
-{% if text.accountCreationErrorMessage is not null %}
+{% if accountCreationFailed %}
     <twig:GOV:Paragraph>{{ text.accountCreationErrorMessage }}</twig:GOV:Paragraph>
-{% elseif text.accountCreatedMessage is not null %}
-    <twig:GOV:Paragraph>{{ text.accountCreatedMessage }}</twig:GOV:Paragraph>
-
-{% else %}
-    <div class="text"><twig:GOV:Paragraph>{{ text.intro }}</twig:GOV:Paragraph></div>
+{% elseif accountCreated %}
+    <twig:GOV:Heading h="2" s="m">{{ text.accountCreatedSubHeading }}</twig:GOV:Heading>
 
     <twig:GOV:Paragraph>
-        {{ text.ifYouAlreadyHaveAnAccount }},
-        <twig:GOV:Link href="{{ path('login') }}">{{ text.signIn }}</twig:GOV:Link>.
+        {{ text.linkSentTo }} <strong>{{ deputyEmail }}</strong> {{ text.activationReminder }}
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Paragraph>{{ text.expirationNote }}</twig:GOV:Paragraph>
+
+    <twig:GOV:Paragraph>{{ text.checkJunk }}</twig:GOV:Paragraph>
+
+    <twig:GOV:Paragraph>
+        <twig:GOV:Link href="{{ path(loginPath) }}">{{ text.signInCaps }}</twig:GOV:Link>
+    </twig:GOV:Paragraph>
+{% else %}
+    <twig:GOV:Paragraph>{{ text.intro }}</twig:GOV:Paragraph>
+
+    <twig:GOV:Paragraph>
+        {{ text.ifYouAlreadyHaveAnAccount }} <twig:GOV:Link href="{{ path(loginPath) }}">{{ text.signIn }}</twig:GOV:Link>.
     </twig:GOV:Paragraph>
 
     <twig:GOV:Form form="{{ form }}">
