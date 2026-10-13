@@ -54,7 +54,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_high_acu" {
 
 resource "aws_cloudwatch_log_metric_filter" "database_analyse_in_progress" {
   name           = "DatabaseAnalyseInProgress.${local.environment}"
-  pattern        = "analyzing"
+  pattern        = "database_analyse_in_progress"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
@@ -71,7 +71,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_throughput" {
   alarm_name          = "${local.environment}-aurora-${each.key}-unusual-throughput"
   alarm_description   = "Aurora instance ${each.value} has experienced unusually high read or network transmit throughput for at least 10 minutes."
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = 3
+  evaluation_periods  = 2
   datapoints_to_alarm = 2
   threshold           = 1
   treat_missing_data  = "notBreaching"
@@ -168,7 +168,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_read_iops" {
   alarm_name          = "${local.environment}-aurora-${each.key}-unusual-read-iops"
   alarm_description   = "Aurora instance ${each.value} has experienced unusually high read IOPS for at least 10 minutes."
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = 3
+  evaluation_periods  = 2
   datapoints_to_alarm = 2
   threshold           = 1
   treat_missing_data  = "notBreaching"
