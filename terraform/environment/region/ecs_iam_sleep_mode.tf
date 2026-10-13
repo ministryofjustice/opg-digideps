@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "sleep_mode" {
       "rds:StartDBCluster"
     ]
     resources = [
-      module.database[0].cluster_arn
+      module.database.cluster_arn
     ]
   }
 
