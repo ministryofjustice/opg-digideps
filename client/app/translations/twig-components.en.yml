@@ -18,6 +18,50 @@ gov:
       cookies: Cookies
       accessibility: Accessibility
 opg:
+  account:
+    request:
+      deputyFirstName:
+        label: Your first name
+      deputyLastName:
+        label: Your last name
+      deputyEmail:
+        first:
+          label: Your email address
+        second:
+          label: Confirm your email address
+      deputyPostCode:
+        label: Your post code
+      clientLastName:
+        label: Client's last name
+      caseNumber:
+        label: Case number
+        help: This is 8 or 10 characters long and can be found on your court order
+      signUp:
+        label: Sign up
+      intro: |
+        You need to give your name, your email address, your postcode and your client's last name
+        and case number. This is so we can create your secure deputy account.
+      ifYouAlreadyHaveAnAccount: If you already have an account, please
+      signIn: sign in
+      accountCreated:
+        subHeading: Please check your email
+        linkSentTo: We've sent a link to
+        activationReminder: that you will need to visit to activate your deputy account.
+        expirationNote: |
+          You'll need to use this link within 48 hours, otherwise you'll have
+          to enter your registration details again.
+        checkJunk: |
+          If you have not received the email within a few minutes, please check your spam,
+          bulk, and junk email folders: it may have been mistakenly blocked by your email provider.
+      errors:
+        MatchingError: |
+          The information you've given us does not match our records.
+          Please call %helplineNumber% to make sure we have a record of your deputyship.
+        AccountTaken: |
+          Our records show that you have already registered with this email address.
+          Please sign in to continue. Please call %helplineNumber% if you are unable to sign in.
+        EmailError: An error occurred while setting up your account. Please try again later.
+        NetworkError: An error occurred while setting up your account. Please try again later.
   admin:
     clientDetails:
       actions:
@@ -36,42 +80,8 @@ opg:
         closed: unsubmitted (closed court orders)
       submitted: Submitted
       type: Type
+  helplineNumber: 0300 456 0300
   optional: (optional)
-  register:
-    deputyFirstName:
-      label: Your first name
-    deputyLastName:
-      label: Your last name
-    deputyEmail:
-      first:
-        label: Your email address
-      second:
-        label: Confirm your email address
-    deputyPostCode:
-      label: Your post code
-    clientLastName:
-      label: Client's last name
-    caseNumber:
-      label: Case number
-      help: This is 8 or 10 characters long and can be found on your court order
-    signUp:
-      label: Sign up
-    intro: You need to give your name, your email address, your postcode and your client's case number. This is so we can create your secure deputy account.
-    ifYouAlreadyHaveAnAccount: If you already have an account, please
-    signIn: sign in
-    accountCreated:
-      subHeading: Please check your email
-      linkSentTo: We've sent a link to
-      activationReminder: that you will need to visit to activate your deputy service account.
-      expirationNote: You'll need to use this link within 48 hours, otherwise you'll have to enter your registration details again.
-      checkJunk: |
-        If you have not received the email within a few minutes, please check your spam,
-        bulk, and junk email folders: it may have mistakenly been blocked by your email provider.
-    errors:
-      MatchingError: Can't match submitted details to deputy.
-      AccountTaken: Email already in use.
-      EmailError: Unable to send email with activation link.
-      NetworkError: An error occurred while setting up your account. Please try again later.
   renderable:
     bankAccount:
       sortCode: Sort code
