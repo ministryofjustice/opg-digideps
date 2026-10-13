@@ -26,14 +26,13 @@ class AccountController extends SymfonyAbstractController
     }
 
     #[Route('/account/request', name: 'account_request', methods: ['GET', 'POST'])]
-    public function requestAction(Request $request): Response|array
+    public function requestAction(Request $request): Response
     {
         $form = $this->createForm(AccountRequestType::class)->handleRequest($request);
 
         $accountCreationError = null;
         $accountCreated = false;
         $deputyEmail = null;
-        $responseCode = Response::HTTP_OK;
 
         // handle submitted form, checking data against db tables and associating user with deputy,
         // or showing verification failure message (could be wrong data from user, could be data missing from db if
@@ -52,21 +51,14 @@ class AccountController extends SymfonyAbstractController
             // TODO remove when we have the proper sendAccountRequest() method in place
             $mockResponseToReceive = $validatingForm->getStringOrThrow('mockResponseToReceive');
 
-            // perhaps do a better job of handling errors in the RestClient, so
-            // we don't need a wide \Exception catch here? or maybe do it in AccountService?
-            try {
-                // TODO replace with call to sendAccountRequest()
-                $response = $this->accountService->sendAccountRequestMock($accountRequest, $mockResponseToReceive);
+            // TODO replace with call to sendAccountRequest()
+            $response = $this->accountService->sendAccountRequestMock($accountRequest, $mockResponseToReceive);
 
-                if ($response instanceof Email) {
-                    $accountCreated = true;
-                    $deputyEmail = $response;
-                } elseif ($response instanceof AccountError) {
-                    $accountCreationError = $response;
-                }
-            } catch (\Exception) {
-                //TODO
-                $accountCreationError = null;
+            if ($response instanceof Email) {
+                $accountCreated = true;
+                $deputyEmail = $response;
+            } elseif ($response instanceof AccountError) {
+                $accountCreationError = $response;
             }
         }
 
@@ -75,6 +67,6 @@ class AccountController extends SymfonyAbstractController
             'accountCreationError' => $accountCreationError,
             'accountCreated' => $accountCreated,
             'deputyEmail' => $deputyEmail
-        ], new Response(null, $responseCode));
+        ]);
     }
 }
