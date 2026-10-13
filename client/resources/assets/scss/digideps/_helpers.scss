@@ -181,7 +181,7 @@
 // Move elements (experimental)
 .move-quarter--up {
   position: relative;
-  top: -$govuk-gutter-one-quarter;
+  top: -($govuk-gutter / 4);
 }
 
 // Text alignment
