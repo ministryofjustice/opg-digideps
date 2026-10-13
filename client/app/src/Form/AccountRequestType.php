@@ -21,72 +21,73 @@ class AccountRequestType extends AbstractType
     {
         $builder
             ->add('deputyFirstName', TextType::class, [
-                'label' => 'opg.register.deputyFirstName.label',
+                'label' => 'opg.account.request.deputyFirstName.label',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'opg.register.deputyFirstName.notBlank']),
+                    new NotBlank(['message' => 'opg.account.request.deputyFirstName.notBlank']),
                     new Length(
                         min: 2,
                         max: 50,
-                        minMessage: 'opg.register.deputyFirstName.tooShort',
-                        maxMessage: 'opg.register.deputyFirstName.tooLong'
+                        minMessage: 'opg.account.request.deputyFirstName.tooShort',
+                        maxMessage: 'opg.account.request.deputyFirstName.tooLong'
                     )
                 ]
             ])
             ->add('deputyLastName', TextType::class, [
-                'label' => 'opg.register.deputyLastName.label',
+                'label' => 'opg.account.request.deputyLastName.label',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'opg.register.deputyLastName.notBlank']),
+                    new NotBlank(['message' => 'opg.account.request.deputyLastName.notBlank']),
                     new Length(
                         min: 2,
                         max: 50,
-                        minMessage: 'opg.register.deputyLastName.tooShort',
-                        maxMessage: 'opg.register.deputyLastName.tooLong'
+                        minMessage: 'opg.account.request.deputyLastName.tooShort',
+                        maxMessage: 'opg.account.request.deputyLastName.tooLong'
                     )
                 ]
             ])
             ->add('deputyEmail', RepeatedType::class, [
                 'type' => EmailType::class,
                 'required' => true,
-                'first_options'  => ['label' => 'opg.register.deputyEmail.first.label'],
-                'second_options' => ['label' => 'opg.register.deputyEmail.second.label'],
-                'invalid_message' => 'opg.register.deputyEmail.doesNotMatch',
+                'first_options'  => ['label' => 'opg.account.request.deputyEmail.first.label'],
+                'second_options' => ['label' => 'opg.account.request.deputyEmail.second.label'],
+                'invalid_message' => 'opg.account.request.deputyEmail.doesNotMatch',
                 'constraints' => [
-                    new NotBlank(message: 'opg.register.deputyEmail.notBlank'),
-                    new Length(max: 60, maxMessage: 'opg.register.deputyEmail.tooLong'),
-                    new Email(message: 'opg.register.deputyEmail.invalidFormat')
+                    new NotBlank(message: 'opg.account.request.deputyEmail.notBlank'),
+                    new Length(max: 60, maxMessage: 'opg.account.request.deputyEmail.tooLong'),
+                    new Email(message: 'opg.account.request.deputyEmail.invalidFormat')
                 ]
             ])
             ->add('deputyPostCode', TextType::class, [
-                'label' => 'opg.register.deputyPostCode.label',
+                'label' => 'opg.account.request.deputyPostCode.label',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'opg.register.deputyPostCode.notBlank']),
-                    new Length(max: 60, maxMessage: 'opg.register.deputyPostCode.tooLong')
+                    new NotBlank(['message' => 'opg.account.request.deputyPostCode.notBlank']),
+                    new Length(max: 60, maxMessage: 'opg.account.request.deputyPostCode.tooLong')
                 ]
             ])
             ->add('clientLastName', TextType::class, [
-                'label' => 'opg.register.clientLastName.label',
+                'label' => 'opg.account.request.clientLastName.label',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'opg.register.clientLastName.notBlank']),
+                    new NotBlank(['message' => 'opg.account.request.clientLastName.notBlank']),
                     new Length(
                         min: 2,
                         max: 50,
-                        minMessage: 'opg.register.clientLastName.tooShort',
-                        maxMessage: 'opg.register.clientLastName.tooLong'
+                        minMessage: 'opg.account.request.clientLastName.tooShort',
+                        maxMessage: 'opg.account.request.clientLastName.tooLong'
                     )
                 ]
             ])
             ->add('caseNumber', TextType::class, [
-                'label' => 'opg.register.caseNumber.label',
+                'label' => 'opg.account.request.caseNumber.label',
                 'required' => true,
-                'help' => 'opg.register.caseNumber.help',
+                'help' => 'opg.account.request.caseNumber.help',
                 'constraints' => [
+                    new NotBlank(['message' => 'opg.account.request.caseNumber.wrongLength']),
                     new AtLeastOneOf([
                         new Length(8), new Length(10)
-                    ], message: 'opg.register.caseNumber.wrongLength', includeInternalMessages: false)
+                    ], message: 'opg.account.request.caseNumber.wrongLength', includeInternalMessages: false)
                 ]
             ])
 
@@ -102,7 +103,7 @@ class AccountRequestType extends AbstractType
             ])
 
             ->add('signUp', SubmitType::class, [
-                'label' => 'opg.register.signUp.label'
+                'label' => 'opg.account.request.signUp.label'
             ]);
     }
 

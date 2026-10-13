@@ -25,7 +25,7 @@ class AccountController extends SymfonyAbstractController
     ) {
     }
 
-    #[Route('/account/request', name: 'account_request', methods: ['GET', 'POST'])]
+    #[Route('/register_ng', name: 'account_request', methods: ['GET', 'POST'])]
     public function requestAction(Request $request): Response
     {
         $form = $this->createForm(AccountRequestType::class)->handleRequest($request);
@@ -62,7 +62,7 @@ class AccountController extends SymfonyAbstractController
             }
         }
 
-        return $this->render('@App/Registration/Account/request.html.twig', [
+        return $this->render('@App/Account/request.html.twig', [
             'form' => $form->createView(),
             'accountCreationError' => $accountCreationError,
             'accountCreated' => $accountCreated,
