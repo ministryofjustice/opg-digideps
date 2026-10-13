@@ -15,7 +15,7 @@ final class Request
     /** @var array<string, ?string> */
     public array $text;
 
-    /** @var array<string, string|bool|null|AccountError> */
+    /** @var array<string, string|bool|null> */
     public array $props;
 
     public FormView $form;
