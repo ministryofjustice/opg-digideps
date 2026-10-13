@@ -5,7 +5,6 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 use OPG\Digideps\Backend\Fixture\ReportList;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Fee;
@@ -21,11 +20,7 @@ use PHPUnit\Framework\Attributes\Test;
 class ReportControllerTest extends AbstractTestController
 {
     private static Client $client1;
-    private static Client $client2;
-    private static Client $client3;
-    private static CourtOrder $order3;
     private static PreRegistration $preRegistration1;
-    private static PreRegistration $preRegistration3;
     private static Report $pa1Client1Report1;
     private static Report $pa2Client1Report1;
     private static Report $pa3Client1Report1;
@@ -50,8 +45,7 @@ class ReportControllerTest extends AbstractTestController
             new Scenario(new CourtOrderDescriptor(new DeputySet(new DeputyDescriptor('lay1'))))
         ));
         ['client' => self::$client1, 'persons' => ['users' => ['lay1' => self::$user1]], 'orders' => [['pfa' => ['order' => $order1, 'reports' => [self::$report1, self::$reportEdit]]], ['pfa' => ['reports' => [self::$report103]]]]] = $result;
-        ['client' => self::$client3, 'orders' => [['pfa' => ['order' => self::$order3]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(new DeputySet(new DeputyDescriptor('lay1')), CourtOrderReportType::OPG102, reportList: ReportList::noReports())), $result['persons']);
-        ['client' => self::$client2, 'orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+        ['orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
         self::$report1->setWishToProvideDocumentation(true);
 
@@ -59,8 +53,6 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->persist(self::$report1, $document);
 
         $result = self::$fixtureService->instantiateScenario(Scenario::newSimplePaScenario(reportType: CourtOrderReportType::OPG102));
-        self::$fixtureService->instantiateScenario(Scenario::newSimplePaScenario(reportType: CourtOrderReportType::OPG102), $result['persons']);
-        self::$fixtureService->instantiateScenario(Scenario::newSimplePaScenario(reportType: CourtOrderReportType::OPG102), $result['persons']);
         ['persons' => ['users' => ['pa1' => $pa1]], 'orders' => [['pfa' => ['reports' => [self::$pa1Client1Report1]]]]] = $result;
         ['persons' => ['users' => ['admin1' => $pa2Admin]], 'orders' => [['pfa' => ['reports' => [self::$pa2Client1Report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleAdminPaScenario(reportType: CourtOrderReportType::OPG102));
         ['persons' => ['users' => ['team1' => $pa3TeamMember]], 'orders' => [['pfa' => ['reports' => [self::$pa3Client1Report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleTeamMemberPaScenario(reportType: CourtOrderReportType::OPG102));
@@ -79,24 +71,7 @@ class ReportControllerTest extends AbstractTestController
             'Hybrid' => 'SINGLE',
         ]);
 
-        // New registration - no old submitted reports therefore report will start from current year
-        self::$preRegistration3 = new PreRegistration([
-            'Case' => self::$client3->getCaseNumber(),
-            'ClientSurname' => self::$client3->getLastName(),
-            'DeputyUid' => (string) self::$user1->getDeputyUid(),
-            'DeputyFirstname' => self::$user1->getFirstname(),
-            'DeputySurname' => self::$user1->getLastname(),
-            'DeputyPostcode' => self::$user1->getAddressPostcode(),
-            'ReportType' => self::$order3->getOrderReportType()->value,
-            'MadeDate' => self::$order3->getOrderMadeDate()->format('Y-m-d'),
-            'OrderType' => self::$order3->getOrderType()->value,
-            'CoDeputy' => false,
-            'Hybrid' => 'SINGLE',
-        ]);
-
         self::$fixtureService->persist(self::$preRegistration1);
-        self::$fixtureService->persist(self::$preRegistration3);
-
 
         self::fixtures()->flush()->clear();
 
@@ -115,48 +90,6 @@ class ReportControllerTest extends AbstractTestController
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
-    }
-
-    public function testAddAuth(): void
-    {
-        $url = '/report';
-        $this->assertEndpointNeedsAuth('POST', $url);
-
-        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
-    }
-
-    public function testAddAcl(): void
-    {
-        $url = '/report';
-        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy, [
-            'client' => ['id' => self::$client2->getId()],
-        ]);
-    }
-
-    public function testAdd(): void
-    {
-        $url = '/report';
-
-        // add new report
-        $reportId = $this->assertJsonRequest('POST', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-            'data' => [
-                'client' => ['id' => self::$client3->getId()],
-            ],
-        ])['data']['report'];
-
-        self::fixtures()->clear();
-
-        // assert creation
-        $report = self::fixtures()->getReportById($reportId);
-
-        $this->assertEquals(self::$client3->getId(), $report->getClient()->getId());
-
-        $this->assertEquals(self::$order3->getOrderMadeDate()->format('Y-m-d'), $report->getStartDate()->format('Y-m-d'));
-        $this->assertEquals(self::$order3->getOrderMadeDate()->add(new \DateInterval('P1Y'))->sub(new \DateInterval('P1D'))->format('Y-m-d'), $report->getEndDate()->format('Y-m-d'));
-
-        self::fixtures()->flush();
     }
 
     public function testGetByIdAuth(): void
@@ -204,7 +137,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayNotHasKey('fees', $clientReportData);
         $this->assertEquals(self::$report1->getId(), $clientReportData['id']);
         $this->assertEquals(self::$client1->getId(), $clientReportData['client']['id']);
-        $this->assertEquals(true, $clientReportData['submitted']);
+        $this->assertTrue($clientReportData['submitted']);
         $this->assertArrayHasKey('start_date', $clientReportData);
         $this->assertArrayHasKey('end_date', $clientReportData);
 

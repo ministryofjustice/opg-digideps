@@ -191,4 +191,9 @@ class CourtOrder
 
         return self::PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT;
     }
+
+    public function isActive(): bool
+    {
+        return $this->status === 'ACTIVE';
+    }
 }

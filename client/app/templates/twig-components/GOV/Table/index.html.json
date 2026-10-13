@@ -5,12 +5,6 @@
             "name": "table",
             "type": "Table",
             "info": "Build it inside PHP with TableBuilder"
-        },
-        {
-            "name": "captionSize",
-            "type": "'s' | 'm' | 'l' | 'xl'",
-            "default": "'m'",
-            "info": "Only used if there is a caption in the table object"
         }
     ],
     "examples": ["table", "table-caption"]

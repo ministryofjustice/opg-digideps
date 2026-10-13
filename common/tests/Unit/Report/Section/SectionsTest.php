@@ -93,7 +93,6 @@ class SectionsTest extends TestCase
                 'contacts',
                 'visitsCare',
                 'lifestyle',
-                'deputyExpenses',
                 'actions',
                 'otherInfo',
                 'documents',

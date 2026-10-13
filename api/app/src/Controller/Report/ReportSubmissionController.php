@@ -7,7 +7,6 @@ namespace OPG\Digideps\Backend\Controller\Report;
 use OPG\Digideps\Backend\Controller\RestController;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
-use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Exception\UnauthorisedException;
 use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
@@ -132,49 +131,6 @@ class ReportSubmissionController extends RestController
     }
 
     /**
-     * Get old report submissions.
-     * Called from ADMIN cron.
-     */
-    #[Route(path: '/old', methods: ['GET'])]
-    public function getOld(Request $request): array
-    {
-        if (!$this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request)) {
-            throw new \RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
-        }
-
-        /* @var $repo ReportSubmissionRepository */
-        $repo = $this->em->getRepository(ReportSubmission::class);
-
-        $ret = $repo->findDownloadableOlderThan(new \DateTime(ReportSubmission::REMOVE_FILES_WHEN_OLDER_THAN), 100);
-
-        $this->formatter->setJmsSerialiserGroups(['report-submission-id', 'report-submission-documents', 'document-storage-reference']);
-
-        return $ret;
-    }
-
-    /**
-     * Set report undownloadable (and remove the storage reference for the files.
-     * Called from ADMIN cron.
-     */
-    #[Route(path: '/{id}/set-undownloadable', requirements: ['id' => '\d+'], methods: ['PUT'])]
-    public function setUndownloadable(int $id, Request $request): bool
-    {
-        if (!$this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request)) {
-            throw new \RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
-        }
-
-        $reportSubmission = $this->em->getRepository(ReportSubmission::class)->find($id);
-        $reportSubmission->setDownloadable(false);
-        foreach ($reportSubmission->getDocuments() as $document) {
-            $document->setStorageReference(null);
-        }
-
-        $this->em->flush();
-
-        return true;
-    }
-
-    /**
      * Queue submission documents which have been synced yet.
      */
     #[Route(path: '/{id}/queue-documents', requirements: ['id' => '\d+'], methods: ['PUT'])]
@@ -201,9 +157,6 @@ class ReportSubmissionController extends RestController
         return true;
     }
 
-    /**
-     * @throws \Exception
-     */
     #[Route(path: '/pre-registration-data', name: 'pre_registration_data', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
     public function getPreRegistrationData(Request $request): array

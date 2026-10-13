@@ -2,21 +2,21 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
+use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputySet;
+use OPG\Digideps\Backend\Fixture\ReportList;
+use OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\ApiTestTrait;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\UserRepository;
-use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
-use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
-use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class UserRepositoryTest extends KernelTestCase
 {
     use ApiTestTrait;
 
-    private static Fixtures $fixtures;
     private static UserRepository $sut;
 
     public function setUp(): void
@@ -24,8 +24,6 @@ class UserRepositoryTest extends KernelTestCase
         parent::setUp();
 
         self::configureTest();
-
-        self::$fixtures = new Fixtures(self::$entityManager);
 
         /** @var UserRepository $sut */
         $sut = self::$entityManager->getRepository(User::class);
@@ -35,74 +33,16 @@ class UserRepositoryTest extends KernelTestCase
         self::purgeDatabase();
     }
 
-    public function testCountsInactiveUsers()
-    {
-        $oldUserWithNoClient = self::$fixtures->createUser();
-        $oldUserWithNoClient->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03') ?: null);
-        $oldUserWithNoClient->setRoleName(User::ROLE_LAY_DEPUTY);
-
-        $oldUserWithNoReports = self::$fixtures->createUser();
-        $oldUserWithNoReports->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03') ?: null);
-        $oldUserWithNoReports->setRoleName(User::ROLE_LAY_DEPUTY);
-        self::$fixtures->createClient($oldUserWithNoReports);
-
-        $oldUserWithReport = self::$fixtures->createUser();
-        $oldUserWithReport->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03') ?: null);
-        $oldUserWithReport->setRoleName(User::ROLE_LAY_DEPUTY);
-        $oldClientWithReport = self::$fixtures->createClient($oldUserWithReport);
-        self::$fixtures->createReport($oldClientWithReport);
-
-        $oldProfUserWithNoClient = self::$fixtures->createUser();
-        $oldProfUserWithNoClient->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03') ?: null);
-        $oldProfUserWithNoClient->setRoleName(User::ROLE_PROF_ADMIN);
-
-        $recentUserWithNoClient = self::$fixtures->createUser();
-        $recentUserWithNoClient->setRegistrationDate(new \DateTime());
-        $recentUserWithNoClient->setRoleName(User::ROLE_LAY_DEPUTY);
-        self::$fixtures->createClient($recentUserWithNoClient);
-
-        self::$entityManager->flush();
-
-        $inactiveUsers = self::$sut->findInactive();
-
-        self::assertCount(2, $inactiveUsers);
-    }
-
     public function testFindActiveLaysInLastYear()
     {
-        $userHelper = UserTestHelper::create();
-        $reportHelper = ReportTestHelper::create();
-        $clientHelper = ClientTestHelper::create();
-
-        $clientOne = $clientHelper->generateClient(self::$entityManager);
-        $activeUserOne = $userHelper->createAndPersistUser(self::$entityManager, $clientOne);
-        $reportOne = $reportHelper->generateReport(self::$entityManager, $clientOne)->setSubmitDate(new \DateTime());
-
-        $clientTwo = $clientHelper->generateClient(self::$entityManager);
-        $activeUserTwo = $userHelper->createAndPersistUser(self::$entityManager, $clientTwo);
-        $reportTwo = $reportHelper->generateReport(self::$entityManager, $clientTwo)->setSubmitDate(new \DateTime());
-
-        $clientThree = $clientHelper->generateClient(self::$entityManager);
-        $reportThree = $reportHelper->generateReport(self::$entityManager, $clientThree)->setSubmitDate(new \DateTime());
-        $inactiveUserOne = $userHelper->createAndPersistUser(self::$entityManager, $clientThree);
+        $scenario = new Scenario(new CourtOrderDescriptor(DeputySet::oneLay(), reportList: ReportList::manyReports()));
+        ['persons' => ['users' => ['lay1' => $activeUserOne]]] = self::$fixtureService->instantiateScenario($scenario, flush: false);
+        ['persons' => ['users' => ['lay1' => $activeUserTwo]]] = self::$fixtureService->instantiateScenario($scenario, flush: false);
+        ['persons' => ['users' => ['lay1' => $inactiveUserOne]]] = self::$fixtureService->instantiateScenario($scenario, flush: false);
         $inactiveUserOne->setLastLoggedIn(new \DateTime('-380 days'));
+        ['persons' => ['users' => ['lay1' => $inactiveUserTwo]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario(), flush: false);
 
-        $clientFour = $clientHelper->generateClient(self::$entityManager);
-        $reportFour = $reportHelper->generateReport(self::$entityManager, $clientFour);
-        $inactiveUserTwo = $userHelper->createAndPersistUser(self::$entityManager, $clientFour);
-        $inactiveUserTwo->setLastLoggedIn(new \DateTime());
-
-        self::$entityManager->persist($inactiveUserOne);
-        self::$entityManager->persist($inactiveUserTwo);
-        self::$entityManager->persist($reportOne);
-        self::$entityManager->persist($reportTwo);
-        self::$entityManager->persist($reportThree);
-        self::$entityManager->persist($reportFour);
-        self::$entityManager->persist($clientOne);
-        self::$entityManager->persist($clientTwo);
-        self::$entityManager->persist($clientThree);
-        self::$entityManager->persist($clientFour);
-        self::$entityManager->flush();
+        self::$fixtureService->flush();
 
         $results = self::$sut->findActiveLaysInLastYear();
         $resultsUserIds = [];

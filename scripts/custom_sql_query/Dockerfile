@@ -1,7 +1,10 @@
 ARG FUNCTION_DIR="/function"
 
 # ===== BASE IMAGE =====
-FROM python:3.14.7-alpine3.24@sha256:c6ead215bfd31f1e433d968853b7a769989117115b728874824e6c0a27cb96fc AS python-base
+FROM python:3.14.8-alpine3.24@sha256:f6a589d43c42b9e7f7dc67a12d37132491f362859a5d750607710cc56da3bc72 AS python-base
+
+# TODO Remove this once alpine upgrade available as it patches a vulnerability
+RUN apk update && apk add --upgrade "zlib==1.3.2-r1"
 
 RUN apk update && apk upgrade
 
@@ -19,7 +22,7 @@ COPY _run.sql ${FUNCTION_DIR}/_run.sql
 # Install build tools ONLY in this stage
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-COPY --from=ghcr.io/astral-sh/uv@sha256:2bb3ebca0a796a155094a27773d290c4b074572e6107f171d88d086682fd2500 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv@sha256:61d393e44e249f2e4b526b6c7ddcecce245946826e608e11c93ad4f5bba55b21 /uv /uvx /bin/
 COPY uv.lock .
 COPY pyproject.toml .
 RUN uv export --locked -o requirements.txt \

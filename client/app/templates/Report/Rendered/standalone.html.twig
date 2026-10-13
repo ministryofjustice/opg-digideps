@@ -4,6 +4,16 @@
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <title>OPG Report</title>
         <link href="application.css" rel="stylesheet" type="text/css">
+        <style>
+            .govuk-summary-card__title-wrapper, .govuk-summary-list__row {
+                display: flex;
+                flex-direction: row;
+            }
+            .govuk-summary-card {
+                display: flex;
+                flex-direction: column;
+            }
+        </style>
     </head>
     <body>
         {% include '@App/Report/Rendered/body.html.twig' %}

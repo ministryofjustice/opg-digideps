@@ -73,12 +73,14 @@ class ClientRepository extends ServiceEntityRepository
 
         $table = Client::class;
         $dql = <<<DQL
-        SELECT c, r, o, nd, u
+        SELECT c, r, o, nd, u, hwCo, pfaCo
         FROM {$table} c
         LEFT JOIN c.reports r
         LEFT JOIN c.deputy nd
         LEFT JOIN c.organisation o
         LEFT JOIN c.users u
+        LEFT JOIN r.hwCourtOrder hwCo
+        LEFT JOIN r.pfaCourtOrder pfaCo
         WHERE c.id = ?1
         DQL;
 
@@ -88,6 +90,7 @@ class ClientRepository extends ServiceEntityRepository
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();
+
         $this->getEntityManager()->getFilters()->enable('softdeleteable');
 
         return count($result) === 0 ? null : $result[0];

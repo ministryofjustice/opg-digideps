@@ -17,7 +17,9 @@ final readonly class ReportDescriptor
         ?\DateTimeImmutable $endDate = null,
         ?\DateTimeImmutable $dueDate = null,
         public ?\DateTimeImmutable $submitDate = null,
+        public ?\DateTimeImmutable $unSubmitDate = null,
         public array $supportingDocumentsWithoutS3Objects = [],
+        public bool $submitted = false
     ) {
         $this->endDate = $endDate ?? $this->startDate->add(new \DateInterval('P12M'))->sub(new \DateInterval('P1D'));
         $this->dueDate = $dueDate ?? $this->endDate->add(new \DateInterval('P1M'));

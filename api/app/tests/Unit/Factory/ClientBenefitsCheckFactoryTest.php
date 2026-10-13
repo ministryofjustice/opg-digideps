@@ -6,11 +6,15 @@ namespace Tests\OPG\Digideps\Backend\Unit\Factory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
 use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Factory\ClientBenefitsCheckFactory;
 use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
@@ -46,7 +50,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
     {
         $validData = $this->generateValidFormData(true);
 
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
+        $report = new Report($this->makeCourtOrder(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
         $report->setId($this->reportId);
 
         $reportRepo = self::createMock(ReportRepository::class);
@@ -121,7 +125,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
     {
         $validData = $this->generateValidFormData(false);
 
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
+        $report = new Report($this->makeCourtOrder(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
         $report->setId($this->reportId);
 
         $reportRepo = self::createMock(ReportRepository::class);
@@ -137,7 +141,6 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $processedClientBenefitsCheck = $sut->createFromFormData($validData);
 
         self::assertEquals($this->reportId, $processedClientBenefitsCheck->getReport()->getId());
-        self::assertEquals(true, $processedClientBenefitsCheck->getId() instanceof UuidInterface);
         self::assertEquals($this->created, $processedClientBenefitsCheck->getCreated()?->format('Y-m-d'));
         self::assertEquals($this->whenLastCheckedEntitlement, $processedClientBenefitsCheck->getWhenLastCheckedEntitlement());
         self::assertEquals($this->dateLastCheckedEntitlement, $processedClientBenefitsCheck->getDateLastCheckedEntitlement()?->format('Y-m-d'));
@@ -148,9 +151,9 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         /** @var MoneyReceivedOnClientsBehalf $money */
         $money = $processedClientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->first();
 
-        self::assertEquals(true, $money->getId() instanceof UuidInterface);
+        self::assertTrue($money->getId() instanceof UuidInterface);
         self::assertEquals($this->moneyCreated, $money->getCreated()->format('Y-m-d'));
-        self::assertEquals(true, $money->getClientBenefitsCheck() instanceof ClientBenefitsCheck);
+        self::assertTrue($money->getClientBenefitsCheck() instanceof ClientBenefitsCheck);
         self::assertEquals($this->moneyType, $money->getMoneyType());
         self::assertEquals($this->moneyAmount, $money->getAmount());
     }
@@ -160,7 +163,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
     {
         $validData = $this->generateValidFormDataRemoveMoneys();
 
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
+        $report = new Report($this->makeCourtOrder(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
         $report->setId($this->reportId);
 
         $reportRepo = self::createMock(ReportRepository::class);
@@ -204,5 +207,10 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $data['do_others_receive_money_on_clients_behalf'] = 'no';
 
         return $data;
+    }
+
+    private function makeCourtOrder(): CourtOrder
+    {
+        return new CourtOrder('', CourtOrderType::PFA, CourtOrderReportType::OPG102, CourtOrderKind::Single, new \DateTime(), new Client());
     }
 }

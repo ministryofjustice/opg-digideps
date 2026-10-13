@@ -20,7 +20,6 @@ func main() {
 	ChunkSize, _ := strconv.Atoi(common.GetEnvWithDefault("CHUNK_SIZE", "100"))
 	TruncateInt, _ := strconv.Atoi(common.GetEnvWithDefault("TRUNCATE", "1"))
 	TruncateBool := common.ConvertToBool(TruncateInt)
-	EmailSuffixToIgnore := "digital.justice.gov.uk"
 
 	// Replace these with env PostgreSQL connection details
 	path := common.GetEnvWithDefault("ANON_PATH", "")
@@ -91,10 +90,10 @@ func main() {
 	err = processing.UpdateAllToPassedInValue(db, "dd_user", "password", defaultUserPassword)
 	common.CheckError(err)
 
-	err = processing.UpdateSelectedColumnsFromPublic(db, "dd_user", "id", "email", "email", EmailSuffixToIgnore)
+	err = processing.UpdateSelectedColumnsFromPublic(db, "dd_user", "id", "email", "role_name", "ROLE_SUPER_ADMIN")
 	common.CheckError(err)
 
-	err = processing.UpdateSelectedColumnsFromPublic(db, "dd_user", "id", "password", "email", EmailSuffixToIgnore)
+	err = processing.UpdateSelectedColumnsFromPublic(db, "dd_user", "id", "password", "role_name", "ROLE_SUPER_ADMIN")
 	common.CheckError(err)
 
 	// ===== Processing - Update Public from Anon =====

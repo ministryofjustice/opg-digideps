@@ -1,7 +1,7 @@
 ##############################
 # Stage 1: Base image
 ##############################
-FROM python:3.13.15-alpine3.24@sha256:540c7d91f98ff6880174c40e99067bf5941eb54d818a7a5e094d188b196a934d as base
+FROM python:3.13.16-alpine3.24@sha256:2d9aefe2fef018a7eb2c13064c89c71929800fd2e5dccdbf52ea5da5bb8d929a as base
 
 WORKDIR /
 
@@ -35,14 +35,14 @@ RUN apk add --no-cache \
     "gdk-pixbuf==2.44.7-r1" \
     "jpeg==9f-r0" \
     "libwebp==1.6.0-r0" \
-    "tiff==4.7.1-r0" \
+    "tiff==4.7.2-r0" \
     "fontconfig==2.17.1-r1" \
     "ttf-freefont==20120503-r4" \
     "font-noto==2026.06.01-r0" \
     "terminus-font==4.49.1-r4" \
     && fc-cache -f
 
-COPY --from=ghcr.io/astral-sh/uv@sha256:2bb3ebca0a796a155094a27773d290c4b074572e6107f171d88d086682fd2500 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv@sha256:61d393e44e249f2e4b526b6c7ddcecce245946826e608e11c93ad4f5bba55b21 /uv /uvx /bin/
 COPY htmltopdf/uv.lock .
 COPY htmltopdf/pyproject.toml .
 RUN uv export --locked -o requirements.txt \

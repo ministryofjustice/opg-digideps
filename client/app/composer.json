@@ -100,10 +100,6 @@
     },
     "repositories": [
         {
-            "type": "composer",
-            "url": "https://govuk-frontend-toolkit.appspot.com"
-        },
-        {
             "type": "path",
             "url": "../../common",
             "options": {

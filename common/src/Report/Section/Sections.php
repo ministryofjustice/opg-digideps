@@ -51,11 +51,10 @@ final readonly class Sections implements \IteratorAggregate
             ];
         }
 
-        if ($type->deputyType === DeputyType::LAY) {
-            $sections[] = ReportSection::DEPUTY_EXPENSES;
-        }
-
         if ($pfa) {
+            if ($type->deputyType === DeputyType::LAY) {
+                $sections[] = ReportSection::DEPUTY_EXPENSES;
+            }
             $sections[] = ReportSection::GIFTS;
         }
 

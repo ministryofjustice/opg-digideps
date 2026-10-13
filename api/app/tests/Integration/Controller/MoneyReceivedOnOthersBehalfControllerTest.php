@@ -7,39 +7,18 @@ namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
 use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
-use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
-use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputyDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputySet;
+use OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Common\Deputy\DeputyType;
 
 class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
 {
-    private static ?string $tokenAdmin = null;
-    private static ?string $tokenDeputy = null;
-    private static ?string $tokenProf = null;
-    private static ?string $tokenPa = null;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        if (self::$tokenAdmin === null) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-            self::$tokenProf = $this->loginAsProf();
-            self::$tokenPa = $this->loginAsPa();
-        }
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        self::fixtures()->clear();
-    }
-
     public function testDeleteHasSuitablePermissionsAllowed(): void
     {
-        foreach ([self::$tokenDeputy, self::$tokenPa, self::$tokenProf] as $deputyToken) {
-            $report = $this->prepareReport();
+        foreach (DeputyType::cases() as $deputyType) {
+            [$report, $email] = $this->prepareReport($deputyType);
 
             $reportUrl = sprintf(
                 '/report/money-type/delete/%s',
@@ -47,34 +26,31 @@ class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
             );
 
 
-            $this->assertEndpointAllowedFor('DELETE', $reportUrl, $deputyToken);
+            $this->assertEndpointAllowedFor('DELETE', $reportUrl, $this->loginAsDeputy($email));
         }
     }
 
     public function testDeleteHasSuitablePermissionsNotAllowed(): void
     {
-        $report = $this->prepareReport();
+        [$report] = $this->prepareReport(DeputyType::LAY);
 
         $reportUrl = sprintf(
             '/report/money-type/delete/%s',
             $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId()
         );
 
-        $this->assertEndpointNotAllowedFor('DELETE', $reportUrl, self::$tokenAdmin);
+        $this->assertEndpointNotAllowedFor('DELETE', $reportUrl, $this->loginAsAdmin());
     }
 
-    private function prepareReport(): Report
+    /**
+     * @return array{Report, string}
+     */
+    private function prepareReport(DeputyType $deputyType): array
     {
-        $em = static::getContainer()->get('em');
-        $reportTestHelper = ReportTestHelper::create();
+        ['persons' => ['users' => ['deputy' => $user]], 'orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(new DeputySet(new DeputyDescriptor('deputy', $deputyType)))), flush: false);
 
-        $client = (ClientTestHelper::create())->generateClient($em);
-
-        $report = $reportTestHelper->generateReport($em);
-        $report->setClient($client);
-
-        $typeOfMoney = new MoneyReceivedOnClientsBehalf();
-        $clientBenefitsCheck = new ClientBenefitsCheck();
+        $typeOfMoney = self::$fixtureService->persist(new MoneyReceivedOnClientsBehalf());
+        $clientBenefitsCheck = self::$fixtureService->persist(new ClientBenefitsCheck());
 
         $typeOfMoney->setCreated(new \DateTime())
             ->setAmount(100.50)
@@ -91,10 +67,8 @@ class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
         $typeOfMoney->setClientBenefitsCheck($clientBenefitsCheck);
         $report->setClientBenefitsCheck($clientBenefitsCheck);
 
-        $em->persist($client);
-        $em->persist($report);
-        $em->flush();
+        self::$fixtureService->flush();
 
-        return $report;
+        return [$report, $user->getEmail()];
     }
 }

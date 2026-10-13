@@ -368,13 +368,25 @@ trait ReportManagementTrait
         $reportRow = $this->getSession()->getPage()->find('xpath', $locator);
 
         if (is_null($reportRow)) {
-            throw new BehatException(sprintf('Could not find a table data element with text %s on the page. HTML of page: %s', $reportPeriod, $this->getSession()->getPage()->find('xpath', '//main')->getHtml()));
+            throw new BehatException(
+                sprintf(
+                    'Could not find a td element with text %s on the page. HTML of page: %s',
+                    $reportPeriod,
+                    $this->getSession()->getPage()->find('xpath', '//main')->getHtml()
+                )
+            );
         }
 
-        $submittedStatus = $reportRow->find('xpath', '//span[normalize-space()="submitted"]');
+        $submittedStatus = $reportRow->find('xpath', '//strong[normalize-space()="submitted"]');
 
         if (is_null($submittedStatus)) {
-            throw new BehatException(sprintf('Could not find a span element with the text "submitted" in the report row for "%s". HTML of page: %s', $reportPeriod, $this->getSession()->getPage()->find('xpath', '//main')->getHtml()));
+            throw new BehatException(
+                sprintf(
+                    'Could not find a span element with the text "submitted" in the report row for "%s". HTML of page: %s',
+                    $reportPeriod,
+                    $this->getSession()->getPage()->find('xpath', '//main')->getHtml()
+                )
+            );
         }
     }
 

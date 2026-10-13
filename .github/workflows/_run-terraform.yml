@@ -46,7 +46,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
-          version: "0.12.10"
+          version: "0.12.11"
           enable-cache: true
 
       - name: Install dependencies
@@ -57,7 +57,7 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/actions/terraform-version@9e8b7c2fb29c11e77b12913f74459fa48b11829f # v4.8.2
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@5fba2afe28b31b8c5eaf1fb4235e2d32aea24a1e # v4.8.3
         with:
           terraform_directory: terraform/${{ inputs.terraform_path }}
 
@@ -69,7 +69,7 @@ jobs:
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         if: inputs.terraform_path == 'account'
         with:
-          go-version: "1.26.4"
+          go-version: "1.26.5"
 
       # requires go 1.25.5
       - name: build redeployer
@@ -80,7 +80,7 @@ jobs:
       - id: terraform_workspace_manager
         if: inputs.apply && inputs.terraform_path == 'environment' && inputs.pull_request_path
         name: register workspace
-        uses: ministryofjustice/opg-github-actions/actions/terraform-workspace-manager@9e8b7c2fb29c11e77b12913f74459fa48b11829f # v4.8.2
+        uses: ministryofjustice/opg-github-actions/actions/terraform-workspace-manager@5fba2afe28b31b8c5eaf1fb4235e2d32aea24a1e # v4.8.3
         with:
           aws_account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
           aws_iam_role: digideps-ci
@@ -90,7 +90,7 @@ jobs:
           assume_role: false
 
       - id: deploy-key
-        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@2ad72748485e27f590599a7e9768b9fc0d5b8e03 # v4.8.7
+        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@77bb12e7fec3bcee9a6a35cb21361195e027a12a # v4.9.0
         with:
           deploy_key: ${{ secrets.ssh_private_key }}
 

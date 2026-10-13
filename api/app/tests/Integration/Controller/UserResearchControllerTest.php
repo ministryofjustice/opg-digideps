@@ -4,40 +4,17 @@ namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use OPG\Digideps\Backend\Entity\Satisfaction;
-use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
-use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputyDescriptor;
+use OPG\Digideps\Backend\Fixture\DeputySet;
+use OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Common\Deputy\DeputyType;
 
 class UserResearchControllerTest extends AbstractTestController
 {
-    private static ?string $tokenAdmin = null;
-    private static string $tokenSuperAdmin;
-    private static string $tokenDeputy;
-    private static string $tokenProf;
-    private static string $tokenPa;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        if (self::$tokenAdmin === null) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-            self::$tokenProf = $this->loginAsProf();
-            self::$tokenPa = $this->loginAsPa();
-        }
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        self::fixtures()->clear();
-    }
-
     public function testUserResearchHasSuitablePermissionsNotAllowedAdmin(): void
     {
-        $satisfaction = $this->prepareSatisfaction();
+        [$satisfaction] = $this->prepareSatisfaction(DeputyType::LAY);
         $url = '/user-research';
         $validData = [
             'deputyshipLength' => 'underOne',
@@ -46,12 +23,12 @@ class UserResearchControllerTest extends AbstractTestController
             'satisfaction' => $satisfaction->getId(),
         ];
 
-        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin, $validData);
+        $this->assertEndpointNotAllowedFor('POST', $url, $this->loginAsAdmin(), $validData);
     }
 
     public function testUserResearchHasSuitablePermissionsNotAllowedSuperAdmin(): void
     {
-        $satisfaction = $this->prepareSatisfaction();
+        [$satisfaction] = $this->prepareSatisfaction(DeputyType::LAY);
         $url = '/user-research';
         $validData = [
             'deputyshipLength' => 'underOne',
@@ -60,12 +37,12 @@ class UserResearchControllerTest extends AbstractTestController
             'satisfaction' => $satisfaction->getId(),
         ];
 
-        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenSuperAdmin, $validData);
+        $this->assertEndpointNotAllowedFor('POST', $url, $this->loginAsSuperAdmin(), $validData);
     }
 
     public function testUserResearchHasSuitablePermissionsAllowedLay(): void
     {
-        $satisfaction = $this->prepareSatisfaction();
+        [$satisfaction, $email] = $this->prepareSatisfaction(DeputyType::LAY);
         $url = '/user-research';
         $validData = [
             'deputyshipLength' => 'underOne',
@@ -74,12 +51,12 @@ class UserResearchControllerTest extends AbstractTestController
             'satisfaction' => $satisfaction->getId(),
         ];
 
-        $this->assertEndpointAllowedFor('POST', $url, self::$tokenDeputy, $validData);
+        $this->assertEndpointAllowedFor('POST', $url, $this->loginAsDeputy($email), $validData);
     }
 
     public function testUserResearchHasSuitablePermissionsAllowedPa(): void
     {
-        $satisfaction = $this->prepareSatisfaction();
+        [$satisfaction, $email] = $this->prepareSatisfaction(DeputyType::PA);
         $url = '/user-research';
         $validData = [
             'deputyshipLength' => 'underOne',
@@ -88,12 +65,12 @@ class UserResearchControllerTest extends AbstractTestController
             'satisfaction' => $satisfaction->getId(),
         ];
 
-        $this->assertEndpointAllowedFor('POST', $url, self::$tokenPa, $validData);
+        $this->assertEndpointAllowedFor('POST', $url, $this->loginAsDeputy($email), $validData);
     }
 
     public function testUserResearchHasSuitablePermissionsAllowedProf(): void
     {
-        $satisfaction = $this->prepareSatisfaction();
+        [$satisfaction, $email] = $this->prepareSatisfaction(DeputyType::PRO);
         $url = '/user-research';
         $validData = [
             'deputyshipLength' => 'underOne',
@@ -102,7 +79,7 @@ class UserResearchControllerTest extends AbstractTestController
             'satisfaction' => $satisfaction->getId(),
         ];
 
-        $this->assertEndpointAllowedFor('POST', $url, self::$tokenProf, $validData);
+        $this->assertEndpointAllowedFor('POST', $url, $this->loginAsDeputy($email), $validData);
     }
 
     public function testUserResearchHasSuitablePermissionsNeedsAuthNoToken(): void
@@ -111,23 +88,20 @@ class UserResearchControllerTest extends AbstractTestController
         $this->assertEndpointNeedsAuth('POST', $url);
     }
 
-    private function prepareSatisfaction(): Satisfaction
+    /**
+     * @return array{Satisfaction, string}
+     */
+    private function prepareSatisfaction(DeputyType $deputyType): array
     {
-        $em = static::getContainer()->get('em');
-
-        $report = ReportTestHelper::create()->generateReport($em);
-        $client = ClientTestHelper::create()->generateClient($em);
-
-        $report->setClient($client);
+        ['persons' => ['users' => ['deputy' => $user]], 'orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(
+            new Scenario(new CourtOrderDescriptor(new DeputySet(new DeputyDescriptor('deputy', $deputyType))))
+        );
 
         $satisfaction = new Satisfaction(2)->setReport($report);
+        self::$fixtureService->persist($satisfaction);
+        self::$fixtureService->flush();
 
-        $em->persist($client);
-        $em->persist($report);
-        $em->persist($satisfaction);
-        $em->flush();
-
-        return $satisfaction;
+        return [$satisfaction, $user->getEmail()];
     }
 
     /**
@@ -137,7 +111,7 @@ class UserResearchControllerTest extends AbstractTestController
     {
         $this->assertJsonRequest('POST', '/user-research', [
             'mustFail' => true,
-            'AuthToken' => self::$tokenDeputy,
+            'AuthToken' => $this->loginAsDeputy(),
             'data' => $data,
         ]);
     }

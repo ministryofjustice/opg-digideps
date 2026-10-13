@@ -2,6 +2,8 @@
 
 namespace OPG\Digideps\Backend\v2\DTO;
 
+use OPG\Digideps\Common\CourtOrder\CourtOrderDto;
+
 class ReportDto
 {
     private ?int $id = null;
@@ -11,10 +13,15 @@ class ReportDto
     private ?\DateTime $unSubmitDate = null;
     private ?\DateTime $startDate = null;
     private ?\DateTime $endDate = null;
+
     /** @var ?String[] $availableSections  */
     private ?array $availableSections = null;
+
     private ?StatusDto $status = null;
     private ?string $type = null;
+
+    /** @var array<CourtOrderDto> */
+    private array $courtOrders = [];
 
     public function getId(): ?int
     {
@@ -134,5 +141,23 @@ class ReportDto
         $this->type = $type;
 
         return $this;
+    }
+
+    /**
+     * @param array<CourtOrderDto> $courtOrderDTOs
+     */
+    public function setCourtOrders(array $courtOrderDTOs): static
+    {
+        $this->courtOrders = $courtOrderDTOs;
+
+        return $this;
+    }
+
+    /**
+     * @return array<CourtOrderDto>
+     */
+    public function getCourtOrders(): array
+    {
+        return $this->courtOrders;
     }
 }

@@ -1,8 +1,8 @@
-{% props table, captionSize="m" %}
+{% props table %}
 
 <table class="govuk-table">
     {% if table.caption is not null %}
-        <caption class="govuk-table__caption govuk-table__caption--{{ captionSize }}">{{ table.caption }}</caption>
+        <twig:Render self="{{ table.caption }}"/>
     {% endif %}
     {% if table.columns %}
         <colgroup>

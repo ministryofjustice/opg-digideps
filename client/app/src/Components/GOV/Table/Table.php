@@ -12,7 +12,7 @@ final readonly class Table
     public array $rows;
 
     public function __construct(
-        public ?string $caption,
+        public Caption|null $caption,
         /**
          * @var array<Column>|null
          */

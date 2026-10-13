@@ -243,7 +243,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
   alarm_description         = "Response Time for Admin ALB in ${local.environment} (ignoring csv upload)"
   datapoints_to_alarm       = 7
   evaluation_periods        = 10
-  threshold                 = 1
+  threshold                 = 1.5
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
   tags                      = var.default_tags

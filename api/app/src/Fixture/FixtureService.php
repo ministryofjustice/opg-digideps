@@ -214,6 +214,7 @@ final class FixtureService
                     $client->setDeputy($deputy);
                 }
                 $user = $deputy->getUser();
+                $this->persist($deputy);
             }
             if ($organisation !== null) {
                 $persons['organisations'][$deputyDescriptor->emailDomain] = $organisation;
@@ -230,6 +231,7 @@ final class FixtureService
             }
         }
 
+        $this->persist($courtOrder);
         $this->flush();
         $this->entityManager->refresh($courtOrder);
 
@@ -243,20 +245,25 @@ final class FixtureService
             $courtOrder->setSibling($sibling['order']);
             if ($courtOrder->getOrderKind() === CourtOrderKind::Hybrid) {
                 $reports = $sibling['reports'];
+                foreach ($reports as $report) {
+                    $report->setCourtOrder($courtOrder);
+                }
             }
         }
 
         if ($reports === null) {
             /** @var array<Report> $reports */
             $reports = [];
-            $count = count($descriptor->reportList->reportDescriptors);
             foreach ($descriptor->reportList->reportDescriptors as $reportDescriptor) {
-                $reports[] = $this->makeReport($courtOrder, $reportDescriptor);
-                if (count($reports) !== $count || !$first) {
-                    $this->makeReportSubmitted($reports[count($reports) - 1], $reportDescriptor, $primary);
-                } elseif ($descriptor->reportList->currentIsSubmittable) {
-                    $this->makeReportSubmittable($reports[count($reports) - 1]);
+                $report = $this->makeReport($courtOrder, $reportDescriptor);
+
+                if ($report->getSubmitDate() !== null) {
+                    $this->makeReportSubmitted($report, $reportDescriptor, $primary);
+                } elseif ($descriptor->reportList->currentIsSubmittable && $first) {
+                    $this->makeReportSubmittable($report);
                 }
+
+                $reports[] = $report;
             }
         }
 
@@ -420,7 +427,7 @@ final class FixtureService
     {
         $reportType = $order->getDesiredReportType();
         $report = new Report(
-            $order->getClient(),
+            $order,
             "{$reportType}",
             \DateTime::createFromImmutable($reportDescriptor->startDate),
             \DateTime::createFromImmutable($reportDescriptor->endDate),
@@ -428,8 +435,16 @@ final class FixtureService
         )
             ->setId($this->counter->nextInt())
             ->setDueDate(\DateTime::createFromImmutable($reportDescriptor->dueDate))
-            ->setSubmitted(false)
-            ->setSubmitDate(null);
+            ->setSubmitted($reportDescriptor->submitted);
+
+        if ($reportDescriptor->submitDate !== null) {
+            $report->setSubmitDate(\DateTime::createFromImmutable($reportDescriptor->submitDate));
+        }
+
+        if ($reportDescriptor->unSubmitDate !== null) {
+            $report->setUnSubmitDate(\DateTime::createFromImmutable($reportDescriptor->unSubmitDate));
+        }
+
         $order->addReport($report);
         foreach ($reportDescriptor->supportingDocumentsWithoutS3Objects as $supportingDocumentWithoutS3Object) {
             $this->addSupportingDocumentWithoutS3Object($report, $supportingDocumentWithoutS3Object);
@@ -438,11 +453,9 @@ final class FixtureService
         return $this->persist($report);
     }
 
+    // this is only called if the report has a non-null submitDate
     private function makeReportSubmitted(Report $report, ReportDescriptor $reportDescriptor, ?User $submitter): void
     {
-        $date = $reportDescriptor->submitDate ?? \DateTimeImmutable::createFromMutable($report->getEndDate())->add(new \DateInterval('P15D'));
-        $report->setSubmitted(true);
-        $report->setSubmitDate(\DateTime::createFromImmutable($date));
         $report->setSubmittedBy($submitter);
 
         $document = new Document($report, "DigiRep-{$this->counter->nextString(8)}.pdf");
@@ -453,7 +466,9 @@ final class FixtureService
 
         $reportSubmission = new ReportSubmission($report, $submitter);
         $reportSubmission->setUuid($this->counter->nextString(20));
-        $reportSubmission->setCreatedOn(\DateTime::createFromImmutable($date));
+
+        $createdDate = $reportDescriptor->submitDate ?? new \DateTimeImmutable();
+        $reportSubmission->setCreatedOn(\DateTime::createFromImmutable($createdDate));
         $this->persist($reportSubmission);
     }
 

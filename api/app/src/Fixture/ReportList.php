@@ -38,7 +38,7 @@ final readonly class ReportList
         }
         $startDate = $orderMadeDate ?? new \DateTimeImmutable()->sub(new \DateInterval('P6M'))->sub(new \DateInterval("P{$submittedReports}Y"));
         for ($i = 0; $i < $submittedReports; ++$i) {
-            $descriptor = new ReportDescriptor($startDate, submitDate: $startDate->add(new \DateInterval('P12M'))->add(new \DateInterval('P15D')));
+            $descriptor = new ReportDescriptor($startDate, submitDate: $startDate->add(new \DateInterval('P12M'))->add(new \DateInterval('P15D')), submitted: true);
             $descriptors[] = $descriptor;
             $startDate = $descriptor->endDate->add(new \DateInterval('P1D'));
         }
