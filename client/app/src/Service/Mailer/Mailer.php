@@ -5,22 +5,21 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Service\Mailer;
 
 use OPG\Digideps\Common\Account\AccountResponse;
+use OPG\Digideps\Common\Mail\MailSenderInterface;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
-class Mailer
+readonly class Mailer
 {
-    /** @var MailFactory */
-    private MailFactory $mailFactory;
-
-    /** @var MailSender */
-    private MailSender $mailSender;
-
-    public function __construct(MailFactory $mailFactory, MailSender $mailSender)
-    {
-        $this->mailFactory = $mailFactory;
-        $this->mailSender = $mailSender;
+    public function __construct(
+        private MailFactory $mailFactory,
+        #[Autowire(service: MailSender::class)]
+        private MailSenderInterface $mailSender,
+        #[Autowire(service: MailApi::class)]
+        private MailSenderInterface $mailApi,
+    ) {
     }
 
     public function sendActivationEmail(User $activatedUser): bool
@@ -33,12 +32,9 @@ class Mailer
         return $this->mailSender->send($this->mailFactory->createInvitationEmail($invitedUser, $deputyName));
     }
 
-    /**
-     * @throws \Exception
-     */
     public function sendResetPasswordEmail(User $passwordResetUser): bool
     {
-        return $this->mailSender->send($this->mailFactory->createResetPasswordEmail($passwordResetUser));
+        return $this->mailSender->send($this->mailFactory->createResetPasswordEmailOld($passwordResetUser));
     }
 
     public function sendUpdateClientDetailsEmail(Client $updatedClient): bool
@@ -51,9 +47,6 @@ class Mailer
         return $this->mailSender->send($this->mailFactory->createUpdateDeputyDetailsEmail($updatedDeputy));
     }
 
-    /**
-     * @throws \Exception
-     */
     public function sendReportSubmissionConfirmationEmail(
         User $submittedByDeputy,
         Report $submittedReport,
@@ -80,6 +73,8 @@ class Mailer
 
     public function sendSetPasswordEmail(AccountResponse $response, bool $isReset): bool
     {
-        return empty($response->email->value) === $isReset; //TODO This is garbage to mislead phpstan
+        return $this->mailApi->send(
+            $isReset ? $this->mailFactory->createResetPasswordEmail($response) : $this->mailFactory->createSetPasswordEmail($response)
+        );
     }
 }
