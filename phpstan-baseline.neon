@@ -6997,7 +6997,7 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/FeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$data of function http_build_query expects array\|object, mixed given\.$#'
+			message: '#^Parameter \#1 \$data of function http_build_query expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/FeatureContext.php
@@ -11011,7 +11011,7 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/DeputyManagement/DeputyManagementFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$data of function http_build_query expects array\|object, mixed given\.$#'
+			message: '#^Parameter \#1 \$data of function http_build_query expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/DeputyManagement/DeputyManagementFeatureContext.php
@@ -15241,7 +15241,7 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/UserManagement/UserManagementFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$data of function http_build_query expects array\|object, mixed given\.$#'
+			message: '#^Parameter \#1 \$data of function http_build_query expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/UserManagement/UserManagementFeatureContext.php
@@ -29881,7 +29881,7 @@ parameters:
 			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
 
 		-
-			message: '#^Parameter \#1 \$data of function http_build_query expects array\|object, mixed given\.$#'
+			message: '#^Parameter \#1 \$data of function http_build_query expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
