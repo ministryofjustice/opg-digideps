@@ -8119,8 +8119,26 @@ parameters:
 			path: src/Service/Mailer/MailFactory.php
 
 		-
+			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:createSetPasswordEmail\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Service/Mailer/MailFactory.php
+
+		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:getRecipientRole\(\) should return string but returns mixed\.$#'
 			identifier: return.type
+			count: 1
+			path: src/Service/Mailer/MailFactory.php
+
+		-
+			message: '#^Parameter \#1 \$area of method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:generateAbsoluteLink\(\) expects OPG\\Digideps\\Common\\Account\\Area, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/Mailer/MailFactory.php
+
+		-
+			message: '#^Parameter \#1 \$area of method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:generateAbsoluteLink\(\) expects OPG\\Digideps\\Common\\Account\\Area, string given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/Service/Mailer/MailFactory.php
 
@@ -8137,8 +8155,26 @@ parameters:
 			path: src/Service/Mailer/MailFactory.php
 
 		-
+			message: '#^Parameter \#1 \$user of method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:getContactParameters\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/Mailer/MailFactory.php
+
+		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
+			count: 1
+			path: src/Service/Mailer/MailFactory.php
+
+		-
+			message: '#^Undefined variable\: \$area$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Service/Mailer/MailFactory.php
+
+		-
+			message: '#^Undefined variable\: \$user$#'
+			identifier: variable.undefined
 			count: 1
 			path: src/Service/Mailer/MailFactory.php
 
@@ -8171,6 +8207,12 @@ parameters:
 			identifier: nullsafe.neverNull
 			count: 2
 			path: src/Service/Mailer/MailSender.php
+
+		-
+			message: '#^Parameter \#1 \$email of method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailSender\:\:send\(\) expects OPG\\Digideps\\Frontend\\Model\\Email, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/Mailer/Mailer.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Mailer\\NotifyClientMock\:\:getSentEmails\(\) has no return type specified\.$#'
