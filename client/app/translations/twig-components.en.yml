@@ -71,7 +71,7 @@ opg:
       MatchingError: Can't match submitted details to deputy.
       AccountTaken: Email already in use.
       EmailError: Unable to send email with activation link.
-      UnexpectedError: An unexpected error occurred. Please try again later.
+      NetworkError: An error occurred while setting up your account. Please try again later.
   renderable:
     bankAccount:
       sortCode: Sort code
