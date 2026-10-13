@@ -22,10 +22,10 @@
 }
 
 .button-secondary {
-  @include button(govuk-colour("light-grey"));
+  @include button(govuk-colour("black", $variant: "tint-95"));
 
   &[disabled="disabled"] {
-    background: govuk-colour("light-grey");
+    background: govuk-colour("black", $variant: "tint-95");
   }
 }
 
@@ -38,7 +38,7 @@
 }
 
 .button-link {
-  @include media(mobile) {
+  @include govuk-media-query($from: mobile) {
     margin-left: 0;
   }
 

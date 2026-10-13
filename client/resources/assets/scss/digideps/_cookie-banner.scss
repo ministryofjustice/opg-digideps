@@ -17,7 +17,7 @@
   }
 
   &__button:hover {
-    background-color: govuk-colour("light-grey") !important;
+    background-color: govuk-colour("black", $variant: "tint-95") !important;
     text-decoration: none;
   }
 }

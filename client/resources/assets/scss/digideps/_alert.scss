@@ -20,11 +20,7 @@
   }
 
   &--success {
-    background-color: color-mix(
-      in srgb,
-      govuk-colour("turquoise") 10%,
-      transparent
-    );
+    background-color: color-mix(in srgb, govuk-colour("teal") 10%, transparent);
   }
 
   &--error {
@@ -33,10 +29,10 @@
   }
 
   &--info {
-    border-color: govuk-colour("light-blue");
+    border-color: govuk-colour("blue", $variant: "tint-25");
     background-color: color-mix(
       in srgb,
-      govuk-colour("light-blue") 10%,
+      govuk-colour("blue", $variant: "tint-25") 10%,
       transparent
     );
   }
@@ -60,7 +56,7 @@
   }
 
   &:focus {
-    outline: 3px solid $focus-colour;
+    outline: 3px solid $govuk-focus-colour;
   }
 }
 
@@ -72,8 +68,8 @@
 
 .alert-success {
   @extend %alert-base;
-  border-color: $turquoise;
-  background-color: rgba($turquoise, 0.1);
+  border-color: govuk-colour("teal");
+  background-color: rgba(govuk-colour("teal"), 0.1);
 }
 
 .alert-error {
@@ -84,14 +80,14 @@
 
 .alert-info {
   @extend %alert-base;
-  border-color: $light-blue;
-  background-color: rgba($light-blue, 0.1);
+  border-color: govuk-colour("blue", $variant: "tint-25");
+  background-color: rgba(govuk-colour("blue", $variant: "tint-25"), 0.1);
 }
 
 .alert-important {
   @extend %alert-base;
-  border-color: $black;
-  background-color: govuk-colour("light-grey");
+  border-color: govuk-colour("black");
+  background-color: govuk-colour("black", $variant: "tint-95");
 }
 
 .alert-message {
