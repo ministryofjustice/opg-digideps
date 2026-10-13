@@ -32,13 +32,14 @@ final class Request
         $this->props = [
             'accountCreated' => $accountCreated,
             'accountCreationFailed' => $accountCreationError !== null,
-            'deputyEmail' => $deputyEmail,
+            'loginPath' => 'login'
         ];
 
         $signInText = $this->translate('opg.account.request.signIn');
         $signInTextCaps = ucfirst($signInText);
         $this->text = [
             'accountCreationErrorMessage' => null,
+            'deputyEmail' => $deputyEmail,
             'intro' => $this->translate('opg.account.request.intro'),
             'signIn' => $signInText,
             'signInCaps' => $signInTextCaps,
