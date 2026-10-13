@@ -20647,6 +20647,12 @@ parameters:
 			path: client/app/src/Command/ProcessLayCSVCommand.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Command\\ProcessLayCSVCommand\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: client/app/src/Command/ProcessLayCSVCommand.php
+
+		-
 			message: '#^Result of method OPG\\Digideps\\Frontend\\Command\\ProcessLayCSVCommand\:\:process\(\) \(void\) is used\.$#'
 			identifier: method.void
 			count: 1
@@ -25693,78 +25699,6 @@ parameters:
 			path: client/app/src/Mapper/DateRangeQuery.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Model\\Email\:\:getFromEmailNotifyID\(\) should return string\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Model/Email.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Model\\Email\:\:getFromName\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Model/Email.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Model\\Email\:\:getParameters\(\) should return array\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Model/Email.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Model\\Email\:\:getSubject\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Model/Email.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Model\\Email\:\:getTemplate\(\) should return string\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Model/Email.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Model\\Email\:\:getToEmail\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Model/Email.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Model\\Email\:\:\$fromEmailNotifyID has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Model/Email.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Model\\Email\:\:\$fromName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Model/Email.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Model\\Email\:\:\$parameters has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Model/Email.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Model\\Email\:\:\$subject has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Model/Email.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Model\\Email\:\:\$template has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Model/Email.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Model\\Email\:\:\$toEmail has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Model/Email.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Model\\EmailAttachment\:\:__construct\(\) has parameter \$content with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -26025,12 +25959,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Audit\\AuditEvents\:\:userRemovedFromOrg\(\) should return array\<string\> but returns array\.$#'
 			identifier: return.type
-			count: 1
-			path: client/app/src/Service/Audit/AuditEvents.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_flip expects array\<int\|string\>, array\<string, mixed\> given\.$#'
-			identifier: argument.type
 			count: 1
 			path: client/app/src/Service/Audit/AuditEvents.php
 
@@ -28273,30 +28201,6 @@ parameters:
 			path: client/app/src/Service/File/Verifier/VerificationStatus.php
 
 		-
-			message: '#^Parameter \#1 \$string of function strlen expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/HtmlToPdfGenerator.php
-
-		-
-			message: '#^Parameter \#3 \$value of function curl_setopt expects array\|string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/HtmlToPdfGenerator.php
-
-		-
-			message: '#^Parameter \#3 \$value of function curl_setopt expects bool, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/HtmlToPdfGenerator.php
-
-		-
-			message: '#^Parameter \#3 \$value of function curl_setopt expects non\-empty\-string, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/HtmlToPdfGenerator.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Logger\:\:debug\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -28387,12 +28291,6 @@ parameters:
 			path: client/app/src/Service/Mailer/MailFactory.php
 
 		-
-			message: '#^Parameter \#1 \$toEmail of method OPG\\Digideps\\Frontend\\Model\\Email\:\:setToEmail\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/Mailer/MailFactory.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -28406,18 +28304,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$loggedInUser of method OPG\\Digideps\\Frontend\\Service\\Audit\\AuditEvents\:\:emailSent\(\) expects OPG\\Digideps\\Frontend\\Entity\\User\|string\|null, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/Mailer/MailSender.php
-
-		-
-			message: '#^Parameter \#2 \$templateId of method Alphagov\\Notifications\\Client\:\:sendEmail\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/Mailer/MailSender.php
-
-		-
-			message: '#^Parameter \#3 \$personalisation of method Alphagov\\Notifications\\Client\:\:sendEmail\(\) expects array, array\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/src/Service/Mailer/MailSender.php
@@ -29911,27 +29797,9 @@ parameters:
 			path: client/app/tests/Unit/Service/Mailer/MailFactoryTest.php
 
 		-
-			message: '#^Cannot call method getFromEmailNotifyID\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Cannot call method getFromName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
 			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: client/app/tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:assertStaticEmailProperties\(\) has parameter \$email with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
 			path: client/app/tests/Unit/Service/Mailer/MailFactoryTest.php
 
 		-
