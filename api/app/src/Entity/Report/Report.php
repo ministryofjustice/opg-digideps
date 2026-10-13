@@ -1343,7 +1343,7 @@ class Report
     public function getPrimaryDeputy(): ?Deputy
     {
         $candidate = $this->submittedBy?->getDeputy();
-        if ($candidate !== null) {
+        if ($candidate !== null && $this->isLayReport()) {
             return $candidate;
         }
 
