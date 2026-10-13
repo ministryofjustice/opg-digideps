@@ -30,6 +30,7 @@
     },
     "require": {
         "ext-openssl": "*",
+        "alphagov/notifications-php-client": "^7.1.1",
         "aws/aws-sdk-php": "^3.403.2",
         "digideps/common": "^1.0",
         "doctrine/dbal": "^3.10.7",

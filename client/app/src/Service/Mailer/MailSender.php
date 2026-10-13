@@ -3,13 +3,14 @@
 namespace OPG\Digideps\Frontend\Service\Mailer;
 
 use Alphagov\Notifications\Client as NotifyClient;
-use OPG\Digideps\Frontend\Model\Email;
+use OPG\Digideps\Common\Mail\NotifyMail;
+use OPG\Digideps\Common\Mail\MailSenderInterface;
 use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class MailSender implements MailSenderInterface
+final readonly class MailSender implements MailSenderInterface
 {
     public function __construct(
         private LoggerInterface $logger,
@@ -19,17 +20,17 @@ class MailSender implements MailSenderInterface
     ) {
     }
 
-    public function send(Email $email): bool
+    public function send(NotifyMail $email): bool
     {
         try {
             $currentUser = $this->tokenStorage?->getToken()?->getUser();
 
             $this->notifyClient->sendEmail(
-                $email->getToEmail(),
-                $email->getTemplate(),
-                $email->getParameters(),
+                $email->toEmail->value,
+                $email->template->value,
+                $email->parameters,
                 '',
-                $email->getFromEmailNotifyID()
+                $email->notifyFromId
             );
 
             $this->logger->notice(
