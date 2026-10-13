@@ -4,7 +4,7 @@
     <twig:GOV:Heading h="2" s="m">{{ text.accountCreatedSubHeading }}</twig:GOV:Heading>
 
     <twig:GOV:Paragraph>
-        {{ text.linkSentTo }} <strong>{{ props.deputyEmail }}</strong> {{ text.activationReminder }}
+        {{ text.linkSentTo }} <strong>{{ text.deputyEmail }}</strong> {{ text.activationReminder }}
     </twig:GOV:Paragraph>
 
     <twig:GOV:Paragraph>{{ text.expirationNote }}</twig:GOV:Paragraph>
@@ -12,14 +12,18 @@
     <twig:GOV:Paragraph>{{ text.checkJunk }}</twig:GOV:Paragraph>
 
     <twig:GOV:Paragraph>
-        <twig:GOV:Link href="{{ path('login') }}">{{ text.signInCaps }}</twig:GOV:Link>
+        <twig:GOV:Link href="{{ path(props.loginPath) }}">{{ text.signInCaps }}</twig:GOV:Link>
     </twig:GOV:Paragraph>
 {% else %}
-    <twig:GOV:Paragraph>{{ text.intro }}</twig:GOV:Paragraph>
+    <twig:GOV:Layout:Row>
+        <twig:GOV:Layout:Column n="2" d="3">
+            <twig:GOV:Paragraph>{{ text.intro }}</twig:GOV:Paragraph>
 
-    <twig:GOV:Paragraph>
-        {{ text.ifYouAlreadyHaveAnAccount }} <twig:GOV:Link href="{{ path('login') }}">{{ text.signIn }}</twig:GOV:Link>.
-    </twig:GOV:Paragraph>
+            <twig:GOV:Paragraph>
+                {{ text.ifYouAlreadyHaveAnAccount }} <twig:GOV:Link href="{{ path(props.loginPath) }}">{{ text.signIn }}</twig:GOV:Link>.
+            </twig:GOV:Paragraph>
+        </twig:GOV:Layout:Column>
+    </twig:GOV:Layout:Row>
 
     <twig:GOV:Form form="{{ form }}">
         <twig:GOV:Form:TextInput element="{{ form.deputyFirstName }}"/>
@@ -32,3 +36,7 @@
         <twig:GOV:Form:Submit element="{{ form.signUp }}"/>
     </twig:GOV:Form>
 {% endif %}
+
+
+    </twig:GOV:Layout:Column>
+</twig:GOV:Layout:Row>
