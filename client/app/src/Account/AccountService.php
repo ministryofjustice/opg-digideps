@@ -56,7 +56,7 @@ final readonly class AccountService
             if ($response instanceof AccountError) {
                 return $response;
             }
-            return $this->sendConfirmPasswordEmail($response);
+            return $response->email;
         } catch (\Throwable $_) {
             return AccountError::NetworkError;
         }
@@ -65,11 +65,6 @@ final readonly class AccountService
     private function sendSetPasswordEmail(AccountResponse $response, bool $isReset = false): Email|AccountError
     {
         return $this->mailer->sendSetPasswordEmail($response, $isReset) ? $response->email : AccountError::EmailError;
-    }
-
-    private function sendConfirmPasswordEmail(PasswordResponse $response): Email|AccountError
-    {
-        return $this->mailer->sendConfirmPasswordEmail($response) ? $response->email : AccountError::EmailError;
     }
 
     private function getRawResponse(string $path, AccountRequest|PasswordRequest|ResetRequest $request): string
