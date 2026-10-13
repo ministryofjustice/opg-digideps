@@ -37,3 +37,18 @@ fields @timestamp, @message
 | limit 50
 EOF
 }
+
+resource "aws_cloudwatch_query_definition" "unique_login_device_usage" {
+  name            = "Business Analytics/${local.environment} unique login device usage"
+  log_group_names = [aws_cloudwatch_log_group.opg_digi_deps.name]
+
+  query_string = <<EOF
+fields msg
+| filter msg like /Login device analytics/
+| parse msg "Login device analytics user_hash=* user_agent=*" as user_hash, user_agent
+| fields user_hash, if(tolower(user_agent) like /mobile|android|iphone|ipad|ipod/, 1, 0) as used_mobile
+| stats max(used_mobile) as used_mobile by user_hash
+| stats count(*) as unique_users, sum(used_mobile) as mobile_users
+| fields unique_users, mobile_users, unique_users - mobile_users as desktop_only_users, round((mobile_users * 100) / unique_users, 1) as mobile_percentage
+EOF
+}

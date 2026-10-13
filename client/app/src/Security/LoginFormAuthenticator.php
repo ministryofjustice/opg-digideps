@@ -35,6 +35,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         private RedisStorage $tokenStorage,
         private RouterInterface $router,
         private readonly LoggerInterface $verboseLogger,
+        private readonly string $userAnalyticsHashKey,
     ) {
     }
 
@@ -102,6 +103,15 @@ class LoginFormAuthenticator extends AbstractAuthenticator
                 'user_id' => $userId,
             ]
         );
+
+        if ($userId !== null) {
+            $anonymousUserId = hash_hmac('sha256', (string) $userId, $this->userAnalyticsHashKey);
+            $userAgent = $request->headers->get('User-Agent', 'unknown');
+
+            $this->verboseLogger->notice(
+                "Login device analytics user_hash={$anonymousUserId} user_agent={$userAgent}"
+            );
+        }
 
         $redirectUrl = $this->redirector->getFirstPageAfterLogin($session);
         if ($request->query->has('lastPage')) {
