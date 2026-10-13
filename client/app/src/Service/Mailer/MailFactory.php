@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service\Mailer;
 
+use OPG\Digideps\Common\Account\AccountResponse;
+use OPG\Digideps\Common\Account\Area;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
@@ -53,18 +55,16 @@ class MailFactory
     }
 
     /**
-     * @param string $area deputy|admin
      * @param string $routeName must be in YML config under email.routes
      *
      * @return string calculated route
      * @throws \Exception
      */
-    private function generateAbsoluteLink(string $area, string $routeName, array $params = []): string
+    private function generateAbsoluteLink(Area $area, string $routeName, array $params = []): string
     {
         return match ($area) {
-            self::AREA_DEPUTY => $this->baseURLs['front'] . $this->router->generate($routeName, $params),
-            self::AREA_ADMIN => $this->baseURLs['admin'] . $this->router->generate($routeName, $params),
-            default => throw new \Exception("area $area not found"),
+            Area::Deputy => $this->baseURLs['front'] . $this->router->generate($routeName, $params),
+            Area::Admin => $this->baseURLs['admin'] . $this->router->generate($routeName, $params),
         };
     }
 
@@ -182,9 +182,9 @@ class MailFactory
     /**
      * Get user area depending on the role.
      */
-    private function getUserArea(User $user): string
+    private function getUserArea(User $user): Area
     {
-        return $user->isDeputy() ? self::AREA_DEPUTY : self::AREA_ADMIN;
+        return $user->isDeputy() ? Area::Deputy : Area::Admin;
     }
 
     public function createUpdateClientDetailsEmail(Client $client): Email
@@ -336,6 +336,27 @@ class MailFactory
         $email->setParameters($notifyParams);
 
         return $email;
+    }
+
+    public function createSetPasswordEmail(AccountResponse $response, bool $isReset)
+    {
+
+        $notifyParams = array_merge($this->getContactParameters($user), [
+            'resetLink' => $this->generateAbsoluteLink($response->area, 'user_activate', [
+                'action' => $isReset ? 'password-reset' : 'password-set',
+                'token' => "{$response->token}",
+                'key' => "{$response->validationKey}"
+            ]),
+            'recreateLink' => $this->generateAbsoluteLink($area, 'password_forgotten'),
+        ]);
+
+        return new Email()
+            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
+            ->setFromName($this->translate($isReset ? 'resetPassword.fromName' : 'setPassword.fromName'))
+            ->setToEmail($response->email->value)
+            ->setTemplate(self::RESET_PASSWORD_TEMPLATE_ID)
+            ->setParameters($notifyParams);
+
     }
 
     private function translate(string $key): string

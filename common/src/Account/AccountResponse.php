@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Common\Account;
 
+use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Common\Validating\ValidatingArray;
 
 final readonly class AccountResponse implements \JsonSerializable
@@ -12,6 +13,8 @@ final readonly class AccountResponse implements \JsonSerializable
         #[\SensitiveParameter] public Token $token,
         #[\SensitiveParameter] public ValidationKey $validationKey,
         #[\SensitiveParameter] public Email $email,
+        public Area $area,
+        public DeputyType $deputyType
     ) {
     }
 
@@ -20,7 +23,9 @@ final readonly class AccountResponse implements \JsonSerializable
         return [
             'token' => $this->token,
             'key' => $this->validationKey,
-            'email' => $this->email
+            'email' => $this->email,
+            'area' => $this->area->value,
+            'type' => $this->deputyType->value,
         ];
     }
 
@@ -35,6 +40,8 @@ final readonly class AccountResponse implements \JsonSerializable
             new Token($data->getStringOrThrow('token')),
             new ValidationKey($data->getStringOrThrow('key')),
             new Email($data->getStringOrThrow('email')),
+            Area::from($data->getStringOrThrow('area')),
+            DeputyType::from($data->getStringOrThrow('type')),
         );
     }
 }

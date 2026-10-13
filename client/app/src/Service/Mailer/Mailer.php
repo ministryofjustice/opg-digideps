@@ -80,6 +80,8 @@ class Mailer
 
     public function sendSetPasswordEmail(AccountResponse $response, bool $isReset): bool
     {
-        return empty($response->email->value) === $isReset; //TODO This is garbage to mislead phpstan
+        return $this->mailSender->send(
+            $this->mailFactory->createSetPasswordEmail($response, $isReset)
+        );
     }
 }
