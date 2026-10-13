@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service\Audit;
 
-use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Common\Mail\NotifyMail;
 use OPG\Digideps\Frontend\Entity\Organisation;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
-use OPG\Digideps\Frontend\Model\Email;
-use OPG\Digideps\Frontend\Service\Mailer\MailFactory;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 
 final class AuditEvents
@@ -365,30 +363,27 @@ final class AuditEvents
         return $event + $this->baseEvent(AuditEvents::EVENT_ADMIN_MANAGER_DELETED);
     }
 
-    public function emailSent(Email $email, User|string|null $loggedInUser): array
+    public function emailSent(NotifyMail $email, User|string|null $loggedInUser): array
     {
         return $this->buildEmailEvent($email, $loggedInUser) + $this->baseEvent(AuditEvents::EVENT_EMAIL_SENT);
     }
 
-    public function emailNotSent(Email $email, User|string|null $loggedInUser, \Throwable $error): array
+    public function emailNotSent(NotifyMail $email, User|string|null $loggedInUser, \Throwable $error): array
     {
         return $this->buildEmailEvent($email, $loggedInUser) + $this->baseEvent(AuditEvents::EVENT_EMAIL_NOT_SENT) + ['error_message' => $error->getMessage()];
     }
 
-    private function buildEmailEvent(Email $email, User|string|null $loggedInUser): array
+    private function buildEmailEvent(NotifyMail $email, User|string|null $loggedInUser): array
     {
-        $class = new \ReflectionClass(MailFactory::class);
-        $constants = array_flip($class->getConstants());
-
-        $templateName = $constants[$email->getTemplate() ?? ''] ?? null;
+        $templateName = $email->template->name;
 
         return [
             'logged_in_user_email' => ($loggedInUser == 'anon.') ? 'user not signed in' : $loggedInUser?->getEmail(),
-            'recipient_email' => $email->getToEmail(),
+            'recipient_email' => $email->toEmail->value,
             'template_name' => $templateName,
-            'notify_template_id' => $email->getTemplate(),
-            'email_parameters' => $email->getParameters(),
-            'from_address_id' => $email->getFromEmailNotifyID(),
+            'notify_template_id' => $email->template->value,
+            'email_parameters' => $email->parameters,
+            'from_address_id' => $email->notifyFromId->toRfc4122(),
             'sent_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
         ];
     }
