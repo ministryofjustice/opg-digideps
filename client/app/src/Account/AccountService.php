@@ -22,31 +22,43 @@ final readonly class AccountService
     ) {
     }
 
-    public function sendResetRequest(ResetRequest $request): Email|AccountError
-    {
-        $response = AccountResponse::jsonDeserialize($this->restClient->post('', $request, expectedResponseType: 'raw'));
-        if ($response instanceof AccountError) {
-            return $response;
-        }
-        return $this->sendSetPasswordEmail($response, true);
-    }
-
     public function sendAccountRequest(AccountRequest $request): Email|AccountError
     {
-        $response = AccountResponse::jsonDeserialize($this->restClient->post('', $request, expectedResponseType: 'raw'));
-        if ($response instanceof AccountError) {
-            return $response;
+        try {
+            $response = AccountResponse::jsonDeserialize($this->restClient->post('/account/request', $request, expectedResponseType: 'raw'));
+            if ($response instanceof AccountError) {
+                return $response;
+            }
+            return $this->sendSetPasswordEmail($response);
+        } catch (\Throwable $_) {
+            return AccountError::NetworkError;
         }
-        return $this->sendSetPasswordEmail($response);
+    }
+
+    public function sendResetRequest(ResetRequest $request): Email|AccountError
+    {
+        try {
+            $response = AccountResponse::jsonDeserialize($this->restClient->post('/account/password/reset', $request, expectedResponseType: 'raw'));
+            if ($response instanceof AccountError) {
+                return $response;
+            }
+            return $this->sendSetPasswordEmail($response, true);
+        } catch (\Throwable $_) {
+            return AccountError::NetworkError;
+        }
     }
 
     public function sendPasswordRequest(PasswordRequest $request): true|AccountError
     {
-        $response = PasswordResponse::jsonDeserialize($this->restClient->post('', $request, expectedResponseType: 'raw'));
-        if ($response instanceof AccountError) {
-            return $response;
+        try {
+            $response = PasswordResponse::jsonDeserialize($this->restClient->post('/account/password/set', $request, expectedResponseType: 'raw'));
+            if ($response instanceof AccountError) {
+                return $response;
+            }
+            return true;
+        } catch (\Throwable $_) {
+            return AccountError::NetworkError;
         }
-        return true;
     }
 
     private function sendSetPasswordEmail(AccountResponse $response, bool $isReset = false): Email|AccountError
