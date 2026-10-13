@@ -4,7 +4,8 @@
 {% block pageTitle %}{{ 'pageTitle' | trans({}, 'register') }}{% endblock %}
 
 {% block pageContent %}
-    <twig:OPG:Account:Register form="{{ form }}"
-                               accountCreated="{{ accountCreated }}"
-                               accountCreationError="{{ accountCreationError }}"/>
+    <twig:OPG:Account:Request form="{{ form }}"
+        accountCreated="{{ accountCreated }}"
+        accountCreationError="{{ accountCreationError }}"
+        deputyEmail="{{ deputyEmail }}"/>
 {% endblock %}
