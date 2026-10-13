@@ -33,33 +33,35 @@ final class Request
             'accountCreated' => $accountCreated,
             'accountCreationFailed' => $accountCreationError !== null,
             'deputyEmail' => $deputyEmail,
-            'loginPath' => 'login',
         ];
 
-        $signInText = $this->translate('opg.register.signIn');
+        $signInText = $this->translate('opg.account.request.signIn');
         $signInTextCaps = ucfirst($signInText);
         $this->text = [
             'accountCreationErrorMessage' => null,
-            'intro' => $this->translate('opg.register.intro'),
+            'intro' => $this->translate('opg.account.request.intro'),
             'signIn' => $signInText,
             'signInCaps' => $signInTextCaps,
-            'ifYouAlreadyHaveAnAccount' => $this->translate('opg.register.ifYouAlreadyHaveAnAccount'),
-            'accountCreatedSubHeading' => $this->translate('opg.register.accountCreated.subHeading'),
-            'linkSentTo' => $this->translate('opg.register.accountCreated.linkSentTo'),
-            'activationReminder' => $this->translate('opg.register.accountCreated.activationReminder'),
-            'expirationNote' => $this->translate('opg.register.accountCreated.expirationNote'),
-            'checkJunk' => $this->translate('opg.register.accountCreated.checkJunk')
+            'ifYouAlreadyHaveAnAccount' => $this->translate('opg.account.request.ifYouAlreadyHaveAnAccount'),
+            'accountCreatedSubHeading' => $this->translate('opg.account.request.accountCreated.subHeading'),
+            'linkSentTo' => $this->translate('opg.account.request.accountCreated.linkSentTo'),
+            'activationReminder' => $this->translate('opg.account.request.accountCreated.activationReminder'),
+            'expirationNote' => $this->translate('opg.account.request.accountCreated.expirationNote'),
+            'checkJunk' => $this->translate('opg.account.request.accountCreated.checkJunk')
         ];
 
         if ($accountCreationError !== null) {
-            $this->text['accountCreationErrorMessage'] = $this->translate("opg.register.errors.{$accountCreationError->value}");
+            $this->text['accountCreationErrorMessage'] = $this->translate(
+                "opg.account.request.errors.{$accountCreationError->value}",
+                ['%helplineNumber%' => $this->translate('opg.helplineNumber')]
+            );
         }
     }
 
-    private function translate(string $id): string
+    private function translate(string $id, array $params = []): string
     {
         try {
-            return $this->translator->trans($id, [], 'twig-components');
+            return $this->translator->trans($id, $params, 'twig-components');
         } catch (\Throwable $t) {
             return "$t";
         }
