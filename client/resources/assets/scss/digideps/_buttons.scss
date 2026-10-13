@@ -38,7 +38,7 @@
 }
 
 .button-link {
-  @include govuk-media-query($from: mobile) {
+  @include govuk-media-query($until: tablet) {
     margin-left: 0;
   }
 

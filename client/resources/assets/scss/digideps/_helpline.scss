@@ -16,7 +16,7 @@
     text-align: left;
     vertical-align: -webkit-baseline-middle;
 
-    @include govuk-media-query($from: mobile) {
+    @include govuk-media-query($until: tablet) {
       display: none;
     }
 
