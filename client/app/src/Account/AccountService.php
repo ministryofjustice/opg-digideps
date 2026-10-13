@@ -75,7 +75,7 @@ final readonly class AccountService
         } elseif ($mockResponseToReceive === 'setpasswordemailfail') {
             return AccountError::EmailError;
         } elseif ($mockResponseToReceive === 'networkerror') {
-            throw new \Exception('network problem');
+            return AccountError::NetworkError;
         }
 
         return $accountRequest->deputyEmail;
