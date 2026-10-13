@@ -9,6 +9,7 @@ use OPG\Digideps\Backend\Entity\Account\AccountToken;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Utility\Environment;
 use OPG\Digideps\Common\Account\AccountError;
+use OPG\Digideps\Common\Account\Area;
 use OPG\Digideps\Common\Account\Email;
 use OPG\Digideps\Common\Account\MaximumTokenAge;
 use OPG\Digideps\Common\Account\Password;
@@ -16,6 +17,7 @@ use OPG\Digideps\Common\Account\PasswordRequest;
 use OPG\Digideps\Common\Account\PasswordResponse;
 use OPG\Digideps\Common\Account\Token;
 use OPG\Digideps\Common\Account\ValidationKey;
+use OPG\Digideps\Common\Deputy\DeputyType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final readonly class PasswordService
@@ -43,7 +45,11 @@ final readonly class PasswordService
             return AccountError::TokenInvalid;
         }
         $this->setUserPassword($user, $request->password, true);
-        return new PasswordResponse(new Email($user->getEmail()));
+        return new PasswordResponse(
+            new Email($user->getEmail()),
+            $user->hasAdminRole() ? Area::Admin : Area::Deputy,
+            $user->deriveDeputyType() ?? DeputyType::LAY
+        );
     }
 
     public function setUserPassword(User $user, Password $password, bool $flush = false): void
