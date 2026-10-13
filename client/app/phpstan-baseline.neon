@@ -13,50 +13,8 @@ parameters:
 			path: config/bootstrap.php
 
 		-
-			message: '#^Cannot access offset ''events'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Command/CheckCSVUploadedCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:alertNoCSVsWereUploaded\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Command/CheckCSVUploadedCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:checkCsvsHaveBeenUploadedAndAlert\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Command/CheckCSVUploadedCommand.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:getLogEvents\(\) should return array\|int but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Command/CheckCSVUploadedCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:getLogStreams\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Command/CheckCSVUploadedCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:postSlackMessage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Command/CheckCSVUploadedCommand.php
-
-		-
-			message: '#^Parameter \#1 \$apiToken of method OPG\\Digideps\\Frontend\\Service\\Client\\Slack\\ClientFactory\:\:createClient\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Command/CheckCSVUploadedCommand.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_column expects array, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Command/CheckCSVUploadedCommand.php
 
@@ -5635,18 +5593,6 @@ parameters:
 			path: src/Service/Availability/SiriusApiAvailability.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Client\\GovUK\\BankHolidaysAPIClient\:\:getBankHolidays\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Service/Client/GovUK/BankHolidaysAPIClient.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Service\\Client\\GovUK\\BankHolidaysAPIClient\:\:\$logger is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Service/Client/GovUK/BankHolidaysAPIClient.php
-
-		-
 			message: '#^Cannot call method getUser\(\) on Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 4
@@ -6147,7 +6093,7 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: src/Service/Client/RestClient.php
 
 		-
@@ -6159,17 +6105,11 @@ parameters:
 		-
 			message: '#^Cannot call method getHeader\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 2
-			path: src/Service/Client/RestClient.php
-
-		-
-			message: '#^Cannot call method getId\(\) on \(class\-string&T of mixed\)\|\(object&T of mixed\)\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: src/Service/Client/RestClient.php
 
 		-
-			message: '#^Cannot call method hasHeader\(\) on mixed\.$#'
+			message: '#^Cannot call method getId\(\) on \(class\-string&T of mixed\)\|\(object&T of mixed\)\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: src/Service/Client/RestClient.php
@@ -8161,12 +8101,6 @@ parameters:
 			path: src/Service/ReportSubmissionService.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\SecretManagerService\:\:getSecret\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Service/SecretManagerService.php
-
-		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 2
@@ -8985,13 +8919,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
 			identifier: method.notFound
-			count: 34
-			path: tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Cannot access offset ''ClientSecret'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 31
 			path: tests/Unit/Service/Client/RestClientTest.php
 
 		-
@@ -9009,7 +8937,7 @@ parameters:
 		-
 			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 32
+			count: 29
 			path: tests/Unit/Service/Client/RestClientTest.php
 
 		-
@@ -9021,12 +8949,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \(mixed\) of echo cannot be converted to string\.$#'
 			identifier: echo.nonString
-			count: 1
-			path: tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Parameter \#3 \$body of class GuzzleHttp\\Psr7\\Response constructor expects Psr\\Http\\Message\\StreamInterface\|resource\|string\|null, string\|false given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/Unit/Service/Client/RestClientTest.php
 
