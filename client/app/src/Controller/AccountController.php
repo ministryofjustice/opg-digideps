@@ -25,7 +25,7 @@ class AccountController extends SymfonyAbstractController
     ) {
     }
 
-    #[Route('/register_ng', name: 'account_request', methods: ['GET', 'POST'])]
+    #[Route('/account/request', name: 'account_request', methods: ['GET', 'POST'])]
     public function requestAction(Request $request): Response
     {
         $form = $this->createForm(AccountRequestType::class)->handleRequest($request);
