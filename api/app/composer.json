@@ -71,6 +71,7 @@
         "symfony/security-csrf": "^6.4.31",
         "symfony/security-http": "^6.4.42",
         "symfony/serializer": "^6.4.42",
+        "symfony/uid": "^6.4.45",
         "symfony/validator": "^6.4.42",
         "symfony/yaml": "^6.4.42"
     },

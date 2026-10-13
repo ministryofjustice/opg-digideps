@@ -6,6 +6,7 @@ namespace OPG\Digideps\Frontend\Service\Mailer;
 
 use OPG\Digideps\Common\Account\AccountResponse;
 use OPG\Digideps\Common\Account\Area;
+use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
@@ -29,10 +30,12 @@ class MailFactory
     public const string RESET_PASSWORD_TEMPLATE_ID = '827555cc-498a-43ef-957a-63fa387065e3';
     public const string PROCESS_ORG_CSV_TEMPLATE_ID = 'ce20ca97-a954-4d34-8a21-8b4f156188a8';
     public const string PROCESS_LAY_CSV_TEMPLATE_ID = '1e6fddc4-999d-4c44-8038-1853ea0e8511';
+    public const string SET_PASSWORD_TEMPLATE_ID = '';
 
     public const string NOTIFY_FROM_EMAIL_ID = 'db930cb2-2153-4e2a-b3d0-06f7c7f92f37';
 
     public const string DATE_FORMAT = 'j F Y';
+
 
     protected TranslatorInterface $translator;
     protected RouterInterface $router;
@@ -338,25 +341,36 @@ class MailFactory
         return $email;
     }
 
-    public function createSetPasswordEmail(AccountResponse $response, bool $isReset)
+    public function createSetPasswordEmail(AccountResponse $response, bool $isReset): Email
     {
-
-        $notifyParams = array_merge($this->getContactParameters($user), [
-            'resetLink' => $this->generateAbsoluteLink($response->area, 'user_activate', [
-                'action' => $isReset ? 'password-reset' : 'password-set',
-                'token' => "{$response->token}",
-                'key' => "{$response->validationKey}"
-            ]),
-            'recreateLink' => $this->generateAbsoluteLink($area, 'password_forgotten'),
-        ]);
+        $notifyParams = [
+            'email' => $this->translator->trans(match ($response->area) {
+                Area::Deputy => match ($response->deputyType) {
+                    DeputyType::LAY => 'layDeputySupportEmail',
+                    DeputyType::PA => 'paSupportEmail',
+                    DeputyType::PRO => 'profSupportEmail',
+                },
+                Area::Admin => 'generalSupportEmail',
+            }, [], 'common'),
+            'phone' => $this->translator->trans('helpline', [], 'common'),
+            'resetLink' => $this->generateAbsoluteLink(
+                $response->area,
+                $isReset ? 'password_reset' : 'user_activate',
+                [
+                    'action' => $isReset ? 'password-reset' : 'password-set',
+                    'token' => "{$response->token}",
+                    'key' => "{$response->validationKey}"
+                ]
+            ),
+            'recreateLink' => $this->generateAbsoluteLink($response->area, 'password_forgotten'),
+        ];
 
         return new Email()
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate($isReset ? 'resetPassword.fromName' : 'setPassword.fromName'))
             ->setToEmail($response->email->value)
-            ->setTemplate(self::RESET_PASSWORD_TEMPLATE_ID)
+            ->setTemplate($isReset ? self::RESET_PASSWORD_TEMPLATE_ID : self::SET_PASSWORD_TEMPLATE_ID)
             ->setParameters($notifyParams);
-
     }
 
     private function translate(string $key): string
