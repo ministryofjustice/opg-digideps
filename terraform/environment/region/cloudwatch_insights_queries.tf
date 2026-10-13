@@ -43,7 +43,8 @@ resource "aws_cloudwatch_query_definition" "unique_login_device_usage" {
   log_group_names = [aws_cloudwatch_log_group.opg_digi_deps.name]
 
   query_string = <<EOF
-fields msg
+fields msg, service_name
+| filter service_name = "frontend"
 | filter msg like /Login device analytics/
 | parse msg "Login device analytics user_hash=* user_agent=*" as user_hash, user_agent
 | fields user_hash, if(tolower(user_agent) like /mobile|android|iphone|ipad|ipod/, 1, 0) as used_mobile

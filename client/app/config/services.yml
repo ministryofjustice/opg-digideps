@@ -38,7 +38,7 @@ services:
     bind:
       $symfonyEnvironment: "%kernel.environment%"
       $symfonyDebug: "%kernel.debug%"
-      $userAnalyticsHashKey: "%secret%"
+      $userAnalyticsHashKey: "%env(USER_ANALYTICS_HASH_KEY)%"
       Predis\ClientInterface: "@predis"
       $environment: "%env(ROLE)%"
       $hostedEnv: "%env(ENVIRONMENT)%"

@@ -16,7 +16,8 @@ module "environment_secrets" {
     "smoke-test-variables",
     "custom-sql-db-password",
     "custom-sql-users",
-    "application-db-password"
+    "application-db-password",
+    "user-analytics-hash-key"
   ]
   kms_key = module.secret_kms.eu_west_1_target_key_arn
   tags    = var.default_tags

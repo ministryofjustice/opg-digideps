@@ -127,6 +127,7 @@ locals {
     data.aws_secretsmanager_secret.front_api_client_secret.arn,
     data.aws_secretsmanager_secret.admin_frontend_secret.arn,
     data.aws_secretsmanager_secret.admin_api_client_secret.arn,
+    data.aws_secretsmanager_secret.user_analytics_hash_key.arn,
   ]
   execution_role_secrets_resources_pre = concat(
     local.execution_role_secrets_resources,

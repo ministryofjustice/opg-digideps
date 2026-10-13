@@ -137,7 +137,8 @@ locals {
         { name = "API_CLIENT_SECRET", valueFrom = data.aws_secretsmanager_secret.front_api_client_secret.arn },
         { name = "NOTIFY_API_KEY", valueFrom = data.aws_secretsmanager_secret.front_notify_api_key.arn },
         { name = "SECRET", valueFrom = data.aws_secretsmanager_secret.front_frontend_secret.arn },
-        { name = "SIRIUS_API_BASE_URI", valueFrom = aws_ssm_parameter.sirius_api_base_uri.arn }
+        { name = "SIRIUS_API_BASE_URI", valueFrom = aws_ssm_parameter.sirius_api_base_uri.arn },
+        { name = "USER_ANALYTICS_HASH_KEY", valueFrom = data.aws_secretsmanager_secret.user_analytics_hash_key.arn }
       ],
       environment = concat(local.frontend_base_variables,
         [
