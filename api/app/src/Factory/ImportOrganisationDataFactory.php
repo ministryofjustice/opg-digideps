@@ -56,7 +56,7 @@ class ImportOrganisationDataFactory implements DataFactoryInterface
                     INSERT INTO staging.sirius_organisation (domain, name)
                     SELECT
                         o.domain,
-                        (ARRAY_AGG(o.name))[1]
+                        COALESCE((ARRAY_AGG(o.name) FILTER(WHERE o.name <> ''))[1], '')
                     FROM (
                         SELECT
                             CASE
@@ -87,7 +87,11 @@ class ImportOrganisationDataFactory implements DataFactoryInterface
                 if (!$dryRun) {
                     $updated = $this->execute("
                         UPDATE organisation o
-                        SET name = COALESCE(sso.name, o.name)
+                        SET name = CASE
+                            WHEN COALESCE(sso.name, '') <> '' THEN sso.name
+                            WHEN o.name <> '' THEN o.name
+                            ELSE 'Your Organisation'
+                        END
                         FROM staging.sirius_organisation sso
                         WHERE o.id = sso.local_id
                     ");
