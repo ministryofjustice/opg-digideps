@@ -95,13 +95,13 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         $user = $token->getUser();
         $userId = $user?->getId();
 
-        $this->verboseLogger->notice(
-            'Session correlation IDs',
-            [
-                'session_safe_id' => $sessionSafeId,
-                'user_id' => $userId,
-            ]
-        );
+        if ($userId !== null) {
+            $userAgent = $request->headers->get('User-Agent', 'unknown');
+
+            $this->verboseLogger->notice(
+                "Session correlation IDs user_id={$userId} user_agent={$userAgent}"
+            );
+        }
 
         $redirectUrl = $this->redirector->getFirstPageAfterLogin($session);
         if ($request->query->has('lastPage')) {
