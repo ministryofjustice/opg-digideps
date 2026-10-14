@@ -12,13 +12,13 @@ use OPG\Digideps\Common\Validating\ValidatingForm;
 use OPG\Digideps\Frontend\Account\AccountService;
 use OPG\Digideps\Frontend\Form\AccountRequestType;
 use Symfony\Bridge\Twig\Attribute\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[AsController]
-class AccountController extends SymfonyAbstractController
+class AccountController extends AbstractController
 {
     public function __construct(
         private readonly AccountService $accountService
@@ -27,7 +27,7 @@ class AccountController extends SymfonyAbstractController
 
     #[Route('/account/request', name: 'account_request', methods: ['GET', 'POST'])]
     #[Template('@App/Account/request.html.twig')]
-    public function requestAction(Request $request): array
+    public function request(Request $request): array
     {
         $form = $this->createForm(AccountRequestType::class)->handleRequest($request);
 
