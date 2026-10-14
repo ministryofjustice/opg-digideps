@@ -40,7 +40,7 @@
 }
 
 .page-report-header {
-  @extend %contain-floats;
+  @include govuk-clearfix;
 
   .item {
     width: 60%;
