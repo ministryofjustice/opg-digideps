@@ -11,9 +11,9 @@ use OPG\Digideps\Common\Account\NonEmptyString;
 use OPG\Digideps\Common\Validating\ValidatingForm;
 use OPG\Digideps\Frontend\Account\AccountService;
 use OPG\Digideps\Frontend\Form\AccountRequestType;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -26,7 +26,8 @@ class AccountController extends SymfonyAbstractController
     }
 
     #[Route('/account/request', name: 'account_request', methods: ['GET', 'POST'])]
-    public function requestAction(Request $request): Response
+    #[Template('@App/Account/request.html.twig')]
+    public function requestAction(Request $request): array
     {
         $form = $this->createForm(AccountRequestType::class)->handleRequest($request);
 
@@ -62,11 +63,11 @@ class AccountController extends SymfonyAbstractController
             }
         }
 
-        return $this->render('@App/Account/request.html.twig', [
+        return [
             'form' => $form->createView(),
             'accountCreationError' => $accountCreationError,
             'accountCreated' => $accountCreated,
             'deputyEmail' => $deputyEmail
-        ]);
+        ];
     }
 }
