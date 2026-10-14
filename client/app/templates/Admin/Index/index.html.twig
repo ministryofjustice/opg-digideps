@@ -72,13 +72,13 @@
         </div>
 
         {# user list #}
-        <table class="table-govuk-body-s">
+        <table class="govuk-table">
             <thead>
                 <tr>
-                    <th scope="col">{{ (page ~ '.userTable.header.name') | trans }}</th>
-                    <th scope="col">{{ (page ~ '.userTable.header.email') | trans }}</th>
-                    <th scope="col">{{ (page ~ '.userTable.header.active') | trans }}</th>
-                    <th scope="col" class="numeric">{{ (page ~ '.userTable.header.regDate') | trans }}</th>
+                    <th class="govuk-table__header" scope="col">{{ (page ~ '.userTable.header.name') | trans }}</th>
+                    <th class="govuk-table__header" scope="col">{{ (page ~ '.userTable.header.email') | trans }}</th>
+                    <th class="govuk-table__header" scope="col">{{ (page ~ '.userTable.header.active') | trans }}</th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">{{ (page ~ '.userTable.header.regDate') | trans }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -88,7 +88,7 @@
                 : user.firstname ~ ' ' ~ user.lastname
                 %}
                 <tr class="behat-region-user-{{ user.email | behat_namify }}">
-                    <td>
+                    <td class="govuk-table__cell">
                         {% if user.roleName != 'ROLE_ADMIN' or is_granted('ROLE_ADMIN') %}
                             <a href='{{ path('admin_user_view', { id: user.id }) }}'
                                class="behat-link-user-{{ user.email | behat_namify }} govuk-!-font-weight-bold">{{ fullName }}</a><br>
@@ -98,8 +98,8 @@
                             {% if app.user.id == user.id %} {{ (page ~ '.userTable.loggedInState') | trans }} {% endif %}
                         </div>
                     </td>
-                    <td>{{ user.email }}</td>
-                    <td>
+                    <td class="govuk-table__cell">{{ user.email }}</td>
+                    <td class="govuk-table__cell">
                         {% if user.active %}
                             {{ 'yes' | trans({}, 'common') }}
                         {% else %}
@@ -112,7 +112,7 @@
                         {% endif %}
 
                     </td>
-                    <td class="numeric">{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'not registered' | trans({}, 'common') }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'not registered' | trans({}, 'common') }}</td>
                 </tr>
             {% endfor %}
             </tbody>
