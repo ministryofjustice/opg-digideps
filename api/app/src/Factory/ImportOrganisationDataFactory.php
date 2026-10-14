@@ -59,10 +59,10 @@ class ImportOrganisationDataFactory implements DataFactoryInterface
                         COALESCE((ARRAY_AGG(o.name) FILTER(WHERE o.name <> ''))[1], '')
                     FROM (
                         SELECT
-                            CASE
+                            LOWER(CASE
                                 WHEN SUBSTRING(spi.deputy_email from '@(.*)$') IN {$this->blacklist} THEN spi.deputy_email
                                 ELSE SUBSTRING(spi.deputy_email from '@(.*)$')
-                            END AS domain,
+                            END) AS domain,
                             spi.deputy_organisation AS name
                         FROM staging.pa_pro_ingest spi
                     ) o
@@ -70,7 +70,7 @@ class ImportOrganisationDataFactory implements DataFactoryInterface
                     -- Alternate version skipping organisations with blacklisted domains altogether
                     -- FROM (
                     --     SELECT
-                    --         substring(spi.deputy_email from '@(.*)$') AS domain,
+                    --         LOWER(substring(spi.deputy_email from '@(.*)$')) AS domain,
                     --         spi.deputy_organisation AS name
                     --     FROM staging.pa_pro_ingest spi
                     -- ) o
