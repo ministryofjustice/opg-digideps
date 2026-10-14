@@ -7,12 +7,14 @@ namespace OPG\Digideps\Backend\Account;
 use OPG\Digideps\Common\Account\ValidationKey;
 use Predis\Client;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 final readonly class BruteForceSentinel
 {
     private const int MIN_SECONDS_APART = 3600;
 
     public function __construct(
+        #[Autowire(service: 'predis')]
         private Client $predis,
         private LoggerInterface $logger
     ) {
