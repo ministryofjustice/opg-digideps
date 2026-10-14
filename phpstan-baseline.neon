@@ -2479,7 +2479,7 @@ parameters:
 			path: api/app/src/Factory/ClientBenefitsCheckFactory.php
 
 		-
-			message: '#^Cannot call method toString\(\) on mixed\.$#'
+			message: '#^Cannot call method toRfc4122\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/src/Factory/ClientBenefitsCheckFactory.php
@@ -15865,18 +15865,6 @@ parameters:
 			path: api/app/tests/Integration/Controller/AbstractTestController.php
 
 		-
-			message: '#^Offset 0 does not exist on array\<string, OPG\\Digideps\\Backend\\Entity\\Deputy\>\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: api/app/tests/Integration/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$value of class OPG\\Digideps\\Common\\Account\\NonEmptyString constructor expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Controller/AccountControllerTest.php
-
-		-
 			message: '#^Call to an undefined method object\:\:expire\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -21040,12 +21028,6 @@ parameters:
 			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, array\|bool\|float\|int\|string\|UnitEnum\|null given\.$#'
 			identifier: argument.type
 			count: 2
-			path: client/app/src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Command\\ProcessOrgCSVCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
 			path: client/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
@@ -28903,20 +28885,8 @@ parameters:
 			path: client/app/src/Service/Mailer/MailFactory.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:createSetPasswordEmail\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Service/Mailer/MailFactory.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:getRecipientRole\(\) should return string but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: client/app/src/Service/Mailer/MailFactory.php
-
-		-
-			message: '#^Parameter \#1 \$area of method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:generateAbsoluteLink\(\) expects OPG\\Digideps\\Common\\Account\\Area, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: client/app/src/Service/Mailer/MailFactory.php
 
@@ -28939,26 +28909,8 @@ parameters:
 			path: client/app/src/Service/Mailer/MailFactory.php
 
 		-
-			message: '#^Parameter \#1 \$user of method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:getContactParameters\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/Mailer/MailFactory.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/Mailer/MailFactory.php
-
-		-
-			message: '#^Undefined variable\: \$area$#'
-			identifier: variable.undefined
-			count: 1
-			path: client/app/src/Service/Mailer/MailFactory.php
-
-		-
-			message: '#^Undefined variable\: \$user$#'
-			identifier: variable.undefined
 			count: 1
 			path: client/app/src/Service/Mailer/MailFactory.php
 
@@ -28991,12 +28943,6 @@ parameters:
 			identifier: nullsafe.neverNull
 			count: 2
 			path: client/app/src/Service/Mailer/MailSender.php
-
-		-
-			message: '#^Parameter \#1 \$email of method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailSender\:\:send\(\) expects OPG\\Digideps\\Frontend\\Model\\Email, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/Mailer/Mailer.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Mailer\\NotifyClientMock\:\:getSentEmails\(\) has no return type specified\.$#'

@@ -24,9 +24,9 @@ final class Token implements \Stringable, \JsonSerializable
     }
 
     /**
-     * Age in whole days since creation. (->days never returns false as used here)
+     * Age in whole seconds since creation.
      */
-    public int $age { get => $this->uuid->getDateTime()->diff(new \DateTimeImmutable())->days ?: 0 ;}
+    public int $age { get => (int)microtime(true) - $this->uuid->getDateTime()->getTimestamp() ;}
 
     public function isExpired(MaximumTokenAge $purpose): bool
     {

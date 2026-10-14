@@ -9,17 +9,16 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\MoneyReceivedOnClientsBehalfInterface;
-use Ramsey\Uuid\Doctrine\UuidGenerator;
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Table(name: 'income_received_on_clients_behalf')]
 #[ORM\Entity]
 class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterface
 {
-    public function __construct(?UuidInterface $id = null)
+    public function __construct(?Uuid $id = null)
     {
-        $this->id = $id ?? Uuid::uuid4();
+        $this->id = $id ?? Uuid::v4();
         $this->created = new \DateTime();
     }
 
@@ -29,7 +28,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     #[ORM\Column(name: 'id', type: 'uuid')]
     #[ORM\GeneratedValue(strategy: 'NONE')]
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private UuidInterface $id;
+    private Uuid $id;
 
     #[JMS\Groups(['client-benefits-check'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
@@ -63,7 +62,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
         return $this->clientBenefitsCheck;
     }
 
-    public function setClientBenefitsCheck(ClientBenefitsCheck $clientBenefitsCheck): MoneyReceivedOnClientsBehalf
+    public function setClientBenefitsCheck(ClientBenefitsCheck $clientBenefitsCheck): static
     {
         $this->clientBenefitsCheck = $clientBenefitsCheck;
 
@@ -75,19 +74,19 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
         return $this->moneyType;
     }
 
-    public function setMoneyType(string $moneyType): MoneyReceivedOnClientsBehalf
+    public function setMoneyType(string $moneyType): static
     {
         $this->moneyType = $moneyType;
 
         return $this;
     }
 
-    public function getId(): UuidInterface
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function setId(UuidInterface $id): MoneyReceivedOnClientsBehalf
+    public function setId(Uuid $id): static
     {
         $this->id = $id;
 
@@ -99,7 +98,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
         return $this->created;
     }
 
-    public function setCreated(\DateTime $created): MoneyReceivedOnClientsBehalf
+    public function setCreated(\DateTime $created): static
     {
         $this->created = $created;
 
@@ -111,7 +110,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
         return $this->amount;
     }
 
-    public function setAmount(?float $amount): MoneyReceivedOnClientsBehalf
+    public function setAmount(?float $amount): static
     {
         $this->amount = $amount;
 
@@ -123,7 +122,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
         return $this->whoReceivedMoney;
     }
 
-    public function setWhoReceivedMoney(?string $whoReceivedMoney): MoneyReceivedOnClientsBehalf
+    public function setWhoReceivedMoney(?string $whoReceivedMoney): static
     {
         $this->whoReceivedMoney = $whoReceivedMoney;
 
