@@ -17,9 +17,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MailFactory
 {
-    public const string AREA_DEPUTY = 'deputy';
-    public const string AREA_ADMIN = 'admin';
-
     // Maintained in GOVUK Notify
     public const string ACTIVATION_TEMPLATE_ID = '07e7fdb3-ad81-4105-b6b6-c3854e0c6caa';
     public const string REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '2f8fff09-5a71-446a-a220-d8a3dc78fa42';
@@ -268,7 +265,7 @@ class MailFactory
             'orgIntro' => self::getRecipientRole($user) == 'default' ? '' : $this->buildOrgIntroText($submittedReport->getClient()),
             'startDate' => $submittedReport->getStartDate()?->format(self::DATE_FORMAT),
             'endDate' => $submittedReport->getEndDate()->format(self::DATE_FORMAT),
-            'homepageURL' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
+            'homepageURL' => $this->generateAbsoluteLink(Area::Deputy, 'homepage'),
             'newStartDate' => $newReport->getStartDate()?->format(self::DATE_FORMAT),
             'newEndDate' => $newReport->getEndDate()?->format(self::DATE_FORMAT),
             'EndDatePlus1' => $dateSubmittableFrom->format(self::DATE_FORMAT),

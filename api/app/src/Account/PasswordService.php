@@ -24,7 +24,7 @@ final readonly class PasswordService
     ) {
     }
 
-    public function setPasswordFromRequest(PasswordRequest $request): AccountError|true
+    public function setPasswordFromRequest(PasswordRequest $request): ?AccountError
     {
         if (!$this->bruteForceSentinel->checkAndRegisterAttempt($request->validationKey)) {
             return AccountError::TokenInvalid;
@@ -39,7 +39,7 @@ final readonly class PasswordService
             return AccountError::TokenInvalid;
         }
         $this->setUserPassword($user, $request->password, true);
-        return true;
+        return null;
     }
 
     public function setUserPassword(User $user, Password $password, bool $flush = false): void
