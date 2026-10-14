@@ -47,8 +47,8 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                     )
                     SELECT
                         COALESCE(spi.deputy_uid, sli.deputy_uid),
-                        (ARRAY_AGG(COALESCE(spi.deputy_type, 'LAY')))[1],
-                        (ARRAY_AGG(spi.deputy_email))[1],
+                        UPPER((ARRAY_AGG(COALESCE(spi.deputy_type, 'LAY')))[1]),
+                        LOWER((ARRAY_AGG(spi.deputy_email))[1]),
                         (ARRAY_AGG(spi.deputy_organisation))[1],
                         (ARRAY_AGG(COALESCE(spi.deputy_first_name, sli.deputy_first_name)))[1],
                         (ARRAY_AGG(COALESCE(spi.deputy_last_name, sli.deputy_last_name)))[1],
@@ -75,7 +75,7 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                         SET
                             firstname = COALESCE(ssd.deputy_first_name, d.firstname),
                             lastname = COALESCE(ssd.deputy_last_name, d.lastname),
-                            email1 = COALESCE(ssd.deputy_email, d.email1),
+                            email1 = LOWER(COALESCE(ssd.deputy_email, d.email1)),
                             address1 = COALESCE(ssd.deputy_address1, d.address1),
                             address2 = COALESCE(ssd.deputy_address2, d.address2),
                             address3 = COALESCE(ssd.deputy_address3, d.address3),
@@ -90,7 +90,8 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                             user_id = COALESCE(u.id, d.user_id)
                         FROM staging.sirius_deputy ssd
                         LEFT JOIN organisation o
-                            ON ssd.deputy_email LIKE CONCAT('%@', o.email_identifier) OR ssd.deputy_email = o.email_identifier
+                            ON ssd.deputy_email LIKE CONCAT('%@', o.email_identifier)
+                            OR ssd.deputy_email = o.email_identifier
                         LEFT JOIN dd_user u
                             ON u.deputy_uid = ssd.deputy_uid::BIGINT
                             AND u.is_primary IS true
@@ -131,6 +132,7 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                         FROM staging.sirius_deputy ssd
                         LEFT JOIN organisation o
                             ON ssd.deputy_email LIKE CONCAT('%@', o.email_identifier)
+                            OR ssd.deputy_email = o.email_identifier
                         LEFT JOIN dd_user u
                             ON u.deputy_uid = ssd.deputy_uid::BIGINT
                         WHERE ssd.local_id IS NULL
