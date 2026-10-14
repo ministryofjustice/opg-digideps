@@ -21,22 +21,6 @@
   }
 }
 
-.button-secondary {
-  @include button(govuk-colour("black", $variant: "tint-95"));
-
-  &[disabled="disabled"] {
-    background: govuk-colour("black", $variant: "tint-95");
-  }
-}
-
-.button-warning {
-  @include button(govuk-colour("red"));
-
-  &[disabled="disabled"] {
-    background: govuk-colour("red");
-  }
-}
-
 .button-link {
   @include govuk-media-query($until: tablet) {
     margin-left: 0;
@@ -50,6 +34,6 @@
 
 .action-link {
   &:visited {
-    color: $link-colour;
+    color: $govuk-link-colour;
   }
 }

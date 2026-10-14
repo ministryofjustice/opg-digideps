@@ -63,7 +63,7 @@
 .alert,
 .alert-notice {
   @extend %alert-base;
-  background-color: rgba($border-colour, 0.1);
+  background-color: rgba($govuk-border-colour, 0.1);
 }
 
 .alert-success {

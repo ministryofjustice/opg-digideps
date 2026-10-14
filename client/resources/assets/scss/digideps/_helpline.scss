@@ -8,7 +8,7 @@
   right: 20px;
 
   h3 {
-    @include bold-19();
+    @include govuk-font($size: 19, $weight: bold);
     display: inline-block;
     margin: 7px 0 0 0;
     padding-left: 50px;
@@ -21,14 +21,14 @@
     }
 
     @include govuk-media-query($from: tablet) {
-      @include bold-16();
+      @include govuk-font($size: 16, $weight: bold);
       padding-left: 33px;
       background-position: 0 3px;
       background-size: 27px 31px;
     }
 
     @include govuk-media-query($from: desktop) {
-      @include bold-19();
+      @include govuk-font($size: 19, $weight: bold);
       padding-left: 50px;
       background-position: 0 0;
       background-size: 35px 44px;

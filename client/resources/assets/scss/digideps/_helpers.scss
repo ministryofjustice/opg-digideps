@@ -181,7 +181,7 @@
 // Move elements (experimental)
 .move-quarter--up {
   position: relative;
-  top: -($govuk-gutter / 4);
+  top: calc($govuk-gutter * -0.25);
 }
 
 // Text alignment
@@ -205,37 +205,37 @@
   width: 100%;
 }
 .width-three-quarters {
-  width: $three-quarters;
+  width: 75%;
 } // 75%
 .width-two-thirds {
-  width: $two-thirds;
+  width: 66.67%;
 } // 66.67%
 .width-half {
-  width: $half;
+  width: 50%;
 } // 50%
 .width-third {
-  width: $one-third;
+  width: 33.34%;
 } // 33.34%
 .width-quarter {
-  width: $one-quarter;
+  width: 25%;
 } // 25%
 .width-fifth {
-  width: $full-width / 5;
+  width: 20%;
 } // 20%
 .width-sixth {
-  width: $full-width / 6;
+  width: 16.67%;
 } // 16.67%
 .width-seventh {
-  width: $full-width / 7;
+  width: 14.29%;
 } // 14.29%
 .width-eighth {
-  width: $full-width / 8;
+  width: 12.5%;
 } // 12.5%
 .width-tenth {
-  width: $full-width / 10;
+  width: 10%;
 } // 10%
 .width-twentieth {
-  width: $full-width / 20;
+  width: 5%;
 } // 5%
 
 // scss-lint:enable SpaceBeforeBrace, SpaceAfterPropertyColon
@@ -266,11 +266,11 @@
 
 // Simple 1px border
 .border-bottom {
-  border-bottom: 1px solid $border-colour;
+  border-bottom: 1px solid $govuk-border-colour;
 }
 
 .border-top {
-  border-top: 1px solid $border-colour;
+  border-top: 1px solid $govuk-border-colour;
 }
 
 // Negating borders

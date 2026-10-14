@@ -96,7 +96,6 @@ const imagesToCopy = [
     from: "node_modules/@ministryofjustice/frontend/moj/assets/images/",
     to: "public/images/"
   },
-  { from: "node_modules/govuk_frontend_toolkit/images/", to: "public/images/" },
   { from: "assets/images/generic-images/", to: "public/" }
 ]
 
@@ -124,9 +123,7 @@ console.log("Finished copying image files")
 const options = {
   loadPaths: [
     dirname,
-    "node_modules/govuk_frontend_toolkit/stylesheets",
     "node_modules/govuk-frontend/dist/govuk/assets",
-    "node_modules/govuk-elements-sass/public/sass",
     "assets/scss"
   ]
 }
