@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Account;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Common\Account\AccountError;
@@ -19,7 +19,7 @@ use Doctrine\DBAL\Types\Type;
 final readonly class AccountService
 {
     public function __construct(
-        private EntityManager $entityManager,
+        private EntityManagerInterface $entityManager,
         private PasswordService $passwordService,
     ) {
     }
