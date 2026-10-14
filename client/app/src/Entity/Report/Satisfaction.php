@@ -4,41 +4,34 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Entity\Report;
 
-use OPG\Digideps\Frontend\Entity\UserResearch\UserResearchResponse;
 use JMS\Serializer\Annotation as JMS;
 
 class Satisfaction
 {
     #[JMS\Type('integer')]
-    private int $id;
+    private ?int $id = null;
 
     #[JMS\Type('integer')]
     private int $score;
 
-    #[JMS\Type('string')]
-    private string $comments;
-
-    #[JMS\Type('string')]
-    private string $deputyRole;
-
-    #[JMS\Type('string')]
-    private string $reportType;
-
     #[JMS\Type('DateTime')]
     private \DateTime $created;
 
-    #[JMS\Type('OPG\Digideps\Frontend\Entity\UserResearch\UserResearchResponse')]
-    private UserResearchResponse $userResearchResponse;
+    #[JMS\Type('string')]
+    private ?string $comments = null;
 
-    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Report')]
-    private ?Report $report = null;
+    #[JMS\Type('string')]
+    private ?string $deputyRole = null;
 
-    public function getId(): int
+    #[JMS\Type('string')]
+    private ?string $reportType = null;
+
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
 
@@ -57,42 +50,6 @@ class Satisfaction
         return $this;
     }
 
-    public function getComments(): string
-    {
-        return $this->comments;
-    }
-
-    public function setComments(string $comments): static
-    {
-        $this->comments = $comments;
-
-        return $this;
-    }
-
-    public function getDeputyRole(): string
-    {
-        return $this->deputyRole;
-    }
-
-    public function setDeputyRole(string $deputyRole): static
-    {
-        $this->deputyRole = $deputyRole;
-
-        return $this;
-    }
-
-    public function getReportType(): string
-    {
-        return $this->reportType;
-    }
-
-    public function setReportType(string $reportType): static
-    {
-        $this->reportType = $reportType;
-
-        return $this;
-    }
-
     public function getCreated(): \DateTime
     {
         return $this->created;
@@ -105,26 +62,38 @@ class Satisfaction
         return $this;
     }
 
-    public function getUserResearchResponse(): UserResearchResponse
+    public function getComments(): ?string
     {
-        return $this->userResearchResponse;
+        return $this->comments;
     }
 
-    public function setUserResearchResponse(UserResearchResponse $userResearchResponse): static
+    public function setComments(?string $comments): static
     {
-        $this->userResearchResponse = $userResearchResponse;
+        $this->comments = $comments;
 
         return $this;
     }
 
-    public function getReport(): ?Report
+    public function getDeputyRole(): ?string
     {
-        return $this->report;
+        return $this->deputyRole;
     }
 
-    public function setReport(?Report $report): static
+    public function setDeputyRole(?string $deputyRole): static
     {
-        $this->report = $report;
+        $this->deputyRole = $deputyRole;
+
+        return $this;
+    }
+
+    public function getReportType(): ?string
+    {
+        return $this->reportType;
+    }
+
+    public function setReportType(?string $reportType): static
+    {
+        $this->reportType = $reportType;
 
         return $this;
     }

@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service\Csv;
 
-class SatisfactionCsvGenerator
-{
-    private CsvBuilder $csvBuilder;
+use OPG\Digideps\Frontend\Entity\Report\Satisfaction;
 
-    public function __construct(CsvBuilder $csvBuilder)
+readonly class SatisfactionCsvGenerator
+{
+    public function __construct(private CsvBuilder $csvBuilder)
     {
-        $this->csvBuilder = $csvBuilder;
     }
 
-    public function generateSatisfactionResponsesCsv(array $satisfactions)
+    /**
+     * @param array<Satisfaction> $satisfactions
+     */
+    public function generateSatisfactionResponsesCsv(array $satisfactions): string
     {
         $headers = ['Satisfaction Score', 'Comments', 'Deputy Role', 'Report Type', 'Date Provided'];
         $rows = [];
@@ -22,8 +24,8 @@ class SatisfactionCsvGenerator
             $rows[] = [
                 $satisfaction->getScore(),
                 $satisfaction->getComments(),
-                $satisfaction->getDeputyrole(),
-                $satisfaction->getReporttype(),
+                $satisfaction->getDeputyRole(),
+                $satisfaction->getReportType(),
                 $satisfaction->getCreated()->format('Y-m-d'),
             ];
         }

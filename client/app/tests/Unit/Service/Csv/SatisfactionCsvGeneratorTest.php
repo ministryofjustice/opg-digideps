@@ -15,23 +15,27 @@ class SatisfactionCsvGeneratorTest extends TestCase
     {
         $satisfactions = [
             new Satisfaction()
-            ->setComments('Loved it')
-            ->setCreated(new \DateTime('2020-12-25'))
-            ->setDeputyRole('LAY_DEPUTY')
-            ->setReportType('102')
-            ->setScore(5),
+                ->setScore(5)
+                ->setCreated(new \DateTime('2020-12-25'))
+                ->setComments('Loved it')
+                ->setDeputyRole('LAY_DEPUTY')
+                ->setReportType('102'),
             new Satisfaction()
-                ->setComments('Not great...')
-                ->setCreated(new \DateTime('2020-12-26'))
-                ->setDeputyRole('PROF_DEPUTY')
-                ->setReportType('103')
                 ->setScore(2)
+                ->setCreated(new \DateTime('2020-12-26'))
+                ->setComments('Not great...')
+                ->setDeputyRole('PROF_DEPUTY')
+                ->setReportType('103'),
+            new Satisfaction()
+                ->setScore(3)
+                ->setCreated(new \DateTime('2026-10-13'))
         ];
 
         $expectedCsv = <<<CSV
 "Satisfaction Score",Comments,"Deputy Role","Report Type","Date Provided"
 5,"Loved it",LAY_DEPUTY,102,2020-12-25
 2,"Not great...",PROF_DEPUTY,103,2020-12-26
+3,,,,2026-10-13
 
 CSV;
 
