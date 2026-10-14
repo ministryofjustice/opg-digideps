@@ -66,6 +66,7 @@ final readonly class AccountService
         return $this->mailer->sendSetPasswordEmail($response, $isReset) ? $response->email : AccountError::EmailError;
     }
 
+    // TODO remove when we've got the real method working
     public function sendAccountRequestMock(AccountRequest $accountRequest, string $mockResponseToReceive): Email|AccountError
     {
         if ($mockResponseToReceive === 'alreadyregistered') {
