@@ -43,9 +43,10 @@ resource "aws_cloudwatch_query_definition" "unique_login_device_usage" {
   log_group_names = [aws_cloudwatch_log_group.opg_digi_deps.name]
 
   query_string = <<EOF
-fields msg, service_name, user_id, user_agent
+fields msg, service_name
 | filter service_name = "frontend"
-| filter msg = "Session correlation IDs"
+| filter msg like /Session correlation IDs/
+| parse msg "Session correlation IDs - session_safe_id: *, user_id: *, user_agent: *" as session_safe_id, user_id, user_agent
 | fields user_id, if(tolower(user_agent) like /mobile|android|iphone|ipad|ipod/, 1, 0) as used_mobile
 | stats max(used_mobile) as used_mobile by user_id
 | stats count(*) as unique_users, sum(used_mobile) as mobile_users
