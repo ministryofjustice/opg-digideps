@@ -5065,12 +5065,6 @@ parameters:
 			path: src/v2/Assembler/ClientAssembler.php
 
 		-
-			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\v2\\Assembler\\Report\\ReportAssemblerInterface\:\:assembleFromArray\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/v2/Assembler/ClientAssembler.php
-
-		-
 			message: '#^Parameter \#1 \$object_or_class of function method_exists expects object\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
