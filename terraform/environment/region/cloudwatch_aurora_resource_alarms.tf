@@ -92,7 +92,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_throughput" {
 
   metric_query {
     id          = "normal_read_throughput_limit"
-    expression  = "LAST(ANOMALY_DETECTION_BAND(read_throughput, 4))"
+    expression  = "LAST(ANOMALY_DETECTION_BAND(read_throughput, 6))"
     label       = "Normal read throughput limit"
     return_data = false
   }
@@ -106,7 +106,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_throughput" {
 
   metric_query {
     id          = "normal_network_transmit_limit"
-    expression  = "LAST(ANOMALY_DETECTION_BAND(network_transmit, 4))"
+    expression  = "LAST(ANOMALY_DETECTION_BAND(network_transmit, 6))"
     label       = "Normal network transmit limit"
     return_data = false
   }
@@ -158,7 +158,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_throughput" {
   alarm_actions             = [data.aws_sns_topic.alerts.arn]
   ok_actions                = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   insufficient_data_actions = []
-  actions_enabled           = false
+  actions_enabled           = var.account.environment.alarms_active
   tags                      = var.default_tags
 }
 
@@ -225,6 +225,6 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_read_iops" {
   alarm_actions             = [data.aws_sns_topic.alerts.arn]
   ok_actions                = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   insufficient_data_actions = []
-  actions_enabled           = false
+  actions_enabled           = var.account.environment.alarms_active
   tags                      = var.default_tags
 }
