@@ -2467,7 +2467,7 @@ parameters:
 			path: src/Factory/ClientBenefitsCheckFactory.php
 
 		-
-			message: '#^Cannot call method toString\(\) on mixed\.$#'
+			message: '#^Cannot call method toRfc4122\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: src/Factory/ClientBenefitsCheckFactory.php
@@ -15851,18 +15851,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: tests/Integration/Controller/AbstractTestController.php
-
-		-
-			message: '#^Offset 0 does not exist on array\<string, OPG\\Digideps\\Backend\\Entity\\Deputy\>\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: tests/Integration/Controller/AccountControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$value of class OPG\\Digideps\\Common\\Account\\NonEmptyString constructor expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/AccountControllerTest.php
 
 		-
 			message: '#^Call to an undefined method object\:\:expire\(\)\.$#'
