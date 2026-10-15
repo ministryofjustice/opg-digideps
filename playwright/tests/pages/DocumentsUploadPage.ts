@@ -33,17 +33,13 @@ export default class DocumentsUploadPage extends DocumentsFileListPage {
 
   // press "Send documents"
   async sendDocuments() {
-    await Promise.all([
-      this.page.locator('a[data-role="send-documents-link"]').click(),
-      this.page.waitForLoadState("networkidle"),
-    ]);
+    await this.page.locator('a[data-role="send-documents-link"]').click();
+    await this.page.waitForLoadState("networkidle");
   }
 
   // press "Continue"
   async continue() {
-    await Promise.all([
-      this.page.locator("a.behat-link-continue").click(),
-      this.page.waitForLoadState("networkidle"),
-    ]);
+    await this.page.locator("a.behat-link-continue").click();
+    await this.page.waitForLoadState("networkidle");
   }
 }

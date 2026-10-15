@@ -16,10 +16,8 @@ export default class LoginPage {
     await this.page.fill("#login_email", user.email);
     await this.page.fill("#login_password", user.password);
 
-    await Promise.all([
-      this.page.waitForLoadState("networkidle"),
-      this.page.click("#login_login"),
-    ]);
+    await this.page.click("#login_login");
+    await this.page.waitForLoadState("networkidle");
   }
 
   async expectOnPage(expected: ExpectedPage) {
