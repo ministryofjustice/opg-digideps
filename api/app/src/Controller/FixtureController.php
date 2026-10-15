@@ -6,6 +6,7 @@ namespace OPG\Digideps\Backend\Controller;
 
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
@@ -30,9 +31,11 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  * @phpstan-type FixtureDocument array{id: int}
  * @phpstan-type FixtureOrder array{courtOrderUid: string, caseNumber: ?string, clientId: int, reports: array<FixtureReport>}
  * @phpstan-type FixtureUser array{email: string}
+ * @phpstan-type FixtureDeputy array{firstName: string, lastName: string, email: string, postCode: string}
+ * @phpstan-type FixtureClient array{id: int, lastName: ?string, caseNumber: ?string}
  * @phpstan-type Order array{order: CourtOrder, reports: array<Report>}
  * @phpstan-type OrderPair array<'pfa'|'hw', Order>
- * @phpstan-type FixtureJson array{users: array<string, FixtureUser>, orders: array<FixtureOrder>}
+ * @phpstan-type FixtureJson array{users: array<string, FixtureUser>, orders: array<FixtureOrder>, client: FixtureClient}
  * @phpstan-type UserCreateSpec array{deputyType: string, userType: string}
  * @phpstan-type UserCreatePayload array<UserCreateSpec>
  */
@@ -205,6 +208,7 @@ class FixtureController extends AbstractController
         $courtOrderPayload = new ValidatingArray($request->getPayload()->all());
 
         $deputyDescriptors = [];
+
         /** @var array $deputyPayload */
         foreach ($courtOrderPayload->getArrayOrDefault('deputies', []) as $deputyPayload) {
             $deputy = new ValidatingArray($deputyPayload);
@@ -212,7 +216,8 @@ class FixtureController extends AbstractController
             $deputyDescriptors[] = new DeputyDescriptor($deputy->getStringOrThrow('ref'), $deputyType);
         }
 
-        $reportType = CourtOrderReportType::tryFrom($courtOrderPayload->getStringOrDefault('reportType', '')) ?? CourtOrderReportType::OPG102;
+        $reportType = CourtOrderReportType::tryFrom($courtOrderPayload->getStringOrDefault('reportType', ''))
+            ?? CourtOrderReportType::OPG102;
 
         $reportDescriptors = [];
         /** @var array $reportPayload */
@@ -249,34 +254,56 @@ class FixtureController extends AbstractController
 
         $scenario = $this->fixtureService->instantiateScenario(new Scenario($courtOrder));
 
+        // TODO Scenario implements jsonSerializable, then use json_encode() on it
         return $this->jsonifyScenario($scenario);
     }
 
     /**
      * @return FixtureJson
      */
-    private function jsonifyScenario(array $details): array
+    private function jsonifyScenario(array $scenario): array
     {
         /** @var OrderPair[] $orderPairs */
-        $orderPairs = $details['orders'] ?? [];
+        $orderPairs = $scenario['orders'] ?? [];
 
         /** @var array $persons */
-        $persons = $details['persons'] ?? [];
+        $persons = $scenario['persons'] ?? [];
 
         /** @var User[] $users */
         $users = $persons['users'] ?? [];
 
+        /** @var Deputy[] $deputies */
+        $deputies = $persons['deputies'] ?? [];
+
         /** @var Client $client */
-        $client = $details['client'] ?? null;
+        $client = $scenario['client'] ?? null;
         if ($client === null) {
             throw new \DomainException('Scenario did not generate a client');
         }
 
+        /** @var FixtureClient $fixtureClient */
+        $fixtureClient = [
+            'id' => $client->getId(),
+            'lastName' => $client->getLastname(),
+            'caseNumber' => $client->getCaseNumber()
+        ];
+
         /** @var array<string, FixtureUser> $fixtureUsers */
-        $fixtureUsers = array_map(function ($user) {
+        $fixtureUsers = array_map(function (User $user) {
             return ['email' => $user->getEmail()];
         }, $users);
 
+        /** @var array<string, FixtureDeputy> $fixtureDeputies */
+        $fixtureDeputies = array_map(function (Deputy $deputy) {
+            return [
+                'firstName' => $deputy->getFirstname(),
+                'lastName' => $deputy->getLastname(),
+                'postCode' => $deputy->getAddressPostcode(),
+                'email' => $deputy->getEmail1()
+            ];
+        }, $deputies);
+
+        /** @var FixtureOrder[] $fixtureOrders */
         $fixtureOrders = [];
 
         /** @var OrderPair $orderPair */
@@ -310,7 +337,9 @@ class FixtureController extends AbstractController
 
         return [
             'users' => $fixtureUsers,
+            'deputies' => $fixtureDeputies,
             'orders' => $fixtureOrders,
+            'client' => $fixtureClient
         ];
     }
 
