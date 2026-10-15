@@ -787,12 +787,6 @@ parameters:
 			path: api/app/src/Controller/Report/DocumentController.php
 
 		-
-			message: '#^Variable \$document might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: api/app/src/Controller/Report/DocumentController.php
-
-		-
 			message: '#^Parameter \#1 \$sectionIds of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:updateSectionsStatusCache\(\) expects array\<string\>\|null, array given\.$#'
 			identifier: argument.type
 			count: 3
@@ -5072,12 +5066,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$caseNumber of method OPG\\Digideps\\Backend\\v2\\DTO\\ClientDto\:\:setCaseNumber\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\v2\\Assembler\\Report\\ReportAssemblerInterface\:\:assembleFromArray\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/v2/Assembler/ClientAssembler.php
@@ -21193,6 +21181,18 @@ parameters:
 			path: client/app/src/Components/OPG/Review/MoneyOutShort.php
 
 		-
+			message: '#^Offset 1 on array\{non\-falsy\-string, string, non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: client/app/src/Components/OPG/RichText/RichTextParser.php
+
+		-
+			message: '#^Offset 2 on array\{non\-falsy\-string, string, non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: client/app/src/Components/OPG/RichText/RichTextParser.php
+
+		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -24925,12 +24925,6 @@ parameters:
 			path: client/app/src/EventDispatcher/ObservableEventDispatcher.php
 
 		-
-			message: '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\Session\\SessionInterface\:\:setFlash\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/EventListener/AuthenticationHandler.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\EventListener\\ForbiddenExceptionListener\:\:onKernelException\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -25919,12 +25913,6 @@ parameters:
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: client/app/src/Form/Report/MentalAssessment.php
-
-		-
-			message: '#^Cannot call method getHasCapacityChanged\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Form/Report/MentalCapacityType.php
 
 		-
 			message: '#^Parameter \#1 \$child of method Symfony\\Component\\Form\\FormBuilderInterface\:\:add\(\) expects string\|Symfony\\Component\\Form\\FormBuilderInterface, mixed given\.$#'
@@ -27639,12 +27627,6 @@ parameters:
 		-
 			message: '#^Call to function array_key_exists\(\) with non\-empty\-string and array\{\} will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 1
-			path: client/app/src/Service/CssClassCollector.php
-
-		-
-			message: '#^Cannot use \+\+ on mixed\.$#'
-			identifier: preInc.type
 			count: 1
 			path: client/app/src/Service/CssClassCollector.php
 
@@ -31661,6 +31643,12 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
+
+		-
+			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\DocumentSyncCommand\:\:getDefaultName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Command\\DocumentSyncCommandTest\:\:testSleepsWhenTurnedOff\(\) has no return type specified\.$#'

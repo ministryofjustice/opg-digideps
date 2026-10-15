@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "aurora_high_cpu" {
-  for_each = module.database[0].instance_identifiers
+  for_each = module.database.instance_identifiers
 
   alarm_name          = "${local.environment}-aurora-${each.key}-high-cpu"
   alarm_description   = "Aurora instance ${each.value} has had average CPU utilisation at or above 85% for 45 minutes."
@@ -25,7 +25,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_high_cpu" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "aurora_high_acu" {
-  for_each = module.database[0].instance_identifiers
+  for_each = module.database.instance_identifiers
 
   alarm_name          = "${local.environment}-aurora-${each.key}-high-acu"
   alarm_description   = "Aurora instance ${each.value} has used at least 85% of its configured maximum ACU capacity for 45 minutes."
@@ -66,7 +66,7 @@ resource "aws_cloudwatch_log_metric_filter" "database_analyse_in_progress" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "aurora_unusual_throughput" {
-  for_each = module.database[0].instance_identifiers
+  for_each = module.database.instance_identifiers
 
   alarm_name          = "${local.environment}-aurora-${each.key}-unusual-throughput"
   alarm_description   = "Aurora instance ${each.value} has experienced unusually high read or network transmit throughput for at least 10 minutes."
@@ -158,12 +158,12 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_throughput" {
   alarm_actions             = [data.aws_sns_topic.alerts.arn]
   ok_actions                = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   insufficient_data_actions = []
-  actions_enabled           = var.account.environment.alarms_active
+  actions_enabled           = false
   tags                      = var.default_tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "aurora_unusual_read_iops" {
-  for_each = module.database[0].instance_identifiers
+  for_each = module.database.instance_identifiers
 
   alarm_name          = "${local.environment}-aurora-${each.key}-unusual-read-iops"
   alarm_description   = "Aurora instance ${each.value} has experienced unusually high read IOPS for at least 10 minutes."
@@ -225,6 +225,6 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_read_iops" {
   alarm_actions             = [data.aws_sns_topic.alerts.arn]
   ok_actions                = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   insufficient_data_actions = []
-  actions_enabled           = var.account.environment.alarms_active
+  actions_enabled           = false
   tags                      = var.default_tags
 }
