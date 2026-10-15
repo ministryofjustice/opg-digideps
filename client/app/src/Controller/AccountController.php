@@ -27,7 +27,7 @@ class AccountController extends AbstractController
 
     #[Route('/account/request', name: 'account_request', methods: ['GET', 'POST'])]
     #[Template('@App/Account/request.html.twig')]
-    public function request(Request $request): array
+    public function requestAction(Request $request): array
     {
         $form = $this->createForm(AccountRequestType::class)->handleRequest($request);
 
