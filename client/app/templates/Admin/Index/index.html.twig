@@ -49,8 +49,6 @@
 
     {{ form_end(form) }}
 
-    <hr>
-
     {# LIST #}
 
     <div class="behat-region-users user-list">
@@ -73,15 +71,15 @@
 
         {# user list #}
         <table class="govuk-table">
-            <thead>
-                <tr>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">{{ (page ~ '.userTable.header.name') | trans }}</th>
                     <th class="govuk-table__header" scope="col">{{ (page ~ '.userTable.header.email') | trans }}</th>
                     <th class="govuk-table__header" scope="col">{{ (page ~ '.userTable.header.active') | trans }}</th>
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">{{ (page ~ '.userTable.header.regDate') | trans }}</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
             {% for user in users %}
                 {% set fullName = (user.isCoDeputy and user.firstname is empty and user.lastname is empty)
                 ? (page ~ '.userTable.codepNameNotSet') | trans
