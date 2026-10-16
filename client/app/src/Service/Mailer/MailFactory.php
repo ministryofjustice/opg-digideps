@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service\Mailer;
 
+use OPG\Digideps\Common\Account\AccountResponse;
+use OPG\Digideps\Common\Account\Area;
+use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
@@ -14,9 +17,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MailFactory
 {
-    public const string AREA_DEPUTY = 'deputy';
-    public const string AREA_ADMIN = 'admin';
-
     // Maintained in GOVUK Notify
     public const string ACTIVATION_TEMPLATE_ID = '07e7fdb3-ad81-4105-b6b6-c3854e0c6caa';
     public const string REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '2f8fff09-5a71-446a-a220-d8a3dc78fa42';
@@ -27,10 +27,12 @@ class MailFactory
     public const string RESET_PASSWORD_TEMPLATE_ID = '827555cc-498a-43ef-957a-63fa387065e3';
     public const string PROCESS_ORG_CSV_TEMPLATE_ID = 'ce20ca97-a954-4d34-8a21-8b4f156188a8';
     public const string PROCESS_LAY_CSV_TEMPLATE_ID = '1e6fddc4-999d-4c44-8038-1853ea0e8511';
+    public const string SET_PASSWORD_TEMPLATE_ID = '';
 
     public const string NOTIFY_FROM_EMAIL_ID = 'db930cb2-2153-4e2a-b3d0-06f7c7f92f37';
 
     public const string DATE_FORMAT = 'j F Y';
+
 
     protected TranslatorInterface $translator;
     protected RouterInterface $router;
@@ -53,18 +55,16 @@ class MailFactory
     }
 
     /**
-     * @param string $area deputy|admin
      * @param string $routeName must be in YML config under email.routes
      *
      * @return string calculated route
      * @throws \Exception
      */
-    private function generateAbsoluteLink(string $area, string $routeName, array $params = []): string
+    private function generateAbsoluteLink(Area $area, string $routeName, array $params = []): string
     {
         return match ($area) {
-            self::AREA_DEPUTY => $this->baseURLs['front'] . $this->router->generate($routeName, $params),
-            self::AREA_ADMIN => $this->baseURLs['admin'] . $this->router->generate($routeName, $params),
-            default => throw new \Exception("area $area not found"),
+            Area::Deputy => $this->baseURLs['front'] . $this->router->generate($routeName, $params),
+            Area::Admin => $this->baseURLs['admin'] . $this->router->generate($routeName, $params),
         };
     }
 
@@ -182,9 +182,9 @@ class MailFactory
     /**
      * Get user area depending on the role.
      */
-    private function getUserArea(User $user): string
+    private function getUserArea(User $user): Area
     {
-        return $user->isDeputy() ? self::AREA_DEPUTY : self::AREA_ADMIN;
+        return $user->isDeputy() ? Area::Deputy : Area::Admin;
     }
 
     public function createUpdateClientDetailsEmail(Client $client): Email
@@ -265,7 +265,7 @@ class MailFactory
             'orgIntro' => self::getRecipientRole($user) == 'default' ? '' : $this->buildOrgIntroText($submittedReport->getClient()),
             'startDate' => $submittedReport->getStartDate()?->format(self::DATE_FORMAT),
             'endDate' => $submittedReport->getEndDate()->format(self::DATE_FORMAT),
-            'homepageURL' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
+            'homepageURL' => $this->generateAbsoluteLink(Area::Deputy, 'homepage'),
             'newStartDate' => $newReport->getStartDate()?->format(self::DATE_FORMAT),
             'newEndDate' => $newReport->getEndDate()?->format(self::DATE_FORMAT),
             'EndDatePlus1' => $dateSubmittableFrom->format(self::DATE_FORMAT),
@@ -336,6 +336,38 @@ class MailFactory
         $email->setParameters($notifyParams);
 
         return $email;
+    }
+
+    public function createSetPasswordEmail(AccountResponse $response, bool $isReset): Email
+    {
+        $notifyParams = [
+            'email' => $this->translator->trans(match ($response->area) {
+                Area::Deputy => match ($response->deputyType) {
+                    DeputyType::LAY => 'layDeputySupportEmail',
+                    DeputyType::PA => 'paSupportEmail',
+                    DeputyType::PRO => 'profSupportEmail',
+                },
+                Area::Admin => 'generalSupportEmail',
+            }, [], 'common'),
+            'phone' => $this->translator->trans('helpline', [], 'common'),
+            'resetLink' => $this->generateAbsoluteLink(
+                $response->area,
+                $isReset ? 'password_reset' : 'user_activate',
+                [
+                    'action' => $isReset ? 'password-reset' : 'password-set',
+                    'token' => "{$response->token}",
+                    'key' => "{$response->validationKey}"
+                ]
+            ),
+            'recreateLink' => $this->generateAbsoluteLink($response->area, 'password_forgotten'),
+        ];
+
+        return new Email()
+            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
+            ->setFromName($this->translate($isReset ? 'resetPassword.fromName' : 'setPassword.fromName'))
+            ->setToEmail($response->email->value)
+            ->setTemplate($isReset ? self::RESET_PASSWORD_TEMPLATE_ID : self::SET_PASSWORD_TEMPLATE_ID)
+            ->setParameters($notifyParams);
     }
 
     private function translate(string $key): string

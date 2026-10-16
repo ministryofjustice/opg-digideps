@@ -295,6 +295,12 @@ parameters:
 			path: api/app/src/Command/UserRetentionPolicyCommand.php
 
 		-
+			message: '#^Method OPG\\Digideps\\Backend\\Controller\\AccountController\:\:decode\(\) should return T of OPG\\Digideps\\Common\\Account\\AccountRequest\|OPG\\Digideps\\Common\\Account\\PasswordRequest\|OPG\\Digideps\\Common\\Account\\ResetRequest but returns OPG\\Digideps\\Common\\Account\\AccountRequest\|OPG\\Digideps\\Common\\Account\\PasswordRequest\|OPG\\Digideps\\Common\\Account\\ResetRequest\.$#'
+			identifier: return.type
+			count: 1
+			path: api/app/src/Controller/AccountController.php
+
+		-
 			message: '#^Parameter \#1 \$content of class Symfony\\Component\\HttpFoundation\\Response constructor expects string\|null, string\|false given\.$#'
 			identifier: argument.type
 			count: 3
@@ -2467,7 +2473,7 @@ parameters:
 			path: api/app/src/Factory/ClientBenefitsCheckFactory.php
 
 		-
-			message: '#^Cannot call method toString\(\) on mixed\.$#'
+			message: '#^Cannot call method toRfc4122\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/src/Factory/ClientBenefitsCheckFactory.php
@@ -21913,19 +21919,7 @@ parameters:
 			path: client/app/src/Controller/Admin/StatsController.php
 
 		-
-			message: '#^Parameter \#1 \$satisfactions of method OPG\\Digideps\\Frontend\\Service\\Csv\\SatisfactionCsvGenerator\:\:generateSatisfactionResponsesCsv\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/StatsController.php
-
-		-
 			message: '#^Parameter \#1 \$userResearchResponses of method OPG\\Digideps\\Frontend\\Service\\Csv\\UserResearchResponseCsvGenerator\:\:generateUserResearchResponsesCsv\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/StatsController.php
-
-		-
-			message: '#^Parameter \#2 \$csvContent of method OPG\\Digideps\\Frontend\\Controller\\Admin\\StatsController\:\:csvResponseGeneration\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/src/Controller/Admin/StatsController.php
@@ -27895,48 +27889,6 @@ parameters:
 			path: client/app/src/Service/Csv/ReportImbalanceCsvGenerator.php
 
 		-
-			message: '#^Cannot call method format\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getComments\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getCreated\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getDeputyrole\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getReporttype\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getScore\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Csv\\SatisfactionCsvGenerator\:\:generateSatisfactionResponsesCsv\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -28957,6 +28909,12 @@ parameters:
 			path: client/app/src/Service/Mailer/MailFactory.php
 
 		-
+			message: '#^Parameter \#1 \$area of method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:generateAbsoluteLink\(\) expects OPG\\Digideps\\Common\\Account\\Area, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/Mailer/MailFactory.php
+
+		-
 			message: '#^Parameter \#1 \$countryCode of method OPG\\Digideps\\Frontend\\Service\\IntlService\:\:getCountryNameByCountryCode\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -29533,12 +29491,6 @@ parameters:
 			path: client/app/src/TestHelpers/ReportHelpers.php
 
 		-
-			message: '#^Parameter \#1 \$deputyRole of method OPG\\Digideps\\Frontend\\Entity\\Report\\Satisfaction\:\:setDeputyRole\(\) expects string, int\|string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/TestHelpers/SatisfactionHelpers.php
-
-		-
 			message: '#^Argument of an invalid type array\|object supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -29639,18 +29591,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: client/app/src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Parameter \#1 \$deputyshipLength of method OPG\\Digideps\\Frontend\\Entity\\UserResearch\\UserResearchResponse\:\:setDeputyshipLength\(\) expects string, int\|string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/TestHelpers/UserResearchResponseHelpers.php
-
-		-
-			message: '#^Parameter \#1 \$user of method OPG\\Digideps\\Frontend\\Entity\\UserResearch\\UserResearchResponse\:\:setUser\(\) expects OPG\\Digideps\\Frontend\\Entity\\User\|null, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/TestHelpers/UserResearchResponseHelpers.php
 
 		-
 			message: '#^Cannot call method format\(\) on mixed\.$#'
