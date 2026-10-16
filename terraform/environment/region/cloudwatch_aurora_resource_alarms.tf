@@ -189,7 +189,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_read_iops" {
 
   metric_query {
     id          = "normal_read_iops_limit"
-    expression  = "LAST(ANOMALY_DETECTION_BAND(read_iops, 4))"
+    expression  = "LAST(ANOMALY_DETECTION_BAND(read_iops, 8))"
     label       = "Normal read IOPS limit"
     return_data = false
   }
