@@ -62,12 +62,12 @@ trait UserManagementTrait
         $userMessage = sprintf('found %d %s', $this->userCount, $pluralUsers);
         $this->assertStringEqualsString($userMessage, $userText, 'Users Found');
 
-        $xpath = '//table[@class="table-govuk-body-s"]/tbody/tr';
+        $xpath = '//table[@class="govuk-table"]/tbody/tr';
         $userElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
         $this->assertIntEqualsInt($this->userCount, count($userElements), 'User rows visible');
 
         foreach ($this->userEmails as $userEmail) {
-            $xpath = '//table[@class="table-govuk-body-s"]/tbody';
+            $xpath = '//table[@class="govuk-table"]/tbody';
             $userResultsTable = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
             $this->assertStringContainsString($userEmail, $userResultsTable, 'Results on page');
         }
@@ -457,7 +457,7 @@ trait UserManagementTrait
     {
         $this->iAmOnAdminUsersSearchPage();
         $this->searchUserWithFilter('', 'edit-test-');
-        $xpath = '//table[@class="table-govuk-body-s"]/tbody';
+        $xpath = '//table[@class="govuk-table"]/tbody';
         $resultsTable = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
         foreach ($this->expectedUsers as $addedUser) {
             $this->assertStringContainsString($addedUser['firstName'], $resultsTable, 'Edit user check - first name');

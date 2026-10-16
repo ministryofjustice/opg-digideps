@@ -14,7 +14,7 @@
     }
 
     td.checkbox {
-      border-bottom: 1px solid $black;
+      border-bottom: 1px solid govuk-colour("black");
     }
   }
 
@@ -27,7 +27,7 @@
     }
 
     td.checkbox {
-      border-bottom: 1px solid $black;
+      border-bottom: 1px solid govuk-colour("black");
     }
   }
 
@@ -40,7 +40,7 @@
 }
 
 .page-report-header {
-  @extend %contain-floats;
+  @include govuk-clearfix;
 
   .item {
     width: 60%;

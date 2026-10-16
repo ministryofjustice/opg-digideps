@@ -122,7 +122,7 @@
 
     {% else %}
 
-        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="button">
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="govuk-button">
             {% if app.user.isDeputyOrg() %}
                 {{ 'backToClientProfile' | trans({}, 'common') }}
             {% else %}
