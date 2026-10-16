@@ -73,7 +73,10 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                     $updated = $this->execute("
                         UPDATE deputy d
                         SET
-                            firstname = COALESCE(ssd.deputy_first_name, d.firstname),
+                            firstname = COALESCE(CASE
+                                WHEN ssd.deputy_first_name = '' THEN ssd.deputy_organisation
+                                ELSE ssd.deputy_first_name
+                            END, d.firstname),
                             lastname = COALESCE(ssd.deputy_last_name, d.lastname),
                             email1 = LOWER(COALESCE(ssd.deputy_email, d.email1)),
                             address1 = COALESCE(ssd.deputy_address1, d.address1),
@@ -115,7 +118,10 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                             created_at
                         )
                         SELECT
-                            ssd.deputy_first_name,
+                            CASE
+                                WHEN ssd.deputy_first_name = '' THEN ssd.deputy_organisation
+                                ELSE ssd.deputy_first_name
+                            END,
                             ssd.deputy_last_name,
                             ssd.deputy_email,
                             ssd.deputy_address1,
