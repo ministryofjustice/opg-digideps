@@ -10,8 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class UserDeletedEventTest extends TestCase
 {
-    /** @test */
-    public function eventIsInitialisedCorrectly()
+    public function testEventIsInitialisedCorrectly(): void
     {
         $deletedUser = UserHelpers::createUser();
         $deletedBy = UserHelpers::createUser();

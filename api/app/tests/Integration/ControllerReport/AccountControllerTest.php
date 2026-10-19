@@ -4,8 +4,7 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Entity\User;
-use Tests\OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class AccountControllerTest extends AbstractTestController
@@ -97,6 +96,7 @@ class AccountControllerTest extends AbstractTestController
      */
     public function testGetAccounts()
     {
+        /** @var array<int, array<string, mixed>> $data */
         $data = $this->assertJsonRequest(
             'GET',
             sprintf('/report/%s?%s', self::$report1->getId(), http_build_query(['groups' => ['account']])),

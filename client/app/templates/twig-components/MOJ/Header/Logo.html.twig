@@ -1,0 +1,12 @@
+{% props
+    organisationName="OPG",
+    serviceName="Complete the deputy report",
+    organisationLink="#",
+    serviceLink="/"
+%}
+
+<div class="moj-header__logo">
+    <twig:MOJ:Header:Svg:Crest2024 aria-hidden="true" focusable="false" class="moj-header__logotype-crest" color="#FFFFFF"/>
+    <a class="moj-header__link moj-header__link--organisation-name" href="{{ organisationLink }}">{{ organisationName }}</a>
+    <a class="moj-header__link moj-header__link--service-name" href="{{ serviceLink }}">{{ serviceName }}</a>
+</div>

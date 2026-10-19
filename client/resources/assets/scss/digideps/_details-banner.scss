@@ -27,7 +27,7 @@
     float: right;
 
     h3 {
-      @include govuk-font(16, $weight: bold);
+      @include govuk-font($size: 16, $weight: bold);
     }
   }
 }

@@ -4,6 +4,12 @@ namespace OPG\Digideps\Backend\DataFixtures;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Fixture\FixtureService;
+use OPG\Digideps\Backend\Fixture\Scenario;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -16,33 +22,55 @@ use Symfony\Component\HttpKernel\KernelInterface;
  * > The fixture will still be shown as having been loaded by the Doctrine
  * > command, `doctrine:fixtures:load`, despite not having been actually
  * > loaded.
+ *
+ * @phpstan-type Users array<string, User>
+ * @phpstan-type Deputies array<string, Deputy>
+ * @phpstan-type Organisations array<string, Organisation>
+ * @phpstan-type Persons array{users: Users, deputies: Deputies, organisations: Organisations}
  */
 abstract class AbstractDataFixture implements FixtureInterface
 {
-    public function __construct(private readonly KernelInterface $kernel)
-    {
+    public function __construct(
+        private readonly KernelInterface $kernel,
+        private readonly ParameterBagInterface $parameters,
+        private readonly FixtureService $fixtureService,
+    ) {
     }
 
     public function load(ObjectManager $manager): void
     {
-        if (in_array($this->kernel->getEnvironment(), $this->getEnvironments())) {
-            $this->doLoad($manager);
+        $workspace = $this->parameters->get('workspace');
+        $environment = $this->kernel->getEnvironment();
+        if (is_string($workspace) && $this->shouldLoad($workspace, $environment)) {
+            $this->doLoad($this->fixtureService);
         }
     }
 
-    /**
-     * Performs the actual fixtures loading.
-     *
-     * @see FixtureInterface::load
-     *
-     * @param ObjectManager $manager the object manager
-     */
-    abstract protected function doLoad(ObjectManager $manager): void;
+    abstract protected function shouldLoad(string $workspace, string $environment): bool;
+    abstract protected function doLoad(FixtureService $fixtureService): void;
 
     /**
-     * Returns the environments the fixtures may be loaded in.
-     *
-     * @return String[] the name of the environments
+     * @param Persons|null $persons
+     * @return Persons
      */
-    abstract protected function getEnvironments(): array;
+    final protected function instantiateWithDeterministicLogin(int $clientCount, Scenario $scenario, string $domain, ?array $persons = null): array
+    {
+        $persons ??= [
+            'users' => [],
+            'deputies' => [],
+            'organisations' => [],
+        ];
+
+        for ($ci = 0; $ci < $clientCount; ++$ci) {
+            ['persons' => $persons] = $this->fixtureService->instantiateScenario($scenario, $persons, false);
+        }
+
+        foreach ($persons['users'] as $id => $user) {
+            $user->setEmail("{$id}@{$domain}");
+            $this->fixtureService->persist($user);
+        }
+        $this->fixtureService->flush();
+
+        return $persons;
+    }
 }

@@ -1,0 +1,209 @@
+<?php
+
+namespace Tests\OPG\Digideps\Backend\Integration\Factory;
+
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Factory\UpdateReportTypeDataFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
+
+class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
+{
+    private static Fixtures $fixtures;
+
+    private static int $count = 0;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        self::$fixtures = new Fixtures(self::$entityManager);
+
+        self::purgeDatabase();
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        self::purgeDatabase();
+    }
+
+    public static function reportTypeChanges(): array
+    {
+        return [
+            'Lay to Pro - nonLayDeputyAdded' => [[
+                'orderType' => CourtOrderType::PFA,
+                'orderKind' => CourtOrderKind::Single,
+                'reportType' => CourtOrderReportType::OPG103,
+                'deputyType' => DeputyType::PRO,
+                'existingReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
+                'expectedReportType' => Report::PROF_PFA_LOW_ASSETS_TYPE,
+                'updatedCount' => 1,
+                'errorCount' => 0,
+            ]],
+            'PFA-low to PFA-high - baseReportChange' => [[
+                'orderType' => CourtOrderType::PFA,
+                'orderKind' => CourtOrderKind::Single,
+                'reportType' => CourtOrderReportType::OPG102,
+                'deputyType' => DeputyType::LAY,
+                'existingReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
+                'expectedReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
+                'updatedCount' => 1,
+                'errorCount' => 0,
+            ]],
+            'PFA to HW - baseReportChange' => [[
+                'orderType' => CourtOrderType::HW,
+                'orderKind' => CourtOrderKind::Single,
+                'reportType' => CourtOrderReportType::OPG104,
+                'deputyType' => DeputyType::LAY,
+                'existingReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
+                'expectedReportType' => Report::LAY_HW_TYPE,
+                'updatedCount' => 1,
+                'errorCount' => 0,
+            ]],
+            'PFA to Hybrid - changedToHybrid' => [[
+                'orderType' => CourtOrderType::HW,
+                'orderKind' => CourtOrderKind::Hybrid,
+                'reportType' => CourtOrderReportType::OPG102,
+                'deputyType' => DeputyType::LAY,
+                'existingReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
+                'expectedReportType' => Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
+                'updatedCount' => 1,
+                'errorCount' => 0,
+            ]],
+            'Hybrid to PFA - changedFromHybrid' => [[
+                'orderType' => CourtOrderType::PFA,
+                'orderKind' => CourtOrderKind::Dual,
+                'reportType' => CourtOrderReportType::OPG102,
+                'deputyType' => DeputyType::LAY,
+                'existingReportType' => Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
+                'expectedReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
+                'updatedCount' => 1,
+                'errorCount' => 0,
+            ]],
+            'No-change' => [[
+                'orderType' => CourtOrderType::PFA,
+                'orderKind' => CourtOrderKind::Single,
+                'reportType' => CourtOrderReportType::OPG103,
+                'deputyType' => DeputyType::LAY,
+                'existingReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
+                'expectedReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
+                'updatedCount' => 0,
+                'errorCount' => 0,
+            ]],
+        ];
+    }
+
+    private function setUpTestData(array $data): int
+    {
+        ++self::$count;
+
+        $uid = '' . self::$count;
+
+        /** @var CourtOrderType $courtOrderType */
+        $courtOrderType = $data['orderType'];
+
+        /** @var CourtOrderReportType $courtOrderReportType */
+        $courtOrderReportType = $data['reportType'];
+
+        /** @var CourtOrderKind $courtOrderKind */
+        $courtOrderKind = $data['orderKind'];
+
+        $client = self::$fixtures->createClient();
+
+        $deputy = self::$fixtures->createDeputy([
+            'setDeputyUid' => $uid,
+            'setDeputyType' => $data['deputyType'],
+        ]);
+
+        $courtOrder = self::$fixtures->createCourtOrder(
+            uid: $uid,
+            type: $courtOrderType,
+            kind: $courtOrderKind,
+            status: 'ACTIVE',
+            courtOrderReportType: $courtOrderReportType,
+            deputy: $deputy,
+            client: $client,
+        );
+
+        $report = self::$fixtures->createReport($courtOrder, ['setType' => $data['existingReportType']]);
+
+        self::$fixtures->persist($courtOrder, $client, $report, $deputy);
+        self::$fixtures->flush();
+        self::$fixtures->clear();
+
+        return $report->getId();
+    }
+
+    #[DataProvider('reportTypeChanges')]
+    public function testRun(array $data): void
+    {
+        $reportId = $this->setUpTestData($data);
+
+        /** @var UpdateReportTypeDataFactory $sut */
+        $sut = self::$container->get(UpdateReportTypeDataFactory::class);
+
+        $dataFactoryResult = $sut->run(false);
+
+        /** @var string $expectedReportType */
+        $expectedReportType = $data['expectedReportType'];
+
+        /** @var string $updatedCount */
+        $updatedCount = $data['updatedCount'];
+
+        /** @var int $errorCount */
+        $errorCount = $data['errorCount'];
+
+        $this->assertSame(
+            $data['expectedReportType'],
+            self::$fixtures->getReportById($reportId)?->getType(),
+            sprintf(
+                'ReportType differs from expected type "%s"',
+                $expectedReportType,
+            )
+        );
+
+        $this->assertStringContainsString(
+            "Updated $updatedCount report types",
+            $dataFactoryResult->getMessages()['success'][0],
+            'Number of report types updated did not match expectation'
+        );
+        $this->assertCount(
+            $errorCount,
+            $dataFactoryResult->getErrorMessages()['errors'],
+            'Expected error count did not match actual error count'
+        );
+    }
+
+    #[DataProvider('reportTypeChanges')]
+    public function testDryRun(array $data): void
+    {
+        $reportId = $this->setUpTestData($data);
+
+        /** @var UpdateReportTypeDataFactory $sut */
+        $sut = self::$container->get(UpdateReportTypeDataFactory::class);
+        $dataFactoryResult = $sut->run(true);
+
+        /** @var string $expectedReportType */
+        $expectedReportType = $data['existingReportType'];
+
+        /** @var string $existingReportType */
+        $existingReportType = $data['existingReportType'];
+
+        $this->assertEquals(
+            $expectedReportType,
+            self::$fixtures->getReportById($reportId)?->getType(),
+            sprintf(
+                'ReportType differs from expected type "%s"',
+                $existingReportType,
+            )
+        );
+
+        $this->assertStringContainsString('0', $dataFactoryResult->getMessages()['success'][0], 'Updated String Count');
+    }
+}

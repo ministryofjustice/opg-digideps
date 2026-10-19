@@ -2,7 +2,7 @@
 
 namespace OPG\Digideps\Backend\Factory;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
 use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
@@ -62,15 +62,6 @@ class StagingSelectedCandidateFactory
         $changes->reportType = $csvDeputyship->reportType;
 
         $changes->clientId = $clientId;
-
-        return $changes;
-    }
-
-    public function createInsertOrderReportCandidate(string $orderUid, int $reportId): StagingSelectedCandidate
-    {
-        $changes = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderReport, $orderUid);
-
-        $changes->reportId = $reportId;
 
         return $changes;
     }

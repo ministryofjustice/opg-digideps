@@ -1,23 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 
-/**
- * @Annotation
- */
+#[\Attribute]
 class EndDateNotGreaterThanFifteenMonths extends Constraint
 {
-    /**
-     * @var string
-     */
-    public $message = 'report.endDate.greaterThan15Months';
+    public string $message = 'report.endDate.greaterThan15Months';
 
-    /**
-     * @return array|string
-     */
-    public function getTargets()
+    public function getTargets(): array|string
     {
         return self::CLASS_CONSTRAINT;
     }

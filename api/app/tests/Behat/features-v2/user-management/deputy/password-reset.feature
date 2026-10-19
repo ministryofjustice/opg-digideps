@@ -1,4 +1,4 @@
-@v2
+@v2 @password-reset
 Feature: Deputy attempts to reset their password
 
     @lay-health-welfare-not-started

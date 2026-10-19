@@ -12,7 +12,7 @@ import ReturnHTML from './modules_new/ReturnHTML'
 import ShowHideContent from './modules_new/ShowHideContent'
 import Multitoggle from './modules_new/Multitoggle'
 import { initAll as MOJFrontendAll } from '@ministryofjustice/frontend'
-import { Accordion, Button, CharacterCount, Checkboxes, ErrorSummary, ExitThisPage, Header, NotificationBanner, PasswordInput, Radios, SkipLink, createAll } from 'govuk-frontend'
+import { Accordion, Button, CharacterCount, Checkboxes, ErrorSummary, ExitThisPage, NotificationBanner, PasswordInput, Radios, SkipLink, createAll } from 'govuk-frontend'
 import EnableJavascript from './modules_new/EnableJavascript'
 import FormSingleSubmit from './modules_new/FormSingleSubmit'
 import ToggleRequired from './modules_new/ToggleRequired'
@@ -72,7 +72,6 @@ window.addEventListener('DOMContentLoaded', () => {
   createAll(Checkboxes)
   createAll(ErrorSummary)
   createAll(ExitThisPage)
-  createAll(Header)
   createAll(NotificationBanner)
   createAll(PasswordInput)
   createAll(Radios)

@@ -8,3 +8,9 @@
 .opg-width-container--wider {
   @include govuk-width-container(1200px);
 }
+
+.opg-product-name {
+  @media only screen and (min-width: 578px) {
+    @include govuk-responsive-margin(2, "left");
+  }
+}

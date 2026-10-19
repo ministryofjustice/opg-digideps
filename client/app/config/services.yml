@@ -333,6 +333,7 @@ services:
           name: kernel.event_listener,
           event: kernel.exception,
           method: onKernelException,
+          priority: 0,
         }
 
   OPG\Digideps\Frontend\EventListener\ForbiddenExceptionListener:
@@ -341,6 +342,16 @@ services:
           name: kernel.event_listener,
           event: kernel.exception,
           method: onKernelException,
+          priority: 0,
+        }
+
+  OPG\Digideps\Frontend\EventListener\ApplicationExceptionListener:
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: kernel.exception,
+          method: onKernelException,
+          priority: -256,
         }
 
   OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor:
@@ -372,13 +383,6 @@ services:
     public: false
   app.note_voter:
     class: OPG\Digideps\Frontend\Security\NoteVoter
-    arguments: ["@security.access.decision_manager"]
-    tags:
-      - { name: security.voter }
-    # small performance boost
-    public: false
-  app.client_contact_voter:
-    class: OPG\Digideps\Frontend\Security\ClientContactVoter
     arguments: ["@security.access.decision_manager"]
     tags:
       - { name: security.voter }

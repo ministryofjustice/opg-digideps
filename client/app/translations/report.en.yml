@@ -23,10 +23,9 @@ chooseAClient:
   reportType: Report Type
 
 chooseAnOrder:
-  htmlTitle: Choose a Court Order - Complete the deputy report | GOV.UK
-  pageTitle: Choose a Court Order
+  htmlTitle: Choose a Report - Complete the deputy report | GOV.UK
+  pageTitle: Choose a Report
   title: Select the client and report you want to manage.
-  courtOrderNumber: Court Order number
   courtOrderLink: Manage
   caseNumber: Case number
   reportType: Report Type

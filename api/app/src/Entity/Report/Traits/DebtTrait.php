@@ -15,7 +15,7 @@ trait DebtTrait
      * @var Collection<int, Debt>
      */
     #[JMS\Groups(['debt'])]
-    #[ORM\OneToMany(mappedBy: 'report', targetEntity: Debt::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Debt::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['id' => 'ASC'])]
     private Collection $debts;
 
@@ -75,7 +75,7 @@ trait DebtTrait
     }
 
     #[JMS\VirtualProperty]
-    #[JMS\Type('string')]
+    #[JMS\Type('double')]
     #[JMS\SerializedName('debts_total_amount')]
     #[JMS\Groups(['debt'])]
     public function getDebtsTotalAmount(): float

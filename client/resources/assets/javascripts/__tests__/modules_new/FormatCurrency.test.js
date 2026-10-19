@@ -14,7 +14,7 @@ describe('Currency Formatting', () => {
     expect(input.value).toBe('1234567.8')
     input.click()
 
-    expect(spy).toBeCalled()
+    expect(spy).toHaveBeenCalled()
     expect(input.value).toBe('1,234,567.80')
   })
   it('Should format empty text and empty text', () => {

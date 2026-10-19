@@ -45,7 +45,7 @@ class DocumentController extends RestController
             'file_name' => 'notEmpty',
             'storage_reference' => 'notEmpty',
         ]);
-        $document = new Document($report);
+        $document = new Document($report, $data['file_name']);
 
         /** @var ?User $user */
         $user = $this->getUser();

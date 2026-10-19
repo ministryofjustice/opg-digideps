@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Transformer;
 
-use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\v2\DTO\OrganisationDto;
 use OPG\Digideps\Backend\v2\DTO\UserDto;
 use OPG\Digideps\Backend\v2\Transformer\ClientTransformer;
 use OPG\Digideps\Backend\v2\Transformer\OrganisationTransformer;
 use OPG\Digideps\Backend\v2\Transformer\UserTransformer;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 final class OrganisationTransformerTest extends TestCase

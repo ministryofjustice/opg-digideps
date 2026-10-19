@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Sync\Command;
 
 use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
@@ -8,23 +10,17 @@ use OPG\Digideps\Frontend\Sync\Command\ChecklistSyncCommand;
 use OPG\Digideps\Frontend\Sync\Service\ChecklistSyncService;
 use OPG\Digideps\Frontend\TestHelpers\ChecklistTestHelper;
 use PHPUnit\Framework\MockObject\MockObject;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class ChecklistSyncCommandTest extends KernelTestCase
 {
-    use ProphecyTrait;
+    private ChecklistSyncService&MockObject $syncService;
+    private MockObject&ParameterStoreService $parameterStore;
+    private MockObject&ReportApi $reportApi;
 
-    /** @var MockObject */
-    private $syncService;
-    private $parameterStore;
-    private $reportApi;
-    private $pdfGenerator;
-
-    /** @var CommandTester */
-    private $commandTester;
+    private CommandTester $commandTester;
 
     private ?string $output = null;
 
@@ -37,24 +33,24 @@ class ChecklistSyncCommandTest extends KernelTestCase
         $this->parameterStore = $this->getMockBuilder(ParameterStoreService::class)->disableOriginalConstructor()->getMock();
         $this->reportApi = $this->getMockBuilder(ReportApi::class)->disableOriginalConstructor()->getMock();
 
-        $app->add(new ChecklistSyncCommand($this->syncService, $this->parameterStore, $this->reportApi));
+        $checklistSyncCommand = new ChecklistSyncCommand($this->syncService, $this->parameterStore, $this->reportApi);
+        $app->add($checklistSyncCommand);
 
-        $command = $app->find(ChecklistSyncCommand::getDefaultName());
+        $commandName = $checklistSyncCommand->getName();
+        self::assertIsString($commandName);
+        $command = $app->find($commandName);
+
         $this->commandTester = new CommandTester($command);
     }
 
-    /**
-     * @test
-     */
-    public function doesNotSyncIfFeatureIsNotEnabled()
+    public function testDoesNotSyncIfFeatureIsNotEnabled(): void
     {
-        $this
-            ->ensureFeatureIsDisabled()
+        $this->ensureFeatureIsDisabled()
             ->assertSyncServiceIsNotInvoked()
             ->invokeTest();
     }
 
-    private function invokeTest(): self
+    private function invokeTest(): static
     {
         $this->commandTester->execute([]);
 
@@ -63,13 +59,9 @@ class ChecklistSyncCommandTest extends KernelTestCase
         return $this;
     }
 
-    /**
-     * @test
-     */
-    public function outputContainsExpectedText()
+    public function testOutputContainsExpectedText(): void
     {
-        $this
-            ->ensureFeatureIsEnabled()
+        $this->ensureFeatureIsEnabled()
             ->ensureThereAreNChecklistsToSync(3)
             ->ensureNChecklistsFailedToSync(2)
             ->invokeTest()
@@ -77,10 +69,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
             ->assertCommandOutputContains('sync_checklists_to_sirius - failure - 2 checklists failed to sync');
     }
 
-    /**
-     * @test
-     */
-    public function outputContainsExpectedTextSuccess()
+    public function testOutputContainsExpectedTextSuccess(): void
     {
         $this
             ->ensureFeatureIsEnabled()
@@ -91,7 +80,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
             ->assertCommandOutputContains('sync_checklists_to_sirius - success - Sync command completed');
     }
 
-    private function assertSyncServiceIsNotInvoked(): ChecklistSyncCommandTest
+    private function assertSyncServiceIsNotInvoked(): static
     {
         $this->reportApi
             ->expects($this->never())
@@ -104,7 +93,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
         return $this;
     }
 
-    private function ensureFeatureIsDisabled(): ChecklistSyncCommandTest
+    private function ensureFeatureIsDisabled(): static
     {
         $this->parameterStore
             ->method('getFeatureFlag')
@@ -113,7 +102,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
         return $this;
     }
 
-    private function ensureThereAreNChecklistsToSync(int $numberOfChecklists): self
+    private function ensureThereAreNChecklistsToSync(int $numberOfChecklists): static
     {
         $reports = [];
 
@@ -126,21 +115,21 @@ class ChecklistSyncCommandTest extends KernelTestCase
         return $this;
     }
 
-    private function ensureNChecklistsFailedToSync(int $numberOfChecklists): self
+    private function ensureNChecklistsFailedToSync(int $numberOfChecklists): static
     {
         $this->syncService->method('syncChecklistsByReports')->willReturn(['notSyncedCount' => $numberOfChecklists, 'reportIdsWithNullChecklists' => []]);
 
         return $this;
     }
 
-    private function assertCommandOutputContains(string $outputContent): self
+    private function assertCommandOutputContains(string $outputContent): static
     {
         self::assertStringContainsString($outputContent, $this->output);
 
         return $this;
     }
 
-    private function ensureFeatureIsEnabled(): ChecklistSyncCommandTest
+    private function ensureFeatureIsEnabled(): static
     {
         $this->parameterStore
             ->method('getFeatureFlag')

@@ -13,6 +13,7 @@ page:
     archive: Archive
     synchronise: Synchronise
     regenerate: Regenerate PDF
+    preview: Preview PDF
     archived:
       noticeSingular: "1 document archived"
       noticePlural: "count documents archived"

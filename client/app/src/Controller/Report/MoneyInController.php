@@ -151,7 +151,7 @@ class MoneyInController extends AbstractController
             $answer = $validatingForm->getStringOrNull('reasonForNoMoneyIn');
 
             $report->setReasonForNoMoneyIn($answer);
-            $report->getStatus()->setMoneyInState(Status::STATE_DONE);
+            $report->getStatus()->setMoneyInState(['state' => Status::STATE_DONE]);
             $this->restClient->put('report/' . $reportId, $report, ['reasonForNoMoneyIn']);
 
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
@@ -197,7 +197,7 @@ class MoneyInController extends AbstractController
         // create (add mode) or load transaction (edit mode)
         $addingItem = false;
         if ($transactionId) {
-            $transaction = array_filter($report->getMoneyTransactionsIn(), function ($t) use ($transactionId): bool {
+            $transaction = array_filter($report->getMoneyTransactionsIn(), function (MoneyTransaction $t) use ($transactionId): bool {
                 if ($t->getBankAccount() instanceof BankAccount) {
                     $t->setBankAccountId($t->getBankAccount()->getId());
                 }

@@ -4,7 +4,7 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
 use OPG\Digideps\Backend\Entity\Report\Expense;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use Tests\OPG\Digideps\Backend\Fixture\Scenario;
+use OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class ExpenseControllerTest extends AbstractTestController
@@ -68,7 +68,7 @@ class ExpenseControllerTest extends AbstractTestController
 
         $this->assertEquals(self::$expense1->getId(), $data['id']);
         $this->assertEquals(self::$expense1->getExplanation(), $data['explanation']);
-        $this->assertEquals(self::$expense1->getAmount(), $data['amount']);
+        $this->assertEquals((float)self::$expense1->getAmount(), (float)$data['amount']);
     }
 
     public function testPostPutAuth(): void

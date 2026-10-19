@@ -1,0 +1,14 @@
+{% props message %}
+{% if message is iterable %}
+    {% set messages = message %}
+{% else %}
+    {% set messages = [message] %}
+{% endif %}
+
+<p {{ attributes.defaults({class: 'govuk-error-message'}) }}>
+    <span class="govuk-visually-hidden">{{ 'gov.errorMessage.aria'|trans({}, 'twig-components') }}:</span>
+    {% for message in messages %}
+        {% if not loop.first %}<br>{% endif %}
+        {{  message | nl2br }}
+    {% endfor %}
+</p>

@@ -174,34 +174,10 @@
         </div>
     {% endblock %}
 
-
     {% block progressBar %}{% endblock %}
 
     {% block pageContent %}{% endblock %}
 
-{% endblock %}
-
-{% block footerSupportLinks %}
-    <li class="govuk-footer__inline-list-item">
-        <a href="{{ path('terms') }}" class="govuk-footer__link">
-            Terms of use
-        </a>
-    </li>
-    <li class="govuk-footer__inline-list-item">
-        <a href="{{ path('privacy') }}" class="govuk-footer__link">
-            Privacy notice
-        </a>
-    </li>
-    <li class="govuk-footer__inline-list-item">
-        <a href="{{ path('cookies') }}" class="govuk-footer__link">
-            Cookies
-        </a>
-    </li>
-    <li class="govuk-footer__inline-list-item">
-        <a href="{{ path('accessibility') }}" class="govuk-footer__link">
-            Accessibility
-        </a>
-    </li>
 {% endblock %}
 
 {% block javascripts %}

@@ -6,9 +6,7 @@ namespace OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck;
 
 use Symfony\Component\Validator\Constraint;
 
-/**
- * @Annotation
- */
+#[\Attribute]
 class ClientBenefitsCheck extends Constraint
 {
     public string $whenLastCheckedNoOptionSelected = 'form.whenLastChecked.errors.noOptionSelected';
@@ -21,5 +19,5 @@ class ClientBenefitsCheck extends Constraint
     public string $moneyOnClientsBehalfNoOptionSelected = 'form.moneyOnClientsBehalf.errors.noOptionSelected';
     public string $moneyOnClientsBehalfMissingMoney = 'form.moneyDetails.errors.missingMoney';
 
-    public $mode = 'strict'; // If the constraint has configuration options, define them as public properties
+    public string $mode = 'strict'; // If the constraint has configuration options, define them as public properties
 }

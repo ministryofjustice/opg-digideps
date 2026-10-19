@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Sync\Service;
 
+use GuzzleHttp\Psr7\Response;
 use OPG\Digideps\Frontend\Entity\Report\Checklist;
 use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Frontend\Entity\User;
@@ -19,17 +20,17 @@ use OPG\Digideps\Frontend\Sync\Service\ChecklistSyncService;
 use OPG\Digideps\Frontend\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
 use OPG\Digideps\Frontend\Sync\Service\SiriusApiErrorTranslator;
 use OPG\Digideps\Frontend\TestHelpers\ChecklistTestHelper;
-use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class ChecklistSyncServiceTest extends TestCase
 {
-    private RestClient $restClient;
-    private SiriusApiGatewayClient $siriusApiGatewayClient;
-    private SiriusApiErrorTranslator $errorTranslator;
+    private RestClient&MockObject $restClient;
+    private SiriusApiGatewayClient&MockObject $siriusApiGatewayClient;
+    private SiriusApiErrorTranslator&MockObject $errorTranslator;
+    private ChecklistPdfGenerator&MockObject $pdfGenerator;
     private QueuedChecklistData $dataInput;
     private string $returnValue;
-    private ChecklistPdfGenerator $pdfGenerator;
 
     private ChecklistSyncService $sut;
 
@@ -40,45 +41,52 @@ class ChecklistSyncServiceTest extends TestCase
         $this->errorTranslator = $this->getMockBuilder(SiriusApiErrorTranslator::class)->disableOriginalConstructor()->getMock();
         $this->pdfGenerator = $this->getMockBuilder(ChecklistPdfGenerator::class)->disableOriginalConstructor()->getMock();
 
-        $this->sut = new ChecklistSyncService($this->restClient, $this->siriusApiGatewayClient, $this->errorTranslator, $this->pdfGenerator);
+        $this->sut = new ChecklistSyncService(
+            $this->restClient,
+            $this->siriusApiGatewayClient,
+            $this->errorTranslator,
+            $this->pdfGenerator
+        );
     }
 
     public function testSendsPostRequestOnFirstSyncOfChecklist(): void
     {
-        $this
-            ->buildChecklistDataInput()->withoutChecklistUuid()
+        $this->buildChecklistDataInput()
+            ->withoutChecklistUuid()
             ->assertPostWillBeInvoked()
             ->invokeTest();
     }
 
     public function testSendsPutRequestOnFirstSyncOfChecklist(): void
     {
-        $this
-            ->buildChecklistDataInput()->withChecklistUuid()
+        $this->buildChecklistDataInput()
+            ->withChecklistUuid()
             ->assertPutWillBeInvoked()
             ->invokeTest();
     }
 
     public function testPostsActualReportUuidForReportsWithASubmission(): void
     {
-        $this
-            ->buildChecklistDataInput()->withChecklistUuid()->withReportSubmission()
+        $this->buildChecklistDataInput()
+            ->withChecklistUuid()
+            ->withReportSubmission()
             ->assertPutWillBeInvokedWithReportUuid()
             ->invokeTest();
     }
 
     public function testSendsDummyReportUuidForReportsWithoutASubmission(): void
     {
-        $this
-            ->buildChecklistDataInput()->withoutChecklistUuid()->withoutReportSubmission()
+        $this->buildChecklistDataInput()
+            ->withoutChecklistUuid()
+            ->withoutReportSubmission()
             ->assertPostWillBeInvokedWithFallbackUuid()
             ->invokeTest();
     }
 
     public function testReturnsUuidAfterSuccessfulResponse(): void
     {
-        $this
-            ->buildChecklistDataInput()->withChecklistUuid()
+        $this->buildChecklistDataInput()
+            ->withChecklistUuid()
             ->assertPutWillBeInvoked()
             ->invokeTest()
             ->assertUuidIsReturned();
@@ -88,15 +96,15 @@ class ChecklistSyncServiceTest extends TestCase
     {
         $expectedException = new SiriusDocumentSyncFailedException('Failed to Sync document');
 
-        $this
-            ->buildChecklistDataInput()->withoutChecklistUuid()
+        $this->buildChecklistDataInput()
+            ->withoutChecklistUuid()
             ->ensureFailedPostWillBeInvoked()
             ->expectExceptionObject($expectedException);
 
         $this->invokeTest();
     }
 
-    private function buildChecklistDataInput(): self
+    private function buildChecklistDataInput(): static
     {
         $this->dataInput = new QueuedChecklistData()
             ->setCaseNumber('12395438')
@@ -110,21 +118,21 @@ class ChecklistSyncServiceTest extends TestCase
         return $this;
     }
 
-    private function withChecklistUuid(): self
+    private function withChecklistUuid(): static
     {
         $this->dataInput->setChecklistUuid('cl-uuid');
 
         return $this;
     }
 
-    private function withoutChecklistUuid(): self
+    private function withoutChecklistUuid(): static
     {
         $this->dataInput->setChecklistUuid(null);
 
         return $this;
     }
 
-    private function withReportSubmission(): self
+    private function withReportSubmission(): static
     {
         $submission = new ReportSubmission()
             ->setId(1)
@@ -136,78 +144,68 @@ class ChecklistSyncServiceTest extends TestCase
         return $this;
     }
 
-    private function withoutReportSubmission(): self
+    private function withoutReportSubmission(): static
     {
         $this->dataInput->setReportSubmissions(null);
 
         return $this;
     }
 
-    private function assertPostWillBeInvoked(): self
+    private function assertPostWillBeInvoked(): static
     {
-        $this
-            ->siriusApiGatewayClient
-            ->expects($this->once())
+        $this->siriusApiGatewayClient->expects(self::once())
             ->method('postChecklistPdf')
-            ->willReturn($this->getSuccessfulResponse());
+            ->willReturn($this->createSuccessfulResponse());
 
         return $this;
     }
 
-    private function assertPutWillBeInvoked(): self
+    private function assertPutWillBeInvoked(): static
     {
-        $this
-            ->siriusApiGatewayClient
-            ->expects($this->once())
+        $this->siriusApiGatewayClient->expects(self::once())
             ->method('putChecklistPdf')
-            ->willReturn($this->getSuccessfulResponse());
+            ->willReturn($this->createSuccessfulResponse());
 
         return $this;
     }
 
-    private function assertPutWillBeInvokedWithReportUuid(): self
+    private function assertPutWillBeInvokedWithReportUuid(): static
     {
-        $this
-            ->siriusApiGatewayClient
-            ->expects($this->once())
+        $this->siriusApiGatewayClient->expects(self::once())
             ->method('putChecklistPdf')
             ->with(
-                $this->equalTo($this->buildExpectedUploadObject()),
+                self::equalTo($this->buildExpectedUploadObject()),
                 $this->dataInput->getSyncedReportSubmission()->getUuid(),
                 $this->dataInput->getCaseNumber(),
                 $this->dataInput->getChecklistUuid()
             )
-            ->willReturn($this->getSuccessfulResponse());
+            ->willReturn($this->createSuccessfulResponse());
 
         return $this;
     }
 
-    private function assertPostWillBeInvokedWithFallbackUuid(): self
+    private function assertPostWillBeInvokedWithFallbackUuid(): static
     {
         $expectedUploadObject = $this->buildExpectedUploadObject();
         $expectedAttributes = $expectedUploadObject->getAttributes();
 
         $expectedUploadObject->setAttributes($expectedAttributes->setSubmissionId(null));
 
-        $this
-            ->siriusApiGatewayClient
-            ->expects($this->once())
+        $this->siriusApiGatewayClient->expects(self::once())
             ->method('postChecklistPdf')
             ->with(
-                $this->equalTo($expectedUploadObject),
+                self::equalTo($expectedUploadObject),
                 ChecklistSyncService::PAPER_REPORT_UUID_FALLBACK,
                 $this->dataInput->getCaseNumber()
             )
-            ->willReturn($this->getSuccessfulResponse());
+            ->willReturn($this->createSuccessfulResponse());
 
         return $this;
     }
 
-    private function ensureFailedPostWillBeInvoked(): self
+    private function ensureFailedPostWillBeInvoked(): static
     {
-        $this
-            ->siriusApiGatewayClient
-            ->expects($this->once())
+        $this->siriusApiGatewayClient->expects(self::once())
             ->method('postChecklistPdf')
             ->willThrowException(new \Exception('Failed to Sync document'));
 
@@ -239,17 +237,17 @@ class ChecklistSyncServiceTest extends TestCase
 
     private function assertUuidIsReturned(): void
     {
-        $this->assertEquals('returned-checklist-uuid', $this->returnValue);
+        self::assertEquals('returned-checklist-uuid', $this->returnValue);
     }
 
-    private function invokeTest(): self
+    private function invokeTest(): static
     {
         $this->returnValue = $this->sut->sync($this->dataInput);
 
         return $this;
     }
 
-    private function getSuccessfulResponse(): Response
+    private function createSuccessfulResponse(): Response
     {
         $successResponseBody = ['data' => ['id' => 'returned-checklist-uuid']];
         return new Response(200, [], json_encode($successResponseBody));
@@ -259,30 +257,16 @@ class ChecklistSyncServiceTest extends TestCase
     {
         $reports = $this->generateSubmittedReports();
 
-        $this->pdfGenerator
-            ->expects($this->exactly(2))
-            ->method('generate')
-            ->willReturn('file-contents');
+        $this->pdfGenerator->expects(self::exactly(2))->method('generate')->willReturn('file-contents');
 
-        $this
-            ->siriusApiGatewayClient
-            ->expects($this->exactly(2))
+        $this->siriusApiGatewayClient->expects(self::exactly(2))
             ->method('postChecklistPdf')
-            ->withConsecutive(
-                [
-                    $this->isInstanceOf(SiriusDocumentUpload::class),
-                    'rs-uuid',
-                    '12395438',
-                ],
-                [
-                    $this->isInstanceOf(SiriusDocumentUpload::class),
-                    'rs-uuid',
-                    '12395438',
-                ],
-            )
-            ->willReturn($this->getSuccessfulResponse());
+            ->with(self::isInstanceOf(SiriusDocumentUpload::class), 'rs-uuid', '12395438')
+            ->willReturn($this->createSuccessfulResponse());
 
-        ['notSyncedCount' => $notSyncedCount, 'reportIdsWithNullChecklists' => $reportIdsWithNullChecklist] = $this->sut->syncChecklistsByReports($reports);
+        ['notSyncedCount' => $notSyncedCount, 'reportIdsWithNullChecklists' => $reportIdsWithNullChecklist] =
+            $this->sut->syncChecklistsByReports($reports);
+
         self::assertEquals(0, $notSyncedCount, sprintf('Expected $notSyncedCount to be %s, but it was %s', 0, $notSyncedCount));
         self::assertEquals([], $reportIdsWithNullChecklist, sprintf('Expected $reportIdsWithNullChecklist to be %s, but it was %s', json_encode([]), json_encode($reportIdsWithNullChecklist)));
     }
@@ -293,60 +277,53 @@ class ChecklistSyncServiceTest extends TestCase
 
         $pdfException = new PdfGenerationFailedException('Failed to sync due to PDF');
 
-        $this->pdfGenerator
-            ->expects($this->exactly(2))
+        $this->pdfGenerator->expects(self::exactly(2))
             ->method('generate')
             ->will(
-                $this->onConsecutiveCalls(
-                    $this->throwException($pdfException),
+                self::onConsecutiveCalls(
+                    self::throwException($pdfException),
                     'file-contents',
                 )
             );
 
-        $expectedFailureData = [
+        $expectedFailureData = json_encode([
             'syncStatus' => Checklist::SYNC_STATUS_PERMANENT_ERROR,
             'syncError' => 'Failed to sync due to PDF',
-        ];
+        ]);
 
-        $expectedSuccessData = [
+        $expectedSuccessData = json_encode([
             'syncStatus' => Checklist::SYNC_STATUS_SUCCESS,
             'uuid' => 'returned-checklist-uuid',
-        ];
+        ]);
 
-        $this->restClient
-            ->expects($this->exactly(2))
+        $invocationMatcher = self::exactly(2);
+        $this->restClient->expects($invocationMatcher)
             ->method('apiCall')
-            ->withConsecutive(
-                [
-                    'put',
-                    'checklist/1',
-                    json_encode($expectedFailureData),
-                    'raw',
-                    [],
-                    false,
-                ],
-                [
-                    'put',
-                    'checklist/2',
-                    json_encode($expectedSuccessData),
-                    'raw',
-                    [],
-                    false,
-                ]
-            );
+            ->willReturnCallback(function (...$options) use ($invocationMatcher, $expectedFailureData, $expectedSuccessData) {
+                self::assertEquals('put', $options[0]);
+                self::assertEquals('raw', $options[3]);
+                self::assertEquals([], $options[4]);
+                self::assertFalse($options[5]);
 
-        $this
-            ->siriusApiGatewayClient
-            ->expects($this->exactly(1))
+                $invocation = $invocationMatcher->getInvocationCount();
+                self::assertEquals("checklist/{$invocation}", $options[1]);
+
+                $actualData = $options[2];
+                match ($invocation) {
+                    1 => self::assertEquals($expectedFailureData, $actualData),
+                    2 => self::assertEquals($expectedSuccessData, $actualData),
+                    default => throw new \Exception('Unexpected method invocation'),
+                };
+            });
+
+        $this->siriusApiGatewayClient->expects(self::once())
             ->method('postChecklistPdf')
-            ->withConsecutive(
-                [
-                    $this->isInstanceOf(SiriusDocumentUpload::class),
-                    'rs-uuid',
-                    '12395438',
-                ],
+            ->with(
+                $this->isInstanceOf(SiriusDocumentUpload::class),
+                'rs-uuid',
+                '12395438',
             )
-            ->willReturn($this->getSuccessfulResponse());
+            ->willReturn($this->createSuccessfulResponse());
 
         ['notSyncedCount' => $notSyncedCount, 'reportIdsWithNullChecklists' => $reportIdsWithNullChecklist] = $this->sut->syncChecklistsByReports($reports);
         self::assertEquals(1, $notSyncedCount, sprintf('Expected $notSyncedCount to be %s, but it was %s', 0, $notSyncedCount));
@@ -359,63 +336,51 @@ class ChecklistSyncServiceTest extends TestCase
 
         $expectedSiriusSyncException = new SiriusDocumentSyncFailedException('Failed to sync due to Sirius sync');
 
-        $this->pdfGenerator
-            ->expects($this->exactly(2))
+        $this->pdfGenerator->expects(self::exactly(2))
             ->method('generate')
             ->willReturn('file-contents');
 
-        $expectedFailureData = [
-            'syncStatus' => Checklist::SYNC_STATUS_PERMANENT_ERROR,
-            'syncError' => 'Failed to sync due to Sirius sync',
-        ];
-
-        $expectedSuccessData = [
-            'syncStatus' => Checklist::SYNC_STATUS_SUCCESS,
-            'uuid' => 'returned-checklist-uuid',
-        ];
-
-        $this->restClient
-            ->expects($this->exactly(2))
+        $invocationMatcher = self::exactly(2);
+        $this->restClient->expects($invocationMatcher)
             ->method('apiCall')
-            ->withConsecutive(
-                [
-                    'put',
-                    'checklist/1',
-                    json_encode($expectedFailureData),
-                    'raw',
-                    [],
-                    false,
-                ],
-                [
-                    'put',
-                    'checklist/2',
-                    json_encode($expectedSuccessData),
-                    'raw',
-                    [],
-                    false,
-                ]
-            );
+            ->willReturnCallback(function (...$options) use ($invocationMatcher) {
+                $expectedSuccessData = json_encode([
+                    'syncStatus' => Checklist::SYNC_STATUS_SUCCESS,
+                    'uuid' => 'returned-checklist-uuid',
+                ]);
 
-        $this
-            ->siriusApiGatewayClient
-            ->expects($this->exactly(2))
+                $expectedFailureData = json_encode([
+                    'syncStatus' => Checklist::SYNC_STATUS_PERMANENT_ERROR,
+                    'syncError' => 'Failed to sync due to Sirius sync',
+                ]);
+
+                self::assertEquals('put', $options[0]);
+                self::assertEquals('raw', $options[3]);
+                self::assertEquals([], $options[4]);
+                self::assertFalse($options[5]);
+
+                $invocation = $invocationMatcher->getInvocationCount();
+                self::assertEquals("checklist/{$invocation}", $options[1]);
+
+                $actualData = $options[2];
+                match ($invocation) {
+                    1 => self::assertEquals($expectedFailureData, $actualData),
+                    2 => self::assertEquals($expectedSuccessData, $actualData),
+                    default => throw new \Exception('Unexpected method invocation'),
+                };
+            });
+
+        $this->siriusApiGatewayClient->expects(self::exactly(2))
             ->method('postChecklistPdf')
-            ->withConsecutive(
-                [
-                    $this->isInstanceOf(SiriusDocumentUpload::class),
-                    'rs-uuid',
-                    '12395438',
-                ],
-                [
-                    $this->isInstanceOf(SiriusDocumentUpload::class),
-                    'rs-uuid',
-                    '12395438',
-                ],
+            ->with(
+                self::isInstanceOf(SiriusDocumentUpload::class),
+                'rs-uuid',
+                '12395438',
             )
             ->will(
-                $this->onConsecutiveCalls(
-                    $this->throwException($expectedSiriusSyncException),
-                    $this->getSuccessfulResponse(),
+                self::onConsecutiveCalls(
+                    self::throwException($expectedSiriusSyncException),
+                    $this->createSuccessfulResponse(),
                 )
             );
 

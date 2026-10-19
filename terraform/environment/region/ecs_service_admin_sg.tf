@@ -18,7 +18,7 @@ locals {
     ecr_api = local.common_sg_rules.ecr_api
     secrets = local.common_sg_rules.secrets
     admin_elb_http = {
-      port        = 80
+      port        = 8080
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
@@ -32,7 +32,7 @@ locals {
       target      = data.aws_security_group.redis_front_sg.id
     }
     api = {
-      port        = 80
+      port        = 8080
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"

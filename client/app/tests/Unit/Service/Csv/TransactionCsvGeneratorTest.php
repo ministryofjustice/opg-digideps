@@ -4,209 +4,144 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\Csv;
 
-use Mockery\Mock;
-use Mockery\MockInterface;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\BankAccount;
 use OPG\Digideps\Frontend\Entity\Report\Expense;
 use OPG\Digideps\Frontend\Entity\Report\Gift;
 use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
 use OPG\Digideps\Frontend\Entity\Report\Report;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Tests\OPG\Digideps\Frontend\Unit\MockeryStub as m;
 use OPG\Digideps\Frontend\Service\Csv\CsvBuilder;
 use OPG\Digideps\Frontend\Service\Csv\TransactionsCsvGenerator;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use PHPUnit\Framework\Constraint\IsType;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class TransactionCsvGeneratorTest extends MockeryTestCase
+class TransactionCsvGeneratorTest extends TestCase
 {
     protected TransactionsCsvGenerator $sut;
 
-    private MockInterface&TranslatorInterface $mockTranslator;
-    private MockInterface&Report $mockReport;
-
-    /**
-     * Set up the mockservies
-     */
     public function setUp(): void
     {
-        $this->mockTranslator = m::mock(Translator::class);
+        $mockTranslator = self::createMock(TranslatorInterface::class);
+        $mockTranslator->method('trans')
+            ->with(new IsType(IsType::TYPE_STRING), [], 'report-money-transaction')
+            ->willReturn('SomeCategory');
 
-        $this->mockTranslator->shouldReceive('trans')->with(m::type('string'), [], 'report-money-transaction')
-            ->andReturn('SomeCategory');
-        $this->sut = new TransactionsCsvGenerator($this->mockTranslator, new CsvBuilder());
+        $this->sut = new TransactionsCsvGenerator($mockTranslator, new CsvBuilder());
     }
 
-    public function testGenerateTransactionsCsvNoTransactions()
+    public function testGenerateTransactionsCsvNoTransactions(): void
     {
-        $this->mockReport = $this->generateMockReport(99, 0, 0, 0, 0);
+        $csvString = $this->sut->generateTransactionsCsv($this->generateMockReport());
 
-        $csvString = $this->sut->generateTransactionsCsv($this->mockReport);
-        $this->assertStringContainsString('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
+        self::assertStringContainsString('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
     }
 
-    public function testGenerateTransactionsCsvWtihTransactions()
+    public function testGenerateTransactionsCsvWithTransactions(): void
     {
-        $this->mockReport = $this->generateMockReport(
-            99,
+        $mockReport = $this->generateMockReport(
             20, // gifts
             20, // expenses
             50, // money out
             10 // money in
         );
 
-        $csvString = $this->sut->generateTransactionsCsv($this->mockReport);
-        $this->assertStringContainsString('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
-        $this->assertEquals(20, preg_match_all('/Gift/', $csvString));
-        $this->assertEquals(20, preg_match_all('/Expense/', $csvString));
-        $this->assertEquals(50, preg_match_all('/Money out/', $csvString));
-        $this->assertEquals(10, preg_match_all('/Money in/', $csvString));
+        $csvString = $this->sut->generateTransactionsCsv($mockReport);
 
-        $this->assertEquals(35, preg_match_all('/Custom bank name/', $csvString));
-        $this->assertEquals(35, preg_match_all('/\(\*\*\*\* 1234\) 12\-34\-56\)/', $csvString));
+        self::assertStringContainsString('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
+        self::assertEquals(20, preg_match_all('/Gift/', $csvString));
+        self::assertEquals(20, preg_match_all('/Expense/', $csvString));
+        self::assertEquals(50, preg_match_all('/Money out/', $csvString));
+        self::assertEquals(10, preg_match_all('/Money in/', $csvString));
+
+        self::assertEquals(35, preg_match_all('/Custom bank name/', $csvString));
+        self::assertEquals(35, preg_match_all('/\(\*\*\*\* 1234\) 12-34-56\)/', $csvString));
     }
 
-    /**
-     * Generates a mock Report with id and associated transactions
-     *
-     * @param $reportId
-     * @param $numGifts
-     * @param $numExpenses
-     * @param $numMoneyOut
-     * @param $numMoneyIn
-     */
     private function generateMockReport(
-        $reportId,
-        $numGifts = 0,
-        $numExpenses = 0,
-        $numMoneyOut = 0,
-        $numMoneyIn = 0,
-        $dueDate = '2/5/2018',
-        $submitDate = '4/28/2018'
-    ): MockInterface&Report {
-        $mockReport = m::mock(Report::class);
+        int $numGifts = 0,
+        int $numExpenses = 0,
+        int $numMoneyOut = 0,
+        int $numMoneyIn = 0
+    ): Report&MockObject {
+        $mockReport = self::createMock(Report::class);
 
-        $mockReport->shouldReceive('getId')->andReturn($reportId);
-        $mockReport->shouldReceive('getGifts')->andReturn(
+        $mockReport->method('getId')->willReturn(99);
+        $mockReport->method('getGifts')->willReturn(
             $this->generateMockTransactions(Gift::class, $numGifts)
         );
-        $mockReport->shouldReceive('getExpenses')->andReturn(
+        $mockReport->method('getExpenses')->willReturn(
             $this->generateMockTransactions(Expense::class, $numExpenses)
         );
-        $mockReport->shouldReceive('getMoneyTransactionsOut')->andReturn(
+        $mockReport->method('getMoneyTransactionsOut')->willReturn(
             $this->generateMockTransactions(MoneyTransaction::class, $numMoneyOut)
         );
-        $mockReport->shouldReceive('getMoneyTransactionsIn')->andReturn(
+        $mockReport->method('getMoneyTransactionsIn')->willReturn(
             $this->generateMockTransactions(MoneyTransaction::class, $numMoneyIn)
         );
-        $mockReport->shouldReceive('getType')->andReturn(102);
-
-        $mockReport->shouldReceive('getClient')->andReturn(
-            $this->generateMockClient(32)
-        );
-
-        if (!empty($dueDate)) {
-            $mockReport->shouldReceive('getDueDate')->andReturn(new \DateTime($dueDate));
-        } else {
-            $mockReport->shouldReceive('getDueDate')->andReturnNull();
-        }
-
-        if (!empty($submitDate)) {
-            $mockReport->shouldReceive('getSubmitDate')->andReturn(new \DateTime($submitDate));
-        } else {
-            $mockReport->shouldReceive('getSubmitDate')->andReturnNull();
-        }
+        $mockReport->method('getType')->willReturn(102);
+        $mockReport->method('getClient')->willReturn($this->generateMockClient());
+        $mockReport->method('getDueDate')->willReturn(new \DateTime('2/5/2018'));
+        $mockReport->method('getSubmitDate')->willReturn(new \DateTime('4/28/2018'));
 
         return $mockReport;
     }
 
     /**
-     * Generates $qty of Mock entited of class $class
+     * Generates $qty of Mocks of class $class
      *
-     * @param $class
-     * @param $qty
-     * @return array
+     * @param class-string<Gift|Expense|MoneyTransaction> $class
+     * @return array<Gift|Expense|MoneyTransaction>
      */
-    private function generateMockTransactions($class, $qty)
+    private function generateMockTransactions(string $class, int $qty): array
     {
-        $mocks = [];
+        $mockTransactions = [];
         for ($i = 0; $i < $qty; $i++) {
-            array_push($mocks, $this->generateMockTransactionEntity($class, $i));
+            $mockTransactions[] = $this->generateMockTransactionEntity($class, $i);
         }
-        return $mocks;
+        return $mockTransactions;
     }
 
     /**
      * Generates instance of mock Entity $class. Counter used to differentiate properties only.
      *
-     * @param $class
-     * @param $counter
-     * @return mixed
+     * @param class-string<Gift|Expense|MoneyTransaction> $class
      */
-    private function generateMockTransactionEntity($class, $counter)
+    private function generateMockTransactionEntity(string $class, int $counter): Gift|Expense|MoneyTransaction
     {
-        $mock = new $class();
-        $mock->setAmount(10.00);
-        //$mock->setIsJointAccount(true);
-        switch ($class) {
-            case Gift::class:
-                $mock->setExplanation('explanation for gift ' . $counter);
-                break;
-            case Expense::class:
-                $mock->setExplanation('explanation for expense ' . $counter);
-                break;
-            case MoneyTransaction::class:
-                /**
-                 * @var int $index
-                 */
-                $index = min($counter, count(MoneyTransaction::$categories) - 1);
-                // Assign Category based on counter
-                $mock->setCategory(MoneyTransaction::$categories[$index][0]);
-                $mock->setDescription('description for transaction ' . $counter);
-
-                break;
-        }
-
-
-        // set all even numbers to have a bank account
-        $bankAccount = ($counter % 3 == 0) ? $this->generateBankAccount($counter) : null;
-        $mock->setBankAccount($bankAccount);
-
-        return $mock;
+        return (match ($class) {
+            Gift::class => new Gift()->setAmount('10.00')->setExplanation('explanation for gift ' . $counter),
+            Expense::class => new Expense()->setAmount('10.00')->setExplanation('explanation for expense ' . $counter),
+            MoneyTransaction::class => new MoneyTransaction()->setAmount('10.00')
+                ->setDescription('description for transaction ' . $counter)
+                ->setCategory(MoneyTransaction::$categories[min($counter, count(MoneyTransaction::$categories) - 1)][0]),
+            default => throw new \DomainException("Unsupported type: {$class}"),
+        })->setBankAccount(($counter % 3 == 0) ? $this->generateBankAccount($counter) : null);
     }
 
     /**
      * Generates instance of mock bank account. $counter used to differentiate.
-     *
-     * @param $counter
-     * @return Mock
      */
-    private function generateBankAccount($counter)
+    private function generateBankAccount(int $counter): BankAccount&MockObject
     {
-        $mockBankAccount = m::mock(BankAccount::class)->makePartial();
-        $mockBankAccount->shouldReceive('getDisplayName')->andReturn('(**** 1234) 12-34-56)');
-        $mockBankAccount->shouldReceive('getBank')->andReturn('Custom bank name ' . $counter);
+        $mockBankAccount = self::createMock(BankAccount::class);
+        $mockBankAccount->method('getDisplayName')->willReturn('(**** 1234) 12-34-56)');
+        $mockBankAccount->method('getBank')->willReturn('Custom bank name ' . $counter);
 
         return $mockBankAccount;
     }
 
-    /**
-     * Generates instance of mock user
-     *
-     * @param $counter
-     * @return Mock
-     */
-    private function generateMockClient($counter)
+    private function generateMockClient(): Client&MockObject
     {
-        $mock = m::mock(Client::class)->makePartial();
-        $mock->shouldReceive('getFirstname')->andReturn('Firstname' . $counter);
-        $mock->shouldReceive('getLastname')->andReturn('Lastname' . $counter);
-        $mock->shouldReceive('getCaseNumber')->andReturn($counter . $counter . $counter . $counter);
-        $mock->shouldReceive('getTotalReportCount')->andReturn($counter * 2);
-        $mock->shouldReceive('getUnsubmittedReportsCount')->andReturn(1);
-        $mock->shouldReceive('getCourtDate')->andReturn(new \DateTime('11/8/2011'));
+        $mockClient = self::createMock(Client::class);
+        $mockClient->method('getFirstname')->willReturn('Firstname' . 32);
+        $mockClient->method('getLastname')->willReturn('Lastname' . 32);
+        $mockClient->method('getCaseNumber')->willReturn("32323232");
+        $mockClient->method('getTotalReportCount')->willReturn(32);
+        $mockClient->method('getUnsubmittedReportsCount')->willReturn(1);
+        $mockClient->method('getCourtDate')->willReturn(new \DateTime('11/8/2011'));
 
-        return $mock;
+        return $mockClient;
     }
 }

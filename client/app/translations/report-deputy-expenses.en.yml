@@ -80,3 +80,11 @@ form:
     hint: ""
   save:
     label: Save expense
+
+review:
+  notEntered: Not entered
+  yes: Yes
+  no: No
+  tableHeader: List of expenses
+  bankAccount: Bank account
+  totalAmount: Total Amount

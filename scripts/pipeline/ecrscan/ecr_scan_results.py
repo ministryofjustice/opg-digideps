@@ -185,12 +185,14 @@ class ECRScanChecker:
 
     def ci_check_and_output(self, report):
         severity_dict = {
+            "INFORMATIONAL": 0,
             "LOW": 0,
             "MEDIUM": 0,
             "HIGH": 0,
             "CRITICAL": 0,
             "UNTRIAGED": 0,
         }
+
         severity_lines = []
 
         for line in report.split("\n"):
@@ -199,15 +201,32 @@ class ECRScanChecker:
 
         for severity_line in severity_lines:
             severity = severity_line.replace("*Severity:* ", "").strip()
+
+            # Handle any new AWS Inspector severities gracefully
+            severity_dict.setdefault(severity, 0)
             severity_dict[severity] += 1
 
-        for severity, count in severity_dict.items():
-            print(f"{severity}: {count}")
+        # Print common severities first
+        ordered_severities = [
+            "INFORMATIONAL",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL",
+            "UNTRIAGED",
+        ]
 
-        # Temporarily removing HIGH because of limitations with puppeteer
+        for severity in ordered_severities:
+            print(f"{severity}: {severity_dict.get(severity, 0)}")
+
+        # Print any unexpected/new severities afterwards
+        for severity in sorted(severity_dict.keys()):
+            if severity not in ordered_severities:
+                print(f"{severity}: {severity_dict[severity]}")
+
         if severity_dict["CRITICAL"] > 0:
             print("Failing the build. Please fix security vulnerabilities")
-            exit(1)
+            sys.exit(1)
 
 
 def main():

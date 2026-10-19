@@ -3,8 +3,8 @@
 namespace OPG\Digideps\Frontend\Form\Admin;
 
 use OPG\Digideps\Frontend\Form\DateType;
-use OPG\Digideps\Frontend\Form\Subscriber\ReportTypeChoicesSubscriber;
 use OPG\Digideps\Frontend\Form\Traits\HasTranslatorTrait;
+use OPG\Digideps\Frontend\Validator\Constraints\AugmentedExpression;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -30,6 +30,16 @@ class ManageActiveReportType extends AbstractType
                 'constraints' => [
                     new Constraints\NotBlank(['message' => 'report.endDate.notBlank', 'groups' => ['startEndDates']]),
                     new Constraints\Date(['message' => 'report.endDate.invalidMessage', 'groups' => ['startEndDates ']]),
+                    new Constraints\GreaterThan([
+                        'propertyPath' => 'parent.all[startDate].data',
+                        'message' => 'report.endDate.beforeStart',
+                        'groups' => ['startEndDates'],
+                    ]),
+                    new AugmentedExpression([
+                        'expression' => 'clone(this.getParent().get("startDate").getData()).modify("+15 months") > this.getData()',
+                        'message' => 'report.endDate.greaterThan15Months',
+                        'groups' => ['startEndDates'],
+                    ]),
                 ],
             ])
             ->add('dueDateChoice', ReportDueDateType::class)
@@ -42,7 +52,6 @@ class ManageActiveReportType extends AbstractType
                     new Constraints\Date(['message' => 'report.dueDate.invalidMessage', 'groups' => ['due_date_new']]),
                 ],
             ])
-            ->addEventSubscriber(new ReportTypeChoicesSubscriber($this->translator))
             ->add('save', SubmitType::class);
     }
 
@@ -51,6 +60,7 @@ class ManageActiveReportType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'admin-clients',
             'compound' => true,
+            'validation_groups' => 'startEndDates',
         ]);
     }
 

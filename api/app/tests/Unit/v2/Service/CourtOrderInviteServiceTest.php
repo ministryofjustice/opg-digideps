@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Service;
 
+use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderInviteService;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderService;
 use OPG\Digideps\Backend\Entity\Client;
@@ -15,7 +16,6 @@ use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Service\DeputyService;
 use OPG\Digideps\Backend\Service\UserService;
 use OPG\Digideps\Backend\v2\DTO\InviteeDto;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -192,11 +192,6 @@ final class CourtOrderInviteServiceTest extends TestCase
 
         $mockPreregistration->expects(self::once())->method('getDeputyUid')->willReturn($deputyUid);
 
-        $this->mockCourtOrderService->expects(self::once())
-            ->method('getByUidAsUser')
-            ->with($courtOrderUid, $invitingUser)
-            ->willReturn($mockCourtOrder);
-
         $this->mockEntityManager->expects(self::once())->method('beginTransaction');
         $this->mockEntityManager->expects(self::once())->method('rollback');
 
@@ -245,11 +240,6 @@ final class CourtOrderInviteServiceTest extends TestCase
             ->willReturn($mockPreregistration);
 
         $mockPreregistration->expects(self::once())->method('getDeputyUid')->willReturn($deputyUid);
-
-        $this->mockCourtOrderService->expects(self::once())
-            ->method('getByUidAsUser')
-            ->with($courtOrderUid, $invitingUser)
-            ->willReturn($mockCourtOrder);
 
         $this->mockEntityManager->expects(self::once())->method('beginTransaction');
         $this->mockEntityManager->expects(self::once())->method('commit');

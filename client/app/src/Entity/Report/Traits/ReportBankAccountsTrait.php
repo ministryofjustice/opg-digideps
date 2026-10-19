@@ -1,41 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use OPG\Digideps\Frontend\Entity\Report\BankAccount;
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\BankAccount;
 
 trait ReportBankAccountsTrait
 {
     /**
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\BankAccount>")
-     *
      * @var BankAccount[]
      */
-    private $bankAccounts = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\BankAccount>')]
+    private array $bankAccounts = [];
 
-    /**
-     * @JMS\Type("double")
-     *
-     * @var float
-     */
-    private $accountsClosingBalanceTotal;
+    #[JMS\Type('double')]
+    private float $accountsClosingBalanceTotal = 0.0;
 
+    #[JMS\Type('double')]
+    private float $accountsOpeningBalanceTotal = 0.0;
 
-    /**
-     * @JMS\Type("double")
-     *
-     * @var float
-     */
-    private $accountsOpeningBalanceTotal;
-
-    /**
-     * @param array $bankAccounts
-     *
-     * @return Report
-     */
-    public function setBankAccounts($bankAccounts)
+    public function setBankAccounts(array $bankAccounts): static
     {
         foreach ($bankAccounts as $account) {
             $account->setReport($this);
@@ -49,7 +35,7 @@ trait ReportBankAccountsTrait
     /**
      * @return BankAccount[]
      */
-    public function getBankAccounts()
+    public function getBankAccounts(): array
     {
         return $this->bankAccounts;
     }
@@ -57,92 +43,68 @@ trait ReportBankAccountsTrait
     /**
      * @return BankAccount[]
      */
-    public function getBankAccountsIncomplete()
+    public function getBankAccountsIncomplete(): array
     {
-        return array_filter($this->bankAccounts ?: [], function ($b) {
+        return array_filter($this->bankAccounts ?: [], function ($b): bool {
             return $b->getClosingBalance() === null;
         });
     }
 
-    /**
-     * @return BankAccount
-     */
-    public function getBankAccountById($id)
+    public function getBankAccountById(int $id): ?BankAccount
     {
-        foreach ($this->bankAccounts as $account) {
-            if ($account->getId() == $id) {
-                return $account;
-            }
-        }
+        return array_find($this->bankAccounts, fn ($account) => $account->getId() == $id);
     }
 
-    /**
-     * @return float
-     */
-    public function getAccountsClosingBalanceTotal()
+    public function getAccountsClosingBalanceTotal(): float
     {
         return $this->accountsClosingBalanceTotal;
     }
 
-    /**
-     * @param float $accountsClosingBalanceTotal
-     *
-     * @return Report
-     */
-    public function setAccountsClosingBalanceTotal($accountsClosingBalanceTotal)
+    public function setAccountsClosingBalanceTotal(?float $accountsClosingBalanceTotal): static
     {
-        $this->accountsClosingBalanceTotal = $accountsClosingBalanceTotal;
+        $this->accountsClosingBalanceTotal = $accountsClosingBalanceTotal ?? 0.0;
 
         return $this;
     }
 
-    /**
-     ** @return bool
-     */
-    public function hasMoneyIn()
+    public function hasMoneyIn(): bool
     {
         return count($this->getMoneyTransactionsIn()) > 0;
     }
 
-    /**
-     ** @return bool
-     */
-    public function hasMoneyOut()
+    public function hasMoneyOut(): bool
     {
         return count($this->getMoneyTransactionsOut()) > 0;
     }
 
-    /**
-     * @return float
-     */
-    public function getAccountsOpeningBalanceTotal()
+    public function getAccountsOpeningBalanceTotal(): float
     {
         return $this->accountsOpeningBalanceTotal;
     }
 
-    /**
-     * @param float $accountsOpeningBalanceTotal
-     */
-    public function setAccountsOpeningBalanceTotal($accountsOpeningBalanceTotal)
+    public function setAccountsOpeningBalanceTotal(?float $accountsOpeningBalanceTotal): void
     {
-        $this->accountsOpeningBalanceTotal = $accountsOpeningBalanceTotal;
+        $this->accountsOpeningBalanceTotal = $accountsOpeningBalanceTotal ?? 0.0;
     }
 
     /**
      * Returns a formatted list of bank accounts associated with this report
      *
-     * @return array
+     * @return array<string, int>
      */
-    public function getBankAccountOptions()
+    public function getBankAccountOptions(): array
     {
         $banksList = [];
         $banks = $this->getBankAccounts();
         foreach ($banks as $bank) {
             /* @var $bank BankAccount */
             $bankName = (!empty($bank->getBank()) ? $bank->getBank() . ' - ' : '') . $bank->getAccountTypeText() . ' (****' . $bank->getAccountNumber() . ')';
-            $banksList[$bankName] = $bank->getId();
-        }
+            $bankId = $bank->getId();
 
+            if (is_int($bankId)) {
+                $banksList[$bankName] = $bankId;
+            }
+        }
         return $banksList;
     }
 }

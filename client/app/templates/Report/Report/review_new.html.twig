@@ -45,10 +45,19 @@
 
     </div>
 
+    <div>
+        <span class="opg-text--secondary">{{ 'pdfDraftSentence' | trans() }}</span>
+        {% include '@App/Report/Report/_pdf_download_link.html.twig' with {devPreview: true} %}
+    </div>
+
     <div class="push--bottom">
         <div class="opg-border--primary">
             {% include '@App/Report/Rendered/body.html.twig' %}
         </div>
+    </div>
+
+    <div class="govuk-!-padding-bottom-4">
+        {% include '@App/Report/Report/_pdf_download_link.html.twig' with {devPreview: true} %}
     </div>
 
     {% include '@App/Report/Report/_review_buttons.html.twig' %}

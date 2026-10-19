@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Service;
 
 use OPG\Digideps\Frontend\Entity\Client;
@@ -7,6 +9,7 @@ use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
 use OPG\Digideps\Frontend\Service\Redirector;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -18,36 +21,35 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class RedirectorTest extends TestCase
 {
-    private User $user;
-    private TokenStorageInterface $tokenStorage;
-    private TokenInterface $token;
-    private Session $session;
-    private RouterInterface $router;
-    private AuthorizationCheckerInterface $authChecker;
-    private ClientApi $clientApi;
-    private LoggerInterface $logger;
-
+    private User&MockObject $user;
+    private TokenStorageInterface&MockObject $tokenStorage;
+    private TokenInterface&MockObject $token;
+    private Session&MockObject $session;
+    private RouterInterface&MockObject $router;
+    private AuthorizationCheckerInterface&MockObject $authChecker;
+    private ClientApi&MockObject $clientApi;
+    private LoggerInterface&MockObject $logger;
     private Redirector $sut;
 
     public function setUp(): void
     {
-        $this->user = $this->createMock(User::class);
+        $this->user = self::createMock(User::class);
 
-        $this->router = $this->createMock(RouterInterface::class);
+        $this->router = self::createMock(RouterInterface::class);
 
-        $this->session = $this->createMock(Session::class);
-        $mockRequestStack = $this->createMock(RequestStack::class);
+        $this->session = self::createMock(Session::class);
+        $mockRequestStack = self::createMock(RequestStack::class);
         $mockRequestStack->method('getSession')->willReturn($this->session);
 
-        $this->token = $this->createMock(TokenInterface::class);
+        $this->token = self::createMock(TokenInterface::class);
 
-        $this->tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $this->tokenStorage = self::createMock(TokenStorageInterface::class);
 
-        $this->authChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $this->authChecker = self::createMock(AuthorizationCheckerInterface::class);
 
-        $this->clientApi = $this->createMock(ClientApi::class);
+        $this->clientApi = self::createMock(ClientApi::class);
 
-        $this->logger = $this->createMock(LoggerInterface::class);
+        $this->logger = self::createMock(LoggerInterface::class);
 
         $this->sut = new Redirector(
             $this->tokenStorage,
@@ -106,8 +108,8 @@ class RedirectorTest extends TestCase
         array $routeParams,
         string $expectedRoute,
     ): void {
-        $this->token->expects($this->once())->method('getUser')->willReturn($this->user);
-        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
+        $this->token->expects(self::once())->method('getUser')->willReturn($this->user);
+        $this->tokenStorage->expects(self::once())->method('getToken')->willReturn($this->token);
 
         $this->authChecker->expects($this->any())
             ->method('isGranted')
@@ -130,19 +132,19 @@ class RedirectorTest extends TestCase
             $this->session->method('get')->willReturn(null);
         } else {
             foreach ($sessionValues as $key => $value) {
-                $this->session->expects($this->once())->method('get')->with($key)->willReturn($value);
+                $this->session->expects(self::once())->method('get')->with($key)->willReturn($value);
             }
         }
 
         if ($numClients > 0) {
             $clients = [];
             for ($i = 0; $i < $numClients; ++$i) {
-                $client = $this->createMock(Client::class);
+                $client = self::createMock(Client::class);
                 $client->method('getId')->willReturn(999);
 
                 $reports = [];
                 for ($j = 0; $j < $numReports; ++$j) {
-                    $report = $this->createMock(Report::class);
+                    $report = self::createMock(Report::class);
                     $reports[] = $report;
                 }
                 $client->method('getReportIds')->willReturn($reports);
@@ -155,14 +157,14 @@ class RedirectorTest extends TestCase
                 ->willReturn($clients);
         }
 
-        $this->router->expects($this->once())
+        $this->router->expects(self::once())
             ->method('generate')
             ->with($routeName, $routeParams)
             ->willReturn($expectedRoute);
 
         $actual = $this->sut->getFirstPageAfterLogin($this->session);
 
-        $this->assertEquals($actual, $expectedRoute);
+        self::assertEquals($actual, $expectedRoute);
     }
 
     /*
@@ -173,14 +175,14 @@ class RedirectorTest extends TestCase
      */
     public function testGetFirstPageAfterLoginNoToken(): void
     {
-        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn(null);
+        $this->tokenStorage->expects(self::once())->method('getToken')->willReturn(null);
 
         $this->authChecker->method('isGranted')
             ->willReturnCallback(function ($role) {
                 return $role === User::ROLE_LAY_DEPUTY;
             });
 
-        $this->router->expects($this->once())
+        $this->router->expects(self::once())
             ->method('generate')
             ->with('login')
             ->willReturn('/login');
@@ -189,7 +191,7 @@ class RedirectorTest extends TestCase
 
         $actual = $this->sut->getFirstPageAfterLogin($this->session);
 
-        $this->assertEquals('/login', $actual);
+        self::assertEquals('/login', $actual);
     }
 
     /*
@@ -201,15 +203,15 @@ class RedirectorTest extends TestCase
      */
     public function testGetFirstPageAfterLoginTokenButNoUser(): void
     {
-        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
-        $this->token->expects($this->once())->method('getUser')->willReturn(null);
+        $this->tokenStorage->expects(self::once())->method('getToken')->willReturn($this->token);
+        $this->token->expects(self::once())->method('getUser')->willReturn(null);
 
         $this->authChecker->method('isGranted')
             ->willReturnCallback(function ($role) {
                 return $role === User::ROLE_LAY_DEPUTY;
             });
 
-        $this->router->expects($this->once())
+        $this->router->expects(self::once())
             ->method('generate')
             ->with('login')
             ->willReturn('/login');
@@ -218,13 +220,13 @@ class RedirectorTest extends TestCase
 
         $actual = $this->sut->getFirstPageAfterLogin($this->session);
 
-        $this->assertEquals('/login', $actual);
+        self::assertEquals('/login', $actual);
     }
 
     public function testGetFirstPageAfterLoginMulticlient(): void
     {
-        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
-        $this->token->expects($this->once())->method('getUser')->willReturn($this->user);
+        $this->tokenStorage->expects(self::once())->method('getToken')->willReturn($this->token);
+        $this->token->expects(self::once())->method('getUser')->willReturn($this->user);
 
         $this->authChecker->method('isGranted')
             ->willReturnCallback(function ($role) {
@@ -239,13 +241,12 @@ class RedirectorTest extends TestCase
         $this->user->method('getCoDeputyClientConfirmed')->willReturn(false);
         $this->user->method('getRegistrationRoute')->willReturn(User::CO_DEPUTY_INVITE);
 
-        $client1 = $this->createMock(Client::class);
-        $client2 = $this->createMock(Client::class);
-        $this->clientApi
-            ->method('getAllClientsByDeputyUid')
+        $client1 = self::createMock(Client::class);
+        $client2 = self::createMock(Client::class);
+        $this->clientApi->method('getAllClientsByDeputyUid')
             ->willReturn([$client1, $client2]);
 
-        $this->router->expects($this->once())
+        $this->router->expects(self::once())
             ->method('generate')
             ->with('codep_verification')
             ->willReturn('/codeputy/verification');
@@ -257,16 +258,16 @@ class RedirectorTest extends TestCase
 
     public function testGetCorrectRouteIfDifferentNonAdminCodepVerification()
     {
-        $this->user->expects($this->once())->method('hasAdminRole')->willReturn(false);
-        $this->user->expects($this->once())->method('getIsCoDeputy')->willReturn(true);
-        $this->user->expects($this->once())->method('getCoDeputyClientConfirmed')->willReturn(true);
+        $this->user->expects(self::once())->method('hasAdminRole')->willReturn(false);
+        $this->user->expects(self::once())->method('getIsCoDeputy')->willReturn(true);
+        $this->user->expects(self::once())->method('getCoDeputyClientConfirmed')->willReturn(true);
 
         $correctedRoute = $this->sut->getCorrectRouteIfDifferent($this->user, 'codep_verification');
 
         static::assertEquals('courtorders_for_deputy', $correctedRoute);
     }
 
-    public function homepageRedirectProvider(): array
+    public static function homepageRedirectProvider(): array
     {
         return [
             ['admin', User::ROLE_ADMIN, 'admin_homepage', '/admin/'],
@@ -287,13 +288,13 @@ class RedirectorTest extends TestCase
             });
 
         if (!is_null($routeName)) {
-            $this->router->expects($this->once())
+            $this->router->expects(self::once())
                 ->method('generate')
                 ->with($routeName)
                 ->willReturn($expectedRoute);
         }
 
-        $mockRequestStack = $this->createMock(RequestStack::class);
+        $mockRequestStack = self::createMock(RequestStack::class);
         $mockRequestStack->method('getSession')->willReturn($this->session);
 
         $sut = new Redirector($this->tokenStorage, $this->authChecker, $this->router, $mockRequestStack, $env, $this->clientApi, $this->logger);
@@ -314,8 +315,8 @@ class RedirectorTest extends TestCase
                 return $role === 'IS_AUTHENTICATED_FULLY';
             });
 
-        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
-        $this->token->expects($this->once())->method('getUser')->willReturn($this->user);
+        $this->tokenStorage->expects(self::once())->method('getToken')->willReturn($this->token);
+        $this->token->expects(self::once())->method('getUser')->willReturn($this->user);
 
         $this->user->method('getDeputyUid')->willReturn(4422);
 
@@ -324,16 +325,16 @@ class RedirectorTest extends TestCase
         $this->user->method('getIsCoDeputy')->willReturn(false);
         $this->user->method('isDeputyOrg')->willReturn(true);
 
-        $client1 = $this->createMock(Client::class);
-        $client2 = $this->createMock(Client::class);
+        $client1 = self::createMock(Client::class);
+        $client2 = self::createMock(Client::class);
         $this->clientApi->method('getAllClientsByDeputyUid')->willReturn([$client1, $client2]);
 
-        $this->router->expects($this->once())
+        $this->router->expects(self::once())
             ->method('generate')
             ->with('courtorders_for_deputy')
             ->willReturn('/courtorder/choose-a-court-order');
 
-        $mockRequestStack = $this->createMock(RequestStack::class);
+        $mockRequestStack = self::createMock(RequestStack::class);
         $mockRequestStack->method('getSession')->willReturn($this->session);
 
         // sut
@@ -346,7 +347,7 @@ class RedirectorTest extends TestCase
 
     public function testRemoveLastAccessedUrl(): void
     {
-        $this->session->expects($this->once())->method('remove')->with('_security.secured_area.target_path');
+        $this->session->expects(self::once())->method('remove')->with('_security.secured_area.target_path');
         $this->sut->removeLastAccessedUrl();
     }
 }

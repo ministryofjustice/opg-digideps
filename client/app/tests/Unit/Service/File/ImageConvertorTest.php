@@ -9,8 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ImageConvertorTest extends KernelTestCase
 {
-    /** @test */
-    public function convert()
+    public function testConvert(): void
     {
         $projectDir = self::bootKernel()->getProjectDir();
         $sut = new ImageConvertor();

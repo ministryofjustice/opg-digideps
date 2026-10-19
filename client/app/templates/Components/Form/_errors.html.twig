@@ -1,9 +1,3 @@
 {% if element.vars.errors | length > 0 %}
-    <p class="govuk-error-message" id="{{ element.vars.id}}-error">
-        <span class="govuk-visually-hidden">Error:</span>
-        {% for error in element.vars.errors %}
-            {% if not loop.first %}<br>{% endif %}
-            {{ error.message | nl2br }}
-        {% endfor %}
-    </p>
+    <twig:GOV:ErrorMessage message="{{ element.vars.errors|map(error => "#{error.message}") }}" id="{{ element.vars.id}}-error"/>
 {% endif %}

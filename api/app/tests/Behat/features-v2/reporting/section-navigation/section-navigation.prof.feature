@@ -13,7 +13,7 @@ Feature: Section navigation - Professional (see section-navigation.lay.combined.
         Given a Professional Deputy has not started a Pfa High Assets report
         When I visit the deputy costs estimate report section
         Then the previous section should be "Deputy costs"
-        And the next section should be "Actions"
+        And the next section should be "Actions you plan to take"
 
     @prof-named-pfa-high-not-started
     Scenario: Debts

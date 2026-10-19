@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
@@ -12,7 +14,7 @@ class CommonPasswordValidator extends ConstraintValidator
     private const int CACHE_PASSWORDS_SECS = 24 * 3600;
 
     private string $filePathCommonPasswords;
-    private string $pwnedPasswordsUrl = '';
+    private string $pwnedPasswordsUrl;
     private bool $refreshCache;
 
     /**
@@ -42,14 +44,14 @@ class CommonPasswordValidator extends ConstraintValidator
         }
     }
 
-    protected function passwordMatchesCommonPasswords(string $searchTerm, string $filePath)
+    protected function passwordMatchesCommonPasswords(string $searchTerm, string $filePath): bool
     {
         $matches = [];
         $handle = @fopen($filePath, 'r');
         if ($handle && strlen($searchTerm) > 0) {
             while (!feof($handle)) {
                 $buffer = fgets($handle);
-                if (strpos($buffer, $searchTerm) !== false) {
+                if (is_string($buffer) && str_contains($buffer, $searchTerm)) {
                     $matches[] = $buffer;
                 }
             }
@@ -63,7 +65,7 @@ class CommonPasswordValidator extends ConstraintValidator
         }
     }
 
-    protected function checkCommonPasswordsFileExists(string $filePath)
+    protected function checkCommonPasswordsFileExists(string $filePath): void
     {
         if (
             file_exists($filePath) &
@@ -79,7 +81,7 @@ class CommonPasswordValidator extends ConstraintValidator
                 $fp
             );
             if ($written === false) {
-                throw new \RuntimeException(sprintf('Unable to download or write common password file to disk'));
+                throw new \RuntimeException('Unable to download or write common password file to disk');
             }
         }
     }

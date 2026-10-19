@@ -209,8 +209,10 @@ class AuthControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEquals('deputy@example.org', $data['email']);
 
+
+        $response = self::$frameworkBundleClient->getResponse();
         // logout
-        $authToken = self::$frameworkBundleClient->getResponse()->headers->get('AuthToken');
+        $authToken = $response->headers->get('AuthToken');
         $this->assertJsonRequest('POST', '/auth/logout', [
             'mustSucceed' => true,
             'AuthToken' => $authToken,

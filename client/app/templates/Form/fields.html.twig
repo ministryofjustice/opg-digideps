@@ -21,7 +21,7 @@
 {%- block form_errors -%}
     {%- if errors|length > 0 -%}
         {%- for error in errors -%}
-            <span class="error-message text">{{ error.message }}</span>
+            <twig:GOV:ErrorMessage message="{{ error.message }}"/>
         {%- endfor -%}
     {%- endif -%}
 {%- endblock form_errors -%}

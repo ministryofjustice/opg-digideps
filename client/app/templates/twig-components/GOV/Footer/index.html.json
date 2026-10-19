@@ -1,0 +1,18 @@
+{
+    "link": "https://design-system.service.gov.uk/components/footer/",
+    "props": [
+        {
+            "name": "version",
+            "type": "string",
+            "default": "null",
+            "info": "Software version / Git tag"
+        },
+        {
+            "name": "wider",
+            "type": "boolean",
+            "default": "false",
+            "info": "To be handled in the future via css and not programmatically."
+        }
+    ],
+    "examples": ["footer"]
+}

@@ -38,12 +38,58 @@ services:
       AWS_SESSION_TOKEN: $AWS_SESSION_TOKEN
       WORKSPACE: $WORKSPACE
 
-  block-ips-tests:
+  security-tests:
     build:
-      context: ./lambdas/functions/block_ips_lambda
+      context: ./lambdas/functions/security_lambda
       dockerfile: Dockerfile
 
   anonymisation-tests:
     build:
       context: ./orchestration
       target: tests
+
+  audit-ga:
+    build:
+      context: ./scripts/github_actions_audit
+    volumes:
+      - ./.github:/github:ro
+
+  frontend-apk-upgrade:
+    container_name: opg-digideps-frontend-apk-upgrade
+    build:
+      context: .
+      dockerfile: ./client/docker/app/Dockerfile
+      target: upgrade-pinned-apk-packages
+
+  api-apk-upgrade:
+    container_name: opg-digideps-api-apk-upgrade
+    build:
+      context: .
+      dockerfile: ./api/docker/app/Dockerfile
+      target: upgrade-pinned-apk-packages
+
+  htmltopdf-apk-upgrade:
+    container_name: opg-digideps-htmltopdf-apk-upgrade
+    build:
+      context: .
+      dockerfile: ./htmltopdf/Dockerfile
+      target: upgrade-pinned-apk-packages
+
+  php-cs-fixer:
+    build:
+      context: .
+      dockerfile: ./php-cs-fixer/Dockerfile
+    working_dir: /workdir
+    environment:
+      CHANGED_PHP_FILES: ${CHANGED_PHP_FILES}
+    volumes:
+      - .:/workdir
+    entrypoint:
+      - sh
+      - -c
+      - |
+        php /usr/local/bin/php-cs-fixer check \
+          --config=.php-cs-fixer.dist.php \
+          -v \
+          --show-progress=none \
+          $$CHANGED_PHP_FILES

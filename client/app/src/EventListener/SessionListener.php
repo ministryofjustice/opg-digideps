@@ -35,7 +35,7 @@ class SessionListener
     public function onKernelRequest(RequestEvent $event)
     {
         // Only operate on the master request and when there is a session
-        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
+        if ($event->getRequestType() !== HttpKernelInterface::MAIN_REQUEST) {
             return 'no-master-request';
         }
         if (!$event->getRequest()->hasSession()) {
@@ -51,7 +51,7 @@ class SessionListener
         return 'no-timeout';
     }
 
-    private function hasReachedTimeout(RequestEvent $event)
+    private function hasReachedTimeout(RequestEvent $event): bool
     {
         $session = $event->getRequest()->getSession();
 
@@ -69,7 +69,7 @@ class SessionListener
         return $idleTime > $this->idleTimeout;
     }
 
-    private function handleTimeout(RequestEvent $event)
+    private function handleTimeout(RequestEvent $event): void
     {
         $session = $event->getRequest()->getSession();
         //Invalidate the current session and throw an exception

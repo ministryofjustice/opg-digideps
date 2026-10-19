@@ -3,30 +3,26 @@
 namespace OPG\Digideps\Frontend\Entity\Traits;
 
 use JMS\Serializer\Annotation as JMS;
-use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 
 trait LoginInfoTrait
 {
     /**
-     * @JMS\Type("integer")
-     *
      * @var int|null
      */
-    private $idOfClientWithDetails;
+    #[JMS\Type('integer')]
+    private ?int $idOfClientWithDetails = null;
 
     /**
-     * @JMS\Type("integer")
-     *
      * @var int|null
      */
-    private $activeReportId;
+    #[JMS\Type('integer')]
+    private ?int $activeReportId = null;
 
     /**
-     * @JMS\Type("integer")
-     *
      * @var int|null
      */
-    private $numberOfReports;
+    #[JMS\Type('integer')]
+    private ?int $numberOfReports = null;
 
     public function getIdOfClientWithDetails(): ?int
     {
@@ -40,30 +36,19 @@ trait LoginInfoTrait
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getActiveReportId()
+    public function getActiveReportId(): ?int
     {
         return $this->activeReportId;
     }
 
-    /**
-     * @param int $activeReportId
-     *
-     * @return HasReportTrait
-     */
-    public function setActiveReportId($activeReportId)
+    public function setActiveReportId(int $activeReportId): static
     {
         $this->activeReportId = $activeReportId;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getNumberOfReports()
+    public function getNumberOfReports(): ?int
     {
         return $this->numberOfReports;
     }

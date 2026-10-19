@@ -16,27 +16,38 @@
   }
 
   &--notice {
-    background-color: fade-out($govuk-border-colour, 0.9);
+    background-color: color-mix(in srgb, $govuk-border-colour 10%, transparent);
   }
 
   &--success {
-    border-color: govuk-colour("turquoise");
-    background-color: fade-out(govuk-colour("turquoise"), 0.9);
+    background-color: color-mix(
+      in srgb,
+      govuk-colour("turquoise") 10%,
+      transparent
+    );
   }
 
   &--error {
     border-color: $govuk-error-colour;
-    background-color: fade-out($govuk-error-colour, 0.9);
+    background-color: color-mix(in srgb, $govuk-error-colour 10%, transparent);
   }
 
   &--info {
     border-color: govuk-colour("light-blue");
-    background-color: fade-out(govuk-colour("light-blue"), 0.9);
+    background-color: color-mix(
+      in srgb,
+      govuk-colour("light-blue") 10%,
+      transparent
+    );
   }
 
   &--important {
     border-color: govuk-colour("black");
-    background-color: fade-out(govuk-colour("black"), 0.9);
+    background-color: color-mix(
+      in srgb,
+      govuk-colour("black") 10%,
+      transparent
+    );
   }
 }
 
@@ -67,8 +78,8 @@
 
 .alert-error {
   @extend %alert-base;
-  border-color: $error-colour;
-  background-color: rgba($error-colour, 0.1);
+  border-color: $govuk-error-colour;
+  background-color: rgba($govuk-error-colour, 0.1);
 }
 
 .alert-info {

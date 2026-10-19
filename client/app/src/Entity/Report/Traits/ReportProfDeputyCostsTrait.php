@@ -1,181 +1,148 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Report\ProfDeputyInterimCost;
 use OPG\Digideps\Frontend\Entity\Report\ProfDeputyOtherCost;
 use OPG\Digideps\Frontend\Entity\Report\ProfDeputyPreviousCost;
 use OPG\Digideps\Frontend\Entity\Report\Report;
-use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
+/**
+ * @phpstan-type CostTypeIds array<array{typeId: string, hasMoreDetails: bool}>
+ */
 trait ReportProfDeputyCostsTrait
 {
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank(message="profDeputyCostsHowCharged.notBlank", groups={"prof-deputy-costs-how-charged"} )
-     * @JMS\Type("string")
-     * @JMS\Groups({"deputyCostsHowCharged"})
-     */
-    private $profDeputyCostsHowCharged;
+    #[Assert\NotBlank(message: 'profDeputyCostsHowCharged.notBlank', groups: ['prof-deputy-costs-how-charged'])]
+    #[JMS\Type('string')]
+    #[JMS\Groups(['deputyCostsHowCharged'])]
+    private ?string $profDeputyCostsHowCharged = null;
 
     /**
-     * @var string yes/no
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"profDeputyCostsHasPrevious"})
+     * 'yes'|'no'|null
      */
-    private $profDeputyCostsHasPrevious;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['profDeputyCostsHasPrevious'])]
+    private ?string $profDeputyCostsHasPrevious = null;
 
     /**
      * @var ProfDeputyOtherCost[]
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyOtherCost>")
-     * @JMS\Groups({"prof-deputy-other-costs"})
      */
-    private $profDeputyOtherCosts = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyOtherCost>')]
+    #[JMS\Groups(['prof-deputy-other-costs'])]
+    private array $profDeputyOtherCosts = [];
 
     /**
-     * @var array
+     * @var CostTypeIds
      */
-    private $profDeputyOtherCostIds;
+    private array $profDeputyOtherCostIds = [];
 
     /**
      * @var ProfDeputyPreviousCost[]
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyPreviousCost>")
      */
-    private $profDeputyPreviousCosts = [];
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyPreviousCost>')]
+    private array $profDeputyPreviousCosts = [];
+
+    #[Assert\NotBlank(message: 'profDeputyFixedCost.amount.notBlank', groups: ['prof-deputy-fixed-cost'])]
+    #[Assert\Range(minMessage: 'profDeputyFixedCost.amount.minMessage', min: 0, groups: ['prof-deputy-fixed-cost'])]
+    #[JMS\Type('double')]
+    #[JMS\Groups(['profDeputyFixedCost'])]
+    private ?float $profDeputyFixedCost = null;
 
     /**
-     * @var float
-     *
-     * @Assert\NotBlank( message="profDeputyFixedCost.amount.notBlank", groups={"prof-deputy-fixed-cost"} )
-     * @Assert\Range(min=0, minMessage = "profDeputyFixedCost.amount.minMessage", groups={"prof-deputy-fixed-cost"})
-     * @JMS\Type("double")
-     * @JMS\Groups({"profDeputyFixedCost"})
+     *  'yes'|'no'|null
      */
-    private $profDeputyFixedCost;
-
-    /**
-     * @var string yes/no
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"profDeputyCostsHasInterim"})
-     */
-    private $profDeputyCostsHasInterim;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['profDeputyCostsHasInterim'])]
+    private ?string $profDeputyCostsHasInterim = null;
 
     /**
      * @var ProfDeputyInterimCost[]
-     * @JMS\Groups({"profDeputyInterimCosts"})
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyInterimCost>")
      */
-    private $profDeputyInterimCosts = [];
+    #[JMS\Groups(['profDeputyInterimCosts'])]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyInterimCost>')]
+    private array $profDeputyInterimCosts = [];
+
+    #[Assert\NotBlank(message: 'profDeputyCostsScco.amountToScco.notBlank', groups: ['prof-deputy-costs-scco'])]
+    #[Assert\Range(minMessage: 'profDeputyCostsScco.amountToScco.minMessage', min: 0, groups: ['prof-deputy-costs-scco'])]
+    #[JMS\Type('double')]
+    #[JMS\Groups(['profDeputyCostsScco'])]
+    private ?float $profDeputyCostsAmountToScco = null;
+
+    #[JMS\Type('string')]
+    #[JMS\Groups(['profDeputyCostsScco'])]
+    private ?string $profDeputyCostsReasonBeyondEstimate = null;
+
+    #[JMS\Type('double')]
+    private ?float $profDeputyTotalCosts = null;
+
+    #[JMS\Type('double')]
+    private ?float $profDeputyTotalCostsTakenFromClient = null;
 
     /**
-     * @var float
-     *
-     * @Assert\NotBlank( message="profDeputyCostsScco.amountToScco.notBlank", groups={"prof-deputy-costs-scco"} )
-     * @Assert\Range(min=0, minMessage = "profDeputyCostsScco.amountToScco.minMessage", groups={"prof-deputy-costs-scco"})
-     * @JMS\Type("double")
-     * @JMS\Groups({"profDeputyCostsScco"})
+     * @var array<array{typeId: string, hasMoreDetails: bool}>
      */
-    private $profDeputyCostsAmountToScco;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"profDeputyCostsScco"})
-     */
-    private $profDeputyCostsReasonBeyondEstimate;
-
-    /**
-     * @var float
-     *
-     * @JMS\Type("double")
-     */
-    private $profDeputyTotalCosts;
-
-    /**
-     * @var float
-     *
-     * @JMS\Type("double")
-     */
-    private $profDeputyTotalCostsTakenFromClient;
+    #[JMS\Type('array')]
+    #[JMS\Groups(['prof-deputy-other-costs'])]
+    private array $profDeputyOtherCostTypeIds = [];
 
     /**
      * return true if only fixed is true.
-     *
-     * @return bool
      */
-    public function hasProfDeputyCostsHowChargedFixedOnly()
+    public function hasProfDeputyCostsHowChargedFixedOnly(): bool
     {
         return $this->getProfDeputyCostsHowCharged() == Report::PROF_DEPUTY_COSTS_TYPE_FIXED;
     }
 
     /**
-     * @JMS\Type("array")
-     * @JMS\Groups({"prof-deputy-other-costs"})
+     * @return CostTypeIds
      */
-    private $profDeputyOtherCostTypeIds = [];
-
-    /**
-     * @return array
-     */
-    public function getProfDeputyOtherCostTypeIds()
+    public function getProfDeputyOtherCostTypeIds(): array
     {
         return $this->profDeputyOtherCostTypeIds;
     }
 
     /**
-     * @param $profDeputyOtherCostTypeIds
-     *
-     * @return $this
+     * @param CostTypeIds $profDeputyOtherCostTypeIds
      */
-    public function setProfDeputyOtherCostTypeIds($profDeputyOtherCostTypeIds)
+    public function setProfDeputyOtherCostTypeIds(array $profDeputyOtherCostTypeIds): static
     {
         $this->profDeputyOtherCostTypeIds = $profDeputyOtherCostTypeIds;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getProfDeputyCostsHowCharged()
+    public function getProfDeputyCostsHowCharged(): ?string
     {
         return $this->profDeputyCostsHowCharged;
     }
 
-    /**
-     * @param string $profDeputyCostsHowCharged
-     */
-    public function setProfDeputyCostsHowCharged($profDeputyCostsHowCharged)
+    public function setProfDeputyCostsHowCharged(?string $profDeputyCostsHowCharged): static
     {
         $this->profDeputyCostsHowCharged = $profDeputyCostsHowCharged;
-
         return $this;
     }
 
-    public function profCostsInterimAtLeastOne(ExecutionContextInterface $context)
+    public function profCostsInterimAtLeastOne(ExecutionContextInterface $context): void
     {
         $ics = $this->getProfDeputyInterimCosts();
         $emptyCount = 0;
 
         foreach ($ics as $index => $ic) {
-            if ($ics[$index]->getDate() === null && $ics[$index]->getAmount() === null) {
+            if ($ic->getDate() === null && $ic->getAmount() === null) {
                 ++$emptyCount;
                 continue;
             }
 
-            if ($ics[$index]->getDate() === null) {
+            if ($ic->getDate() === null) {
                 $context->buildViolation('profDeputyInterimCost.date.notBlank')->atPath(sprintf('profDeputyInterimCosts[%s].date', $index))->addViolation();
             }
 
-            if ($ics[$index]->getAmount() === null) {
+            if ($ic->getAmount() === null) {
                 $context->buildViolation('profDeputyInterimCost.amount.notBlank')->atPath(sprintf('profDeputyInterimCosts[%s].amount', $index))->addViolation();
             }
         }
@@ -185,20 +152,12 @@ trait ReportProfDeputyCostsTrait
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getProfDeputyCostsHasPrevious()
+    public function getProfDeputyCostsHasPrevious(): ?string
     {
         return $this->profDeputyCostsHasPrevious;
     }
 
-    /**
-     * @param string $profDeputyCostsHasPrevious
-     *
-     * @return $this
-     */
-    public function setProfDeputyCostsHasPrevious($profDeputyCostsHasPrevious)
+    public function setProfDeputyCostsHasPrevious(?string $profDeputyCostsHasPrevious): static
     {
         $this->profDeputyCostsHasPrevious = $profDeputyCostsHasPrevious;
 
@@ -208,37 +167,27 @@ trait ReportProfDeputyCostsTrait
     /**
      * @return ProfDeputyPreviousCost[]
      */
-    public function getProfDeputyPreviousCosts()
+    public function getProfDeputyPreviousCosts(): array
     {
         return $this->profDeputyPreviousCosts;
     }
 
     /**
      * @param ProfDeputyPreviousCost[] $profDeputyPreviousCosts
-     *
-     * @return $this
      */
-    public function setProfDeputyPreviousCosts($profDeputyPreviousCosts)
+    public function setProfDeputyPreviousCosts(array $profDeputyPreviousCosts): static
     {
         $this->profDeputyPreviousCosts = $profDeputyPreviousCosts;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getProfDeputyCostsHasInterim()
+    public function getProfDeputyCostsHasInterim(): ?string
     {
         return $this->profDeputyCostsHasInterim;
     }
 
-    /**
-     * @param string $profDeputyCostsHasInterim
-     *
-     * @return $this
-     */
-    public function setProfDeputyCostsHasInterim($profDeputyCostsHasInterim)
+    public function setProfDeputyCostsHasInterim(?string $profDeputyCostsHasInterim): static
     {
         $this->profDeputyCostsHasInterim = $profDeputyCostsHasInterim;
 
@@ -248,17 +197,15 @@ trait ReportProfDeputyCostsTrait
     /**
      * @return ProfDeputyInterimCost[]
      */
-    public function getProfDeputyInterimCosts()
+    public function getProfDeputyInterimCosts(): array
     {
         return $this->profDeputyInterimCosts;
     }
 
     /**
      * @param ProfDeputyInterimCost[] $profDeputyInterimCosts
-     *
-     * @return $this
      */
-    public function setProfDeputyInterimCosts($profDeputyInterimCosts)
+    public function setProfDeputyInterimCosts(array $profDeputyInterimCosts): static
     {
         $this->profDeputyInterimCosts = $profDeputyInterimCosts;
 
@@ -268,62 +215,46 @@ trait ReportProfDeputyCostsTrait
     /**
      * @return ProfDeputyOtherCost[]
      */
-    public function getProfDeputyOtherCosts()
+    public function getProfDeputyOtherCosts(): array
     {
         return $this->profDeputyOtherCosts;
     }
 
     /**
-     * @param $profDeputyOtherCosts
-     *
-     * @return $this
+     * @param ProfDeputyOtherCost[] $profDeputyOtherCosts
      */
-    public function setProfDeputyOtherCosts($profDeputyOtherCosts)
+    public function setProfDeputyOtherCosts(array $profDeputyOtherCosts): static
     {
         $this->profDeputyOtherCosts = $profDeputyOtherCosts;
 
         return $this;
     }
 
-    public function addProfDeputyInterimCosts(ProfDeputyInterimCost $ic)
+    public function addProfDeputyInterimCosts(ProfDeputyInterimCost $ic): static
     {
         $this->profDeputyInterimCosts[] = $ic;
+
+        return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getProfDeputyCostsAmountToScco()
+    public function getProfDeputyCostsAmountToScco(): ?float
     {
         return $this->profDeputyCostsAmountToScco;
     }
 
-    /**
-     * @param float $profDeputyCostsAmountToScco
-     *
-     * @return $this
-     */
-    public function setProfDeputyCostsAmountToScco($profDeputyCostsAmountToScco)
+    public function setProfDeputyCostsAmountToScco(?float $profDeputyCostsAmountToScco): static
     {
         $this->profDeputyCostsAmountToScco = $profDeputyCostsAmountToScco;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getProfDeputyCostsReasonBeyondEstimate()
+    public function getProfDeputyCostsReasonBeyondEstimate(): ?string
     {
         return $this->profDeputyCostsReasonBeyondEstimate;
     }
 
-    /**
-     * @param string $profDeputyCostsReasonBeyondEstimate
-     *
-     * @return $this
-     */
-    public function setProfDeputyCostsReasonBeyondEstimate($profDeputyCostsReasonBeyondEstimate)
+    public function setProfDeputyCostsReasonBeyondEstimate(?string $profDeputyCostsReasonBeyondEstimate): static
     {
         $this->profDeputyCostsReasonBeyondEstimate = $profDeputyCostsReasonBeyondEstimate;
 
@@ -331,101 +262,71 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
-     * @return array
+     * @return CostTypeIds
      */
-    public function getProfDeputyOtherCostIds()
+    public function getProfDeputyOtherCostIds(): array
     {
         return $this->profDeputyOtherCostIds;
     }
 
     /**
-     * @param array $profDeputyOtherCostIds
-     *
-     * @return $this
+     * @param CostTypeIds $profDeputyOtherCostIds
      */
-    public function setProfDeputyOtherCostIds($profDeputyOtherCostIds)
+    public function setProfDeputyOtherCostIds(array $profDeputyOtherCostIds): static
     {
         $this->profDeputyOtherCostIds = $profDeputyOtherCostIds;
+
+        return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getProfDeputyFixedCost()
+    public function getProfDeputyFixedCost(): ?float
     {
         return $this->profDeputyFixedCost;
     }
 
-    /**
-     * @param float $profDeputyFixedCost
-     *
-     * @return $this
-     */
-    public function setProfDeputyFixedCost($profDeputyFixedCost)
+    public function setProfDeputyFixedCost(?float $profDeputyFixedCost): static
     {
         $this->profDeputyFixedCost = $profDeputyFixedCost;
 
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getProfDeputyTotalCosts()
+    public function getProfDeputyTotalCosts(): ?float
     {
         return $this->profDeputyTotalCosts;
     }
 
-    /**
-     * @param float $profDeputyTotalCosts
-     *
-     * @return $this
-     */
-    public function setProfDeputyTotalCosts($profDeputyTotalCosts)
+    public function setProfDeputyTotalCosts(?float $profDeputyTotalCosts): static
     {
         $this->profDeputyTotalCosts = $profDeputyTotalCosts;
 
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getProfDeputyTotalCostsTakenFromClient()
+    public function getProfDeputyTotalCostsTakenFromClient(): ?float
     {
         return $this->profDeputyTotalCostsTakenFromClient;
     }
 
-    /**
-     * @param $profDeputyTotalCostsThisPeriodOnly
-     */
-    public function setProfDeputyTotalCostsTakenFromClient($profDeputyTotalCostsTakenFromClient)
+    public function setProfDeputyTotalCostsTakenFromClient(?float $profDeputyTotalCostsTakenFromClient): static
     {
         $this->profDeputyTotalCostsTakenFromClient = $profDeputyTotalCostsTakenFromClient;
 
         return $this;
     }
 
-    /**
-     * @param string $typeId
-     *
-     * @return ProfDeputyOtherCost
-     */
-    protected function getProfDeputyOtherCostByTypeId($typeId)
+    protected function getProfDeputyOtherCostByTypeId(string $typeId): ?ProfDeputyOtherCost
     {
-        foreach ($this->getProfDeputyOtherCosts() as $submittedCost) {
-            if ($typeId == $submittedCost->getProfDeputyOtherCostTypeId()) {
-                return $submittedCost;
-            }
-        }
+        return array_find(
+            $this->getProfDeputyOtherCosts(),
+            fn (ProfDeputyOtherCost $submittedCost) => $typeId == $submittedCost->getProfDeputyOtherCostTypeId()
+        );
     }
 
     /**
      * Generates a static data array of submitted costs (values set in the database). Used in the summary view.
-     *
-     * @return array
      */
-    public function generateActualSubmittedOtherCosts()
+    public function generateActualSubmittedOtherCosts(): array
     {
         $defaultOtherCosts = $this->getProfDeputyOtherCostTypeIds();
         $submittedCosts = [];
@@ -440,11 +341,8 @@ trait ReportProfDeputyCostsTrait
         return $submittedCosts;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasProfDeputyOtherCosts()
+    public function hasProfDeputyOtherCosts(): bool
     {
-        return (bool) count($this->getProfDeputyOtherCosts() ? $this->getProfDeputyOtherCosts() : []) > 0;
+        return count($this->getProfDeputyOtherCosts()) > 0;
     }
 }

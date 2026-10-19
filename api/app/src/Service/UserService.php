@@ -138,15 +138,16 @@ class UserService
             $isPrimary = false;
         }
 
-        $invitedUser = new User();
-        $invitedUser->setIsPrimary($isPrimary);
-        $invitedUser->setEmail($invitedDeputyData->email);
-        $invitedUser->setFirstname($invitedDeputyData->firstname);
-        $invitedUser->setLastname($invitedDeputyData->lastname);
-        $invitedUser->setRoleName($invitedDeputyData->roleName);
-        $invitedUser->setDeputyUid($deputyUid);
-        $invitedUser->setActive(true);
-        $invitedUser->setRegistrationRoute(User::CO_DEPUTY_INVITE);
+        $invitedUser = new User(
+            $invitedDeputyData->firstname,
+            $invitedDeputyData->lastname,
+            $invitedDeputyData->email
+        )
+            ->setIsPrimary($isPrimary)
+            ->setRoleName($invitedDeputyData->roleName)
+            ->setDeputyUid($deputyUid)
+            ->setActive(true)
+            ->setRegistrationRoute(User::CO_DEPUTY_INVITE);
 
         return $this->addUser($invitingDeputy, $invitedUser, $clientId);
     }

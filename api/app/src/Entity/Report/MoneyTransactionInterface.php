@@ -7,12 +7,9 @@ namespace OPG\Digideps\Backend\Entity\Report;
 interface MoneyTransactionInterface
 {
     /**
-     * @return string in/out
+     * in/out
      */
-    public function getType();
+    public function getType(): string;
 
-    /**
-     * @return float
-     */
-    public function getAmount();
+    public function getAmount(): ?string;
 }

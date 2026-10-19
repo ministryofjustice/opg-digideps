@@ -16,7 +16,7 @@
                 </span>
             </dt>
             <dd class="govuk-summary-list__value">
-                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                <twig:GOV:ErrorMessage message="{{ 'pleaseAnswer' | trans({}, 'common' ) }}"/>
             </dd>
         {% else %}
             <dt class="govuk-summary-list__key">

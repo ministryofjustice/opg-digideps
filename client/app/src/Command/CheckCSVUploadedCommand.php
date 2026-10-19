@@ -25,6 +25,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
     public const string LAY_CSV = 'LAY';
     public const string ORG_CSV = 'ORG';
 
+    /** @var string|null $defaultName*/
     public static $defaultName = 'digideps:check-csv-uploaded';
 
     private \DateTime $now;

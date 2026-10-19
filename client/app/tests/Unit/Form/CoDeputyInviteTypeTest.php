@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Form;
 
 use OPG\Digideps\Frontend\Entity\User;
@@ -12,11 +14,10 @@ class CoDeputyInviteTypeTest extends TypeTestCase
 {
     // Integrates the validator into the form factory which ensures that the validation
     // constraints set up in the entity annotations are applied during form validation
-    protected function getExtensions()
+    protected function getExtensions(): array
     {
         $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping(true)
-            ->addDefaultDoctrineAnnotationReader()
+            ->enableAttributeMapping()
             ->getValidator();
 
         return [
@@ -24,7 +25,7 @@ class CoDeputyInviteTypeTest extends TypeTestCase
         ];
     }
 
-    public function testSubmissionWithValidData()
+    public function testSubmissionWithValidData(): void
     {
         $formData = [
             'firstname' => 'Sarah',
@@ -42,11 +43,11 @@ class CoDeputyInviteTypeTest extends TypeTestCase
 
         $form->submit($formData);
 
-        $this->assertTrue($form->isValid());
-        $this->assertEquals($expectedInvitedUser, $invitedUser);
+        self::assertTrue($form->isValid());
+        self::assertEquals($expectedInvitedUser, $invitedUser);
     }
 
-    public function testSubmissionWithMissingMandatoryData()
+    public function testSubmissionWithMissingMandatoryData(): void
     {
         $formData = [
             'firstname' => '',
@@ -58,12 +59,12 @@ class CoDeputyInviteTypeTest extends TypeTestCase
         $form = $this->factory->create(CoDeputyInviteType::class, $invitedUser);
         $form->submit($formData);
 
-        $this->assertFalse($form->isValid());
+        self::assertFalse($form->isValid());
         $errors = $form['firstname']->getErrors();
-        $this->assertGreaterThan(0, $errors->count());
+        self::assertGreaterThan(0, $errors->count());
     }
 
-    public function testSubmissionWhenMinLengthIsNotMet()
+    public function testSubmissionWhenMinLengthIsNotMet(): void
     {
         $formData = [
             'firstname' => 'Jamie',
@@ -75,8 +76,8 @@ class CoDeputyInviteTypeTest extends TypeTestCase
         $form = $this->factory->create(CoDeputyInviteType::class, $invitedUser);
         $form->submit($formData);
 
-        $this->assertFalse($form->isValid());
+        self::assertFalse($form->isValid());
         $errors = $form['lastname']->getErrors();
-        $this->assertGreaterThan(0, $errors->count());
+        self::assertGreaterThan(0, $errors->count());
     }
 }
