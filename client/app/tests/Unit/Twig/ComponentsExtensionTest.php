@@ -1,41 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\OPG\Digideps\Frontend\Unit\Twig;
 
-use OPG\Digideps\Frontend\Entity\User;
+use Dom\Element;
+use Dom\HTMLDocument;
 use OPG\Digideps\Frontend\Service\ReportSectionsLinkService;
 use OPG\Digideps\Frontend\Twig\ComponentsExtension;
-use Dom\HTMLDocument;
-use Mockery as m;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
-use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
 
 class ComponentsExtensionTest extends TestCase
 {
-    private TranslatorInterface|MockInterface $translator;
-    private ReportSectionsLinkService|MockInterface $reportSectionsLinkService;
-    private ComponentsExtension $object;
+    private TranslatorInterface&MockObject $translator;
+
+    private ComponentsExtension $sut;
 
     public function setUp(): void
     {
-        $this->translator = m::mock('Symfony\Contracts\Translation\TranslatorInterface');
-        $this->reportSectionsLinkService = m::mock(ReportSectionsLinkService::class);
-        $this->object = new ComponentsExtension($this->translator, $this->reportSectionsLinkService);
+        $this->translator = self::createMock(TranslatorInterface::class);
+        $reportSectionsLinkService = self::createMock(ReportSectionsLinkService::class);
+
+        $this->sut = new ComponentsExtension($this->translator, $reportSectionsLinkService);
     }
 
-    public static function accordionLinksProvider()
+    /**
+     * @return array<array{string, bool, bool, string, string, bool}>
+     */
+    public static function accordionLinksProvider(): array
     {
         return [
             ['list', false, false, 'money-in', 'money-out', false],
             ['money-in', true, false, 'list', 'money-both', false],
             ['money-out', false, true, 'money-both', 'list', false],
             ['money-both', true, true, 'money-out', 'money-in', false],
-            // oneATime
             ['list', false, false, 'money-in', 'money-out', true],
             ['money-in', true, false, 'list', 'money-out', true],
             ['money-out', false, true, 'money-in', 'list', true],
@@ -66,55 +69,48 @@ class ComponentsExtensionTest extends TestCase
             ],
         ];
 
-        $actual = $this->object->renderAccordionLinks($options);
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $this->sut->renderAccordionLinks($options));
     }
 
     /**
      * expected results (time diff from 2015-01-29 17:10:00).
+     *
+     * @return array<array{string, string, array{string, array<string, int|string>, string}}>
      */
-    public static function formatLastLoginProvider()
+    public static function formatLastLoginProvider(): array
     {
         return [
             ['2015-01-29 17:09:30', 'trans', ['PREFIXlessThenAMinuteAgo', [], 'DOMAIN']],
 
-            ['2015-01-29 17:09:00', 'transChoice', ['PREFIXminutesAgo', 1, ['%count%' => 1], 'DOMAIN']],
-            ['2015-01-29 17:07:00', 'transChoice', ['PREFIXminutesAgo', 3, ['%count%' => 3], 'DOMAIN']],
+            ['2015-01-29 17:09:00', 'trans', ['PREFIXminutesAgo', ['%count%' => 1], 'DOMAIN']],
+            ['2015-01-29 17:07:00', 'trans', ['PREFIXminutesAgo', ['%count%' => 3], 'DOMAIN']],
 
-            ['2015-01-29 16:10:00', 'transChoice', ['PREFIXhoursAgo', 1, ['%count%' => 1], 'DOMAIN']],
-            ['2015-01-29 7:11:00', 'transChoice', ['PREFIXhoursAgo', 10, ['%count%' => 10], 'DOMAIN']],
+            ['2015-01-29 16:10:00', 'trans', ['PREFIXhoursAgo', ['%count%' => 1], 'DOMAIN']],
+            ['2015-01-29 7:11:00', 'trans', ['PREFIXhoursAgo', ['%count%' => 10], 'DOMAIN']],
 
             ['2015-01-28 15:10:00', 'trans', ['PREFIXexactDate', ['%date%' => '28 January 2015'], 'DOMAIN']],
         ];
     }
 
     /**
-     * @test
-     *
      * @dataProvider formatLastLoginProvider
      *
-     * @doesNotPerformAssertions
+     * @param array{string, array<string, int>, string} $methodArgs
      */
-    public function formatTimeDifference($input, $expectedMethodCalled, $methodArgs)
+    public function testFormatTimeDifference(string $input, string $expectedMethodCalled, array $methodArgs): void
     {
-        if (isset($methodArgs[3])) {
-            $this->translator->shouldReceive($expectedMethodCalled)->with($methodArgs[0], $methodArgs[1], $methodArgs[2], $methodArgs[3])->once();
-        } else {
-            $this->translator->shouldReceive($expectedMethodCalled)->with($methodArgs[0], $methodArgs[1], $methodArgs[2])->once();
-        }
+        $this->translator->expects(self::once())->method($expectedMethodCalled)->with(...$methodArgs);
 
-        $this->object->formatTimeDifference([
+        $this->sut->formatTimeDifference([
             'from' => new \DateTime($input),
             'to' => new \DateTime('2015-01-29 17:10:00'),
             'translationDomain' => 'DOMAIN',
             'translationPrefix' => 'PREFIX',
             'defaultDateFormat' => 'd F Y',
         ]);
-
-        m::close();
     }
 
-    public static function padDayMonthProvider()
+    public static function padDayMonthProvider(): array
     {
         return [
             ['a', 'a'],
@@ -135,40 +131,35 @@ class ComponentsExtensionTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @dataProvider padDayMonthProvider
      */
-    public function padDayMonth($input, $expected)
+    public function testPadDayMonth(int|string|null $input, int|string|null $expected): void
     {
-        $f = $this->object->getFilters()['pad_day_month']->getCallable();
+        $f = $this->sut->getFilters()['pad_day_month']->getCallable();
 
-        $this->assertSame($expected, $f($input));
+        self::assertSame($expected, $f($input));
     }
 
-    public static function behatNamifyProvider()
+    public static function behatNamifyProvider(): array
     {
         return [
             ['a', 'a'],
-
             ['  ab_cd-1  23  ! "random    data"!@£$%^&end*    ', 'ab-cd-1-23-random-dataend'],
             ['Alfa Romeo 156 JTD', 'alfa-romeo-156-jtd'],
         ];
     }
 
     /**
-     * @test
-     *
      * @dataProvider behatNamifyProvider
      */
-    public function behatNamify($input, $expected)
+    public function testBehatNamify(string $input, string $expected): void
     {
-        $f = $this->object->getFilters()['behat_namify']->getCallable();
+        $f = $this->sut->getFilters()['behat_namify']->getCallable();
 
-        $this->assertSame($expected, $f($input));
+        self::assertSame($expected, $f($input));
     }
 
-    public static function moneyFormatProvider()
+    public static function moneyFormatProvider(): array
     {
         return [
             ['0', '0.00'],
@@ -178,59 +169,38 @@ class ComponentsExtensionTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @dataProvider moneyFormatProvider
      */
-    public function moneyFormat($input, $expected)
+    public function testMoneyFormat(string|int|null $input, string|int|null $expected): void
     {
-        $f = $this->object->getFilters()['money_format']->getCallable();
+        $f = $this->sut->getFilters()['money_format']->getCallable();
 
-        $this->assertSame($expected, $f($input));
+        self::assertSame($expected, $f($input));
     }
 
-    public static function progressBarRegistrationProvider()
+    public function testClassName(): void
     {
-        $user = m::mock(User::class);
-        $user->shouldReceive('getRoleName')->andReturn('ROLE_ADMIN');
+        $f = $this->sut->getFilters()['class_name']->getCallable();
 
-        return [
-            [],
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function className()
-    {
-        $f = $this->object->getFilters()['class_name']->getCallable();
-
-        $this->assertEquals(null, $f(0));
-        $this->assertEquals(null, $f([]));
-        $this->assertEquals(null, $f(''));
-        $this->assertEquals('Closure', $f(function () {
+        self::assertEquals(null, $f(0));
+        self::assertEquals(null, $f([]));
+        self::assertEquals(null, $f(''));
+        self::assertEquals('Closure', $f(function () {
         }));
-        $this->assertEquals('DateTime', $f(new \DateTime()));
+        self::assertEquals('DateTime', $f(new \DateTime()));
     }
 
-    /**
-     * @test
-     */
-    public function lcfirst()
+    public function testLcfirst(): void
     {
-        $f = $this->object->getFilters()['lcfirst']->getCallable();
+        $f = $this->sut->getFilters()['lcfirst']->getCallable();
 
-        $this->assertNull($f(null));
-        $this->assertEquals('', $f(''));
-        $this->assertEquals('123aBc', $f('123aBc'));
-        $this->assertEquals('aBCd', $f('ABCd'));
-        $this->assertEquals('assets held outside England and Wales', $f('Assets held outside England and Wales'));
+        self::assertNull($f(null));
+        self::assertEquals('', $f(''));
+        self::assertEquals('123aBc', $f('123aBc'));
+        self::assertEquals('aBCd', $f('ABCd'));
+        self::assertEquals('assets held outside England and Wales', $f('Assets held outside England and Wales'));
     }
 
-    /**
-     * @throws LoaderError
-     */
     public function testProgressBarReportSubmission(): void
     {
         $loader = new FilesystemLoader(__DIR__ . '/../../../templates');
@@ -238,26 +208,18 @@ class ComponentsExtensionTest extends TestCase
 
         $env = new Environment($loader);
         $env->addExtension(new TranslationExtension($this->translator));
-        $env->addExtension($this->object);
+        $env->addExtension($this->sut);
 
         // Add expectations for the trans() calls made by the progress indicator template
-        $this->translator->shouldReceive('trans')
-            ->with('reportSubmissionProgressBar.review_report.label', [], 'common', null)
-            ->once()
-            ->andReturn('Review report');
-
-        $this->translator->shouldReceive('trans')
-            ->with('reportSubmissionProgressBar.report_confirm_details.label', [], 'common', null)
-            ->once()
-            ->andReturn('Confirm details');
-
-        $this->translator->shouldReceive('trans')
-            ->with('reportSubmissionProgressBar.report_declaration.label', [], 'common', null)
-            ->once()
-            ->andReturn('Declaration');
+        $this->translator->expects(self::exactly(3))->method('trans')
+            ->willReturnMap([
+                ['reportSubmissionProgressBar.review_report.label', [], 'common', null, 'Review report'],
+                ['reportSubmissionProgressBar.report_confirm_details.label', [], 'common', null, 'Confirm details'],
+                ['reportSubmissionProgressBar.report_declaration.label', [], 'common', null, 'Declaration'],
+            ]);
 
         ob_start();
-        $this->object->progressBarReportSubmission($env, 'report_confirm_details');
+        $this->sut->progressBarReportSubmission($env, 'report_confirm_details');
         $html = ob_get_contents();
         ob_end_clean();
 
@@ -266,6 +228,8 @@ class ComponentsExtensionTest extends TestCase
         );
 
         $selector = 'li.opg-progress-bar__item';
+
+        /** @var Element $liNode */
         foreach ($doc->querySelectorAll($selector) as $pos => $liNode) {
             [$expectedStepText, $expectedStatus, $expectedClasses] = match ($pos) {
                 0 => ['Review report', '- completed', ['opg-progress-bar__item--completed', 'opg-progress-bar__item--previous']],
@@ -274,14 +238,19 @@ class ComponentsExtensionTest extends TestCase
                 default => throw new \LogicException('Unexpected list item position'),
             };
 
-            $this->assertStringContainsString($expectedStepText, $liNode->textContent);
+            self::assertNotNull($liNode->textContent);
+            self::assertStringContainsString($expectedStepText, $liNode->textContent);
+
             foreach ($expectedClasses as $expectedClass) {
-                $this->assertStringContainsString($expectedClass, $liNode->getAttribute('class'));
+                $attributeValue = $liNode->getAttribute('class');
+                self::assertNotNull($attributeValue);
+                self::assertStringContainsString($expectedClass, $attributeValue);
             }
 
             $visuallyHiddenContent = $liNode->querySelector('.govuk-visually-hidden')->textContent;
 
-            $this->assertStringContainsString($expectedStatus, $visuallyHiddenContent);
+            self::assertNotNull($visuallyHiddenContent);
+            self::assertStringContainsString($expectedStatus, $visuallyHiddenContent);
         }
     }
 }

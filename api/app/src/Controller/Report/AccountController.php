@@ -31,8 +31,7 @@ class AccountController extends RestController
            'opening_balance' => 'mustExist',
         ]);
 
-        $account = new BankAccount();
-        $account->setReport($report);
+        $account = new BankAccount($report);
 
         $this->fillAccountData($account, $data);
 

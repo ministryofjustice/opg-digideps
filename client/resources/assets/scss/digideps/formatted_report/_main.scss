@@ -4,16 +4,19 @@ $print-text: #454572;
 
 .formatted-report {
   @include govuk-clearfix;
-  @include govuk-font(14);
+  @include govuk-font($size: 16);
   color: $black;
-  overflow: hidden;
+  // WeasyPrint can split content incorrectly across pages when
+  // overflow:hidden is applied to the report container.
+  // Allow overflow so page-break rules on child elements are honoured.
+  overflow: visible;
   box-sizing: border-box;
 
   // =======================================================
   // BASE ELEMENTS
 
   h1 {
-    @include govuk-font(48, $weight: bold);
+    @include govuk-font($size: 48, $weight: bold);
     width: 600px;
   }
 
@@ -23,7 +26,7 @@ $print-text: #454572;
   }
 
   h2 {
-    @include govuk-font(24);
+    @include govuk-font($size: 24);
     clear: both;
 
     &.section-heading {
@@ -33,7 +36,7 @@ $print-text: #454572;
   }
 
   h3 {
-    @include govuk-font(19, $weight: bold);
+    @include govuk-font($size: 19, $weight: bold);
   }
 
   // =======================================================
@@ -71,13 +74,13 @@ $print-text: #454572;
 
   .balance {
     .message {
-      @include govuk-font(19);
+      @include govuk-font($size: 19);
       height: 35px;
       text-align: center;
     }
 
     .total {
-      @include govuk-font(19, $weight: bold);
+      @include govuk-font($size: 19, $weight: bold);
       text-align: center;
     }
   }
@@ -144,10 +147,10 @@ $print-text: #454572;
   }
 
   .label {
-    @include govuk-font(16);
+    @include govuk-font($size: 16);
 
     &.bigger {
-      @include govuk-font(19);
+      @include govuk-font($size: 19);
     }
 
     &.bold {
@@ -156,7 +159,7 @@ $print-text: #454572;
   }
 
   .value {
-    @include govuk-font(16);
+    @include govuk-font($size: 16);
 
     min-height: 34px;
     margin: 2px 0 15px 0;
@@ -182,7 +185,7 @@ $print-text: #454572;
     }
 
     &.total {
-      @include govuk-font(16, $weight: bold);
+      @include govuk-font($size: 16, $weight: bold);
 
       border-width: 2px;
       text-align: right;
@@ -194,7 +197,7 @@ $print-text: #454572;
   }
 
   .checkbox {
-    @include govuk-font(14, $weight: bold);
+    @include govuk-font($size: 16, $weight: bold);
     display: -moz-inline-stack;
     display: inline-block;
     width: 0.75em;
@@ -265,7 +268,7 @@ $print-text: #454572;
     border-spacing: 0;
 
     td {
-      @include govuk-font(16);
+      @include govuk-font($size: 16);
       padding: em(6, 12) em(20, 12) em(6, 12) 0;
       border-bottom: 1px solid $border-colour;
       color: $black;
@@ -273,7 +276,7 @@ $print-text: #454572;
     }
 
     th {
-      @include govuk-font(16);
+      @include govuk-font($size: 16);
       padding: em(12, 12) 0 em(9, 12) 0;
       border-bottom: 1px solid $border-colour;
       color: $black;
@@ -287,12 +290,12 @@ $print-text: #454572;
 
     // Use tabular numbers for numeric table cells
     td.numeric {
-      @include govuk-font(16);
+      @include govuk-font($size: 16);
       text-align: right;
     }
 
     tr.totals td {
-      @include govuk-font(16);
+      @include govuk-font($size: 16);
       padding: em(6, 18) 20px em(9, 18) 0;
       border-bottom: 0;
     }
@@ -334,12 +337,12 @@ $print-text: #454572;
     }
 
     th {
-      @include govuk-font(16, $weight: bold);
+      @include govuk-font($size: 16, $weight: bold);
       border-bottom: 1px solid $black !important;
     }
 
     td {
-      @include govuk-font(16);
+      @include govuk-font($size: 16);
       color: $print-text;
     }
   }

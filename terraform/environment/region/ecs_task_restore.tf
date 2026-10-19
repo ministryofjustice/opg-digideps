@@ -43,7 +43,7 @@ locals {
           },
           {
             name  = "S3_PREFIX",
-            value = local.environment
+            value = local.environment == "preproduction2" ? "preproduction" : local.environment
           },
           {
             name  = "DROP_PUBLIC",

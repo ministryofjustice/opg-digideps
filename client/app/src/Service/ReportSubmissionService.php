@@ -79,6 +79,17 @@ class ReportSubmissionService
     }
 
     /**
+     * Generate the HTML of the report
+     */
+    public function getPdfHtml(Report $report): string|false
+    {
+        return $this->templating->render('@App/Report/Formatted/formatted_standalone_preview.html.twig', [
+            'report' => $report,
+            'showSummary' => true,
+        ]);
+    }
+
+    /**
      * Generate the HTML of the report and convert to PDF.
      */
     public function getPdfBinaryContent(Report $report, bool $showSummary = false, bool $devPreview = false): string|false
@@ -125,7 +136,7 @@ class ReportSubmissionService
 
     public function getReportSubmissionById(string $id)
     {
-        return $this->restClient->get("report-submission/$id", 'Report\\ReportSubmission');
+        return $this->restClient->get("report-submission/$id", ReportSubmission::class);
     }
 
     public function getReportSubmissionsByIds(array $ids): array

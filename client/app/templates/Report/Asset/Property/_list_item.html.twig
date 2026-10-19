@@ -2,7 +2,7 @@
 
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | striptags } %}
+{% set transOptions = {'%client%': clientFirstName | striptags } %}
 {% set page = 'summaryPage' %}
 {% set hideEditLink = hideEditLink | default(false) %}
 
@@ -16,13 +16,13 @@
             {% if not hideEditLink  %}
                 <a
                     class="govuk-link behat-link-edit govuk-!-static-padding-right-2"
-                    href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id}) }}">
+                    href="{{ path('assets_property_step', {'reportId': reportId, 'assetId': asset.id}) }}">
                     {{ 'edit' | trans({}, 'common' ) }}
                     <span class="govuk-visually-hidden">{{ (page ~ '.' ~ (groupId | lower)) | trans() }} {{ loop.index }}</span>
                 </a>
                 <a
                     class="govuk-link behat-link-delete"
-                    href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">
+                    href="{{ path('asset_delete', {'reportId': reportId, 'assetId': asset.id}) }}">
                     {{ 'remove' | trans({}, 'common' ) }}
                     <span class="govuk-visually-hidden">{{ (page ~ '.' ~ (groupId | lower)) | trans() }} {{ loop.index }}</span>
                 </a>

@@ -18,87 +18,64 @@ class ChecklistInformation
 {
     use CreationAudit;
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['checklist-information'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'checklist_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var Checklist
-     */
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Checklist')]
     #[JMS\Groups(['checklist-information-checklist'])]
     #[ORM\JoinColumn(name: 'checklist_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Checklist::class, cascade: ['persist'], inversedBy: 'checklistInformation')]
-    private $checklist;
+    private Checklist $checklist;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['checklist-information'])]
     #[ORM\Column(name: 'information', type: 'text', nullable: false)]
-    private $information;
+    private string $information;
 
-    public function __construct(Checklist $checklist, $information)
+    public function __construct(Checklist $checklist, string $information)
     {
         $this->setChecklist($checklist);
         $this->setInformation(trim($information));
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
-        $this->id = $id;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
 
         return $this;
     }
 
-    /**
-     * @return Checklist
-     */
-    public function getChecklist()
+    public function getChecklist(): Checklist
     {
         return $this->checklist;
     }
 
-    /**
-     * @param Checklist $checklist
-     */
-    public function setChecklist($checklist)
+    public function setChecklist(Checklist $checklist): void
     {
         $this->checklist = $checklist;
     }
 
-    /**
-     * @return string
-     */
-    public function getInformation()
+    public function getInformation(): string
     {
         return $this->information;
     }
 
-    /**
-     * @param string $information
-     */
-    public function setInformation($information)
+    public function setInformation(string $information): void
     {
         $this->information = $information;
     }

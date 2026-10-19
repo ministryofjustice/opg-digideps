@@ -6,7 +6,7 @@
 set -Eeuo pipefail
 
 print_usage() {
-  echo "Usage: `basename $0` [workspace]"
+  echo "Usage: $(basename "$0") [workspace]"
 }
 
 if [ $# -eq 0 ]; then
@@ -29,16 +29,24 @@ for workspace in $reserved_workspaces; do
   fi
 done
 
-echo "cleaning up workspace $workspace_name..."
+echo "cleaning up workspace ${workspace_name}..."
+
 terraform init -input=false
-terraform workspace select $workspace_name
-terraform destroy -auto-approve
-if [ $? != 0 ]; then
-  export TF_EXIT_CODE="1"
-else
+
+if ! terraform workspace select "${workspace_name}"; then
+  echo "workspace ${workspace_name} does not exist. Assuming it has already been destroyed."
+  exit 0
+fi
+
+if terraform destroy -auto-approve; then
   terraform import "module.eu_west_1[0].aws_cloudwatch_log_group.container_insights" "/aws/ecs/containerinsights/${workspace_name}/performance"
+
   # Second destroy to remove performance log group as first destroy recreates it
   terraform destroy -auto-approve
+
   terraform workspace select default
-  terraform workspace delete $workspace_name
+  terraform workspace delete "${workspace_name}"
+else
+  echo "terraform destroy failed for workspace ${workspace_name}"
+  exit 1
 fi

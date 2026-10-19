@@ -1,49 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\MissingOptionsException;
 
-/** @Annotation */
+#[\Attribute]
 class EmailSameDomain extends Constraint
 {
-    /**
-     * @var string error message
-     */
-    public $message = 'Email domains do not match';
+    public string $message = 'Email domains do not match';
 
-    /**
-     * @var array validation groups
-     */
     public $groups = [];
 
-    /**
-     * EmailSameDomain constructor.
-     *
-     * @param mixed|null $options
-     */
-    public function __construct($options = [])
+    public function __construct(array $options = [])
     {
-        $requiredOptions = ['message', 'groups'];
-
-        foreach ($requiredOptions as $option) {
-            if (isset($options[$option])) {
-                $this->$option = $options[$option];
-            } else {
-                throw new MissingOptionsException("Missing option: '" . $option . "' required for constraint", []);
-            }
+        if (!(isset($options['message']) && isset($options['groups']))) {
+            throw new MissingOptionsException("Missing option(s): 'message' and 'groups' required for constraint", []);
         }
+
+        $this->message = $options['message'];
+
+        /** @var string[] $groups */
+        $groups = $options['groups'];
+
+        $this->groups = $groups;
 
         parent::__construct();
     }
 
-    public function validatedBy()
+    public function validatedBy(): string
     {
         return 'email_same_domain';
     }
 
-    public function getTargets()
+    public function getTargets(): array|string
     {
         return self::PROPERTY_CONSTRAINT;
     }

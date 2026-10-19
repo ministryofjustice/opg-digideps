@@ -10,41 +10,27 @@ class Action
 {
     use HasReportTrait;
 
-    /**
-     * @JMS\Type("integer")
-     */
+    #[JMS\Type('integer')]
     private int $id;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"action"})
-     *
-     * @Assert\NotBlank(message="action.doYouExpectFinancialDecisions.notBlank", groups={"action-expect-decisions-choice"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['action'])]
+    #[Assert\NotBlank(message: 'action.doYouExpectFinancialDecisions.notBlank', groups: ['action-expect-decisions-choice'])]
     private ?string $doYouExpectFinancialDecisions = null;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"action"})
-     *
-     * @Assert\NotBlank(message="action.doYouExpectFinancialDecisionsDetails.notBlank", groups={"action-expect-decisions-details"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['action'])]
+    #[Assert\NotBlank(message: 'action.doYouExpectFinancialDecisionsDetails.notBlank', groups: ['action-expect-decisions-details'])]
     private ?string $doYouExpectFinancialDecisionsDetails = null;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"action"})
-     *
-     * @Assert\NotBlank(message="action.doYouHaveConcerns.notBlank", groups={"action-have-concerns-choice"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['action'])]
+    #[Assert\NotBlank(message: 'action.doYouHaveConcerns.notBlank', groups: ['action-have-concerns-choice'])]
     private ?string $doYouHaveConcerns = null;
 
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"action"})
-     *
-     * @Assert\NotBlank(message="action.doYouHaveConcernsDetails.notBlank", groups={"action-have-concerns-details"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['action'])]
+    #[Assert\NotBlank(message: 'action.doYouHaveConcernsDetails.notBlank', groups: ['action-have-concerns-details'])]
     private ?string $doYouHaveConcernsDetails = null;
 
     public function getId(): int

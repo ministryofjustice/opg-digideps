@@ -11,75 +11,38 @@ class PreRegistration
     public const string REALM_PROF = 'REALM_PROF';
     public const string REALM_LAY = 'REALM_LAY';
 
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @Assert\NotBlank()
-     */
-    private $caseNumber;
+    #[JMS\Type('string')]
+    #[Assert\NotBlank]
+    private string $caseNumber;
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @Assert\NotBlank()
-     */
-    private $clientLastname;
+    #[JMS\Type('string')]
+    #[Assert\NotBlank]
+    private string $clientLastname;
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @Assert\NotBlank()
-     */
-    private $deputyUid;
+    #[JMS\Type('string')]
+    #[Assert\NotBlank]
+    private string $deputyUid;
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @Assert\NotBlank()
-     */
-    private $deputySurname;
+    #[JMS\Type('string')]
+    #[Assert\NotBlank]
+    private string $deputySurname;
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @Assert\Length(min=2, max=20, minMessage="postcode too short", maxMessage="postcode too long" )
-     */
-    private $deputyPostCode;
+    #[JMS\Type('string')]
+    #[Assert\Length(min: 2, max: 20, minMessage: 'postcode too short', maxMessage: 'postcode too long')]
+    private string $deputyPostCode;
 
-    /**
-     * @JMS\Type("string")
-     */
-    private $typeOfReport;
+    #[JMS\Type('string')]
+    private string $typeOfReport;
 
-    /**
-     * @JMS\Type("string")
-     */
-    private $orderType;
+    #[JMS\Type('string')]
+    private string $orderType;
 
-    /**
-     * @JMS\Type("string")
-     */
-    private $otherColumns;
+    #[JMS\Type('string')]
+    private string $otherColumns;
 
-    /**
-     * @var \DateTime
-     */
-    private $orderDate;
+    private \DateTime $orderDate;
 
     public function __construct()
     {
@@ -125,7 +88,7 @@ class PreRegistration
         return $this->orderDate;
     }
 
-    public function setOrderDate(\DateTime $orderDate): PreRegistration
+    public function setOrderDate(\DateTime $orderDate): static
     {
         $this->orderDate = $orderDate;
 

@@ -51,7 +51,7 @@ class MoneyReceivedOnClientsBehalfValidator extends ConstraintValidator
         }
     }
 
-    private function amountValid($value, MoneyReceivedOnClientsBehalfInterface $object, MoneyReceivedOnClientsBehalfConstraint $constraint)
+    private function amountValid($value, MoneyReceivedOnClientsBehalfInterface $object, MoneyReceivedOnClientsBehalfConstraint $constraint): void
     {
         if (!is_null($value) && $object->getAmountDontKnow() === true) {
             $this->context
@@ -68,7 +68,7 @@ class MoneyReceivedOnClientsBehalfValidator extends ConstraintValidator
         }
     }
 
-    private function amountDontKnowValid($value, MoneyReceivedOnClientsBehalfInterface $object, MoneyReceivedOnClientsBehalfConstraint $constraint)
+    private function amountDontKnowValid($value, MoneyReceivedOnClientsBehalfInterface $object, MoneyReceivedOnClientsBehalfConstraint $constraint): void
     {
         if ($value === true && !is_null($object->getAmount())) {
             $this->context

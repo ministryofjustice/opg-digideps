@@ -24,7 +24,7 @@ class ChecklistTest extends KernelTestCase
     /**
      * @dataProvider submitProfDeputyCostsChecklistValuesProvider
      */
-    public function tesValidationsSubmitProfDeputyCostsChecklist(
+    public function testValidationsSubmitProfDeputyCostsChecklist(
         ?string $profCostsReasonableAndProportionate,
         ?string $paymentsMatchCostCertificate,
         ?string $hasDeputyOverchargedFromPreviousEstimates,
@@ -41,7 +41,20 @@ class ChecklistTest extends KernelTestCase
         self::assertEquals($expectedCountErrors, count($errors));
     }
 
-    public function submitProfDeputyCostsChecklistValuesProvider(): array
+    public function testValidationsSubmitBankAccountsChecklistRequiresOpenClosingBalancesMatch(): void
+    {
+        $checklist = new Checklist(new Report());
+        $checklist->setMoneyMovementsAcceptable('yes');
+
+        $errors = $this->validator->validate($checklist, null, ['submit-bankAccounts-checklist']);
+
+        self::assertCount(1, $errors);
+        $error = $errors[0];
+        self::assertNotNull($error);
+        self::assertSame('openClosingBalancesMatch', $error->getPropertyPath());
+    }
+
+    public static function submitProfDeputyCostsChecklistValuesProvider(): array
     {
         return [
             'one missing value' => [null, 'yes', 'no', 1],

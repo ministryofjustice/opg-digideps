@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Entity\Report;
 
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
 use PHPUnit\Framework\TestCase;
 
 final class ClientBenefitsCheckTest extends TestCase
@@ -35,7 +35,6 @@ final class ClientBenefitsCheckTest extends TestCase
         ];
     }
 
-
     #[DataProvider('otherMoneyProvider')]
     #[Test]
     public function setDoOthersReceiveMoneyOnClientsBehalfSetsDontKnowNullWhenValueIsNotDontKnow(
@@ -59,7 +58,6 @@ final class ClientBenefitsCheckTest extends TestCase
             'dontKnow' => [ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW, 'Another explanation'],
         ];
     }
-
 
     #[DataProvider('dateCheckedProvider')]
     #[Test]

@@ -11,19 +11,6 @@ trait ReportTrait
     protected $sections103 = ['Deputy expenses', 'Decisions', 'Contacts', 'Visits and care', 'Accounts', 'Gifts', 'Money in', 'Money out', 'Assets', 'Debts', 'Actions', 'Other information', 'Documents'];
 
     /**
-     * @When I save the report as :reportId
-     */
-    public function iSaveTheReportAs($reportId): void
-    {
-        $url = $this->getSession()->getCurrentUrl();
-        preg_match('/\/report\/(\d+)\//', $url, $match);
-        self::$reportsCache[$reportId] = [
-            'type' => $match[1],
-            'id' => $match[2],
-        ];
-    }
-
-    /**
      * @When I go to the report URL :url for :reportId
      */
     public function iGoToTheReportUrl($url, $reportId): void
@@ -88,43 +75,6 @@ trait ReportTrait
         } else {
             throw new \RuntimeException('usertype not specified. Usage: the PA|Lay report should be submittable');
         }
-    }
-
-    /**
-     * @Given I have the :startDate to :endDate report between :deputy and :client
-     */
-    public function iHaveTheReportBetweenDeputyAndClient($startDate, $endDate, $deputy, $client): void
-    {
-        $this->iAmLoggedInAsWithPassword($deputy . '@behat-test.com', 'DigidepsPass1234');
-        $this->enterReport($client, $startDate, $endDate);
-        preg_match('/\/report\/(\d+)\//', $this->getSession()->getCurrentUrl(), $match);
-
-        self::$currentReportCache = [
-            'deputy' => $deputy,
-            'client' => $client,
-            'reportId' => $match[2],
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'reportType' => $match[1],
-        ];
-    }
-
-    /**
-     * @Given I am viewing the :startDate to :endDate report for :client
-     */
-    public function iAmViewingTheToReport($startDate, $endDate, $client): void
-    {
-        $this->enterReport($client, $startDate, $endDate);
-
-        preg_match('/\/report\/(\d+)\//', $this->getSession()->getCurrentUrl(), $match);
-
-        self::$currentReportCache = [
-            'client' => $client,
-            'reportId' => $match[2],
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'reportType' => $match[1],
-        ];
     }
 
     /**

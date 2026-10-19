@@ -10,29 +10,25 @@ use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Mailer\MailFactory;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
 class AuditEventsTest extends TestCase
 {
-    use ProphecyTrait;
-
     private \DateTime $now;
-    private ObjectProphecy|DateTimeProvider $dateTimeProvider;
+    private DateTimeProvider&MockObject $dateTimeProvider;
 
     public function setUp(): void
     {
         $this->now = new \DateTime();
-        $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
-        $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($this->now);
+        $this->dateTimeProvider = self::createMock(DateTimeProvider::class);
+        $this->dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($this->now);
     }
 
     /**
-     * @test
      * @dataProvider startDateProvider
      */
-    public function clientDischarged(?string $expectedStartDate, ?\DateTime $actualStartDate): void
+    public function testClientDischarged(?string $expectedStartDate, ?\DateTime $actualStartDate): void
     {
         $expected = [
             'trigger' => 'ADMIN_BUTTON',
@@ -45,7 +41,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = new AuditEvents($this->dateTimeProvider->reveal())->clientDischarged(
+        $actual = new AuditEvents($this->dateTimeProvider)->clientDischarged(
             'ADMIN_BUTTON',
             '19348522',
             'me@test.com',
@@ -53,10 +49,10 @@ class AuditEventsTest extends TestCase
             $actualStartDate
         );
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    public function startDateProvider()
+    public static function startDateProvider(): array
     {
         return [
             'Start date present' => [
@@ -68,10 +64,9 @@ class AuditEventsTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider emailChangeProvider
      */
-    public function userEmailChanged()
+    public function testUserEmailChanged(): void
     {
         $expected = [
             'trigger' => 'ADMIN_USER_EDIT',
@@ -85,7 +80,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = new AuditEvents($this->dateTimeProvider->reveal())->userEmailChanged(
+        $actual = new AuditEvents($this->dateTimeProvider)->userEmailChanged(
             'ADMIN_USER_EDIT',
             'me@test.com',
             'you@test.com',
@@ -94,14 +89,13 @@ class AuditEventsTest extends TestCase
             'ROLE_LAY_DEPUTY'
         );
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
     /**
-     * @test
      * @dataProvider emailChangeProvider
      */
-    public function clientEmailChanged(?string $oldEmail, ?string $newEmail)
+    public function testClientEmailChanged(?string $oldEmail, ?string $newEmail): void
     {
         $expected = [
             'trigger' => 'DEPUTY_USER_EDIT',
@@ -115,7 +109,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = new AuditEvents($this->dateTimeProvider->reveal())->clientEmailChanged(
+        $actual = new AuditEvents($this->dateTimeProvider)->clientEmailChanged(
             'DEPUTY_USER_EDIT',
             $oldEmail,
             $newEmail,
@@ -123,10 +117,10 @@ class AuditEventsTest extends TestCase
             'Panda Bear'
         );
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    public function emailChangeProvider()
+    public static function emailChangeProvider(): array
     {
         return [
             'Email changed' => ['me@test.com', 'you@test.com'],
@@ -136,11 +130,15 @@ class AuditEventsTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider roleChangedProvider
      */
-    public function roleChanged(string $trigger, $changedFrom, $changedTo, $changedBy, $userChanged): void
-    {
+    public function testRoleChanged(
+        string $trigger,
+        string $changedFrom,
+        string $changedTo,
+        string $changedBy,
+        string $userChanged
+    ): void {
         $expected = [
             'trigger' => $trigger,
             'role_changed_from' => $changedFrom,
@@ -152,7 +150,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = new AuditEvents($this->dateTimeProvider->reveal())->roleChanged(
+        $actual = new AuditEvents($this->dateTimeProvider)->roleChanged(
             $trigger,
             $changedFrom,
             $changedTo,
@@ -160,10 +158,10 @@ class AuditEventsTest extends TestCase
             $userChanged
         );
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    public function roleChangedProvider()
+    public static function roleChangedProvider(): array
     {
         return [
             'PA to LAY' => ['ADMIN_BUTTON', 'ROLE_PA', 'ROLE_LAY_DEPUTY', 'polly.jean.harvey@test.com', 't.amos@test.com'],
@@ -171,10 +169,7 @@ class AuditEventsTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
-    public function userDeletedDeputy(): void
+    public function testUserDeletedDeputy(): void
     {
         $expected = [
             'trigger' => 'ADMIN_BUTTON',
@@ -187,7 +182,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = new AuditEvents($this->dateTimeProvider->reveal())->userDeleted(
+        $actual = new AuditEvents($this->dateTimeProvider)->userDeleted(
             'ADMIN_BUTTON',
             'super-admin@email.com',
             'Roisin Murphy',
@@ -195,14 +190,13 @@ class AuditEventsTest extends TestCase
             'ROLE_LAY_DEPUTY'
         );
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
     /**
-     * @test
      * @dataProvider adminRoleProvider
      */
-    public function userDeletedAdmin(string $role): void
+    public function testUserDeletedAdmin(string $role): void
     {
         $expected = [
             'trigger' => 'ADMIN_BUTTON',
@@ -215,7 +209,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = new AuditEvents($this->dateTimeProvider->reveal())->userDeleted(
+        $actual = new AuditEvents($this->dateTimeProvider)->userDeleted(
             'ADMIN_BUTTON',
             'super-admin@email.com',
             'Robyn Konichiwa',
@@ -223,10 +217,10 @@ class AuditEventsTest extends TestCase
             $role
         );
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    public function adminRoleProvider()
+    public static function adminRoleProvider(): array
     {
         return [
             'admin' => [User::ROLE_ADMIN],
@@ -234,10 +228,7 @@ class AuditEventsTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
-    public function orgCreated()
+    public function testOrgCreated(): void
     {
         $currentUser = UserHelpers::createSuperAdminUser();
         $organisation =
@@ -260,19 +251,16 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = new AuditEvents($this->dateTimeProvider->reveal())->orgCreated(
+        $actual = new AuditEvents($this->dateTimeProvider)->orgCreated(
             'ADMIN_MANUAL_ORG_CREATION',
             $currentUser,
             $organisation
         );
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    /**
-     * @test
-     */
-    public function adminManagerCreated()
+    public function testAdminManagerCreated(): void
     {
         $currentUser = UserHelpers::createSuperAdminUser();
         $createdAdminManager = UserHelpers::createAdminManager();
@@ -290,19 +278,16 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = new AuditEvents($this->dateTimeProvider->reveal())->adminManagerCreated(
+        $actual = new AuditEvents($this->dateTimeProvider)->adminManagerCreated(
             'ADMIN_MANAGER_MANUALLY_CREATED',
             $currentUser,
             $createdAdminManager
         );
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    /**
-     * @test
-     */
-    public function adminManagerDeleted()
+    public function testAdminManagerDeleted(): void
     {
         $currentUser = UserHelpers::createSuperAdminUser();
         $adminManagerToDelete = UserHelpers::createAdminManager();
@@ -320,19 +305,16 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = new AuditEvents($this->dateTimeProvider->reveal())->adminManagerDeleted(
+        $actual = new AuditEvents($this->dateTimeProvider)->adminManagerDeleted(
             'ADMIN_MANAGER_MANUALLY_DELETED',
             $currentUser,
             $adminManagerToDelete
         );
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    /**
-     * @test
-     */
-    public function emailSent()
+    public function testEmailSent(): void
     {
         $loggedInUser = UserHelpers::createSuperAdminUser();
         $email = new Email()
@@ -353,18 +335,15 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = new AuditEvents($this->dateTimeProvider->reveal())->emailSent(
+        $actual = new AuditEvents($this->dateTimeProvider)->emailSent(
             $email,
             $loggedInUser,
         );
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 
-    /**
-     * @test
-     */
-    public function emailNotSent()
+    public function testEmailNotSent(): void
     {
         $loggedInUser = UserHelpers::createSuperAdminUser();
         $email = new Email()
@@ -388,12 +367,12 @@ class AuditEventsTest extends TestCase
             'error_message' => 'Something went wrong',
         ];
 
-        $actual = new AuditEvents($this->dateTimeProvider->reveal())->emailNotSent(
+        $actual = new AuditEvents($this->dateTimeProvider)->emailNotSent(
             $email,
             $loggedInUser,
             $error
         );
 
-        $this->assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual);
     }
 }

@@ -4,7 +4,6 @@ namespace OPG\Digideps\Backend\Controller\Report;
 
 use OPG\Digideps\Backend\Controller\RestController;
 use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Checklist;
 use OPG\Digideps\Backend\Entity\Report\ChecklistInformation;
 use OPG\Digideps\Backend\Entity\Report\Debt;
@@ -15,7 +14,6 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReviewChecklist;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Exception\UnauthorisedException;
-use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
@@ -26,7 +24,6 @@ use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -59,57 +56,8 @@ class ReportController extends RestController
         private readonly EntityManagerInterface $em,
         private readonly AuthService $authService,
         private readonly RestFormatter $formatter,
-        private readonly PreRegistrationRepository $preRegRepository,
     ) {
         parent::__construct($em);
-    }
-
-    /**
-     * Add a report
-     * Currently only used by Lay deputy during registration steps
-     * Pa report are instead created via OrgService::createReport().
-     */
-    #[Route(path: '', methods: ['POST'])]
-    #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function add(Request $request): array
-    {
-        $reportData = $this->formatter->deserializeBodyContent($request);
-
-        if (empty($reportData['client']['id'])) {
-            throw new \InvalidArgumentException('Missing client.id');
-        }
-        /** @var Client $client */
-        $client = $this->findEntityBy(Client::class, $reportData['client']['id']);
-        $this->denyAccessIfClientDoesNotBelongToUser($client);
-
-        /** @var PreRegistration[] $preRegistrationRecord */
-        $preRegistrationRecord = $this->preRegRepository->findByCaseNumber($client->getCaseNumber());
-        $orderStartDate = $preRegistrationRecord[0]->getOrderDate();
-
-        if (is_null($orderStartDate)) {
-            throw new UnprocessableEntityHttpException(sprintf('OrderDate (made_date) is missing for Preregistration record: %s', $preRegistrationRecord[0]->getId()));
-        }
-
-        $today = new \DateTime();
-        // Day and month from order made date combined with current year
-        $amendedOrderStartDate = new \DateTime(date('d M ', $orderStartDate->getTimestamp()) . date('Y'));
-        if ($today < $amendedOrderStartDate) {
-            $amendedOrderStartDate->modify('-1 year');
-        }
-
-        $endDate = clone $amendedOrderStartDate;
-
-        // report type is taken from Sirius. In case that's not available (shouldn't happen unless pre registration table is dropped), use a 102
-        $reportType = $this->reportService->getReportTypeBasedOnSirius($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $report = new Report($client, $reportType, $amendedOrderStartDate, $endDate->add(new \DateInterval('P12M'))->sub(new \DateInterval('P1D')));
-        $report->setReportSeen(true);
-
-        $report->updateSectionsStatusCache($report->getAvailableSections());
-
-        $this->em->persist($report);
-        $this->em->flush();
-
-        return ['report' => $report->getId()];
     }
 
     #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
@@ -284,12 +232,12 @@ class ReportController extends RestController
             ]);
         }
 
-        /** @var ?string $reasonForNoFees */
-        $reasonForNoFees = $data['reason_for_no_fees'] ?? null;
+        if (array_key_exists('reason_for_no_fees', $data)) {
+            /** @var ?string $reasonForNoFees */
+            $reasonForNoFees = $data['reason_for_no_fees'];
 
-        if ($reasonForNoFees !== null) {
             $report->setReasonForNoFees($reasonForNoFees);
-            if ($data['reason_for_no_fees']) {
+            if (!is_null($reasonForNoFees)) {
                 foreach ($report->getFees() as $fee) {
                     $fee->setAmount(null)
                         ->setMoreDetails(null);
@@ -342,10 +290,6 @@ class ReportController extends RestController
 
         if (array_key_exists('due_date', $data)) {
             $report->setDueDate(new \DateTime($data['due_date']));
-        }
-
-        if (array_key_exists('report_seen', $data)) {
-            $report->setReportSeen((bool) $data['report_seen']);
         }
 
         if (array_key_exists('reason_for_no_contacts', $data)) {
@@ -451,8 +395,8 @@ class ReportController extends RestController
             foreach ($data['money_short_categories_in'] as $row) {
                 $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
                 if ($e instanceof MoneyShortCategory) {
-                    $e
-                        ->setPresent($row['present']);
+                    $row['present'] = ($row['present'] ?? null) === null ? null : !empty($row['present']);
+                    $e->setPresent($row['present']);
                     $this->em->flush($e);
                 }
             }
@@ -467,8 +411,8 @@ class ReportController extends RestController
             foreach ($data['money_short_categories_out'] as $row) {
                 $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
                 if ($e instanceof MoneyShortCategory) {
-                    $e
-                        ->setPresent($row['present']);
+                    $row['present'] = ($row['present'] ?? null) === null ? null : !empty($row['present']);
+                    $e->setPresent($row['present']);
                     $this->em->flush($e);
                 }
             }
@@ -535,27 +479,14 @@ class ReportController extends RestController
             ]);
         }
 
-        if (array_key_exists('current_prof_payments_received', $data)) {
-            if ($data['current_prof_payments_received'] == 'no') { // reset whole section
-                foreach ($report->getCurrentProfServiceFees() as $f) {
-                    $this->em->remove($f);
-                }
-                $report->setPreviousProfFeesEstimateGiven(null);
-                $report->setProfFeesEstimateSccoReason(null);
-            }
-            $report->setCurrentProfPaymentsReceived($data['current_prof_payments_received']);
-            $this->em->flush();
-            $report->updateSectionsStatusCache([
-                Report::SECTION_PROF_CURRENT_FEES,
-            ]);
-        }
-
         if (array_key_exists('submitted', $data)) {
             $report->setSubmitted($data['submitted']);
         }
 
         if (array_key_exists('unsubmit_date', $data)) {
-            $report->setUnSubmitDate($data);
+            /** @var ?\DateTime $unsubmitDate */
+            $unsubmitDate = $data['unsubmit_date'];
+            $report->setUnSubmitDate($unsubmitDate);
         }
 
         foreach ($this->updateHandlers as $updateHandler) {
@@ -676,7 +607,7 @@ class ReportController extends RestController
                     'lastname' => $reportDatum['client']['lastname'],
                     'case_number' => $reportDatum['client']['caseNumber'],
                     'organisation' => [
-                        'name' => $reportDatum['client']['organisation']['name'],
+                        'name' => $reportDatum['client']['organisation']['name'] ?? '',
                     ],
                 ],
             ];
@@ -782,6 +713,13 @@ class ReportController extends RestController
 
     private function populateChecklistEntity(Checklist $checklist, array $checklistData): Checklist
     {
+        if (($checklistData['contact_details_upto_date'] ?? null) !== null) {
+            $checklistData['contact_details_upto_date'] = $checklistData['contact_details_upto_date'] ? 'yes' : 'no';
+        }
+        if (($checklistData['deputy_full_name_accurate_in_sirius'] ?? null) !== null) {
+            $checklistData['deputy_full_name_accurate_in_sirius'] = $checklistData['deputy_full_name_accurate_in_sirius'] ? 'yes' : 'no';
+        }
+
         $this->hydrateEntityWithArrayData($checklist, $checklistData, [
             'accounts_balance' => 'setAccountsBalance',
             'assets_declared_and_managed' => 'setAssetsDeclaredAndManaged',

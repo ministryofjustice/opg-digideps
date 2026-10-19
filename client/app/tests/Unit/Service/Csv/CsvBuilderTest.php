@@ -9,8 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class CsvBuilderTest extends TestCase
 {
-    /** @test */
-    public function buildCsv()
+    public function testBuildCsv(): void
     {
         $sut = new CsvBuilder();
         $headers = ['name', 'age', 'location'];

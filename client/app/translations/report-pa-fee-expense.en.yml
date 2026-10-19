@@ -99,3 +99,16 @@ notices:
     deleted: "Expense deleted"
   fee:
     edited: "Fees edited"
+
+review:
+  yes: Yes
+  no: No
+  notEntered: Not entered
+  reasonForNoFees: Reason for not having charged the client any fees for your services during the reporting period
+  listOfDeputyFeesAndExpensesHeader: List of deputy fees and expenses
+  listOfOtherExpensesHeader: Expenses outside the practice direction
+  categories: Categories of fees
+  details: Details
+  amount: Amount
+  totalAmount: Total amount
+  description: Description of expense

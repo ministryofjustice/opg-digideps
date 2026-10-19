@@ -20,11 +20,14 @@ class ReportSatisfactionSummaryMapper
     }
 
     /**
-     * @return mixed
+     * @return array<Satisfaction>
      */
-    public function getBy(DateRangeQuery $query)
+    public function getBy(DateRangeQuery $query): array
     {
-        return $this->restClient->get($this->generateApiUrl($query), Satisfaction::class . '[]', ['satisfaction']);
+        /** @var array<Satisfaction> $result */
+        $result = $this->restClient->get($this->generateApiUrl($query), Satisfaction::class . '[]', ['satisfaction']);
+
+        return $result;
     }
 
     /**

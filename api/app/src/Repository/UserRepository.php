@@ -7,7 +7,6 @@ use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Utility\Query\QueryPager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Exception;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
@@ -18,9 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
-/**
- * @method null|User findOneByEmail(string $email)
- */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
     private QueryBuilder $qb;
@@ -67,15 +63,14 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $this
             ->handleRoleNameFilter($request)
-            ->handleAdManagedFilter($request)
             ->handleSearchTermFilter($request);
 
         $order_by = $request->get('order_by', 'id');
         $sort_order = strtoupper($request->get('sort_order', 'DESC'));
 
         $this->qb
-            ->setFirstResult($request->get('offset', 0))
-            ->setMaxResults($request->get('limit', 50))
+            ->setFirstResult($request->query->getInt('offset', 0))
+            ->setMaxResults($request->query->getInt('limit', 50))
             ->orderBy('u.' . $order_by, $sort_order)
             ->groupBy('u.id');
 
@@ -98,15 +93,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->qb
             ->andWhere(sprintf('u.roleName %s :role', $operand))
             ->setParameter('role', $roleName);
-
-        return $this;
-    }
-
-    private function handleAdManagedFilter(Request $request): UserRepository
-    {
-        if ($request->get('ad_managed')) {
-            $this->qb->andWhere('u.adManaged = true');
-        }
 
         return $this;
     }
@@ -161,51 +147,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->qb->setParameter('othername', '%' . strtolower($otherName . '%'));
 
         $this->qb->andWhere($nameBasedQuery);
-    }
-
-    /**
-     * @return int[]
-     *
-     * @throws Exception
-     */
-    public function findInactive($role = User::ROLE_LAY_DEPUTY): array
-    {
-        $conn = $this->getEntityManager()->getConnection();
-
-        $sql = <<<SQL
-        SELECT u.id
-        FROM dd_user u
-        LEFT JOIN deputy_case dc ON dc.user_id = u.id
-        LEFT JOIN client c ON c.id = dc.client_id AND (c.deleted_at IS NULL)
-        WHERE (
-            -- Abandoned Registration process, password set
-            u.registration_token IS NOT NULL
-            AND u.token_date < date_trunc('day', CURRENT_DATE - INTERVAL '60' day)
-            AND u.last_logged_in < date_trunc('day', CURRENT_DATE - INTERVAL '60' day)
-            AND u.registration_date IS NULL
-            -- Abandoned Registration process, no password set
-            OR u.registration_token IS NOT NULL
-            AND u.token_date < date_trunc('day', CURRENT_DATE - INTERVAL '30' day)
-            AND u.last_logged_in IS NULL
-            -- Standard no activity within N days
-            OR u.registration_date < date_trunc('day', CURRENT_DATE - INTERVAL '30' day)
-        )
-        AND u.role_name = :role
-        AND NOT EXISTS (
-            SELECT TRUE FROM user_research_response urr WHERE urr.user_id = u.id
-        ) AND NOT EXISTS (
-            SELECT TRUE FROM report r WHERE r.client_id = c.id
-        ) AND NOT EXISTS (
-            SELECT TRUE FROM dd_user du WHERE du.created_by_id = u.id
-        ) AND NOT EXISTS (
-            SELECT TRUE FROM deputy d WHERE d.user_id = u.id
-        )
-        SQL;
-
-        $stmt = $conn->prepare($sql);
-        $result = $stmt->executeQuery(['role' => $role]);
-
-        return $result->fetchFirstColumn();
     }
 
     public function findActiveLaysInLastYear(): array
@@ -350,8 +291,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function findByFiltersWithCounts(
         $q,
-        $offset,
-        $limit,
+        int $offset,
+        int $limit,
         $id,
     ): array {
         // BASE QUERY BUILDER with filters (for both count and results)
@@ -479,5 +420,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    public function findOneByEmail(string $email): ?User
+    {
+        /** @var ?User $user */
+        $user = $this->findOneBy(['email' => $email]);
+        return $user;
     }
 }

@@ -20,7 +20,7 @@ class AuthService
         private readonly LoggerInterface $logger,
         private readonly UserRepository $userRepository,
         private readonly RoleHierarchyInterface $roleHierarchy,
-        private array $clientPermissions,
+        private readonly array $clientPermissions,
         private readonly JWTService $JWTService,
         private readonly UserPasswordHasherInterface $passwordHasher
     ) {
@@ -97,8 +97,7 @@ class AuthService
 
         $clientSource = array_search($clientSecretFromRequest, $this->clientSecrets);
 
-        $permittedRoles = isset($this->clientPermissions[$clientSource]) ?
-            $this->clientPermissions[$clientSource] : [];
+        $permittedRoles = $this->clientPermissions[$clientSource] ?? [];
 
         // Get all roles available to this user
         $availableRoles = $this->roleHierarchy->getReachableRoleNames([$roleName]);

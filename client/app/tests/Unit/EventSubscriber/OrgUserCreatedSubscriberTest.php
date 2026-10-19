@@ -9,14 +9,10 @@ use OPG\Digideps\Frontend\EventSubscriber\OrgUserCreatedSubscriber;
 use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 class OrgUserCreatedSubscriberTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @test */
-    public function getSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         self::assertEquals(
             ['org.user.created' => 'sendEmail'],
@@ -24,16 +20,14 @@ class OrgUserCreatedSubscriberTest extends TestCase
         );
     }
 
-    /** @test */
-    public function sendEmail()
+    public function testSendEmail(): void
     {
         $createdUser = UserHelpers::createUser();
         $userCreatedEvent = new OrgUserCreatedEvent($createdUser);
 
-        $mailer = self::prophesize(Mailer::class);
-        $mailer->sendInvitationEmail($createdUser)->shouldBeCalled();
+        $mailer = self::createMock(Mailer::class);
+        $mailer->expects(self::once())->method('sendInvitationEmail')->with($createdUser);
 
-        $sut = new OrgUserCreatedSubscriber($mailer->reveal());
-        $sut->sendEmail($userCreatedEvent);
+        new OrgUserCreatedSubscriber($mailer)->sendEmail($userCreatedEvent);
     }
 }

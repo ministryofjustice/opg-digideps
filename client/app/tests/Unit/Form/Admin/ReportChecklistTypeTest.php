@@ -14,7 +14,7 @@ class ReportChecklistTypeTest extends TypeTestCase
     /**
      * @dataProvider formValuesProvider
      */
-    public function testSubmitValidData(?string $costValues, bool $deputyDetails)
+    public function testSubmitValidData(?string $costValues, bool $deputyDetails): void
     {
         $report = new Report();
         $report->setAvailableSections(['profDeputyCosts']);
@@ -42,12 +42,11 @@ class ReportChecklistTypeTest extends TypeTestCase
 
         $form->submit($formData);
 
-        $this->assertTrue($form->isSynchronized());
-
-        $this->assertEquals($expected, $formDataObject);
+        self::assertTrue($form->isSynchronized());
+        self::assertEquals($expected, $formDataObject);
     }
 
-    public function formValuesProvider(): array
+    public static function formValuesProvider(): array
     {
         return [
             'Yes' => ['yes', false],

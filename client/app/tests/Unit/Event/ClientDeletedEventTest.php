@@ -11,8 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class ClientDeletedEventTest extends TestCase
 {
-    /** @test */
-    public function eventIsInitialisedCorrectly()
+    public function testEventIsInitialisedCorrectly(): void
     {
         $client = ClientHelpers::createClient();
         $currentUser = UserHelpers::createUser();

@@ -14,7 +14,6 @@ clientSearch:
 clientDetails:
   htmlTitle: Administration - Clients
   supportTitle: Clients
-  reportsTitle: Reports
   noResults: No reports found
   organisation: Organisation
   organisationInactive: (Inactive)

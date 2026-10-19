@@ -1,0 +1,11 @@
+{
+    "link": "https://design-system.service.gov.uk/components/table/",
+    "props": [
+        {
+            "name": "table",
+            "type": "Table",
+            "info": "Build it inside PHP with TableBuilder"
+        }
+    ],
+    "examples": ["table", "table-caption"]
+}

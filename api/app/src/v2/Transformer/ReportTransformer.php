@@ -7,13 +7,6 @@ use OPG\Digideps\Backend\v2\DTO\StatusDto;
 
 class ReportTransformer
 {
-    public function __construct(private readonly StatusTransformer $statusTransformer)
-    {
-    }
-
-    /**
-     * @return array
-     */
     public function transform(ReportDto $dto): array
     {
         $transformed = [
@@ -32,8 +25,10 @@ class ReportTransformer
         }
 
         if ($dto->getStatus() instanceof StatusDto) {
-            $transformed['status'] = $this->statusTransformer->transform($dto->getStatus());
+            $transformed['status'] = $dto->getStatus();
         }
+
+        $transformed['court_orders'] = $dto->getCourtOrders();
 
         return $transformed;
     }

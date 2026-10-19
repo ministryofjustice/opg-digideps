@@ -20,6 +20,7 @@ module "eu_west_1" {
   providers = {
     aws            = aws.digideps_eu_west_1
     aws.management = aws.management_eu_west_1
+    aws.identity   = aws.identity_eu_west_1
   }
 }
 
@@ -43,5 +44,6 @@ module "eu_west_2" {
   providers = {
     aws            = aws.digideps_eu_west_2
     aws.management = aws.management_eu_west_2
+    aws.identity   = aws.identity_eu_west_2
   }
 }

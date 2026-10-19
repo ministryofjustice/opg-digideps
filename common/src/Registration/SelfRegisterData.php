@@ -9,27 +9,24 @@ class SelfRegisterData
 {
     /**
      * Deputy's first name.
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'user.firstname.notBlank', groups: ['self_registration', 'verify_codeputy'])]
     #[Assert\Length(min: 2, max: 50, minMessage: 'user.firstname.minLength', maxMessage: 'user.firstname.maxLength', groups: ['self_registration', 'verify_codeputy'])]
     private ?string $firstname = null;
 
     /**
      * Deputy's last name.
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'user.lastname.notBlank', groups: ['self_registration', 'verify_codeputy'])]
     #[Assert\Length(min: 2, max: 50, minMessage: 'user.lastname.minLength', maxMessage: 'user.lastname.maxLength', groups: ['self_registration', 'verify_codeputy'])]
     private ?string $lastname = null;
 
     /**
      * Deputy's email.
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'user.email.notBlank', groups: ['self_registration', 'verify_codeputy'])]
     #[Assert\Email(message: 'user.email.invalid', groups: ['self_registration', 'verify_codeputy'])]
     #[Assert\Length(max: 60, maxMessage: 'user.email.maxLength', groups: ['self_registration', 'verify_codeputy'])]
@@ -37,29 +34,22 @@ class SelfRegisterData
 
     /**
      * Deputy's postcode.
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     #[Assert\Length(max: 10, maxMessage: 'user.addressPostcode.maxLength', groups: ['self_registration', 'verify_codeputy'])]
     private ?string $postcode = null;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'client.firstname.notBlank', groups: ['self_registration'])]
     #[Assert\Length(min: 2, max: 50, minMessage: 'client.firstname.minMessage', maxMessage: 'client.firstname.maxMessage', groups: ['self_registration'])]
     private ?string $clientFirstname = null;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'client.lastname.notBlank', groups: ['self_registration', 'verify_codeputy'])]
     #[Assert\Length(min: 2, max: 50, minMessage: 'client.lastname.minMessage', maxMessage: 'client.lastname.maxMessage', groups: ['self_registration', 'verify_codeputy'])]
     private ?string $clientLastname = null;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'client.caseNumber.notBlank', groups: ['self_registration', 'verify_codeputy'])]
     #[Assert\Length(min: 8, max: 8, exactMessage: 'client.caseNumber.exactMessage', groups: ['self_registration', 'verify_codeputy'])]
     private ?string $caseNumber = null;

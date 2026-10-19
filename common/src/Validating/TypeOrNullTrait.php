@@ -8,6 +8,12 @@ trait TypeOrNullTrait
 {
     abstract protected function getUnvalidated(string|int|null $key): mixed;
 
+    public function getBooleanOrNull(string|int|null $key): ?bool
+    {
+        $value = $this->getUnvalidated($key);
+        return is_bool($value) ? $value : null;
+    }
+
     public function getIntegerOrNull(string|int|null $key): ?int
     {
         $value = $this->getUnvalidated($key);

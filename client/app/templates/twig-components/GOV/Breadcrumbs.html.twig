@@ -1,0 +1,16 @@
+{% props breadcrumbs, inverse=false %}
+
+{% set className = "govuk-breadcrumbs" %}
+{% if inverse %}
+    {% set className = className ~ ' govuk-breadcrumbs--inverse' %}
+{% endif %}
+
+<nav class="{{ className }}" aria-label="Breadcrumb">
+    <ol class="govuk-breadcrumbs__list">
+        {% for item in breadcrumbs.items %}
+            <li class="govuk-breadcrumbs__list-item">
+                <a class="govuk-breadcrumbs__link" href="{{ item.href }}">{{ item.text }}</a>
+            </li>
+        {% endfor %}
+    </ol>
+</nav>

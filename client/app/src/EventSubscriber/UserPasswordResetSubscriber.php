@@ -20,7 +20,7 @@ class UserPasswordResetSubscriber implements EventSubscriberInterface
         $this->mailer = $mailer;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             UserPasswordResetEvent::NAME => 'sendEmail',

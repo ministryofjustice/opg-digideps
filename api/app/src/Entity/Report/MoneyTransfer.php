@@ -12,118 +12,89 @@ use JMS\Serializer\Annotation as JMS;
 #[ORM\Entity, ORM\HasLifecycleCallbacks]
 class MoneyTransfer
 {
-    /**
-     * @var int
-     */
     #[JMS\Groups(['money-transfer'])]
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['money-transfer'])]
     #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
-    private $amount;
+    private ?string $amount = null;
 
-    /**
-     * @var BankAccount
-     */
     #[JMS\Groups(['account'])]
     #[JMS\SerializedName('accountFrom')]
     #[ORM\JoinColumn(name: 'from_account_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: BankAccount::class)]
-    private $from;
+    private ?BankAccount $from = null;
 
-    /**
-     * @var BankAccount
-     */
     #[JMS\Groups(['account'])]
     #[JMS\SerializedName('accountTo')]
     #[ORM\JoinColumn(name: 'to_account_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: BankAccount::class)]
-    private $to;
+    private ?BankAccount $to = null;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'moneyTransfers')]
-    private $report;
+    private Report $report;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['money-transfer'])]
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]
-    private $description;
+    private ?string $description = null;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function __construct(Report $report)
     {
-        return $this->id;
+        $this->report = $report;
     }
 
-    /**
-     * Set amount.
-     *
-     * @param string $amount
-     *
-     * @return MoneyTransfer
-     */
-    public function setAmount($amount)
+    public function getId(): int
     {
-        $this->amount = $amount;
+        return $this->id ?? 0;
+    }
+
+    public function setId(int $id): static
+    {
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
 
         return $this;
     }
 
-    /**
-     * Get amount.
-     *
-     * @return string
-     */
-    public function getAmount()
+    public function setAmount(null|string|float|int $amount): static
+    {
+        $this->amount = $amount === null ? null : (string)$amount;
+
+        return $this;
+    }
+
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    /**
-     * @return BankAccount
-     */
-    public function getFrom()
+    public function getFrom(): ?BankAccount
     {
         return $this->from;
     }
 
-    /**
-     * @return BankAccount
-     */
-    public function getTo()
+    public function getTo(): ?BankAccount
     {
         return $this->to;
     }
 
-    /**
-     * @return MoneyTransfer
-     */
-    public function setFrom(BankAccount $from)
+    public function setFrom(?BankAccount $from): static
     {
         $this->from = $from;
 
         return $this;
     }
 
-    /**
-     * @return MoneyTransfer
-     */
-    public function setTo(BankAccount $to)
+    public function setTo(?BankAccount $to): static
     {
         $this->to = $to;
 
@@ -139,36 +110,24 @@ class MoneyTransfer
     #[JMS\Groups(['money-transfer'])]
     #[JMS\Type('integer')]
     #[JMS\SerializedName('reportId')]
-    public function getReportId()
+    public function getReportId(): int
     {
         return $this->getReport()->getId();
     }
 
-    public function setReport(Report $report)
+    public function setReport(Report $report): static
     {
         $this->report = $report;
 
         return $this;
     }
 
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * Set description.
-     *
-     * @param string $description
-     *
-     * @return MoneyTransfer
-     */
-    public function setDescription($description)
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 

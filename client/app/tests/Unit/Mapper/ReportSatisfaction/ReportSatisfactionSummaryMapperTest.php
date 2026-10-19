@@ -26,7 +26,7 @@ class ReportSatisfactionSummaryMapperTest extends TestCase
         $this->sut = new ReportSatisfactionSummaryMapper($this->restClient);
     }
 
-    public function testReturnsReportSatisfactionsByDefaultParameters()
+    public function testReturnsReportSatisfactionsByDefaultParameters(): void
     {
         $this->query = new DateRangeQuery();
 
@@ -35,7 +35,7 @@ class ReportSatisfactionSummaryMapperTest extends TestCase
         $this->assertMapperReturnsResultFromRestClient();
     }
 
-    public function testReturnsReportSatisfactionsByCustomParameters()
+    public function testReturnsReportSatisfactionsByCustomParameters(): void
     {
         $this->query = new DateRangeQuery()
             ->setStartDate(new \DateTime('01-01-2001'))
@@ -50,21 +50,17 @@ class ReportSatisfactionSummaryMapperTest extends TestCase
 
     private function assertRestClientIsCalledWithDefaultQueryParameters(): void
     {
-        $this
-            ->restClient
-            ->expects($this->once())
+        $this->restClient->expects(self::once())
             ->method('get')
-            ->with('/satisfaction/satisfaction_data?orderBy=id&order=DESC', $this->anything())
+            ->with('/satisfaction/satisfaction_data?orderBy=id&order=DESC', self::anything())
             ->willReturn(['returned-from-rest-client']);
     }
 
     private function assertRestClientIsCalledWithCustomQueryParameters(): void
     {
-        $this
-            ->restClient
-            ->expects($this->once())
+        $this->restClient->expects(self::once())
             ->method('get')
-            ->with($this->buildExpectedUrl(), $this->anything())
+            ->with($this->buildExpectedUrl(), self::anything())
             ->willReturn(['returned-from-rest-client']);
     }
 
@@ -80,15 +76,13 @@ class ReportSatisfactionSummaryMapperTest extends TestCase
 
     private function assertRestClientPopulatesAnArrayOfExpectedEntities(): void
     {
-        $this
-            ->restClient
-            ->expects($this->once())
+        $this->restClient->expects(self::once())
             ->method('get')
-            ->with($this->anything(), Satisfaction::class . '[]');
+            ->with(self::anything(), Satisfaction::class . '[]');
     }
 
     private function assertMapperReturnsResultFromRestClient(): void
     {
-        $this->assertEquals(['returned-from-rest-client'], $this->sut->getBy($this->query));
+        self::assertEquals(['returned-from-rest-client'], $this->sut->getBy($this->query));
     }
 }

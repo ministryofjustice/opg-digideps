@@ -25,8 +25,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class MoneyTransferController extends AbstractController
 {
     private static array $jmsGroups = [
-        'money-transfer',
         'account',
+        'money-transfer',
         'money-transfer-state',
     ];
 
@@ -134,12 +134,22 @@ class MoneyTransferController extends AbstractController
         }
 
         // add URL-data into model
-        if (isset($dataFromUrl['from-id']) && isset($dataFromUrl['to-id'])) {
-            $transfer->setAccountFromId($dataFromUrl['from-id']);
-            $transfer->setAccountFrom($report->getBankAccountById($dataFromUrl['from-id']));
-            $transfer->setAccountToId($dataFromUrl['to-id']);
-            $transfer->setAccountTo($report->getBankAccountById($dataFromUrl['to-id']));
+        if (isset($dataFromUrl['from-id']) && isset($dataFromUrl['to-id']) && is_numeric($dataFromUrl['from-id'])
+            && is_numeric($dataFromUrl['to-id'])) {
+            $fromAccount = $report->getBankAccountById((int) $dataFromUrl['from-id']);
+            $toAccount = $report->getBankAccountById((int) $dataFromUrl['to-id']);
+
+            if ($fromAccount === null || $toAccount === null) {
+                throw $this->createNotFoundException('Bank account not found');
+            }
+
+            $transfer->setAccountFromId($fromAccount->getId());
+            $transfer->setAccountFrom($fromAccount);
+            $transfer->setAccountToId($toAccount->getId());
+            $transfer->setAccountTo($toAccount);
         }
+
+
 
         $stepRedirector->setStepUrlAdditionalParams([
             'data' => $dataFromUrl,
@@ -212,6 +222,7 @@ class MoneyTransferController extends AbstractController
 
         return [
             'report' => $report,
+            'moneyTransfers' => $report->getMoneyTransfers()
         ];
     }
 

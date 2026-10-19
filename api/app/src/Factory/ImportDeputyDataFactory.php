@@ -47,8 +47,8 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                     )
                     SELECT
                         COALESCE(spi.deputy_uid, sli.deputy_uid),
-                        (ARRAY_AGG(COALESCE(spi.deputy_type, 'LAY')))[1],
-                        (ARRAY_AGG(spi.deputy_email))[1],
+                        UPPER((ARRAY_AGG(COALESCE(spi.deputy_type, 'LAY')))[1]),
+                        LOWER((ARRAY_AGG(spi.deputy_email))[1]),
                         (ARRAY_AGG(spi.deputy_organisation))[1],
                         (ARRAY_AGG(COALESCE(spi.deputy_first_name, sli.deputy_first_name)))[1],
                         (ARRAY_AGG(COALESCE(spi.deputy_last_name, sli.deputy_last_name)))[1],
@@ -73,7 +73,18 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                     $updated = $this->execute("
                         UPDATE deputy d
                         SET
-                            email1 = COALESCE(ssd.deputy_email, d.email1),
+                            firstname = COALESCE(CASE
+                                WHEN ssd.deputy_first_name = '' THEN ssd.deputy_organisation
+                                ELSE ssd.deputy_first_name
+                            END, d.firstname),
+                            lastname = COALESCE(ssd.deputy_last_name, d.lastname),
+                            email1 = LOWER(COALESCE(ssd.deputy_email, d.email1)),
+                            address1 = COALESCE(ssd.deputy_address1, d.address1),
+                            address2 = COALESCE(ssd.deputy_address2, d.address2),
+                            address3 = COALESCE(ssd.deputy_address3, d.address3),
+                            address4 = COALESCE(ssd.deputy_address4, d.address4),
+                            address5 = COALESCE(ssd.deputy_address5, d.address5),
+                            address_postcode = COALESCE(ssd.deputy_post_code, d.address_postcode),
                             deputy_type = COALESCE(ssd.deputy_type, d.deputy_type),
                             organisation_id = CASE
                                 WHEN COALESCE(ssd.deputy_type, d.deputy_type) = 'LAY' THEN NULL
@@ -82,7 +93,8 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                             user_id = COALESCE(u.id, d.user_id)
                         FROM staging.sirius_deputy ssd
                         LEFT JOIN organisation o
-                            ON ssd.deputy_email LIKE CONCAT('%@', o.email_identifier) OR ssd.deputy_email = o.email_identifier
+                            ON ssd.deputy_email LIKE CONCAT('%@', o.email_identifier)
+                            OR ssd.deputy_email = o.email_identifier
                         LEFT JOIN dd_user u
                             ON u.deputy_uid = ssd.deputy_uid::BIGINT
                             AND u.is_primary IS true
@@ -106,7 +118,10 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                             created_at
                         )
                         SELECT
-                            ssd.deputy_first_name,
+                            CASE
+                                WHEN ssd.deputy_first_name = '' THEN ssd.deputy_organisation
+                                ELSE ssd.deputy_first_name
+                            END,
                             ssd.deputy_last_name,
                             ssd.deputy_email,
                             ssd.deputy_address1,
@@ -123,6 +138,7 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                         FROM staging.sirius_deputy ssd
                         LEFT JOIN organisation o
                             ON ssd.deputy_email LIKE CONCAT('%@', o.email_identifier)
+                            OR ssd.deputy_email = o.email_identifier
                         LEFT JOIN dd_user u
                             ON u.deputy_uid = ssd.deputy_uid::BIGINT
                         WHERE ssd.local_id IS NULL
@@ -149,7 +165,7 @@ class ImportDeputyDataFactory implements DataFactoryInterface
         if (!$dryRun) {
             $messages[] = "Updated {$updated} existing entries in deputy.";
             $messages[] = "Created {$inserted} entries in deputy.";
-            $messages[] = " Linked {$postLinked} new entries in deputy.";
+            $messages[] = " Linked {$postLinked} entries in deputy.";
         }
         return new DataFactoryResult([
             'counts' => $messages,

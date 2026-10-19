@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\TestHelpers;
 
 use Doctrine\ORM\EntityManagerInterface;
-use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
 use Faker\Factory;
@@ -25,8 +25,7 @@ class DeputyTestHelper
         $firstname = is_null($user) ? $faker->firstName() : $user->getFirstName();
         $lastname = is_null($user) ? $faker->lastName() : $user->getLastName();
 
-
-        $deputy = ($deputy ?? new Deputy($deputyUid, DeputyType::LAY, $firstname, $lastname))
+        $deputy = ($deputy ?? new Deputy($deputyUid, $user?->deriveDeputyType() ?? DeputyType::LAY, $firstname, $lastname))
             ->setDeputyUid($deputyUid)
             ->setFirstname($firstname)
             ->setLastname($lastname)

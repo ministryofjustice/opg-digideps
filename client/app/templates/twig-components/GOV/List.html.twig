@@ -1,0 +1,9 @@
+{% props list %}
+
+<{{ list.tag }} {{ attributes.defaults({class: list.className}) }}>
+    {% for item in list.items %}
+        <li>
+            <twig:Render self="{{ item }}"/>
+        </li>
+    {% endfor %}
+</{{ list.tag }}>

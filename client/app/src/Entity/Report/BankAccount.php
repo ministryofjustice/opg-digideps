@@ -25,116 +25,82 @@ class BankAccount implements BankAccountInterface
         'other_no_sortcode',
     ];
 
-    private static $typesNotRequiringSortCode = [
+    /**
+     * @var string[] $typesNotRequiringSortCode
+     */
+    private static array $typesNotRequiringSortCode = [
         'postoffice',
         'cfo',
         'other_no_sortcode',
     ];
 
-    private static $typesNotRequiringBankName = [
+    /**
+     * @var string[] $typesNotRequiringBankName
+     */
+    private static array $typesNotRequiringBankName = [
         'postoffice',
         'cfo',
     ];
 
-    /**
-     * @JMS\Type("integer")
-     *
-     * @var int
-     */
-    private $id;
+    #[JMS\Type('integer')]
+    private ?int $id = null;
+
+    #[JMS\Groups(['account'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'account.accountType.notBlank', groups: ['bank-account-type'])]
+    #[Assert\Length(max: 100, maxMessage: 'account.accountType.maxMessage', groups: ['bank-account-type'])]
+    private ?string $accountType = null;
+
+    #[JMS\Groups(['account'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'account.bank.notBlank', groups: ['bank-account-name'])]
+    #[Assert\Length(min: 2, max: 500, minMessage: 'account.bank.minMessage', maxMessage: 'account.bank.maxMessage', groups: ['bank-account-name'])]
+    private ?string $bank = null;
+
+    #[JMS\Type('string')]
+    /** @phpstan-ignore property.unusedType */
+    private ?string $accountTypeText = null;
+
+    #[JMS\Groups(['account'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'account.accountNumber.notBlank', groups: ['bank-account-number'])]
+    #[Assert\Type(type: 'alnum', message: 'account.accountNumber.type', groups: ['bank-account-number'])]
+    #[Assert\Length(min: 4, max: 4, exactMessage: 'account.accountNumber.length', groups: ['bank-account-number'])]
+    private ?string $accountNumber = null;
+
+    #[JMS\Type('string')]
+    #[JMS\Groups(['account'])]
+    private ?string $sortCode = null;
+
+    #[JMS\Type('string')]
+    #[JMS\Groups(['account'])]
+    #[Assert\NotBlank(message: 'account.openingBalance.notBlank', groups: ['bank-account-opening-balance'])]
+    #[Assert\Type(type: 'numeric', message: 'account.openingBalance.type', groups: ['bank-account-opening-balance'])]
+    #[Assert\Range(maxMessage: 'account.openingBalance.outOfRange', max: 100000000000, groups: ['bank-account-opening-balance'])]
+    private ?string $openingBalance = null;
+
+    #[JMS\Type('string')]
+    #[Assert\Type(type: 'numeric', message: 'account.closingBalance.type', groups: ['bank-account-closing-balance'])]
+    #[Assert\Range(maxMessage: 'account.closingBalance.outOfRange', max: 100000000000, groups: ['bank-account-closing-balance'])]
+    #[JMS\Groups(['account'])]
+    private ?string $closingBalance = null;
+
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['account'])]
+    #[Assert\NotNull(message: 'account.isClosed.notBlank', groups: ['bank-account-is-closed'])]
+    private ?bool $isClosed = null;
 
     /**
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.accountType.notBlank", groups={"bank-account-type"})
-     * @Assert\Length(max=100, maxMessage="account.accountType.maxMessage", groups={"bank-account-type"})
-     *
-     * @JMS\Groups({"account"})
-     *
-     * @var string
+     * @var ?string 'yes'|'no'|null
      */
-    private $accountType;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['account'])]
+    #[Assert\NotBlank(message: 'account.isJointAccount.notBlank', groups: ['bank-account-is-joint'])]
+    private ?string $isJointAccount = null;
 
-    /**
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.bank.notBlank", groups={"bank-account-name"})
-     * @Assert\Length(max=500, min=2,  minMessage= "account.bank.minMessage", maxMessage= "account.bank.maxMessage", groups={"bank-account-name"})
-     *
-     * @JMS\Groups({"account"})
-     *
-     * @var string
-     */
-    private $bank;
-
-    /**
-     * @JMS\Type("string")
-     *
-     * @var string
-     */
-    private $accountTypeText;
-
-    /**
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"bank-account-number"})
-     * @Assert\Type(type="alnum", message="account.accountNumber.type", groups={"bank-account-number"})
-     * @Assert\Length(exactMessage="account.accountNumber.length",min=4, max=4, groups={"bank-account-number"})
-     * @JMS\Groups({"account"})
-     *
-     * @var string
-     */
-    private $accountNumber;
-
-    /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"account"})
-     *
-     * @var string
-     */
-    private $sortCode;
-
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"account"})
-     *
-     * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"bank-account-opening-balance"})
-     * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"bank-account-opening-balance"})
-     * @Assert\Range(max=100000000000, maxMessage = "account.openingBalance.outOfRange", groups={"bank-account-opening-balance"})
-     */
-    private mixed $openingBalance = null;
-
-    /**
-     * @JMS\Type("string")
-     * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"bank-account-closing-balance"})
-     * @Assert\Range(max=100000000000, maxMessage = "account.closingBalance.outOfRange", groups={"bank-account-closing-balance"})
-     * @JMS\Groups({"account"})
-     */
-    private mixed $closingBalance = null;
-
-    /**
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"account"})
-     * @Assert\NotBlank(message="account.isClosed.notBlank", groups={"bank-account-is-closed"})
-     *
-     * @var bool
-     */
-    private $isClosed;
-
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"account"})
-     * @Assert\NotBlank(message="account.isJointAccount.notBlank", groups={"bank-account-is-joint"})
-     *
-     * @var string
-     */
-    private $isJointAccount;
-
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"account"})
-     *
-     * @var string
-     */
-    private $meta;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['account'])]
+    private ?string $meta = null;
 
     /**
      * Get bank account name in one line. Comes from Virtual property.
@@ -142,75 +108,72 @@ class BankAccount implements BankAccountInterface
      * <bank> - <type> (****<last 4 digits>)
      * e.g.
      * barclays - Current account (****1234)
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"account"})
-     *
-     * @var string
      */
-    private $nameOneLine;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['account'])]
+    private ?string $nameOneLine = null;
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId(?int $id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    public function setBank($bank)
+    public function setBank(?string $bank): static
     {
         $this->bank = $bank;
 
         return $this;
     }
 
-    public function getBank()
+    public function getBank(): ?string
     {
         return $this->bank;
     }
 
-    public function setSortCode($sortCode)
+    public function setSortCode(?string $sortCode): static
     {
         $this->sortCode = $sortCode;
 
         return $this;
     }
 
-    public function getSortCode()
+    public function getSortCode(): ?string
     {
         return $this->sortCode;
     }
 
-    public function setAccountNumber($accountNumber)
+    public function setAccountNumber(?string $accountNumber): static
     {
         $this->accountNumber = $accountNumber;
 
         return $this;
     }
 
-    public function getAccountNumber()
+    public function getAccountNumber(): ?string
     {
         return $this->accountNumber;
     }
 
-    public function setOpeningBalance($openingBalance)
+    public function setOpeningBalance(?string $openingBalance): static
     {
         $this->openingBalance = $openingBalance;
 
         return $this;
     }
 
-    public function getOpeningBalance()
+    public function getOpeningBalance(): mixed
     {
         return $this->openingBalance;
     }
 
-    public function setClosingBalance(mixed $closingBalance): static
+    public function setClosingBalance(?string $closingBalance): static
     {
         $this->closingBalance = $closingBalance;
 
@@ -235,10 +198,7 @@ class BankAccount implements BankAccountInterface
         return !is_null($this->closingBalance) && $this->getClosingBalance() === 0.0;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasClosingBalance()
+    public function hasClosingBalance(): bool
     {
         if (is_null($this->closingBalance)) {
             return false;
@@ -247,97 +207,79 @@ class BankAccount implements BankAccountInterface
         return true;
     }
 
-    public function getIsClosed()
+    public function getIsClosed(): ?bool
     {
         return $this->isClosed;
     }
 
-    public function setIsClosed($isClosed)
+    public function setIsClosed(?bool $isClosed): static
     {
         $this->isClosed = $isClosed;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAccountType()
+    public function getAccountType(): ?string
     {
         return $this->accountType;
     }
 
-    public function getAccountTypeText()
+    public function getAccountTypeText(): ?string
     {
         return $this->accountTypeText;
     }
 
     /**
      * Sort code required.
-     *
-     * @return string
      */
-    public function requiresSortCode()
+    public function requiresSortCode(): bool
     {
         return !in_array($this->getAccountType(), self::$typesNotRequiringSortCode);
     }
 
     /**
      * Bank name required.
-     *
-     * @return string
      */
-    public function requiresBankName()
+    public function requiresBankName(): bool
     {
         return !in_array($this->getAccountType(), self::$typesNotRequiringBankName);
     }
 
-    /**
-     * @param string $accountType
-     */
-    public function setAccountType($accountType)
+    public function setAccountType(?string $accountType): void
     {
         $this->accountType = $accountType;
     }
 
-    public function getIsJointAccount()
+    public function getIsJointAccount(): ?string
     {
         return $this->isJointAccount;
     }
 
-    public function setIsJointAccount($isJointAccount)
+    public function setIsJointAccount(?string $isJointAccount): static
     {
         $this->isJointAccount = $isJointAccount;
 
         return $this;
     }
 
-    public function getMeta()
+    public function getMeta(): ?string
     {
         return $this->meta;
     }
 
-    public function setMeta($meta)
+    public function setMeta(?string $meta): static
     {
         $this->meta = $meta;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getNameOneLine()
+    public function getNameOneLine(): ?string
     {
         return $this->nameOneLine;
     }
 
-    /**
-     * @param string $nameOneLine
-     *
-     * @return $this
-     */
-    public function setNameOneLine($nameOneLine)
+    public function setNameOneLine(?string $nameOneLine): static
     {
         $this->nameOneLine = $nameOneLine;
 
@@ -346,10 +288,8 @@ class BankAccount implements BankAccountInterface
 
     /**
      * Format the account name for CSV.
-     *
-     * @return string
      */
-    public function getDisplayName()
+    public function getDisplayName(): ?string
     {
         switch ($this->getAccountType()) {
             case 'current':
@@ -366,22 +306,22 @@ class BankAccount implements BankAccountInterface
                 return ($this->getIsJointAccount() ? 'Joint other ' : 'Other') . ' account ' . ' (****' . $this->getAccountNumber() . ' / ' . $this->getDisplaySortCode() . ')';
             case 'other_no_sortcode':
                 return ($this->getIsJointAccount() ? 'Joint other ' : 'Other') . ' account ' . ' (****' . $this->getAccountNumber() . ')';
+            default:
+                return null;
         }
     }
 
     /**
      * Formats a sort code with hyphens.
-     *
-     * @return string
      */
-    public function getDisplaySortCode()
+    public function getDisplaySortCode(): ?string
     {
-        if (strlen($this->getSortCode()) == 6) {
-            $sc = str_split($this->getSortCode());
+        if ($this->sortCode !== null && strlen($this->sortCode) == 6) {
+            $sc = str_split($this->sortCode);
 
             return $sc[0] . $sc[1] . '-' . $sc[2] . $sc[3] . '-' . $sc[4] . $sc[5];
         }
 
-        return $this->getSortCode();
+        return $this->sortCode;
     }
 }

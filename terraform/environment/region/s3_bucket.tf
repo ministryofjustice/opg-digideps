@@ -27,6 +27,22 @@ module "pa_uploads" {
   replication_role_arn                 = aws_iam_role.backup_role.arn
   backup_kms_key_id                    = "arn:aws:kms:eu-west-1:${local.backup_account_id}:key/${var.account.s3.backup_kms_arn}"
   backup_account_id                    = local.backup_account_id
+  s3_vpc_endpoint_id                   = data.aws_vpc_endpoint.s3_endpoint.id
+
+  allowed_principal_arns = [
+    "arn:aws:iam::${var.account.environment.account_id}:role/integration-tests.*",
+    "arn:aws:iam::${var.account.environment.account_id}:role/front.*",
+    "arn:aws:iam::${var.account.environment.account_id}:role/admin.*",
+    "arn:aws:iam::${var.account.environment.account_id}:role/digideps-backup-role.*",
+    "arn:aws:iam::${var.account.environment.account_id}:role/integrations-s3-read-${var.account.environment.name}",
+    "arn:aws:iam::${var.account.environment.account_id}:role/viewer",
+    "arn:aws:iam::${var.account.environment.account_id}:role/data-access",
+    "arn:aws:iam::${var.account.environment.account_id}:role/onboarding",
+    "arn:aws:iam::${var.account.environment.account_id}:role/operator",
+    "arn:aws:iam::${var.account.environment.account_id}:role/breakglass",
+    "arn:aws:iam::${var.account.environment.account_id}:role/digideps-ci-boundary",
+    "arn:aws:iam::${var.account.environment.account_id}:role/aws-service-role/*",
+  ]
 
   providers = {
     aws = aws
@@ -35,4 +51,17 @@ module "pa_uploads" {
 
 data "aws_kms_key" "s3" {
   key_id = "alias/digideps_s3_encryption_key"
+}
+
+locals {
+  s3_alb_log_account_names = {
+    "development" : "dev",
+    "preproduction" : "pre",
+    "production" : "prod",
+  }
+  s3_alb_log_account_name = local.s3_alb_log_account_names[var.account.environment.name]
+}
+
+data "aws_s3_bucket" "alb_access" {
+  bucket = "alb-logs.${data.aws_region.current.name}.${local.s3_alb_log_account_name}.digideps.opg.service.justice.gov.uk"
 }

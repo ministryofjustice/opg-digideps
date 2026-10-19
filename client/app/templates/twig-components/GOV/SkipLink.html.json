@@ -1,0 +1,11 @@
+{
+    "link": "https://design-system.service.gov.uk/components/skip-link/",
+    "props": [
+        {
+            "name": "anchor",
+            "type": "string",
+            "default": "'anchor'",
+            "info": "Id of element to skip to"
+        }
+    ]
+}

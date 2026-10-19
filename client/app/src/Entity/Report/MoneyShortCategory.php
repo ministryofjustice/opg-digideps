@@ -6,61 +6,53 @@ use JMS\Serializer\Annotation as JMS;
 
 class MoneyShortCategory
 {
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
-     */
-    private $typeId;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
+    private string $typeId;
 
     /**
      * @var bool
-     *
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
     private $present;
 
     /**
      * IncomeBenefit constructor.
      *
-     * @param $typeId
+     * @param string $typeId
      * @param bool $present
      */
-    public function __construct($typeId, $present)
+    public function __construct(string $typeId, $present)
     {
         $this->typeId = $typeId;
         $this->present = $present;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTypeId()
+    public function getTypeId(): string
     {
         return $this->typeId;
     }
 
-    /**
-     * @param mixed $typeId
-     */
-    public function setTypeId($typeId)
+    public function setTypeId(string $typeId): static
     {
         $this->typeId = $typeId;
+
+        return $this;
     }
 
     /**
      * @return bool
      */
-    public function isPresent()
+    public function isPresent(): bool
     {
         return $this->present;
     }
 
-    /**
-     * @param bool $present
-     */
-    public function setPresent($present)
+    public function setPresent(bool $present): static
     {
         $this->present = $present;
+
+        return $this;
     }
 }

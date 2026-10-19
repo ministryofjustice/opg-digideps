@@ -4,26 +4,37 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service\RestHandler\Report;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use Doctrine\ORM\EntityManager;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler;
-use Doctrine\ORM\EntityManager;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class PaFeesExpensesReportUpdateHandlerTest extends TestCase
 {
-    private PaFeesExpensesReportUpdateHandler $sut;
     private EntityManager&MockObject $em;
     private Report&MockObject $report;
     private ReportRepository&MockObject $reportRepo;
+    private PaFeesExpensesReportUpdateHandler $sut;
 
     public function setUp(): void
     {
         $date = new \DateTime('now', new \DateTimeZone('Europe/London'));
         $this->report = $this->getMockBuilder(Report::class)
-            ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
+            ->setConstructorArgs([new CourtOrder(
+                '',
+                CourtOrderType::PFA,
+                CourtOrderReportType::OPG102,
+                CourtOrderKind::Single,
+                new \DateTime(),
+                new Client()
+            ), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
             ->onlyMethods(['updateSectionsStatusCache'])
             ->getMock();
 
@@ -36,11 +47,6 @@ final class PaFeesExpensesReportUpdateHandlerTest extends TestCase
             ->onlyMethods(['addFeesToReportIfMissing'])
             ->getMock();
 
-        $this->em->expects($this->any())
-            ->method('getRepository')
-            ->with(Report::class)
-            ->willReturn($this->reportRepo);
-
         $this->sut = new PaFeesExpensesReportUpdateHandler($this->em);
     }
 
@@ -50,6 +56,10 @@ final class PaFeesExpensesReportUpdateHandlerTest extends TestCase
     public function testInitialiseFeesGetCreated(): void
     {
         $this->ensureSectionStatusCacheWillBeUpdated();
+        $this->em->expects($this->once())
+            ->method('getRepository')
+            ->with(Report::class)
+            ->willReturn($this->reportRepo);
         $this->reportRepo->expects($this->once())
             ->method('addFeesToReportIfMissing')
             ->with($this->report);
@@ -77,9 +87,7 @@ final class PaFeesExpensesReportUpdateHandlerTest extends TestCase
 
     private function ensureSectionStatusCacheWillBeUpdated(): void
     {
-        $this
-            ->report
-            ->expects($this->once())
+        $this->report->expects($this->once())
             ->method('updateSectionsStatusCache')
             ->with([Report::SECTION_PA_DEPUTY_EXPENSES]);
     }

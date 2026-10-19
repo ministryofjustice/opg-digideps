@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder;
 
-final readonly class CourtOrderRelationshipResult
+final class CourtOrderRelationshipResult
 {
     private string $message;
     private string $errorMessage;
 
-    public function __construct(private CourtOrderRelationshipChange $change)
+    public function __construct(CourtOrderRelationshipChange $change)
     {
-        $this->message = "Changes in CourtOrder {$this->change->courtOrder->getId()}:"
-            . ($this->change->hasSiblingIdChange() ? " SiblingId changed from '{$this->change->oldSiblingId}' -> '{$this->change->courtOrder->getSibling()?->getId()}'." : '')
-            . ($this->change->hasKindChange() ? " Kind changed from '{$this->change->oldKind?->value}' -> '{$this->change->courtOrder->getOrderKind()->value}'." : '');
+        $this->message = "Changes in CourtOrder {$change->courtOrderId}:"
+            . ($change->hasSiblingIdChange() ? " SiblingId changed from '$change->oldSiblingId' -> '$change->currentSiblingId'." : '')
+            . ($change->hasKindChange() ? " Kind changed from '{$change->oldKind?->value}' -> '{$change->currentKind->value}'." : '');
+
         $this->errorMessage = '';
     }
 
@@ -30,5 +31,17 @@ final readonly class CourtOrderRelationshipResult
     public function getErrorMessage(): string
     {
         return $this->errorMessage;
+    }
+
+    public function appendError(string $error): CourtOrderRelationshipResult
+    {
+        $this->errorMessage .= '; ' . $error;
+        return $this;
+    }
+
+    public function appendMessage(string $message): CourtOrderRelationshipResult
+    {
+        $this->message .= '; ' . $message;
+        return $this;
     }
 }

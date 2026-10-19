@@ -57,7 +57,7 @@ class PreRegistration
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'pre_registration_id_seq', allocationSize: 1, initialValue: 1)]
-    private int $id;
+    private ?int $id = null;
 
     #[Assert\NotBlank]
     #[JMS\Type('string')]
@@ -331,12 +331,18 @@ class PreRegistration
 
     public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    public function setId(int $id): self
+    public function setId(int $id): static
     {
-        $this->id = $id;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
 
         return $this;
     }

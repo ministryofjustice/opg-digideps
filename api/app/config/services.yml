@@ -1,7 +1,6 @@
 parameters:
     fixtures:
         account_password: "%env(FIXTURES_ACCOUNTPASSWORD)%"
-        legacy_password_hash: "%env(FIXTURES_LEGACYPASSWORDHASH)%"
 
     # To avoid undefined variable errors at build time during clear-cache, we can define default values for env vars
     # At runtime Symfony will fetch the actual value from the environment
@@ -74,7 +73,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     OPG\Digideps\Backend\:
         resource: "../src/*"
-        exclude: "../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}"
+        exclude: "../src/{DependencyInjection,Entity,Fixture,Migrations,Tests,Kernel.php}"
 
     OPG\Digideps\Backend\Controller\:
         resource: "../src/Controller/"
@@ -343,9 +342,6 @@ services:
     PlainUserAssembler:
         class: OPG\Digideps\Backend\v2\Assembler\UserAssembler
 
-    OPG\Digideps\Backend\v2\Assembler\Report\ReportSummaryAssembler: ~
-    OPG\Digideps\Backend\v2\Assembler\Report\ReportAssemblerInterface: '@OPG\Digideps\Backend\v2\Assembler\Report\ReportSummaryAssembler'
-
     PlainOrganisationAssembler:
         class: OPG\Digideps\Backend\v2\Assembler\OrganisationAssembler
 
@@ -358,17 +354,6 @@ services:
         class: GBProd\UuidNormalizer\UuidDenormalizer
         tags:
             - { name: serializer.denormalizer }
-
-    Aws\Ssm\SsmClient:
-        arguments: ["%ssm_client_params%"]
-
-    OPG\Digideps\Backend\Service\ParameterStoreService:
-        arguments:
-            [
-                '@Aws\Ssm\SsmClient',
-                "%env(PARAMETER_PREFIX)%",
-                "%env(FEATURE_FLAG_PREFIX)%",
-            ]
 
     OPG\Digideps\Backend\Security\HeaderTokenAuthenticator:
         class: OPG\Digideps\Backend\Security\HeaderTokenAuthenticator
@@ -428,9 +413,6 @@ services:
     OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector:
         public: true
 
-    OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory:
-        public: true
-
     OPG\Digideps\Backend\Domain\Deputyship\DeputyshipProcessingRawDbAccess:
         arguments:
             $ingestWriterEm: "@doctrine.orm.ingestwriter_entity_manager"
@@ -451,16 +433,13 @@ services:
     OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderService:
         public: true
 
-    OPG\Digideps\Backend\Service\LayRegistrationService:
-        public: true
-
     OPG\Digideps\Backend\Service\DeputyService:
         public: true
 
     OPG\Digideps\Backend\Service\UserDeputyService:
         public: true
 
-    OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory:
+    OPG\Digideps\Backend\Factory\UpdateReportTypeDataFactory:
         public: true
 
     preCSVDataFactory:
@@ -474,12 +453,16 @@ services:
                       "active",
                   ]
                 - [
+                      '@OPG\Digideps\Backend\Factory\ImportOrganisationDataFactory',
+                      "active",
+                  ]
+                - [
                       '@OPG\Digideps\Backend\Factory\ImportDeputyDataFactory',
                       "active",
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\ImportClientDataFactory',
-                      "dry-run-only",
+                      "active",
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\MissingDeputyDataFactory',
@@ -506,11 +489,11 @@ services:
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\RequiredReport\RequiredReportDataFactory',
-                      "dry-run-only",
+                      "active",
                   ]
                 - [
-                      '@OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory',
-                      "dry-run-only",
+                      '@OPG\Digideps\Backend\Factory\UpdateReportTypeDataFactory',
+                      "active",
                   ]
 
     OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
@@ -518,3 +501,9 @@ services:
         arguments:
             $preCSVDataFactory: "@preCSVDataFactory"
             $postCSVDataFactory: "@postCSVDataFactory"
+
+    OPG\Digideps\Backend\Domain\Report\ReportTransitionService:
+        public: true
+
+    OPG\Digideps\Backend\Fixture\FixtureService:
+        public: true

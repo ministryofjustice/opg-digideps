@@ -1,0 +1,11 @@
+{
+    "link": "https://design-system.service.gov.uk/styles/lists/",
+    "props": [
+        {
+            "name": "list",
+            "type": "AbstractList",
+            "info": "Build it inside PHP with ListBuilder"
+        }
+    ],
+    "examples": ["ordered-list", "unordered-list"]
+}

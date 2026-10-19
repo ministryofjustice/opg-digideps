@@ -14,13 +14,10 @@ use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use OPG\Digideps\Backend\Entity\Traits\IsSoftDeleteableEntity;
 use OPG\Digideps\Backend\Repository\ClientRepository;
 
-/**
- * Client.
- */
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
 #[ORM\Table(name: 'client', options: ['collate' => 'utf8_general_ci', 'charset' => 'utf8'])]
-#[ORM\Index(columns: ['case_number'], name: 'case_number_idx')]
-#[ORM\Index(columns: ['archived_at'], name: 'archived_at_idx')]
+#[ORM\Index(name: 'case_number_idx', columns: ['case_number'])]
+#[ORM\Index(name: 'archived_at_idx', columns: ['archived_at'])]
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Client
@@ -52,7 +49,7 @@ class Client
      */
     #[JMS\Groups(['client-reports'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Report>')]
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Report::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Report::class, mappedBy: 'client', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['submitDate' => 'DESC'])]
     private Collection $reports;
 
@@ -136,15 +133,6 @@ class Client
     private Collection $notes;
 
     /**
-     * @var Collection<int, ClientContact>
-     */
-    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\ClientContact>')]
-    #[JMS\Groups(['client-clientcontacts'])]
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: ClientContact::class, cascade: ['persist', 'remove'])]
-    #[ORM\OrderBy(['lastName' => 'ASC'])]
-    private Collection $clientContacts;
-
-    /**
      * Holds the deputy the client belongs to
      * Loaded from the CSV upload.
      */
@@ -158,7 +146,7 @@ class Client
      * @var Collection<int, CourtOrder>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrder>')]
-    #[ORM\OneToMany(mappedBy: 'client', targetEntity: CourtOrder::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: CourtOrder::class, mappedBy: 'client', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $courtOrders;
 
@@ -177,7 +165,6 @@ class Client
         $this->users = new ArrayCollection();
         $this->reports = new ArrayCollection();
         $this->notes = new ArrayCollection();
-        $this->clientContacts = new ArrayCollection();
         $this->courtOrders = new ArrayCollection();
     }
 
@@ -544,24 +531,6 @@ class Client
     }
 
     /**
-     * @return Collection<int, ClientContact>
-     */
-    public function getClientContacts(): Collection
-    {
-        return $this->clientContacts;
-    }
-
-    /**
-     * @param Collection<int, ClientContact> $clientContacts
-     */
-    public function setClientContacts(Collection $clientContacts): static
-    {
-        $this->clientContacts = $clientContacts;
-
-        return $this;
-    }
-
-    /**
      * Regular expression to match a case number.
      */
     public static function isValidCaseNumber(string $query): bool
@@ -616,21 +585,19 @@ class Client
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\SerializedName('expected_report_start_date')]
     #[JMS\Groups(['checklist-information'])]
-    public function getExpectedReportStartDate($year = null): ?\DateTime
+    public function getExpectedReportStartDate(?int $year = null): ?\DateTime
     {
         if (is_null($this->getCourtDate())) {
             return null;
         }
 
         // Default year to current
-        if (!isset($year)) {
-            $year = date('Y');
-        }
+        $year ??= (int)date('Y');
 
         $expectedReportStartDate = clone $this->getCourtDate();
 
         // if court Date is this year, just return it as the start date
-        if ($expectedReportStartDate->format('Y') == $year) {
+        if ((int)$expectedReportStartDate->format('Y') === $year) {
             return $this->getCourtDate();
         }
 
@@ -647,7 +614,7 @@ class Client
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\SerializedName('expected_report_end_date')]
     #[JMS\Groups(['checklist-information'])]
-    public function getExpectedReportEndDate($year = null): ?\DateTime
+    public function getExpectedReportEndDate(?int $year = null): ?\DateTime
     {
         if (!($this->getExpectedReportStartDate($year) instanceof \DateTime)) {
             return null;
@@ -711,6 +678,14 @@ class Client
 
     public function getOrganisation(): ?Organisation
     {
+        if ($this->organisation === null) {
+            foreach ($this->getActiveCourtOrders() as $courtOrder) {
+                $organisation = $courtOrder->getOrganisation();
+                if ($organisation !== null) {
+                    return $organisation;
+                }
+            }
+        }
         return $this->organisation;
     }
 
@@ -740,6 +715,14 @@ class Client
     }
 
     /**
+     * @return Collection<int, CourtOrder>
+     */
+    public function getActiveCourtOrders(): Collection
+    {
+        return $this->courtOrders->filter(fn (CourtOrder $courtOrder) => $courtOrder->isActive());
+    }
+
+    /**
      * @param Collection<int, CourtOrder> $courtOrders
      */
     public function setCourtOrders(Collection $courtOrders): static
@@ -752,5 +735,11 @@ class Client
     public function filterReports(int ...$reportIds): void
     {
         $this->reports = $this->reports->filter(fn (Report $report) => in_array($report->getId(), $reportIds));
+    }
+
+    public function addCourtOrder(CourtOrder $courtOrder): static
+    {
+        $this->courtOrders->add($courtOrder);
+        return $this;
     }
 }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProcessing;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
-use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipCandidatesConverter;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
@@ -112,14 +112,14 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
         $client->setCaseNumber($caseNumber);
         self::$entityManager->persist($client);
 
-        $courtOrder = new CourtOrder();
-        $courtOrder->setCourtOrderUid($orderUid);
-        $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setClient($client);
-        $courtOrder->setOrderType(CourtOrderType::PFA);
-        $courtOrder->setOrderMadeDate(new \DateTime());
-        $courtOrder->setOrderKind(CourtOrderKind::Single);
-        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
+        $courtOrder = new CourtOrder(
+            $orderUid,
+            CourtOrderType::PFA,
+            CourtOrderReportType::OPG102,
+            CourtOrderKind::Single,
+            new \DateTime(),
+            $client
+        );
         self::$entityManager->persist($courtOrder);
 
         $deputy = new Deputy(

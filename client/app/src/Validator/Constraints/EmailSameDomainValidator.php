@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Validator\Constraints;
 
 use OPG\Digideps\Frontend\Form\Traits\HasTranslatorTrait;
@@ -20,21 +22,21 @@ class EmailSameDomainValidator extends ConstraintValidator
         $creatorEmail = $this->getLoggedUserEmail();
 
         $creatorDomain = $this->getDomain($creatorEmail);
-        $targetDomain = $this->getDomain($value);
 
-        if (!empty($targetDomain) && $targetDomain !== $creatorDomain) {
+        /** @var string $targetValue */
+        $targetValue = $value;
+
+        $targetDomain = $this->getDomain($targetValue);
+
+        if (!empty($targetDomain) && $targetDomain !== $creatorDomain && property_exists($constraint, 'message')) {
             $this->context->buildViolation($constraint->message, ['creatorDomain' => $creatorDomain])->atPath('email')->addViolation();
         }
     }
 
     /**
-     * Return domain portion of email address.
-     *
-     * @param $email string
-     *
-     * @return string
+     * Return domain portion of email address
      */
-    private function getDomain($email)
+    private function getDomain(string $email): string
     {
         return substr(strrchr($email, '@'), 1);
     }

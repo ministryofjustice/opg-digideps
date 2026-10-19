@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Factory;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Factory\ClientIdFixDataFactory;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use Tests\OPG\Digideps\Backend\Integration\Fixtures;
@@ -67,8 +67,7 @@ class ClientIdFixDataFactoryIntegrationTest extends ApiIntegrationTestCase
         $courtOrder->setClient($oldClient);
 
         // report also associated with old inactive client
-        $report = self::$fixtures->createReport($oldClient);
-        $courtOrder->addReport($report);
+        $report = self::$fixtures->createReport($courtOrder);
 
         self::$entityManager->persist($report);
         self::$entityManager->persist($courtOrder);
@@ -128,7 +127,7 @@ class ClientIdFixDataFactoryIntegrationTest extends ApiIntegrationTestCase
         $courtOrder->setClient($oldClient);
 
         // report also associated with old inactive client
-        $report = self::$fixtures->createReport($oldClient);
+        $report = self::$fixtures->createReport($courtOrder);
         $courtOrder->addReport($report);
 
         self::$entityManager->persist($report);

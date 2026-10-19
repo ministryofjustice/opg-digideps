@@ -75,13 +75,7 @@ class ReportSubmission
 
     public function hasReportPdf(): bool
     {
-        foreach ($this->documents as $document) {
-            if ($document->isReportPdf()) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->documents, fn ($document) => $document->isReportPdf());
     }
 
     public function getArchivedBy(): ?User
