@@ -2,9 +2,11 @@
 
 namespace OPG\Digideps\Frontend\Service;
 
+use OPG\Digideps\Frontend\Components\OPG\Review\Section;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Frontend\Exception\ReportSubmissionDocumentsNotDownloadableException;
+use OPG\Digideps\Frontend\Report\ReportSectionService;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Service\Csv\TransactionsCsvGenerator;
 use OPG\Digideps\Frontend\Service\File\S3FileUploader;
@@ -28,7 +30,8 @@ class ReportSubmissionService
         private readonly S3FileUploader $fileUploader,
         private readonly RestClient $restClient,
         private readonly LoggerInterface $logger,
-        private readonly HtmlToPdfGenerator $htmltopdf
+        private readonly HtmlToPdfGenerator $htmltopdf,
+        private readonly ReportSectionService $reportSectionService,
     ) {
     }
 
@@ -83,8 +86,14 @@ class ReportSubmissionService
      */
     public function getPdfHtml(Report $report): string|false
     {
-        return $this->templating->render('@App/Report/Formatted/formatted_standalone_preview.html.twig', [
+        $sections = [];
+        foreach ($this->reportSectionService->getReportMetadata($report)->sections->getIterator() as $section) {
+            $sections[] = new Section($report, $section);
+        }
+
+        return $this->templating->render('@App/Report/Rendered/standalone.html.twig', [
             'report' => $report,
+            'sections' => $sections,
             'showSummary' => true,
         ]);
     }
@@ -92,10 +101,16 @@ class ReportSubmissionService
     /**
      * Generate the HTML of the report and convert to PDF.
      */
-    public function getPdfBinaryContent(Report $report, bool $showSummary = false, bool $devPreview = false): string|false
+    public function getPdfBinaryContent(Report $report, bool $showSummary = false): string|false
     {
-        $html = $this->templating->render($devPreview ? '@App/Report/Rendered/standalone.html.twig' : '@App/Report/Formatted/formatted_standalone.html.twig', [
+        $sections = [];
+        foreach ($this->reportSectionService->getReportMetadata($report)->sections->getIterator() as $section) {
+            $sections[] = new Section($report, $section);
+        }
+
+        $html = $this->templating->render('@App/Report/Rendered/standalone.html.twig', [
             'report' => $report,
+            'sections' => $sections,
             'showSummary' => $showSummary,
         ]);
 
@@ -155,7 +170,7 @@ class ReportSubmissionService
     /**
      * @throws ReportSubmissionDocumentsNotDownloadableException
      */
-    public function assertReportSubmissionIsDownloadable(ReportSubmission $reportSubmission)
+    public function assertReportSubmissionIsDownloadable(ReportSubmission $reportSubmission): void
     {
         if ($reportSubmission->isDownloadable() !== true) {
             throw new ReportSubmissionDocumentsNotDownloadableException(self::MSG_NOT_DOWNLOADABLE);
