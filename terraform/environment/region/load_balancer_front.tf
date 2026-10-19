@@ -48,21 +48,32 @@ resource "aws_lb_listener_certificate" "front_loadbalancer_cdr_certificate" {
 
 resource "aws_lb_listener_rule" "front_maintenance" {
   listener_arn = aws_lb_listener.front_https.arn
-
+  priority     = 101 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
   action {
-    type = "fixed-response"
+    type = "redirect"
 
-    fixed_response {
-      content_type = "text/html"
-      message_body = file("${path.module}/maintenance/maintenance.html")
-      status_code  = "503"
+    redirect {
+      host        = "maintenance.opg.service.justice.gov.uk"
+      path        = "/en-gb/complete-the-deputy-report"
+      query       = ""
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_302"
     }
   }
 
   condition {
     path_pattern {
-      values = ["/dd-maintenance"]
+      values = ["/maintenance"]
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to the condition as this is modified by a script
+      # when putting the service into maintenance mode.
+      condition,
+    ]
   }
 }
 
