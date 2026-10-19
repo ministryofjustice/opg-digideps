@@ -82,3 +82,6 @@ api/cachegrind/*/cachegrind*
 #Zap
 zap/ModernReport/
 /.php-cs-fixer.php
+
+# Playwright
+/playwright/test-results/

@@ -18,8 +18,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent]
 final class MoneyOut
 {
-    private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
-
     public ?SummaryList $list = null;
     /**
      * @var array<Table>
@@ -99,11 +97,11 @@ final class MoneyOut
                 $this->translate('form.category.entries.' . $categoryText . '.label'),
                 is_string($entry->getDescription()) ? $entry->getDescription() : $this->text['notEntered'],
                 $bankAccountText,
-                new Cell($this->formatMoney((float)($entry->getAmount() ?? 0)), self::NUMERIC_FORMAT)
+                new Cell($this->formatMoney((float)($entry->getAmount() ?? 0)), Cell::NUMERIC_FORMAT)
             );
             $subtotal += (float)($entry->getAmount() ?? 0.0);
         }
-        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), '', '', new Cell($this->formatMoney($subtotal), self::NUMERIC_FORMAT, isBold: true));
+        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), '', '', new Cell($this->formatMoney($subtotal), Cell::NUMERIC_FORMAT, isBold: true));
 
         return $builder->makeTable();
     }
@@ -112,7 +110,7 @@ final class MoneyOut
     {
         return new TableBuilder(true)
             ->addColumns(1, 1, 1, 1)
-            ->addRow(new Cell($this->text['totalMoneyOutAmount'], colspan: 3), new Cell($this->formatMoney($report->getMoneyOutTotal()), self::NUMERIC_FORMAT, isBold: true))
+            ->addRow(new Cell($this->text['totalMoneyOutAmount'], colspan: 3), new Cell($this->formatMoney($report->getMoneyOutTotal()), Cell::NUMERIC_FORMAT, isBold: true))
             ->makeTable();
     }
 
