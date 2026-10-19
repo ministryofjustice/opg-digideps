@@ -1,7 +1,7 @@
 locals {
-  aurora_unusual_read_throughput_minimum  = 10000000
-  aurora_unusual_network_transmit_minimum = 10000000
-  aurora_unusual_read_iops_minimum        = 1500
+  aurora_unusual_read_throughput_minimum  = 1000000
+  aurora_unusual_network_transmit_minimum = 1000000
+  aurora_unusual_read_iops_minimum        = 300
 }
 
 resource "aws_cloudwatch_metric_alarm" "aurora_high_cpu" {
