@@ -13,31 +13,28 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Act on session on each request.
  */
 class ResponseNoCacheListenerTest extends TestCase
 {
-    private const array EXPECTED_SET_CALLS = [
-        1 => ['Cache-Control', 'no-cache, no-store, must-revalidate'],
-        2 => ['Pragma', 'no-cache'],
-        3 => ['Expires', '0'],
-        4 => ['X-Session-Safe-Id', 'abc123'],
-    ];
-
     public function testOnKernelResponseSetsNoCacheHeadersAndSessionSafeId(): void
     {
         $headers = self::createMock(ResponseHeaderBag::class);
 
-        $invocationMatcher = self::exactly(count(self::EXPECTED_SET_CALLS));
-        $headers->expects($invocationMatcher)
+        /** @var array<string, mixed> $actualSetCalls */
+        $actualSetCalls = [];
+
+        $headers->expects(self::exactly(5))
             ->method('set')
-            ->willReturnCallback(function ($name, $value) use ($invocationMatcher) {
-                $invocation = $invocationMatcher->getInvocationCount();
-                self::assertEquals(self::EXPECTED_SET_CALLS[$invocation][0], $name);
-                self::assertEquals(self::EXPECTED_SET_CALLS[$invocation][1], $value);
-            });
+            ->willReturnCallback(
+                function (string $name, mixed $value) use (&$actualSetCalls): void {
+                    $actualSetCalls[$name] = $value;
+                }
+            );
 
         $response = self::createMock(Response::class);
         $response->headers = $headers;
@@ -47,6 +44,7 @@ class ResponseNoCacheListenerTest extends TestCase
             ->method('has')
             ->with('session_safe_id')
             ->willReturn(true);
+
         $session->expects(self::once())
             ->method('get')
             ->with('session_safe_id')
@@ -57,6 +55,11 @@ class ResponseNoCacheListenerTest extends TestCase
             ->method('getSession')
             ->willReturn($session);
 
+        $security = self::createMock(Security::class);
+        $security->expects(self::once())
+            ->method('getUser')
+            ->willReturn(self::createMock(UserInterface::class));
+
         $kernel = self::createMock(KernelInterface::class);
 
         $event = new ResponseEvent(
@@ -66,26 +69,35 @@ class ResponseNoCacheListenerTest extends TestCase
             $response
         );
 
-        $object = new ResponseNoCacheListener();
-        $object->onKernelResponse($event);
+        $listener = new ResponseNoCacheListener($security);
+        $listener->onKernelResponse($event);
+
+        self::assertEqualsCanonicalizing(
+            [
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+                'X-Authenticated' => '1',
+                'X-Session-Safe-Id' => 'abc123',
+            ],
+            $actualSetCalls
+        );
     }
 
     public function testOnKernelResponseWithoutSessionSafeIdDoesNotSetHeader(): void
     {
         $headers = self::createMock(ResponseHeaderBag::class);
 
-        // we only expect three headers to be set, not X-Session-Safe-Id
-        $invocationMatcher = self::exactly(count(self::EXPECTED_SET_CALLS) - 1);
-        $headers->expects($invocationMatcher)
+        /** @var array<string, mixed> $actualSetCalls */
+        $actualSetCalls = [];
+
+        $headers->expects(self::exactly(4))
             ->method('set')
-            ->willReturnCallback(function ($name, $value) use ($invocationMatcher) {
-                $invocation = $invocationMatcher->getInvocationCount();
-
-                self::assertNotEquals('X-Session-Safe-Id', $name, 'X-Session-Safe-Id should never be set');
-
-                self::assertEquals(self::EXPECTED_SET_CALLS[$invocation][0], $name);
-                self::assertEquals(self::EXPECTED_SET_CALLS[$invocation][1], $value);
-            });
+            ->willReturnCallback(
+                function (string $name, mixed $value) use (&$actualSetCalls): void {
+                    $actualSetCalls[$name] = $value;
+                }
+            );
 
         $response = self::createMock(Response::class);
         $response->headers = $headers;
@@ -101,6 +113,11 @@ class ResponseNoCacheListenerTest extends TestCase
             ->method('getSession')
             ->willReturn($session);
 
+        $security = self::createMock(Security::class);
+        $security->expects(self::once())
+            ->method('getUser')
+            ->willReturn(null);
+
         $kernel = self::createMock(KernelInterface::class);
 
         $event = new ResponseEvent(
@@ -110,7 +127,22 @@ class ResponseNoCacheListenerTest extends TestCase
             $response
         );
 
-        $object = new ResponseNoCacheListener();
-        $object->onKernelResponse($event);
+        $listener = new ResponseNoCacheListener($security);
+        $listener->onKernelResponse($event);
+
+        self::assertEqualsCanonicalizing(
+            [
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+                'X-Authenticated' => '0',
+            ],
+            $actualSetCalls
+        );
+
+        self::assertArrayNotHasKey(
+            'X-Session-Safe-Id',
+            $actualSetCalls
+        );
     }
 }
