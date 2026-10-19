@@ -96,7 +96,7 @@ class ImportOrganisationDataFactoryTest extends ApiIntegrationTestCase
         foreach ($all as $organisation) {
             match ($organisation->getName()) {
                 'Organisation 1' => $this->assertSame('pro1.com', $organisation->getEmailIdentifier()),
-                'Hello World' => $this->assertSame('pro2.com', $organisation->getEmailIdentifier()),
+                'Organisation 2' => $this->assertSame('pro2.com', $organisation->getEmailIdentifier()),
                 'Organisation 3' => $this->assertSame('pa1.com', $organisation->getEmailIdentifier()),
                 'Organisation 4' => $this->assertSame('xyz@gmail.com', $organisation->getEmailIdentifier()),
                 'Organisation 5' => $this->assertSame('xyz@hotmail.com', $organisation->getEmailIdentifier()),
