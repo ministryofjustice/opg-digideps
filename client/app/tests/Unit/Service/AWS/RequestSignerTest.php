@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\AWS;
 
+use Aws\Credentials\Credentials;
+use GuzzleHttp\Psr7\Request;
 use OPG\Digideps\Frontend\Service\AWS\DefaultCredentialProvider;
 use OPG\Digideps\Frontend\Service\AWS\RequestSigner;
 use OPG\Digideps\Frontend\Service\AWS\SignatureV4Signer;
-use Aws\Credentials\Credentials;
-use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
 
 class RequestSignerTest extends TestCase
@@ -33,28 +33,27 @@ class RequestSignerTest extends TestCase
             ->onlyMethods(['getCredentials'])
             ->getMock();
 
-        $provider->expects($this->once())
+        $provider->expects(self::once())
             ->method('getCredentials')
             ->willReturn($expectedCredentials);
 
-        $signer = $this->createMock(SignatureV4Signer::class);
-        $signer->expects($this->once())
+        $signer = self::createMock(SignatureV4Signer::class);
+        $signer->expects(self::once())
             ->method('signRequest')
             ->with(
-                $this->equalTo($originalRequest),
-                $this->callback(function ($actualCredentials) use ($expectedCredentials) {
+                self::equalTo($originalRequest),
+                self::callback(function ($actualCredentials) use ($expectedCredentials) {
                     return $actualCredentials instanceof Credentials
                         && $actualCredentials->getAccessKeyId() === $expectedCredentials->getAccessKeyId()
                         && $actualCredentials->getSecretKey() === $expectedCredentials->getSecretKey()
                         && $actualCredentials->getSecurityToken() === $expectedCredentials->getSecurityToken();
                 }),
-                $this->equalTo($service)
+                self::equalTo($service)
             )
             ->willReturn($signedRequest);
 
-        $sut = new RequestSigner($provider, $signer);
-        $result = $sut->signRequest($originalRequest, $service);
+        $result = new RequestSigner($provider, $signer)->signRequest($originalRequest, $service);
 
-        $this->assertEquals($signedRequest, $result);
+        self::assertEquals($signedRequest, $result);
     }
 }

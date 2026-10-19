@@ -5,23 +5,14 @@ on:
     # 18.30pm on Friday
     - cron: "30 18 * * 5"
 
-permissions:
-  id-token: write
-  contents: read
-  security-events: none
-  pull-requests: none
-  actions: none
-  checks: none
-  deployments: none
-  issues: none
-  packages: none
-  repository-projects: none
-  statuses: none
+permissions: {}
 
 jobs:
   reset_database:
     name: reset training database
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
+    permissions:
+      id-token: write
     with:
       workspace: training
       account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
@@ -33,10 +24,12 @@ jobs:
 
   slack_notify_failure:
     name: notify of failure
-    uses: ./.github/workflows/_slack-notification.yml
+    uses: $/.github/workflows/_slack-notification.yml
     if: ${{ failure() }}
     needs:
       - reset_database
+    permissions:
+      id-token: write
     with:
       success: no
       branch: main

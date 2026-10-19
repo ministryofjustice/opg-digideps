@@ -42,5 +42,6 @@
         <ini name="memory_limit" value="1024M"/>
         <env name="KERNEL_CLASS" value="OPG\Digideps\Frontend\Kernel"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
+        <env name="APP_ENV" value="test"/>
     </php>
 </phpunit>

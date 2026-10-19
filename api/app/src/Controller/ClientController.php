@@ -83,7 +83,7 @@ class ClientController extends RestController
 
         if ($user && $user->isLayDeputy()) {
             // We come to this route from either editing or creating a client
-            if (null !== $data['court_date']) {
+            if ($data['court_date'] !== null) {
                 $client->setCourtDate(new \DateTime($data['court_date']));
             }
             $this->hydrateEntityWithArrayData($client, $data, [

@@ -10,36 +10,37 @@
     {% set linkToSubSection = path(subSection, {reportId: report.id}) %}
 {% endif %}
 
-<div href="{{ linkToSubSection }}" class="opg-overview-section {{ sectionNeedsAttention ? ('behat-region-section-' ~ sectionId ~ '-needs-attention opg-overview-section--error') : '' }}">
+<div href="{{ linkToSubSection }}" class="opg-overview-section {{ sectionNeedsAttention ? ('behat-region-section-' ~ sectionId ~ '-needs-attention opg-overview-section--error') : '' }}"
+data-role="report-overview-subsection">
     <div class="opg-overview-section__header">
         <h3 class="govuk-heading-m opg-overview-section__label">
-            <a href="{{ linkToSubSection }}" class="opg-overview-section__label-link">
+            <a href="{{ linkToSubSection }}" class="opg-overview-section__label-link" data-role="report-overview-subsection-name">
                 {{ (subSection ~ '.subSectionTitle') | trans }}
             </a>
         </h3>
 
-        {%  if description | default(false) %}
-            <div class="opg-overview-section__description">
-                {% if descriptionLeft | default(false)  %}
+        <div class="opg-overview-section__description">
+            {% if description | default(false) %}
+                {% if descriptionLeft | default(false) %}
                     {{ descriptionLeft }}{{ report.client.firstname | striptags }}{{ descriptionRight }}
                 {% else %}
                     {{ (subSection ~ '.subSectionDescription') | trans(transOptions) }}
                 {% endif %}
-            </div>
-        {%  endif %}
-        {%  if descriptionLink | default(false) %}
-            <div class="opg-overview-section__description">
-                <a href="{{ linkToSubSection }}#cantFindTheProblem">{{ (subSection ~ '.subSectionDescription.' ~ descriptionLinkAction ~ 'Explanation') | trans(transOptions) }}</a>
-            </div>
-        {% endif %}
+            {% elseif descriptionLink | default(false) %}
+                <a href="{{ linkToSubSection }}#cantFindTheProblem">
+                    {{ (subSection ~ '.subSectionDescription.' ~ descriptionLinkAction ~ 'Explanation') | trans(transOptions) }}
+                </a>
+            {% endif %}
+        </div>
+
     </div>
 
     {% if sectionNeedsAttention %}
-        <span class="opg-overview-section__status govuk-tag {{ 'needs-attention' | status_to_tag_css }} behat-region-{{ subSection }}-state-{{ state.state }}">
+        <span data-role="report-overview-subsection-status" class="opg-overview-section__status govuk-tag {{ 'needs-attention' | status_to_tag_css }} behat-region-{{ subSection }}-state-{{ state.state }}">
             {{ 'labels.needs-attention' |  trans }}
         </span>
     {% else %}
-        <span class="opg-overview-section__status govuk-!-padding-right-2 govuk-!-padding-left-2 govuk-!-padding-bottom-1 {{ state.state | status_to_tag_css }} behat-region-{{ subSection }}-state-{{ state.state }}">
+        <span data-role="report-overview-subsection-status" class="opg-overview-section__status govuk-!-padding-right-2 govuk-!-padding-left-2 govuk-!-padding-bottom-1 {{ state.state | status_to_tag_css }} behat-region-{{ subSection }}-state-{{ state.state }}">
             {% if state.state == 'done' or customiseAllLabels | default(false) %}
                 {{ (subSection ~ '.label.' ~ state.state) | trans({'%count%': state.nOfRecords}) }}
             {% elseif state.state == 'low-assets-done' %}

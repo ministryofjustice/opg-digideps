@@ -112,3 +112,13 @@ variable "replication_within_account" {
   type        = bool
   default     = false
 }
+
+variable "s3_vpc_endpoint_id" {
+  description = "ID of the S3 VPC endpoint allowed to access the bucket"
+  type        = string
+}
+
+variable "allowed_principal_arns" {
+  description = "Principal ARNs allowed to access the bucket without using the S3 VPC endpoint"
+  type        = list(string)
+}

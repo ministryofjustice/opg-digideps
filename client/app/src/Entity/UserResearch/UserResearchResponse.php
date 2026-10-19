@@ -6,7 +6,6 @@ namespace OPG\Digideps\Frontend\Entity\UserResearch;
 
 use OPG\Digideps\Frontend\Entity\Report\Satisfaction;
 use OPG\Digideps\Frontend\Entity\User;
-use DateTime;
 use JMS\Serializer\Annotation as JMS;
 
 class UserResearchResponse
@@ -16,39 +15,25 @@ class UserResearchResponse
     public const string SIX_TO_TEN = 'sixToTen';
     public const string OVER_TEN = 'overTen';
 
-    /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\UserResearch\ResearchType")
-     */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\UserResearch\ResearchType')]
     private $researchType;
 
-    /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
-     */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
     private User $user;
 
-    /**
-     * @JMS\Type("int")
-     */
+    #[JMS\Type('int')]
     private int $id;
 
-    /**
-     * @JMS\Type("string")
-     */
+    #[JMS\Type('string')]
     private string $deputyshipLength;
 
-    /**
-     * @JMS\Type("boolean")
-     */
+    #[JMS\Type('boolean')]
     private bool $hasAccessToVideoCallDevice;
 
-    /**
-     * @JMS\Type("DateTime")
-     */
+    #[JMS\Type('DateTime')]
     private $created;
 
-    /**
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Satisfaction")
-     */
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Satisfaction')]
     private $satisfaction;
 
     public function getDeputyshipLength(): string
@@ -56,7 +41,7 @@ class UserResearchResponse
         return $this->deputyshipLength;
     }
 
-    public function setDeputyshipLength(string $deputyshipLength): UserResearchResponse
+    public function setDeputyshipLength(string $deputyshipLength): static
     {
         $this->deputyshipLength = $deputyshipLength;
 
@@ -68,7 +53,7 @@ class UserResearchResponse
         return $this->hasAccessToVideoCallDevice;
     }
 
-    public function setHasAccessToVideoCallDevice(bool $hasAccessToVideoCallDevice): UserResearchResponse
+    public function setHasAccessToVideoCallDevice(bool $hasAccessToVideoCallDevice): static
     {
         $this->hasAccessToVideoCallDevice = $hasAccessToVideoCallDevice;
 
@@ -80,7 +65,7 @@ class UserResearchResponse
         return $this->id;
     }
 
-    public function setId(int $id): UserResearchResponse
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -92,7 +77,7 @@ class UserResearchResponse
         return $this->user;
     }
 
-    public function setUser(?User $user): UserResearchResponse
+    public function setUser(?User $user): static
     {
         $this->user = $user;
 
@@ -104,7 +89,7 @@ class UserResearchResponse
         return $this->created;
     }
 
-    public function setCreated(?\DateTime $created): UserResearchResponse
+    public function setCreated(?\DateTime $created): static
     {
         $this->created = $created;
 
@@ -116,7 +101,7 @@ class UserResearchResponse
         return $this->researchType;
     }
 
-    public function setResearchType(ResearchType $researchType): UserResearchResponse
+    public function setResearchType(ResearchType $researchType): static
     {
         $this->researchType = $researchType;
 
@@ -128,7 +113,7 @@ class UserResearchResponse
         return $this->satisfaction;
     }
 
-    public function setSatisfaction(Satisfaction $satisfaction): UserResearchResponse
+    public function setSatisfaction(Satisfaction $satisfaction): static
     {
         $this->satisfaction = $satisfaction;
 

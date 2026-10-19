@@ -4,81 +4,52 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service\JWT;
 
+use Jose\Component\Core\AlgorithmManager;
 use Jose\Component\Core\JWKSet;
-use Jose\Component\Core\Util\RSAKey;
-use Lcobucci\JWT\Encoding\JoseEncoder;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Token;
-use Lcobucci\JWT\Token\Parser;
-use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use Lcobucci\JWT\Validation\Validator;
+use Jose\Component\Signature\Algorithm\RS256;
+use Jose\Component\Signature\JWSVerifier;
+use Jose\Component\Signature\Serializer\CompactSerializer;
+use Jose\Component\Signature\Serializer\JWSSerializerManager;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class JWTService
 {
-    public function getJWTHeaders(string $jwt): mixed
-    {
-        $token = new Parser(new JoseEncoder())->parse($jwt);
+    private JWSVerifier $jwsVerifier;
+    private JWSSerializerManager $serializerManager;
 
-        return $token->headers()->all();
+    public function __construct(
+        private readonly HttpClientInterface $openInternetClient,
+    ) {
+        $this->jwsVerifier = new JWSVerifier(new AlgorithmManager([new RS256()]));
+        $this->serializerManager = new JWSSerializerManager([new CompactSerializer()]);
     }
 
-    public function getJWTClaims(string $jwt): mixed
+    public function getUrn(string $jwt): ?string
     {
-        $token = new Parser(new JoseEncoder())->parse($jwt);
+        $jws = $this->serializerManager->unserialize($jwt);
 
-        return $token->claims()->all();
-    }
+        /** @var array<string, string> $protectedHeader */
+        $protectedHeader = $jws->getSignature(0)->getProtectedHeader();
 
-    public function getJWTSignature(string $jwt): string|null
-    {
-        $token = new Parser(new JoseEncoder())->parse($jwt);
+        // Get public key from API
+        $jwkResponse = $this->openInternetClient->request('GET', $protectedHeader['jku']);
 
-        return $token->signature()->hash();
-    }
+        /** @var array $jwks */
+        $jwks = json_decode($jwkResponse->getContent(), true);
 
-    public function decodeAndVerifyWithJWK(string $jwt, array $jwks): Token
-    {
-        $publicKey = $this->getPublicKeyByJWK($jwt, $jwks);
+        $jwk = JWKSet::createFromKeyData($jwks)->get($protectedHeader['kid']);
 
-        $token = new Parser(new JoseEncoder())->parse($jwt);
+        $isVerified = $this->jwsVerifier->verifyWithKey($jws, $jwk, 0);
 
-        $validator = new Validator();
-
-        $validator->assert(
-            $token,
-            new SignedWith(
-                new Sha256(),
-                InMemory::plainText($publicKey)
-            )
-        );
-
-        return $token;
-    }
-
-    public static function base64EncodeJWT(array $headers, array $claims, ?array $signature = null)
-    {
-        $headers = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(json_encode($headers)));
-        $claims = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(json_encode($claims)));
-
-        $jwt = sprintf('%s.%s', $headers, $claims);
-
-        if (isset($signature)) {
-            $signature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(json_encode($signature)));
-            $jwt = sprintf('%s.%s', $jwt, $signature);
+        if (!$isVerified) {
+            throw new \DomainException('Invalid JWS');
         }
 
-        return $jwt;
-    }
+        $jwsPayload = $jws->getPayload();
 
-    public function getPublicKeyByJWK(string $jwt, array $jwks)
-    {
-        $headers = $this->getJWTHeaders($jwt);
-        // @TODO rewrite using lcobucci/jwt when https://github.com/lcobucci/jwt/issues/32 is resolved
-        $set = JWKSet::createFromKeyData($jwks);
+        /** @var array<string, ?string> $payloadArray */
+        $payloadArray = is_string($jwsPayload) ? (json_decode($jwsPayload, true) ?? []) : $jwsPayload;
 
-        $jwk = $set->get($headers['kid']); // Same as $json['keys'][0]['kid']
-
-        return RSAKey::createFromJWK($jwk)->toPEM();
+        return $payloadArray['sub'] ?? null;
     }
 }

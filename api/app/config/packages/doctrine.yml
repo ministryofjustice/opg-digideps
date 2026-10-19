@@ -11,7 +11,7 @@ doctrine:
                 password: "%database_password%"
                 sslmode: "%database_ssl_mode%"
                 sslrootcert: "%kernel.project_dir%/certs/eu-west-1-bundle.pem"
-                server_version: 16.13
+                server_version: 16.15
                 wrapper_class: OPG\Digideps\Backend\DBAL\ConnectionWrapper
                 charset: UTF8
             ingestwriter:
@@ -23,7 +23,7 @@ doctrine:
                 password: "%database_password%"
                 sslmode: "%database_ssl_mode%"
                 sslrootcert: "%kernel.project_dir%/certs/eu-west-1-bundle.pem"
-                server_version: 16.13
+                server_version: 16.15
                 wrapper_class: OPG\Digideps\Backend\DBAL\ConnectionWrapper
                 charset: UTF8
         types:
@@ -33,6 +33,8 @@ doctrine:
         default_entity_manager: default
         auto_generate_proxy_classes: "%kernel.debug%"
         proxy_dir: "%kernel.cache_dir%/doctrine/orm/Proxies"
+        enable_native_lazy_objects: true
+        enable_lazy_ghost_objects: true
         entity_managers:
             default:
                 connection: default

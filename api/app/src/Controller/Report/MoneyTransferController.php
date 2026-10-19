@@ -35,8 +35,7 @@ class MoneyTransferController extends RestController
            'amount' => 'mustExist',
         ]);
 
-        $transfer = new MoneyTransfer();
-        $transfer->setReport($report);
+        $transfer = new MoneyTransfer($report);
 
         if (array_key_exists('description', $data)) {
             $transfer->setDescription($data['description']);

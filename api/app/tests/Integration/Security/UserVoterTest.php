@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Security;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Fixture\FixtureService;
+use OPG\Digideps\Backend\Fixture\Scenario;
 use OPG\Digideps\Backend\Security\UserVoter;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
-use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -27,22 +29,19 @@ class UserVoterTest extends KernelTestCase
     {
         $userTestHelper = UserTestHelper::create();
         $clientTestHelp = ClientTestHelper::create();
-        $reportTestHelper = ReportTestHelper::create();
 
         self::bootKernel();
         $em = static::getContainer()->get('em');
+        /**
+         * @var FixtureService $fixtureService
+         */
+        $fixtureService = static::getContainer()->get(FixtureService::class);
 
         $layNoReportsOrClients = $userTestHelper->createAndPersistUser($em);
 
         $layNoReportsOneClient = $userTestHelper->createAndPersistUser($em, $clientTestHelp->generateClient($em));
 
-        $client = $clientTestHelp->generateClient($em);
-        $report = $reportTestHelper->generateReport($em, $client);
-        $em->persist($client);
-        $em->persist($report);
-        $em->flush();
-
-        $layReportOneClient = $userTestHelper->createAndPersistUser($em, $client);
+        ['persons' => ['users' => ['lay1' => $layReportOneClient]]] = $fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
         $admin = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN);
         $admin2 = $userTestHelper->createAndPersistUser($em, null, User::ROLE_ADMIN);
@@ -247,8 +246,8 @@ class UserVoterTest extends KernelTestCase
     }
 
     /**
-     * @dataProvider deleteUserProvider
      */
+    #[DataProvider('deleteUserProvider')]
     public function testDetermineDeletePermission(User $deletor, User $deletee, int $expectedPermission): void
     {
         $token = new UsernamePasswordToken($deletor, 'private-firewall');
@@ -462,8 +461,8 @@ class UserVoterTest extends KernelTestCase
     }
 
     /**
-     * @dataProvider addEditUserProvider
      */
+    #[DataProvider('addEditUserProvider')]
     public function testDetermineAddEditPermission(User $editor, User $editee, int $expectedPermission): void
     {
         $sut = new UserVoter();

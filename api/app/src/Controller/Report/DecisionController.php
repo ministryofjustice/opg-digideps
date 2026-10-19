@@ -42,8 +42,7 @@ class DecisionController extends RestController
             ]);
             $report = $this->findEntityBy(Report::class, $data['report_id'], 'Report not found');
             $this->denyAccessIfReportDoesNotBelongToUser($report);
-            $decision = new Decision();
-            $decision->setReport($report);
+            $decision = new Decision($report);
 
             $this->em->persist($report);
             $this->em->flush();

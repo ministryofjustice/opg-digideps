@@ -1,0 +1,4 @@
+form:
+  caseNumber.label: Case numbers (comma separated) to to plan changes for.
+  allowNotContinuous.label: Allow cleanup despite overlapping reports.
+  notDryRun.label: Danger. If this is ticked all planned changes will be made.

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Validator\Constraints;
 
 use OPG\Digideps\Frontend\Service\Client\RestClient;
@@ -11,15 +13,9 @@ use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 class DUserPasswordValidator extends UserPasswordValidator
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
+    private RestClient $restClient;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private TokenStorageInterface $tokenStorage;
 
     public function __construct(TokenStorageInterface $tokenStorage, RestClient $restClient)
     {
@@ -42,10 +38,12 @@ class DUserPasswordValidator extends UserPasswordValidator
         }
     }
 
-    private function isOldPasswordValid($user, $password)
+    private function isOldPasswordValid($user, $password): bool
     {
-        return $this->restClient->post('user/' . $user->getId() . '/is-password-correct', [
+        $result = $this->restClient->post('user/' . $user->getId() . '/is-password-correct', [
             'password' => $password,
         ]);
+
+        return $result === true || $result === 'true';
     }
 }

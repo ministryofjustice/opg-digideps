@@ -7,26 +7,24 @@ namespace Tests\OPG\Digideps\Frontend\Unit\Entity\Report;
 use OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck;
 use OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf;
 use OPG\Digideps\Frontend\TestHelpers\ReportHelpers;
-use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 
 class ClientBenefitsCheckTest extends TestCase
 {
     /**
-     * @test
-     *
      * @dataProvider invalidDataProvider
+     * @param array<MoneyReceivedOnClientsBehalf>|null $moneyTypes
      */
-    public function validation(
+    public function testValidation(
         ?string $whenLastChecked,
         ?\DateTime $dateLastChecked,
         ?string $neverCheckedExplanation,
         ?string $doOthersReceiveMoney,
         ?string $moneyExplanation,
-        ?ArrayCollection $moneyTypes,
+        ?array $moneyTypes,
         int $expectedValidationErrorsCount
-    ) {
+    ): void {
         $report = ReportHelpers::createReport();
 
         $sut = new ClientBenefitsCheck()
@@ -39,22 +37,20 @@ class ClientBenefitsCheckTest extends TestCase
             ->setReport($report);
 
         $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping(true)
-            ->addDefaultDoctrineAnnotationReader()
+            ->enableAttributeMapping()
             ->getValidator();
 
         $result = $validator->validate($sut, null, 'client-benefits-check');
 
-        $this->assertCount($expectedValidationErrorsCount, $result);
+        self::assertCount($expectedValidationErrorsCount, $result);
     }
 
-    public function invalidDataProvider()
+    public static function invalidDataProvider(): array
     {
         $moneyType = new MoneyReceivedOnClientsBehalf()
         ->setAmountDontKnow(false);
 
-        $moneyTypes = new ArrayCollection();
-        $moneyTypes->add($moneyType);
+        $moneyTypes[] = $moneyType;
 
         return [
             "Fails when \$whenLastCheckedEntitlement is 'haveChecked' and \$dateLastCheckedEntitlement is null" => [

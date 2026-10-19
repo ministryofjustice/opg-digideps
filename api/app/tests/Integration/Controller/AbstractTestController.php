@@ -2,16 +2,16 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
+use OPG\Digideps\Backend\DataFixtures\TestUserFixtures;
+use OPG\Digideps\Backend\Fixture\FixtureService;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
 use OPG\Digideps\Backend\Service\JWT\JWTService;
-use Osteel\OpenApi\Testing\ValidatorBuilder;
-use Osteel\OpenApi\Testing\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
-use Tests\OPG\Digideps\Backend\Fixture\FixtureService;
 use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 abstract class AbstractTestController extends WebTestCase
@@ -24,7 +24,6 @@ abstract class AbstractTestController extends WebTestCase
     protected static string $adminSecret;
     protected static ?JWTService $jwtService;
     protected ?int $loggedInUserId = null;
-    private ?ValidatorInterface $openapiValidator = null;
 
     public static function setUpBeforeClass(): void
     {
@@ -35,14 +34,19 @@ abstract class AbstractTestController extends WebTestCase
 
     public static function setupFixtures(): void
     {
-        // each test restores the db before launching the entire suite,
-        // help to cleanup records created from previously-executed tests
-        Fixtures::deleteReportsData();
-
         self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
 
         self::$em = static::getContainer()->get('em');
-        self::$fixtureService = static::getContainer()->get(FixtureService::class);
+        /** @var FixtureService $fixtureService */
+        $fixtureService = static::getContainer()->get(FixtureService::class);
+        self::$fixtureService = $fixtureService;
+        $purger = new ORMPurger(self::$em, []);
+        $purger->setPurgeMode(ORMPurger::PURGE_MODE_DELETE);
+        $purger->purge();
+        /** @var TestUserFixtures $testUserFixtures */
+        $testUserFixtures = self::getContainer()->get(TestUserFixtures::class);
+        $testUserFixtures->doLoad(self::$fixtureService);
+
         self::$fixtures = new Fixtures(self::$em);
         self::$em->clear();
 
@@ -255,24 +259,9 @@ abstract class AbstractTestController extends WebTestCase
         // clean up vars
         $reflectionObject = new \ReflectionObject($this);
         foreach ($reflectionObject->getProperties() as $property) {
-            if (!$property->isStatic() && !str_starts_with($property->getDeclaringClass()->getName(), 'PHPUnit_')) {
+            if (!$property->isStatic() && !str_starts_with($property->getDeclaringClass()->getName(), 'PHPUnit_') && ($property->getType()?->allowsNull() ?? true)) {
                 $property->setValue($this, null);
             }
         }
-    }
-
-    private function getOpenApiSpecification(): ValidatorInterface
-    {
-        if ($this->openapiValidator === null) {
-            $this->openapiValidator = ValidatorBuilder::fromYamlFile(__DIR__ . '/../../../openapi/specification.yaml')->getValidator();
-        }
-
-        return $this->openapiValidator;
-    }
-
-    protected function validateResponseAgainstOpenApiSpecification(string $path, string $method): void
-    {
-        $validator = $this->getOpenApiSpecification();
-        $this->assertTrue($validator->validate(self::$frameworkBundleClient->getResponse(), $path, $method));
     }
 }

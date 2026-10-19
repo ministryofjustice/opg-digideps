@@ -6,31 +6,23 @@ namespace Tests\OPG\Digideps\Frontend\Unit\Service\Audit;
 
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\Result;
-use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\LogRecord;
 use OPG\Digideps\Frontend\Service\Audit\AwsAuditLogHandler;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 
 class AwsAuditLogHandlerTest extends TestCase
 {
-    /** @var AwsAuditLogHandler */
-    private $sut;
-
-    /** @var MockObject&CloudWatchLogsClient */
-    private $cloudWatchClient;
-
+    private MockObject&CloudWatchLogsClient $cloudWatchClient;
     public const string LOG_GROUP_NAME = 'audit-local';
     public const string STREAM_NAME = 'DELETED_CLIENTS';
-    private LoggerInterface|MockObject $logger;
+    private AwsAuditLogHandler $sut;
 
     public function setUp(): void
     {
-        $this->cloudWatchClient = $this
-            ->getMockBuilder(CloudWatchLogsClient::class)
+        $this->cloudWatchClient = $this->getMockBuilder(CloudWatchLogsClient::class)
             ->disableOriginalConstructor()
             ->addMethods(['putLogEvents', 'createLogStream', 'describeLogStreams', 'getLogEvents'])
             ->getMock();
@@ -38,20 +30,7 @@ class AwsAuditLogHandlerTest extends TestCase
         $this->sut = new AwsAuditLogHandler($this->cloudWatchClient, self::LOG_GROUP_NAME);
     }
 
-    /**
-     * @test
-     */
-    public function serviceIsInstanceOfAbstractHandler(): void
-    {
-        $this->assertInstanceOf(AbstractProcessingHandler::class, $this->sut);
-    }
-
-    /**
-     * @test
-     *
-     * @throws \Exception
-     */
-    public function ignoresRecordsWithoutEventName(): void
+    public function testIgnoresRecordsWithoutEventName(): void
     {
         $record = new LogRecord(
             new \DateTimeImmutable('2018-09-02 13:42:23'),
@@ -61,19 +40,13 @@ class AwsAuditLogHandlerTest extends TestCase
             ['type' => 'audit'],
         );
 
-        $this
-            ->assertLogStreamWillNotBeCreated()
+        $this->assertLogStreamWillNotBeCreated()
             ->assertLogWillNotBePutOnAws();
 
         $this->sut->handle($record);
     }
 
-    /**
-     * @test
-     *
-     * @throws \Exception
-     */
-    public function ignoresRecordsWithoutEventType(): void
+    public function testIgnoresRecordsWithoutEventType(): void
     {
         $record = new LogRecord(
             new \DateTimeImmutable('2018-09-02 13:42:23'),
@@ -83,46 +56,33 @@ class AwsAuditLogHandlerTest extends TestCase
             ['event' => self::STREAM_NAME],
         );
 
-        $this
-            ->assertLogStreamWillNotBeCreated()
+        $this->assertLogStreamWillNotBeCreated()
             ->assertLogWillNotBePutOnAws();
 
         $this->sut->handle($record);
     }
 
-    /**
-     * @test
-     */
-    public function sendsLogMessageWithoutSequenceTokenToNewLogStreamIfStreamDoesNotExistOnAws(): void
+    public function testSendsLogMessageWithoutSequenceTokenToNewLogStreamIfStreamDoesNotExistOnAws(): void
     {
-        $this
-            ->ensureLogStreamWillNotExist()
+        $this->ensureLogStreamWillNotExist()
             ->assertLogStreamWillBeCreated()
             ->assertLogWillBePutOnAwsWithoutSequenceToken();
 
         $this->sut->handle($this->getLogMessageInput());
     }
 
-    /**
-     * @test
-     */
-    public function sendsLogMessageWithSequenceTokenToExistingLogStreamIfStreamExistsOnAws(): void
+    public function testSendsLogMessageWithSequenceTokenToExistingLogStreamIfStreamExistsOnAws(): void
     {
-        $this
-            ->ensureLogStreamWillExist()
+        $this->ensureLogStreamWillExist()
             ->assertLogStreamWillNotBeCreated()
             ->assertLogWillBePutOnAwsWithSequenceToken();
 
         $this->sut->handle($this->getLogMessageInput());
     }
 
-    /**
-     * @test
-     */
-    public function sequenceTokenIsStoredInMemoryForSubsequentWrites(): void
+    public function testSequenceTokenIsStoredInMemoryForSubsequentWrites(): void
     {
-        $this
-            ->ensureLogStreamWillExist()
+        $this->ensureLogStreamWillExist()
             ->assertLogStreamWillNotBeCreated()
             ->assertConsecutiveLogsWillBePutOnAws();
 
@@ -131,10 +91,9 @@ class AwsAuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider awsResultProvider
      */
-    public function getLogEventsByLogStream(
+    public function testGetLogEventsByLogStream(
         Result $result,
         string $streamName,
         int $logStartTime,
@@ -145,7 +104,7 @@ class AwsAuditLogHandlerTest extends TestCase
             ->assertExpectedResultIsReturned($result, $streamName, $logStartTime, $logEndTime);
     }
 
-    public function awsResultProvider()
+    public static function awsResultProvider(): array
     {
         return [
             'one log event' => [
@@ -198,7 +157,7 @@ class AwsAuditLogHandlerTest extends TestCase
         string $streamName,
         int $startTime,
         int $endTime
-    ): self {
+    ): static {
         $this
             ->cloudWatchClient
             ->expects($this->once())
@@ -221,12 +180,10 @@ class AwsAuditLogHandlerTest extends TestCase
         string $streamName,
         int $startTime,
         int $endTime
-    ): self {
+    ): void {
         $result = $this->sut->getLogEventsByLogStream($streamName, $startTime, $endTime, self::LOG_GROUP_NAME);
 
-        $this->assertEquals($expected, $result);
-
-        return $this;
+        self::assertEquals($expected, $result);
     }
 
     /**
@@ -246,8 +203,7 @@ class AwsAuditLogHandlerTest extends TestCase
 
     private function ensureLogStreamWillExist(): AwsAuditLogHandlerTest
     {
-        $this
-            ->cloudWatchClient
+        $this->cloudWatchClient->expects(self::atLeastOnce())
             ->method('describeLogStreams')
             ->willReturn(new Result([
                 'logStreams' => [
@@ -263,8 +219,7 @@ class AwsAuditLogHandlerTest extends TestCase
 
     private function ensureLogStreamWillNotExist(): AwsAuditLogHandlerTest
     {
-        $this
-            ->cloudWatchClient
+        $this->cloudWatchClient->expects(self::once())
             ->method('describeLogStreams')
             ->willReturn(new Result([
                 'logStreams' => [
@@ -277,9 +232,7 @@ class AwsAuditLogHandlerTest extends TestCase
 
     private function assertLogStreamWillBeCreated(): AwsAuditLogHandlerTest
     {
-        $this
-            ->cloudWatchClient
-            ->expects($this->once())
+        $this->cloudWatchClient->expects(self::once())
             ->method('createLogStream')
             ->with([
                 'logGroupName' => self::LOG_GROUP_NAME,
@@ -291,10 +244,7 @@ class AwsAuditLogHandlerTest extends TestCase
 
     private function assertLogStreamWillNotBeCreated(): AwsAuditLogHandlerTest
     {
-        $this
-            ->cloudWatchClient
-            ->expects($this->never())
-            ->method('createLogStream');
+        $this->cloudWatchClient->expects(self::never())->method('createLogStream');
 
         return $this;
     }
@@ -304,9 +254,7 @@ class AwsAuditLogHandlerTest extends TestCase
      */
     private function assertLogWillBePutOnAwsWithSequenceToken(): void
     {
-        $this
-            ->cloudWatchClient
-            ->expects($this->once())
+        $this->cloudWatchClient->expects(self::once())
             ->method('putLogEvents')
             ->with($this->getExpectedMessageWithSequenceToken())
             ->willReturn(new Result([
@@ -319,9 +267,7 @@ class AwsAuditLogHandlerTest extends TestCase
      */
     private function assertLogWillBePutOnAwsWithoutSequenceToken(): void
     {
-        $this
-            ->cloudWatchClient
-            ->expects($this->once())
+        $this->cloudWatchClient->expects(self::once())
             ->method('putLogEvents')
             ->with($this->getExpectedMessageWithoutSequenceToken())
             ->willReturn(new Result([
@@ -334,22 +280,27 @@ class AwsAuditLogHandlerTest extends TestCase
      */
     private function assertConsecutiveLogsWillBePutOnAws(): void
     {
-        $this
-            ->cloudWatchClient
-            ->expects($this->exactly(2))
+        $expectedTokens = [
+            1 => $this->getExpectedMessageWithSequenceToken(),
+            2 => $this->getExpectedMessageWithSequenceToken(),
+        ];
+
+        $invocationMatcher = self::exactly(count($expectedTokens));
+
+        $this->cloudWatchClient->expects($invocationMatcher)
             ->method('putLogEvents')
-            ->withConsecutive([$this->getExpectedMessageWithSequenceToken()], [$this->getExpectedMessageWithSequenceToken()])
-            ->willReturn(new Result([
-                'nextSequenceToken' => 'next-sequence-token',
-            ]));
+            ->willReturnCallback(function (array $tokens) use ($expectedTokens, $invocationMatcher) {
+                $invocation = $invocationMatcher->getInvocationCount();
+
+                self::assertEquals($expectedTokens[$invocation], $tokens);
+
+                return new Result(['nextSequenceToken' => 'next-sequence-token']);
+            });
     }
 
     private function assertLogWillNotBePutOnAws(): void
     {
-        $this
-            ->cloudWatchClient
-            ->expects($this->never())
-            ->method('putLogEvents');
+        $this->cloudWatchClient->expects($this->never())->method('putLogEvents');
     }
 
     /**

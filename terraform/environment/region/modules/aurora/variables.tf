@@ -2,16 +2,13 @@ variable "account_id" {
   description = "Account id to use."
   type        = string
 }
+
 variable "apply_immediately" {
   description = "Apply changes immediately."
   type        = bool
   default     = true
 }
-variable "aurora_serverless" {
-  description = "Use serverless configuration."
-  type        = bool
-  default     = false
-}
+
 variable "auto_minor_version_upgrade" {
   description = "Auto upgrade minor versions."
   type        = bool
@@ -93,12 +90,6 @@ variable "instance_count" {
   default     = 1
 }
 
-variable "instance_class" {
-  description = "The instance class to be used for the Aurora instances."
-  type        = string
-  default     = "db.t3.medium"
-}
-
 variable "publicly_accessible" {
   description = "Indicates whether the cluster can be accessed publicly."
   type        = bool
@@ -145,12 +136,6 @@ variable "vpc_security_group_ids" {
   type        = list(string)
 }
 
-variable "replication_source_identifier" {
-  description = "The identifier of the source DB instance or DB cluster if this DB instance is a read replica."
-  type        = string
-  default     = ""
-}
-
 variable "iam_database_authentication_enabled" {
   description = "Indicates whether IAM database authentication is enabled."
   type        = bool
@@ -170,4 +155,10 @@ variable "min_acu" {
 variable "max_acu" {
   description = "The maximum acu value."
   type        = number
+}
+
+variable "allow_major_version_upgrade" {
+  description = "Whether to allow major version upgrades."
+  type        = bool
+  default     = false
 }

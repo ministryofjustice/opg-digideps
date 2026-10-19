@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\TestHelpers;
 
 use OPG\Digideps\Frontend\Entity\Organisation;
-use Doctrine\Common\Collections\ArrayCollection;
 use Faker\Factory;
 
 class OrganisationHelpers
@@ -23,8 +22,8 @@ class OrganisationHelpers
             ->setIsActivated(true);
 
         $orgUsers = [
-            (UserHelpers::createUser())->setOrganisations(new ArrayCollection([$organisation])),
-            (UserHelpers::createUser())->setOrganisations(new ArrayCollection([$organisation])),
+            (UserHelpers::createUser())->setOrganisations([$organisation]),
+            (UserHelpers::createUser())->setOrganisations([$organisation]),
         ];
 
         $orgClients = [

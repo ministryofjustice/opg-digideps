@@ -8,6 +8,7 @@ export default defineConfig({
     baseURL: process.env.FRONT_URL,
     ignoreHTTPSErrors: true,
     browserName: "chromium",
+    javaScriptEnabled: true,
   },
   workers: 1,
 });

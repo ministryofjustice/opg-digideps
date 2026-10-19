@@ -39,7 +39,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
 
     #[JMS\Groups(['client-benefits-check'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck')]
-    #[JoinColumn(name: 'client_benefits_check_id', referencedColumnName: 'id')]
+    #[JoinColumn(name: 'client_benefits_check_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: ClientBenefitsCheck::class, cascade: ['persist'], inversedBy: 'moneyReceivedOnClientsBehalf')]
     private ClientBenefitsCheck $clientBenefitsCheck;
 

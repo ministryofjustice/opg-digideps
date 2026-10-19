@@ -1,7 +1,3 @@
-locals {
-  maintenance_mode = local.environment == "production02" ? "*" : "/dd-maintenance"
-}
-
 resource "aws_lb" "front" {
   name                       = "front-${local.environment}"
   internal                   = false #tfsec:ignore:aws-elb-alb-not-public - This is a public LB
@@ -9,6 +5,12 @@ resource "aws_lb" "front" {
   subnets                    = data.aws_subnet.load_balancer[*].id
   idle_timeout               = 300
   drop_invalid_header_fields = true
+
+  access_logs {
+    bucket  = data.aws_s3_bucket.alb_access.bucket
+    prefix  = "front-${local.environment}"
+    enabled = true
+  }
 
   security_groups = [module.front_elb_security_group.id, module.front_elb_security_group_route53_hc.id]
 
@@ -19,11 +21,11 @@ resource "aws_lb_listener" "front_https" {
   load_balancer_arn = aws_lb.front.arn
   port              = "443"
   protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-FS-1-2-Res-2020-10"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
   certificate_arn   = local.certificate_arn
 
   default_action {
-    target_group_arn = aws_lb_target_group.front.arn
+    target_group_arn = aws_lb_target_group.front_http.arn
     type             = "forward"
   }
 }
@@ -59,7 +61,7 @@ resource "aws_lb_listener_rule" "front_maintenance" {
 
   condition {
     path_pattern {
-      values = [local.maintenance_mode]
+      values = ["/dd-maintenance"]
     }
   }
 }
@@ -80,9 +82,9 @@ resource "aws_lb_listener" "front_http" {
   }
 }
 
-resource "aws_lb_target_group" "front" {
-  name                 = "front-tg-${local.environment}"
-  port                 = 80
+resource "aws_lb_target_group" "front_http" {
+  name                 = "front-target-${local.environment}"
+  port                 = 8080
   protocol             = "HTTP"
   target_type          = "ip"
   vpc_id               = data.aws_vpc.main.id

@@ -26,6 +26,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 class DecisionController extends AbstractController
 {
     private static array $jmsGroups = [
+        'created-at',
         'decision',
         'mental-capacity',
         'decision-status',
@@ -259,13 +260,14 @@ class DecisionController extends AbstractController
             return $this->redirectToRoute('decisions', ['reportId' => $reportId]);
         }
 
-        $numberOfDecisions = count($report->getDecisions());
+        $decisions = $report->getDecisions();
 
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report' => $report,
+            'decisions' => $decisions,
             'status' => $report->getStatus(),
-            'numOfDecisions' => $numberOfDecisions,
+            'numOfDecisions' => count($decisions),
         ];
     }
 

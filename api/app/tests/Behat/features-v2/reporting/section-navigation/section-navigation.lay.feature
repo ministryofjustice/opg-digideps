@@ -25,7 +25,7 @@ Feature: Section navigation from summary pages - Lay
         And I visit the report overview page
         When I visit the visits and care summary report section
         Then the previous section should be "Contacts"
-        And the next section should be "Client benefits check"
+        And the next section should be "Benefits check and money others received"
         And the link to the report overview page should display the correct reporting years
 
     @lay-pfa-high-completed
@@ -42,7 +42,7 @@ Feature: Section navigation from summary pages - Lay
         Given a Lay Deputy has a completed report
         And I visit the report overview page
         When I visit the accounts summary section
-        Then the previous section should be "Client benefits check"
+        Then the previous section should be "Benefits check and money others received"
         And the next section should be "Deputy expenses"
         And the link to the report overview page should display the correct reporting years
 
@@ -51,7 +51,7 @@ Feature: Section navigation from summary pages - Lay
         Given a Lay Deputy has a completed report
         And I visit the report overview page
         When I visit the deputy expenses summary report section
-        Then the previous section should be "Bank accounts"
+        Then the previous section should be "Accounts"
         And the next section should be "Gifts"
         And the link to the report overview page should display the correct reporting years
 
@@ -97,7 +97,7 @@ Feature: Section navigation from summary pages - Lay
         And I visit the report overview page
         When I visit the debts summary report section
         Then the previous section should be "Assets"
-        And the next section should be "Actions"
+        And the next section should be "Actions you plan to take"
         And the link to the report overview page should display the correct reporting years
 
     @lay-pfa-high-completed
@@ -114,8 +114,8 @@ Feature: Section navigation from summary pages - Lay
         Given a Lay Deputy has a completed report
         And I visit the report overview page
         When I visit the any other information summary report section
-        Then the previous section should be "Actions"
-        And the next section should be "Documents"
+        Then the previous section should be "Actions you plan to take"
+        And the next section should be "Supporting documents"
         And the link to the report overview page should display the correct reporting years
 
     @lay-pfa-high-completed

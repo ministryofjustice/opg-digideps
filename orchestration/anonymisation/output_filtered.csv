@@ -38,20 +38,6 @@ public,client_benefits_check,dont_know_money_explanation,text,,,Lorem
 public,client_benefits_check,id,uuid,,PRIMARY KEY,NA
 public,client_benefits_check,never_checked_explanation,text,,,Lorem
 public,client_benefits_check,when_last_checked_entitlement,character varying,255,,Lorem
-public,client_contact,address1,character varying,200,,Lorem
-public,client_contact,address2,character varying,200,,Lorem
-public,client_contact,address3,character varying,200,,Lorem
-public,client_contact,address4,character varying,200,,Lorem
-public,client_contact,address5,character varying,200,,Lorem
-public,client_contact,address_country,character varying,10,,Lorem
-public,client_contact,address_postcode,character varying,10,,PostCode
-public,client_contact,email,character varying,60,,Email
-public,client_contact,firstname,character varying,100,,FirstName
-public,client_contact,id,integer,,PRIMARY KEY,NA
-public,client_contact,job_title,character varying,150,,Lorem
-public,client_contact,lastname,character varying,100,,LastName
-public,client_contact,org_name,character varying,150,,Lorem
-public,client_contact,phone,character varying,20,,PhoneNumber
 public,contact,address,character varying,200,,Lorem
 public,contact,address2,character varying,200,,Lorem
 public,contact,contact_name,character varying,255,,Lorem
@@ -169,12 +155,6 @@ public,prof_deputy_other_cost,id,integer,,PRIMARY KEY,NA
 public,prof_deputy_other_cost,more_details,text,,,Lorem
 public,prof_deputy_other_cost,prof_deputy_other_cost_type_id,character varying,255,,Lorem
 public,prof_deputy_prev_cost,id,integer,,PRIMARY KEY,NA
-public,prof_service_fee,assessed_or_fixed,character varying,255,,Lorem
-public,prof_service_fee,fee_type_id,character varying,255,,Lorem
-public,prof_service_fee,id,integer,,PRIMARY KEY,NA
-public,prof_service_fee,other_fee_details,character varying,255,,Lorem
-public,prof_service_fee,payment_received,character varying,255,,Lorem
-public,prof_service_fee,service_type_id,character varying,255,,Lorem
 public,report,action_more_info_details,text,,,Lorem
 public,report,agreed_behalf_deputy,character varying,50,,Lorem
 public,report,agreed_behalf_deputy_explanation,text,,,Lorem
@@ -193,6 +173,9 @@ public,report,reason_for_no_fees,text,,,Lorem
 public,report,reason_for_no_money_in,text,,,Lorem
 public,report,reason_for_no_money_out,text,,,Lorem
 public,report,wish_to_provide_documentation,character varying,255,,Lorem
+public,report_cleanup_action,order_id,integer,,PRIMARY KEY,NA
+public,report_cleanup_action,report_id,integer,,PRIMARY KEY,NA
+public,report_cleanup_problem,id,integer,,PRIMARY KEY,NA
 public,report_submission,id,integer,,PRIMARY KEY,NA
 public,report_submission,opg_uuid,character varying,36,,Lorem
 public,research_type,id,uuid,,PRIMARY KEY,NA

@@ -9,48 +9,33 @@ use JMS\Serializer\Annotation as JMS;
 
 trait SynchronisableTrait
 {
-    /**
-     * @var ?string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['synchronisation'])]
     #[ORM\Column(name: 'synchronisation_status', type: 'string', nullable: true, options: ['default' => null])]
-    protected $synchronisationStatus;
+    protected ?string $synchronisationStatus = null;
 
-    /**
-     * @var ?\DateTime
-     */
     #[JMS\Type('DateTime')]
     #[JMS\Groups(['synchronisation'])]
     #[ORM\Column(name: 'synchronisation_time', type: 'datetime', nullable: true, options: ['default' => null])]
-    protected $synchronisationTime;
+    protected ?\DateTime $synchronisationTime = null;
 
-    /**
-     * @var ?string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['synchronisation'])]
     #[ORM\Column(name: 'synchronisation_error', type: 'text', length: 65535, nullable: true, options: ['default' => null])]
-    protected $synchronisationError;
+    protected ?string $synchronisationError = null;
 
-    /**
-     * @var ?User
-     */
     #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['synchronisation'])]
     #[ORM\JoinColumn(name: 'synchronised_by', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected $synchronisedBy;
+    protected ?User $synchronisedBy = null;
 
     public function getSynchronisationStatus(): ?string
     {
         return $this->synchronisationStatus;
     }
 
-    /**
-     * @return $this
-     */
-    public function setSynchronisationStatus(?string $status)
+    public function setSynchronisationStatus(?string $status): static
     {
         if (
             !in_array($status, [
@@ -74,10 +59,7 @@ trait SynchronisableTrait
         return $this->synchronisationTime;
     }
 
-    /**
-     * @return $this
-     */
-    public function setSynchronisationTime(?\DateTime $time)
+    public function setSynchronisationTime(?\DateTime $time): static
     {
         $this->synchronisationTime = $time;
 
@@ -89,10 +71,7 @@ trait SynchronisableTrait
         return $this->synchronisationError;
     }
 
-    /**
-     * @return $this
-     */
-    public function setSynchronisationError(?string $error)
+    public function setSynchronisationError(?string $error): static
     {
         $this->synchronisationError = $error;
 
@@ -104,10 +83,7 @@ trait SynchronisableTrait
         return $this->synchronisedBy;
     }
 
-    /**
-     * @return $this
-     */
-    public function setSynchronisedBy(?User $user)
+    public function setSynchronisedBy(?User $user): static
     {
         $this->synchronisedBy = $user;
 

@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\v2\Registration\Uploader;
 
-use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\Factory\ReportFactory;
-use OPG\Digideps\Backend\v2\Assembler\ClientAssembler;
-use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\v2\Assembler\ClientAssembler;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -24,7 +22,6 @@ class LayDeputyshipProcessor
         private readonly EntityManagerInterface $em,
         private readonly ClientAssembler $clientAssembler,
         private readonly LayClientMatcher $clientMatcher,
-        private readonly ReportFactory $reportFactory,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -62,15 +59,7 @@ class LayDeputyshipProcessor
             $user = $this->findUser($layDeputyshipDto->getDeputyUid());
             $client->addUser($user);
 
-            $report = $this->reportFactory->create(
-                $client,
-                $layDeputyshipDto->getTypeOfReport(),
-                $layDeputyshipDto->getOrderType(),
-                $layDeputyshipDto->getOrderDate()
-            );
-
             if ($multiclientApplyDbChanges) {
-                $this->em->persist($report);
                 $this->em->persist($client);
                 $this->em->flush();
                 $this->em->commit();
@@ -83,7 +72,6 @@ class LayDeputyshipProcessor
             // log db changes
             $entityDetails = $this->getEntityDetails(
                 $client,
-                $report,
                 $layDeputyshipDto
             );
 
@@ -155,7 +143,6 @@ class LayDeputyshipProcessor
     // note that the reportId and clientId will be null if this is a dry run (database changes are not applied)
     private function getEntityDetails(
         Client $client,
-        Report $report,
         LayDeputyshipDto $layDeputyshipDto,
     ): array {
         $deputyUids = array_map(
@@ -174,12 +161,6 @@ class LayDeputyshipProcessor
 
             // UIDs of deputies associated with the client (including the deputy from the row)
             'clientDeputyUids' => $deputyUids,
-
-            // ID of the report used for this row
-            'reportId' => $report->getId(),
-
-            // type of the report used for this row; '102', '103', '104', '102-4', '103-4'
-            'reportType' => $report->getType(),
 
             // data from the CSV parsed into the DTO
             'dto.caseNumber' => $layDeputyshipDto->getCaseNumber(),

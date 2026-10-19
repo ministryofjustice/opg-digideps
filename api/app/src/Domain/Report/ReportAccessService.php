@@ -38,10 +38,9 @@ final class ReportAccessService
         $sql = "
             SELECT DISTINCT r.id
             FROM report r
-            JOIN court_order_report cor
-                ON r.id = cor.report_id
             JOIN court_order co
-                ON co.id = cor.court_order_id
+                ON co.id = r.pfa_court_order_id AND co.order_type = 'pfa'
+                OR co.id = r.hw_court_order_id AND co.order_type = 'hw'
             JOIN court_order_deputy cod
                 ON co.id = cod.court_order_id
                 {$active}
@@ -54,6 +53,7 @@ final class ReportAccessService
                 AND o.is_activated
             LEFT JOIN organisation_user ou
                 ON ou.organisation_id = o.id
+                AND o.is_activated
             WHERE
                 (d.user_id = ? OR ou.user_id = ?)
                 AND c.archived_at IS NULL

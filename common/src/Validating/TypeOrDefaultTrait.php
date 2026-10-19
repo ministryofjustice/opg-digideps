@@ -8,6 +8,12 @@ trait TypeOrDefaultTrait
 {
     abstract protected function getUnvalidated(string|int|null $key): mixed;
 
+    public function getBooleanOrDefault(string|int|null $key, bool $default): bool
+    {
+        $value = $this->getUnvalidated($key);
+        return is_bool($value) ? $value : $default;
+    }
+
     public function getIntegerOrDefault(string|int|null $key, int $default): int
     {
         $value = $this->getUnvalidated($key);

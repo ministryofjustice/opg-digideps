@@ -161,10 +161,7 @@ class NoteControllerTest extends AbstractTestController
         $paUser = self::fixtures()->getRepo(User::class)->findOneBy(['email' => 'pa@example.org']);
         $newUserEmail = rand(1, 99999) . 'user-to-be-deleted@example.org';
 
-        $newUser = new User()
-            ->setEmail($newUserEmail)
-            ->setFirstname('Art')
-            ->setLastname('Work')
+        $newUser = new User('Art', 'Work', $newUserEmail)
             ->setRoleName(User::ROLE_PA_NAMED);
 
         $client = new Client()

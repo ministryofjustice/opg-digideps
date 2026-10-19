@@ -53,9 +53,7 @@
             </td>
             <td class="govuk-table__cell govuk-table__cell--numeric">
             {% if account.closingBalance === null %}
-                <div class="error-message">
-                    {{ 'summaryPage.balanceRequired' | trans({ '%date%': report.endDate | date("j F Y") }) }}
-                </div>
+                <twig:GOV:ErrorMessage message="{{ 'summaryPage.balanceRequired' | trans({ '%date%': report.endDate | date("j F Y") }) }}"/>
                 <a class="govuk-link" href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 3, 'accountId': account.id}) }}">
                     {{ 'summaryPage.addBalance' | trans }}
                 </a>

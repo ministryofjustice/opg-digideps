@@ -1,7 +1,10 @@
 ARG FUNCTION_DIR="/function"
 
 # ===== BASE IMAGE =====
-FROM python:3.14.5-alpine3.23@sha256:5a824eb82cc75361f98611f3cfc5091ea33f10a6ccea4d4ebdabbc523b9a1614 AS python-base
+FROM python:3.14.8-alpine3.24@sha256:f6a589d43c42b9e7f7dc67a12d37132491f362859a5d750607710cc56da3bc72 AS python-base
+
+# TODO Remove this once alpine upgrade available as it patches a vulnerability
+RUN apk update && apk add --upgrade "zlib==1.3.2-r1"
 
 RUN apk update && apk upgrade
 
@@ -15,17 +18,15 @@ RUN mkdir -p ${FUNCTION_DIR}
 COPY run_custom_query.py ${FUNCTION_DIR}/run_custom_query.py
 COPY _verification.sql ${FUNCTION_DIR}/_verification.sql
 COPY _run.sql ${FUNCTION_DIR}/_run.sql
-COPY requirements.txt /requirements.txt
 
 # Install build tools ONLY in this stage
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-# Install dependencies into the function dir
-RUN pip install \
-    --no-cache-dir \
-    --target ${FUNCTION_DIR} \
-    -r /requirements.txt
-
+COPY --from=ghcr.io/astral-sh/uv@sha256:61d393e44e249f2e4b526b6c7ddcecce245946826e608e11c93ad4f5bba55b21 /uv /uvx /bin/
+COPY uv.lock .
+COPY pyproject.toml .
+RUN uv export --locked -o requirements.txt \
+    && python -m pip install --no-cache-dir --target ${FUNCTION_DIR} -r requirements.txt
 
 # ===== FINAL IMAGE =====
 FROM python-base AS final

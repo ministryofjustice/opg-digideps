@@ -5,51 +5,43 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\Persistence\ManagerRegistry;
 use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Fee;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\Persistence\ManagerRegistry;
-use Mockery as m;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class ReportRepositoryTest extends TestCase
 {
+    private Report&MockObject $mockReport;
+    private EntityManagerInterface&MockObject $mockEm;
     private ReportRepository $sut;
-    private EntityRepository|MockInterface $mockReport;
-    private MockInterface|EntityManager $mockEm;
 
     public function setUp(): void
     {
-        $this->mockEm = m::mock(EntityManagerInterface::class);
-        $mockManagerRegistry = m::mock(ManagerRegistry::class);
-        $mockMetaClass = m::mock(ClassMetadata::class);
+        $mockMetaClass = self::createMock(ClassMetadata::class);
 
-        $mockManagerRegistry->shouldReceive('getManagerForClass')->andReturn($this->mockEm);
-        $this->mockEm->shouldReceive('getClassMetadata')->andReturn($mockMetaClass);
+        $this->mockEm = self::createConfiguredMock(EntityManagerInterface::class, ['getClassMetadata' => $mockMetaClass]);
 
-        $clientSearchFilter = m::mock(ClientSearchFilter::class);
-        $this->mockReport = m::mock(Report::class);
-        $mockClient = m::mock(Client::class);
+        $mockManagerRegistry = self::createConfiguredMock(ManagerRegistry::class, ['getManagerForClass' => $this->mockEm]);
 
-        $this->mockReport->shouldReceive('getClient')
-            ->zeroOrMoreTimes()
-            ->andReturn($mockClient);
+        $clientSearchFilter = self::createMock(ClientSearchFilter::class);
 
-        $this->sut = new ReportRepository($mockManagerRegistry, $clientSearchFilter, new ReportAccessService($this->createStub(EntityManagerInterface::class)));
-    }
+        $mockClient = self::createMock(Client::class);
+        $this->mockReport = self::createConfiguredMock(Report::class, ['getClient' => $mockClient]);
 
-    public function tearDown(): void
-    {
-        m::close();
+        $this->sut = new ReportRepository(
+            $mockManagerRegistry,
+            $clientSearchFilter,
+            new ReportAccessService($this->createStub(EntityManagerInterface::class))
+        );
     }
 
     /**
@@ -57,31 +49,29 @@ final class ReportRepositoryTest extends TestCase
      */
     public function testAddFeesToReportIfMissingForNonPAUser(): void
     {
-        $this->mockReport->shouldReceive('isPAReport')->andReturn(false);
+        $this->mockReport->expects(self::once())->method('isPAReport')->willReturn(false);
 
         $this->assertNull($this->sut->addFeesToReportIfMissing($this->mockReport));
     }
 
     public function testAddFeesToReportIfMissingForPAUserWithFeesMissing(): void
     {
-        $this->mockReport->shouldReceive('getFees')->andReturn(new ArrayCollection([]));
+        $this->mockReport->expects(self::once())->method('getFees')->willReturn(new ArrayCollection([]));
 
-        $this->mockReport->shouldReceive('addFee')->times(count(Fee::$feeTypeIds))->andReturnSelf();
+        $this->mockReport->expects(self::exactly(count(Fee::$feeTypeIds)))->method('addFee')->willReturnSelf();
 
-        $this->mockReport->shouldReceive('isPAReport')->andReturn(true);
+        $this->mockReport->expects(self::once())->method('isPAReport')->willReturn(true);
 
         $this->assertEquals(7, $this->sut->addFeesToReportIfMissing($this->mockReport));
     }
 
     public function testAddFeesToReportIfMissingForPAUserWithFeesNotMissing(): void
     {
-        $this->mockReport->shouldReceive('getFees')->andReturn(new ArrayCollection(['foo']));
+        $this->mockReport->expects(self::once())->method('getFees')->willReturn(new ArrayCollection(['foo']));
+        $this->mockReport->expects(self::once())->method('isPAReport')->willReturn(true);
 
-        $this->mockReport->shouldReceive('addFee')->never();
-
-        $this->mockEm->shouldReceive('persist')->never();
-
-        $this->mockReport->shouldReceive('isPAReport')->andReturn(true);
+        $this->mockReport->expects(self::never())->method('addFee');
+        $this->mockEm->expects(self::never())->method('persist');
 
         $this->assertEquals(0, $this->sut->addFeesToReportIfMissing($this->mockReport));
     }

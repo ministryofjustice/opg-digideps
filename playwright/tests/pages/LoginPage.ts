@@ -1,7 +1,10 @@
 import { Page, expect } from "@playwright/test";
 
-type ExpectedPage = "courtorder" | "org";
+type ExpectedPage = "client/add" | "org";
 
+/**
+ * <FRONT_URL>/login
+ */
 export default class LoginPage {
   constructor(private page: Page) {}
 

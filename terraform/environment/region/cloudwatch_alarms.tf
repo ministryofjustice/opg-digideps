@@ -29,6 +29,7 @@ resource "aws_cloudwatch_metric_alarm" "php_critical_errors" {
   period              = 60
   namespace           = aws_cloudwatch_log_metric_filter.php_critical_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
@@ -57,6 +58,7 @@ resource "aws_cloudwatch_metric_alarm" "php_errors" {
   period              = 60
   namespace           = aws_cloudwatch_log_metric_filter.php_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
@@ -88,6 +90,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_5xx_errors" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.frontend_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
@@ -117,6 +120,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_5xx_errors" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.admin_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
@@ -146,6 +150,7 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
@@ -157,6 +162,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_5xx_errors" {
   alarm_description   = "Number of 5XX Errors returned to Public Users from the ${local.environment} Frontend ALB."
   actions_enabled     = var.account.environment.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   comparison_operator = "GreaterThanThreshold"
   dimensions = {
     "LoadBalancer" = trimprefix(split(":", aws_lb.front.arn)[5], "loadbalancer/")
@@ -177,6 +183,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
   alarm_description   = "Number of 5XX Errors returned to Internal Users from the ${local.environment} Admin ALB."
   actions_enabled     = var.account.environment.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   comparison_operator = "GreaterThanThreshold"
   dimensions = {
     "LoadBalancer" = trimprefix(split(":", aws_lb.admin.arn)[5], "loadbalancer/")
@@ -198,6 +205,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
   alarm_description   = "Response Time for Frontend ALB in ${local.environment}"
   actions_enabled     = var.account.environment.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   comparison_operator = "GreaterThanThreshold"
   dimensions = {
     "LoadBalancer" = trimprefix(split(":", aws_lb.front.arn)[5], "loadbalancer/")
@@ -230,11 +238,12 @@ resource "aws_cloudwatch_log_metric_filter" "pre_registration_add_in_progress" {
 resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
   alarm_name                = "${local.environment}-admin-alb-response-time"
   alarm_actions             = [data.aws_sns_topic.alerts.arn]
+  ok_actions                = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   alarm_description         = "Response Time for Admin ALB in ${local.environment} (ignoring csv upload)"
   datapoints_to_alarm       = 7
   evaluation_periods        = 10
-  threshold                 = 1
+  threshold                 = 1.5
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
   tags                      = var.default_tags
@@ -273,6 +282,48 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_average_response_time" {
   }
 }
 
+# ========== Hit max task count alarms ==========
+
+resource "aws_cloudwatch_metric_alarm" "api_task_count_max" {
+  alarm_name          = "${local.environment}-api-task-count-max"
+  alarm_description   = "API ECS task has hit maximum scaling ${local.environment}."
+  actions_enabled     = var.account.environment.alarms_active
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
+  comparison_operator = "GreaterThanThreshold"
+  dimensions = {
+    "ServiceName" = "api-${local.environment}"
+  }
+  evaluation_periods = 1
+  metric_name        = "LiveTaskCount"
+  namespace          = "AWS/ECS"
+  period             = 60
+  statistic          = "Sum"
+  tags               = var.default_tags
+  threshold          = var.account.ecs.scale_max == 0 ? 20 : var.account.ecs.scale_max
+  treat_missing_data = "notBreaching"
+}
+
+resource "aws_cloudwatch_metric_alarm" "front_task_count_max" {
+  alarm_name          = "${local.environment}-front-task-count-max"
+  alarm_description   = "API ECS task has hit maximum scaling ${local.environment}."
+  actions_enabled     = var.account.environment.alarms_active
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
+  comparison_operator = "GreaterThanThreshold"
+  dimensions = {
+    "ServiceName" = "front-${local.environment}"
+  }
+  evaluation_periods = 1
+  metric_name        = "LiveTaskCount"
+  namespace          = "AWS/ECS"
+  period             = 60
+  statistic          = "Sum"
+  tags               = var.default_tags
+  threshold          = var.account.ecs.scale_max == 0 ? 20 : var.account.ecs.scale_max
+  treat_missing_data = "notBreaching"
+}
+
 # ========== DDOS Alarms ==========
 
 resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
@@ -287,6 +338,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
   alarm_description   = "Triggers when AWS Shield Advanced detects a DDoS attack"
   treat_missing_data  = "notBreaching"
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   dimensions = {
     ResourceArn = aws_lb.admin.arn
   }
@@ -304,6 +356,7 @@ resource "aws_cloudwatch_metric_alarm" "front_ddos_attack_external" {
   alarm_description   = "Triggers when AWS Shield Advanced detects a DDoS attack"
   treat_missing_data  = "notBreaching"
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   dimensions = {
     ResourceArn = aws_lb.front.arn
   }
@@ -374,6 +427,7 @@ resource "aws_cloudwatch_metric_alarm" "document_queued_more_than_hour" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_queued_more_than_hour.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
@@ -389,6 +443,7 @@ resource "aws_cloudwatch_metric_alarm" "document_progress_more_than_hour" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_in_progress_more_than_hour.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
@@ -404,6 +459,7 @@ resource "aws_cloudwatch_metric_alarm" "document_temporary_error" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_temporary_error.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
@@ -419,6 +475,41 @@ resource "aws_cloudwatch_metric_alarm" "document_permanent_error" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_permanent_error.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
+  actions_enabled     = var.account.environment.alarms_active
+  tags                = var.default_tags
+}
+
+# ========== Authentication breach detected ==========
+data "aws_cloudwatch_log_group" "security_lambda" {
+  name = "/aws/lambda/security"
+}
+
+resource "aws_cloudwatch_log_metric_filter" "authentication_breach" {
+  name           = "AuthenticationBreach.${local.environment}"
+  pattern        = "authentication_breach_detected"
+  log_group_name = data.aws_cloudwatch_log_group.security_lambda.name
+
+  metric_transformation {
+    name          = "AuthenticationBreach.${local.environment}"
+    namespace     = "DigiDeps/Error"
+    value         = "1"
+    default_value = "0"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "authentication_breach" {
+  alarm_name          = "${local.environment}-authentication-breach"
+  statistic           = "Sum"
+  metric_name         = aws_cloudwatch_log_metric_filter.authentication_breach.metric_transformation[0].name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  datapoints_to_alarm = 5
+  evaluation_periods  = 5
+  threshold           = 1
+  period              = 60
+  namespace           = aws_cloudwatch_log_metric_filter.authentication_breach.metric_transformation[0].namespace
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
+  ok_actions          = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }

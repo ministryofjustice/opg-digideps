@@ -476,6 +476,16 @@ trait AccountsSectionTrait
     }
 
     /**
+     * @Given I select "No" for the account closed question
+     */
+    public function iSelectNoForTheAccountClosedQuestion(): void
+    {
+        $this->chooseOption('account[isClosed]', '0');
+        $this->chooseOption('account[addAnother]', 'no');
+        $this->pressButton('Save and continue');
+    }
+
+    /**
      * @Given I should see the account on the summary page marked as closed
      */
     public function iShouldSeeTheAccountOnSummaryPageMarkedAsClosed(): void
@@ -505,6 +515,42 @@ trait AccountsSectionTrait
         if (!str_contains(strtolower($closedStatusText), 'yes')) {
             throw new BehatException(sprintf(
                 'Account %s closed status does not show "yes" - found: %s',
+                $lastAccount['accountNumber'],
+                $closedStatusText
+            ));
+        }
+    }
+
+    /**
+     * @Given I should see the account on the summary page marked as not closed
+     */
+    public function iShouldSeeTheAccountOnSummaryPageMarkedAsNotClosed(): void
+    {
+        $this->iAmOnAccountsSummaryPage();
+
+        // Get the most recently added account
+        $lastAccount = end($this->accountList);
+
+        if ($lastAccount === false) {
+            throw new BehatException('No account found in $accountList');
+        }
+
+        $page = $this->getSession()->getPage();
+        $accountElements = $page->findAll('css', '.behat-region-account-' . $lastAccount['accountNumber']);
+        $lastAccountElement = end($accountElements);
+
+        $closedStatusElement = $lastAccountElement->find('xpath', ".//*[contains(text(), 'Closed')]");
+        if (is_null($closedStatusElement)) {
+            throw new BehatException(sprintf(
+                'Account %s not marked as closed on summary page',
+                $lastAccount['accountNumber']
+            ));
+        }
+
+        $closedStatusText = $closedStatusElement->getText();
+        if (!str_contains(strtolower($closedStatusText), 'no')) {
+            throw new BehatException(sprintf(
+                'Account %s closed status does not show "no" - found: %s',
                 $lastAccount['accountNumber'],
                 $closedStatusText
             ));

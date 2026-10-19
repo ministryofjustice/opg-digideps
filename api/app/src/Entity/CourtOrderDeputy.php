@@ -16,7 +16,7 @@ use OPG\Digideps\Backend\Repository\CourtOrderDeputyRepository;
 #[ORM\HasLifecycleCallbacks]
 class CourtOrderDeputy
 {
-    #[ORM\JoinColumn(name: 'court_order_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'court_order_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: CourtOrder::class, cascade: ['persist'], inversedBy: 'courtOrderDeputyRelationships')]
     private CourtOrder $courtOrder;

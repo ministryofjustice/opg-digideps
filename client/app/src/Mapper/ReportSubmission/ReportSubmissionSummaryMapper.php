@@ -2,6 +2,7 @@
 
 namespace OPG\Digideps\Frontend\Mapper\ReportSubmission;
 
+use OPG\Digideps\Frontend\Entity\Report\ReportSubmissionSummary;
 use OPG\Digideps\Frontend\Mapper\DateRangeQuery;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 
@@ -15,12 +16,9 @@ class ReportSubmissionSummaryMapper
         $this->restClient = $restClient;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getBy(DateRangeQuery $query)
+    public function getBy(DateRangeQuery $query): mixed
     {
-        return $this->restClient->get($this->generateApiUrl($query), 'Report\ReportSubmissionSummary[]');
+        return $this->restClient->get($this->generateApiUrl($query), ReportSubmissionSummary::class . '[]');
     }
 
     /**

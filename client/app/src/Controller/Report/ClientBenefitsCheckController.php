@@ -15,7 +15,6 @@ use OPG\Digideps\Frontend\Service\Client\Internal\ClientBenefitsCheckApi;
 use OPG\Digideps\Frontend\Service\Client\Internal\MoneyReceivedOnClientsBehalfApi;
 use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
 use OPG\Digideps\Frontend\Service\StepRedirector;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
@@ -88,13 +87,11 @@ class ClientBenefitsCheckController extends AbstractController
         if ($step === 3) {
             if (is_null($moneyTypeId)) {
                 $income = new MoneyReceivedOnClientsBehalf();
-                $clientBenefitsCheck->setTypesOfMoneyReceivedOnClientsBehalf(new ArrayCollection([$income]));
+                $clientBenefitsCheck->setTypesOfMoneyReceivedOnClientsBehalf([$income]);
             } else {
                 foreach (($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() ?? []) as $moneyType) {
                     if ($moneyType->getId() === $moneyTypeId) {
-                        $clientBenefitsCheck->setTypesOfMoneyReceivedOnClientsBehalf(
-                            new ArrayCollection([$moneyType])
-                        );
+                        $clientBenefitsCheck->setTypesOfMoneyReceivedOnClientsBehalf([$moneyType]);
                         break;
                     }
                 }
@@ -102,7 +99,7 @@ class ClientBenefitsCheckController extends AbstractController
         }
 
         // We only want to support deleting empty income types when there is at least one saved income type - otherwise validate the fields
-        $allowDeleteEmpty = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() instanceof ArrayCollection
+        $allowDeleteEmpty = is_array($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf())
             && count($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()) >= 2;
 
         $form = $this->createForm(
@@ -116,12 +113,13 @@ class ClientBenefitsCheckController extends AbstractController
             ]
         );
 
-        if ($step === 3) {
+        if ($step === 3 && $moneyTypeId === null) {
             $form->add('addAnother', AddAnotherThingType::class);
         }
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var ClientBenefitsCheck $formData */
             $formData = $form->getData();
             $formData->setReport($report);
 
@@ -184,7 +182,7 @@ class ClientBenefitsCheckController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        /** @var ArrayCollection<int,MoneyReceivedOnClientsBehalf> $typesOfMoniesReceived */
+        /** @var array<int,MoneyReceivedOnClientsBehalf> $typesOfMoniesReceived */
         $typesOfMoniesReceived = $report->getClientBenefitsCheck()?->getTypesOfMoneyReceivedOnClientsBehalf() ?? [];
         foreach ($typesOfMoniesReceived as $moneyType) {
             if ($moneyType->getId() === $moneyTypeId) {

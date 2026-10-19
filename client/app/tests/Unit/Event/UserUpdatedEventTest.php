@@ -10,8 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class UserUpdatedEventTest extends TestCase
 {
-    /** @test */
-    public function eventIsInitialisedCorrectly()
+    public function testEventIsInitialisedCorrectly(): void
     {
         $preUpdateUser = UserHelpers::createUser();
         $postUpdateUser = UserHelpers::createUser();

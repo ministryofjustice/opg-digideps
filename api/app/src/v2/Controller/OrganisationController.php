@@ -100,8 +100,8 @@ class OrganisationController extends AbstractController
     {
         $ret = $this->userRepository->findByFiltersWithCounts(
             $request->get('q'),
-            $request->get('offset', 0),
-            $request->get('limit', 15),
+            $request->query->getInt('offset', 0),
+            $request->query->getInt('limit', 15),
             $organisation->getId()
         );
 
@@ -116,8 +116,8 @@ class OrganisationController extends AbstractController
     {
         $ret = $this->clientRepository->findByFiltersWithCounts(
             $request->get('q'),
-            $request->get('offset', 0),
-            $request->get('limit', 15),
+            $request->query->getInt('offset', 0),
+            $request->query->getInt('limit', 15),
             $organisation->getId()
         );
 

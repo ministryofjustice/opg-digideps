@@ -5,23 +5,14 @@ on:
     # 11am every Sunday
     - cron: "0 11 * * 0"
 
-permissions:
-  id-token: write
-  contents: read
-  security-events: none
-  pull-requests: none
-  actions: none
-  checks: none
-  deployments: none
-  issues: none
-  packages: none
-  repository-projects: none
-  statuses: none
+permissions: {}
 
 jobs:
   scale_services_up:
     name: scale up staging services
-    uses: ./.github/workflows/_scale-services.yml
+    uses: $/.github/workflows/_scale-services.yml
+    permissions:
+      id-token: write
     with:
       replicas: 3
       acu: 8
@@ -30,7 +21,9 @@ jobs:
 
   resilience_tests_staging:
     name: resilience tests on staging
-    uses: ./.github/workflows/_run-task.yml
+    uses: $/.github/workflows/_run-task.yml
+    permissions:
+      id-token: write
     needs:
       - scale_services_up
     with:
@@ -45,7 +38,9 @@ jobs:
   scale_services_down:
     if: always()
     name: scale down staging services
-    uses: ./.github/workflows/_scale-services.yml
+    uses: $/.github/workflows/_scale-services.yml
+    permissions:
+      id-token: write
     needs:
       - resilience_tests_staging
     with:

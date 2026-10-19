@@ -11,84 +11,91 @@ use JMS\Serializer\Annotation as JMS;
 #[ORM\Entity]
 class VisitsCare
 {
-    /**
-     * @var int
-     */
     #[JMS\Groups(['visits-care'])]
     #[JMS\Type('integer')]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'safeguarding_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\OneToOne(inversedBy: 'visitsCare', targetEntity: Report::class)]
-    private $report;
+    private Report $report;
 
     /**
-     * @var ?string yes|no|null
+     * yes|no|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
     #[ORM\Column(name: 'do_you_live_with_client', type: 'string', length: 4, nullable: true)]
-    private $doYouLiveWithClient;
+    private ?string $doYouLiveWithClient = null;
 
-    /**
-     * @var ?string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
     #[ORM\Column(name: 'how_often_contact_client', type: 'text', nullable: true)]
-    private $howOftenDoYouContactClient;
+    private ?string $howOftenDoYouContactClient = null;
 
     /**
-     * @var ?string yes|no|null
+     * yes|no|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
     #[ORM\Column(name: 'does_client_receive_paid_care', type: 'text', nullable: true)]
-    private $doesClientReceivePaidCare;
+    private ?string $doesClientReceivePaidCare = null;
 
     /**
-     * @var ?string client_pays_for_all | client_gets_financial_help | all_care_is_paid_by_someone_else
+     * client_pays_for_all | client_gets_financial_help | all_care_is_paid_by_someone_else
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
-    #[ORM\Column(name: 'how_is_care_funded', length: 255, type: 'string', nullable: true)]
-    private $howIsCareFunded;
+    #[ORM\Column(name: 'how_is_care_funded', type: 'string', length: 255, nullable: true)]
+    private ?string $howIsCareFunded = null;
 
-    /**
-     * @var ?string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
     #[ORM\Column(name: 'who_is_doing_the_caring', type: 'text', nullable: true)]
-    private $whoIsDoingTheCaring;
+    private ?string $whoIsDoingTheCaring = null;
 
     /**
-     * @var ?string yes|no|null
+     * yes|no|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])] // Setting this due to JMS bug that returned a name of does_client_have_acare_plan
     #[JMS\SerializedName('does_client_have_a_care_plan')]
     #[ORM\Column(name: 'does_client_have_a_care_plan', type: 'string', length: 4, nullable: true)]
-    private $doesClientHaveACarePlan;
+    private ?string $doesClientHaveACarePlan = null;
 
-    /**
-     * @var ?\DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['visits-care'])]
     #[ORM\Column(name: 'when_was_care_plan_last_reviewed', type: 'date', nullable: true, options: ['default' => null])]
-    private $whenWasCarePlanLastReviewed;
+    private ?\DateTime $whenWasCarePlanLastReviewed = null;
+
+    public function __construct(Report $report)
+    {
+        $this->report = $report;
+    }
+
 
     public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    public function setReport(?Report $report = null): static
+    public function setId(int $id): static
+    {
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
+    }
+
+    public function setReport(Report $report): static
     {
         $this->report = $report;
 

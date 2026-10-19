@@ -26,6 +26,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 class DeputyExpenseController extends AbstractController
 {
     private static array $jmsGroups = [
+        'created-at',
         'expenses',
         'expenses-state',
         'account',
@@ -213,6 +214,7 @@ class DeputyExpenseController extends AbstractController
 
         return [
             'report' => $report,
+            'expenses' => $report->getExpenses()
         ];
     }
 

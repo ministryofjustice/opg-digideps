@@ -16,6 +16,7 @@
 **.crt
 **.ca
 **.key
+**.zip
 ecs-helper
 opg-ecs-helper_*.tar.gz
 /composer.lock
@@ -56,7 +57,7 @@ log/pact.log
 **/client/resources/public/*.png
 **/client/resources/public/*.ico
 **/parameters.yml
-lambdas/functions/block_ips_lambda/block_ips.zip
+lambdas/functions/security_lambda/security.zip
 ecs-helper
 opg-ecs-helper_*.tar.gz
 
@@ -80,3 +81,4 @@ api/cachegrind/*/cachegrind*
 
 #Zap
 zap/ModernReport/
+/.php-cs-fixer.php

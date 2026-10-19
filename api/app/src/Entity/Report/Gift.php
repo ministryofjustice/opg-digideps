@@ -15,112 +15,81 @@ class Gift
 {
     use HasBankAccountTrait;
 
-    /**
-     * @var int
-     */
     #[JMS\Groups(['gifts'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'gift_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['gifts'])]
     #[ORM\Column(name: 'explanation', type: 'text', nullable: false)]
-    private $explanation;
+    private string $explanation;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['gifts'])]
     #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
-    private $amount;
+    private ?string $amount = null;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'gifts')]
-    private $report;
+    private Report $report;
 
-    public function __construct(Report $report)
+    public function __construct(Report $report, string $explanation)
     {
         $this->report = $report;
+        $this->explanation = $explanation;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
-        $this->id = $id;
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getExplanation()
+    public function getExplanation(): string
     {
         return $this->explanation;
     }
 
-    /**
-     * @param mixed $explanation
-     *
-     * @return Gift
-     */
-    public function setExplanation($explanation)
+    public function setExplanation(string $explanation): static
     {
         $this->explanation = $explanation;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAmount()
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    /**
-     * @param string $amount
-     *
-     * @return Gift
-     */
-    public function setAmount($amount)
+    public function setAmount(null|float|int|string $amount): static
     {
-        $this->amount = $amount;
+        $this->amount = $amount !== null ? (string)$amount : null;
 
         return $this;
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    /**
-     * @param Report $report
-     */
-    public function setReport($report)
+    public function setReport(Report $report): void
     {
         $this->report = $report;
     }

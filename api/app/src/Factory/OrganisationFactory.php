@@ -50,9 +50,6 @@ class OrganisationFactory
             throw new \InvalidArgumentException(sprintf("Unable to create organisation with name '%s' from 'emailIdentifier': '%s'", $name, $emailIdentifier));
         }
 
-        return new Organisation()
-            ->setName($name)
-            ->setEmailIdentifier($emailIdentifier)
-            ->setIsActivated($isActivated);
+        return new Organisation($name, $emailIdentifier, $isActivated);
     }
 }
