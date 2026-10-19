@@ -281,7 +281,7 @@
                     {% endfor %}
                     <ul>
                         {% for deputy in message.deputies %}
-                            <li>{{ 'alert.email' | trans({}, 'admin-fixtures') }}: <strong>{{ deputy.email }}</strong></li>
+                            <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.email' | trans({}, 'admin-fixtures') }}: <strong>{{ deputy.email }}</strong></li>
                         {% endfor %}
                     </ul>
                 {%  endif %}
