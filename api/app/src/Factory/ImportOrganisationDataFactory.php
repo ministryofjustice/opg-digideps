@@ -88,8 +88,8 @@ class ImportOrganisationDataFactory implements DataFactoryInterface
                     $updated = $this->execute("
                         UPDATE organisation o
                         SET name = CASE
+                            WHEN o.name <> '' AND o.name <> 'Your Organisation' THEN o.name
                             WHEN COALESCE(sso.name, '') <> '' THEN sso.name
-                            WHEN o.name <> '' THEN o.name
                             ELSE 'Your Organisation'
                         END
                         FROM staging.sirius_organisation sso
