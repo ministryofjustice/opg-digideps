@@ -17,7 +17,9 @@ class MoneyTransferType extends AbstractType
         $banks = [];
         foreach ($options['banks'] as $bank) {
             /** @var BankAccount $bank */
-            $banks[$bank->getNameOneLine()] = $bank->getId();
+            if (!empty($bank->getNameOneLine())) {
+                $banks[$bank->getNameOneLine()] = $bank->getId();
+            }
         }
 
         $builder

@@ -8,6 +8,9 @@ use OPG\Digideps\Frontend\Components\RenderableInterface;
 
 final readonly class Cell
 {
+    //Should be 'numeric' but that would be inconsistent with other tables currently
+    public const string NUMERIC_FORMAT = '';
+
     public string $className;
 
     public function __construct(

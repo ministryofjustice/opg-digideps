@@ -17,7 +17,7 @@ export default class LoginPage {
     await this.page.fill("#login_password", user.password);
 
     await Promise.all([
-      this.page.waitForLoadState("networkidle"),
+      this.page.waitForLoadState(),
       this.page.click("#login_login"),
     ]);
   }
