@@ -38,7 +38,7 @@ export interface UserDetails {
   email: string;
 }
 
-interface DeputyDetails {
+export interface DeputyDetails {
   firstName: string;
   lastName: string;
   postCode: string;
@@ -60,16 +60,16 @@ interface OrderDetails {
   reports: ReportDetails[];
 }
 
-interface Client {
+export interface ClientDetails {
   id: number;
-  caseNumber: string | null;
-  lastName: string | null;
+  caseNumber: string;
+  lastName: string;
 }
 
 export interface Scenario {
   users: { [userReference: string]: UserDetails };
   orders: OrderDetails[];
-  client: Client;
+  client: ClientDetails;
   deputies: { [userReference: string]: DeputyDetails };
 }
 
