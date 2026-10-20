@@ -55,4 +55,19 @@ export default class AccountRequestPage {
       this.page.getByRole("heading", { name: "Please check your email" }),
     ).not.toBeNull();
   }
+
+  expectNotMatchedErrorMessage() {
+    expect(
+      this.page.locator(
+        "The information you've given us does not match our records.",
+      ),
+    ).not.toBe(null);
+  }
+
+  // TODO remove once real account service is in place
+  async selectMockResponseToReceive(optionLabel: string) {
+    await this.page
+      .getByLabel("Mock response to receive")
+      .selectOption({ label: optionLabel });
+  }
 }

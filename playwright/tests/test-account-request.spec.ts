@@ -19,6 +19,12 @@ test("user can request an account if they enter valid details", async ({
     await accountRequestPage.goto();
     await accountRequestPage.enterDeputyDetails(deputy);
     await accountRequestPage.enterClientDetails(client);
+
+    // TODO remove once the real account service is available
+    await accountRequestPage.selectMockResponseToReceive(
+      "Valid details entered",
+    );
+
     await accountRequestPage.signUp();
 
     await accountRequestPage.isExpected();
@@ -32,4 +38,32 @@ test("user can request an account if they enter valid details", async ({
       deputies: [{ ref: deputyRef, type: "LAY" }],
     }),
   ).then((fixture) => runTest(fixture.data as Scenario));
+});
+
+test("user account request is rejected if they enter non-matching details", async ({
+  page,
+}) => {
+  // deputy and client are not in the db, so will not match, despite
+  // form validation passing
+  const deputy = {
+    firstName: "Jet",
+    lastName: "Caroom",
+    postCode: "B1 2XX",
+    email: "jet.caroom@opg.test",
+  };
+
+  const client = { id: 1, caseNumber: "1234567890", lastName: "Fraberge-Egg" };
+
+  const accountRequestPage = new AccountRequestPage(page);
+  await accountRequestPage.goto();
+  await accountRequestPage.enterDeputyDetails(deputy);
+  await accountRequestPage.enterClientDetails(client);
+
+  // TODO remove once the real account service is available
+  await accountRequestPage.selectMockResponseToReceive("Details not matched");
+
+  await accountRequestPage.signUp();
+
+  await accountRequestPage.isExpected();
+  accountRequestPage.expectNotMatchedErrorMessage();
 });
