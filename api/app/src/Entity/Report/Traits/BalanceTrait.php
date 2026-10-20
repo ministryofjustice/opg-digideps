@@ -77,7 +77,7 @@ trait BalanceTrait
             + $this->getMoneyInTotal()
             - $this->getMoneyOutTotal()
             - ($this->hasSection(Report::SECTION_PROF_DEPUTY_COSTS) ? $this->getProfDeputyTotalCosts() ?? 0.0 : 0.0)
-            - ($this->has106Flag() ? $this->getFeesTotal() : 0.0)
+            - ($this->isPAreport() ? $this->getFeesTotal() : 0.0)
             - $this->getExpensesTotal()
             - $this->getGiftsTotal();
     }

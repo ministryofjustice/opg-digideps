@@ -259,9 +259,9 @@ def is_successful_request(
     status: int,
     request_uri: str,
 ) -> bool:
-    """Return True for non-root successful requests."""
+    """Return True for non-root and non temporary redirect (302) successful requests."""
 
-    return status < 399 and request_uri != "/"
+    return status < 399 and status != 302 and request_uri != "/"
 
 
 def is_authenticated_route(

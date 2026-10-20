@@ -1141,19 +1141,7 @@ parameters:
 			path: src/Controller/Admin/StatsController.php
 
 		-
-			message: '#^Parameter \#1 \$satisfactions of method OPG\\Digideps\\Frontend\\Service\\Csv\\SatisfactionCsvGenerator\:\:generateSatisfactionResponsesCsv\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Admin/StatsController.php
-
-		-
 			message: '#^Parameter \#1 \$userResearchResponses of method OPG\\Digideps\\Frontend\\Service\\Csv\\UserResearchResponseCsvGenerator\:\:generateUserResearchResponsesCsv\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Admin/StatsController.php
-
-		-
-			message: '#^Parameter \#2 \$csvContent of method OPG\\Digideps\\Frontend\\Controller\\Admin\\StatsController\:\:csvResponseGeneration\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/Admin/StatsController.php
@@ -3469,12 +3457,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setMentalCapacity\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -4151,12 +4133,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: src/EventDispatcher/ObservableEventDispatcher.php
-
-		-
-			message: '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\Session\\SessionInterface\:\:setFlash\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/EventListener/AuthenticationHandler.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\EventListener\\ForbiddenExceptionListener\:\:onKernelException\(\) has no return type specified\.$#'
@@ -5147,12 +5123,6 @@ parameters:
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Form/Report/MentalAssessment.php
-
-		-
-			message: '#^Cannot call method getHasCapacityChanged\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Form/Report/MentalCapacityType.php
 
 		-
 			message: '#^Parameter \#1 \$child of method Symfony\\Component\\Form\\FormBuilderInterface\:\:add\(\) expects string\|Symfony\\Component\\Form\\FormBuilderInterface, mixed given\.$#'
@@ -7135,48 +7105,6 @@ parameters:
 			path: src/Service/Csv/ReportImbalanceCsvGenerator.php
 
 		-
-			message: '#^Cannot call method format\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getComments\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getCreated\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getDeputyrole\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getReporttype\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Cannot call method getScore\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Csv\\SatisfactionCsvGenerator\:\:generateSatisfactionResponsesCsv\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Service/Csv/SatisfactionCsvGenerator.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -8557,12 +8485,6 @@ parameters:
 			path: src/Service/ReportSubmissionService.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService\:\:assertReportSubmissionIsDownloadable\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService\:\:getReportSubmissionById\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -8767,12 +8689,6 @@ parameters:
 			path: src/TestHelpers/ReportHelpers.php
 
 		-
-			message: '#^Parameter \#1 \$deputyRole of method OPG\\Digideps\\Frontend\\Entity\\Report\\Satisfaction\:\:setDeputyRole\(\) expects string, int\|string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/TestHelpers/SatisfactionHelpers.php
-
-		-
 			message: '#^Argument of an invalid type array\|object supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -8873,18 +8789,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Parameter \#1 \$deputyshipLength of method OPG\\Digideps\\Frontend\\Entity\\UserResearch\\UserResearchResponse\:\:setDeputyshipLength\(\) expects string, int\|string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/TestHelpers/UserResearchResponseHelpers.php
-
-		-
-			message: '#^Parameter \#1 \$user of method OPG\\Digideps\\Frontend\\Entity\\UserResearch\\UserResearchResponse\:\:setUser\(\) expects OPG\\Digideps\\Frontend\\Entity\\User\|null, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/TestHelpers/UserResearchResponseHelpers.php
 
 		-
 			message: '#^Cannot call method format\(\) on mixed\.$#'

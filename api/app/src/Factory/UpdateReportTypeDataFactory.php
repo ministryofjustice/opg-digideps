@@ -35,7 +35,11 @@ readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
             INNER JOIN court_order co
                 ON co.id = r.pfa_court_order_id AND co.order_type = 'pfa'
                 OR co.id = r.hw_court_order_id AND co.order_type = 'hw'
-            WHERE co.status = 'ACTIVE'
+            WHERE
+                co.status = 'ACTIVE'
+                AND NOT COALESCE(r.submitted, FALSE)
+                AND r.submit_date IS NULL
+                AND r.un_submit_date IS NULL
         SQL);
 
         foreach ($result->iterateColumn() as $reportId) {

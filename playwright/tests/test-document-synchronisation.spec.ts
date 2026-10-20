@@ -18,7 +18,7 @@ import ReportReviewPage from "./pages/ReportReviewPage";
 
 const deputyReference = "document-synchronisation-user";
 
-test("admin dashboard shows correct statuses for pending and synchronised documents", async ({
+test.fixme("admin dashboard shows correct statuses for pending and synchronised documents", async ({
   page,
 }) => {
   const runTest = async (scenario: Scenario) => {

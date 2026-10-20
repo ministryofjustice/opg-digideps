@@ -1,3 +1,9 @@
+locals {
+  aurora_unusual_read_throughput_minimum  = 1000000
+  aurora_unusual_network_transmit_minimum = 1000000
+  aurora_unusual_read_iops_minimum        = 300
+}
+
 resource "aws_cloudwatch_metric_alarm" "aurora_high_cpu" {
   for_each = module.database.instance_identifiers
 
@@ -66,7 +72,7 @@ resource "aws_cloudwatch_log_metric_filter" "database_analyse_in_progress" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "aurora_unusual_throughput" {
-  for_each = module.database.instance_identifiers
+  for_each = var.account.environment.is_production == 1 ? module.database.instance_identifiers : tomap({})
 
   alarm_name          = "${local.environment}-aurora-${each.key}-unusual-throughput"
   alarm_description   = "Aurora instance ${each.value} has experienced unusually high read or network transmit throughput for at least 10 minutes."
@@ -78,7 +84,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_throughput" {
 
   metric_query {
     id          = "unusual_throughput"
-    expression  = "IF(read_throughput > read_throughput_limit OR network_transmit > network_transmit_limit, 1, 0)"
+    expression  = "IF((read_throughput > read_throughput_limit AND read_throughput > ${local.aurora_unusual_read_throughput_minimum}) OR (network_transmit > network_transmit_limit AND network_transmit > ${local.aurora_unusual_network_transmit_minimum}), 1, 0)"
     label       = "Unusual database throughput"
     return_data = true
   }
@@ -92,7 +98,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_throughput" {
 
   metric_query {
     id          = "normal_read_throughput_limit"
-    expression  = "LAST(ANOMALY_DETECTION_BAND(read_throughput, 4))"
+    expression  = "LAST(ANOMALY_DETECTION_BAND(read_throughput, 8))"
     label       = "Normal read throughput limit"
     return_data = false
   }
@@ -106,7 +112,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_throughput" {
 
   metric_query {
     id          = "normal_network_transmit_limit"
-    expression  = "LAST(ANOMALY_DETECTION_BAND(network_transmit, 4))"
+    expression  = "LAST(ANOMALY_DETECTION_BAND(network_transmit, 8))"
     label       = "Normal network transmit limit"
     return_data = false
   }
@@ -158,12 +164,12 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_throughput" {
   alarm_actions             = [data.aws_sns_topic.alerts.arn]
   ok_actions                = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   insufficient_data_actions = []
-  actions_enabled           = false
+  actions_enabled           = var.account.environment.alarms_active
   tags                      = var.default_tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "aurora_unusual_read_iops" {
-  for_each = module.database.instance_identifiers
+  for_each = var.account.environment.is_production == 1 ? module.database.instance_identifiers : tomap({})
 
   alarm_name          = "${local.environment}-aurora-${each.key}-unusual-read-iops"
   alarm_description   = "Aurora instance ${each.value} has experienced unusually high read IOPS for at least 10 minutes."
@@ -175,7 +181,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_read_iops" {
 
   metric_query {
     id          = "unusual_read_iops"
-    expression  = "IF(read_iops > read_iops_limit, 1, 0)"
+    expression  = "IF(read_iops > read_iops_limit AND read_iops > ${local.aurora_unusual_read_iops_minimum}, 1, 0)"
     label       = "Unusual read IOPS"
     return_data = true
   }
@@ -189,7 +195,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_read_iops" {
 
   metric_query {
     id          = "normal_read_iops_limit"
-    expression  = "LAST(ANOMALY_DETECTION_BAND(read_iops, 4))"
+    expression  = "LAST(ANOMALY_DETECTION_BAND(read_iops, 8))"
     label       = "Normal read IOPS limit"
     return_data = false
   }
@@ -225,6 +231,6 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_read_iops" {
   alarm_actions             = [data.aws_sns_topic.alerts.arn]
   ok_actions                = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   insufficient_data_actions = []
-  actions_enabled           = false
+  actions_enabled           = var.account.environment.alarms_active
   tags                      = var.default_tags
 }
