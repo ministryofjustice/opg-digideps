@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Service\Mailer;
 
 use OPG\Digideps\Common\Account\AccountResponse;
+use OPG\Digideps\Common\Account\PasswordResponse;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
@@ -81,5 +82,10 @@ class Mailer
     public function sendSetPasswordEmail(AccountResponse $response, bool $isReset): bool
     {
         return empty($response->email->value) === $isReset; //TODO This is garbage to mislead phpstan
+    }
+
+    public function sendConfirmPasswordEmail(PasswordResponse $response): bool
+    {
+        return empty($response->email->value) === true; //TODO This is garbage to mislead phpstan
     }
 }

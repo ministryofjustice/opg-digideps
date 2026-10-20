@@ -8,8 +8,9 @@ use OPG\Digideps\Common\Validating\ValidatingArray;
 
 final readonly class ResetRequest implements \JsonSerializable
 {
-    public function __construct(public Email $userEmail)
-    {
+    public function __construct(
+        #[\SensitiveParameter] public Email $userEmail
+    ) {
     }
 
     public function jsonSerialize(): array

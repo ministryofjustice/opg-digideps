@@ -8,13 +8,14 @@ use OPG\Digideps\Common\Validating\ValidatingArray;
 
 final readonly class PasswordResponse implements \JsonSerializable
 {
-    public function __construct()
-    {
+    public function __construct(
+        #[\SensitiveParameter] public Email $email
+    ) {
     }
 
     public function jsonSerialize(): array
     {
-        return [];
+        return ['email' => $this->email];
     }
 
     public static function jsonDeserialize(string $json): PasswordResponse|AccountError
@@ -24,6 +25,8 @@ final readonly class PasswordResponse implements \JsonSerializable
         if ($error !== null) {
             return AccountError::from($error);
         }
-        return new PasswordResponse();
+        return new PasswordResponse(
+            new Email($data->getStringOrThrow('email')),
+        );
     }
 }
