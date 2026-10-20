@@ -20,4 +20,4 @@ Feature: Section navigation - Public Authority (see section-navigation.lay.combi
         Given a Public Authority Deputy has not started a Combined High Assets report
         When I visit the health and lifestyle report section
         Then the previous section should be "Visits and care"
-        And the next section should be "Deputy fees and expenses"
+        And the next section should be "Benefits check and money others received"
