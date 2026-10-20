@@ -19,8 +19,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent]
 final class Assets
 {
-    private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
-
     public ?SummaryList $list = null;
     /**
      * @var array<Table>
@@ -84,7 +82,7 @@ final class Assets
             );
             $total += (float)$asset->getValue();
         }
-        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, true));
+        $builder->addRow(new Cell($this->text['totalAmount'], isHeader: true), '', new Cell($this->formatMoney($total), Cell::NUMERIC_FORMAT, true));
         return $builder->makeTable();
     }
 
@@ -133,7 +131,7 @@ final class Assets
     {
         return new TableBuilder(true)
             ->addColumns(1, 1, 1)
-            ->addRow(new Cell($this->text['totalValue'], colspan: 2), new Cell($this->formatMoney((float)$report->getAssetsTotalValue()), self::NUMERIC_FORMAT, isBold: true))
+            ->addRow(new Cell($this->text['totalValue'], colspan: 2), new Cell($this->formatMoney((float)$report->getAssetsTotalValue()), Cell::NUMERIC_FORMAT, isBold: true))
             ->makeTable();
     }
 
