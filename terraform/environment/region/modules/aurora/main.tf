@@ -21,6 +21,7 @@ resource "aws_rds_cluster" "cluster_serverless" {
   vpc_security_group_ids              = var.vpc_security_group_ids
   tags                                = var.tags
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
+  allow_major_version_upgrade         = var.allow_major_version_upgrade
 
   serverlessv2_scaling_configuration {
     min_capacity = var.min_acu

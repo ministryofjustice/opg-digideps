@@ -20,6 +20,7 @@ module "database" {
   iam_database_authentication_enabled = true
   min_acu                             = var.account.db.min_acu
   max_acu                             = var.account.db.max_acu
+  allow_major_version_upgrade         = var.account.environment.name == "production" ? false : true
 }
 
 moved {
