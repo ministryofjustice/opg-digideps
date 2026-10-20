@@ -1,7 +1,8 @@
 locals {
-  aurora_unusual_read_throughput_minimum  = 1000000
-  aurora_unusual_network_transmit_minimum = 1000000
-  aurora_unusual_read_iops_minimum        = 300
+  aurora_unusual_read_throughput_minimum  = 1000000 # Minimum read throughput considered unusual
+  aurora_unusual_network_transmit_minimum = 1000000 # Minimum network transmit considered unusual
+  aurora_unusual_read_iops_minimum        = 300     # Minimum read IOPS considered unusual
+  aurora_anomaly_detection_band_width     = 12      # The higher this value, the less sensitive the anomaly detection will be, while lower values make it more sensitive (and prone to more false alarms)
 }
 
 resource "aws_cloudwatch_metric_alarm" "aurora_high_cpu" {
@@ -58,13 +59,13 @@ resource "aws_cloudwatch_metric_alarm" "aurora_high_acu" {
 
 # AuroraDB Exfiltration Alarms
 
-resource "aws_cloudwatch_log_metric_filter" "database_analyse_in_progress" {
-  name           = "DatabaseAnalyseInProgress.${local.environment}"
-  pattern        = "database_analyse_in_progress"
+resource "aws_cloudwatch_log_metric_filter" "database_activity_in_progress" {
+  name           = "DatabaseActivityInProgress.${local.environment}"
+  pattern        = "database_activity_in_progress"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
-    name          = "DatabaseAnalyseInProgress.${local.environment}"
+    name          = "DatabaseActivityInProgress.${local.environment}"
     namespace     = "DigiDeps/Database"
     value         = "1"
     default_value = "0"
@@ -91,28 +92,28 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_throughput" {
 
   metric_query {
     id          = "read_throughput_limit"
-    expression  = "IF(FILL(database_analyse_running, 0) > 0, normal_read_throughput_limit * 2, normal_read_throughput_limit)"
+    expression  = "IF(FILL(database_activity_running, 0) > 0, normal_read_throughput_limit * 2, normal_read_throughput_limit)"
     label       = "Read throughput limit"
     return_data = false
   }
 
   metric_query {
     id          = "normal_read_throughput_limit"
-    expression  = "LAST(ANOMALY_DETECTION_BAND(read_throughput, 8))"
+    expression  = "LAST(ANOMALY_DETECTION_BAND(read_throughput, ${local.aurora_anomaly_detection_band_width}))"
     label       = "Normal read throughput limit"
     return_data = false
   }
 
   metric_query {
     id          = "network_transmit_limit"
-    expression  = "IF(FILL(database_analyse_running, 0) > 0, normal_network_transmit_limit * 2, normal_network_transmit_limit)"
+    expression  = "IF(FILL(database_activity_running, 0) > 0, normal_network_transmit_limit * 2, normal_network_transmit_limit)"
     label       = "Network transmit limit"
     return_data = false
   }
 
   metric_query {
     id          = "normal_network_transmit_limit"
-    expression  = "LAST(ANOMALY_DETECTION_BAND(network_transmit, 8))"
+    expression  = "LAST(ANOMALY_DETECTION_BAND(network_transmit, ${local.aurora_anomaly_detection_band_width}))"
     label       = "Normal network transmit limit"
     return_data = false
   }
@@ -150,12 +151,12 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_throughput" {
   }
 
   metric_query {
-    id          = "database_analyse_running"
+    id          = "database_activity_running"
     return_data = false
 
     metric {
-      namespace   = aws_cloudwatch_log_metric_filter.database_analyse_in_progress.metric_transformation[0].namespace
-      metric_name = aws_cloudwatch_log_metric_filter.database_analyse_in_progress.metric_transformation[0].name
+      namespace   = aws_cloudwatch_log_metric_filter.database_activity_in_progress.metric_transformation[0].namespace
+      metric_name = aws_cloudwatch_log_metric_filter.database_activity_in_progress.metric_transformation[0].name
       period      = 300
       stat        = "Maximum"
     }
@@ -188,14 +189,14 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_read_iops" {
 
   metric_query {
     id          = "read_iops_limit"
-    expression  = "IF(FILL(database_analyse_running, 0) > 0, normal_read_iops_limit * 2, normal_read_iops_limit)"
+    expression  = "IF(FILL(database_activity_running, 0) > 0, normal_read_iops_limit * 2, normal_read_iops_limit)"
     label       = "Read IOPS limit"
     return_data = false
   }
 
   metric_query {
     id          = "normal_read_iops_limit"
-    expression  = "LAST(ANOMALY_DETECTION_BAND(read_iops, 8))"
+    expression  = "LAST(ANOMALY_DETECTION_BAND(read_iops, ${local.aurora_anomaly_detection_band_width}))"
     label       = "Normal read IOPS limit"
     return_data = false
   }
@@ -217,12 +218,12 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_read_iops" {
   }
 
   metric_query {
-    id          = "database_analyse_running"
+    id          = "database_activity_running"
     return_data = false
 
     metric {
-      namespace   = aws_cloudwatch_log_metric_filter.database_analyse_in_progress.metric_transformation[0].namespace
-      metric_name = aws_cloudwatch_log_metric_filter.database_analyse_in_progress.metric_transformation[0].name
+      namespace   = aws_cloudwatch_log_metric_filter.database_activity_in_progress.metric_transformation[0].namespace
+      metric_name = aws_cloudwatch_log_metric_filter.database_activity_in_progress.metric_transformation[0].name
       period      = 300
       stat        = "Maximum"
     }

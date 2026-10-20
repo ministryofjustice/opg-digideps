@@ -488,6 +488,10 @@ services:
                       "active",
                   ]
                 - [
+                      '@OPG\Digideps\Backend\Factory\FixClientOrganisationFactory',
+                      "active",
+                  ]
+                - [
                       '@OPG\Digideps\Backend\Factory\RequiredReport\RequiredReportDataFactory',
                       "active",
                   ]

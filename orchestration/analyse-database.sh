@@ -9,7 +9,7 @@ export PGPASSWORD=$POSTGRES_PASSWORD
 POSTGRES_HOST_OPTS="-h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER"
 
 while true; do
-    echo "database_analyse_in_progress"
+    echo "database_activity_in_progress activity=database_analyse"
     sleep 45
 done &
 heartbeat_pid=$!

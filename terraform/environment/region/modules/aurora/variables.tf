@@ -156,3 +156,9 @@ variable "max_acu" {
   description = "The maximum acu value."
   type        = number
 }
+
+variable "allow_major_version_upgrade" {
+  description = "Whether to allow major version upgrades."
+  type        = bool
+  default     = false
+}
