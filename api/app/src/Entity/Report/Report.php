@@ -200,7 +200,7 @@ class Report
         ];
     }
 
-    #[JMS\Groups(['report', 'report-id'])]
+    #[JMS\Groups(['report', 'report-id', 'report'])]
     #[JMS\Type('integer')]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
