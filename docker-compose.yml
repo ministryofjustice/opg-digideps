@@ -160,7 +160,7 @@ services:
 
   postgres:
     container_name: opg-digideps-postgres
-    image: postgres:14.24@sha256:156f0b253fd61366d5fc2107ad45955027d5612f695a8436ce20167f3fa79bff
+    image: postgres:16.15-alpine3.24@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
     ports:
       - 5432:5432
     env_file:
