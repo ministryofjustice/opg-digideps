@@ -45,7 +45,7 @@ class ReportSectionsLinkService
         ];
 
         // defined order for Client profile page (PROF or PA)
-        if ($report->hasSection('paDeputyExpenses')) { // PAs
+        if ($report->isPAreport()) { // PAs
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
                 'clientBenefitsCheck',
@@ -57,7 +57,7 @@ class ReportSectionsLinkService
                 'actions', 'otherInfo',
                 'documents',
             ];
-        } elseif ($report->hasSection('profDeputyCosts')) { // Professionals
+        } elseif ($report->isProfReport()) { // Professionals
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
                 'clientBenefitsCheck',

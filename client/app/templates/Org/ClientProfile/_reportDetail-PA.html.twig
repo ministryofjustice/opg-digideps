@@ -136,8 +136,32 @@
                                 info: true,
                                 description: true,
                                 state: reportStatus.lifestyleState
-                                } %}
+                            } %}
                         {%  endif %}
+
+                        {% if report.hasSection('clientBenefitsCheck') %}
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'client_benefits_check',
+                                sectionId: 'clientBenefitsCheck',
+                                report: report,
+                                state: reportStatus.clientBenefitsCheckState,
+                                linkToSubSection: path('client_benefits_check', {'reportId': report.id}),
+                                description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('bankAccounts') %}
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'bank_accounts',
+                                sectionId: 'bankAccounts',
+                                report: report,
+                                state: reportStatus.bankAccountsState,
+                                warning: true,
+                                description: true
+                            } %}
+                        {% endif %}
 
                         {% if report.hasSection('gifts') %}
                             {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
@@ -147,6 +171,107 @@
                                 report: report,
                                 state: reportStatus.giftsState,
                                 linkToSubSection: path('gifts', {'reportId': report.id}),
+                                description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('moneyTransfers') %}
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'money_transfers',
+                                sectionId: 'moneyTransfers',
+                                report: report,
+                                state: reportStatus.moneyTransferState,
+                                warning: true,
+                                description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('moneyIn') %}
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'money_in',
+                                sectionId: 'moneyIn',
+                                report: report,
+                                state: reportStatus.moneyInState,
+                                warning: true,
+                                description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('moneyOut') %}
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'money_out',
+                                sectionId: 'moneyOut',
+                                report: report,
+                                state: reportStatus.moneyOutState,
+                                warning: true,
+                                description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('moneyInShort') %}
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'money_in_short',
+                                sectionId: 'moneyInShort',
+                                report: report,
+                                state: reportStatus.MoneyInShortState,
+                                warning: true,
+                                description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('moneyOutShort') %}
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'money_out_short',
+                                sectionId: 'moneyOutShort',
+                                report: report,
+                                state: reportStatus.MoneyOutShortState,
+                                warning: true,
+                                description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('balance') %}
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'balance',
+                                sectionId: 'balance',
+                                report: report,
+                                state: reportStatus.balanceState,
+                                warning: true,
+                                description: true,
+                                customiseAllLabels: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('assets') %}
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'assets',
+                                sectionId: 'assets',
+                                report: report,
+                                state: reportStatus.assetsState,
+                                list: true,
+                                description: true
+                            } %}
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="govuk-grid-column-one-half">
+                    <ul>
+                        {% if report.hasSection('debts') %}
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'debts',
+                                sectionId: 'debts',
+                                report: report,
+                                state: reportStatus.debtsState,
+                                list: true,
                                 description: true
                             } %}
                         {% endif %}
@@ -185,123 +310,6 @@
                                 info: true,
                                 description: true,
                                 state: reportStatus.otherInfoState,
-                            } %}
-                        {% endif %}
-                    </ul>
-                </div>
-
-                <div class="govuk-grid-column-one-half">
-                    <ul>
-                        {% if report.hasSection('clientBenefitsCheck') %}
-                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'client_benefits_check',
-                                sectionId: 'clientBenefitsCheck',
-                                report: report,
-                                state: reportStatus.clientBenefitsCheckState,
-                                linkToSubSection: path('client_benefits_check', {'reportId': report.id}),
-                                description: true
-                            } %}
-                        {% endif %}
-                        {% if report.hasSection('bankAccounts') %}
-                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'bank_accounts',
-                                sectionId: 'bankAccounts',
-                                report: report,
-                                state: reportStatus.bankAccountsState,
-                                warning: true,
-                                description: true
-                            } %}
-                        {% endif %}
-
-                        {% if report.hasSection('balance') %}
-                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'balance',
-                                sectionId: 'balance',
-                                report: report,
-                                state: reportStatus.balanceState,
-                                warning: true,
-                                description: true,
-                                customiseAllLabels: true
-                            } %}
-                        {% endif %}
-
-                        {% if report.hasSection('moneyTransfers') %}
-                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'money_transfers',
-                                sectionId: 'moneyTransfers',
-                                report: report,
-                                state: reportStatus.moneyTransferState,
-                                warning: true,
-                                description: true
-                                } %}
-                        {% endif %}
-
-                        {% if report.hasSection('moneyIn') and report.hasSection('moneyOut') %}
-                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'money_in',
-                                sectionId: 'moneyIn',
-                                report: report,
-                                state: reportStatus.moneyInState,
-                                warning: true,
-                                description: true
-                            } %}
-                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'money_out',
-                                sectionId: 'moneyOut',
-                                report: report,
-                                state: reportStatus.moneyOutState,
-                                warning: true,
-                                description: true
-                            } %}
-                        {% endif %}
-                        {% if report.hasSection('moneyInShort') and report.hasSection('moneyOutShort') %}
-                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'money_in_short',
-                                sectionId: 'moneyInShort',
-                                report: report,
-                                state: reportStatus.MoneyInShortState,
-                                warning: true,
-                                description: true
-                            } %}
-                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'money_out_short',
-                                sectionId: 'moneyOutShort',
-                                report: report,
-                                state: reportStatus.MoneyOutShortState,
-                                warning: true,
-                                description: true
-                            } %}
-                        {% endif %}
-
-                        {% if report.hasSection('assets') %}
-                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'assets',
-                                sectionId: 'assets',
-                                report: report,
-                                state: reportStatus.assetsState,
-                                list: true,
-                                description: true
-                            } %}
-                        {% endif %}
-
-                        {% if report.hasSection('debts') %}
-                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'debts',
-                                sectionId: 'debts',
-                                report: report,
-                                state: reportStatus.debtsState,
-                                list: true,
-                                description: true
                             } %}
                         {% endif %}
 
