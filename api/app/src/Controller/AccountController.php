@@ -37,7 +37,7 @@ final class AccountController extends AbstractController
     #[Route('/account/password/set', name: 'account_password_set', methods: 'POST')]
     public function set(Request $request): JsonResponse
     {
-        return new JsonResponse($this->passwordService->setPasswordFromRequest($this->decode(PasswordRequest::class, $request->getContent())) ?? ['error' => null]);
+        return new JsonResponse($this->passwordService->setPasswordFromRequest($this->decode(PasswordRequest::class, $request->getContent())));
     }
 
     /**

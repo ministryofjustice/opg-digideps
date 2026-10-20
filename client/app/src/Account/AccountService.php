@@ -48,14 +48,14 @@ final readonly class AccountService
         }
     }
 
-    public function sendPasswordRequest(PasswordRequest $request): true|AccountError
+    public function sendPasswordRequest(PasswordRequest $request): Email|AccountError
     {
         try {
             $response = PasswordResponse::jsonDeserialize($this->restClient->post('/account/password/set', $request, expectedResponseType: 'raw'));
             if ($response instanceof AccountError) {
                 return $response;
             }
-            return true;
+            return $this->sendConfirmPasswordEmail($response);
         } catch (\Throwable $_) {
             return AccountError::NetworkError;
         }
@@ -64,5 +64,10 @@ final readonly class AccountService
     private function sendSetPasswordEmail(AccountResponse $response, bool $isReset = false): Email|AccountError
     {
         return $this->mailer->sendSetPasswordEmail($response, $isReset) ? $response->email : AccountError::EmailError;
+    }
+
+    private function sendConfirmPasswordEmail(PasswordResponse $response): Email|AccountError
+    {
+        return $this->mailer->sendConfirmPasswordEmail($response) ? $response->email : AccountError::EmailError;
     }
 }

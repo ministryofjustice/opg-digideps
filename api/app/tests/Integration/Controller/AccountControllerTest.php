@@ -180,7 +180,7 @@ class AccountControllerTest extends AbstractTestController
         )]);
         $response = PasswordResponse::jsonDeserialize(json_encode($decoded) ?: '');
         $this->assertInstanceOf(PasswordResponse::class, $response);
-        $this->login($user->getEmail(), 'Hello World XXX', self::$deputySecret);
+        $this->login($response->email->value, 'Hello World XXX', self::$deputySecret);
     }
 
     public function testRequestFlow(): void
@@ -206,7 +206,7 @@ class AccountControllerTest extends AbstractTestController
         )]);
         $response = PasswordResponse::jsonDeserialize(json_encode($decoded) ?: '');
         $this->assertInstanceOf(PasswordResponse::class, $response);
-        $this->login($email, 'Hello World', self::$deputySecret);
+        $this->login($response->email->value, 'Hello World', self::$deputySecret);
     }
 
     private function makeEmail(): string
