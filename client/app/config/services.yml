@@ -418,16 +418,6 @@ services:
   line_formatter:
     class: Monolog\Formatter\LineFormatter
 
-  uuid_normalizer:
-    class: GBProd\UuidNormalizer\UuidNormalizer
-    tags:
-      - { name: serializer.normalizer }
-
-  uuid_denormalizer:
-    class: GBProd\UuidNormalizer\UuidDenormalizer
-    tags:
-      - { name: serializer.denormalizer }
-
   OPG\Digideps\Frontend\Command\CheckCSVUploadedCommand:
     class: OPG\Digideps\Frontend\Command\CheckCSVUploadedCommand
     arguments:

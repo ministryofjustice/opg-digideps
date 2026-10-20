@@ -301,6 +301,12 @@ parameters:
 			path: api/app/src/Command/UserRetentionPolicyCommand.php
 
 		-
+			message: '#^Method OPG\\Digideps\\Backend\\Controller\\AccountController\:\:decode\(\) should return T of OPG\\Digideps\\Common\\Account\\AccountRequest\|OPG\\Digideps\\Common\\Account\\PasswordRequest\|OPG\\Digideps\\Common\\Account\\ResetRequest but returns OPG\\Digideps\\Common\\Account\\AccountRequest\|OPG\\Digideps\\Common\\Account\\PasswordRequest\|OPG\\Digideps\\Common\\Account\\ResetRequest\.$#'
+			identifier: return.type
+			count: 1
+			path: api/app/src/Controller/AccountController.php
+
+		-
 			message: '#^Parameter \#1 \$content of class Symfony\\Component\\HttpFoundation\\Response constructor expects string\|null, string\|false given\.$#'
 			identifier: argument.type
 			count: 3
@@ -2473,7 +2479,7 @@ parameters:
 			path: api/app/src/Factory/ClientBenefitsCheckFactory.php
 
 		-
-			message: '#^Cannot call method toString\(\) on mixed\.$#'
+			message: '#^Cannot call method toRfc4122\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/src/Factory/ClientBenefitsCheckFactory.php
@@ -28881,6 +28887,12 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:getRecipientRole\(\) should return string but returns mixed\.$#'
 			identifier: return.type
+			count: 1
+			path: client/app/src/Service/Mailer/MailFactory.php
+
+		-
+			message: '#^Parameter \#1 \$area of method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:generateAbsoluteLink\(\) expects OPG\\Digideps\\Common\\Account\\Area, string given\.$#'
+			identifier: argument.type
 			count: 1
 			path: client/app/src/Service/Mailer/MailFactory.php
 

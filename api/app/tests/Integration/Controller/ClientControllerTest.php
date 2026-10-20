@@ -6,7 +6,7 @@ use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Fixture\Scenario;
-use Ramsey\Uuid\Uuid;
+use Symfony\Component\Uid\Uuid;
 
 class ClientControllerTest extends AbstractTestController
 {
@@ -113,7 +113,7 @@ class ClientControllerTest extends AbstractTestController
         self::$pa1 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa@example.org');
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => 'pa000001']);
 
-        $org = self::fixtures()->createOrganisation('Example', '' . Uuid::uuid4() . '@example.org', true);
+        $org = self::fixtures()->createOrganisation('Example', '' . Uuid::v4() . '@example.org', true);
         self::fixtures()->flush();
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());

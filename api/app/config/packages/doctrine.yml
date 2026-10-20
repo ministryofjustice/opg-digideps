@@ -26,8 +26,6 @@ doctrine:
                 server_version: 16.15
                 wrapper_class: OPG\Digideps\Backend\DBAL\ConnectionWrapper
                 charset: UTF8
-        types:
-            uuid: Ramsey\Uuid\Doctrine\UuidType
 
     orm:
         default_entity_manager: default
