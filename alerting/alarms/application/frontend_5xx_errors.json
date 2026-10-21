@@ -1,0 +1,23 @@
+{
+  "name": "frontend-5xx-errors",
+  "title": "Frontend is repeatedly returning HTTP 5xx responses",
+  "description": "The public frontend has returned at least one HTTP 5xx response during each of the last five minutes. This means frontend requests are repeatedly failing and require investigation.",
+  "severity": "error",
+  "investigation_steps": [
+    "Review the matching logs to identify the failing request paths, status codes, and errors",
+    "Check for recent deployments or infrastructure changes, then raise a bug or incident if further investigation is required, or try to resolve the issue if the cause is known."
+  ],
+  "logs": {
+    "log_group": "{environment}",
+    "query": [
+      "fields @timestamp, status, request_method, request_uri, upstream_status, upstream_response_time, aws_request_id, @message, @logStream",
+      "| filter service_name = \"frontend\"",
+      "| filter status >= 500 and status < 600",
+      "| filter request_uri != \"/health-check/dependencies\"",
+      "| sort @timestamp desc",
+      "| limit 100"
+    ]
+  },
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/environment/region/cloudwatch_alarms.tf"
+}
