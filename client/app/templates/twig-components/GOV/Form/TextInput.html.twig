@@ -5,7 +5,16 @@
         {% set label = (label | trans({}, 'twig-components')) ~ ' ' ~ ('opg.optional' | trans({}, 'twig-components')) %}
     {% endif %}
     {{ form_label(element, label, { label_attr: { class: "govuk-label govuk-label" } }) }}
-    {{ form_errors(element) }}
+    {% if not element.vars.valid %}
+        <div id="{{ element.vars.id }}-error">{{ form_errors(element) }}</div>
+    {% else %}
+        {{ form_errors(element) }}
+    {% endif %}
     {{ form_help(element, { help_attr: { class: "govuk-hint" } }) }}
-    {{ form_widget(element, { attr: { class: "govuk-input govuk-!-width-one-half" } }) }}
+    {% set inputAttributes = element.vars.attr|merge({ class: "govuk-input govuk-!-width-one-half" }) %}
+    {% if not element.vars.valid %}
+        {% set describedBy = (inputAttributes['aria-describedby']|default('') ~ ' ' ~ (element.vars.help ? element.vars.id ~ '_help' : '') ~ ' ' ~ element.vars.id ~ '-error')|trim %}
+        {% set inputAttributes = inputAttributes|merge({'aria-invalid': 'true', 'aria-describedby': describedBy, class: inputAttributes.class ~ ' govuk-input--error'}) %}
+    {% endif %}
+    {{ form_widget(element, { attr: inputAttributes }) }}
 </div>
