@@ -145,12 +145,6 @@ parameters:
 			path: api/app/src/Command/ApiComparison.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\ApiComparison\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Command/ApiComparison.php
-
-		-
 			message: '#^Binary operation "\+\=" between mixed and int\<0, max\> results in an error\.$#'
 			identifier: assignOp.invalid
 			count: 1
@@ -28891,12 +28885,6 @@ parameters:
 			path: client/app/src/Service/Mailer/MailFactory.php
 
 		-
-			message: '#^Parameter \#1 \$area of method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:generateAbsoluteLink\(\) expects OPG\\Digideps\\Common\\Account\\Area, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/Mailer/MailFactory.php
-
-		-
 			message: '#^Parameter \#1 \$countryCode of method OPG\\Digideps\\Frontend\\Service\\IntlService\:\:getCountryNameByCountryCode\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -30167,18 +30155,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Event/UserUpdatedEventTest.php
-
-		-
-			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\Rule\\InvokedCount\:\:getInvocationCount\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: client/app/tests/Unit/EventListener/ResponseNoCacheListenerTest.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 4
-			path: client/app/tests/Unit/EventListener/ResponseNoCacheListenerTest.php
 
 		-
 			message: '#^Class OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers constructor invoked with 0 parameters, 1 required\.$#'
@@ -31535,12 +31511,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
-
-		-
-			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\DocumentSyncCommand\:\:getDefaultName\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Command\\DocumentSyncCommandTest\:\:testSleepsWhenTurnedOff\(\) has no return type specified\.$#'
