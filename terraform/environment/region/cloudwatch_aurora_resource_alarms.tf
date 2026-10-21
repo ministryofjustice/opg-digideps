@@ -149,7 +149,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_throughput" {
   }
 
   alarm_actions             = [data.aws_sns_topic.alerts.arn]
-  ok_actions                = [data.aws_sns_topic.alerts.arn]
+  ok_actions                = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   insufficient_data_actions = []
   actions_enabled           = var.account.environment.alarms_active
   tags                      = var.default_tags
@@ -209,7 +209,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_unusual_read_iops" {
   }
 
   alarm_actions             = [data.aws_sns_topic.alerts.arn]
-  ok_actions                = [data.aws_sns_topic.alerts.arn]
+  ok_actions                = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
   insufficient_data_actions = []
   actions_enabled           = var.account.environment.alarms_active
   tags                      = var.default_tags
