@@ -127,7 +127,7 @@
             </div>
             {% if not hideEditLink  %}
                 <div class="govuk-grid-column-one-half text--right">
-                    <a class="govuk-link behat-link-add" href="{{ path('money_out_short_add', { 'reportId': report.id, 'from': 'summary'}) }}">
+                    <a class="govuk-!-font-size-19 govuk-!-font-weight-bold govuk-link behat-link-add" href="{{ path('money_out_short_add', { 'reportId': report.id, 'from': 'summary'}) }}">
                         <strong>
                             <span class="icon icon-plus"></span>
                             {{ 'summaryPage.moneyOut.addButton' | trans }}
