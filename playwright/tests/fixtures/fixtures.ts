@@ -20,6 +20,7 @@ interface ReportSpec {
 interface DeputySpec {
   ref: string;
   type: string;
+  hasRegistered?: boolean;
 }
 
 interface OrderSpec {

@@ -49,11 +49,7 @@ class AccountController extends AbstractController
                 new NonEmptyString($validatingForm->getStringOrThrow('clientLastName'))
             );
 
-            // TODO remove when we have the proper sendAccountRequest() method in place
-            $mockResponseToReceive = $validatingForm->getStringOrThrow('mockResponseToReceive');
-
-            // TODO replace with call to sendAccountRequest()
-            $response = $this->accountService->sendAccountRequestMock($accountRequest, $mockResponseToReceive);
+            $response = $this->accountService->sendAccountRequest($accountRequest);
 
             if ($response instanceof Email) {
                 $accountCreated = true;

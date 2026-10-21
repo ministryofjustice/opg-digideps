@@ -18,8 +18,8 @@ final readonly class DeputyDescriptor
         public bool $hasLogin = true,
         public bool $isActive = true,
         public bool $isPrimary = true,
-        public bool $isLoginActive = true,
         ?string $emailDomain = null,
+        public bool $hasRegistered = true,
     ) {
         if (!$this->hasLogin && $this->userType !== UserType::Deputy) {
             throw new \DomainException('Non deputy users must have a login.');

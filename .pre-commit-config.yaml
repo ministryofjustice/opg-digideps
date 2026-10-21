@@ -36,6 +36,7 @@ repos:
       - id: php-cs-fixer
         files: \.(php)$
       - id: php-stan
+        args: [-d memory_limit=512M]
         files: \.(php)$
 
   - repo: https://github.com/ministryofjustice/opg-pre-commit-hooks.git
