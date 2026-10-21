@@ -82,6 +82,6 @@ final readonly class AccountService
         /** @var StreamInterface $rawResponse */
         $rawResponse = $this->restClient->post($path, $json, expectedResponseType: 'raw');
 
-        return $rawResponse->getContents();
+        return (string) $rawResponse;
     }
 }

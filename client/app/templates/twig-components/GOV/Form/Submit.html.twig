@@ -2,7 +2,7 @@
 {% set className = 'govuk-button' %}
 {% if buttonClass is not null %}{% set className = className ~ ' ' ~ buttonClass %}{% endif %}
 {% set options = {
-    'label': element.label,
+    'label': element.vars.label,
     'attr': { 'class': className, 'data-module': 'govuk-button', 'data-prevent-double-click': true },
     'disabled': disabled,
     'translation_domain': 'twig-components'

@@ -48,7 +48,7 @@ opg:
         linkSentTo: We've sent a link to
         activationReminder: that you will need to visit to activate your deputy account.
         expirationNote: |
-          You'll need to use this link within 48 hours, otherwise you'll have
+          You'll need to use this link within 1 hour, otherwise you'll have
           to enter your registration details again.
         checkJunk: |
           If you have not received the email within a few minutes, please check your spam,
