@@ -12,8 +12,11 @@
     {% endif %}
     {{ form_help(element, { help_attr: { class: "govuk-hint" } }) }}
     {% set inputAttributes = element.vars.attr|merge({ class: "govuk-input govuk-!-width-one-half" }) %}
+    {% if element.vars.help %}
+        {% set inputAttributes = inputAttributes|merge({'aria-describedby': (inputAttributes['aria-describedby']|default('') ~ ' ' ~ element.vars.id ~ '_help')|trim}) %}
+    {% endif %}
     {% if not element.vars.valid %}
-        {% set describedBy = (inputAttributes['aria-describedby']|default('') ~ ' ' ~ (element.vars.help ? element.vars.id ~ '_help' : '') ~ ' ' ~ element.vars.id ~ '-error')|trim %}
+        {% set describedBy = (inputAttributes['aria-describedby']|default('') ~ ' ' ~ element.vars.id ~ '-error')|trim %}
         {% set inputAttributes = inputAttributes|merge({'aria-invalid': 'true', 'aria-describedby': describedBy, class: inputAttributes.class ~ ' govuk-input--error'}) %}
     {% endif %}
     {{ form_widget(element, { attr: inputAttributes }) }}
