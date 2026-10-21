@@ -14,7 +14,6 @@ use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
 use OPG\Digideps\Frontend\Service\JWT\JWTService;
 use OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -241,7 +240,7 @@ class RestClient implements RestClientInterface
      * @param string|object|array $mixed     HTTP body. json_encoded string or entity (that will JMS-serialised)
      * @param array               $jmsGroups deserialise_groups
      *
-     * @return string|StreamInterface response body
+     * @return string response body
      */
     public function post($endpoint, $mixed, array $jmsGroups = [], $expectedResponseType = 'array', $options = [])
     {
