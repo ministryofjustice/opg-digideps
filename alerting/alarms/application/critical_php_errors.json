@@ -1,0 +1,22 @@
+{
+  "name": "critical-php-errors",
+  "title": "Critical PHP errors are repeatedly occurring",
+  "description": "Critical PHP errors have been written to the application logs during each of the last five minutes. This normally indicates a repeated application failure that requires investigation.",
+  "severity": "critical",
+  "investigation_steps": [
+    "Review the matching logs and identify the error causing this alert.",
+    "Check for recent deployments, failed tasks or unhealthy containers that could be causing the errors.",
+    "Raise a bug or incident if further investigation is required, or resolve the issue if the cause is known."
+  ],
+  "logs": {
+    "log_group": "{environment}",
+    "query": [
+      "fields @timestamp, service_name, @message, @logStream",
+      "| filter @message like /CRITICAL/",
+      "| sort @timestamp desc",
+      "| limit 100"
+    ]
+  },
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/environment/region/cloudwatch_alarms.tf"
+}
