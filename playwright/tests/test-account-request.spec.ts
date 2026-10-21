@@ -20,15 +20,10 @@ test("user can request an account if they enter valid details", async ({
     await accountRequestPage.enterDeputyDetails(deputy);
     await accountRequestPage.enterClientDetails(client);
 
-    // TODO remove once the real account service is available
-    await accountRequestPage.selectMockResponseToReceive(
-      "Valid details entered",
-    );
-
     await accountRequestPage.signUp();
 
     await accountRequestPage.isExpected();
-    accountRequestPage.expectSuccessMessage();
+    await accountRequestPage.expectSuccessMessage();
   };
 
   await setupFixture(
@@ -59,11 +54,8 @@ test("user account request is rejected if they enter non-matching details", asyn
   await accountRequestPage.enterDeputyDetails(deputy);
   await accountRequestPage.enterClientDetails(client);
 
-  // TODO remove once the real account service is available
-  await accountRequestPage.selectMockResponseToReceive("Details not matched");
-
   await accountRequestPage.signUp();
 
   await accountRequestPage.isExpected();
-  accountRequestPage.expectNotMatchedErrorMessage();
+  await accountRequestPage.expectNotMatchedErrorMessage();
 });
