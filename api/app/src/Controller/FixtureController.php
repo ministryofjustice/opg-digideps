@@ -255,7 +255,6 @@ class FixtureController extends AbstractController
 
         $scenario = $this->fixtureService->instantiateScenario(new Scenario($courtOrder));
 
-        // TODO Scenario implements jsonSerializable, then use json_encode() on it
         return $this->jsonifyScenario($scenario);
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Account;
 
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
@@ -14,7 +15,6 @@ use OPG\Digideps\Common\Account\Area;
 use OPG\Digideps\Common\Account\Email;
 use OPG\Digideps\Common\Account\ResetRequest;
 use OPG\Digideps\Common\Deputy\DeputyType;
-use Doctrine\DBAL\Types\Type;
 
 final readonly class AccountService
 {
@@ -33,7 +33,14 @@ final readonly class AccountService
 
         $user = $this->getUserFromDeputy($deputy);
         if ($user->getPassword() !== null) {
-            return $user->getEmail() === $request->deputyEmail->value ? AccountError::PasswordSet : AccountError::AccountTaken;
+            return $user->getEmail() === strtolower($request->deputyEmail->value)
+                ? AccountError::PasswordSet : AccountError::AccountTaken;
+        }
+
+        // confirm email isn't already in use by a different user (possibly with a different deputy UID)
+        $existingUserWithEmail = $this->getUserFromEmail($request->deputyEmail);
+        if ($existingUserWithEmail instanceof User) {
+            return AccountError::AccountTaken;
         }
 
         $user->setEmail($request->deputyEmail->value);
@@ -63,7 +70,7 @@ final readonly class AccountService
         );
     }
 
-    public function getUserFromDeputy(Deputy $deputy, bool $flush = false): User
+    private function getUserFromDeputy(Deputy $deputy): User
     {
         $user = $deputy->getUser();
         if ($user !== null) {
@@ -84,7 +91,7 @@ final readonly class AccountService
         $user->setDeputyUid($deputy->getDeputyUid());
         $deputy->setUser($user);
         $user->setDeputy($deputy);
-        $this->entityManager->persist($deputy);
+
         $user->getOrganisations()->clear();
         if ($deputy->getOrganisation() !== null) {
             $user->getOrganisations()->add($deputy->getOrganisation());
@@ -97,11 +104,6 @@ final readonly class AccountService
         $user->setAddressPostcode($deputy->getAddressPostcode());
         $user->setPhoneMain($deputy->getPhoneMain());
         $user->setPhoneAlternative($deputy->getPhoneAlternative());
-
-        if ($flush) {
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
-        }
 
         return $user;
     }
@@ -149,6 +151,7 @@ final readonly class AccountService
 
     private function getUserFromEmail(Email $email): User|AccountError
     {
-        return $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email->value]) ?? AccountError::UnknownEmail;
+        return $this->entityManager->getRepository(User::class)
+            ->findOneBy(['email' => strtolower($email->value)]) ?? AccountError::UnknownEmail;
     }
 }

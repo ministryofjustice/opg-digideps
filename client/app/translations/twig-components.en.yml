@@ -54,14 +54,18 @@ opg:
           If you have not received the email within a few minutes, please check your spam,
           bulk, and junk email folders: it may have been mistakenly blocked by your email provider.
       errors:
+        AccountTaken: |
+          Our records show that an account already exists for this deputyship.
+          Please sign in using your registered email address. Please call %helplineNumber%
+          if you are unable to sign in.
+        EmailError: An error occurred while setting up your account. Please try again later.
         MatchingError: |
           The information you've given us does not match our records.
           Please call %helplineNumber% to make sure we have a record of your deputyship.
-        AccountTaken: |
+        NetworkError: An error occurred while setting up your account. Please try again later.
+        PasswordSet: |
           Our records show that you have already registered with this email address.
           Please sign in to continue. Please call %helplineNumber% if you are unable to sign in.
-        EmailError: An error occurred while setting up your account. Please try again later.
-        NetworkError: An error occurred while setting up your account. Please try again later.
   admin:
     clientDetails:
       actions:
