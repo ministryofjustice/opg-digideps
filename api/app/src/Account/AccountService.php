@@ -82,6 +82,9 @@ final readonly class AccountService
         });
         $user->setActive(true);
         $user->setDeputyUid($deputy->getDeputyUid());
+        $deputy->setUser($user);
+        $user->setDeputy($deputy);
+        $this->entityManager->persist($deputy);
         $user->getOrganisations()->clear();
         if ($deputy->getOrganisation() !== null) {
             $user->getOrganisations()->add($deputy->getOrganisation());
@@ -124,7 +127,7 @@ final readonly class AccountService
                 AND d.lastname = ?
                 AND d.address_postcode = ?
         ", [
-            $request->caseNumber,
+            strlen($request->caseNumber->value) === 10 ? substr($request->caseNumber->value, 0, 8) : $request->caseNumber->value,
             $request->clientLastName,
             $request->deputyFirstName,
             $request->deputyLastName,
