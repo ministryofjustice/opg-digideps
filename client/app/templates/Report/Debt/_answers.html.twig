@@ -36,7 +36,7 @@
         </div>
         <div class="govuk-grid-column-one-half text--right">
             {% if not hideEditLink  %}
-                <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit">
+                <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="govuk-!-font-size-19 govuk-!-font-weight-bold action-link behat-link-edit">
                     <strong>{{ 'edit' | trans({}, 'common' ) }}</strong>
                     <span class="govuk-visually-hidden">List of debts</span>
                 </a>
