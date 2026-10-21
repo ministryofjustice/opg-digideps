@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Frontend\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -90,18 +89,6 @@ class AccountRequestType extends AbstractType
                     ], message: 'opg.account.request.caseNumber.wrongLength', includeInternalMessages: false)
                 ]
             ])
-
-            // TODO REMOVE WHEN WE HAVE THE REAL ACCOUNT SERVICE
-            ->add('mockResponseToReceive', ChoiceType::class, [
-                'choices' => [
-                    'Valid details entered' => 'verified',
-                    'Details not matched' => 'nomatch',
-                    'Email is already registered' => 'alreadyregistered',
-                    'Notify failed to send "set password" email' => 'setpasswordemailfail',
-                    'Error contacting API' => 'networkerror'
-                ]
-            ])
-
             ->add('signUp', SubmitType::class, [
                 'label' => 'opg.account.request.signUp.label'
             ]);

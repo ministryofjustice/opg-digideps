@@ -50,24 +50,15 @@ export default class AccountRequestPage {
     await this.page.getByRole("button", { name: "Sign up" }).click();
   }
 
-  expectSuccessMessage() {
-    expect(
-      this.page.getByRole("heading", { name: "Please check your email" }),
-    ).not.toBeNull();
+  async expectSuccessMessage() {
+    await expect(this.page.getByText("Please check your email")).toBeVisible();
   }
 
-  expectNotMatchedErrorMessage() {
-    expect(
-      this.page.locator(
-        "The information you've given us does not match our records.",
+  async expectNotMatchedErrorMessage() {
+    await expect(
+      this.page.getByText(
+        "the information you've given us does not match our records",
       ),
-    ).not.toBe(null);
-  }
-
-  // TODO remove once real account service is in place
-  async selectMockResponseToReceive(optionLabel: string) {
-    await this.page
-      .getByLabel("Mock response to receive")
-      .selectOption({ label: optionLabel });
+    ).toBeVisible();
   }
 }
