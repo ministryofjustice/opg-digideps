@@ -37,12 +37,6 @@ final readonly class AccountService
                 ? AccountError::PasswordSet : AccountError::AccountTaken;
         }
 
-        // confirm email isn't already in use by a different user (possibly with a different deputy UID)
-        $existingUserWithEmail = $this->getUserFromEmail($request->deputyEmail);
-        if ($existingUserWithEmail instanceof User) {
-            return AccountError::AccountTaken;
-        }
-
         $user->setEmail($request->deputyEmail->value);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
