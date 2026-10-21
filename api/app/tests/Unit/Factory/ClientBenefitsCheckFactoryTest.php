@@ -17,8 +17,7 @@ use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Uid\Uuid;
 
 final class ClientBenefitsCheckFactoryTest extends TestCase
 {
@@ -76,7 +75,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         );
 
         self::assertEquals($this->reportId, $processedClientBenefitsCheck->getReport()->getId());
-        self::assertEquals($this->id, $processedClientBenefitsCheck->getId()->toString());
+        self::assertEquals($this->id, $processedClientBenefitsCheck->getId()->toRfc4122());
         self::assertEquals($this->created, $processedClientBenefitsCheck->getCreated()?->format('Y-m-d'));
         self::assertEquals($this->whenLastCheckedEntitlement, $processedClientBenefitsCheck->getWhenLastCheckedEntitlement());
         self::assertEquals($this->dateLastCheckedEntitlement, $processedClientBenefitsCheck->getDateLastCheckedEntitlement()->format('Y-m-d'));
@@ -87,7 +86,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         /** @var MoneyReceivedOnClientsBehalf $money */
         $money = $processedClientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->first();
 
-        self::assertEquals($this->moneyId, $money->getId()->toString());
+        self::assertEquals($this->moneyId, $money->getId()->toRfc4122());
         self::assertEquals($this->moneyCreated, $money->getCreated()->format('Y-m-d'));
         self::assertEquals($existingClientBenefitsCheck, $money->getClientBenefitsCheck());
         self::assertEquals($this->moneyType, $money->getMoneyType());
@@ -151,7 +150,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         /** @var MoneyReceivedOnClientsBehalf $money */
         $money = $processedClientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->first();
 
-        self::assertTrue($money->getId() instanceof UuidInterface);
+        self::assertTrue($money->getId() instanceof Uuid);
         self::assertEquals($this->moneyCreated, $money->getCreated()->format('Y-m-d'));
         self::assertTrue($money->getClientBenefitsCheck() instanceof ClientBenefitsCheck);
         self::assertEquals($this->moneyType, $money->getMoneyType());

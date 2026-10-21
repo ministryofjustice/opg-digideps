@@ -131,8 +131,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[JMS\Groups(['user-login'])]
     #[JMS\Exclude]
-    #[ORM\Column(name: 'password', type: 'string', length: 100, nullable: false)]
-    private ?string $password = '';
+    #[ORM\Column(name: 'password', type: 'string', length: 100, nullable: true)]
+    private ?string $password = null;
 
     #[JMS\Groups(['user', 'report-submitted-by', 'user-email', 'user-list'])]
     #[JMS\Type('string')]

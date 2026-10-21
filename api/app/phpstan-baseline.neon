@@ -295,6 +295,12 @@ parameters:
 			path: src/Command/UserRetentionPolicyCommand.php
 
 		-
+			message: '#^Method OPG\\Digideps\\Backend\\Controller\\AccountController\:\:decode\(\) should return T of OPG\\Digideps\\Common\\Account\\AccountRequest\|OPG\\Digideps\\Common\\Account\\PasswordRequest\|OPG\\Digideps\\Common\\Account\\ResetRequest but returns OPG\\Digideps\\Common\\Account\\AccountRequest\|OPG\\Digideps\\Common\\Account\\PasswordRequest\|OPG\\Digideps\\Common\\Account\\ResetRequest\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Controller/AccountController.php
+
+		-
 			message: '#^Parameter \#1 \$content of class Symfony\\Component\\HttpFoundation\\Response constructor expects string\|null, string\|false given\.$#'
 			identifier: argument.type
 			count: 3
@@ -2461,7 +2467,7 @@ parameters:
 			path: src/Factory/ClientBenefitsCheckFactory.php
 
 		-
-			message: '#^Cannot call method toString\(\) on mixed\.$#'
+			message: '#^Cannot call method toRfc4122\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: src/Factory/ClientBenefitsCheckFactory.php
