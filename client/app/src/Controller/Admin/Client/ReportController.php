@@ -8,6 +8,7 @@ use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Report\Checklist;
 use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\ReviewChecklist;
 use OPG\Digideps\Frontend\Entity\Report\UnsubmittedSection;
 use OPG\Digideps\Frontend\Entity\SynchronisableInterface;
 use OPG\Digideps\Frontend\Entity\User;
@@ -80,7 +81,11 @@ class ReportController extends AbstractController
         /** @var SubmitButton $buttonClicked */
         $buttonClicked = $form->getClickedButton();
 
-        $reviewChecklist = $this->restClient->get('report/' . $report->getId() . '/checklist', 'Report\\ReviewChecklist');
+        $reviewChecklist = $this->restClient->get(
+            'report/' . $report->getId() . '/checklist',
+            ReviewChecklist::class,
+            jmsGroups: ['report-io']
+        );
         /** @var Form $reviewForm */
         $reviewForm = $this->createForm(ReviewChecklistType::class, $reviewChecklist);
         $reviewForm->handleRequest($request);
