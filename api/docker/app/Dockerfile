@@ -38,7 +38,7 @@ RUN composer dump-autoload --optimize
 # Stage 2: Base PHP Image
 ##############################
 FROM php:8.4.25-fpm-alpine3.24@sha256:49734670eccf414af884c2a0c2e558401e228615f8028f1c9fca30a0d4fb1bc2 AS base
-
+# update_php_oct
 ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 
 WORKDIR /var/www

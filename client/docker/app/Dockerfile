@@ -38,7 +38,7 @@ RUN composer install --prefer-dist --no-interaction --no-scripts \
 # Stage 2: Base PHP + Shared Files
 ##############################
 FROM php:8.4.25-fpm-alpine3.24@sha256:49734670eccf414af884c2a0c2e558401e228615f8028f1c9fca30a0d4fb1bc2 AS base
-
+# update_php_oct
 WORKDIR /var/www
 
 # Shared app assets
