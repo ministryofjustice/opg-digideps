@@ -41,11 +41,11 @@ class AccountController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $validatingForm = new ValidatingForm($form);
             $accountRequest = new AccountRequest(
-                new NonEmptyString($validatingForm->getStringOrThrow('caseNumber')),
+                new NonEmptyString(strtolower($validatingForm->getStringOrThrow('caseNumber'))),
                 new NonEmptyString($validatingForm->getStringOrThrow('deputyFirstName')),
                 new NonEmptyString($validatingForm->getStringOrThrow('deputyLastName')),
                 new NonEmptyString($validatingForm->getStringOrThrow('deputyPostCode')),
-                new Email($validatingForm->getStringOrThrow('deputyEmail')),
+                new Email(strtolower($validatingForm->getStringOrThrow('deputyEmail'))),
                 new NonEmptyString($validatingForm->getStringOrThrow('clientLastName'))
             );
 
