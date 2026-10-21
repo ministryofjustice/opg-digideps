@@ -13,6 +13,7 @@ use OPG\Digideps\Common\Account\PasswordResponse;
 use OPG\Digideps\Common\Account\ResetRequest;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Service\Mailer\Mailer;
+use Psr\Http\Message\StreamInterface;
 
 final readonly class AccountService
 {
@@ -25,12 +26,12 @@ final readonly class AccountService
     public function sendAccountRequest(AccountRequest $request): Email|AccountError
     {
         try {
-            $response = AccountResponse::jsonDeserialize($this->restClient->post('/account/request', $request, expectedResponseType: 'raw'));
+            $response = AccountResponse::jsonDeserialize($this->getRawResponse('/account/request', $request));
             if ($response instanceof AccountError) {
                 return $response;
             }
             return $this->sendSetPasswordEmail($response);
-        } catch (\Throwable $_) {
+        } catch (\Throwable $e) {
             return AccountError::NetworkError;
         }
     }
@@ -38,7 +39,7 @@ final readonly class AccountService
     public function sendResetRequest(ResetRequest $request): Email|AccountError
     {
         try {
-            $response = AccountResponse::jsonDeserialize($this->restClient->post('/account/password/reset', $request, expectedResponseType: 'raw'));
+            $response = AccountResponse::jsonDeserialize($this->getRawResponse('/account/password/reset', $request));
             if ($response instanceof AccountError) {
                 return $response;
             }
@@ -51,7 +52,7 @@ final readonly class AccountService
     public function sendPasswordRequest(PasswordRequest $request): Email|AccountError
     {
         try {
-            $response = PasswordResponse::jsonDeserialize($this->restClient->post('/account/password/set', $request, expectedResponseType: 'raw'));
+            $response = PasswordResponse::jsonDeserialize($this->getRawResponse('/account/password/set', $request));
             if ($response instanceof AccountError) {
                 return $response;
             }
@@ -71,18 +72,16 @@ final readonly class AccountService
         return $this->mailer->sendConfirmPasswordEmail($response) ? $response->email : AccountError::EmailError;
     }
 
-    public function sendAccountRequestMock(AccountRequest $accountRequest, string $mockResponseToReceive): Email|AccountError
+    private function getRawResponse(string $path, AccountRequest|PasswordRequest|ResetRequest $request): string
     {
-        if ($mockResponseToReceive === 'alreadyregistered') {
-            return AccountError::AccountTaken;
-        } elseif ($mockResponseToReceive === 'nomatch') {
-            return AccountError::MatchingError;
-        } elseif ($mockResponseToReceive === 'setpasswordemailfail') {
-            return AccountError::EmailError;
-        } elseif ($mockResponseToReceive === 'networkerror') {
-            return AccountError::NetworkError;
+        $json = json_encode($request);
+        if ($json === false) {
+            throw new \InvalidArgumentException('account-related request could not be encoded as JSON');
         }
 
-        return $accountRequest->deputyEmail;
+        /** @var StreamInterface $rawResponse */
+        $rawResponse = $this->restClient->post($path, $json, expectedResponseType: 'raw');
+
+        return $rawResponse->getContents();
     }
 }

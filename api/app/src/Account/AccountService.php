@@ -126,7 +126,7 @@ final readonly class AccountService
         ", [
             $request->caseNumber,
             $request->clientLastName,
-            $request->deputyFirstname,
+            $request->deputyFirstName,
             $request->deputyLastName,
             $request->deputyPostCode,
         ], [

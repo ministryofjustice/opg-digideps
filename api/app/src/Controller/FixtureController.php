@@ -213,7 +213,8 @@ class FixtureController extends AbstractController
         foreach ($courtOrderPayload->getArrayOrDefault('deputies', []) as $deputyPayload) {
             $deputy = new ValidatingArray($deputyPayload);
             $deputyType = DeputyType::tryFrom($deputy->getStringOrDefault('type', '')) ?? DeputyType::LAY;
-            $deputyDescriptors[] = new DeputyDescriptor($deputy->getStringOrThrow('ref'), $deputyType);
+            $deputyHasRegistered = $deputy->getBooleanOrDefault('hasRegistered', false);
+            $deputyDescriptors[] = new DeputyDescriptor($deputy->getStringOrThrow('ref'), $deputyType, hasRegistered: $deputyHasRegistered);
         }
 
         $reportType = CourtOrderReportType::tryFrom($courtOrderPayload->getStringOrDefault('reportType', ''))
