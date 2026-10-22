@@ -8125,6 +8125,12 @@ parameters:
 			path: src/Service/Mailer/MailFactory.php
 
 		-
+			message: '#^Parameter \#1 \$area of method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:generateAbsoluteLink\(\) expects OPG\\Digideps\\Common\\Account\\Area, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/Mailer/MailFactory.php
+
+		-
 			message: '#^Parameter \#1 \$countryCode of method OPG\\Digideps\\Frontend\\Service\\IntlService\:\:getCountryNameByCountryCode\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
