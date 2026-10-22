@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service\Mailer;
 
+use OPG\Digideps\Common\Validating\ValidatingArray;
+use OPG\Digideps\Common\Validating\ValidationException;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
@@ -32,24 +34,13 @@ class MailFactory
 
     public const string DATE_FORMAT = 'j F Y';
 
-    protected TranslatorInterface $translator;
-    protected RouterInterface $router;
-    private array $emailParams;
-    private array $baseURLs;
-    private IntlService $intlService;
-
     public function __construct(
-        TranslatorInterface $translator,
-        RouterInterface $router,
-        IntlService $intlService,
-        array $emailParams,
-        array $baseURLs,
+        protected TranslatorInterface $translator,
+        protected RouterInterface $router,
+        private readonly IntlService $intlService,
+        private readonly array $emailParams,
+        private readonly array $baseURLs,
     ) {
-        $this->translator = $translator;
-        $this->router = $router;
-        $this->emailParams = $emailParams;
-        $this->baseURLs = $baseURLs;
-        $this->intlService = $intlService;
     }
 
     /**
@@ -142,18 +133,10 @@ class MailFactory
      */
     public static function getRecipientRole(User $user): string
     {
-        switch ($user->getRoleName()) {
-            case User::ROLE_PA_NAMED:
-            case User::ROLE_PA_ADMIN:
-            case User::ROLE_PA_TEAM_MEMBER:
-            case User::ROLE_PROF_NAMED:
-            case User::ROLE_PROF_ADMIN:
-            case User::ROLE_PROF_TEAM_MEMBER:
-                return $user->getRoleName();
-
-            default:
-                return 'default';
-        }
+        return match ($user->getRoleName()) {
+            User::ROLE_PA_NAMED, User::ROLE_PA_ADMIN, User::ROLE_PA_TEAM_MEMBER, User::ROLE_PROF_NAMED, User::ROLE_PROF_ADMIN, User::ROLE_PROF_TEAM_MEMBER => $user->getRoleName(),
+            default => 'default',
+        };
     }
 
     /**
@@ -187,13 +170,16 @@ class MailFactory
         return $user->isDeputy() ? self::AREA_DEPUTY : self::AREA_ADMIN;
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function createUpdateClientDetailsEmail(Client $client): Email
     {
         $email = new Email()
           ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
           ->setFromName($this->translator->trans('client.fromName', [], 'email'))
           ->setSubject($this->translator->trans('client.subject', [], 'email'))
-          ->setToEmail($this->emailParams['update_send_to_address'])
+          ->setToEmail($this->getDestinationEmailAddress($client))
           ->setTemplate(self::CLIENT_DETAILS_CHANGE_TEMPLATE_ID);
 
         $countryName = $this->intlService->getCountryNameByCountryCode($client->getCountry());
@@ -341,5 +327,14 @@ class MailFactory
     private function translate(string $key): string
     {
         return $this->translator->trans($key, [], 'email');
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    private function getDestinationEmailAddress(Client $client): string
+    {
+        $validatingArray = new ValidatingArray($this->emailParams);
+        return $validatingArray->getStringOrThrow('update_address_pfa_lay');
     }
 }
