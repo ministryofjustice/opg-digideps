@@ -5,6 +5,11 @@
             "name": "list",
             "type": "AbstractList",
             "info": "Build it inside PHP with ListBuilder"
+        },
+        {
+            "name": "tag",
+            "type": "string",
+            "info": "'ul' or 'ol'; NB if list is set, this is ignored; allows raw lists to be constructed with nested <li> elements (e.g. for long stretches of bullet points containing static text)"
         }
     ],
     "examples": ["ordered-list", "unordered-list"]

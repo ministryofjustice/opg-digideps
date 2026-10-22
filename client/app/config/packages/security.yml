@@ -104,7 +104,7 @@ security:
     - { path: ^/terms, roles: PUBLIC_ACCESS }
     - { path: ^/privacy, roles: PUBLIC_ACCESS }
     - { path: ^/cookies, roles: PUBLIC_ACCESS }
-    - { path: ^/accessibility, roles: PUBLIC_ACCESS }
+    - { path: ^.*/accessibility$, roles: PUBLIC_ACCESS }
     - { path: ^/behat/frontend/reset-fixtures, roles: PUBLIC_ACCESS }
     - { path: ^/$, roles: PUBLIC_ACCESS }
     # all the rest needs authentication
