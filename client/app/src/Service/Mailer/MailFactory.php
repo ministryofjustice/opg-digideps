@@ -206,7 +206,7 @@ class MailFactory
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translator->trans('client.fromName', [], 'email'))
             ->setSubject($this->translator->trans('client.subject', [], 'email'))
-            ->setToEmail($this->emailParams['update_send_to_address'])
+            ->setToEmail($this->emailParams[MailerEmailAddress::UPDATE_ADDRESS_PFA_LAY->value])
             ->setTemplate(self::DEPUTY_DETAILS_CHANGE_TEMPLATE_ID);
 
         $countryName =
@@ -334,7 +334,16 @@ class MailFactory
      */
     private function getDestinationEmailAddress(Client $client): string
     {
+        $emailAddressKey = MailerEmailAddress::UPDATE_ADDRESS_PFA_LAY;
+        if ($client->hasHwCourtOrder()) {
+            $emailAddressKey = MailerEmailAddress::UPDATE_ADDRESS_HW;
+        } elseif ($client->hasProDeputy()) {
+            $emailAddressKey = MailerEmailAddress::UPDATE_ADDRESS_PFA_PRO;
+        } elseif ($client->hasPaDeputy()) {
+            $emailAddressKey = MailerEmailAddress::UPDATE_ADDRESS_PFA_PA;
+        }
+
         $validatingArray = new ValidatingArray($this->emailParams);
-        return $validatingArray->getStringOrThrow('update_address_pfa_lay');
+        return $validatingArray->getStringOrThrow($emailAddressKey->value);
     }
 }

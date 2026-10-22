@@ -8,6 +8,7 @@ use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Service\IntlService;
+use OPG\Digideps\Frontend\Service\Mailer\MailerEmailAddress;
 use OPG\Digideps\Frontend\Service\Mailer\MailFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -99,7 +100,7 @@ class MailFactoryTest extends TestCase
                 'from_email' => 'digideps+from@digital.justice.gov.uk',
                 'report_submit_to_address' => 'digideps+noop@digital.justice.gov.uk',
                 'feedback_send_to_address' => 'digideps+noop@digital.justice.gov.uk',
-                'update_send_to_address' => 'updateAddress@digital.justice.gov.uk',
+                MailerEmailAddress::UPDATE_ADDRESS_PFA_LAY->value => 'updateAddress@digital.justice.gov.uk',
             ],
             [
                 'front' => 'https://front.base.url',
