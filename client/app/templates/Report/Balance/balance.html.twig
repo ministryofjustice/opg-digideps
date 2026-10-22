@@ -64,7 +64,7 @@
 
     <h3 class="govuk-heading-m">{{ 'moreInfo.heading' | trans }}</h3>
 
-    <div class="text">
+    <div class="govuk-!-width-two-thirds">
         <p class="govuk-body">{{ 'moreInfo.para1' | trans(transOptions) }}</p>
         <p class="govuk-body">{{ 'moreInfo.para2' | trans }}</p>
         <p class="govuk-body">{{ 'moreInfo.para3' | trans }}</p>
@@ -97,7 +97,7 @@
     {% if report.isDue and readyToBalance and not report.isTotalsMatch %}
         <h3 class="govuk-heading-m" id="cantFindTheProblem">{{ 'cantFind.heading' | trans }}</h3>
 
-        <div class="text">
+        <div class="govuk-!-width-two-thirds">
             <p class="govuk-body">{{ 'cantFind.para1' | trans }}</p>
             <p class="govuk-body">{{ 'cantFind.para2' | trans }}</p>
         </div>
@@ -110,7 +110,7 @@
 
         {{ macros.saveAndContinueButton(form.save) }}
 
-        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="govuk-link button-link">
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="govuk-!-font-size-19 govuk-link button-link">
             {% if app.user.isDeputyOrg() %}
                 {{ 'backToClientProfile' | trans({}, 'common') }}
             {% else %}
