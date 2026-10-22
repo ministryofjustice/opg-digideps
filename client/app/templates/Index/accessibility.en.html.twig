@@ -1,0 +1,33 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% block htmlTitle %}Accessibility Statement | GOV.UK{% endblock %}
+{% block pageTitle %}Accessibility statement for the Complete the deputy report service{% endblock %}
+
+{% block linkBack %}
+    {% if backlink %}
+        <a href="{{ backlink }}" class="link-back behat-link-step-back">{{ 'back' | trans({}, 'common' ) }}</a>
+    {% endif %}
+{% endblock %}
+
+{% block pageContent %}
+    <twig:GOV:Paragraph>
+        This accessibility statement applies to the Complete the deputy report service.
+        This website is run by the <twig:GOV:Link href="https://www.gov.uk/government/organisations/office-of-the-public-guardian">Office of the Public Guardian</twig:GOV:Link>.
+        We want as many people as possible to be able to use this service.
+        For example, that means you should be able to:
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:List tag="ul">
+        <li>
+            change colours, contrast levels and fonts using accessibility software you have
+            installed on your computer
+        </li>
+        <li>zoom in up to 300% without the text spilling off the screen</li>
+        <li>navigate most of the website using just a keyboard</li>
+        <li>navigate most of the website using speech recognition software</li>
+        <li>
+            listen to most of the website using a screen reader (including the most recent
+            versions of JAWS, NVDA and VoiceOver)
+        </li>
+    </twig:GOV:List>
+{% endblock %}

@@ -1,9 +1,26 @@
-{% props list %}
+{% props list=null, tag=null %}
+{% set items = null %}
+{% set className = 'govuk-list' %}
+{% if list is not null %}
+    {% set realTag = list.tag %}
+    {% set className = list.className %}
+    {% set items = list.items %}
+{% elseif tag === 'ol' %}
+    {% set realTag = 'ol' %}
+    {% set className = className ~ ' govuk-list--number' %}
+{% else %}
+    {% set realTag = 'ul' %}
+    {% set className = className ~ ' govuk-list--bullet' %}
+{% endif %}
 
-<{{ list.tag }} {{ attributes.defaults({class: list.className}) }}>
-    {% for item in list.items %}
-        <li>
-            <twig:Render self="{{ item }}"/>
-        </li>
-    {% endfor %}
-</{{ list.tag }}>
+<{{ realTag }} {{ attributes.defaults({class: className}) }}>
+    {% if items is not null %}
+        {% for item in items %}
+            <li>
+                <twig:Render self="{{ item }}"/>
+            </li>
+        {% endfor %}
+    {% else %}
+        {% with outerScope %}{% block content %}{% endblock %}{% endwith %}
+    {% endif %}
+</{{ realTag }}>
