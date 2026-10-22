@@ -144,10 +144,18 @@ class IndexController extends AbstractController
         ]);
     }
 
+    // retained in case this path is referenced outside the app anywhere
     #[Route(path: '/accessibility', name: 'accessibility')]
-    public function accessibilityAction(Request $request): Response
+    public function accessibilityAction(): Response
     {
-        return $this->render('@App/Index/accessibility.html.twig', [
+        return $this->redirectToRoute('localised_accessibility', ['_locale' => 'en']);
+    }
+
+    // if we ever support another language, switch the template here
+    #[Route(path: '/{_locale}/accessibility', name: 'localised_accessibility', requirements: ['_locale' => 'en'])]
+    public function localisedAccessibilityAction(Request $request, string $_locale): Response
+    {
+        return $this->render("@App/Index/accessibility.{$_locale}.html.twig", [
             'backlink' => $this->getRefererUrlSafe($request, ['accessibility']),
         ]);
     }
