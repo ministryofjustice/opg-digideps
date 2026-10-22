@@ -213,14 +213,16 @@ class Client
     private $expectedReportEndDate;
 
     /**
+     * @var array<CourtOrder>
+     */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\CourtOrder>')]
+    public array $courtOrders = [];
+
+    /**
      * @var \DateTime
      */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     private $archivedAt;
-
-    public function __construct()
-    {
-    }
 
     /**
      * @return User[]
@@ -874,5 +876,37 @@ class Client
         }
 
         return $submittedReports;
+    }
+
+    public function hasHwCourtOrder(): bool
+    {
+        return array_any(
+            $this->courtOrders,
+            fn (CourtOrder $courtOrder) => $courtOrder->getOrderType() === 'hw' && $courtOrder->isActive()
+        );
+    }
+
+    public function hasProDeputy(): bool
+    {
+        return $this->hasDeputyOfType('PRO');
+    }
+
+    public function hasPaDeputy(): bool
+    {
+        return $this->hasDeputyOfType('PA');
+    }
+
+    /**
+     * @param string $deputyType 'PRO'|'PA'|'LAY'
+     */
+    private function hasDeputyOfType(string $deputyType): bool
+    {
+        return array_any(
+            $this->courtOrders,
+            fn (CourtOrder $courtOrder) => array_any(
+                $courtOrder->getActiveDeputies(),
+                fn (Deputy $activeDeputy) => $activeDeputy->deputyType === $deputyType
+            )
+        );
     }
 }
