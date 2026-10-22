@@ -1,72 +1,197 @@
+import json
 import logging
-import urllib
+import urllib.parse
+import uuid
+from datetime import datetime, timedelta, timezone
+from functools import lru_cache
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 logger.setLevel("INFO")
 
+DEFAULT_LOG_CONFIGURATION = {
+    "log_group": "{environment}",
+    "query": [
+        "fields @timestamp, @message, @logStream, @log",
+        "| sort @timestamp desc",
+        "| limit 100",
+    ],
+}
 
-def get_service_url(region: str, service: str) -> str:
-    return f"https://console.aws.amazon.com/{service}/home?region={region}"
+
+def get_alert_configuration_directory():
+    for directory in Path(__file__).resolve().parents:
+        alert_directory = directory / "alerting" / "alarms"
+        if alert_directory.is_dir():
+            return alert_directory
+
+    return Path(__file__).resolve().parent.parent / "alerting" / "alarms"
+
+
+@lru_cache
+def get_alert_configurations():
+    configurations = {}
+    duplicate_names = set()
+
+    for configuration_file in get_alert_configuration_directory().rglob("*.json"):
+        try:
+            with configuration_file.open() as file:
+                configuration = json.load(file)
+        except (OSError, json.JSONDecodeError) as error:
+            logger.error(f"Unable to load {configuration_file}: {error}")
+            continue
+
+        name = configuration.get("name")
+        if not name:
+            logger.error(f"Alert configuration {configuration_file} has no name")
+            continue
+
+        if name in duplicate_names:
+            continue
+
+        if name in configurations:
+            logger.error(f"More than one alert configuration uses the name {name}")
+            configurations.pop(name)
+            duplicate_names.add(name)
+            continue
+
+        configurations[name] = configuration
+
+    return configurations
+
+
+def get_environment(alarm_name):
+    return alarm_name.split("-", 1)[0] if "-" in alarm_name else "unknown"
+
+
+def get_configuration(alarm_name, environment):
+    configuration_name = alarm_name.removeprefix(f"{environment}-")
+    return get_alert_configurations().get(configuration_name, {})
+
+
+def get_alarm_url(region, alarm_name):
+    encoded_alarm_name = urllib.parse.quote(alarm_name)
+    return (
+        "https://console.aws.amazon.com/cloudwatch/home"
+        f"?region={region}#alarm:alarmFilter=ANY;name={encoded_alarm_name}"
+    )
+
+
+def encode_cloudwatch_value(value):
+    return urllib.parse.quote(value, safe="").replace("%", "*")
+
+
+def encode_cloudwatch_route(value):
+    return urllib.parse.quote(value, safe="~()*'").replace("%", "$")
+
+
+def parse_state_change_time(value):
+    return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(timezone.utc)
+
+
+def format_timestamp(value):
+    if not value:
+        return None
+
+    return (
+        parse_state_change_time(value)
+        .isoformat(timespec="milliseconds")
+        .replace("+00:00", "Z")
+    )
+
+
+def get_log_url(message, region, environment, configuration):
+    logs = configuration.get("logs")
+    state_change_time = message.get("StateChangeTime")
+
+    if not logs or not state_change_time:
+        return None
+
+    trigger = message.get("Trigger", {})
+    period = int(trigger.get("Period", 60))
+    evaluation_periods = int(trigger.get("EvaluationPeriods", 5))
+    end_time = parse_state_change_time(state_change_time)
+    start_time = end_time - timedelta(seconds=period * (evaluation_periods + 1))
+    query = "\n".join(logs["query"])
+    log_group = logs["log_group"].replace("{environment}", environment)
+
+    query_details = (
+        "~(end~'"
+        + encode_cloudwatch_value(
+            end_time.isoformat(timespec="milliseconds").replace("+00:00", "Z")
+        )
+        + "~start~'"
+        + encode_cloudwatch_value(
+            start_time.isoformat(timespec="milliseconds").replace("+00:00", "Z")
+        )
+        + "~timeType~'ABSOLUTE~tz~'UTC~editorString~'"
+        + encode_cloudwatch_value(query)
+        + "~isLiveTail~false~queryId~'"
+        + str(uuid.uuid4())
+        + "~source~(~'"
+        + encode_cloudwatch_value(log_group)
+        + "))"
+    )
+    route = encode_cloudwatch_route(f"?queryDetail={query_details}")
+
+    return (
+        f"https://{region}.console.aws.amazon.com/cloudwatch/home"
+        f"?region={region}#logsV2:logs-insights{route}"
+    )
+
+
+def alarm_details(message, region):
+    alarm_name = message.get("AlarmName", "Unknown alarm")
+    environment = get_environment(alarm_name)
+    configuration = get_configuration(alarm_name, environment)
+    log_configuration = configuration or {"logs": DEFAULT_LOG_CONFIGURATION}
+
+    return {
+        "alarm_name": alarm_name,
+        "environment": environment,
+        "title": configuration.get("title", alarm_name),
+        "description": configuration.get(
+            "description",
+            message.get("AlarmDescription", "A CloudWatch alarm has changed state."),
+        ),
+        "severity": configuration.get("severity", "error"),
+        "investigation_steps": configuration.get("investigation_steps", []),
+        "alarm_url": get_alarm_url(region, alarm_name),
+        "log_url": get_log_url(message, region, environment, log_configuration),
+        "confluence_link": configuration.get("confluence_link"),
+        "terraform_link": configuration.get("terraform_link"),
+        "dedup_key": message.get("AlarmArn", f"{region}:{alarm_name}"),
+        "state_change_time": format_timestamp(message.get("StateChangeTime")),
+    }
+
+
+def slack_link(name, url):
+    return f"<{url}|{name}>" if url else None
 
 
 def alarm_message(message, region):
-    alarm_name = message.get("AlarmName")
-    logger.info(f"Attempting to process alarm event for branch {alarm_name}")
+    details = alarm_details(message, region)
+    logger.info(f"Attempting to process alarm event {details['alarm_name']}")
 
-    environment = alarm_name.split("-")[0] if "-" in alarm_name else "Unknown"
-    new_state = message.get("NewStateValue")
-    old_state = message.get("OldStateValue")
-    service = "cloudwatch"
-    service_url = get_service_url(region, service)
-    alarm_url = (
-        f"{service_url}#alarm:alarmFilter=ANY;name={urllib.parse.quote(alarm_name)}"
-    )
+    sections = [
+        f":warning: *ALARM - {details['title']}* :x:",
+        f"*Environment:* {details['environment']}",
+        f"*Summary:* {details['description']}",
+    ]
 
-    insights_log_url = f"https://{region}.console.aws.amazon.com/cloudwatch/home?region={region}#logsV2:logs"
-    insights_period = f"-insights$3FqueryDetail$3D~(end~0~start~-3600~timeType~'RELATIVE~unit~'seconds~editorString~'"
-
-    if "5xx" in alarm_name:
-        fields = "fields*20*40timestamp*2c*20status*2c*20request_uri*2c*20*40message*0a*7c*20"
-        filter = "filter*20status*20*3e*20499*0a*7c*20"
-    elif "critical" in alarm_name:
-        fields = "fields*20*40timestamp*2c*20*40message*0a*7c*20"
-        filter = "filter*20*40message*20like*20*27CRITICAL*27*0a*7c*20"
-    elif "PHPError" in alarm_name:
-        fields = "fields*20*40timestamp*2c*20*40message*0a*7c*20"
-        filter = (
-            "filter*20*40message*20*3d*7e*20*2f*5c*5berror*5c*5d.*2a*7c*5c*5bcrit*5c*5d.*2a*7c*5c*5balert*5c*5d"
-            ".*2a*7c*5c*5bemerg*5c*5d.*2a*2f*0a*7c*20"
+    if details["investigation_steps"]:
+        steps = "\n".join(
+            f"{number}. {step}"
+            for number, step in enumerate(details["investigation_steps"], start=1)
         )
-    elif "response-time" in alarm_name:
-        fields = "fields*20*40timestamp*2c*20service_name*2c*20upstream_response_time*2c*20request_uri*2c*20status*2c*20real_forwarded_for*0a*7c*20"
-        filter = "filter*20upstream_response_time*20*3e*202.0*0a*7c*20"
-    else:
-        fields = "fields*20*40timestamp*2c*20*40message*2c*20*40logStream*2c*20*40log*0a*7c*20"
-        filter = ""
+        sections.append(f"*What to do:*\n{steps}")
 
-    sort = "sort*20*40timestamp*20desc*0a*7c*20limit*20100~"
-    queryId = (
-        "queryId~'a470863db7311d3b-1131594d-4a8e566-832b5bb8-cf15779ff535ffd2c4e411b~"
-    )
-    source = f"source~(~'{environment}))"
+    links = [
+        slack_link("View matching logs", details["log_url"]),
+        slack_link("View alarm", details["alarm_url"]),
+        slack_link("Documentation", details["confluence_link"]),
+        slack_link("Terraform", details["terraform_link"]),
+    ]
+    sections.append("*Links:* " + " | ".join(link for link in links if link))
 
-    log_url = (
-        f"{insights_log_url}{insights_period}{fields}{filter}{sort}{queryId}{source}"
-    )
-
-    with open("templates/sns_alerts.txt", "r") as file:
-        template_text = file.read()
-
-    formatted_text = template_text.format(
-        alarm_name=alarm_name,
-        old_state=old_state,
-        new_state=new_state,
-        region=region,
-        alarm_url=alarm_url,
-        environment=environment,
-        log_url=log_url,
-    )
-
-    payload = {"text": formatted_text, "channel": "default"}
-
-    return payload
+    return {"text": "\n\n".join(sections), "channel": "default"}
