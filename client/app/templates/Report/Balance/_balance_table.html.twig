@@ -11,36 +11,36 @@
 
 <h3 class="govuk-heading-m">{{ 'balanceTable.heading' | trans }}</h3>
 
-<table>
-    <thead>
-        <tr>
-            <th>{{ 'section' | trans({}, 'common') }}</th>
-            <th class="numeric">{{ 'in' | trans({}, 'common') }}</th>
-            <th class="numeric">{{ 'out' | trans({}, 'common') }}</th>
-            <th class="numeric">{{ 'balance' | trans({}, 'common') }}</th>
+<table class="govuk-table">
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">{{ 'section' | trans({}, 'common') }}</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ 'in' | trans({}, 'common') }}</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ 'out' | trans({}, 'common') }}</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric">{{ 'balance' | trans({}, 'common') }}</th>
             {% if not hideEditLink %}
-                <th>
+                <th scope="col" class="govuk-table__header">
                     <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
                 </th>
             {% endif %}
         </tr>
     </thead>
-    <tbody>
+    <tbody class="govuk-table__body">
 
         <!-- SOME STARTED -->
         {% set partialBalance = 0 %}
 
         {# BANK ACCOUNTS #}
         {% set started = report.status.bankAccountsState['state'] != 'not-started' %}
-        <tr>
-            <td class="width-half">
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell width-half">
                 {{ 'balanceTable.accountsOpeningBalance' | trans }}
                 {% if started %}
                     ({{ report.startDate | date("j F Y") }})
                 {% endif %}
             </td>
-            <td colspan="2"></td>
-            <td class="numeric">
+            <td class="govuk-table__cell" colspan="2"></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">
                 {% if not started %}
                     -
                 {% else %}
@@ -49,7 +49,7 @@
                 {% endif %}
             </td>
             {% if not hideEditLink  %}
-                <td class="numeric width-twentieth">
+                <td class="govuk-table__cell govuk-table__cell--numeric width-twentieth">
                     <a href="{{ path('bank_accounts', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                         {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
                         <span class="govuk-visually-hidden">{{ 'balanceTable.accountsOpeningBalance' | trans }}</span>
@@ -62,17 +62,17 @@
         {% if report.hasSection('deputyExpenses') %}
             {# DEPUTY EXPENSES (LAY) #}
             {% set started = report.status.expensesState['state'] != 'not-started'%}
-            <tr>
-                <td>{{ 'balanceTable.deputyExpenses' | trans }}</td>
-                <td></td>
-                <td class="numeric">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">{{ 'balanceTable.deputyExpenses' | trans }}</td>
+                <td class="govuk-table__cell"></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
                     {% if not started %}
                         -
                     {% else %}
                         £{{ report.expensesTotal | money_format }}
                     {% endif %}
                 </td>
-                <td class="numeric">
+                <td class="govuk-table__cell govuk-table__cell--numeric">
                     {% if not started %}
                         -
                     {% else %}
@@ -81,7 +81,7 @@
                     {% endif %}
                 </td>
                 {% if not hideEditLink  %}
-                    <td class="numeric">
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
                         <a href="{{ path('deputy_expenses', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                             {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
                             <span class="govuk-visually-hidden">{{ 'balanceTable.deputyExpenses' | trans }}</span>
@@ -95,17 +95,17 @@
             {# FEES/EXPENSES (PA) #}
             {% set started = report.status.paFeesExpensesState['state'] != 'not-started' %}
             {% set feesAndExpensesTotal = report.feesTotal + report.expensesTotal %}
-            <tr>
-                <td>{{ 'balanceTable.paDeputyExpenses' | trans }}</td>
-                <td></td>
-                <td class="numeric">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">{{ 'balanceTable.paDeputyExpenses' | trans }}</td>
+                <td class="govuk-table__cell"></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
                     {% if not started %}
                         -
                     {% else %}
                         £{{ feesAndExpensesTotal | money_format }}
                     {% endif %}
                 </td>
-                <td class="numeric">
+                <td class="govuk-table__cell govuk-table__cell--numeric">
                     {% if not started %}
                         -
                     {% else %}
@@ -114,7 +114,7 @@
                     {% endif %}
                 </td>
                 {% if not hideEditLink  %}
-                    <td class="numeric">
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
                         <a href="{{ path('pa_fee_expense', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                             {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
                             <span class="govuk-visually-hidden">{{ 'balanceTable.paDeputyExpenses' | trans }}</span>
@@ -126,17 +126,17 @@
 
         {# GIFTS #}
         {% set started = report.status.giftsState['state'] != 'not-started' %}
-        <tr>
-            <td>{{ 'balanceTable.gifts' | trans }}</td>
-            <td></td>
-            <td class="numeric">
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell">{{ 'balanceTable.gifts' | trans }}</td>
+            <td class="govuk-table__cell"></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">
                 {% if not started %}
                     -
                 {% else %}
                     £{{ report.giftsTotalValue | money_format }}
                 {% endif %}
             </td>
-            <td class="numeric">
+            <td class="govuk-table__cell govuk-table__cell--numeric">
                 {% if not started %}
                     -
                 {% else %}
@@ -145,7 +145,7 @@
                 {% endif %}
             </td>
             {% if not hideEditLink  %}
-                <td class="numeric">
+                <td class="govuk-table__cell govuk-table__cell--numeric">
                     <a href="{{ path('gifts', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                         {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
                         <span class="govuk-visually-hidden">{{ 'balanceTable.gifts' | trans }}</span>
@@ -157,17 +157,17 @@
 
         {% if report.hasSection('profDeputyCosts') %}
             {% set started = report.status.profDeputyCostsState['state'] != 'not-started' %}
-            <tr>
-                <td>{{ 'balanceTable.profDeputyCosts' | trans }}</td>
-                <td></td>
-                <td class="numeric">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">{{ 'balanceTable.profDeputyCosts' | trans }}</td>
+                <td class="govuk-table__cell"></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
                     {% if not started %}
                         -
                     {% else %}
                         £{{ report.profDeputyTotalCosts | money_format }}
                     {% endif %}
                 </td>
-                <td class="numeric">
+                <td class="govuk-table__cell govuk-table__cell--numeric">
                     {% if not started %}
                         -
                     {% else %}
@@ -176,7 +176,7 @@
                     {% endif %}
                 </td>
                 {% if not hideEditLink  %}
-                    <td class="numeric">
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
                         <a href="{{ path('prof_deputy_costs', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                             {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
                             <span class="govuk-visually-hidden">{{ 'balanceTable.profDeputyCosts' | trans }}</span>
@@ -189,17 +189,17 @@
 
         {# MONEY IN #}
         {% set started = report.status.moneyInState['state'] != 'not-started' %}
-        <tr>
-            <td>{{ 'balanceTable.moneyIn' | trans }}</td>
-            <td class="numeric">
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell">{{ 'balanceTable.moneyIn' | trans }}</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">
                 {% if not started %}
                     -
                 {% else %}
                     £{{ report.moneyInTotal | money_format }}
                 {% endif %}
             </td>
-            <td></td>
-            <td class="numeric">
+            <td class="govuk-table__cell"></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">
                 {% if not started %}
                     -
                 {% else %}
@@ -208,7 +208,7 @@
                 {% endif %}
             </td>
             {% if not hideEditLink  %}
-                <td class="numeric">
+                <td class="govuk-table__cell govuk-table__cell--numeric">
                     <a href="{{ path('money_in', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                         {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
                         <span class="govuk-visually-hidden">{{ 'balanceTable.moneyIn' | trans }}</span>
@@ -219,17 +219,17 @@
 
         {# MONEY OUT #}
         {% set started = report.status.moneyOutState['state'] != 'not-started' %}
-        <tr>
-            <td>{{ 'balanceTable.moneyOut' | trans }}</td>
-            <td></td>
-            <td class="numeric">
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell">{{ 'balanceTable.moneyOut' | trans }}</td>
+            <td class="govuk-table__cell"></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">
                 {% if not started %}
                     -
                 {% else %}
                     £{{ report.moneyOutTotal | money_format }}
                 {% endif %}
             </td>
-            <td class="numeric">
+            <td class="govuk-table__cell govuk-table__cell--numeric">
                 {% if not started %}
                     -
                 {% else %}
@@ -238,7 +238,7 @@
                 {% endif %}
             </td>
             {% if not hideEditLink  %}
-                <td class="numeric">
+                <td class="govuk-table__cell govuk-table__cell--numeric">
                     <a href="{{ path('money_out', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                         {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
                         <span class="govuk-visually-hidden">{{ 'balanceTable.moneyOut' | trans }}</span>
@@ -254,17 +254,15 @@
     {% if showBalanceCalculations %}
 
         <tfoot >
-            <tr id="calculated_balance_foot">
-                <td colspan="3">
+            <tr class="govuk-table__row" id="calculated_balance_foot">
+                <td class="govuk-table__cell" colspan="3">
                     <span class="govuk-!-font-weight-bold">{{ 'balanceTable.footer' | trans }}</span>
                 </td>
-                <td class="numeric govuk-!-font-weight-bold">
-                        <span class="govuk-!-font-weight-bold behat-region-calculated-balance" id="calculated_balance_foot_value">
-                            £{{ report.calculatedBalance | money_format }}
-                        </span>
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">
+                    £{{ report.calculatedBalance | money_format }}
                 </td>
                 {% if not hideEditLink  %}
-                    <td></td>
+                    <td class="govuk-table__cell"></td>
                 {% endif %}
             </tr>
         </tfoot>
