@@ -1,4 +1,4 @@
-FROM php:8.4.26RC1-cli-alpine3.24@sha256:2833e4b9335af7fcb1b25bee3b4bb336406348f8d979f74441cc10031b871550
+FROM php:8.4.27-alpine3.24@sha256:8d29b132476e5f54633d30bfbfa0b0b7c95a9cb0c308b3175d61351aea73b643
 # update_php_oct
 RUN apk add --no-cache curl
 
