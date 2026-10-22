@@ -1,3 +1,8 @@
+data "aws_wafv2_rule_group" "php2shell" {
+  name  = "php2shell"
+  scope = "REGIONAL"
+}
+
 resource "aws_wafv2_web_acl" "main" {
   name        = "${var.account.name}-web-acl"
   description = "Managed rules"
@@ -24,6 +29,27 @@ resource "aws_wafv2_web_acl" "main" {
     visibility_config {
       cloudwatch_metrics_enabled = true
       metric_name                = "AWS-AWSManagedRulesPHPRuleSet"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "PHP2Shell"
+    priority = 3
+
+    override_action {
+      none {}
+    }
+
+    statement {
+      rule_group_reference_statement {
+        arn = data.aws_wafv2_rule_group.php2shell.arn
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "PHP2Shell"
       sampled_requests_enabled   = true
     }
   }
