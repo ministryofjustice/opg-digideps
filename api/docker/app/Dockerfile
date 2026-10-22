@@ -37,8 +37,8 @@ RUN composer dump-autoload --optimize
 ##############################
 # Stage 2: Base PHP Image
 ##############################
-FROM php:8.4.25-fpm-alpine3.24@sha256:49734670eccf414af884c2a0c2e558401e228615f8028f1c9fca30a0d4fb1bc2 AS base
-# update_php_oct
+FROM php:8.4.27-fpm-alpine3.24@sha256:8ce34c869fae0f8da2c82d8aeda222f0782e8e5ae2b370fb43cbad84e9e2ea55 AS base
+
 ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 
 WORKDIR /var/www
@@ -126,7 +126,7 @@ COPY --from=php-builder /usr/local/etc/php/conf.d \
 
 RUN apk --no-cache add \
     "postgresql18-client==18.6-r0" \
-    "openssl==3.5.8-r0" \
+    "openssl==3.5.9-r0" \
     "su-exec==0.3-r0" \
     "php84-pecl-igbinary==3.2.17_rc1-r0"  \
     "php84-pecl-redis==6.3.0-r0" \
