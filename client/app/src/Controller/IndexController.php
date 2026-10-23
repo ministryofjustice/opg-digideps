@@ -156,6 +156,14 @@ class IndexController extends AbstractController
     public function localisedAccessibilityAction(Request $request, string $_locale): Response
     {
         return $this->render("@App/Index/accessibility.{$_locale}.html.twig", [
+            'emailAddress' => $this->translator->trans('contact.digideps.emailAddress', [], 'twig-components'),
+            'telephoneNumber' => $this->translator->trans('contact.digideps.telephoneNumber', [], 'twig-components'),
+            'textphoneNumber' => $this->translator->trans('contact.digideps.textphoneNumber', [], 'twig-components'),
+            'openingHours' => $this->translator->trans('contact.digideps.openingHours', [], 'twig-components'),
+            'customerServiceEmail' => $this->translator->trans('contact.opg.customerServiceEmail', [], 'twig-components'),
+            'lastReviewedDate' => $this->translator->trans('opg.accessibilityStatement.lastReviewedDate', [], 'twig-components'),
+            'lastTestedDate' => $this->translator->trans('opg.accessibilityStatement.lastTestedDate', [], 'twig-components'),
+            'preparedDate' => $this->translator->trans('opg.accessibilityStatement.preparedDate', [], 'twig-components'),
             'backlink' => $this->getRefererUrlSafe($request, ['accessibility']),
         ]);
     }
