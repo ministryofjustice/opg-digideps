@@ -2,10 +2,11 @@
 
 namespace OPG\Digideps\Frontend\Entity;
 
+use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Traits\ActiveAudit;
 use OPG\Digideps\Frontend\Entity\Traits\IsSoftDeleteableEntity;
-use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Validator\Constraints\YearMustBeFourDigitsAndValid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -213,14 +214,16 @@ class Client
     private $expectedReportEndDate;
 
     /**
+     * @var array<CourtOrder>
+     */
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\CourtOrder>')]
+    public array $courtOrders = [];
+
+    /**
      * @var \DateTime
      */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     private $archivedAt;
-
-    public function __construct()
-    {
-    }
 
     /**
      * @return User[]
@@ -874,5 +877,34 @@ class Client
         }
 
         return $submittedReports;
+    }
+
+    public function hasHwCourtOrder(): bool
+    {
+        return array_any(
+            $this->courtOrders,
+            fn (CourtOrder $courtOrder) => $courtOrder->getOrderType() === 'hw' && $courtOrder->isActive()
+        );
+    }
+
+    public function hasProDeputy(): bool
+    {
+        return $this->hasDeputyOfType(DeputyType::PRO);
+    }
+
+    public function hasPaDeputy(): bool
+    {
+        return $this->hasDeputyOfType(DeputyType::PA);
+    }
+
+    private function hasDeputyOfType(DeputyType $deputyType): bool
+    {
+        return array_any(
+            array_filter($this->courtOrders, fn (CourtOrder $courtOrder) => $courtOrder->isActive()),
+            fn (CourtOrder $courtOrder) => array_any(
+                $courtOrder->getActiveDeputies(),
+                fn (Deputy $activeDeputy) => $activeDeputy->deputyType === $deputyType->value
+            )
+        );
     }
 }
