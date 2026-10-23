@@ -1,6 +1,10 @@
-{% props href, text=null, noVisitedState=false, inverse=false, inNewTab=false, accessibilityText=null %}
+{%- apply spaceless -%}
+{% props href, text=null, noVisitedState=false, inverse=false, inNewTab=false, accessibilityText=null, class=null %}
 
 {% set className = "govuk-link" %}
+{% if class is not null %}
+    {% set className = className ~ ' ' ~ class %}
+{% endif %}
 {% if noVisitedState %}
     {% set className = className ~ ' govuk-link--no-visited-state' %}
 {% endif %}
@@ -8,7 +12,6 @@
     {% set className = className ~ ' govuk-link--inverse' %}
 {% endif %}
 
-{%- apply spaceless -%}
 <a href="{{ href }}" class="{{ className }}"{% if inNewTab %} rel="noreferrer noopener" target="_blank"{% endif %}>
     {%- if text is null -%}
         {%- with outerScope %}{% block content %}{% endblock %}{% endwith -%}
