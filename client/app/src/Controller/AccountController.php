@@ -13,15 +13,18 @@ use OPG\Digideps\Frontend\Account\AccountService;
 use OPG\Digideps\Frontend\Form\AccountRequestType;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsController]
 class AccountController extends AbstractController
 {
     public function __construct(
-        private readonly AccountService $accountService
+        private readonly AccountService $accountService,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -55,13 +58,19 @@ class AccountController extends AbstractController
                 $accountCreated = true;
                 $deputyEmail = $response;
             } elseif ($response instanceof AccountError) {
-                $accountCreationError = $response;
+                // add a form-level error message
+                $formErrorMessage = $this->translator->trans(
+                    "opg.account.request.errors.{$response->value}",
+                    ['%helplineNumber%' => $this->translator->trans('opg.helplineNumber', [], 'twig-components')],
+                    'twig-components'
+                );
+
+                $form->addError(new FormError($formErrorMessage));
             }
         }
 
         return [
             'form' => $form->createView(),
-            'accountCreationError' => $accountCreationError,
             'accountCreated' => $accountCreated,
             'deputyEmail' => $deputyEmail
         ];

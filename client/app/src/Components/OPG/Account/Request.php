@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Components\OPG\Account;
 
-use OPG\Digideps\Common\Account\AccountError;
 use Symfony\Component\Form\FormView;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -25,20 +24,18 @@ final class Request
     ) {
     }
 
-    public function mount(FormView $form, ?AccountError $accountCreationError, bool $accountCreated, ?string $deputyEmail): void
+    public function mount(FormView $form, bool $accountCreated, ?string $deputyEmail): void
     {
         $this->form = $form;
 
         $this->props = [
             'accountCreated' => $accountCreated,
-            'accountCreationFailed' => $accountCreationError !== null,
             'loginPath' => 'login'
         ];
 
         $signInText = $this->translate('opg.account.request.signIn');
         $signInTextCaps = ucfirst($signInText);
         $this->text = [
-            'accountCreationErrorMessage' => null,
             'deputyEmail' => $deputyEmail,
             'intro' => $this->translate('opg.account.request.intro'),
             'signIn' => $signInText,
@@ -50,19 +47,12 @@ final class Request
             'expirationNote' => $this->translate('opg.account.request.accountCreated.expirationNote'),
             'checkJunk' => $this->translate('opg.account.request.accountCreated.checkJunk')
         ];
-
-        if ($accountCreationError !== null) {
-            $this->text['accountCreationErrorMessage'] = $this->translate(
-                "opg.account.request.errors.{$accountCreationError->value}",
-                ['%helplineNumber%' => $this->translate('opg.helplineNumber')]
-            );
-        }
     }
 
-    private function translate(string $id, array $params = []): string
+    private function translate(string $id): string
     {
         try {
-            return $this->translator->trans($id, $params, 'twig-components');
+            return $this->translator->trans($id, [], 'twig-components');
         } catch (\Throwable $t) {
             return "$t";
         }

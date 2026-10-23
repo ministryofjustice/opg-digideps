@@ -1,6 +1,4 @@
-{% if props.accountCreationFailed %}
-    <twig:GOV:Paragraph>{{ text.accountCreationErrorMessage }}</twig:GOV:Paragraph>
-{% elseif props.accountCreated %}
+{% if props.accountCreated %}
     <twig:GOV:Heading h="2" s="m">{{ text.accountCreatedSubHeading }}</twig:GOV:Heading>
 
     <twig:GOV:Paragraph>
