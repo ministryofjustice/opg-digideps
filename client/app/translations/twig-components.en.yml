@@ -1,3 +1,11 @@
+contact:
+  digideps:
+    emailAddress: digideps@digital.justice.gov.uk
+    telephoneNumber: 0300 456 0300
+    textphoneNumber: 0115 934 2778
+    openingHours: Monday, Tuesday, Thursday, Friday 9:30am to 5pm, and Wednesday 10am to 5pm
+  opg:
+    customerServiceEmail: customerservices@publicguardian.gov.uk
 gov:
   skipLink: Skip to main content
   backLink: Back
@@ -18,6 +26,10 @@ gov:
       cookies: Cookies
       accessibility: Accessibility
 opg:
+  accessibilityStatement:
+    lastReviewedDate: 26 October 2026
+    lastTestedDate: 06 February 2026
+    preparedDate: 26 October 2026
   admin:
     clientDetails:
       actions:
