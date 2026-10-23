@@ -4,9 +4,7 @@
 {% block pageTitle %}Accessibility statement for the Complete the deputy report service{% endblock %}
 
 {% block linkBack %}
-    {% if backlink %}
-        <twig:GOV:Link href="{{ backlink }}" class="link-back">{{ 'back' | trans({}, 'common' ) }}</twig:GOV:Link>
-    {% endif %}
+    {% if backlink %}<twig:GOV:BackLink href="{{ backlink }}"/>{% endif %}
 {% endblock %}
 
 {% block pageContent %}
