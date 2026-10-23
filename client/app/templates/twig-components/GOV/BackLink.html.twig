@@ -1,3 +1,4 @@
+{%- apply spaceless -%}
 {% props href, inverse=false %}
 
 {% set className = "govuk-back-link" %}
@@ -8,3 +9,4 @@
 <a href="{{ href }}" class="{{ className }}">
     {{ 'gov.backLink'|trans({}, 'twig-components') }}
 </a>
+{%- endapply -%}
