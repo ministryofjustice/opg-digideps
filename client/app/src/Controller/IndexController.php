@@ -152,7 +152,7 @@ class IndexController extends AbstractController
     }
 
     // if we ever support another language, switch the template here
-    #[Route(path: '/{_locale}/accessibility', name: 'localised_accessibility', requirements: ['_locale' => 'en'])]
+    #[Route(path: '/{_locale}/accessibility', name: 'localised_accessibility', requirements: ['_locale' => 'en'], defaults: ['_locale' => 'en'])]
     public function localisedAccessibilityAction(Request $request, string $_locale): Response
     {
         return $this->render("@App/Index/accessibility.{$_locale}.html.twig", [
