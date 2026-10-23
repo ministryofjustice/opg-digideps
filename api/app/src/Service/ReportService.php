@@ -126,12 +126,12 @@ class ReportService
             }
         }
 
+        $hasDebts = null;
         foreach ($fromReport->getDebts() as $debt) {
-            if (!$this->checkDebtExists($toReport, $debt)) {
-                $this->em->persist($this->cloneDebt($debt, $toReport));
-                $toReport->setHasDebts('yes');
-            }
+            $this->em->persist($this->cloneDebt($debt, $toReport));
+            $hasDebts = $hasDebts !== 'yes' && $this->checkDebtExists($toReport, $debt) ? 'yes' : 'no';
         }
+        $toReport->setHasDebts($hasDebts);
         $toReport->setDebtManagement($toReport->getDebtManagement() ?? $fromReport->getDebtManagement());
     }
 
@@ -256,7 +256,8 @@ class ReportService
     {
         foreach ($toReport->getDebts() as $existingDebt) {
             if (
-                $existingDebt->getAmount() === $debt->getAmount()
+                !is_null($existingDebt->getAmount())
+                && $existingDebt->getAmount() === $debt->getAmount()
                 && $existingDebt->getDebtTypeId() === $debt->getDebtTypeId()
                 && (!$existingDebt->getHasMoreDetails() || $existingDebt->getMoreDetails() === $debt->getMoreDetails())
             ) {
