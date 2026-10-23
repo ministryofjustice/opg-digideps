@@ -3,7 +3,7 @@
 // Last updated info at bottom of privacy notice
 
 .meta-data {
-  @include core-16;
+  @include govuk-font($size: 16);
   margin-top: em(60);
-  color: $secondary-text-colour;
+  color: $govuk-secondary-text-colour;
 }

@@ -6,13 +6,13 @@ table {
   // Allow a qualifying element, only table data cells should use tabular numbers
   td.numeric-small {
     // sass-lint:disable-line no-qualifying-elements
-    @include core-19($tabular-numbers: true);
+    @include govuk-font($size: 19, $tabular: true);
     text-align: right;
   }
 }
 
 .grandtotals-border {
-  border-top: 2px solid $border-colour;
+  border-top: 2px solid $govuk-border-colour;
 
   &--transparent {
     border-top: 2px solid transparent;

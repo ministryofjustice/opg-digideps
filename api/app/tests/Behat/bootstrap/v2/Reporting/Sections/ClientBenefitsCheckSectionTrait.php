@@ -219,7 +219,7 @@ trait ClientBenefitsCheckSectionTrait
     {
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
-        $this->pressButton('Add money');
+        $this->clickLink('Add money');
 
         $this->iAddNumberOfMoneyTypesWithAddAnother($numOfMoneyTypes);
     }
@@ -538,6 +538,6 @@ trait ClientBenefitsCheckSectionTrait
     public function iWantToAddAnotherMoneyRecievedOnTheClientsBehalf(): void
     {
         $this->iAmOnPage('/\/client-benefits-check\/summary/');
-        $this->pressButton('Add money');
+        $this->clickLink('Add money');
     }
 }

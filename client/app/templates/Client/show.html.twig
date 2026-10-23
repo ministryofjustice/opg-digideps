@@ -17,15 +17,15 @@
 {% endblock %}
 
 {% block pageContent %}
-    <table class="text">
-        <tbody>
-            <tr>
-                <th scope="row" class="govuk-!-font-weight-bold">{{ (page ~ '.clientTable.header.caseNumber') | trans }}</th>
-                <td class="behat-region-case-number">{{ client.getCaseNumber }}</td>
+    <table class="govuk-table govuk-!-width-one-half">
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header govuk-!-font-weight-bold">{{ (page ~ '.clientTable.header.caseNumber') | trans }}</th>
+                <td class="govuk-table__cell behat-region-case-number">{{ client.getCaseNumber }}</td>
             </tr>
-            <tr valign="top">
-                <th scope="row" class="govuk-!-font-weight-bold">{{ (page ~ '.clientTable.header.address') | trans({'%client%': client.firstname}) }}</th>
-                <td>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header govuk-!-font-weight-bold">{{ (page ~ '.clientTable.header.address') | trans({'%client%': client.firstname}) }}</th>
+                <td class="govuk-table__cell">
                     {% if client.address is not empty %}
                         <div itemprop="streetAddress">{{ client.address }}</div>
                     {% endif %}
@@ -49,9 +49,9 @@
                     {% endif %}
                 </td>
             </tr>
-            <tr>
-                <th scope="row" class="govuk-!-font-weight-bold">{{ (page ~ '.clientTable.header.courtDate') | trans }}</th>
-                <td>{{ client.courtDate | date("d/m/Y") }}</td>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header govuk-!-font-weight-bold">{{ (page ~ '.clientTable.header.courtDate') | trans }}</th>
+                <td class="govuk-table__cell">{{ client.courtDate | date("d/m/Y") }}</td>
             </tr>
         </tbody>
     </table>

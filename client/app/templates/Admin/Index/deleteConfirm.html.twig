@@ -21,14 +21,14 @@
     {% include '@App/Components/Link/_link-button.html.twig' with {
         transDomain: 'admin',
         linkButtonLabel: 'yes.label',
-        linkClass: 'button-warning push-half--right',
+        linkClass: 'govuk-button--warning push-half--right',
         linkHref: path('admin_delete', { id: user.id })
     } %}
 
     {% include '@App/Components/Link/_link-button.html.twig' with {
         transDomain: 'admin',
         linkButtonLabel: 'no.label',
-        linkClass: 'button-secondary',
+        linkClass: 'govuk-button--secondary',
         linkHref: path('admin_editUser', { filter: user.id })
     } %}
 
