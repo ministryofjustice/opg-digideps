@@ -199,18 +199,6 @@
                             } %}
                         {% endif %}
 
-                        {% if report.hasSection('moneyOut') %}
-                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'money_out',
-                                sectionId: 'moneyOut',
-                                report: report,
-                                state: reportStatus.moneyOutState,
-                                warning: true,
-                                description: true
-                            } %}
-                        {% endif %}
-
                         {% if report.hasSection('moneyInShort') %}
                             {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                                 transDomain: translationDomain,
@@ -218,6 +206,22 @@
                                 sectionId: 'moneyInShort',
                                 report: report,
                                 state: reportStatus.MoneyInShortState,
+                                warning: true,
+                                description: true
+                            } %}
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="govuk-grid-column-one-half">
+                    <ul>
+                        {% if report.hasSection('moneyOut') %}
+                            {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'money_out',
+                                sectionId: 'moneyOut',
+                                report: report,
+                                state: reportStatus.moneyOutState,
                                 warning: true,
                                 description: true
                             } %}
@@ -259,11 +263,7 @@
                                 description: true
                             } %}
                         {% endif %}
-                    </ul>
-                </div>
 
-                <div class="govuk-grid-column-one-half">
-                    <ul>
                         {% if report.hasSection('debts') %}
                             {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                                 transDomain: translationDomain,
