@@ -1,0 +1,114 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% block htmlTitle %}Accessibility Statement | GOV.UK{% endblock %}
+{% block pageTitle %}Accessibility statement for the Complete the deputy report service{% endblock %}
+
+{% block linkBack %}
+    {% if backlink %}<twig:GOV:BackLink href="{{ backlink }}"/>{% endif %}
+{% endblock %}
+
+{% block pageContent %}
+    <twig:GOV:Paragraph>
+        This accessibility statement applies to the Complete the deputy report service.
+        This website is run by the <twig:GOV:Link href="https://www.gov.uk/government/organisations/office-of-the-public-guardian">Office of the Public Guardian</twig:GOV:Link>.
+        We want as many people as possible to be able to use this service.
+        For example, that means you should be able to:
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:List>
+        <li>
+            change colours, contrast levels and fonts using accessibility software you have
+            installed on your computer
+        </li>
+        <li>zoom in up to 300% without the text spilling off the screen</li>
+        <li>navigate most of the website using just a keyboard</li>
+        <li>navigate most of the website using speech recognition software</li>
+        <li>
+            listen to most of the website using a screen reader (including the most recent
+            versions of JAWS, NVDA and VoiceOver)
+        </li>
+    </twig:GOV:List>
+
+    <twig:GOV:Paragraph>
+        We’ve also made the service text as simple as possible to understand.
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Paragraph>
+        <twig:GOV:Link href="https://mcmw.abilitynet.org.uk/">AbilityNet</twig:GOV:Link>
+        has advice on making your device easier to use if you have a disability.
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Heading h="2" size="l">Feedback and contact information</twig:GOV:Heading>
+
+    <twig:GOV:Paragraph>
+        We’re always looking to improve the accessibility of this service.
+        If you find any problems not listed on this page or think we’re not meeting
+        accessibility requirements, contact:
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:List>
+        <li>Email: <twig:GOV:Link href="{{ 'mailto:' ~ emailAddress }}">{{ emailAddress }}</twig:GOV:Link></li>
+        <li>Telephone: {{ telephoneNumber }}</li>
+        <li>Textphone: {{ textphoneNumber }}</li>
+    </twig:GOV:List>
+
+    <twig:GOV:Paragraph>
+        We are available {{ openingHours }}.
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Paragraph>
+        If you cannot use this service, you can
+        <twig:GOV:Link href="https://www.gov.uk/government/publications/deputy-annual-report-accounting-for-your-actions">complete your deputy report using a paper form</twig:GOV:Link>.
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Paragraph>
+        If you need the form in a more accessible format, email
+        <twig:GOV:Link href="{{ 'mailto:' ~ customerServiceEmail }}">{{ customerServiceEmail }}</twig:GOV:Link>
+        and tell us which format you need.
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Heading h="2" size="l">Enforcement procedure</twig:GOV:Heading>
+
+    <twig:GOV:Paragraph>
+        The Equality and Human Rights Commission (EHRC) is responsible for enforcing the
+        Public Sector Bodies (Websites and Mobile Applications) (No. 2)
+        Accessibility Regulations 2018 (the ‘accessibility regulations’). If you’re
+        not happy with how we respond to your complaint,
+        <twig:GOV:Link href="https://www.equalityadvisoryservice.com/">contact the Equality Advisory and Support Service (EASS)</twig:GOV:Link>.
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Heading h="2" size="l">Technical information about this website’s accessibility</twig:GOV:Heading>
+
+    <twig:GOV:Paragraph>
+        The Office of the Public Guardian is committed to making its online services accessible, in accordance with the
+        Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Heading h="2" size="l">Compliance status</twig:GOV:Heading>
+
+    <twig:GOV:Paragraph>
+        The website has been tested against the Web Content Accessibility Guidelines (WCAG) 2.2 AA standard.
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Paragraph>
+        This website is fully compliant with the
+        <twig:GOV:Link href="https://www.w3.org/TR/WCAG22/">Web Content Accessibility Guidelines version 2.2</twig:GOV:Link>
+        AA standard.
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Heading h="2" size="l">Preparation of this accessibility statement</twig:GOV:Heading>
+
+    <twig:GOV:Paragraph>
+        This statement was prepared on {{ preparedDate }}. It was last reviewed on {{ lastReviewedDate }}.
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Paragraph>
+        This website was last tested on {{ lastTestedDate }} against the WCAG 2.2 AA standard.
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Paragraph>
+        The test was carried out by Uservision. You can
+        <twig:GOV:Link href="https://uv3327-moj-digideps-spotcheck.uservisionaccessibility.co.uk/index.html">read the full accessibility test report</twig:GOV:Link>.
+        All WCAG failures identified in this test have been resolved and the website is currently awaiting a further test.
+    </twig:GOV:Paragraph>
+{% endblock %}
