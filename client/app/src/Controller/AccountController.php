@@ -32,9 +32,9 @@ class AccountController extends AbstractController
     #[Template('@App/Account/request.html.twig')]
     public function requestAction(Request $request): array
     {
-        $form = $this->createForm(AccountRequestType::class)->handleRequest($request);
+        $form = $this->createForm(AccountRequestType::class, options: ['action' => $this->generateUrl('account_request')]);
+        $form->handleRequest($request);
 
-        $accountCreationError = null;
         $accountCreated = false;
         $deputyEmail = null;
 
