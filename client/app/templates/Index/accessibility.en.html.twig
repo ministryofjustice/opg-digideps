@@ -5,7 +5,7 @@
 
 {% block linkBack %}
     {% if backlink %}
-        <a href="{{ backlink }}" class="link-back behat-link-step-back">{{ 'back' | trans({}, 'common' ) }}</a>
+        <twig:GOV:Link href="{{ backlink }}" class="link-back">{{ 'back' | trans({}, 'common' ) }}</twig:GOV:Link>
     {% endif %}
 {% endblock %}
 
@@ -17,7 +17,7 @@
         For example, that means you should be able to:
     </twig:GOV:Paragraph>
 
-    <twig:GOV:List tag="ul">
+    <twig:GOV:List>
         <li>
             change colours, contrast levels and fonts using accessibility software you have
             installed on your computer
@@ -30,4 +30,13 @@
             versions of JAWS, NVDA and VoiceOver)
         </li>
     </twig:GOV:List>
+
+    <twig:GOV:Paragraph>
+        We've also made the service text as simple as possible to understand.
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Paragraph>
+        <twig:GOV:Link href="https://mcmw.abilitynet.org.uk/">AbilityNet</twig:GOV:Link>
+        has advice on making your device easier to use if you have a disability.
+    </twig:GOV:Paragraph>
 {% endblock %}
