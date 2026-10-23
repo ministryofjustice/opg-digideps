@@ -30,7 +30,8 @@
   },
   "scripts": {
     "lint:phpstan": "phpstan --memory-limit=512M",
-    "tests:unit": "phpunit"
+    "tests:unit": "phpunit",
+    "tests:serialise": "phpunit --testsuite=serialise"
   },
   "autoload": {
     "psr-4": {
