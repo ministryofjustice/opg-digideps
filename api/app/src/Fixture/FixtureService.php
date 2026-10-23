@@ -407,15 +407,17 @@ final class FixtureService
                 UserType::AdminManager => User::ROLE_ADMIN_MANAGER,
                 UserType::SuperAdmin => User::ROLE_SUPER_ADMIN,
             })
-            ->setActive($descriptor->isLoginActive)
-            ->setIsPrimary($descriptor->isPrimary)
-            ->setAgreeTermsUse(true)
             ->setCoDeputyClientConfirmed(true)
-            ->setPassword($this->password)
-            ->setRegistrationDate(new \DateTime()->sub(new \DateInterval('P1Y')))
-            ->setLastLoggedIn(new \DateTime())
-            ->setRegistrationRoute(User::SELF_REGISTER)
-        ;
+            ->setIsPrimary($descriptor->isPrimary)
+            ->setRegistrationRoute(User::SELF_REGISTER);
+
+        if ($descriptor->hasRegistered) {
+            $user->setActive(true)
+                ->setAgreeTermsUse(true)
+                ->setPassword($this->password)
+                ->setRegistrationDate(new \DateTime()->sub(new \DateInterval('P1Y')))
+                ->setLastLoggedIn(new \DateTime());
+        }
 
         $organisation?->addUser($user);
         $deputy?->setEmail1($user->getEmail());
