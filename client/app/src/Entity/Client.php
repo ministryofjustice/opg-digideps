@@ -2,10 +2,11 @@
 
 namespace OPG\Digideps\Frontend\Entity;
 
+use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Traits\ActiveAudit;
 use OPG\Digideps\Frontend\Entity\Traits\IsSoftDeleteableEntity;
-use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Validator\Constraints\YearMustBeFourDigitsAndValid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -888,24 +889,21 @@ class Client
 
     public function hasProDeputy(): bool
     {
-        return $this->hasDeputyOfType('PRO');
+        return $this->hasDeputyOfType(DeputyType::PRO);
     }
 
     public function hasPaDeputy(): bool
     {
-        return $this->hasDeputyOfType('PA');
+        return $this->hasDeputyOfType(DeputyType::PA);
     }
 
-    /**
-     * @param string $deputyType 'PRO'|'PA'|'LAY'
-     */
-    private function hasDeputyOfType(string $deputyType): bool
+    private function hasDeputyOfType(DeputyType $deputyType): bool
     {
         return array_any(
-            $this->courtOrders,
+            array_filter($this->courtOrders, fn (CourtOrder $courtOrder) => $courtOrder->isActive()),
             fn (CourtOrder $courtOrder) => array_any(
                 $courtOrder->getActiveDeputies(),
-                fn (Deputy $activeDeputy) => $activeDeputy->deputyType === $deputyType
+                fn (Deputy $activeDeputy) => $activeDeputy->deputyType === $deputyType->value
             )
         );
     }

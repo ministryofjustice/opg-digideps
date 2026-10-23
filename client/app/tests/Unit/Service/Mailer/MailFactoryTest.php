@@ -409,6 +409,7 @@ class MailFactoryTest extends TestCase
 
         $courtOrder = $this->createStub(CourtOrder::class);
         $courtOrder->method('getOrderType')->willReturn('pfa');
+        $courtOrder->method('isActive')->willReturn(true);
         $courtOrder->method('getActiveDeputies')->willReturn([$deputy]);
 
         $client->courtOrders = [$courtOrder];
@@ -427,6 +428,7 @@ class MailFactoryTest extends TestCase
 
         $courtOrder = $this->createStub(CourtOrder::class);
         $courtOrder->method('getOrderType')->willReturn('pfa');
+        $courtOrder->method('isActive')->willReturn(true);
         $courtOrder->method('getActiveDeputies')->willReturn([$deputy]);
 
         $client->courtOrders = [$courtOrder];
