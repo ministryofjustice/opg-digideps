@@ -11,46 +11,60 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
-        <dl class="push--bottom">
-            <dt>
-                <strong class="govuk-!-font-weight-bold">{{ 'reportStatus' | trans() }}</strong>
-            </dt>
-            <dd class="push--bottom">
-                <span class="govuk-tag {{ (report.isUnsubmitted ? 'notFinished' : reportStatus.state) | status_to_tag_css }}">
-                    {{ ('status.' ~ reportStatus.status) | trans() }}
-                </span>
-            </dd>
+        <dl class="govuk-summary-list push--bottom">
+            <div class="govuk-summary-list__row no-border">
+                <dt class="govuk-summary-list__key govuk-!-padding-bottom-0">
+                    <strong class="govuk-!-font-weight-bold">{{ 'reportStatus' | trans() }}</strong>
+                </dt>
+            </div>
+            <div class="govuk-summary-list__row no-border">
+                <dd class="govuk-summary-list__key govuk-!-padding-top-0">
+                    <span class="govuk-tag {{ (report.isUnsubmitted ? 'notFinished' : reportStatus.state) | status_to_tag_css }}">
+                        {{ ('status.' ~ reportStatus.status) | trans() }}
+                    </span>
+                </dd>
+            </div>
 
-            <dt class="govuk-visually-hidden">
-                <strong class="govuk-!-font-weight-bold">{{ 'reportOptions' | trans() }}</strong>
-            </dt>
-            <dd class="push--bottom">
-                {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
-                    <p class="push--top">
-                        <a class="behat-link-edit-report_submit govuk-button govuk-button--start" id="edit-report_submit{{ incompleteAppend }}" href="{{ path('report_review', {'reportId': report.id}) }}" role="button" data-module="govuk-button">
-                            {{ 'reviewAndSubmit' | trans() }}
-                            {{ macros.icon('startButton',  'govuk-button__start-icon') }}
-                        </a>
-                    </p>
-                {% else %}
-                    <a href="{{ path('report_review', {'reportId': report.id}) }}" class="preview-and-check-report">{{ 'options.previewReport' | trans() }}</a>
-                {% endif %}
-            </dd>
+            <div class="govuk-summary-list__row no-border">
+                <dt class="govuk-visually-hidden">
+                    <strong class="govuk-!-font-weight-bold">{{ 'reportOptions' | trans() }}</strong>
+                </dt>
+            </div>
+
+            <div class="govuk-summary-list__row no-border">
+                <dt class="govuk-summary-list__value push--bottom">
+                    {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
+                        <p class="push--top">
+                            <a class="behat-link-edit-report_submit govuk-button govuk-button--start" id="edit-report_submit{{ incompleteAppend }}" href="{{ path('report_review', {'reportId': report.id}) }}" role="button" data-module="govuk-button">
+                                {{ 'reviewAndSubmit' | trans() }}
+                                {{ macros.icon('startButton',  'govuk-button__start-icon') }}
+                            </a>
+                        </p>
+                    {% else %}
+                        <a href="{{ path('report_review', {'reportId': report.id}) }}" class="preview-and-check-report">{{ 'options.previewReport' | trans() }}</a>
+                    {% endif %}
+                </dt>
+            </div>
         </dl>
     </div>
 
     <div class="govuk-grid-column-one-half">
-        <dl class="push--bottom">
-            <dt>
-                <strong class="govuk-!-font-weight-bold">{{ 'reportingPeriod' | trans() }}</strong>
-            </dt>
-            <dd class="push--bottom">
-                <span class="push--right">{{ report.startDate | date(" j F Y") }} to {{ report.endDate | date(" j F Y") }}</span>
-                <a href="{{ path('report_edit', {'reportId': report.id}) }}" class="right behat-link-edit-report-period">
-                    {{ 'edit' | trans }} <span class="govuk-visually-hidden">reporting period</span>
-                </a>
-
-                <details class="govuk-details govuk-!-padding-top-5" data-module="govuk-details">
+        <dl class="govuk-summary-list push--bottom">
+            <div class="govuk-summary-list__row no-border">
+                <dt class="govuk-summary-list__key govuk-!-padding-bottom-0">
+                    <strong class="govuk-!-font-weight-bold">{{ 'reportingPeriod' | trans() }}</strong>
+                </dt>
+            </div>
+            <div class="govuk-summary-list__row no-border">
+                <dd class="govuk-summary-list__value govuk-!-padding-top-0">
+                    <span class="push--right">{{ report.startDate | date(" j F Y") }} to {{ report.endDate | date(" j F Y") }}</span>
+                    <a href="{{ path('report_edit', {'reportId': report.id}) }}" class="right behat-link-edit-report-period">
+                        {{ 'edit' | trans }} <span class="govuk-visually-hidden">reporting period</span>
+                    </a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row no-border">
+                <details class="govuk-details govuk-!-padding-top-1" data-module="govuk-details">
                     <summary class="govuk-details__summary">
                         <span class="govuk-details__summary-text">{{ 'overdueHelpTextHeader' | trans }}</span>
                     </summary>
@@ -59,20 +73,24 @@
                         <p class="govuk-body">{{ 'overdueHelpTextParagraph2' | trans }}</p>
                     </div>
                 </details>
-            </dd>
-            <dt>
-                <strong class="govuk-!-font-weight-bold">{{ 'reportDueDate' | trans() }}</strong>
-            </dt>
-            <dd class="push--bottom">
-                {{ report.dueDate | date(" j F Y") }}<br>
-                {% if report.dueDateDiffDays < 0 %}
-                    <span class="govuk-body-s govuk-!-font-weight-bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
-                {% elseif report.dueDateDiffDays == 0 %}
-                    <span class="govuk-body-s govuk-!-font-weight-bold">Due today</span>
-                {% elseif report.dueDateDiffDays <= 30 %}
-                    <span class="govuk-body-s">Due in {{ report.dueDateDiffDays }} days</span>
-                {% endif %}
-            </dd>
+            </div>
+            <div class="govuk-summary-list__row no-border">
+                <dt class="govuk-summary-list__key govuk-!-padding-bottom-0">
+                    <strong class="govuk-!-font-weight-bold">{{ 'reportDueDate' | trans() }}</strong>
+                </dt>
+            </div>
+            <div class="govuk-summary-list__row no-border">
+                <dd class="govuk-summary-list__value govuk-!-padding-top-0">
+                    {{ report.dueDate | date(" j F Y") }}<br>
+                    {% if report.dueDateDiffDays < 0 %}
+                        <span class="govuk-body-s govuk-!-font-weight-bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
+                    {% elseif report.dueDateDiffDays == 0 %}
+                        <span class="govuk-body-s govuk-!-font-weight-bold">Due today</span>
+                    {% elseif report.dueDateDiffDays <= 30 %}
+                        <span class="govuk-body-s">Due in {{ report.dueDateDiffDays }} days</span>
+                    {% endif %}
+                </dd>
+            </div>
         </dl>
     </div>
 
@@ -86,7 +104,7 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                    <ul>
+                    <ul class="govuk-list">
 
                         {% if report.hasSection('decisions') %}
                             {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
@@ -237,7 +255,7 @@
                 </div>
 
                 <div class="govuk-grid-column-one-half">
-                    <ul>
+                    <ul class="govuk-list">
 
                         {% if report.hasSection('gifts') %}
                             {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
