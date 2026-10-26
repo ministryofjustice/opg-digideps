@@ -209,7 +209,7 @@ jobs:
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
         id: buildx_setup
         with:
-          version: v0.17.0
+          version: v0.17.1
           platforms: linux/${{ matrix.platform }}
 
       - name: export dates
@@ -231,7 +231,7 @@ jobs:
             ${{ matrix.svc_name }}-main-${{ steps.cache-dates.outputs.cache_date_yesterday }}
 
       - name: download resources artifact
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: web-distribution
           path: client/resources/public
@@ -414,7 +414,7 @@ jobs:
       - name: Run Snyk Scan
         id: snyk_scan
         if: matrix.svc_name != 'mock-sirius' && matrix.svc_name != 'test' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
-        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@77bb12e7fec3bcee9a6a35cb21361195e027a12a # v4.9.0
+        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@939ca6ddfc2bafefa48b0730ea0268bd75a25876 # v4.9.1
         with:
           SNYK_TEST_IMAGE: ${{ matrix.svc_name }}:latest
           SNYK_TOKEN: ${{ secrets.snyk_token }}
@@ -425,7 +425,7 @@ jobs:
 
       - name: Upload SNYK scan results to GitHub Security tab
         if: steps.snyk_scan.outcome == 'success' && hashFiles('test-results/snyk-results.sarif') != ''
-        uses: github/codeql-action/upload-sarif@68bde559dea0fdcac2102bfdf6230c5f70eb485e # v4.35.4
+        uses: github/codeql-action/upload-sarif@9e0d7b8d25671d64c341c19c0152d693099fb5ba # v4.35.5
         with:
           sarif_file: test-results/snyk-results.sarif
           category: ${{ matrix.svc_name }}
