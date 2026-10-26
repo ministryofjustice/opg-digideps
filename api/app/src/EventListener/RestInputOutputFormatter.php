@@ -147,6 +147,9 @@ class RestInputOutputFormatter
             $code = 500;
         }
 
+        if ($e instanceof \InvalidArgumentException) {
+            $code = 400;
+        }
         if ($e instanceof AccessDeniedHttpException) {
             $code = 403;
         }
