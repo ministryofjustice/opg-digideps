@@ -7,6 +7,8 @@ namespace OPG\Digideps\Common\Listener;
 use OPG\Digideps\Common\Validating\ValidatingArray;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 final readonly class ErrorLogger
 {
@@ -36,6 +38,7 @@ final readonly class ErrorLogger
             'file' => basename($throwable->getFile()),
             'line' => $throwable->getLine(),
             'message' => $throwable->getMessage(),
+            'code' => (int)$throwable->getCode(),
             'previous' => $this->extractLog($throwable->getPrevious()),
             'trace' => $this->extractTrace($throwable),
         ];
@@ -68,9 +71,22 @@ final readonly class ErrorLogger
     private function doLog(\Throwable $throwable): bool
     {
         $code = (int)$throwable->getCode();
-        return match (true) {
-            substr_count($throwable::class, '\\') === 0, $code < 400, $code > 599, $code === 500 => true,
-            default => false
-        };
+
+        if (
+            substr_count($throwable::class, '\\') === 0
+            || $code < 400
+            || $code > 599
+            || $code === 500
+        ) {
+            if (!in_array($throwable::class, [
+                NotFoundHttpException::class,
+                AccessDeniedException::class,
+                \InvalidArgumentException::class
+            ])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

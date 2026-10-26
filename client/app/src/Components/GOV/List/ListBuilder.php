@@ -13,8 +13,9 @@ final class ListBuilder
      */
     private array $items;
 
-    public function __construct(private bool $decorated = true)
+    public function __construct(private readonly bool $decorated = true)
     {
+        $this->items = [];
     }
 
     public function addItem(string|RenderableInterface $item): ListBuilder
