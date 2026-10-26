@@ -1,6 +1,6 @@
 # Custom Alerting
 
-This folder contains JSON configuration files used to produce clearer and more informative Slack and PagerDuty notifications for our CloudWatch alarms. These are not the CloudWatch alarms themselves. Instead, they sit above that layer so that when we receive alerts, they are more informative and useful.
+This folder contains JSON configuration files used to produce clearer and more informative Slack notifications for our CloudWatch alarms. These are not the CloudWatch alarms themselves. Instead, they sit above that layer so that when we receive alerts, they are more informative and useful.
 
 Each JSON file represents a CloudWatch alarm that can be configured. Alarms are grouped into subfolders based on the layer they relate to, such as the application or data layer.
 
@@ -33,9 +33,8 @@ uses the JSON configuration containing:
 Each alert configuration contains:
 
 - `name`: The CloudWatch alarm name without its environment prefix (see above)
-- `title`: A clear title displayed in Slack and PagerDuty. When called by pagerduty, this is what it will show.
+- `title`: A clear title displayed in Slack.
 - `description`: A short explanation of what the alarm means.
-- `severity`: The PagerDuty severity. Supported values are `critical`, `error`, `warning` and `info`. (Most of the time you want to use critical)
 - `investigation_steps`: The initial actions someone should take when investigating the alarm.
 - `logs`: The configuration used to create a link to the relevant CloudWatch logs, see examples, there is no way to link the actual log that caused the alarm.
 - `confluence_link`: A link to the alarm documentation in Confluence.

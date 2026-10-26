@@ -2,7 +2,6 @@
   "name": "critical-php-errors",
   "title": "Critical PHP errors are repeatedly occurring",
   "description": "Critical PHP errors have been written to the application logs during each of the last five minutes. This normally indicates a repeated application failure that requires investigation.",
-  "severity": "critical",
   "investigation_steps": [
     "Review the matching logs and identify the error causing this alert.",
     "Check for recent deployments, failed tasks or unhealthy containers that could be causing the errors.",
