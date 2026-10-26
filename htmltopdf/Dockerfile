@@ -1,7 +1,7 @@
 ##############################
 # Stage 1: Base image
 ##############################
-FROM python:3.13.16-alpine3.24@sha256:2d9aefe2fef018a7eb2c13064c89c71929800fd2e5dccdbf52ea5da5bb8d929a as base
+FROM python:3.13.17-alpine3.24@sha256:fa0bb0d0cd7c7d6cef30a69094d32ac2b71c7304c87c6107fec100e1ee4eda02 as base
 
 WORKDIR /
 
@@ -42,7 +42,7 @@ RUN apk add --no-cache \
     "terminus-font==4.49.1-r4" \
     && fc-cache -f
 
-COPY --from=ghcr.io/astral-sh/uv@sha256:61d393e44e249f2e4b526b6c7ddcecce245946826e608e11c93ad4f5bba55b21 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv@sha256:32a7bb39b496babbd997b0a39a4d66c126bdaf5661b302bf6f06abda8deca6ff /uv /uvx /bin/
 COPY htmltopdf/uv.lock .
 COPY htmltopdf/pyproject.toml .
 RUN uv export --locked -o requirements.txt \
