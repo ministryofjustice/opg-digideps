@@ -81,6 +81,7 @@ final readonly class ErrorLogger
             if (!in_array($throwable::class, [
                 NotFoundHttpException::class,
                 AccessDeniedException::class,
+                \InvalidArgumentException::class
             ])) {
                 return true;
             }
