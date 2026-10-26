@@ -16,6 +16,6 @@
       "| limit 100"
     ]
   },
-  "confluence_link": "",
+  "confluence_link": "https://opgtransform.atlassian.net/wiki/spaces/DigiDeps/pages/4973101057/Critical+PHP+Errors",
   "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/environment/region/cloudwatch_alarms.tf"
 }
