@@ -23,7 +23,7 @@
     {{ form_known_date(form.endDate, 'endDate') }}
 
     {% if report.isSubmitted %}
-        <fieldset class="govuk-form-group {% if not form.unsubmittedSections.vars.valid %}govuk-form-group--error{% endif %}">
+        <fieldset class="govuk-fieldset govuk-form-group {% if not form.unsubmittedSections.vars.valid %}govuk-form-group--error{% endif %}">
             <legend>
                 <h2 class="govuk-heading-s flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>
             </legend>
