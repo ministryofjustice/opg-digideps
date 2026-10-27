@@ -37,6 +37,6 @@ class OrgUserFixtures extends AbstractDataFixture
 
     protected function shouldLoad(string $workspace, string $environment): bool
     {
-        return $workspace === 'training' && in_array($environment, ['dev', 'local']);
+        return /*$workspace === 'training' &&*/ in_array($environment, ['dev', 'local']);
     }
 }
