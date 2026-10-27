@@ -1,5 +1,8 @@
 # Use the official Nginx base image
-FROM nginx:1.31@sha256:b34848eff6db786b6b1282d3a9c3fd0b5563dfb6d261df4923378b419e0d24f0
+FROM nginx:1.31.8-alpine3.24-slim@sha256:f45171d36c76a8b2f5ef97108a3a8a2294248a6578a0a180edc2d78f7d2edc26
+
+# TODO Remove and test replacement with wget
+RUN apk add curl
 
 # Copy the nginx.conf file to the container
 COPY nginx.conf /etc/nginx/nginx.conf

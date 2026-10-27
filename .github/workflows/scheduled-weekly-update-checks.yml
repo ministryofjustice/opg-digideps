@@ -38,7 +38,7 @@ jobs:
           make htmltopdf-apk-upgrade
 
       - name: Create a signed commit
-        uses: ministryofjustice/modernisation-platform-github-actions/signed-commit@f8ab8e9ee8784b90840cd07d21936bfa8a4484be # v6.2.1
+        uses: ministryofjustice/modernisation-platform-github-actions/signed-commit@e49ac27b104b38bac12fc1e3257a13be6289a59c # v6.2.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pr_title: "Update pinned versions"
