@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "158bfc8c42c211ee45a585cb76cce282",
+    "content-hash": "bf7d5a7b4782a872e329cbabc5b8cc2f",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -115,16 +115,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.401.4",
+            "version": "3.401.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "b5941e2da9fb860f06ad5046d96219c4288ab6b8"
+                "reference": "4d304660ba59e185e86a17946c6be6ab07bf8546"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b5941e2da9fb860f06ad5046d96219c4288ab6b8",
-                "reference": "b5941e2da9fb860f06ad5046d96219c4288ab6b8",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/4d304660ba59e185e86a17946c6be6ab07bf8546",
+                "reference": "4d304660ba59e185e86a17946c6be6ab07bf8546",
                 "shasum": ""
             },
             "require": {
@@ -206,9 +206,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.401.4"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.401.5"
             },
-            "time": "2026-10-20T18:15:27+00:00"
+            "time": "2026-10-21T18:10:10+00:00"
         },
         {
             "name": "brick/math",
@@ -342,15 +342,15 @@
             "dist": {
                 "type": "path",
                 "url": "../../common",
-                "reference": "1f22323d5c522dce36d885b6309eab1cd69d9024"
+                "reference": "949ea697405eae44a11b501f5178da4d547844c0"
             },
             "require": {
                 "jms/serializer-bundle": "^5.5.2",
-                "monolog/monolog": "^3.11.0",
-                "symfony/form": "^6.4.45",
+                "monolog/monolog": "^3.12.0",
+                "symfony/form": "^6.4.46",
                 "symfony/security-core": "^6.4.48",
-                "symfony/uid": "^6.4.45",
-                "symfony/validator": "^6.4.46"
+                "symfony/uid": "^6.4.48",
+                "symfony/validator": "^6.4.47"
             },
             "require-dev": {
                 "dg/bypass-finals": "^1.11.0",
