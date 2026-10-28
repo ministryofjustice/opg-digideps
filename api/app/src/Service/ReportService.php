@@ -126,12 +126,11 @@ class ReportService
             }
         }
 
-        $hasDebts = null;
+        $toReport->setHasDebts($fromReport->getHasDebts());
         foreach ($fromReport->getDebts() as $debt) {
             $this->em->persist($this->cloneDebt($debt, $toReport));
-            $hasDebts = $hasDebts !== 'yes' && $this->checkDebtExists($toReport, $debt) ? 'yes' : 'no';
         }
-        $toReport->setHasDebts($hasDebts);
+
         $toReport->setDebtManagement($toReport->getDebtManagement() ?? $fromReport->getDebtManagement());
     }
 
@@ -250,21 +249,6 @@ class ReportService
             ->setPhone1($contact->getPhone1());
         $toReport->addContact($newContact);
         return $newContact;
-    }
-
-    private function checkDebtExists(Report $toReport, Debt $debt): bool
-    {
-        foreach ($toReport->getDebts() as $existingDebt) {
-            if (
-                !is_null($existingDebt->getAmount())
-                && $existingDebt->getAmount() === $debt->getAmount()
-                && $existingDebt->getDebtTypeId() === $debt->getDebtTypeId()
-                && (!$existingDebt->getHasMoreDetails() || $existingDebt->getMoreDetails() === $debt->getMoreDetails())
-            ) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private function cloneDebt(Debt $debt, Report $toReport): Debt
