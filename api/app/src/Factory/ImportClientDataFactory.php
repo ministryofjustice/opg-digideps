@@ -47,7 +47,7 @@ class ImportClientDataFactory implements DataFactoryInterface
                         client_post_code
                     )
                     SELECT
-                        COALESCE(spi.case_number, sli.case_number),
+                        COALESCE(LOWER(spi.case_number), LOWER(sli.case_number)),
                         (ARRAY_AGG(COALESCE(spi.client_first_name, sli.client_first_name)))[1],
                         (ARRAY_AGG(COALESCE(spi.client_last_name, sli.client_last_name)))[1],
                         (ARRAY_AGG(spi.client_date_of_birth))[1],
@@ -59,8 +59,8 @@ class ImportClientDataFactory implements DataFactoryInterface
                         (ARRAY_AGG(COALESCE(spi.client_post_code, sli.client_post_code)))[1]
                     FROM staging.lay_ingest sli
                     FULL OUTER JOIN staging.pa_pro_ingest spi
-                        ON sli.case_number = spi.case_number
-                    GROUP BY spi.case_number, sli.case_number
+                        ON LOWER(sli.case_number) = LOWER(spi.case_number)
+                    GROUP BY LOWER(spi.case_number), LOWER(sli.case_number)
                 ");
                 $preLinked = $this->execute('
                     UPDATE staging.sirius_client ssc
