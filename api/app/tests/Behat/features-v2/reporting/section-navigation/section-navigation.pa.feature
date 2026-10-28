@@ -5,19 +5,19 @@ Feature: Section navigation - Public Authority (see section-navigation.lay.combi
     Scenario: Deputy fees and expenses
         Given a Public Authority Deputy has not started a Combined High Assets report
         When I visit the deputy fees and expenses section
-        Then the previous section should be "Health and lifestyle"
-        And the next section should be "Gifts"
+        Then the previous section should be "Debts"
+        And the next section should be "Actions you plan to take"
 
     @pa-admin-combined-high-not-started
     Scenario: Gifts
         Given a Public Authority Deputy has not started a Combined High Assets report
         When I visit the gifts report section
-        Then the previous section should be "Deputy fees and expenses"
-        And the next section should be "Actions you plan to take"
+        Then the previous section should be "Accounts"
+        And the next section should be "Money transfers"
 
     @pa-admin-combined-high-not-started
     Scenario: Health and lifestyle
         Given a Public Authority Deputy has not started a Combined High Assets report
         When I visit the health and lifestyle report section
         Then the previous section should be "Visits and care"
-        And the next section should be "Deputy fees and expenses"
+        And the next section should be "Benefits check and money others received"
