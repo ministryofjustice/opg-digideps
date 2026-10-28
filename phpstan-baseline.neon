@@ -157,6 +157,12 @@ parameters:
 			path: api/app/src/Command/ProcessLayCSVCommand.php
 
 		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3Client\:\:getObject\(\) expects array\{Bucket\?\: string, IfMatch\?\: string, IfModifiedSince\?\: DateTimeInterface\|int\|string, IfNoneMatch\?\: string, IfUnmodifiedSince\?\: DateTimeInterface\|int\|string, Key\?\: string, Range\?\: string, ResponseCacheControl\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: array\|bool\|float\|int\|string\|UnitEnum\|null, Key\: mixed, SaveAs\: non\-falsy\-string\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Command/ProcessLayCSVCommand.php
+
+		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -226,6 +232,12 @@ parameters:
 			message: '#^Cannot access offset mixed on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
+			path: api/app/src/Command/ProcessOrgCSVCommand.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3Client\:\:getObject\(\) expects array\{Bucket\?\: string, IfMatch\?\: string, IfModifiedSince\?\: DateTimeInterface\|int\|string, IfNoneMatch\?\: string, IfUnmodifiedSince\?\: DateTimeInterface\|int\|string, Key\?\: string, Range\?\: string, ResponseCacheControl\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: array\|bool\|float\|int\|string\|UnitEnum\|null, Key\: mixed, SaveAs\: non\-falsy\-string\} given\.$#'
+			identifier: argument.type
+			count: 1
 			path: api/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
@@ -3469,6 +3481,12 @@ parameters:
 			path: api/app/src/Service/Audit/AwsAuditLogHandler.php
 
 		-
+			message: '#^Parameter \#1 \$args of method Aws\\CloudWatchLogs\\CloudWatchLogsClient\:\:putLogEvents\(\) expects array\{logGroupName\?\: string, logStreamName\?\: string, logEvents\?\: list\<array\{timestamp\?\: int, message\?\: string, \.\.\.\}\>, sequenceToken\?\: string, entity\?\: array\{keyAttributes\?\: array\<string, string\>, attributes\?\: array\<string, string\>, \.\.\.\}, \.\.\.\}, array\{logGroupName\: string, logStreamName\: string, logEvents\: array, sequenceToken\?\: non\-falsy\-string\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Service/Audit/AwsAuditLogHandler.php
+
+		-
 			message: '#^Parameter \#1 \$streams of method OPG\\Digideps\\Backend\\Service\\Audit\\AwsAuditLogHandler\:\:extractExistingStreamNames\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -4161,6 +4179,36 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Service\\File\\Storage\\S3Storage\:\:store\(\) has parameter \$key with no type specified\.$#'
 			identifier: missingType.parameter
+			count: 1
+			path: api/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:deleteObject\(\) expects array\{Bucket\?\: string, Key\?\: string, MFA\?\: string, VersionId\?\: string, RequestPayer\?\: ''requester'', BypassGovernanceRetention\?\: bool, ExpectedBucketOwner\?\: string, IfMatch\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: string, Key\: mixed\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:deleteObjects\(\) expects array\{Bucket\?\: string, Delete\?\: array\{Objects\?\: list\<array\>, Quiet\?\: bool, \.\.\.\}, MFA\?\: string, RequestPayer\?\: ''requester'', BypassGovernanceRetention\?\: bool, ExpectedBucketOwner\?\: string, ChecksumAlgorithm\?\: ''CRC32''\|''CRC32C''\|''CRC64NVME''\|''MD5''\|''SHA1''\|''SHA256''\|''SHA512''\|''XXHASH128''\|''XXHASH3''\|''XXHASH64'', \.\.\.\}, array\{Bucket\: string, Delete\: array\{Objects\: non\-empty\-array\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:getObjectTagging\(\) expects array\{Bucket\?\: string, Key\?\: string, VersionId\?\: string, ExpectedBucketOwner\?\: string, RequestPayer\?\: ''requester'', \.\.\.\}, array\{Bucket\: string, Key\: mixed\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:putObject\(\) expects array\{ACL\?\: ''authenticated\-read''\|''aws\-exec\-read''\|''bucket\-owner\-full…''\|''bucket\-owner\-read''\|''private''\|''public\-read''\|''public\-read\-write'', Body\?\: Psr\\Http\\Message\\StreamInterface\|resource\|string, Bucket\?\: string, CacheControl\?\: string, ContentDisposition\?\: string, ContentEncoding\?\: string, ContentLanguage\?\: string, ContentLength\?\: int, \.\.\., \.\.\.\}, array\{Bucket\: string, Key\: mixed, Body\: mixed, ServerSideEncryption\: ''AES256'', Metadata\: array\{\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:putObjectTagging\(\) expects array\{Bucket\?\: string, Key\?\: string, VersionId\?\: string, ContentMD5\?\: string, ChecksumAlgorithm\?\: ''CRC32''\|''CRC32C''\|''CRC64NVME''\|''MD5''\|''SHA1''\|''SHA256''\|''SHA512''\|''XXHASH128''\|''XXHASH3''\|''XXHASH64'', Tagging\?\: array\{TagSet\?\: list\<array\>, \.\.\.\}, ExpectedBucketOwner\?\: string, RequestPayer\?\: ''requester'', \.\.\.\}, array\{Bucket\: string, Key\: mixed, Tagging\: array\{TagSet\: array\}\} given\.$#'
+			identifier: argument.type
 			count: 1
 			path: api/app/src/Service/File/Storage/S3Storage.php
 
@@ -11493,6 +11541,12 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:setPassword\(\) has parameter \$user with no type specified\.$#'
 			identifier: missingType.parameter
+			count: 1
+			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:putObject\(\) expects array\{ACL\?\: ''authenticated\-read''\|''aws\-exec\-read''\|''bucket\-owner\-full…''\|''bucket\-owner\-read''\|''private''\|''public\-read''\|''public\-read\-write'', Body\?\: Psr\\Http\\Message\\StreamInterface\|resource\|string, Bucket\?\: string, CacheControl\?\: string, ContentDisposition\?\: string, ContentEncoding\?\: string, ContentLanguage\?\: string, ContentLength\?\: int, \.\.\., \.\.\.\}, array\{Bucket\: string, Key\: string, Body\: string\|false, ServerSideEncryption\: ''AES256'', Metadata\: array\{\}\} given\.$#'
+			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
 
@@ -20851,6 +20905,12 @@ parameters:
 			path: client/app/src/Command/ProcessLayCSVCommand.php
 
 		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3Client\:\:getObject\(\) expects array\{Bucket\?\: string, IfMatch\?\: string, IfModifiedSince\?\: DateTimeInterface\|int\|string, IfNoneMatch\?\: string, IfUnmodifiedSince\?\: DateTimeInterface\|int\|string, Key\?\: string, Range\?\: string, ResponseCacheControl\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: array\|bool\|float\|int\|string\|UnitEnum\|null, Key\: array\|bool\|float\|int\|string\|UnitEnum\|null, SaveAs\: non\-falsy\-string\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Command/ProcessLayCSVCommand.php
+
+		-
 			message: '#^Parameter \#1 \$array of function array_chunk expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -20955,6 +21015,12 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Command\\ProcessOrgCSVCommand\:\:csvToArray\(\) should return array but returns mixed\.$#'
 			identifier: return.type
+			count: 1
+			path: client/app/src/Command/ProcessOrgCSVCommand.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3Client\:\:getObject\(\) expects array\{Bucket\?\: string, IfMatch\?\: string, IfModifiedSince\?\: DateTimeInterface\|int\|string, IfNoneMatch\?\: string, IfUnmodifiedSince\?\: DateTimeInterface\|int\|string, Key\?\: string, Range\?\: string, ResponseCacheControl\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: array\|bool\|float\|int\|string\|UnitEnum\|null, Key\: array\|bool\|float\|int\|string\|UnitEnum\|null, SaveAs\: non\-falsy\-string\} given\.$#'
+			identifier: argument.type
 			count: 1
 			path: client/app/src/Command/ProcessOrgCSVCommand.php
 
@@ -21508,6 +21574,12 @@ parameters:
 			message: '#^PHPDoc tag @var with type array is not subtype of native type array\{''user'', ''user\-clients'', ''client'', ''client\-reports''\}\|array\{''user'', ''user\-organisations''\}\.$#'
 			identifier: varTag.nativeType
 			count: 1
+			path: client/app/src/Controller/Admin/IndexController.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3Client\:\:getObject\(\) expects array\{Bucket\?\: string, IfMatch\?\: string, IfModifiedSince\?\: DateTimeInterface\|int\|string, IfNoneMatch\?\: string, IfUnmodifiedSince\?\: DateTimeInterface\|int\|string, Key\?\: string, Range\?\: string, ResponseCacheControl\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: array\|bool\|float\|int\|string\|UnitEnum\|null, Key\: array\|bool\|float\|int\|string\|UnitEnum\|null\} given\.$#'
+			identifier: argument.type
+			count: 2
 			path: client/app/src/Controller/Admin/IndexController.php
 
 		-
@@ -26491,6 +26563,12 @@ parameters:
 			path: client/app/src/Service/Audit/AwsAuditLogHandler.php
 
 		-
+			message: '#^Parameter \#1 \$args of method Aws\\CloudWatchLogs\\CloudWatchLogsClient\:\:putLogEvents\(\) expects array\{logGroupName\?\: string, logStreamName\?\: string, logEvents\?\: list\<array\{timestamp\?\: int, message\?\: string, \.\.\.\}\>, sequenceToken\?\: string, entity\?\: array\{keyAttributes\?\: array\<string, string\>, attributes\?\: array\<string, string\>, \.\.\.\}, \.\.\.\}, array\{logGroupName\: string, logStreamName\: string, logEvents\: array, sequenceToken\?\: non\-falsy\-string\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/Audit/AwsAuditLogHandler.php
+
+		-
 			message: '#^Parameter \#1 \$streams of method OPG\\Digideps\\Frontend\\Service\\Audit\\AwsAuditLogHandler\:\:extractExistingStreamNames\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -27290,6 +27368,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$string of function parse_str expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/Client/RestClient.php
+
+		-
+			message: '#^Parameter \#1 \$threshold of class Symfony\\Component\\Security\\Core\\Exception\\TooManyLoginAttemptsAuthenticationException constructor expects int\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/src/Service/Client/RestClient.php
@@ -28585,6 +28669,36 @@ parameters:
 			path: client/app/src/Service/File/Storage/S3Storage.php
 
 		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:deleteObject\(\) expects array\{Bucket\?\: string, Key\?\: string, MFA\?\: string, VersionId\?\: string, RequestPayer\?\: ''requester'', BypassGovernanceRetention\?\: bool, ExpectedBucketOwner\?\: string, IfMatch\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: string, Key\: mixed\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:deleteObjects\(\) expects array\{Bucket\?\: string, Delete\?\: array\{Objects\?\: list\<array\>, Quiet\?\: bool, \.\.\.\}, MFA\?\: string, RequestPayer\?\: ''requester'', BypassGovernanceRetention\?\: bool, ExpectedBucketOwner\?\: string, ChecksumAlgorithm\?\: ''CRC32''\|''CRC32C''\|''CRC64NVME''\|''MD5''\|''SHA1''\|''SHA256''\|''SHA512''\|''XXHASH128''\|''XXHASH3''\|''XXHASH64'', \.\.\.\}, array\{Bucket\: string, Delete\: array\{Objects\: non\-empty\-array\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:getObjectTagging\(\) expects array\{Bucket\?\: string, Key\?\: string, VersionId\?\: string, ExpectedBucketOwner\?\: string, RequestPayer\?\: ''requester'', \.\.\.\}, array\{Bucket\: string, Key\: mixed\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:putObject\(\) expects array\{ACL\?\: ''authenticated\-read''\|''aws\-exec\-read''\|''bucket\-owner\-full…''\|''bucket\-owner\-read''\|''private''\|''public\-read''\|''public\-read\-write'', Body\?\: Psr\\Http\\Message\\StreamInterface\|resource\|string, Bucket\?\: string, CacheControl\?\: string, ContentDisposition\?\: string, ContentEncoding\?\: string, ContentLanguage\?\: string, ContentLength\?\: int, \.\.\., \.\.\.\}, array\{Bucket\: string, Key\: mixed, Body\: mixed, ServerSideEncryption\: ''AES256'', Metadata\: array\{\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:putObjectTagging\(\) expects array\{Bucket\?\: string, Key\?\: string, VersionId\?\: string, ContentMD5\?\: string, ChecksumAlgorithm\?\: ''CRC32''\|''CRC32C''\|''CRC64NVME''\|''MD5''\|''SHA1''\|''SHA256''\|''SHA512''\|''XXHASH128''\|''XXHASH3''\|''XXHASH64'', Tagging\?\: array\{TagSet\?\: list\<array\>, \.\.\.\}, ExpectedBucketOwner\?\: string, RequestPayer\?\: ''requester'', \.\.\.\}, array\{Bucket\: string, Key\: mixed, Tagging\: array\{TagSet\: array\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/File/Storage/S3Storage.php
+
+		-
 			message: '#^Parameter \#1 \$length of method GuzzleHttp\\Psr7\\Stream\:\:read\(\) expects int, int\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -28813,12 +28927,6 @@ parameters:
 			path: client/app/src/Service/Mailer/MailFactory.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:getRecipientRole\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Service/Mailer/MailFactory.php
-
-		-
 			message: '#^Parameter \#1 \$countryCode of method OPG\\Digideps\\Frontend\\Service\\IntlService\:\:getCountryNameByCountryCode\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -28827,7 +28935,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$toEmail of method OPG\\Digideps\\Frontend\\Model\\Email\:\:setToEmail\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: client/app/src/Service/Mailer/MailFactory.php
 
 		-
