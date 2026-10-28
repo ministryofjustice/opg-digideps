@@ -128,7 +128,7 @@ class ReportController extends AbstractController
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
-            'deputy' => $client->getDeputy(),
+            'deputy' => $report->getPrimaryDeputy(),
             'report' => $report,
             'activeReport' => $activeReport,
         ]);
