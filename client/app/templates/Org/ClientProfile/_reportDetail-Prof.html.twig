@@ -152,6 +152,18 @@
                     } %}
                 {%  endif %}
 
+                {% if report.hasSection('clientBenefitsCheck') %}
+                    {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
+                        transDomain: translationDomain,
+                        subSection: 'client_benefits_check',
+                        sectionId: 'clientBenefitsCheck',
+                        report: report,
+                        state: reportStatus.clientBenefitsCheckState,
+                        linkToSubSection: path('client_benefits_check', {'reportId': report.id}),
+                        description: true
+                    } %}
+                {% endif %}
+
                 {% if report.hasSection('bankAccounts') %}
                     {% include '@App/Org/ClientProfile/_subsection.html.twig' with {
                         transDomain: translationDomain,
