@@ -2317,34 +2317,10 @@ parameters:
 			path: api/app/src/EventSubscriber/ClientArchivedSubscriber.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Exception\\BusinessRulesException\:\:setData\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Exception/BusinessRulesException.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Exception\\BusinessRulesException\:\:\$code has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Exception/BusinessRulesException.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Exception\\InvalidRegistrationTokenException\:\:\$code has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: api/app/src/Exception/InvalidRegistrationTokenException.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Exception\\UnauthorisedException\:\:setData\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Exception/UnauthorisedException.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Exception\\UnauthorisedException\:\:\$code has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Exception/UnauthorisedException.php
 
 		-
 			message: '#^Property OPG\\Digideps\\Backend\\Exception\\UserWrongCredentialsException\:\:\$code has no type specified\.$#'
@@ -3437,12 +3413,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Security/RedisUserProvider.php
-
-		-
-			message: '#^Binary operation "\-" between mixed and int\<1, max\> results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: api/app/src/Security/RegistrationTokenAuthenticator.php
 
 		-
 			message: '#^Binary operation "\." between ''token'' and mixed results in an error\.$#'
@@ -21283,21 +21253,9 @@ parameters:
 			path: client/app/src/Controller/Admin/Client/ReportController.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/Admin/Client/ReportController.php
-
-		-
 			message: '#^Cannot call method setData\(\) on Symfony\\Component\\Form\\FormInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 3
-			path: client/app/src/Controller/Admin/Client/ReportController.php
-
-		-
-			message: '#^Cannot call method setIsSubmitted\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: client/app/src/Controller/Admin/Client/ReportController.php
 
 		-
@@ -21326,18 +21284,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|GMP\|int\|resource\|SimpleXMLElement\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/Client/ReportController.php
-
-		-
-			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:post\(\) expects array\|object\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/Client/ReportController.php
-
-		-
-			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:put\(\) expects array\|object\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/src/Controller/Admin/Client/ReportController.php
@@ -25231,12 +25177,6 @@ parameters:
 			path: client/app/src/Exception/RestClientException.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Exception\\RestClientException\:\:getData\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Exception/RestClientException.php
-
-		-
 			message: '#^Parameter \#1 \$statusCode of method Symfony\\Component\\HttpKernel\\Exception\\HttpException\:\:__construct\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -25245,12 +25185,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$message of method Symfony\\Component\\HttpKernel\\Exception\\HttpException\:\:__construct\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: client/app/src/Exception/RestClientException.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Exception\\RestClientException\:\:\$data has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: client/app/src/Exception/RestClientException.php
 
