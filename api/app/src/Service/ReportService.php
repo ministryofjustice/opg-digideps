@@ -126,9 +126,28 @@ class ReportService
             }
         }
 
+        $debts = [];
         $toReport->setHasDebts($fromReport->getHasDebts());
-        foreach ($fromReport->getDebts() as $debt) {
-            $this->em->persist($this->cloneDebt($debt, $toReport));
+        foreach ($fromReport->getDebts() as $fromDebt) {
+            if ($toReport->getDebts()->count() > 0) {
+                foreach ($toReport->getDebts() as $toDebt) {
+                    if ($fromDebt->getDebtTypeId() === $toDebt->getDebtTypeId()) {
+                        $toDebt->setHasMoreDetails($fromDebt->getHasMoreDetails());
+                        $toDebt->setAmount($fromDebt->getAmount());
+                        $toDebt->setMoreDetails($fromDebt->getMoreDetails());
+
+                        $debts[] = $toDebt;
+                    }
+                }
+            } else {
+                $debts[] = $this->cloneDebt($fromDebt, $toReport);
+            }
+        }
+
+        if (!empty($debts)) {
+            foreach ($debts as $debt) {
+                $this->em->persist($debt);
+            }
         }
 
         $toReport->setDebtManagement($toReport->getDebtManagement() ?? $fromReport->getDebtManagement());
