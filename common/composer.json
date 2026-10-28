@@ -11,10 +11,10 @@
   },
   "require": {
     "jms/serializer-bundle": "^5.5.2",
-    "symfony/form": "^6.4.45",
-    "symfony/uid": "^6.4.45",
-    "symfony/validator": "^6.4.46",
-    "monolog/monolog": "^3.11.0",
+    "symfony/form": "^6.4.46",
+    "symfony/uid": "^6.4.48",
+    "symfony/validator": "^6.4.47",
+    "monolog/monolog": "^3.12.0",
     "symfony/security-core": "^6.4.48"
   },
   "require-dev": {
