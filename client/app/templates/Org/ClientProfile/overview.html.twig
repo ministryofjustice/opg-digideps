@@ -11,9 +11,14 @@
 {% block supportTitleTop %}{{ client.fullname | title }}{% endblock %}
 
 {% block breadcrumbs %}
-    {{ macros.breadcrumbsArray([
-        { href: path('org_dashboard'), text: 'breadcrumbs.dashboard' | trans },
-    ]) }}
+    <twig:GOV:Breadcrumbs :breadcrumbs="{
+        items: [
+            {
+                href: path('org_dashboard'),
+                text: 'breadcrumbs.dashboard' | trans
+            }
+        ]
+    }" />
 {% endblock %}
 
 {% block pageContent %}
