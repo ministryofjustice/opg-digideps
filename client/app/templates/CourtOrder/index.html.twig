@@ -44,10 +44,12 @@
         <h2 class="govuk-heading-l">{{ 'currentDeputyReport' | trans({}, 'common') }}</h2>
         {% embed '@App/Report/Report/_report_row.html.twig' %}
             {% block bottomLeftContent %}
-                {{ (page ~ '.editReportingPeriodPara') | trans(transOptions, translationDomain) }}
-                <a class="govuk-link behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': report.id}) }}">
-                    {{ (page ~ '.editReportingPeriodLink') | trans({}, translationDomain) }}
-                </a>
+                <div class="govuk-!-width-two-thirds govuk-body">
+                    {{ (page ~ '.editReportingPeriodPara') | trans(transOptions, translationDomain) }}
+                    <a class="govuk-link behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': report.id}) }}">
+                        {{ (page ~ '.editReportingPeriodLink') | trans({}, translationDomain) }}
+                    </a>
+                </div>
             {% endblock %}
         {% endembed %}
     {% endif %}

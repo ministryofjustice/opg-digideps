@@ -20,7 +20,7 @@
         {% if not hideEditLink %}
             <div class="govuk-grid-column-one-half text--right">
                 <strong>
-                    <a href="{{ path('pa_fee_expense_fee_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="govuk-link behat-link-edit">
+                    <a href="{{ path('pa_fee_expense_fee_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="govuk-!-font-size-19 govuk-!-font-weight-bold govuk-link behat-link-edit">
                         {{ 'edit' | trans({}, 'common' ) }}
                         <span class="govuk-visually-hidden">List of deputy fees and expenses</span>
                     </a>

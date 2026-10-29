@@ -220,3 +220,6 @@ announcement: |
 overdueHelpTextHeader: Why might this report incorrectly show as overdue?
 overdueHelpTextParagraph1: This report may have already been submitted on paper or by email, and will therefore be incorrectly marked as overdue.
 overdueHelpTextParagraph2: You can stop this report from showing as overdue by clicking 'Edit' and changing the reporting period dates to the dates of your current reporting period.
+
+breadcrumbs:
+  dashboard: Dashboard

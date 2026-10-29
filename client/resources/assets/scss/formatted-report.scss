@@ -13,8 +13,5 @@ $govuk-include-default-font-face: false;
 @import "node_modules/govuk-frontend/dist/govuk/tools/index";
 @import "node_modules/govuk-frontend/dist/govuk/helpers/index";
 
-@import "measurements";
-@import "colours";
-
 @import "digideps/helpers";
 @import "digideps/formatted_report/main";

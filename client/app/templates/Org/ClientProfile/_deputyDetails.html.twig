@@ -14,56 +14,81 @@
     </div>
 
     <div class="govuk-accordion__section-content">
+
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-                <dl>
-                    <dt>
-                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.name') | trans }}</strong>
-                    </dt>
-                    <dd class="push--bottom">
-                        {{ deputy.firstname ~ " " ~ deputy.lastname }}
-                    </dd>
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row no-border">
+                        <dt class="govuk-summary-list__key govuk-!-padding-bottom-0">
+                            <strong class="govuk-!-font-weight-bold">{{ (page ~ '.name') | trans }}</strong>
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row no-border">
+                        <dd class="govuk-summary-list__value govuk-!-padding-top-0">
+                            {{ deputy.firstname ~ " " ~ deputy.lastname }}
+                        </dd>
+                    </div>
 
-                    <dt>
-                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.address') | trans }}</strong>
-                    </dt>
-                    <dd class="push--bottom">
-                        {% for addressPart in deputy.addressNotEmptyParts %}
-                            {{ addressPart }}<br/>
-                        {% endfor %}
-                    </dd>
+                    <div class="govuk-summary-list__row no-border">
+                        <dt class="govuk-summary-list__key govuk-!-padding-bottom-0">
+                            <strong class="govuk-!-font-weight-bold">{{ (page ~ '.address') | trans }}</strong>
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row no-border">
+                        <dd class="govuk-summary-list__value govuk-!-padding-top-0">
+                            {% for addressPart in deputy.addressNotEmptyParts %}
+                                {{ addressPart }}<br/>
+                            {% endfor %}
+                        </dd>
+                    </div>
                 </dl>
             </div>
 
             <div class="govuk-grid-column-one-half">
-                <dl>
-                    <dt>
-                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.mainPhone') | trans }}</strong>
-                    </dt>
-                    <dd class="push--bottom">
-                        {{ (deputy.phoneMain) ? deputy.phoneMain : 'not entered' | trans({}, 'common') }}
-                    </dd>
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row no-border">
+                        <dt class="govuk-summary-list__key govuk-!-padding-bottom-0">
+                            <strong class="govuk-!-font-weight-bold">{{ (page ~ '.mainPhone') | trans }}</strong>
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row no-border">
+                        <dd class="govuk-summary-list__value govuk-!-padding-top-0">
+                            {{ (deputy.phoneMain) ? deputy.phoneMain : 'not entered' | trans({}, 'common') }}
+                        </dd>
+                    </div>
 
-                    <dt>
-                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.altPhone') | trans }}</strong>
-                    </dt>
-                    <dd class="push--bottom">
-                        {{ (deputy.phoneAlternative) ? deputy.phoneAlternative : 'not entered' | trans({}, 'common') }}
-                    </dd>
+                    <div class="govuk-summary-list__row no-border">
+                        <dt class="govuk-summary-list__key govuk-!-padding-bottom-0">
+                            <strong class="govuk-!-font-weight-bold">{{ (page ~ '.altPhone') | trans }}</strong>
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row no-border">
+                        <dd class="govuk-summary-list__value govuk-!-padding-top-0">
+                            {{ (deputy.phoneAlternative) ? deputy.phoneAlternative : 'not entered' | trans({}, 'common') }}
+                        </dd>
+                    </div>
 
-                    <dt>
-                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.mainEmail') | trans }}</strong>
-                    </dt>
-                    <dd class="push--bottom">
-                        {{ (deputy.email1) ? deputy.email1 : 'not entered' | trans({}, 'common') }}
-                    </dd>
+                    <div class="govuk-summary-list__row no-border">
+                        <dt class="govuk-summary-list__key govuk-!-padding-bottom-0">
+                            <strong class="govuk-!-font-weight-bold">{{ (page ~ '.mainEmail') | trans }}</strong>
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row no-border">
+                        <dd class="govuk-summary-list__value govuk-!-padding-top-0">
+                            {{ (deputy.email1) ? deputy.email1 : 'not entered' | trans({}, 'common') }}
+                        </dd>
+                    </div>
 
-                    <dt>
-                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.altEmail') | trans }}</strong>
-                    </dt>
-                    <dd class="push--bottom">
-                        {{ (deputy.email2) ? deputy.email2 : 'not entered' | trans({}, 'common') }}
-                    </dd>
+                    <div class="govuk-summary-list__row no-border">
+                        <dt class="govuk-summary-list__key govuk-!-padding-bottom-0">
+                            <strong class="govuk-!-font-weight-bold">{{ (page ~ '.altEmail') | trans }}</strong>
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row no-border">
+                        <dd class="govuk-summary-list__value govuk-!-padding-top-0">
+                            {{ (deputy.email2) ? deputy.email2 : 'not entered' | trans({}, 'common') }}
+                        </dd>
+                    </div>
                 </dl>
             </div>
         </div>
@@ -85,7 +110,6 @@
                 {{ contactMessage }} <a href="mailto:{{ email }}?subject=Update deputy details&body=Change details for: {{ client.getFullname }} ({{ client.caseNumber }})">{{email}}</a>
             </div>
         </div>
-
     </div>
 
 </div>

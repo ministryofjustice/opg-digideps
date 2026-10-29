@@ -65,9 +65,9 @@
                 </h2>
             </div>
         {% endif %}
-        <div class="govuk-grid-column-two-half text--right">
+        <div class="govuk-grid-column-one-half text--right">
             {% if not hideEditLink %}
-            <a href="{{ path('money_out_step' , {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="govuk-link behat-link-add">
+            <a href="{{ path('money_out_step' , {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="govuk-!-font-size-19 govuk-!-font-weight-bold govuk-link behat-link-add">
                 <strong>
                     <span class="icon icon-plus"></span>
                     {{ 'summaryPage.moneyOut.addPayment' | trans(transOptions) }}
@@ -82,7 +82,7 @@
         <h3 class="govuk-heading-m">{{ ('form.group.entries.' ~ groupId) | trans(transOptions) }}</h3>
 
         <table class="govuk-table behat-region-list-accounts">
-            <thead>
+            <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header">
                     {{ 'summaryPage.moneyOut.list.label.type' | trans(transOptions) }}
@@ -141,7 +141,7 @@
 
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-summary-list__key">
+                <th scope="col" class="govuk-table__header">
                     <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ 'summaryPage.moneyOut.list.label.totalAmount' | trans(transOptions) }}</span>
                 </th>
                 <td class="govuk-table__cell"></td>
