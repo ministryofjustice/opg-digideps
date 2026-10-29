@@ -8,6 +8,7 @@ use Dom\Element;
 use Dom\HTMLDocument;
 use OPG\Digideps\Frontend\Service\ReportSectionsLinkService;
 use OPG\Digideps\Frontend\Twig\ComponentsExtension;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
@@ -46,9 +47,7 @@ class ComponentsExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider accordionLinksProvider
-     */
+    #[DataProvider('accordionLinksProvider')]
     public function testRenderAccordionLinks($clickedPanel, $open1, $open2, $href1, $href2, $oneATime)
     {
         $options = ['clickedPanel' => $clickedPanel,
@@ -93,10 +92,10 @@ class ComponentsExtensionTest extends TestCase
     }
 
     /**
-     * @dataProvider formatLastLoginProvider
      *
      * @param array{string, array<string, int>, string} $methodArgs
      */
+    #[DataProvider('formatLastLoginProvider')]
     public function testFormatTimeDifference(string $input, string $expectedMethodCalled, array $methodArgs): void
     {
         $this->translator->expects(self::once())->method($expectedMethodCalled)->with(...$methodArgs);
@@ -130,9 +129,7 @@ class ComponentsExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider padDayMonthProvider
-     */
+    #[DataProvider('padDayMonthProvider')]
     public function testPadDayMonth(int|string|null $input, int|string|null $expected): void
     {
         $f = $this->sut->getFilters()['pad_day_month']->getCallable();
@@ -149,9 +146,7 @@ class ComponentsExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider behatNamifyProvider
-     */
+    #[DataProvider('behatNamifyProvider')]
     public function testBehatNamify(string $input, string $expected): void
     {
         $f = $this->sut->getFilters()['behat_namify']->getCallable();
@@ -168,9 +163,7 @@ class ComponentsExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider moneyFormatProvider
-     */
+    #[DataProvider('moneyFormatProvider')]
     public function testMoneyFormat(string|int|null $input, string|int|null $expected): void
     {
         $f = $this->sut->getFilters()['money_format']->getCallable();

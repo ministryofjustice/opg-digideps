@@ -5,21 +5,18 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Frontend\Unit\Entity\Report;
 
 use OPG\Digideps\Frontend\Entity\Report\Report;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ReportTest extends TestCase
 {
-    /**
-     * @dataProvider typeProvider
-     */
+    #[DataProvider('typeProvider')]
     public function testDetermineReportType(Report $report, string $expectedType): void
     {
         self::assertEquals($expectedType, $report->determineReportType());
     }
 
-    /**
-     * @dataProvider typeDefinition
-     */
+    #[DataProvider('typeDefinition')]
     public function testGetReportTypeDefinition(Report $report, string $expectedType): void
     {
         self::assertEquals($expectedType, $report->getReportTypeDefinition());

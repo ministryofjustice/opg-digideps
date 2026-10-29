@@ -92,9 +92,7 @@ class ClientTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider courtOrderCombos
-     */
+    #[DataProvider('courtOrderCombos')]
     public function testHasHwCourtOrder(bool $hwPresent, bool $hwActive, bool $pfaPresent, bool $pfaActive): void
     {
         $hwCourtOrder = new CourtOrder();

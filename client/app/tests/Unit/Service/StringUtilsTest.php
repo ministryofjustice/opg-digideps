@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Frontend\Unit\Service;
 
 use OPG\Digideps\Frontend\Service\StringUtils;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class StringUtilsTest extends TestCase
@@ -25,9 +26,7 @@ class StringUtilsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider secondsToHoursMinutesProvider
-     */
+    #[DataProvider('secondsToHoursMinutesProvider')]
     public function testSecondsToHoursMinutes(int $input, string $expected): void
     {
         self::assertEquals($expected, StringUtils::secondsToHoursMinutes($input));
@@ -44,9 +43,7 @@ class StringUtilsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider implodeWithDifferentLastProvider
-     */
+    #[DataProvider('implodeWithDifferentLastProvider')]
     public function testImplodeWithDifferentLast(array $strings, string $joiner, string $lastJoiner, string $expected): void
     {
         self::assertEquals($expected, StringUtils::implodeWithDifferentLast($strings, $joiner, $lastJoiner));

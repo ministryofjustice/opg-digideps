@@ -2,23 +2,11 @@
 <!-- http://phpunit.de/manual/4.1/en/appendixes.configuration.html -->
 <phpunit
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
-    backupGlobals="false"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/13.4/phpunit.xsd"
     colors="true"
     bootstrap="bootstrap.php"
-    convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true"
-    convertWarningsToExceptions="true"
-    stopOnError="false"
-    stopOnFailure="false"
-    stopOnRisky="false"
-    stopOnWarning="false"
+    displayDetailsOnPhpunitDeprecations="true"
 >
-    <coverage processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">../../src</directory>
-        </include>
-    </coverage>
     <testsuites>
         <testsuite name="Client unit tests">
             <directory>./Command</directory>
@@ -44,4 +32,12 @@
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
         <env name="APP_ENV" value="test"/>
     </php>
+    <source>
+        <include>
+            <directory suffix=".php">../../src</directory>
+        </include>
+    </source>
+    <extensions>
+        <bootstrap class="DG\BypassFinals\PHPUnitExtension"/>
+    </extensions>
 </phpunit>
