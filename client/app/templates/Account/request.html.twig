@@ -1,0 +1,8 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans({}, 'register') }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans({}, 'register') }}{% endblock %}
+
+{% block pageContent %}
+    <twig:OPG:Account:Request form="{{ form }}" accountCreated="{{ accountCreated }}" deputyEmail="{{ deputyEmail }}"/>
+{% endblock %}
