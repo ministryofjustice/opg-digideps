@@ -10,6 +10,7 @@ use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Service\DeputyProvider;
 use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\NativeType;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -70,7 +71,7 @@ class DeputyProviderTest extends TestCase
         $mockUser = self::createMock(User::class);
 
         $this->restClient->method('setLoggedUserId')->with(1)->willReturn($this->restClient);
-        $this->restClient->method('get')->with('user/1', 'User', new IsType(IsType::TYPE_ARRAY))->willReturn($mockUser);
+        $this->restClient->method('get')->with('user/1', 'User', new IsType(NativeType::Array))->willReturn($mockUser);
 
         self::assertEquals($mockUser, $this->sut->loadUserByIdentifier('1'));
     }

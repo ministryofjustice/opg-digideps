@@ -12,6 +12,7 @@ use OPG\Digideps\Frontend\Service\Mailer\MailSender;
 use OPG\Digideps\Frontend\TestHelpers\ClientHelpers;
 use OPG\Digideps\Frontend\TestHelpers\ReportHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -39,9 +40,7 @@ class MailerTest extends TestCase
         $this->sut->sendActivationEmail($activatedUser);
     }
 
-    /**
-     * @dataProvider deputyNameProvider
-     */
+    #[DataProvider('deputyNameProvider')]
     public function testSendInvitationEmail(?string $deputyName): void
     {
         $invitedUser = UserHelpers::createUser();

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Frontend\Unit\Validator;
 
 use OPG\Digideps\Frontend\Validator\RouteValidator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RequestContext;
@@ -23,9 +24,7 @@ class RouteValidatorTest extends KernelTestCase
         $this->router = $router;
     }
 
-    /**
-     * @dataProvider getPossibleRoutes
-     */
+    #[DataProvider('getPossibleRoutes')]
     public function testValidateRoutes(string $path, bool $return): void
     {
         $context = new RequestContext()->setMethod(Request::METHOD_GET);
