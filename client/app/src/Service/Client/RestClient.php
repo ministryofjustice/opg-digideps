@@ -285,7 +285,9 @@ class RestClient implements RestClientInterface
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
-        if ($data) {
+        if (is_string($data)) {
+            $options['body'] = $data;
+        } elseif ($data !== null) {
             $options['body'] = $this->toJson($data, $options);
         }
 
