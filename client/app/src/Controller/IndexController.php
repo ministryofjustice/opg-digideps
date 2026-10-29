@@ -144,11 +144,27 @@ class IndexController extends AbstractController
         ]);
     }
 
+    // retained in case this path is referenced outside the app anywhere
     #[Route(path: '/accessibility', name: 'accessibility')]
-    public function accessibilityAction(Request $request): Response
+    public function accessibilityAction(): Response
     {
-        return $this->render('@App/Index/accessibility.html.twig', [
-            'backlink' => $this->getRefererUrlSafe($request, ['accessibility']),
+        return $this->redirectToRoute('localised_accessibility', ['_locale' => 'en']);
+    }
+
+    // if we ever support another language, switch the template here
+    #[Route(path: '/{_locale}/accessibility', name: 'localised_accessibility', requirements: ['_locale' => 'en'], defaults: ['_locale' => 'en'])]
+    public function localisedAccessibilityAction(Request $request, string $_locale): Response
+    {
+        return $this->render("@App/Index/accessibility.{$_locale}.html.twig", [
+            'emailAddress' => $this->translator->trans('contact.digideps.emailAddress', [], 'twig-components'),
+            'telephoneNumber' => $this->translator->trans('contact.digideps.telephoneNumber', [], 'twig-components'),
+            'textphoneNumber' => $this->translator->trans('contact.digideps.textphoneNumber', [], 'twig-components'),
+            'openingHours' => $this->translator->trans('contact.digideps.openingHours', [], 'twig-components'),
+            'customerServiceEmail' => $this->translator->trans('contact.opg.customerServiceEmail', [], 'twig-components'),
+            'lastReviewedDate' => $this->translator->trans('opg.accessibilityStatement.lastReviewedDate', [], 'twig-components'),
+            'lastTestedDate' => $this->translator->trans('opg.accessibilityStatement.lastTestedDate', [], 'twig-components'),
+            'preparedDate' => $this->translator->trans('opg.accessibilityStatement.preparedDate', [], 'twig-components'),
+            'backlink' => $this->getRefererUrlSafe($request, ['accessibility', 'localised_accessibility']),
         ]);
     }
 
