@@ -18,6 +18,7 @@ use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
 use OPG\Digideps\Frontend\Service\JWT\JWTService;
 use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\NativeType;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -54,8 +55,10 @@ class RestClientTest extends TestCase
         $this->parameterBag->method('get')->with('kernel.debug')->willReturn(false);
 
         $this->container = self::createMock(ContainerInterface::class);
-        $this->container->method('get')->with('jms_serializer')->willReturn($this->serialiser);
-        $this->container->method('get')->with('logger')->willReturn($this->logger);
+        $this->container->method('get')->willReturnMap([
+            ['jms_serializer', $this->serialiser],
+            ['logger', $this->logger],
+        ]);
 
         $this->sut = new RestClient(
             $this->container,
@@ -169,7 +172,7 @@ class RestClientTest extends TestCase
             [$responseJson, 'array', 'json', null, $responseArray],
         ]);
 
-        $this->serialiser->method('serialize')->with($selfRegData, 'json', new IsType(IsType::TYPE_OBJECT))->willReturn($selfRegDataJson);
+        $this->serialiser->method('serialize')->with($selfRegData, 'json', new IsType(NativeType::Object))->willReturn($selfRegDataJson);
 
         $this->endpointResponse->method('getStatusCode')->willReturn(Response::HTTP_CREATED);
         $this->endpointResponse->method('getBody')->willReturn(Utils::streamFor($responseJson));

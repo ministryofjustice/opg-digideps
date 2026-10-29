@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Frontend\Unit\EventListener;
 
 use OPG\Digideps\Frontend\EventListener\SessionListener;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Constraint\IsInstanceOf;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -101,9 +102,7 @@ class SessionListenerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provider
-     */
+    #[DataProvider('provider')]
     public function testOnKernelRequest(int $idleTimeout, int $lastUsedRelativeToCurrentTime, int $callsToManualExpire): void
     {
         $event = self::createMock(RequestEvent::class);

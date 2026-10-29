@@ -10,6 +10,7 @@ use OPG\Digideps\Frontend\EventSubscriber\UserDeletedSubscriber;
 use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -23,9 +24,7 @@ class UserDeletedSubscriberTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider userProvider
-     */
+    #[DataProvider('userProvider')]
     public function testLogEvent(User $deletedUser, string $expectedEventName): void
     {
         $logger = self::createMock(LoggerInterface::class);

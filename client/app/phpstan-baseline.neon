@@ -8635,12 +8635,6 @@ parameters:
 			path: src/TestHelpers/DocumentHelpers.php
 
 		-
-			message: '#^Cannot call method setOrganisations\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/TestHelpers/OrganisationHelpers.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\OrganisationHelpers\:\:createInactiveOrganisation\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -8657,120 +8651,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/TestHelpers/OrganisationHelpers.php
-
-		-
-			message: '#^Parameter \#1 \$users of method OPG\\Digideps\\Frontend\\Entity\\Organisation\:\:setUsers\(\) expects array\<OPG\\Digideps\\Frontend\\Entity\\User\>, array\<int, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/TestHelpers/OrganisationHelpers.php
-
-		-
-			message: '#^Parameter \#1 \$submittedBy of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setSubmittedBy\(\) expects OPG\\Digideps\\Frontend\\Entity\\User\|null, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/TestHelpers/ReportHelpers.php
-
-		-
-			message: '#^Argument of an invalid type array\|object supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Cannot call method setEmail\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Cannot call method setIsCaseManager\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Cannot call method setRoleName\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 12
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers\:\:createAdminManager\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers\:\:createAdminUser\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers\:\:createInvitedCoDeputy\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers\:\:createLayUser\(\) should return array\|object but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers\:\:createPaAdminUser\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers\:\:createPaDeputyUser\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers\:\:createPaNamedDeputyUser\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers\:\:createPaTeamMemberUser\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers\:\:createProfAdminUser\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers\:\:createProfDeputyUser\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers\:\:createProfNamedDeputyUser\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers\:\:createProfTeamMemberUser\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers\:\:createSuperAdminUser\(\) should return OPG\\Digideps\\Frontend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/TestHelpers/UserHelpers.php
 
 		-
 			message: '#^Cannot call method format\(\) on mixed\.$#'
@@ -9295,91 +9175,7 @@ parameters:
 			path: tests/Unit/Entity/Report/MoneyReceivedOnClientsBehalfTest.php
 
 		-
-			message: '#^Cannot call method getEmail\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/Event/ClientDeletedEventTest.php
-
-		-
-			message: '#^Parameter \#2 \$currentUser of class OPG\\Digideps\\Frontend\\Event\\ClientDeletedEvent constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface\|null, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Event/ClientDeletedEventTest.php
-
-		-
-			message: '#^Parameter \#3 \$changedBy of class OPG\\Digideps\\Frontend\\Event\\ClientUpdatedEvent constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Event/ClientUpdatedEventTest.php
-
-		-
-			message: '#^Parameter \#1 \$deletedUser of class OPG\\Digideps\\Frontend\\Event\\UserDeletedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Event/UserDeletedEventTest.php
-
-		-
-			message: '#^Parameter \#2 \$deletedBy of class OPG\\Digideps\\Frontend\\Event\\UserDeletedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Event/UserDeletedEventTest.php
-
-		-
-			message: '#^Cannot call method getEmail\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Unit/Event/UserUpdatedEventTest.php
-
-		-
-			message: '#^Cannot call method getFullName\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/Event/UserUpdatedEventTest.php
-
-		-
-			message: '#^Cannot call method getRoleName\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/Event/UserUpdatedEventTest.php
-
-		-
-			message: '#^Parameter \#1 \$preUpdateUser of class OPG\\Digideps\\Frontend\\Event\\UserUpdatedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Event/UserUpdatedEventTest.php
-
-		-
-			message: '#^Parameter \#2 \$postUpdateUser of class OPG\\Digideps\\Frontend\\Event\\UserUpdatedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Event/UserUpdatedEventTest.php
-
-		-
-			message: '#^Parameter \#3 \$currentUser of class OPG\\Digideps\\Frontend\\Event\\UserUpdatedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Event/UserUpdatedEventTest.php
-
-		-
-			message: '#^Parameter \#1 \$createdUser of class OPG\\Digideps\\Frontend\\Event\\AdminUserCreatedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/AdminUserLifeCycleSubscriberTest.php
-
-		-
 			message: '#^Cannot call method format\(\) on DateTime\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/ClientDeletedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method getEmail\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/ClientDeletedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method setRoleName\(\) on array\|object\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: tests/Unit/EventSubscriber/ClientDeletedSubscriberTest.php
@@ -9391,58 +9187,10 @@ parameters:
 			path: tests/Unit/EventSubscriber/ClientDeletedSubscriberTest.php
 
 		-
-			message: '#^Parameter \#2 \$currentUser of class OPG\\Digideps\\Frontend\\Event\\ClientDeletedEvent constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface\|null, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/ClientDeletedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method getEmail\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/ClientUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method setRoleName\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Unit/EventSubscriber/ClientUpdatedSubscriberTest.php
-
-		-
 			message: '#^Parameter \#1 \$email of method OPG\\Digideps\\Frontend\\Entity\\Client\:\:setEmail\(\) expects string, null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Unit/EventSubscriber/ClientUpdatedSubscriberTest.php
-
-		-
-			message: '#^Parameter \#3 \$changedBy of class OPG\\Digideps\\Frontend\\Event\\ClientUpdatedEvent constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface, array\|object given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/EventSubscriber/ClientUpdatedSubscriberTest.php
-
-		-
-			message: '#^Parameter \#3 \$changedBy of class OPG\\Digideps\\Frontend\\Event\\ClientUpdatedEvent constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: tests/Unit/EventSubscriber/ClientUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method getFullName\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/CoDeputyCreationSubscriberTest.php
-
-		-
-			message: '#^Parameter \#1 \$invitedCoDeputy of class OPG\\Digideps\\Frontend\\Event\\CoDeputyInvitedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/CoDeputyCreationSubscriberTest.php
-
-		-
-			message: '#^Parameter \#2 \$inviterDeputy of class OPG\\Digideps\\Frontend\\Event\\CoDeputyInvitedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/CoDeputyCreationSubscriberTest.php
 
 		-
 			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Frontend\\Entity\\Deputy\|OPG\\Digideps\\Frontend\\Entity\\User\|null\.$#'
@@ -9457,208 +9205,22 @@ parameters:
 			path: tests/Unit/EventSubscriber/DeputyChangedOrgSubscriberTest.php
 
 		-
-			message: '#^Parameter \#1 \$invitedDeputy of class OPG\\Digideps\\Frontend\\Event\\DeputyInvitedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/DeputyInvitedSubscriberTest.php
-
-		-
-			message: '#^Parameter \#1 \$registeredDeputy of class OPG\\Digideps\\Frontend\\Event\\DeputySelfRegisteredEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/DeputySelfRegisteredSubscriberTest.php
-
-		-
-			message: '#^Parameter \#1 \$createdUser of class OPG\\Digideps\\Frontend\\Event\\OrgUserCreatedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/OrgUserCreatedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method getEmail\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: tests/Unit/EventSubscriber/OrgUserMembershipSubscriberTest.php
-
-		-
-			message: '#^Cannot call method getFullName\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/OrgUserMembershipSubscriberTest.php
-
-		-
-			message: '#^Parameter \#2 \$addedUser of class OPG\\Digideps\\Frontend\\Event\\UserAddedToOrganisationEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/OrgUserMembershipSubscriberTest.php
-
-		-
-			message: '#^Parameter \#2 \$userToRemove of class OPG\\Digideps\\Frontend\\Event\\UserRemovedFromOrganisationEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/OrgUserMembershipSubscriberTest.php
-
-		-
-			message: '#^Parameter \#3 \$currentUser of class OPG\\Digideps\\Frontend\\Event\\UserAddedToOrganisationEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/OrgUserMembershipSubscriberTest.php
-
-		-
-			message: '#^Parameter \#3 \$currentUser of class OPG\\Digideps\\Frontend\\Event\\UserRemovedFromOrganisationEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/OrgUserMembershipSubscriberTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/ReportSubmittedSubscriberTest.php
-
-		-
-			message: '#^Parameter \#2 \$submittedBy of class OPG\\Digideps\\Frontend\\Event\\ReportSubmittedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 3
-			path: tests/Unit/EventSubscriber/ReportSubmittedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/ReportUnsubmittedSubscriberTest.php
-
-		-
-			message: '#^Parameter \#2 \$unsubmittedBy of class OPG\\Digideps\\Frontend\\Event\\ReportUnsubmittedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/ReportUnsubmittedSubscriberTest.php
-
-		-
-			message: '#^Parameter \#1 \$activatedUser of class OPG\\Digideps\\Frontend\\Event\\UserActivatedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/UserActivatedSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setRoleName\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: tests/Unit/EventSubscriber/UserDeletedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method getEmail\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/UserDeletedSubscriberTest.php
-
-		-
-			message: '#^Cannot clone non\-object variable \$deletedUser of type array\|object\.$#'
-			identifier: clone.nonObject
-			count: 3
-			path: tests/Unit/EventSubscriber/UserDeletedSubscriberTest.php
-
-		-
-			message: '#^Parameter \#2 \$deletedBy of class OPG\\Digideps\\Frontend\\Event\\UserDeletedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/UserDeletedSubscriberTest.php
-
-		-
-			message: '#^Parameter \#1 \$passwordResetUser of class OPG\\Digideps\\Frontend\\Event\\UserPasswordResetEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/EventSubscriber/UserPasswordResetSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setFirstname\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Call to an undefined method object\:\:setRoleName\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method getEmail\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method getEmail\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method getFullName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method getRoleName\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method getRoleName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method setEmail\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot call method setLastname\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Cannot clone non\-object variable \$preUpdateUser of type array\|object\.$#'
-			identifier: clone.nonObject
-			count: 4
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Parameter \#1 \$preUpdateUser of class OPG\\Digideps\\Frontend\\Event\\UserUpdatedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 4
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Parameter \#2 \$postUpdateUser of class OPG\\Digideps\\Frontend\\Event\\UserUpdatedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
-			message: '#^Parameter \#3 \$currentUser of class OPG\\Digideps\\Frontend\\Event\\UserUpdatedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 5
-			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
-
-		-
 			message: '#^Cannot call method getErrors\(\) on Symfony\\Component\\Form\\FormInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 2
 			path: tests/Unit/Form/CoDeputyInviteTypeTest.php
+
+		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/Unit/Form/Report/Asset/AssetTypeTitleTest.php
+
+		-
+			message: '#^Cannot call method willReturnCallback\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Unit/Form/Report/Asset/AssetTypeTitleTest.php
 
 		-
 			message: '#^Call to an undefined method Symfony\\Component\\Form\\FormError\|Symfony\\Component\\Form\\FormErrorIterator\:\:getMessage\(\)\.$#'
@@ -9671,12 +9233,6 @@ parameters:
 			identifier: method.nonObject
 			count: 1
 			path: tests/Unit/Form/ReportTypeTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Mapper\\ReportSubmission\\ReportSubmissionSummaryMapperTest\:\:assertRestClientIsCalledWithCustomQueryParameters\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Mapper/ReportSubmission/ReportSubmissionSummaryMapperTest.php
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Mapper\\ReportSubmission\\ReportSubmissionSummaryMapperTest\:\:testReturnsReportSubmissionsByCustomParameters\(\) has no return type specified\.$#'
@@ -9721,126 +9277,6 @@ parameters:
 			path: tests/Unit/Service/Audit/AwsAuditLogHandlerTest.php
 
 		-
-			message: '#^Cannot call method getRoles\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/Service/Client/Internal/ClientApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of class Symfony\\Component\\Security\\Core\\Authentication\\Token\\UsernamePasswordToken constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface, array\|object given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/Service/Client/Internal/ClientApiTest.php
-
-		-
-			message: '#^Parameter \#2 \$currentUser of class OPG\\Digideps\\Frontend\\Event\\ClientDeletedEvent constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface\|null, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/ClientApiTest.php
-
-		-
-			message: '#^Parameter \#3 \$changedBy of class OPG\\Digideps\\Frontend\\Event\\ClientUpdatedEvent constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/ClientApiTest.php
-
-		-
-			message: '#^Parameter \#3 \$roles of class Symfony\\Component\\Security\\Core\\Authentication\\Token\\UsernamePasswordToken constructor expects array\<string\>, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/Service/Client/Internal/ClientApiTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/Service/Client/Internal/OrganisationApiTest.php
-
-		-
-			message: '#^Cannot call method setOrganisations\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/Service/Client/Internal/OrganisationApiTest.php
-
-		-
-			message: '#^Parameter \#2 \$addedUser of class OPG\\Digideps\\Frontend\\Event\\UserAddedToOrganisationEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/OrganisationApiTest.php
-
-		-
-			message: '#^Parameter \#2 \$userToAdd of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\OrganisationApi\:\:addUserToOrganisation\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/OrganisationApiTest.php
-
-		-
-			message: '#^Parameter \#2 \$userToRemove of class OPG\\Digideps\\Frontend\\Event\\UserRemovedFromOrganisationEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/OrganisationApiTest.php
-
-		-
-			message: '#^Parameter \#2 \$userToRemove of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\OrganisationApi\:\:removeUserFromOrganisation\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/OrganisationApiTest.php
-
-		-
-			message: '#^Parameter \#3 \$currentUser of class OPG\\Digideps\\Frontend\\Event\\UserAddedToOrganisationEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/OrganisationApiTest.php
-
-		-
-			message: '#^Parameter \#3 \$currentUser of class OPG\\Digideps\\Frontend\\Event\\UserRemovedFromOrganisationEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/OrganisationApiTest.php
-
-		-
-			message: '#^Parameter \#3 \$currentUser of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\OrganisationApi\:\:addUserToOrganisation\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/OrganisationApiTest.php
-
-		-
-			message: '#^Parameter \#3 \$currentUser of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\OrganisationApi\:\:removeUserFromOrganisation\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/OrganisationApiTest.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/Service/Client/Internal/OrganisationApiTest.php
-
-		-
-			message: '#^Parameter \#2 \$submittedBy of class OPG\\Digideps\\Frontend\\Event\\ReportSubmittedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/ReportApiTest.php
-
-		-
-			message: '#^Parameter \#2 \$submittedBy of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\ReportApi\:\:submit\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/ReportApiTest.php
-
-		-
-			message: '#^Parameter \#2 \$unsubmittedBy of class OPG\\Digideps\\Frontend\\Event\\ReportUnsubmittedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/ReportApiTest.php
-
-		-
-			message: '#^Parameter \#2 \$user of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\ReportApi\:\:unsubmit\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/ReportApiTest.php
-
-		-
 			message: '#^Parameter \#1 \$comments of method OPG\\Digideps\\Frontend\\Model\\FeedbackReport\:\:setComments\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -9859,154 +9295,10 @@ parameters:
 			path: tests/Unit/Service/Client/Internal/SatisfactionApiTest.php
 
 		-
-			message: '#^Cannot call method getEmail\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Cannot call method getRoles\(\) on array\|object\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$createdUser of class OPG\\Digideps\\Frontend\\Event\\AdminUserCreatedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$createdUser of class OPG\\Digideps\\Frontend\\Event\\OrgUserCreatedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$deletedUser of class OPG\\Digideps\\Frontend\\Event\\UserDeletedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$email of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\UserApi\:\:getByEmail\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$invitedCoDeputy of class OPG\\Digideps\\Frontend\\Event\\CoDeputyInvitedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$invitedDeputy of class OPG\\Digideps\\Frontend\\Event\\DeputyInvitedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$passwordResetUser of class OPG\\Digideps\\Frontend\\Event\\UserPasswordResetEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$preUpdateUser of class OPG\\Digideps\\Frontend\\Event\\UserUpdatedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$preUpdateUser of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\UserApi\:\:update\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$registeredDeputy of class OPG\\Digideps\\Frontend\\Event\\DeputySelfRegisteredEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of class Symfony\\Component\\Security\\Core\\Authentication\\Token\\UsernamePasswordToken constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface, array\|object given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$userToCreate of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\UserApi\:\:createOrgUser\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$userToCreate of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\UserApi\:\:createUser\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#1 \$userToDelete of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\UserApi\:\:delete\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#2 \$deletedBy of class OPG\\Digideps\\Frontend\\Event\\UserDeletedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#2 \$inviterDeputy of class OPG\\Digideps\\Frontend\\Event\\CoDeputyInvitedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#2 \$loggedInUser of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\UserApi\:\:reInviteCoDeputy\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#2 \$postUpdateUser of class OPG\\Digideps\\Frontend\\Event\\UserUpdatedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#2 \$postUpdateUser of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\UserApi\:\:update\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#3 \$currentUser of class OPG\\Digideps\\Frontend\\Event\\UserUpdatedEvent constructor expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
-
-		-
-			message: '#^Parameter \#3 \$roles of class Symfony\\Component\\Security\\Core\\Authentication\\Token\\UsernamePasswordToken constructor expects array\<string\>, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/Service/Client/Internal/UserApiTest.php
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
+			count: 34
+			path: tests/Unit/Service/Client/RestClientTest.php
 
 		-
 			message: '#^Cannot access offset ''ClientSecret'' on mixed\.$#'
@@ -10027,6 +9319,18 @@ parameters:
 			path: tests/Unit/Service/Client/RestClientTest.php
 
 		-
+			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 32
+			path: tests/Unit/Service/Client/RestClientTest.php
+
+		-
+			message: '#^Cannot call method willThrowException\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Unit/Service/Client/RestClientTest.php
+
+		-
 			message: '#^Parameter \#1 \(mixed\) of echo cannot be converted to string\.$#'
 			identifier: echo.nonString
 			count: 1
@@ -10037,6 +9341,30 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/Unit/Service/Client/RestClientTest.php
+
+		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
+
+		-
+			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
+
+		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: tests/Unit/Service/DeputyProviderTest.php
+
+		-
+			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/Unit/Service/DeputyProviderTest.php
 
 		-
 			message: '#^Cannot access property \$headers on mixed\.$#'
@@ -10225,9 +9553,27 @@ parameters:
 			path: tests/Unit/Service/File/Scanner/ClamFileScannerTest.php
 
 		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
+			count: 13
+			path: tests/Unit/Service/File/Storage/S3StorageTest.php
+
+		-
 			message: '#^Cannot access offset ''statusCode'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
+			path: tests/Unit/Service/File/Storage/S3StorageTest.php
+
+		-
+			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 8
+			path: tests/Unit/Service/File/Storage/S3StorageTest.php
+
+		-
+			message: '#^Cannot call method willThrowException\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 4
 			path: tests/Unit/Service/File/Storage/S3StorageTest.php
 
 		-
@@ -10279,6 +9625,12 @@ parameters:
 			path: tests/Unit/Service/File/Storage/S3StorageTest.php
 
 		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: tests/Unit/Service/Mailer/MailFactoryTest.php
+
+		-
 			message: '#^Cannot call method getFromEmailNotifyID\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -10288,6 +9640,12 @@ parameters:
 			message: '#^Cannot call method getFromName\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
+			path: tests/Unit/Service/Mailer/MailFactoryTest.php
+
+		-
+			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
 			path: tests/Unit/Service/Mailer/MailFactoryTest.php
 
 		-
@@ -10357,34 +9715,16 @@ parameters:
 			path: tests/Unit/Service/Mailer/MailFactoryTest.php
 
 		-
-			message: '#^Parameter \#1 \$activatedUser of method OPG\\Digideps\\Frontend\\Service\\Mailer\\Mailer\:\:sendActivationEmail\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Mailer/MailerTest.php
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: tests/Unit/Service/RedirectorTest.php
 
 		-
-			message: '#^Parameter \#1 \$invitedUser of method OPG\\Digideps\\Frontend\\Service\\Mailer\\Mailer\:\:sendInvitationEmail\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Mailer/MailerTest.php
-
-		-
-			message: '#^Parameter \#1 \$passwordResetUser of method OPG\\Digideps\\Frontend\\Service\\Mailer\\Mailer\:\:sendResetPasswordEmail\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Mailer/MailerTest.php
-
-		-
-			message: '#^Parameter \#1 \$submittedByDeputy of method OPG\\Digideps\\Frontend\\Service\\Mailer\\Mailer\:\:sendReportSubmissionConfirmationEmail\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Mailer/MailerTest.php
-
-		-
-			message: '#^Parameter \#1 \$updatedDeputy of method OPG\\Digideps\\Frontend\\Service\\Mailer\\Mailer\:\:sendUpdateDeputyDetailsEmail\(\) expects OPG\\Digideps\\Frontend\\Entity\\User, array\|object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Mailer/MailerTest.php
+			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/Unit/Service/RedirectorTest.php
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\RedirectorTest\:\:testGetCorrectRouteIfDifferentNonAdminCodepVerification\(\) has no return type specified\.$#'
@@ -10415,6 +9755,18 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/Unit/Service/ReportSubmissionServiceTest.php
+
+		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
+			identifier: method.notFound
+			count: 10
+			path: tests/Unit/Service/RequestIdLoggerProcessorTest.php
+
+		-
+			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 10
+			path: tests/Unit/Service/RequestIdLoggerProcessorTest.php
 
 		-
 			message: '#^Property Symfony\\Component\\HttpFoundation\\Request\:\:\$headers \(Symfony\\Component\\HttpFoundation\\HeaderBag\) does not accept Symfony\\Component\\HttpFoundation\\ParameterBag\.$#'

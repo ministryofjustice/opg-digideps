@@ -6,6 +6,7 @@ namespace Tests\OPG\Digideps\Frontend\Unit\Service\File;
 
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use OPG\Digideps\Frontend\Service\File\MimeTypeAndExtensionChecker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -20,9 +21,7 @@ class MimeTypeAndExtensionCheckerTest extends KernelTestCase
         $this->sut = new MimeTypeAndExtensionChecker(new FinfoMimeTypeDetector());
     }
 
-    /**
-     * @dataProvider fileProvider
-     */
+    #[DataProvider('fileProvider')]
     public function testCheck(string $relativePath, string $fileName, bool $expectedResult): void
     {
         $filePath = sprintf('%s/%s', $this->projectDir, $relativePath);

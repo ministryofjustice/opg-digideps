@@ -8,7 +8,9 @@ use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Sync\Model\Sirius\QueuedDocumentData;
 use OPG\Digideps\Frontend\Sync\Service\DocumentSyncRunner;
 use OPG\Digideps\Frontend\Sync\Service\DocumentSyncService;
+use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\NativeType;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -62,7 +64,7 @@ class DocumentSyncRunnerTest extends KernelTestCase
 
         $this->restClient->expects(self::once())
             ->method('apiCall')
-            ->with('get', 'document/queued', ['row_limit' => '100'], 'array', self::isType('array'), false)
+            ->with('get', 'document/queued', ['row_limit' => '100'], 'array', new IsType(NativeType::Array), false)
             ->willReturn($rawQueuedDocumentData);
 
         $this->syncService->expects(self::once())
@@ -91,7 +93,7 @@ class DocumentSyncRunnerTest extends KernelTestCase
     {
         $this->restClient->expects(self::once())
             ->method('apiCall')
-            ->with('get', 'document/queued', ['row_limit' => '100'], 'array', self::isType('array'), false)
+            ->with('get', 'document/queued', ['row_limit' => '100'], 'array', new IsType(NativeType::Array), false)
             ->willReturn(json_encode([]));
 
         $this->syncService->expects(self::once())
