@@ -164,7 +164,7 @@ class IndexController extends AbstractController
             'lastReviewedDate' => $this->translator->trans('opg.accessibilityStatement.lastReviewedDate', [], 'twig-components'),
             'lastTestedDate' => $this->translator->trans('opg.accessibilityStatement.lastTestedDate', [], 'twig-components'),
             'preparedDate' => $this->translator->trans('opg.accessibilityStatement.preparedDate', [], 'twig-components'),
-            'backlink' => $this->getRefererUrlSafe($request, ['accessibility']),
+            'backlink' => $this->getRefererUrlSafe($request, ['accessibility', 'localised_accessibility']),
         ]);
     }
 
