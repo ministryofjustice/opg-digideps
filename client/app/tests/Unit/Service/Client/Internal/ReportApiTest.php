@@ -11,6 +11,7 @@ use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\TestHelpers\ReportHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -31,9 +32,7 @@ class ReportApiTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider reportIdProvider
-     */
+    #[DataProvider('reportIdProvider')]
     public function testSubmit(?string $reportId): void
     {
         $reportToBeSubmitted = ReportHelpers::createReport();

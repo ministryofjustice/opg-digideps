@@ -14,6 +14,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use OPG\Digideps\Frontend\Service\File\Scanner\ClamFileScanner;
 use OPG\Digideps\Frontend\Service\File\Scanner\Exception\VirusFoundException;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -29,9 +30,7 @@ class ClamFileScannerTest extends TestCase
         $this->logger = self::createMock(LoggerInterface::class);
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
+    #[DoesNotPerformAssertions]
     public function testScanFileReturnsGracefullyOnCleanFile(): void
     {
         $this->ensureFileWillBeClean()
@@ -54,9 +53,7 @@ class ClamFileScannerTest extends TestCase
             ->invokeTest('file.pdf');
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
+    #[DoesNotPerformAssertions]
     public function testScanFileMakesMultipleReattemptsIfScanServiceIsUnavailable(): void
     {
         $this->ensureServiceIsTemporarilyUnavailable()

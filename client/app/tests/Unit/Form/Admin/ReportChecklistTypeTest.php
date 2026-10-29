@@ -7,13 +7,12 @@ namespace Tests\OPG\Digideps\Frontend\Unit\Form\Admin;
 use OPG\Digideps\Frontend\Entity\Report\Checklist;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Form\Admin\ReportChecklistType;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Form\Test\TypeTestCase;
 
 class ReportChecklistTypeTest extends TypeTestCase
 {
-    /**
-     * @dataProvider formValuesProvider
-     */
+    #[DataProvider('formValuesProvider')]
     public function testSubmitValidData(?string $costValues, bool $deputyDetails): void
     {
         $report = new Report();

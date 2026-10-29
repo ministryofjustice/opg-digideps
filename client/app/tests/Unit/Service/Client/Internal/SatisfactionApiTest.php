@@ -10,6 +10,7 @@ use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Model\FeedbackReport;
 use OPG\Digideps\Frontend\Service\Client\Internal\SatisfactionApi;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -50,9 +51,7 @@ class SatisfactionApiTest extends TestCase
         $this->sut->createGeneralFeedback($formData);
     }
 
-    /**
-     * @dataProvider commentsProvider
-     */
+    #[DataProvider('commentsProvider')]
     public function testCreatePostSubmissionFeedback(
         ?string $comments,
         string $expectedCommentsInPostRequest,

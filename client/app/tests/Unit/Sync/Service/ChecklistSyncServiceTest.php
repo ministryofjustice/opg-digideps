@@ -279,11 +279,9 @@ class ChecklistSyncServiceTest extends TestCase
 
         $this->pdfGenerator->expects(self::exactly(2))
             ->method('generate')
-            ->will(
-                self::onConsecutiveCalls(
-                    self::throwException($pdfException),
-                    'file-contents',
-                )
+            ->willReturnOnConsecutiveCalls(
+                self::throwException($pdfException),
+                'file-contents',
             );
 
         $expectedFailureData = json_encode([
@@ -305,7 +303,7 @@ class ChecklistSyncServiceTest extends TestCase
                 self::assertEquals([], $options[4]);
                 self::assertFalse($options[5]);
 
-                $invocation = $invocationMatcher->getInvocationCount();
+                $invocation = $invocationMatcher->numberOfInvocations();
                 self::assertEquals("checklist/{$invocation}", $options[1]);
 
                 $actualData = $options[2];
@@ -359,7 +357,7 @@ class ChecklistSyncServiceTest extends TestCase
                 self::assertEquals([], $options[4]);
                 self::assertFalse($options[5]);
 
-                $invocation = $invocationMatcher->getInvocationCount();
+                $invocation = $invocationMatcher->numberOfInvocations();
                 self::assertEquals("checklist/{$invocation}", $options[1]);
 
                 $actualData = $options[2];
@@ -377,11 +375,9 @@ class ChecklistSyncServiceTest extends TestCase
                 'rs-uuid',
                 '12395438',
             )
-            ->will(
-                self::onConsecutiveCalls(
-                    self::throwException($expectedSiriusSyncException),
-                    $this->createSuccessfulResponse(),
-                )
+            ->willReturnOnConsecutiveCalls(
+                self::throwException($expectedSiriusSyncException),
+                $this->createSuccessfulResponse(),
             );
 
         ['notSyncedCount' => $notSyncedCount, 'reportIdsWithNullChecklists' => $reportIdsWithNullChecklist] = $this->sut->syncChecklistsByReports($reports);

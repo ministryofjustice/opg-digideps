@@ -14,6 +14,7 @@ use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\ClientHelpers;
 use OPG\Digideps\Frontend\TestHelpers\DeputyHelper;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -26,9 +27,7 @@ class ClientDeletedSubscriberTest extends TestCase
         ], ClientDeletedSubscriber::getSubscribedEvents());
     }
 
-    /**
-     * @dataProvider deputyProvider
-     */
+    #[DataProvider('deputyProvider')]
     public function testLogEvent(Client $clientWithUsers, Deputy|User $deputy): void
     {
         $logger = self::createMock(LoggerInterface::class);
