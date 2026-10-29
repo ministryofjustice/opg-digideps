@@ -157,6 +157,7 @@ class Report implements StartEndDateComparableInterface
      * @var User
      */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
+    #[JMS\Groups(['report-submitted-by'])]
     private $submittedBy;
 
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Deputy')]
