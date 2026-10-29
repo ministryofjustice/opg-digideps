@@ -193,7 +193,11 @@ class ReportController extends AbstractController
                 );
             }
 
-            $report->setSubmitted(true)->setSubmitDate(new \DateTime());
+            $report
+                ->setSubmitted(true)
+                ->setSubmitDate(new \DateTime())
+                ->setSubmittedBy($currentUser)
+            ;
             $reportSubmissionService->generateReportDocuments($report);
 
             $this->reportApi->submit($report, $currentUser);

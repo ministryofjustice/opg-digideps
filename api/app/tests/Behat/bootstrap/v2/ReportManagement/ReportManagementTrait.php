@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\ReportManagement;
 
+use Behat\Step\Then;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
@@ -390,21 +391,19 @@ trait ReportManagementTrait
         }
     }
 
-    /**
-     * @Then the link to download the submitted report should be visible
-     */
-    public function theLinkToDownloadTheSubmittedReportShouldBeVisible(): void
+    #[Then('the link to view the summary of the submitted report should be visible')]
+    public function theLinkToViewTheSummaryOfTheSubmittedReportShouldBeVisible(): void
     {
         $this->iAmOnAdminClientDetailsPage();
 
         $xpathLocator = sprintf(
-            "//a[contains(@href,'/report/deputyreport-%s.pdf')]",
+            "//a[contains(@href,'/admin/report/%s/summary')]",
             $this->interactingWithUserDetails->getPreviousReportId()
         );
 
-        $reportPdfLink = $this->getSession()->getPage()->find('xpath', $xpathLocator);
+        $summaryLink = $this->getSession()->getPage()->find('xpath', $xpathLocator);
 
-        if (is_null($reportPdfLink)) {
+        if (is_null($summaryLink)) {
             throw new BehatException('Could not find download link for the report');
         }
     }
