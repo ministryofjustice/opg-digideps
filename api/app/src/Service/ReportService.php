@@ -130,6 +130,7 @@ class ReportService
         $toReport->setHasDebts($fromReport->getHasDebts());
         foreach ($fromReport->getDebts() as $fromDebt) {
             if ($toReport->getDebts()->count() > 0) {
+                // Covers reports if previous report is unsubmitted so we do not duplicate debts entries
                 foreach ($toReport->getDebts() as $toDebt) {
                     if ($fromDebt->getDebtTypeId() === $toDebt->getDebtTypeId()) {
                         $toDebt->setHasMoreDetails($fromDebt->getHasMoreDetails());
@@ -144,10 +145,8 @@ class ReportService
             }
         }
 
-        if (!empty($debts)) {
-            foreach ($debts as $debt) {
-                $this->em->persist($debt);
-            }
+        foreach ($debts as $debt) {
+            $this->em->persist($debt);
         }
 
         $toReport->setDebtManagement($toReport->getDebtManagement() ?? $fromReport->getDebtManagement());
