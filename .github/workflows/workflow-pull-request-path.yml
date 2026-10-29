@@ -80,7 +80,7 @@ jobs:
 
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/actions/semver@5fba2afe28b31b8c5eaf1fb4235e2d32aea24a1e # v4.8.3
+        uses: ministryofjustice/opg-github-actions/actions/semver@83663a5235330cc2193319b25d559885610c6bd5 # v4.8.4
         with:
           prerelease: true
           default_bump: ${{ steps.semver_bump.outputs.default_bump }}

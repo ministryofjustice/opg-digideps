@@ -61,11 +61,9 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
         // exception if reached delay-check
         if ($this->incrementalWaitingTimeChecker->isFrozen($this->bruteForceKey)) {
             $nextAttemptAt = $this->incrementalWaitingTimeChecker->getUnfrozenAt($this->bruteForceKey);
+            $nextAttemptAt = is_numeric($nextAttemptAt) ? (float)$nextAttemptAt : null;
             $nextAttemptIn = ceil(($nextAttemptAt - time()) / 60);
-            $exception = new UnauthorisedException("Attack detected. Please try again in $nextAttemptIn minutes", 423);
-            $exception->setData($nextAttemptAt);
-
-            throw $exception;
+            throw new UnauthorisedException("Attack detected. Please try again in $nextAttemptIn minutes", 423, data: $nextAttemptAt);
         }
 
         $user = $this->userRepository->findOneBy(['registrationToken' => $token]);

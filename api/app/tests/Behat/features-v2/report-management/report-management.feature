@@ -66,11 +66,11 @@ Feature: Report Management (applies to all admin roles)
         Then the report should should show as submitted
 
     @super-admin @pa-admin-combined-high-submitted
-    Scenario: A super admin can download a submitted report PDF
+    Scenario: A super admin can view the summary of a submitted report
         Given a Public Authority Deputy has submitted a Combined High Assets report
         And a super admin user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
-        Then the link to download the submitted report should be visible
+        Then the link to view the summary of the submitted report should be visible
 
     @admin @admin-manager @pa-admin-combined-high-submitted
     Scenario: An admin manager cannot download a submitted report PDF

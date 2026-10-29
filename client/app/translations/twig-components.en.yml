@@ -34,7 +34,7 @@ opg:
     clientDetails:
       actions:
         checklist: Checklist
-        download: Download
+        viewSummary: View report
         manage: Manage
       actionsHeader: Actions
       dueDate: Due
