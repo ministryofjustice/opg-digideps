@@ -82,7 +82,7 @@ final class ProfDeputyCosts
         $builder = new TableBuilder()->addColumns(1, 1)->addHeader($this->text['costType'], $this->text['amount']);
 
         foreach ($report->getProfDeputyOtherCosts() as $cost) {
-            $label = $report->getProfDeputyOtherCostTypeIds()[$cost->getProfDeputyOtherCostTypeId()]['typeId'];
+            $label = $cost->getProfDeputyOtherCostTypeId();
             $builder->addRow($this->translate("breakdown.form.entries.{$label}.label"), new Cell($this->tryFormatMoney($cost->getAmount(), '-'), format: Cell::NUMERIC_FORMAT));
         }
         $builder->addRow(new Cell($this->text['totalCosts'], isHeader: true), new Cell($this->tryFormatMoney($report->getProfDeputyTotalCosts(), $this->text['incomplete']), isBold: true));
