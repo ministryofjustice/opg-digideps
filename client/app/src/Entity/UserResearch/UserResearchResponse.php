@@ -16,7 +16,10 @@ class UserResearchResponse
     public const string OVER_TEN = 'overTen';
 
     #[JMS\Type('OPG\Digideps\Frontend\Entity\UserResearch\ResearchType')]
-    private $researchType;
+    private ResearchType $researchType;
+
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\UserResearch\ElectronicDeviceType')]
+    private ElectronicDeviceType $electronicDeviceType;
 
     #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
     private User $user;
@@ -104,6 +107,18 @@ class UserResearchResponse
     public function setResearchType(ResearchType $researchType): static
     {
         $this->researchType = $researchType;
+
+        return $this;
+    }
+
+    public function getElectronicDeviceType(): ElectronicDeviceType
+    {
+        return $this->electronicDeviceType;
+    }
+
+    public function setElectronicDeviceType(ElectronicDeviceType $electronicDeviceType): static
+    {
+        $this->electronicDeviceType = $electronicDeviceType;
 
         return $this;
     }
