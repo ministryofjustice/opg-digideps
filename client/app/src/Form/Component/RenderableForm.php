@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @template T of AbstractFormType
  */
-final class RenderableForm
+final readonly class RenderableForm
 {
     use TypeOrNullTrait;
     use TypeOrDefaultTrait;
@@ -26,8 +26,22 @@ final class RenderableForm
     /**
      * @param T $type
      */
-    public function __construct(private readonly AbstractFormType $type, private readonly FormInterface $form)
+    public function __construct(
+        private AbstractFormType $type,
+        private FormInterface $form,
+        /**
+         * @var callable(): RenderableForm<T>
+         */
+        private mixed $recreate,
+    ) {
+    }
+
+    /**
+     * @return RenderableForm<T>
+     */
+    final public function recreate(): RenderableForm
     {
+        return ($this->recreate)();
     }
 
     protected function getUnvalidated(int|string|null $key): mixed

@@ -39,7 +39,7 @@ abstract class AbstractController extends SymfonyAbstractController
          */
         $type = $builder->getType()->getInnerType();
         $form = $builder->getForm();
-        return new RenderableForm($type, $form);
+        return new RenderableForm($type, $form, fn () => $this->createRenderableForm($typeClass, $action));
     }
 
     protected function getUser(): ?User
