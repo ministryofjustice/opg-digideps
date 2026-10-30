@@ -19,7 +19,7 @@ class UserResearchResponse
     private ResearchType $researchType;
 
     #[JMS\Type('OPG\Digideps\Frontend\Entity\UserResearch\ElectronicDeviceType')]
-    private ElectronicDeviceType $electronicDeviceType;
+    private ?ElectronicDeviceType $electronicDeviceType = null;
 
     #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
     private User $user;
@@ -111,7 +111,7 @@ class UserResearchResponse
         return $this;
     }
 
-    public function getElectronicDeviceType(): ElectronicDeviceType
+    public function getElectronicDeviceType(): ?ElectronicDeviceType
     {
         return $this->electronicDeviceType;
     }
