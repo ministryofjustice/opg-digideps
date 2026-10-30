@@ -90,12 +90,12 @@ final readonly class AccountService
             $deputy->getLastname(),
             $deputy->getEmail1(),
         );
+        $user->setRegistrationRoute(User::ACCOUNT_REQUEST);
         $user->setRoleName(match ($deputy->getDeputyType()) {
             DeputyType::LAY => User::ROLE_LAY_DEPUTY,
             DeputyType::PRO => User::ROLE_PROF_NAMED,
             DeputyType::PA => User::ROLE_PA_NAMED,
         });
-        $user->setActive(true);
         $user->setDeputyUid($deputy->getDeputyUid());
         $deputy->setUser($user);
         $user->setDeputy($deputy);
