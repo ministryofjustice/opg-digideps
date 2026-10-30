@@ -143,6 +143,17 @@ opg:
         label: I have read and agree to the ‘Complete the deputy report’ terms of use
         required: You must check the box to show you agree to the terms of use before continuing.
         submit: Continue
+    reset:
+      content: |-
+        To reset your password, enter your email address and check your email for confirmation.
+      email:
+        label: Your email address
+        hint: We sent your registration link to this email address
+        submit: Reset your password
+        notBlank: Enter an email address
+        tooLong: The email cannot be longer than 60 characters
+        invalidFormat: This email is not valid
+      returnLink: Return to sign in
   admin:
     clientDetails:
       actions:
