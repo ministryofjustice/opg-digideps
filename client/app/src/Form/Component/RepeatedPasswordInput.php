@@ -16,8 +16,8 @@ final readonly class RepeatedPasswordInput extends AbstractRepeatedInput
         bool $required = true,
         bool $disabled = false,
         public ?int $characters = null,
-        ?LegendRecipe $legend = null,
-        ?HintRecipe $hint = null,
+        null|string|LegendRecipe $legend = null,
+        null|string|HintRecipe $hint = null,
         ?Constraints $constraints = null,
     ) {
         parent::__construct(
