@@ -131,6 +131,12 @@ opg:
         PasswordSet: |
           Our records show that you have already registered with this email address.
           Please sign in to continue. Please call %helplineNumber% if you are unable to sign in.
+    password:
+      required: Please enter a password
+      doesNotMatch: The passwords you entered do not match.
+      first: Password
+      second: Confirm password
+      submit: Save password
     accept:
       title: Read and agree to our terms of use
       content: |-

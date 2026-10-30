@@ -8,12 +8,18 @@ use OPG\Digideps\Common\Account\AcceptRequest;
 use OPG\Digideps\Common\Account\AccountError;
 use OPG\Digideps\Common\Account\AccountRequest;
 use OPG\Digideps\Common\Account\Email;
+use OPG\Digideps\Common\Account\MaximumTokenAge;
 use OPG\Digideps\Common\Account\NonEmptyString;
+use OPG\Digideps\Common\Account\Password;
+use OPG\Digideps\Common\Account\PasswordRequest;
 use OPG\Digideps\Common\Account\ResetRequest;
+use OPG\Digideps\Common\Account\Token;
+use OPG\Digideps\Common\Account\ValidationKey;
 use OPG\Digideps\Frontend\Account\AccountService;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Form\Account\AcceptRequestType;
 use OPG\Digideps\Frontend\Form\Account\AccountRequestType;
+use OPG\Digideps\Frontend\Form\Account\PasswordRequestType;
 use OPG\Digideps\Frontend\Form\Account\ResetRequestType;
 use OPG\Digideps\Frontend\Validator\RouteValidator;
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -25,6 +31,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Uid\UuidV7;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsController]
@@ -98,10 +105,62 @@ class AccountController extends AbstractController
             } else {
                 $this->addFlash('error', "{$result->value}");
             }
-            $form = $this->createForm(ResetRequestType::class, options: ['action' => $this->generateUrl('account_forgotten')]);
+            $form = $form->recreate();
         }
 
-        return ['form' => $form];
+        return ['form' => $form->render()];
+    }
+
+    #[Route('/account/activate/{key}/{token}', name: 'account_activate', methods: ['GET', 'POST'])]
+    #[Template('@App/Account/password.html.twig')]
+    public function activateAction(Request $request, string $key, string $token): array|RedirectResponse
+    {
+        return $this->processPasswordRequest($request, 'account_activate', 'account_request', $key, $token);
+    }
+
+    #[Route('/account/reset/{key}/{token}', name: 'account_reset', methods: ['GET', 'POST'])]
+    #[Template('@App/Account/password.html.twig')]
+    public function passwordResetAction(Request $request, string $key, string $token): array|RedirectResponse
+    {
+        return $this->processPasswordRequest($request, 'account_reset', 'account_password_forgotten', $key, $token);
+    }
+
+    private function processPasswordRequest(Request $request, string $actionRoute, string $errorRoute, string $key, string $token): array|RedirectResponse
+    {
+        if (!$this->validateToken($key, $token)) {
+            return new RedirectResponse($this->generateUrl($errorRoute));
+        }
+
+        $form = $this->createRenderableForm(PasswordRequestType::class, $this->generateUrl($actionRoute, ['key' => $key, 'token' => $token]));
+        if ($form->handleRequest($request)) {
+            $result = $this->accountService->sendPasswordRequest(new PasswordRequest(
+                new Password($form->getStringOrThrow('password')),
+                new Token($token),
+                new ValidationKey($key)
+            ));
+            if ($result instanceof AccountError) {
+                $this->addFlash('error', $result->value);
+                return new RedirectResponse($this->generateUrl($errorRoute));
+            } else {
+                return new RedirectResponse($this->generateUrl('login'));
+            }
+        }
+
+        return ['form' => $form->render(),];
+    }
+
+    private function validateToken(string $key, string $token): bool
+    {
+        if (!ValidationKey::isValid($key) || !Token::isValid($token)) {
+            $this->addFlash('error', UuidV7::v7());
+            return false;
+        }
+        if (new Token($token)->age > MaximumTokenAge::PasswordReset->value) {
+            $this->addFlash('error', '');
+            return false;
+        }
+
+        return true;
     }
 
     #[Route('/account/accept', name: 'account_accept', methods: ['GET', 'POST'])]
