@@ -9,10 +9,12 @@ use OPG\Digideps\Common\Account\AccountError;
 use OPG\Digideps\Common\Account\AccountRequest;
 use OPG\Digideps\Common\Account\Email;
 use OPG\Digideps\Common\Account\NonEmptyString;
+use OPG\Digideps\Common\Account\ResetRequest;
 use OPG\Digideps\Frontend\Account\AccountService;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Form\Account\AcceptRequestType;
 use OPG\Digideps\Frontend\Form\Account\AccountRequestType;
+use OPG\Digideps\Frontend\Form\Account\ResetRequestType;
 use OPG\Digideps\Frontend\Validator\RouteValidator;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
@@ -79,6 +81,27 @@ class AccountController extends AbstractController
             'accountCreated' => $accountCreated,
             'deputyEmail' => $deputyEmail
         ];
+    }
+
+    #[Route('/account/forgotten', name: 'account_forgotten', methods: ['GET', 'POST'])]
+    #[Template('@App/Account/reset.html.twig')]
+    public function requestPasswordAction(Request $request): array
+    {
+        $form = $this->createRenderableForm(ResetRequestType::class, $this->generateUrl('account_forgotten'));
+        $form->handleRequest($request);
+
+        if ($form->handleRequest($request)) {
+            $email = new Email(strtolower($form->getStringOrThrow('email')));
+            $result = $this->accountService->sendResetRequest(new ResetRequest($email));
+            if ($result instanceof Email) {
+                $this->addFlash('notice', "Send email to {$result->value}.");
+            } else {
+                $this->addFlash('error', "{$result->value}");
+            }
+            $form = $this->createForm(ResetRequestType::class, options: ['action' => $this->generateUrl('account_forgotten')]);
+        }
+
+        return ['form' => $form];
     }
 
     #[Route('/account/accept', name: 'account_accept', methods: ['GET', 'POST'])]
