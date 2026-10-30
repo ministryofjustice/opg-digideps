@@ -1,5 +1,21 @@
 locals {
-  monitor_notify_lambda_function_name = "monitor-notify"
+  monitor_notify_lambda_function_name          = "monitor-notify"
+  monitor_notify_lambda_source_directory       = "${path.module}/../../../lambdas/functions/monitor_notify_lambda/app"
+  monitor_notify_alert_configuration_directory = "${path.module}/../../../alerting/alarms"
+  monitor_notify_lambda_source_files = setunion(
+    fileset(local.monitor_notify_lambda_source_directory, "*.py"),
+    fileset(local.monitor_notify_lambda_source_directory, "**/*.py"),
+    fileset(local.monitor_notify_lambda_source_directory, "**/*.txt")
+  )
+}
+
+locals {
+  monitor_notify_alert_configurations = {
+    for configuration in [
+      for filename in fileset(local.monitor_notify_alert_configuration_directory, "**/*.json") :
+      jsondecode(file("${local.monitor_notify_alert_configuration_directory}/${filename}"))
+    ] : configuration.name => configuration
+  }
 }
 
 # INFO - Lambda used to monitor for different types of events and to notify us via slack
@@ -148,8 +164,21 @@ data "aws_iam_policy_document" "lambda_monitor_notify" {
 
 data "archive_file" "monitor_notify_zip" {
   type        = "zip"
-  source_dir  = "../../lambdas/functions/monitor_notify_lambda/app"
-  output_path = "../../lambdas/functions/monitor_notify_lambda/monitor_notify.zip"
+  output_path = "${path.module}/../../../lambdas/functions/monitor_notify_lambda/monitor_notify.zip"
+
+  dynamic "source" {
+    for_each = local.monitor_notify_lambda_source_files
+
+    content {
+      content  = file("${local.monitor_notify_lambda_source_directory}/${source.value}")
+      filename = source.value
+    }
+  }
+
+  source {
+    content  = jsonencode(local.monitor_notify_alert_configurations)
+    filename = "alerting/alarms.json"
+  }
 }
 
 data "archive_file" "monitor_notify_layer" {
