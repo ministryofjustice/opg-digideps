@@ -18,11 +18,59 @@ gov:
       cookies: Cookies
       accessibility: Accessibility
 opg:
+  account:
+    request:
+      deputyFirstName:
+        label: Your first name
+      deputyLastName:
+        label: Your last name
+      deputyEmail:
+        first:
+          label: Your email address
+        second:
+          label: Confirm your email address
+      deputyPostCode:
+        label: Your post code
+      clientLastName:
+        label: Client's last name
+      caseNumber:
+        label: Case number
+        help: This is 8 or 10 characters long and can be found on your court order
+      signUp:
+        label: Sign up
+      intro: |
+        You need to give your name, your email address, your postcode and your client's last name
+        and case number. This is so we can create your secure deputy account.
+      ifYouAlreadyHaveAnAccount: If you already have an account, please
+      signIn: sign in
+      accountCreated:
+        subHeading: Please check your email
+        linkSentTo: We've sent a link to
+        activationReminder: that you will need to visit to activate your deputy account.
+        expirationNote: |
+          You'll need to use this link within 1 hour, otherwise you'll have
+          to enter your registration details again.
+        checkJunk: |
+          If you have not received the email within a few minutes, please check your spam,
+          bulk, and junk email folders: it may have been mistakenly blocked by your email provider.
+      errors:
+        AccountTaken: |
+          Our records show that an account already exists for this deputyship.
+          Please sign in using your registered email address. Please call %helplineNumber%
+          if you are unable to sign in.
+        EmailError: An error occurred while setting up your account. Please try again later.
+        MatchingError: |
+          The information you've given us does not match our records.
+          Please call %helplineNumber% to make sure we have a record of your deputyship.
+        NetworkError: An error occurred while setting up your account. Please try again later.
+        PasswordSet: |
+          Our records show that you have already registered with this email address.
+          Please sign in to continue. Please call %helplineNumber% if you are unable to sign in.
   admin:
     clientDetails:
       actions:
         checklist: Checklist
-        download: Download
+        viewSummary: View report
         manage: Manage
       actionsHeader: Actions
       dueDate: Due
@@ -36,6 +84,8 @@ opg:
         closed: unsubmitted (closed court orders)
       submitted: Submitted
       type: Type
+  helplineNumber: 0300 456 0300
+  optional: (optional)
   renderable:
     bankAccount:
       sortCode: Sort code

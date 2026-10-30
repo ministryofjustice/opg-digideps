@@ -20,13 +20,14 @@ interface ReportSpec {
 interface DeputySpec {
   ref: string;
   type: string;
+  hasRegistered?: boolean;
 }
 
 interface OrderSpec {
-  reportType: string;
+  reportType?: string;
   active?: boolean;
-  reports: ReportSpec[];
-  deputies: DeputySpec[];
+  reports?: ReportSpec[];
+  deputies?: DeputySpec[];
 }
 
 export interface TestUser {
@@ -35,6 +36,13 @@ export interface TestUser {
 }
 
 export interface UserDetails {
+  email: string;
+}
+
+export interface DeputyDetails {
+  firstName: string;
+  lastName: string;
+  postCode: string;
   email: string;
 }
 
@@ -53,9 +61,17 @@ interface OrderDetails {
   reports: ReportDetails[];
 }
 
+export interface ClientDetails {
+  id: number;
+  caseNumber: string;
+  lastName: string;
+}
+
 export interface Scenario {
   users: { [userReference: string]: UserDetails };
   orders: OrderDetails[];
+  client: ClientDetails;
+  deputies: { [userReference: string]: DeputyDetails };
 }
 
 interface Fixture {

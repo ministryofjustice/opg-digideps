@@ -9,6 +9,6 @@
     <span class="govuk-visually-hidden">{{ 'gov.errorMessage.aria'|trans({}, 'twig-components') }}:</span>
     {% for message in messages %}
         {% if not loop.first %}<br>{% endif %}
-        {{  message | nl2br }}
+        {{ message | nl2br }}
     {% endfor %}
 </p>
