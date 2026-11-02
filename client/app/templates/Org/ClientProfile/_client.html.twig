@@ -21,48 +21,66 @@
 
         <div class="govuk-grid-row behat-region-client-profile-details">
             <div class="govuk-grid-column-one-half">
-                <dl>
-                    <dt>
-                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.name') | trans }}</strong>
-                    </dt>
-                    <dd class="push--bottom">
-                        {{ client.fullname | title }}
-                    </dd>
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row no-border">
+                        <dt class="govuk-summary-list__key govuk-!-padding-bottom-0">
+                            <strong class="govuk-!-font-weight-bold">{{ (page ~ '.name') | trans }}</strong>
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row no-border">
+                        <dd class="govuk-summary-list__value govuk-!-padding-top-0">
+                            {{ client.fullname | title }}
+                        </dd>
+                    </div>
 
-                    <dt>
-                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.dateOfBirth') | trans }}</strong>
-                    </dt>
-                    <dd class="push--bottom">
+                    <div class="govuk-summary-list__row no-border">
+                        <dt class="govuk-summary-list__key govuk-!-padding-bottom-0">
+                            <strong class="govuk-!-font-weight-bold">{{ (page ~ '.dateOfBirth') | trans }}</strong>
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row no-border">
+                        <dd class="govuk-summary-list__value govuk-!-padding-top-0">
                         {{ (client.dateOfBirth) ? client.dateOfBirth | date(" j F Y") ~ ' (aged ' ~ client.getAge() ~ ')' : 'not entered' | trans({}, 'common') }}
-                    </dd>
-
-                    <dt>
-                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.phone') | trans }}</strong>
-                    </dt>
-                    <dd class="push--bottom">
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row no-border">
+                        <dt class="govuk-summary-list__key govuk-!-padding-bottom-0">
+                            <strong class="govuk-!-font-weight-bold">{{ (page ~ '.phone') | trans }}</strong>
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row no-border">
+                        <dd class="govuk-summary-list__value govuk-!-padding-top-0">
                         {{ (client.phone) ? client.phone : 'not entered' | trans({}, 'common') }}
-                    </dd>
+                        </dd>
+                    </div>
 
                 </dl>
             </div>
 
             <div class="govuk-grid-column-one-half">
-                <dl>
-                    <dt>
-                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.email') | trans }}</strong>
-                    </dt>
-                    <dd class="push--bottom dont-break-out">
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row no-border">
+                        <dt class="govuk-summary-list__key govuk-!-padding-bottom-0">
+                            <strong class="govuk-!-font-weight-bold">{{ (page ~ '.email') | trans }}</strong>
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row no-border">
+                        <dd class="govuk-summary-list__value govuk-!-padding-top-0">
                         {{ (client.email) ? client.email : 'not entered' | trans({}, 'common') }}
-                    </dd>
-
-                    <dt>
-                        <strong class="govuk-!-font-weight-bold">{{ (page ~ '.address') | trans }}</strong>
-                    </dt>
-                    <dd>
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row no-border">
+                        <dt class="govuk-summary-list__key govuk-!-padding-bottom-0">
+                            <strong class="govuk-!-font-weight-bold">{{ (page ~ '.address') | trans }}</strong>
+                        </dt>
+                    </div>
+                    <div class="govuk-summary-list__row no-border">
+                        <dd class="govuk-summary-list__value govuk-!-padding-top-0">
                         {% for addressPart in client.addressNotEmptyParts %}
                             {{ addressPart }}<br/>
                         {% endfor %}
-                    </dd>
+                        </dd>
+                    </div>
                 </dl>
             </div>
         </div>

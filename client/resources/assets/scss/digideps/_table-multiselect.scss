@@ -2,5 +2,5 @@
 // TABLE MULTISELECT
 // Select all/many rows on a table in the admin
 .opg-table__row--checked {
-  background-color: lighten($focus-colour, 25%);
+  background-color: color-mix(in srgb, $govuk-focus-colour 75%, white);
 }

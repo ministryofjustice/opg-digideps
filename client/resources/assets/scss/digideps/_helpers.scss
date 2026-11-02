@@ -58,130 +58,130 @@
 // Adding spacing
 // Add margins
 .push {
-  margin: $gutter !important;
+  margin: $govuk-gutter !important;
 }
 .push--top {
-  margin-top: $gutter !important;
+  margin-top: $govuk-gutter !important;
 }
 .push--right {
-  margin-right: $gutter !important;
+  margin-right: $govuk-gutter !important;
 }
 .push--bottom {
-  margin-bottom: $gutter !important;
+  margin-bottom: $govuk-gutter !important;
 }
 .push--left {
-  margin-left: $gutter !important;
+  margin-left: $govuk-gutter !important;
 }
 .push--ends {
-  margin-top: $gutter !important;
-  margin-bottom: $gutter !important;
+  margin-top: $govuk-gutter !important;
+  margin-bottom: $govuk-gutter !important;
 }
 .push--sides {
-  margin-right: $gutter !important;
-  margin-left: $gutter !important;
+  margin-right: $govuk-gutter !important;
+  margin-left: $govuk-gutter !important;
 }
 
 .push-half {
-  margin: $gutter-half !important;
+  margin: $govuk-gutter-half !important;
 }
 .push-half--top {
-  margin-top: $gutter-half !important;
+  margin-top: $govuk-gutter-half !important;
 }
 .push-half--right {
-  margin-right: $gutter-half !important;
+  margin-right: $govuk-gutter-half !important;
 }
 .push-half--bottom {
-  margin-bottom: $gutter-half !important;
+  margin-bottom: $govuk-gutter-half !important;
 }
 .push-half--left {
-  margin-left: $gutter-half !important;
+  margin-left: $govuk-gutter-half !important;
 }
 .push-half--ends {
-  margin-top: $gutter-half !important;
-  margin-bottom: $gutter-half !important;
+  margin-top: $govuk-gutter-half !important;
+  margin-bottom: $govuk-gutter-half !important;
 }
 .push-half--sides {
-  margin-right: $gutter-half !important;
-  margin-left: $gutter-half !important;
+  margin-right: $govuk-gutter-half !important;
+  margin-left: $govuk-gutter-half !important;
 }
 
 .push-double {
-  margin: $gutter * 2 !important;
+  margin: $govuk-gutter * 2 !important;
 }
 .push-double--top {
-  margin-top: $gutter * 2 !important;
+  margin-top: $govuk-gutter * 2 !important;
 }
 .push-double--right {
-  margin-right: $gutter * 2 !important;
+  margin-right: $govuk-gutter * 2 !important;
 }
 .push-double--bottom {
-  margin-bottom: $gutter * 2 !important;
+  margin-bottom: $govuk-gutter * 2 !important;
 }
 .push-double--left {
-  margin-left: $gutter * 2 !important;
+  margin-left: $govuk-gutter * 2 !important;
 }
 .push-double--ends {
-  margin-top: $gutter * 2 !important;
-  margin-bottom: $gutter * 2 !important;
+  margin-top: $govuk-gutter * 2 !important;
+  margin-bottom: $govuk-gutter * 2 !important;
 }
 .push-double--sides {
-  margin-right: $gutter * 2 !important;
-  margin-left: $gutter * 2 !important;
+  margin-right: $govuk-gutter * 2 !important;
+  margin-left: $govuk-gutter * 2 !important;
 }
 
 // Add padding
 .soft {
-  padding: $gutter !important;
+  padding: $govuk-gutter !important;
 }
 .soft--top {
-  padding-top: $gutter !important;
+  padding-top: $govuk-gutter !important;
 }
 .soft--right {
-  padding-right: $gutter !important;
+  padding-right: $govuk-gutter !important;
 }
 .soft--bottom {
-  padding-bottom: $gutter !important;
+  padding-bottom: $govuk-gutter !important;
 }
 .soft--left {
-  padding-left: $gutter !important;
+  padding-left: $govuk-gutter !important;
 }
 .soft--ends {
-  padding-top: $gutter !important;
-  padding-bottom: $gutter !important;
+  padding-top: $govuk-gutter !important;
+  padding-bottom: $govuk-gutter !important;
 }
 .soft--sides {
-  padding-right: $gutter !important;
-  padding-left: $gutter !important;
+  padding-right: $govuk-gutter !important;
+  padding-left: $govuk-gutter !important;
 }
 
 .soft-half {
-  padding: $gutter-half !important;
+  padding: $govuk-gutter-half !important;
 }
 .soft-half--top {
-  padding-top: $gutter-half !important;
+  padding-top: $govuk-gutter-half !important;
 }
 .soft-half--right {
-  padding-right: $gutter-half !important;
+  padding-right: $govuk-gutter-half !important;
 }
 .soft-half--bottom {
-  padding-bottom: $gutter-half !important;
+  padding-bottom: $govuk-gutter-half !important;
 }
 .soft-half--left {
-  padding-left: $gutter-half !important;
+  padding-left: $govuk-gutter-half !important;
 }
 .soft-half--ends {
-  padding-top: $gutter-half !important;
-  padding-bottom: $gutter-half !important;
+  padding-top: $govuk-gutter-half !important;
+  padding-bottom: $govuk-gutter-half !important;
 }
 .soft-half--sides {
-  padding-right: $gutter-half !important;
-  padding-left: $gutter-half !important;
+  padding-right: $govuk-gutter-half !important;
+  padding-left: $govuk-gutter-half !important;
 }
 
 // Move elements (experimental)
 .move-quarter--up {
   position: relative;
-  top: -$gutter-one-quarter;
+  top: calc($govuk-gutter * -0.25);
 }
 
 // Text alignment
@@ -205,37 +205,37 @@
   width: 100%;
 }
 .width-three-quarters {
-  width: $three-quarters;
+  width: 75%;
 } // 75%
 .width-two-thirds {
-  width: $two-thirds;
+  width: 66.67%;
 } // 66.67%
 .width-half {
-  width: $half;
+  width: 50%;
 } // 50%
 .width-third {
-  width: $one-third;
+  width: 33.34%;
 } // 33.34%
 .width-quarter {
-  width: $one-quarter;
+  width: 25%;
 } // 25%
 .width-fifth {
-  width: $full-width / 5;
+  width: 20%;
 } // 20%
 .width-sixth {
-  width: $full-width / 6;
+  width: 16.67%;
 } // 16.67%
 .width-seventh {
-  width: $full-width / 7;
+  width: 14.29%;
 } // 14.29%
 .width-eighth {
-  width: $full-width / 8;
+  width: 12.5%;
 } // 12.5%
 .width-tenth {
-  width: $full-width / 10;
+  width: 10%;
 } // 10%
 .width-twentieth {
-  width: $full-width / 20;
+  width: 5%;
 } // 5%
 
 // scss-lint:enable SpaceBeforeBrace, SpaceAfterPropertyColon
@@ -266,11 +266,11 @@
 
 // Simple 1px border
 .border-bottom {
-  border-bottom: 1px solid $border-colour;
+  border-bottom: 1px solid $govuk-border-colour;
 }
 
 .border-top {
-  border-top: 1px solid $border-colour;
+  border-top: 1px solid $govuk-border-colour;
 }
 
 // Negating borders

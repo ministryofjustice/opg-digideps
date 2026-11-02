@@ -26,43 +26,39 @@
                 <p class="govuk-body">{{ 'intro.para02' |trans }}</p>
             </div>
 
-            <div class="govuk-grid-row push--top">
-                <div class="column-half">
+            <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
                     <h2 class="govuk-heading-m flush--top">{{ 'iwanttocreate' | trans }}</h2>
-                </div>
-                <div class="column-half">
-
-                    <p class="govuk-body">
-                        <a id="creat-account-button" class="button" href="{{ path('register') }}">{{ 'createaccount' | trans }}</a>
-                    </p>
-
-                    <details class="govuk-details" data-module="govuk-details">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">{{ 'whatyouneed' |trans }}</span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <ul class="govuk-list govuk-list--bullet">
-                                <li>{{ 'whatyouneedListItem1' | trans }}</li>
-                                <li>{{ 'whatyouneedListItem2' | trans }}</li>
-                                <li>{{ 'whatyouneedListItem3' | trans }}</li>
-                            </ul>
-                        </div>
-                    </details>
-                </div>
             </div>
 
-            <div class="govuk-grid-row push-half--top">
-                <div class="column-half">
-                    <h2 class="govuk-heading-m flush--top">{{ 'ialready' |trans }}</h2>
-                </div>
-                <div class="column-half">
-                    <p class="govuk-body">
-                        <a href="{{ path('login') }}" class="button">{{ 'signin' |trans }}</a>
-                    </p>
-                </div>
+            <div class="govuk-grid-column-one-half">
+                <p class="govuk-body govuk-!-margin-0">
+                    <a id="creat-account-button" class="govuk-button govuk-!-margin-bottom-4" href="{{ path('register') }}">{{ 'createaccount' | trans }}</a>
+                </p>
+
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">{{ 'whatyouneed' |trans }}</span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>{{ 'whatyouneedListItem1' | trans }}</li>
+                            <li>{{ 'whatyouneedListItem2' | trans }}</li>
+                            <li>{{ 'whatyouneedListItem3' | trans }}</li>
+                        </ul>
+                    </div>
+                </details>
             </div>
 
-            <div class="text push--top">
+            <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                <h2 class="govuk-heading-m flush--top">{{ 'ialready' |trans }}</h2>
+            </div>
+            <div class="govuk-grid-column-one-half">
+                <p class="govuk-body">
+                    <a href="{{ path('login') }}" class="govuk-button">{{ 'signin' |trans }}</a>
+                </p>
+            </div>
+
+            <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
 
                 <details class="govuk-details" data-module="govuk-details">
                     <summary class="govuk-details__summary">
