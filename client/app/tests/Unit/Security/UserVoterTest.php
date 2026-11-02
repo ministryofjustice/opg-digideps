@@ -9,15 +9,14 @@ use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Security\UserVoter;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 // WARNING: phpstorm incorrectly marks variables in this file as "unused local"; they are, in fact, used
 class UserVoterTest extends TestCase
 {
-    /**
-     * @dataProvider deleteUserProvider
-     */
+    #[DataProvider('deleteUserProvider')]
     public function testDetermineDeletePermission(User $deletor, User $deletee, int $expectedPermission): void
     {
         $sut = new UserVoter();
@@ -216,9 +215,7 @@ class UserVoterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider addEditUserProvider
-     */
+    #[DataProvider('addEditUserProvider')]
     public function testDetermineAddEditPermission(User $actor, User $subject, int $expectedPermission): void
     {
         $sut = new UserVoter();
@@ -429,9 +426,7 @@ class UserVoterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider canAddUserProvider
-     */
+    #[DataProvider('canAddUserProvider')]
     public function testDetermineCanAddPermission(User $actor, int $expectedPermission): void
     {
         $sut = new UserVoter();

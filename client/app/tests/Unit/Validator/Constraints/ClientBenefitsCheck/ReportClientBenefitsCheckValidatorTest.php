@@ -9,6 +9,7 @@ use OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf;
 use OPG\Digideps\Frontend\TestHelpers\ReportHelpers;
 use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
 use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheckValidator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -41,9 +42,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
         $this->sut->initialize($this->reportContext);
     }
 
-    /**
-     * @dataProvider whenLastCheckedEntitlementValueProvider
-     */
+    #[DataProvider('whenLastCheckedEntitlementValueProvider')]
     public function testValidatorAddsConstraintIfPropertyIsWhenLastCheckedEntitlement(string|int|null $value): void
     {
         $this->setContextPropertyName('whenLastCheckedEntitlement')
@@ -96,9 +95,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dateLastCheckedEntitlementValueProvider
-     */
+    #[DataProvider('dateLastCheckedEntitlementValueProvider')]
     public function testValidatorAddsConstraintIfPropertyIsDateLastCheckedEntitlement(?\DateTime $value, string $transId): void
     {
         $this->setContextPropertyName('dateLastCheckedEntitlement')
@@ -130,9 +127,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
             ->invokeTest(null);
     }
 
-    /**
-     * @dataProvider neverCheckedExplanationValueProvider
-     */
+    #[DataProvider('neverCheckedExplanationValueProvider')]
     public function testValidatorAddsConstraintIfPropertyIsNeverCheckedExplanation(?string $value, string $transId): void
     {
         $this->setContextPropertyName('neverCheckedExplanation')
@@ -149,9 +144,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dontKnowMoneyExplanationValueProvider
-     */
+    #[DataProvider('dontKnowMoneyExplanationValueProvider')]
     public function testValidatorAddsConstraintIfPropertyIsDontKnowMoneyExplanation(?string $value, string $transId): void
     {
         $this->setContextPropertyName('dontKnowMoneyExplanation')

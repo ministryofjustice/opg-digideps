@@ -7,15 +7,16 @@ namespace Tests\OPG\Digideps\Frontend\Unit\Entity\Report;
 use OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck;
 use OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf;
 use OPG\Digideps\Frontend\TestHelpers\ReportHelpers;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 
 class ClientBenefitsCheckTest extends TestCase
 {
     /**
-     * @dataProvider invalidDataProvider
      * @param array<MoneyReceivedOnClientsBehalf>|null $moneyTypes
      */
+    #[DataProvider('invalidDataProvider')]
     public function testValidation(
         ?string $whenLastChecked,
         ?\DateTime $dateLastChecked,

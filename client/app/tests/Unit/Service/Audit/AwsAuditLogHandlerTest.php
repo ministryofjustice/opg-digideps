@@ -10,6 +10,7 @@ use Monolog\Level;
 use Monolog\Logger;
 use Monolog\LogRecord;
 use OPG\Digideps\Frontend\Service\Audit\AwsAuditLogHandler;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -22,9 +23,8 @@ class AwsAuditLogHandlerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->cloudWatchClient = $this->getMockBuilder(CloudWatchLogsClient::class)
+        $this->cloudWatchClient = $this->getMockBuilder(MockCloudWatchLogsClient::class)
             ->disableOriginalConstructor()
-            ->addMethods(['putLogEvents', 'createLogStream', 'describeLogStreams', 'getLogEvents'])
             ->getMock();
 
         $this->sut = new AwsAuditLogHandler($this->cloudWatchClient, self::LOG_GROUP_NAME);
@@ -90,9 +90,7 @@ class AwsAuditLogHandlerTest extends TestCase
         $this->sut->handle($this->getLogMessageInput());
     }
 
-    /**
-     * @dataProvider awsResultProvider
-     */
+    #[DataProvider('awsResultProvider')]
     public function testGetLogEventsByLogStream(
         Result $result,
         string $streamName,
@@ -290,7 +288,7 @@ class AwsAuditLogHandlerTest extends TestCase
         $this->cloudWatchClient->expects($invocationMatcher)
             ->method('putLogEvents')
             ->willReturnCallback(function (array $tokens) use ($expectedTokens, $invocationMatcher) {
-                $invocation = $invocationMatcher->getInvocationCount();
+                $invocation = $invocationMatcher->numberOfInvocations();
 
                 self::assertEquals($expectedTokens[$invocation], $tokens);
 

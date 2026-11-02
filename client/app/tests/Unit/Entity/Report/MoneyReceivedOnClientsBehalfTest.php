@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Frontend\Unit\Entity\Report;
 
 use OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 
 class MoneyReceivedOnClientsBehalfTest extends TestCase
 {
-    /**
-     * @dataProvider invalidDataProvider
-     */
+    #[DataProvider('invalidDataProvider')]
     public function testValidation(?string $moneyType, ?int $amount, bool $amountDontKnow, ?string $whoReceived, int $expectedViolationCount)
     {
         $sut = new MoneyReceivedOnClientsBehalf()
