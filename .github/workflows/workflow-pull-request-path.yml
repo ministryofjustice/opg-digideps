@@ -38,6 +38,7 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           WORKFLOW_TYPE: ${{ github.event_name }}
         run: |
+          date -u -d '3 hours ago' '+%Y-%m-%d %H:%M:%S'
           branch_ref="${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}"
           BRANCH="$(echo "$branch_ref" | awk -F'_' '{print $1}' | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]' | cut -c1-8)"
           export BRANCH

@@ -41,9 +41,9 @@ class SnapshotManagement:
         self.backup_account = environments["backup"]
         self.role = "digideps-ci-boundary" if os.getenv("CI") else "breakglass"
         self.cross_account_role = (
-            "cross-acc-db-restore.digideps-development"
+            "cross-account-db-restore-digideps-preproduction"
             if os.getenv("CI")
-            else "cross-acc-db-restore.digideps-development"
+            else "breakglass"
         )
         self.role_to_assume = str(f"arn:aws:iam::{self.account}:role/{self.role}")
         self.cross_account_role_to_assume = str(
@@ -286,7 +286,7 @@ class SnapshotManagement:
         self.recovery_point_arn = latest_arn
 
     def restore(self):
-        # ----- Setup For Restore -----
+        # ===== Setup For Restore =====
         if self.account is None:
             print("No valid account set! Exiting...")
             sys.exit(1)
@@ -329,27 +329,28 @@ class SnapshotManagement:
 
         self.cleanup_existing_temp_resources()
 
-        # ----- Actual Restore -----
-        # if self.AWSBackup:
-        #     self.restore_from_recovery_point()
-        #
-        # else:
-        #     if self.do_point_in_time_restore:
-        #         if self.SnapshotIdentifier is not None:
-        #             if self.restore_from_remote:
-        #                 self.create_cross_account_client_session()
-        #                 self.KmsKeyId = self.get_kms_key(key_alias_remote)
-        #                 self.share_snapshot_with_digideps()
-        #                 self.copy_snapshot_to_manual_digideps()
-        #             self.restore_from_snapshot()
-        #         else:
-        #             print(
-        #                 "No snapshot specified. Either specify snapshot or do point in time recovery"
-        #             )
-        #     else:
-        #         self.restore_to_point_in_time()
-        #
-        # print("Process has finished. Please go and check your databases")
+        # ===== Actual Restore =====
+        # - Use AWS Backup Restore
+        if self.AWSBackup:
+            self.restore_from_recovery_point()
+        # - Use Standard Restore
+        else:
+            if self.do_point_in_time_restore:
+                self.restore_to_point_in_time()
+            else:
+                if self.SnapshotIdentifier is not None:
+                    if self.restore_from_remote:
+                        self.create_cross_account_client_session()
+                        self.KmsKeyId = self.get_kms_key(key_alias_remote)
+                        self.share_snapshot_with_digideps()
+                        self.copy_snapshot_to_manual_digideps()
+                    self.restore_from_snapshot()
+                else:
+                    print(
+                        "No snapshot specified. Either specify snapshot or do point in time recovery"
+                    )
+
+        print("Process has finished. Please go and check your databases")
 
     def drop_protection(self):
         response = self.client.modify_db_cluster(
