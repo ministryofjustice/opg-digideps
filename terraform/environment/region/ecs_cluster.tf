@@ -208,7 +208,10 @@ locals {
     { name = "PA_PRO_REPORT_CSV_FILENAME", value = local.pa_pro_report_csv_filename },
     { name = "LAY_REPORT_CSV_FILENAME", value = local.lay_report_csv_file },
     { name = "WORKSPACE", value = local.environment },
-    { name = "UPDATE_ADDRESS", value = "laydeputysupport@publicguardian.gov.uk" },
+    { name = "UPDATE_ADDRESS_PFA_LAY", value = "laydeputysupport@publicguardian.gov.uk" },
+    { name = "UPDATE_ADDRESS_PFA_PRO", value = "opg.pro@publicguardian.gov.uk" },
+    { name = "UPDATE_ADDRESS_PFA_PA", value = "OPG.publicauthorityteam@publicguardian.gov.uk" },
+    { name = "UPDATE_ADDRESS_HW", value = "HealthandWelfareSupervision@publicguardian.gov.uk" },
     { name = "FIXTURES_ENABLED", value = tostring(var.account.environment.fixtures_enabled) }
   ]
 }

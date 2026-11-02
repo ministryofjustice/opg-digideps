@@ -99,7 +99,7 @@ class Report implements StartEndDateComparableInterface
     public const string NO_MONEY_EXISTS = 'No';
 
     #[JMS\Type('integer')]
-    #[JMS\Groups(['visits-care', 'report-id', 'report'])]
+    #[JMS\Groups(['report-id', 'report'])]
     private int $id;
 
     /**
@@ -157,6 +157,7 @@ class Report implements StartEndDateComparableInterface
      * @var User
      */
     #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
+    #[JMS\Groups(['report-submitted-by'])]
     private $submittedBy;
 
     #[JMS\Type('OPG\Digideps\Frontend\Entity\Deputy')]

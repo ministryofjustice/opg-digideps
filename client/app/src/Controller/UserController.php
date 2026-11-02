@@ -309,9 +309,9 @@ class UserController extends AbstractController
             } catch (\Throwable $e) {
                 $failureData = [];
 
-                if (method_exists($e, 'getData')) {
+                if ($e instanceof RestClientException) {
                     $data = $e->getData();
-                    if (is_array($data) && isset($data['message'])) {
+                    if (isset($data['message'])) {
                         /** @var array $failureData */
                         $failureData = json_decode((string) $data['message'], true) ?? [];
                     }

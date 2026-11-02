@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\Mailer;
 
 use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\CourtOrder;
+use OPG\Digideps\Frontend\Entity\Deputy;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Service\IntlService;
+use OPG\Digideps\Frontend\Service\Mailer\MailerEmailAddress;
 use OPG\Digideps\Frontend\Service\Mailer\MailFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +29,7 @@ class MailFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        $this->client = $this->generateClient();
+        $this->client = self::generateClient();
 
         $this->layDeputy = $this->generateUser();
         $this->layDeputy->setClients([$this->client]);
@@ -44,7 +47,7 @@ class MailFactoryTest extends TestCase
         $this->router = $this->createMock(RouterInterface::class);
     }
 
-    private function generateClient(): Client
+    private static function generateClient(): Client
     {
         return new Client()
             ->setFirstname('Joanne')
@@ -99,7 +102,10 @@ class MailFactoryTest extends TestCase
                 'from_email' => 'digideps+from@digital.justice.gov.uk',
                 'report_submit_to_address' => 'digideps+noop@digital.justice.gov.uk',
                 'feedback_send_to_address' => 'digideps+noop@digital.justice.gov.uk',
-                'update_send_to_address' => 'updateAddress@digital.justice.gov.uk',
+                MailerEmailAddress::UPDATE_ADDRESS_PFA_LAY->value => 'layUpdate@digital.justice.gov.uk',
+                MailerEmailAddress::UPDATE_ADDRESS_HW->value => 'hwUpdate@digital.justice.gov.uk',
+                MailerEmailAddress::UPDATE_ADDRESS_PFA_PRO->value => 'proUpdate@digital.justice.gov.uk',
+                MailerEmailAddress::UPDATE_ADDRESS_PFA_PA->value => 'paUpdate@digital.justice.gov.uk',
             ],
             [
                 'front' => 'https://front.base.url',
@@ -366,20 +372,18 @@ class MailFactoryTest extends TestCase
         self::assertSame($expectedTemplateParams, $email->getParameters());
     }
 
-    public function testCreateUpdateClientDetailsEmail(): void
+    public function testCreateUpdateClientDetailsEmailLayPfa(): void
     {
         $this->translator->expects(self::exactly(2))->method('trans')->willReturnMap([
             ['client.fromName', [], 'email', null, 'OPG'],
             ['client.subject', [], 'email', null, 'A subject'],
         ]);
 
-        $client = $this->generateClient();
-
-        $email = $this->generateSUT()->createUpdateClientDetailsEmail($client);
+        $email = $this->generateSUT()->createUpdateClientDetailsEmail(self::generateClient());
 
         $this->assertStaticEmailProperties($email);
 
-        self::assertSame('updateAddress@digital.justice.gov.uk', $email->getToEmail());
+        self::assertSame('layUpdate@digital.justice.gov.uk', $email->getToEmail());
         self::assertSame(MailFactory::CLIENT_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = [
@@ -396,6 +400,59 @@ class MailFactoryTest extends TestCase
         self::assertSame($expectedTemplateParams, $email->getParameters());
     }
 
+    public function testCreateUpdateClientDetailsEmailProPfa(): void
+    {
+        $client = self::generateClient();
+
+        $deputy = $this->createStub(Deputy::class);
+        $deputy->deputyType = 'PRO';
+
+        $courtOrder = $this->createStub(CourtOrder::class);
+        $courtOrder->method('getOrderType')->willReturn('pfa');
+        $courtOrder->method('isActive')->willReturn(true);
+        $courtOrder->method('getActiveDeputies')->willReturn([$deputy]);
+
+        $client->courtOrders = [$courtOrder];
+
+        $email = $this->generateSUT()->createUpdateClientDetailsEmail($client);
+
+        self::assertSame('proUpdate@digital.justice.gov.uk', $email->getToEmail());
+    }
+
+    public function testCreateUpdateClientDetailsEmailPaPfa(): void
+    {
+        $client = self::generateClient();
+
+        $deputy = $this->createStub(Deputy::class);
+        $deputy->deputyType = 'PA';
+
+        $courtOrder = $this->createStub(CourtOrder::class);
+        $courtOrder->method('getOrderType')->willReturn('pfa');
+        $courtOrder->method('isActive')->willReturn(true);
+        $courtOrder->method('getActiveDeputies')->willReturn([$deputy]);
+
+        $client->courtOrders = [$courtOrder];
+
+        $email = $this->generateSUT()->createUpdateClientDetailsEmail($client);
+
+        self::assertSame('paUpdate@digital.justice.gov.uk', $email->getToEmail());
+    }
+
+    public function testCreateUpdateClientDetailsEmailHw(): void
+    {
+        $client = self::generateClient();
+
+        $courtOrder = $this->createStub(CourtOrder::class);
+        $courtOrder->method('getOrderType')->willReturn('hw');
+        $courtOrder->method('isActive')->willReturn(true);
+
+        $client->courtOrders = [$courtOrder];
+
+        $email = $this->generateSUT()->createUpdateClientDetailsEmail($client);
+
+        self::assertSame('hwUpdate@digital.justice.gov.uk', $email->getToEmail());
+    }
+
     public function testCreateUpdateClientDetailsEmailCountryNotSet()
     {
         $this->translator->expects(self::exactly(2))->method('trans')->willReturnMap([
@@ -409,7 +466,7 @@ class MailFactoryTest extends TestCase
 
         $this->assertStaticEmailProperties($email);
 
-        self::assertSame('updateAddress@digital.justice.gov.uk', $email->getToEmail());
+        self::assertSame('layUpdate@digital.justice.gov.uk', $email->getToEmail());
         self::assertSame(MailFactory::CLIENT_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = [
@@ -437,7 +494,7 @@ class MailFactoryTest extends TestCase
 
         $this->assertStaticEmailProperties($email);
 
-        self::assertSame('updateAddress@digital.justice.gov.uk', $email->getToEmail());
+        self::assertSame('layUpdate@digital.justice.gov.uk', $email->getToEmail());
         self::assertSame(MailFactory::DEPUTY_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = [
@@ -467,7 +524,7 @@ class MailFactoryTest extends TestCase
 
         $this->assertStaticEmailProperties($email);
 
-        self::assertSame('updateAddress@digital.justice.gov.uk', $email->getToEmail());
+        self::assertSame('layUpdate@digital.justice.gov.uk', $email->getToEmail());
         self::assertSame(MailFactory::DEPUTY_DETAILS_CHANGE_TEMPLATE_ID, $email->getTemplate());
 
         $expectedTemplateParams = [

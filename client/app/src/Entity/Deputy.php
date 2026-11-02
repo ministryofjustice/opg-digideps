@@ -108,6 +108,9 @@ class Deputy implements DeputyInterface
     #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
     public ?User $user = null;
 
+    #[JMS\Type('string')]
+    public ?string $deputyType = null;
+
     /**
      * @return int
      */

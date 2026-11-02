@@ -47,7 +47,7 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/actions/terraform-version@5fba2afe28b31b8c5eaf1fb4235e2d32aea24a1e # v4.8.3
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@83663a5235330cc2193319b25d559885610c6bd5 # v4.8.4
         with:
           terraform_directory: terraform/environment
 
@@ -57,7 +57,7 @@ jobs:
           terraform_wrapper: false
 
       - id: deploy-key
-        uses: "ministryofjustice/opg-github-actions/actions/github-deploy-key@77bb12e7fec3bcee9a6a35cb21361195e027a12a" # v4.9.0
+        uses: "ministryofjustice/opg-github-actions/actions/github-deploy-key@939ca6ddfc2bafefa48b0730ea0268bd75a25876" # v4.9.1
         with:
           deploy_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
 

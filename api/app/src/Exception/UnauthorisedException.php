@@ -2,19 +2,10 @@
 
 namespace OPG\Digideps\Backend\Exception;
 
-class UnauthorisedException extends \RuntimeException implements HasDataInterface
+final class UnauthorisedException extends \RuntimeException
 {
-    protected $code = 403;
-
-    protected mixed $data = null;
-
-    public function getData(): mixed
+    public function __construct(string $message = "", int $code = 403, ?\Throwable $previous = null, public ?float $data = null)
     {
-        return $this->data;
-    }
-
-    public function setData($data): void
-    {
-        $this->data = $data;
+        parent::__construct($message, $code, $previous);
     }
 }

@@ -13,78 +13,6 @@ parameters:
 			path: api/app/config/bootstrap.php
 
 		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 3
-			path: api/app/src/Cleanup/Model/Client.php
-
-		-
-			message: '#^Parameter \#1 \$datetime of class DateTimeImmutable constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/src/Cleanup/Model/Client.php
-
-		-
-			message: '#^Parameter \#3 \$orderUid of class OPG\\Digideps\\Backend\\Cleanup\\Model\\Order constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Cleanup/Model/Client.php
-
-		-
-			message: '#^Parameter \#5 \$submitted of class OPG\\Digideps\\Backend\\Cleanup\\Model\\Report constructor expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Cleanup/Model/Client.php
-
-		-
-			message: '#^Cannot access offset ''case_number'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/Cleanup/Model/Query.php
-
-		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: api/app/src/Cleanup/Model/Query.php
-
-		-
-			message: '#^Parameter \#2 \$caseNumber of class OPG\\Digideps\\Backend\\Cleanup\\Model\\Client constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Cleanup/Model/Query.php
-
-		-
-			message: '#^Parameter \#3 \$rows of class OPG\\Digideps\\Backend\\Cleanup\\Model\\Client constructor expects array\<array\<string, mixed\>\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Cleanup/Model/Query.php
-
-		-
-			message: '#^Parameter \#4 \$only of method OPG\\Digideps\\Backend\\Cleanup\\Model\\Query\:\:fetch\(\) expects array\<int\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Cleanup/Model/Query.php
-
-		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 2
-			path: api/app/src/Cleanup/ReportCleaner.php
-
-		-
-			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array\<string, mixed\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/src/Cleanup/ReportCleaner.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$clientIds of method OPG\\Digideps\\Backend\\Cleanup\\Model\\Query\:\:run\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Cleanup/ReportCleaner.php
-
-		-
 			message: '#^Binary operation "\." between ''\<comment\>Comparison…'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -145,12 +73,6 @@ parameters:
 			path: api/app/src/Command/ApiComparison.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\ApiComparison\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Command/ApiComparison.php
-
-		-
 			message: '#^Binary operation "\+\=" between mixed and int\<0, max\> results in an error\.$#'
 			identifier: assignOp.invalid
 			count: 1
@@ -159,6 +81,12 @@ parameters:
 		-
 			message: '#^Binary operation "\+\=" between mixed and mixed results in an error\.$#'
 			identifier: assignOp.invalid
+			count: 1
+			path: api/app/src/Command/ProcessLayCSVCommand.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3Client\:\:getObject\(\) expects array\{Bucket\?\: string, IfMatch\?\: string, IfModifiedSince\?\: DateTimeInterface\|int\|string, IfNoneMatch\?\: string, IfUnmodifiedSince\?\: DateTimeInterface\|int\|string, Key\?\: string, Range\?\: string, ResponseCacheControl\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: array\|bool\|float\|int\|string\|UnitEnum\|null, Key\: mixed, SaveAs\: non\-falsy\-string\} given\.$#'
+			identifier: argument.type
 			count: 1
 			path: api/app/src/Command/ProcessLayCSVCommand.php
 
@@ -235,6 +163,12 @@ parameters:
 			path: api/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3Client\:\:getObject\(\) expects array\{Bucket\?\: string, IfMatch\?\: string, IfModifiedSince\?\: DateTimeInterface\|int\|string, IfNoneMatch\?\: string, IfUnmodifiedSince\?\: DateTimeInterface\|int\|string, Key\?\: string, Range\?\: string, ResponseCacheControl\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: array\|bool\|float\|int\|string\|UnitEnum\|null, Key\: mixed, SaveAs\: non\-falsy\-string\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Command/ProcessOrgCSVCommand.php
+
+		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -305,12 +239,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: api/app/src/Controller/AccountController.php
-
-		-
-			message: '#^Parameter \#1 \$content of class Symfony\\Component\\HttpFoundation\\Response constructor expects string\|null, string\|false given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/src/Controller/Admin/CleanupController.php
 
 		-
 			message: '#^Cannot access property \$headers on mixed\.$#'
@@ -2323,34 +2251,10 @@ parameters:
 			path: api/app/src/EventSubscriber/ClientArchivedSubscriber.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Exception\\BusinessRulesException\:\:setData\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Exception/BusinessRulesException.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Exception\\BusinessRulesException\:\:\$code has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Exception/BusinessRulesException.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Exception\\InvalidRegistrationTokenException\:\:\$code has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: api/app/src/Exception/InvalidRegistrationTokenException.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Exception\\UnauthorisedException\:\:setData\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Exception/UnauthorisedException.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Exception\\UnauthorisedException\:\:\$code has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Exception/UnauthorisedException.php
 
 		-
 			message: '#^Property OPG\\Digideps\\Backend\\Exception\\UserWrongCredentialsException\:\:\$code has no type specified\.$#'
@@ -3445,12 +3349,6 @@ parameters:
 			path: api/app/src/Security/RedisUserProvider.php
 
 		-
-			message: '#^Binary operation "\-" between mixed and int\<1, max\> results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: api/app/src/Security/RegistrationTokenAuthenticator.php
-
-		-
 			message: '#^Binary operation "\." between ''token'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -3501,6 +3399,12 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Service\\Audit\\AwsAuditLogHandler\:\:initialize\(\) should return string\|null but returns mixed\.$#'
 			identifier: return.type
+			count: 1
+			path: api/app/src/Service/Audit/AwsAuditLogHandler.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\CloudWatchLogs\\CloudWatchLogsClient\:\:putLogEvents\(\) expects array\{logGroupName\?\: string, logStreamName\?\: string, logEvents\?\: list\<array\{timestamp\?\: int, message\?\: string, \.\.\.\}\>, sequenceToken\?\: string, entity\?\: array\{keyAttributes\?\: array\<string, string\>, attributes\?\: array\<string, string\>, \.\.\.\}, \.\.\.\}, array\{logGroupName\: string, logStreamName\: string, logEvents\: array, sequenceToken\?\: non\-falsy\-string\} given\.$#'
+			identifier: argument.type
 			count: 1
 			path: api/app/src/Service/Audit/AwsAuditLogHandler.php
 
@@ -4197,6 +4101,36 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Service\\File\\Storage\\S3Storage\:\:store\(\) has parameter \$key with no type specified\.$#'
 			identifier: missingType.parameter
+			count: 1
+			path: api/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:deleteObject\(\) expects array\{Bucket\?\: string, Key\?\: string, MFA\?\: string, VersionId\?\: string, RequestPayer\?\: ''requester'', BypassGovernanceRetention\?\: bool, ExpectedBucketOwner\?\: string, IfMatch\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: string, Key\: mixed\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:deleteObjects\(\) expects array\{Bucket\?\: string, Delete\?\: array\{Objects\?\: list\<array\>, Quiet\?\: bool, \.\.\.\}, MFA\?\: string, RequestPayer\?\: ''requester'', BypassGovernanceRetention\?\: bool, ExpectedBucketOwner\?\: string, ChecksumAlgorithm\?\: ''CRC32''\|''CRC32C''\|''CRC64NVME''\|''MD5''\|''SHA1''\|''SHA256''\|''SHA512''\|''XXHASH128''\|''XXHASH3''\|''XXHASH64'', \.\.\.\}, array\{Bucket\: string, Delete\: array\{Objects\: non\-empty\-array\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:getObjectTagging\(\) expects array\{Bucket\?\: string, Key\?\: string, VersionId\?\: string, ExpectedBucketOwner\?\: string, RequestPayer\?\: ''requester'', \.\.\.\}, array\{Bucket\: string, Key\: mixed\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:putObject\(\) expects array\{ACL\?\: ''authenticated\-read''\|''aws\-exec\-read''\|''bucket\-owner\-full…''\|''bucket\-owner\-read''\|''private''\|''public\-read''\|''public\-read\-write'', Body\?\: Psr\\Http\\Message\\StreamInterface\|resource\|string, Bucket\?\: string, CacheControl\?\: string, ContentDisposition\?\: string, ContentEncoding\?\: string, ContentLanguage\?\: string, ContentLength\?\: int, \.\.\., \.\.\.\}, array\{Bucket\: string, Key\: mixed, Body\: mixed, ServerSideEncryption\: ''AES256'', Metadata\: array\{\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:putObjectTagging\(\) expects array\{Bucket\?\: string, Key\?\: string, VersionId\?\: string, ContentMD5\?\: string, ChecksumAlgorithm\?\: ''CRC32''\|''CRC32C''\|''CRC64NVME''\|''MD5''\|''SHA1''\|''SHA256''\|''SHA512''\|''XXHASH128''\|''XXHASH3''\|''XXHASH64'', Tagging\?\: array\{TagSet\?\: list\<array\>, \.\.\.\}, ExpectedBucketOwner\?\: string, RequestPayer\?\: ''requester'', \.\.\.\}, array\{Bucket\: string, Key\: mixed, Tagging\: array\{TagSet\: array\}\} given\.$#'
+			identifier: argument.type
 			count: 1
 			path: api/app/src/Service/File/Storage/S3Storage.php
 
@@ -11529,6 +11463,12 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:setPassword\(\) has parameter \$user with no type specified\.$#'
 			identifier: missingType.parameter
+			count: 1
+			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:putObject\(\) expects array\{ACL\?\: ''authenticated\-read''\|''aws\-exec\-read''\|''bucket\-owner\-full…''\|''bucket\-owner\-read''\|''private''\|''public\-read''\|''public\-read\-write'', Body\?\: Psr\\Http\\Message\\StreamInterface\|resource\|string, Bucket\?\: string, CacheControl\?\: string, ContentDisposition\?\: string, ContentEncoding\?\: string, ContentLanguage\?\: string, ContentLength\?\: int, \.\.\., \.\.\.\}, array\{Bucket\: string, Key\: string, Body\: string\|false, ServerSideEncryption\: ''AES256'', Metadata\: array\{\}\} given\.$#'
+			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
 
@@ -20887,6 +20827,12 @@ parameters:
 			path: client/app/src/Command/ProcessLayCSVCommand.php
 
 		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3Client\:\:getObject\(\) expects array\{Bucket\?\: string, IfMatch\?\: string, IfModifiedSince\?\: DateTimeInterface\|int\|string, IfNoneMatch\?\: string, IfUnmodifiedSince\?\: DateTimeInterface\|int\|string, Key\?\: string, Range\?\: string, ResponseCacheControl\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: array\|bool\|float\|int\|string\|UnitEnum\|null, Key\: array\|bool\|float\|int\|string\|UnitEnum\|null, SaveAs\: non\-falsy\-string\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Command/ProcessLayCSVCommand.php
+
+		-
 			message: '#^Parameter \#1 \$array of function array_chunk expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -20991,6 +20937,12 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Command\\ProcessOrgCSVCommand\:\:csvToArray\(\) should return array but returns mixed\.$#'
 			identifier: return.type
+			count: 1
+			path: client/app/src/Command/ProcessOrgCSVCommand.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3Client\:\:getObject\(\) expects array\{Bucket\?\: string, IfMatch\?\: string, IfModifiedSince\?\: DateTimeInterface\|int\|string, IfNoneMatch\?\: string, IfUnmodifiedSince\?\: DateTimeInterface\|int\|string, Key\?\: string, Range\?\: string, ResponseCacheControl\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: array\|bool\|float\|int\|string\|UnitEnum\|null, Key\: array\|bool\|float\|int\|string\|UnitEnum\|null, SaveAs\: non\-falsy\-string\} given\.$#'
+			identifier: argument.type
 			count: 1
 			path: client/app/src/Command/ProcessOrgCSVCommand.php
 
@@ -21205,54 +21157,6 @@ parameters:
 			path: client/app/src/Controller/Admin/AjaxController.php
 
 		-
-			message: '#^Cannot access offset ''count'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
-
-		-
-			message: '#^Cannot access offset ''message'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
-
-		-
-			message: '#^Cannot access offset ''ok'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
-
-		-
-			message: '#^Parameter \#1 \$content of class Symfony\\Component\\HttpFoundation\\Response constructor expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
-
-		-
-			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
-
-		-
-			message: '#^Parameter \#1 \$string of function strlen expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
-
-		-
-			message: '#^Part \$result\[''count''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
-
-		-
-			message: '#^Part \$result\[''message''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: client/app/src/Controller/Admin/Cleanup/CleanupController.php
-
-		-
 			message: '#^Cannot call method getArchivedAt\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 3
@@ -21289,21 +21193,9 @@ parameters:
 			path: client/app/src/Controller/Admin/Client/ReportController.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/Admin/Client/ReportController.php
-
-		-
 			message: '#^Cannot call method setData\(\) on Symfony\\Component\\Form\\FormInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 3
-			path: client/app/src/Controller/Admin/Client/ReportController.php
-
-		-
-			message: '#^Cannot call method setIsSubmitted\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: client/app/src/Controller/Admin/Client/ReportController.php
 
 		-
@@ -21332,18 +21224,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|GMP\|int\|resource\|SimpleXMLElement\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/Client/ReportController.php
-
-		-
-			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:post\(\) expects array\|object\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/Client/ReportController.php
-
-		-
-			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:put\(\) expects array\|object\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/src/Controller/Admin/Client/ReportController.php
@@ -21568,6 +21448,12 @@ parameters:
 			message: '#^PHPDoc tag @var with type array is not subtype of native type array\{''user'', ''user\-clients'', ''client'', ''client\-reports''\}\|array\{''user'', ''user\-organisations''\}\.$#'
 			identifier: varTag.nativeType
 			count: 1
+			path: client/app/src/Controller/Admin/IndexController.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3Client\:\:getObject\(\) expects array\{Bucket\?\: string, IfMatch\?\: string, IfModifiedSince\?\: DateTimeInterface\|int\|string, IfNoneMatch\?\: string, IfUnmodifiedSince\?\: DateTimeInterface\|int\|string, Key\?\: string, Range\?\: string, ResponseCacheControl\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: array\|bool\|float\|int\|string\|UnitEnum\|null, Key\: array\|bool\|float\|int\|string\|UnitEnum\|null\} given\.$#'
+			identifier: argument.type
+			count: 2
 			path: client/app/src/Controller/Admin/IndexController.php
 
 		-
@@ -25237,12 +25123,6 @@ parameters:
 			path: client/app/src/Exception/RestClientException.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Exception\\RestClientException\:\:getData\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Exception/RestClientException.php
-
-		-
 			message: '#^Parameter \#1 \$statusCode of method Symfony\\Component\\HttpKernel\\Exception\\HttpException\:\:__construct\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -25251,12 +25131,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$message of method Symfony\\Component\\HttpKernel\\Exception\\HttpException\:\:__construct\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: client/app/src/Exception/RestClientException.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Exception\\RestClientException\:\:\$data has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: client/app/src/Exception/RestClientException.php
 
@@ -26563,6 +26437,12 @@ parameters:
 			path: client/app/src/Service/Audit/AwsAuditLogHandler.php
 
 		-
+			message: '#^Parameter \#1 \$args of method Aws\\CloudWatchLogs\\CloudWatchLogsClient\:\:putLogEvents\(\) expects array\{logGroupName\?\: string, logStreamName\?\: string, logEvents\?\: list\<array\{timestamp\?\: int, message\?\: string, \.\.\.\}\>, sequenceToken\?\: string, entity\?\: array\{keyAttributes\?\: array\<string, string\>, attributes\?\: array\<string, string\>, \.\.\.\}, \.\.\.\}, array\{logGroupName\: string, logStreamName\: string, logEvents\: array, sequenceToken\?\: non\-falsy\-string\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/Audit/AwsAuditLogHandler.php
+
+		-
 			message: '#^Parameter \#1 \$streams of method OPG\\Digideps\\Frontend\\Service\\Audit\\AwsAuditLogHandler\:\:extractExistingStreamNames\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -27362,6 +27242,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$string of function parse_str expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/Client/RestClient.php
+
+		-
+			message: '#^Parameter \#1 \$threshold of class Symfony\\Component\\Security\\Core\\Exception\\TooManyLoginAttemptsAuthenticationException constructor expects int\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/src/Service/Client/RestClient.php
@@ -28657,6 +28543,36 @@ parameters:
 			path: client/app/src/Service/File/Storage/S3Storage.php
 
 		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:deleteObject\(\) expects array\{Bucket\?\: string, Key\?\: string, MFA\?\: string, VersionId\?\: string, RequestPayer\?\: ''requester'', BypassGovernanceRetention\?\: bool, ExpectedBucketOwner\?\: string, IfMatch\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: string, Key\: mixed\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:deleteObjects\(\) expects array\{Bucket\?\: string, Delete\?\: array\{Objects\?\: list\<array\>, Quiet\?\: bool, \.\.\.\}, MFA\?\: string, RequestPayer\?\: ''requester'', BypassGovernanceRetention\?\: bool, ExpectedBucketOwner\?\: string, ChecksumAlgorithm\?\: ''CRC32''\|''CRC32C''\|''CRC64NVME''\|''MD5''\|''SHA1''\|''SHA256''\|''SHA512''\|''XXHASH128''\|''XXHASH3''\|''XXHASH64'', \.\.\.\}, array\{Bucket\: string, Delete\: array\{Objects\: non\-empty\-array\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:getObjectTagging\(\) expects array\{Bucket\?\: string, Key\?\: string, VersionId\?\: string, ExpectedBucketOwner\?\: string, RequestPayer\?\: ''requester'', \.\.\.\}, array\{Bucket\: string, Key\: mixed\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:putObject\(\) expects array\{ACL\?\: ''authenticated\-read''\|''aws\-exec\-read''\|''bucket\-owner\-full…''\|''bucket\-owner\-read''\|''private''\|''public\-read''\|''public\-read\-write'', Body\?\: Psr\\Http\\Message\\StreamInterface\|resource\|string, Bucket\?\: string, CacheControl\?\: string, ContentDisposition\?\: string, ContentEncoding\?\: string, ContentLanguage\?\: string, ContentLength\?\: int, \.\.\., \.\.\.\}, array\{Bucket\: string, Key\: mixed, Body\: mixed, ServerSideEncryption\: ''AES256'', Metadata\: array\{\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/File/Storage/S3Storage.php
+
+		-
+			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3ClientInterface\:\:putObjectTagging\(\) expects array\{Bucket\?\: string, Key\?\: string, VersionId\?\: string, ContentMD5\?\: string, ChecksumAlgorithm\?\: ''CRC32''\|''CRC32C''\|''CRC64NVME''\|''MD5''\|''SHA1''\|''SHA256''\|''SHA512''\|''XXHASH128''\|''XXHASH3''\|''XXHASH64'', Tagging\?\: array\{TagSet\?\: list\<array\>, \.\.\.\}, ExpectedBucketOwner\?\: string, RequestPayer\?\: ''requester'', \.\.\.\}, array\{Bucket\: string, Key\: mixed, Tagging\: array\{TagSet\: array\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/File/Storage/S3Storage.php
+
+		-
 			message: '#^Parameter \#1 \$length of method GuzzleHttp\\Psr7\\Stream\:\:read\(\) expects int, int\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -28885,18 +28801,6 @@ parameters:
 			path: client/app/src/Service/Mailer/MailFactory.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:getRecipientRole\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Service/Mailer/MailFactory.php
-
-		-
-			message: '#^Parameter \#1 \$area of method OPG\\Digideps\\Frontend\\Service\\Mailer\\MailFactory\:\:generateAbsoluteLink\(\) expects OPG\\Digideps\\Common\\Account\\Area, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/Mailer/MailFactory.php
-
-		-
 			message: '#^Parameter \#1 \$countryCode of method OPG\\Digideps\\Frontend\\Service\\IntlService\:\:getCountryNameByCountryCode\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -28905,7 +28809,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$toEmail of method OPG\\Digideps\\Frontend\\Model\\Email\:\:setToEmail\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: client/app/src/Service/Mailer/MailFactory.php
 
 		-
@@ -30167,18 +30071,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Event/UserUpdatedEventTest.php
-
-		-
-			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\Rule\\InvokedCount\:\:getInvocationCount\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: client/app/tests/Unit/EventListener/ResponseNoCacheListenerTest.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 4
-			path: client/app/tests/Unit/EventListener/ResponseNoCacheListenerTest.php
 
 		-
 			message: '#^Class OPG\\Digideps\\Frontend\\TestHelpers\\UserHelpers constructor invoked with 0 parameters, 1 required\.$#'
@@ -31535,12 +31427,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
-
-		-
-			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\DocumentSyncCommand\:\:getDefaultName\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Command\\DocumentSyncCommandTest\:\:testSleepsWhenTurnedOff\(\) has no return type specified\.$#'

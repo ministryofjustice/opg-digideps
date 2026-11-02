@@ -1,4 +1,4 @@
-FROM composer:2.9@sha256:02062f7719ec9433a9d4256cfba1c792db96dc9db60a4a92e48264c9e166b877
+FROM composer:2.2.30@sha256:db5a72680c556826fdf498dc16e67b55c10da56928de06929cbc431b81271efb
 
 WORKDIR /common
 COPY composer.json .

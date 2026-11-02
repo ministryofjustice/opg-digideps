@@ -327,6 +327,15 @@ services:
           method: onKernelResponse,
         }
 
+  OPG\Digideps\Common\Listener\ErrorLogger:
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: kernel.exception,
+          method: onKernelException,
+          priority: 999,
+        }
+
   OPG\Digideps\Frontend\EventListener\UnauthorizedExceptionListener:
     tags:
       - {
