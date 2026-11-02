@@ -8,6 +8,7 @@ use Dom\Element;
 use Dom\HTMLDocument;
 use OPG\Digideps\Frontend\Service\ReportSectionsLinkService;
 use OPG\Digideps\Frontend\Twig\ComponentsExtension;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
@@ -46,9 +47,7 @@ class ComponentsExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider accordionLinksProvider
-     */
+    #[DataProvider('accordionLinksProvider')]
     public function testRenderAccordionLinks($clickedPanel, $open1, $open2, $href1, $href2, $oneATime)
     {
         $options = ['clickedPanel' => $clickedPanel,
@@ -75,31 +74,31 @@ class ComponentsExtensionTest extends TestCase
     /**
      * expected results (time diff from 2015-01-29 17:10:00).
      *
-     * @return array<array{string, string, array{string, array<string, int|string>, string}}>
+     * @return array<array{string, array{string, array<string, int|string>, string}}>
      */
     public static function formatLastLoginProvider(): array
     {
         return [
-            ['2015-01-29 17:09:30', 'trans', ['PREFIXlessThenAMinuteAgo', [], 'DOMAIN']],
+            ['2015-01-29 17:09:30', ['PREFIXlessThenAMinuteAgo', [], 'DOMAIN']],
 
-            ['2015-01-29 17:09:00', 'trans', ['PREFIXminutesAgo', ['%count%' => 1], 'DOMAIN']],
-            ['2015-01-29 17:07:00', 'trans', ['PREFIXminutesAgo', ['%count%' => 3], 'DOMAIN']],
+            ['2015-01-29 17:09:00', ['PREFIXminutesAgo', ['%count%' => 1], 'DOMAIN']],
+            ['2015-01-29 17:07:00', ['PREFIXminutesAgo', ['%count%' => 3], 'DOMAIN']],
 
-            ['2015-01-29 16:10:00', 'trans', ['PREFIXhoursAgo', ['%count%' => 1], 'DOMAIN']],
-            ['2015-01-29 7:11:00', 'trans', ['PREFIXhoursAgo', ['%count%' => 10], 'DOMAIN']],
+            ['2015-01-29 16:10:00', ['PREFIXhoursAgo', ['%count%' => 1], 'DOMAIN']],
+            ['2015-01-29 7:11:00', ['PREFIXhoursAgo', ['%count%' => 10], 'DOMAIN']],
 
-            ['2015-01-28 15:10:00', 'trans', ['PREFIXexactDate', ['%date%' => '28 January 2015'], 'DOMAIN']],
+            ['2015-01-28 15:10:00', ['PREFIXexactDate', ['%date%' => '28 January 2015'], 'DOMAIN']],
         ];
     }
 
     /**
-     * @dataProvider formatLastLoginProvider
      *
      * @param array{string, array<string, int>, string} $methodArgs
      */
-    public function testFormatTimeDifference(string $input, string $expectedMethodCalled, array $methodArgs): void
+    #[DataProvider('formatLastLoginProvider')]
+    public function testFormatTimeDifference(string $input, array $methodArgs): void
     {
-        $this->translator->expects(self::once())->method($expectedMethodCalled)->with(...$methodArgs);
+        $this->translator->expects(self::once())->method('trans')->with(...$methodArgs);
 
         $this->sut->formatTimeDifference([
             'from' => new \DateTime($input),
@@ -130,9 +129,7 @@ class ComponentsExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider padDayMonthProvider
-     */
+    #[DataProvider('padDayMonthProvider')]
     public function testPadDayMonth(int|string|null $input, int|string|null $expected): void
     {
         $f = $this->sut->getFilters()['pad_day_month']->getCallable();
@@ -149,9 +146,7 @@ class ComponentsExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider behatNamifyProvider
-     */
+    #[DataProvider('behatNamifyProvider')]
     public function testBehatNamify(string $input, string $expected): void
     {
         $f = $this->sut->getFilters()['behat_namify']->getCallable();
@@ -168,9 +163,7 @@ class ComponentsExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider moneyFormatProvider
-     */
+    #[DataProvider('moneyFormatProvider')]
     public function testMoneyFormat(string|int|null $input, string|int|null $expected): void
     {
         $f = $this->sut->getFilters()['money_format']->getCallable();

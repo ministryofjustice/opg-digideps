@@ -8,9 +8,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
 use League\OpenAPIValidation\PSR7\ValidatorBuilder;
-use OPG\Digideps\Frontend\Service\AWS\DefaultCredentialProvider;
 use OPG\Digideps\Frontend\Service\AWS\RequestSigner;
-use OPG\Digideps\Frontend\Service\AWS\SignatureV4Signer;
 use OPG\Digideps\Frontend\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
 use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
@@ -61,9 +59,12 @@ class SiriusApiGatewayClientTest extends KernelTestCase
         /** @var Serializer $serializer */
         $serializer = $container->get('serializer');
 
+        $signer = $this->createMock(RequestSigner::class);
+        $signer->expects($this->atLeastOnce())->method('signRequest')->willReturnArgument(0);
+
         return new SiriusApiGatewayClient(
             $this->makeClient($requestFixture),
-            new RequestSigner(new DefaultCredentialProvider(), new SignatureV4Signer()),
+            $signer,
             '',
             $serializer,
             self::createStub(LoggerInterface::class)

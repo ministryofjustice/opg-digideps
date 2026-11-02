@@ -33,7 +33,7 @@ class CommonPasswordValidatorTest extends TestCase
             $context->expects(self::once())
                 ->method('buildViolation')
                 ->with(self::equalTo($expectedMessage))
-                ->will(self::returnValue($builder));
+                ->willReturn($builder);
         } else {
             $context->expects(self::never())->method('buildViolation');
         }

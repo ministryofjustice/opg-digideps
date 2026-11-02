@@ -128,7 +128,7 @@ class UserApiTest extends TestCase
         $this->eventDispatcher->expects($invocationMatcher)
             ->method('dispatch')
             ->willReturnCallback(function (Event $event, string $message) use ($invocationMatcher, $expected) {
-                $invocation = $invocationMatcher->getInvocationCount();
+                $invocation = $invocationMatcher->numberOfInvocations();
                 self::assertInstanceOf(get_class($expected[$invocation][0]), $event);
                 self::assertEquals($expected[$invocation][0], $event);
                 self::assertEquals($expected[$invocation][1], $message);
