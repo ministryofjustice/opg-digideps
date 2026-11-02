@@ -1,0 +1,36 @@
+{% if props.accountCreated %}
+    <twig:GOV:Heading h="2" s="m">{{ text.accountCreatedSubHeading }}</twig:GOV:Heading>
+
+    <twig:GOV:Paragraph>
+        {{ text.linkSentTo }} <strong>{{ text.deputyEmail }}</strong> {{ text.activationReminder }}
+    </twig:GOV:Paragraph>
+
+    <twig:GOV:Paragraph>{{ text.expirationNote }}</twig:GOV:Paragraph>
+
+    <twig:GOV:Paragraph>{{ text.checkJunk }}</twig:GOV:Paragraph>
+
+    <twig:GOV:Paragraph>
+        <twig:GOV:Link href="{{ path(props.loginPath) }}">{{ text.signInCaps }}</twig:GOV:Link>
+    </twig:GOV:Paragraph>
+{% else %}
+    <twig:GOV:Layout:Row>
+        <twig:GOV:Layout:Column n="2" d="3">
+            <twig:GOV:Paragraph>{{ text.intro }}</twig:GOV:Paragraph>
+
+            <twig:GOV:Paragraph>
+                {{ text.ifYouAlreadyHaveAnAccount }} <twig:GOV:Link href="{{ path(props.loginPath) }}">{{ text.signIn }}</twig:GOV:Link>.
+            </twig:GOV:Paragraph>
+        </twig:GOV:Layout:Column>
+    </twig:GOV:Layout:Row>
+
+    <twig:GOV:Form form="{{ form }}">
+        <twig:GOV:Form:TextInput element="{{ form.deputyFirstName }}"/>
+        <twig:GOV:Form:TextInput element="{{ form.deputyLastName }}"/>
+        <twig:GOV:Form:TextInput element="{{ form.deputyEmail.first }}"/>
+        <twig:GOV:Form:TextInput element="{{ form.deputyEmail.second }}"/>
+        <twig:GOV:Form:TextInput element="{{ form.deputyPostCode }}"/>
+        <twig:GOV:Form:TextInput element="{{ form.clientLastName }}"/>
+        <twig:GOV:Form:TextInput element="{{ form.caseNumber }}"/>
+        <twig:GOV:Form:Submit element="{{ form.signUp }}"/>
+    </twig:GOV:Form>
+{% endif %}

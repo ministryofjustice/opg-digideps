@@ -1,0 +1,5 @@
+{% props form %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+    {% block content %}{% endblock %}
+{{ form_end(form, { render_rest: true }) }}
