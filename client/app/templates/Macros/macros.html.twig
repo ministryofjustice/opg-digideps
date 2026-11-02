@@ -245,7 +245,7 @@
                     </p>
                     <p class="govuk-body">{{ 'alert.instructions' | trans({}, 'admin-fixtures') }}</p>
                     {% for details in message %}
-                        <ul>
+                        <ul class="govuk-list">
                             <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.caseNumber' | trans({}, 'admin-fixtures') }}: <strong>{{details.caseNumber}}</strong></li>
                             <li class="govuk-body govuk-!-margin-bottom-0">{{ 'alert.clientLastName' | trans({}, 'admin-fixtures') }}: <strong>{{details.clientLastName}}</strong></li>
                             <br/>
@@ -279,7 +279,7 @@
                     {% for caseNumber in message.caseNumber %}
                         <p class="govuk-body">{{ 'alert.caseNumber' | trans({}, 'admin-fixtures') }}:<strong>{{ caseNumber}}</strong></p>
                     {% endfor %}
-                    <ul>
+                    <ul class="govuk-list">
                         {% for deputy in message.deputies %}
                             <li>{{ 'alert.email' | trans({}, 'admin-fixtures') }}: <strong>{{ deputy.email }}</strong></li>
                         {% endfor %}

@@ -50,7 +50,7 @@
         </div>
         <div class="govuk-grid-column-one-half text--right">
             {% if not hideEditLink  %}
-                <a href="{{ path('contacts_add', { 'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-add">
+                <a href="{{ path('contacts_add', { 'reportId': report.id, 'from': 'summary'}) }}" class="govuk-!-font-size-19 govuk-!-font-weight-bold govuk-link behat-link-add">
                     <strong>
                         <span class="icon icon-plus"></span>
                         {{ (page ~ '.addButton') | trans }}
