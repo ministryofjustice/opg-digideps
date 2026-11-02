@@ -6,6 +6,7 @@ namespace Tests\OPG\Digideps\Frontend\Unit\Entity\Report;
 
 use OPG\Digideps\Frontend\Entity\Report\Checklist;
 use OPG\Digideps\Frontend\Entity\Report\Report;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -21,9 +22,7 @@ class ChecklistTest extends KernelTestCase
             ->getValidator();
     }
 
-    /**
-     * @dataProvider submitProfDeputyCostsChecklistValuesProvider
-     */
+    #[DataProvider('submitProfDeputyCostsChecklistValuesProvider')]
     public function testValidationsSubmitProfDeputyCostsChecklist(
         ?string $profCostsReasonableAndProportionate,
         ?string $paymentsMatchCostCertificate,

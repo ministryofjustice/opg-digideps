@@ -9,6 +9,7 @@ use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
 use OPG\Digideps\Frontend\Service\Redirector;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -91,9 +92,7 @@ class RedirectorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider firstPageAfterLoginProvider
-     */
+    #[DataProvider('firstPageAfterLoginProvider')]
     public function testGetFirstPageAfterLogin(
         ?string $grantedRole,
         bool $paOrProfDeputy,
@@ -277,9 +276,7 @@ class RedirectorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider homepageRedirectProvider
-     */
+    #[DataProvider('homepageRedirectProvider')]
     public function testGetHomepageRedirect(string $env, string $userRole, ?string $routeName, string|bool $expectedRoute): void
     {
         $this->authChecker->method('isGranted')

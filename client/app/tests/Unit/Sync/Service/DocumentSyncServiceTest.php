@@ -16,6 +16,7 @@ use OPG\Digideps\Frontend\Sync\Model\Sirius\QueuedDocumentData;
 use OPG\Digideps\Frontend\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
 use OPG\Digideps\Frontend\Sync\Service\DocumentSyncService;
 use OPG\Digideps\Frontend\Sync\Service\SiriusApiErrorTranslator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -62,9 +63,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->serializer = $serializer;
     }
 
-    /**
-     * @dataProvider reportTypeProvider
-     */
+    #[DataProvider('reportTypeProvider')]
     public function testSyncDocumentReportPdfSyncSuccess(string $reportTypeCode, string $expectedReportType): void
     {
         $reportPdfReportSubmission = new ReportSubmission()
@@ -381,9 +380,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         self::assertNotContains($queuedDocumentData->getReportSubmissionId(), $sut->getSyncErrorSubmissionIds());
     }
 
-    /**
-     * @dataProvider errorCodeProvider
-     */
+    #[DataProvider('errorCodeProvider')]
     public function testSendDocumentSyncFailureSiriusErrorTypeBasedOnResponseCode(int $errorCode, string $expectedErrorType, int $syncAttempts): void
     {
         $reportPdfReportSubmission =
@@ -460,7 +457,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $sut->syncDocument($queuedDocumentData);
     }
 
-    public function errorCodeProvider(): array
+    public static function errorCodeProvider(): array
     {
         return [
             '4XX error code' => [400, Document::SYNC_STATUS_PERMANENT_ERROR, 0],
@@ -587,7 +584,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->restClient->expects($invocationMatcher)
             ->method('apiCall')
             ->willReturnCallback(function (array $parameters) use ($invocationMatcher, $expectations) {
-                $invocation = $invocationMatcher->getInvocationCount();
+                $invocation = $invocationMatcher->numberOfInvocations();
 
                 if (!isset($expectations[$invocation])) {
                     throw new \LogicException('Unexpected number of invocations');
