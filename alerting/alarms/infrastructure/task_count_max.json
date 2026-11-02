@@ -1,0 +1,14 @@
+{
+  "name": "task-count-max",
+  "title": "An ECS service has reached its maximum task count",
+  "description": "An ECS service has scaled to its configured maximum number of tasks and cannot automatically add more capacity.",
+  "investigation_steps": [
+    "Open the alarm to identify the affected ECS service.",
+    "Check CPU, memory, request volume and recent scaling activity.",
+    "Determine whether the maximum task count should be temporarily increased or whether an application problem is causing the load.",
+    "This could lead to service degradation or unavailability if the load continues and no additional capacity is added.",
+    "Using breakglass to temporarily increase the maximum task count may be necessary to restore service capacity while addressing the underlying issue."
+  ],
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/environment/region/cloudwatch_alarms.tf"
+}

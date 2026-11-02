@@ -63,5 +63,5 @@ The time range covers the alarms complete evaluation window with some space adde
 4. Add a clear title and description that will be used by slack and pagerduty.
 5. Add in some steps that will help guide people looking into the alert.
 6. Add a Logs Insights query if needed, check examples if stuck.
-7. Add the Confluence documentation link if there is one.
+7. Add the Confluence documentation link if there is one. (Making one might be a good idea to keep it all clear)
 8. Add a link to the Terraform definition.

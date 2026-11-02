@@ -1,0 +1,14 @@
+{
+  "name": "aurora-high-cpu",
+  "title": "An Aurora instance has sustained high CPU utilisation",
+  "description": "An Aurora instance has had average CPU utilisation at or above 85% for 45 minutes.",
+  "investigation_steps": [
+    "Open the alarm to identify the affected Aurora instance.",
+    "Check database connections, query activity and Performance Insights.",
+    "Investigate expensive queries, unusual application traffic or insufficient database capacity.",
+    "This could lead to service degradation or unavailability if the high CPU usage persists.",
+    "Using breakglass to temporarily increase database capacity may be necessary to restore service performance while addressing the underlying issue."
+  ],
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/environment/region/cloudwatch_aurora_resource_alarms.tf"
+}

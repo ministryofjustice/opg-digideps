@@ -23,27 +23,32 @@ DEFAULT_LOGS = {
 }
 
 
+# This is because some alarm names include numeric suffixes like production-aurora-1-high-cpu so we normalise them by removing numeric parts
+def normalise_alarm_name(alarm_name):
+    return "-".join(part for part in alarm_name.split("-") if not part.isdigit())
+
+
 def get_alert_configuration(alarm_name):
     with open(ALERT_CONFIGURATION_FILE, encoding="utf-8") as file:
         configurations = json.load(file)
 
+    normalised_alarm_name = normalise_alarm_name(alarm_name)
+
     for name, configuration in configurations.items():
-        if alarm_name == name or alarm_name.endswith(f"-{name}"):
+        if normalised_alarm_name == name or normalised_alarm_name.endswith(f"-{name}"):
             return configuration
 
     return {}
 
 
 def get_environment(alarm_name, configuration):
-    configuration_name = configuration.get("name")
+    environment_position = configuration.get("environment_position", 0)
+    alarm_name_parts = alarm_name.split("-")
 
-    if not configuration_name:
-        return alarm_name.split("-", 1)[0]
+    if environment_position >= len(alarm_name_parts):
+        return "unknown"
 
-    if alarm_name == configuration_name:
-        return os.getenv("ENVIRONMENT", "unknown")
-
-    return alarm_name.removesuffix(f"-{configuration_name}")
+    return alarm_name_parts[environment_position]
 
 
 def encode_cloudwatch_value(value):
@@ -59,6 +64,19 @@ def get_alarm_url(region, alarm_name):
     )
 
 
+def get_alarm_period(trigger):
+    if trigger.get("Period"):
+        return int(trigger["Period"])
+
+    periods = [
+        int(metric["MetricStat"]["Period"])
+        for metric in trigger.get("Metrics", [])
+        if metric.get("MetricStat", {}).get("Period")
+    ]
+
+    return max(periods, default=60)
+
+
 def get_log_url(message, region, environment, logs):
     if not message.get("StateChangeTime"):
         return None
@@ -67,10 +85,11 @@ def get_log_url(message, region, environment, logs):
         message["StateChangeTime"].replace("Z", "+00:00")
     )
 
-    period = int(message.get("Trigger", {}).get("Period", 60))
-    evaluation_periods = int(message.get("Trigger", {}).get("EvaluationPeriods", 5))
+    trigger = message.get("Trigger", {})
+    period = get_alarm_period(trigger)
+    evaluation_periods = int(trigger.get("EvaluationPeriods", 5))
 
-    start_time = alarm_time - timedelta(seconds=period * (evaluation_periods + 1))
+    start_time = alarm_time - timedelta(seconds=period * evaluation_periods)
 
     start = start_time.isoformat(timespec="milliseconds").replace("+00:00", "Z")
     end = alarm_time.isoformat(timespec="milliseconds").replace("+00:00", "Z")
@@ -121,11 +140,17 @@ def alarm_message(message, region):
         ),
     )
 
-    log_url = get_log_url(
-        message,
-        region,
-        environment,
-        configuration.get("logs", DEFAULT_LOGS),
+    logs = configuration.get("logs") if configuration else DEFAULT_LOGS
+
+    log_url = (
+        get_log_url(
+            message,
+            region,
+            environment,
+            logs,
+        )
+        if logs
+        else None
     )
 
     sections = [
