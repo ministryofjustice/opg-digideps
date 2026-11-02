@@ -11,11 +11,14 @@
 {% block supportTitleTop %}{{ client.fullname | title }}{% endblock %}
 
 {% block breadcrumbs %}
-    <div class="breadcrumbs hard--bottom">
-        <ol class="group">
-            <li><a href="{{ path('org_dashboard') }}">Dashboard</a></li>
-        </ol>
-    </div>
+    <twig:GOV:Breadcrumbs :breadcrumbs="{
+        items: [
+            {
+                href: path('org_dashboard'),
+                text: 'breadcrumbs.dashboard' | trans
+            }
+        ]
+    }" />
 {% endblock %}
 
 {% block pageContent %}

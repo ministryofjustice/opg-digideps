@@ -7,7 +7,7 @@
     </div>
     <div class="govuk-grid-column-one-half text--right">
         {% if page == 'summaryPage' and report.wishToProvideDocumentation == 'yes' %}
-            <a href="{{ path('report_documents', { 'reportId': report.id, 'from': 'summary'}) }}" class="govuk-link behat-link-add">
+            <a href="{{ path('report_documents', { 'reportId': report.id, 'from': 'summary'}) }}" class="govuk-!-font-size-19 govuk-!-font-weight-bold govuk-link behat-link-add">
                 <strong>
                     <span class="icon icon-plus"></span>
                     {{ 'summaryPage.addButton' | trans }}

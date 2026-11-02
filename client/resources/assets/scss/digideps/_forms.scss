@@ -14,7 +14,7 @@ input[type="text"]::-ms-clear {
 }
 
 .form-label {
-  @include media(mobile) {
+  @include govuk-media-query($until: tablet) {
     width: auto;
   }
 
@@ -29,7 +29,7 @@ input[type="text"]::-ms-clear {
   margin: 2px;
   padding: 5px 10px 6px;
   border: 0;
-  background: govuk-colour("light-grey");
+  background: govuk-colour("black", $variant: "tint-95");
   text-align: center;
   z-index: 1;
 
@@ -80,7 +80,7 @@ input[type="text"]::-ms-clear {
     margin-right: 30px;
     float: left;
 
-    @include media(mobile) {
+    @include govuk-media-query($until: tablet) {
       width: 100% !important; // Overriding manual width classes
       float: none;
     }
@@ -103,7 +103,7 @@ input[type="text"]::-ms-clear {
     padding-top: 3px;
     padding-bottom: 2px;
 
-    @include media(mobile) {
+    @include govuk-media-query($until: tablet) {
       margin-bottom: 15px;
       padding-top: 2px;
     }
