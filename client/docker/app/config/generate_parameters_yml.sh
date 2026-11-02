@@ -23,7 +23,10 @@ parameters:
   log_path: /var/log/app/application.log
   opg_docker_tag: "%env(OPG_DOCKER_TAG)%"
   email_params:
-    update_send_to_address: "%env(UPDATE_ADDRESS)%"
+    update_address_pfa_lay: "%env(UPDATE_ADDRESS_PFA_LAY)%"
+    update_address_pfa_pro: "%env(UPDATE_ADDRESS_PFA_PRO)%"
+    update_address_pfa_pa: "%env(UPDATE_ADDRESS_PFA_PA)%"
+    update_address_hw: "%env(UPDATE_ADDRESS_HW)%"
   htmltopdf_address: "%env(HTMLTOPDF_ADDRESS)%"
   s3_bucket_name: "%env(S3_BUCKETNAME)%"
   s3_sirius_bucket: "%env(S3_SIRIUS_BUCKET)%"

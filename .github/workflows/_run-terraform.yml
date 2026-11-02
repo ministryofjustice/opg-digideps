@@ -44,9 +44,9 @@ jobs:
           persist-credentials: false
 
       - name: Install uv
-        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
-          version: "0.12.11"
+          version: "0.13.5"
           enable-cache: true
 
       - name: Install dependencies
@@ -57,7 +57,7 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/actions/terraform-version@5fba2afe28b31b8c5eaf1fb4235e2d32aea24a1e # v4.8.3
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@83663a5235330cc2193319b25d559885610c6bd5 # v4.8.4
         with:
           terraform_directory: terraform/${{ inputs.terraform_path }}
 
@@ -69,7 +69,7 @@ jobs:
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
         if: inputs.terraform_path == 'account'
         with:
-          go-version: "1.26.5"
+          go-version: "1.26.6"
 
       # requires go 1.25.5
       - name: build redeployer
@@ -80,7 +80,7 @@ jobs:
       - id: terraform_workspace_manager
         if: inputs.apply && inputs.terraform_path == 'environment' && inputs.pull_request_path
         name: register workspace
-        uses: ministryofjustice/opg-github-actions/actions/terraform-workspace-manager@5fba2afe28b31b8c5eaf1fb4235e2d32aea24a1e # v4.8.3
+        uses: ministryofjustice/opg-github-actions/actions/terraform-workspace-manager@83663a5235330cc2193319b25d559885610c6bd5 # v4.8.4
         with:
           aws_account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
           aws_iam_role: digideps-ci
@@ -90,7 +90,7 @@ jobs:
           assume_role: false
 
       - id: deploy-key
-        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@77bb12e7fec3bcee9a6a35cb21361195e027a12a # v4.9.0
+        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@939ca6ddfc2bafefa48b0730ea0268bd75a25876 # v4.9.1
         with:
           deploy_key: ${{ secrets.ssh_private_key }}
 

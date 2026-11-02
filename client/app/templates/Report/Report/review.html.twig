@@ -31,7 +31,7 @@
 {% block pageContent %}
 
     <div class="push--bottom">
-        {% if report.submitted == false %}
+        {% if not report.isSubmitted %}
             <p class="govuk-body">{{ (page ~ '.para1') | trans() }}</p>
             <p class="govuk-body">{{ (page ~ '.para2') | trans() }}</p>
         {% endif %}
@@ -41,7 +41,9 @@
     </div>
 
     <div>
-        <span class="opg-text--secondary">{{ 'pdfDraftSentence' | trans() }}</span>
+        {% if not report.isSubmitted %}
+            <span class="opg-text--secondary">{{ 'pdfDraftSentence' | trans() }}</span>
+        {% endif %}
         {% include '@App/Report/Report/_pdf_download_link.html.twig' %}
     </div>
 

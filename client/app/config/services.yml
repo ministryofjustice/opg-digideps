@@ -327,6 +327,15 @@ services:
           method: onKernelResponse,
         }
 
+  OPG\Digideps\Common\Listener\ErrorLogger:
+    tags:
+      - {
+          name: kernel.event_listener,
+          event: kernel.exception,
+          method: onKernelException,
+          priority: 999,
+        }
+
   OPG\Digideps\Frontend\EventListener\UnauthorizedExceptionListener:
     tags:
       - {
@@ -417,16 +426,6 @@ services:
 
   line_formatter:
     class: Monolog\Formatter\LineFormatter
-
-  uuid_normalizer:
-    class: GBProd\UuidNormalizer\UuidNormalizer
-    tags:
-      - { name: serializer.normalizer }
-
-  uuid_denormalizer:
-    class: GBProd\UuidNormalizer\UuidDenormalizer
-    tags:
-      - { name: serializer.denormalizer }
 
   OPG\Digideps\Frontend\Command\CheckCSVUploadedCommand:
     class: OPG\Digideps\Frontend\Command\CheckCSVUploadedCommand

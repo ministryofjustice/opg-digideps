@@ -126,12 +126,29 @@ class ReportService
             }
         }
 
-        foreach ($fromReport->getDebts() as $debt) {
-            if (!$this->checkDebtExists($toReport, $debt)) {
-                $this->em->persist($this->cloneDebt($debt, $toReport));
-                $toReport->setHasDebts('yes');
+        $debts = [];
+        $toReport->setHasDebts($fromReport->getHasDebts());
+        foreach ($fromReport->getDebts() as $fromDebt) {
+            if ($toReport->getDebts()->count() > 0) {
+                // Covers reports if previous report is unsubmitted so we do not duplicate debts entries
+                foreach ($toReport->getDebts() as $toDebt) {
+                    if ($fromDebt->getDebtTypeId() === $toDebt->getDebtTypeId()) {
+                        $toDebt->setHasMoreDetails($fromDebt->getHasMoreDetails());
+                        $toDebt->setAmount($fromDebt->getAmount());
+                        $toDebt->setMoreDetails($fromDebt->getMoreDetails());
+
+                        $debts[] = $toDebt;
+                    }
+                }
+            } else {
+                $debts[] = $this->cloneDebt($fromDebt, $toReport);
             }
         }
+
+        foreach ($debts as $debt) {
+            $this->em->persist($debt);
+        }
+
         $toReport->setDebtManagement($toReport->getDebtManagement() ?? $fromReport->getDebtManagement());
     }
 
@@ -252,20 +269,6 @@ class ReportService
         return $newContact;
     }
 
-    private function checkDebtExists(Report $toReport, Debt $debt): bool
-    {
-        foreach ($toReport->getDebts() as $existingDebt) {
-            if (
-                $existingDebt->getAmount() === $debt->getAmount()
-                && $existingDebt->getDebtTypeId() === $debt->getDebtTypeId()
-                && (!$existingDebt->getHasMoreDetails() || $existingDebt->getMoreDetails() === $debt->getMoreDetails())
-            ) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private function cloneDebt(Debt $debt, Report $toReport): Debt
     {
         return new Debt($toReport, $debt->getDebtTypeId(), $debt->getHasMoreDetails(), $debt->getAmount(), $debt->getMoreDetails());
@@ -276,7 +279,7 @@ class ReportService
      */
     public function createNextYearReport(Report $oldReport, bool $log = true): Report
     {
-        if (!$oldReport->getSubmitted()) {
+        if ($oldReport->getSubmitDate() === null) {
             throw new \RuntimeException("Can't create a new year report based on an unsubmitted report");
         }
 

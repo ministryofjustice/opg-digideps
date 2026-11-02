@@ -1,7 +1,7 @@
 ##############################
 # Stage 1: Composer Build
 ##############################
-FROM composer:2.10.1@sha256:7725eb4545c438629ae8bde3ef0bb9a5038ef566126ad878442a69007242d267 AS composer
+FROM composer:2.2.30@sha256:db5a72680c556826fdf498dc16e67b55c10da56928de06929cbc431b81271efb AS composer
 
 WORKDIR /app
 
@@ -37,7 +37,7 @@ RUN composer dump-autoload --optimize
 ##############################
 # Stage 2: Base PHP Image
 ##############################
-FROM php:8.4.25-fpm-alpine3.24@sha256:49734670eccf414af884c2a0c2e558401e228615f8028f1c9fca30a0d4fb1bc2 AS base
+FROM php:8.4.27-fpm-alpine3.24@sha256:8ce34c869fae0f8da2c82d8aeda222f0782e8e5ae2b370fb43cbad84e9e2ea55 AS base
 
 ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 
@@ -126,7 +126,7 @@ COPY --from=php-builder /usr/local/etc/php/conf.d \
 
 RUN apk --no-cache add \
     "postgresql18-client==18.6-r0" \
-    "openssl==3.5.8-r0" \
+    "openssl==3.5.9-r0" \
     "su-exec==0.3-r0" \
     "php84-pecl-igbinary==3.2.17_rc1-r0"  \
     "php84-pecl-redis==6.3.0-r0" \
@@ -134,8 +134,8 @@ RUN apk --no-cache add \
 
 # TODO Remove this once alpine upgrade available as it patches a vulnerability
 RUN apk update && apk add --upgrade \
-    "curl=8.22.0-r0" \
-    "libcurl=8.22.0-r0"
+    "curl=8.23.0-r0" \
+    "libcurl=8.23.0-r0"
 
 ##############################
 # Stage 3a: runtime image (image without test dependencies)

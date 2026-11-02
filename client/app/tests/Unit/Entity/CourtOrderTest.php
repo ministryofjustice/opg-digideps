@@ -7,6 +7,7 @@ namespace Tests\OPG\Digideps\Frontend\Unit\Entity;
 use OPG\Digideps\Frontend\Entity\CourtOrder;
 use OPG\Digideps\Frontend\Entity\Deputy;
 use OPG\Digideps\Frontend\Entity\Report\Report;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class CourtOrderTest extends TestCase
@@ -27,9 +28,7 @@ class CourtOrderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider inactiveReportProvider
-     */
+    #[DataProvider('inactiveReportProvider')]
     public function testGetActiveReportNull(?Report $report = null): void
     {
         $this->courtOrder->setReports($report ? [$report] : []);
@@ -75,9 +74,7 @@ class CourtOrderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider unsubmittedReportProvider
-     */
+    #[DataProvider('unsubmittedReportProvider')]
     public function testGetUnsubmittedReportNull(?Report $report = null): void
     {
         $this->courtOrder->setReports($report ? [$report] : []);
@@ -156,10 +153,10 @@ class CourtOrderTest extends TestCase
     }
 
     /**
-     * @dataProvider hasCoDeputiesProvider
      *
      * @param array<Deputy> $activeDeputies
      */
+    #[DataProvider('hasCoDeputiesProvider')]
     public function testHasCoDeputiesNoDeputies(array $activeDeputies, bool $expectedResult): void
     {
         $this->courtOrder->setActiveDeputies($activeDeputies);

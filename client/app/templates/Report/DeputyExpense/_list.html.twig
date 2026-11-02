@@ -32,7 +32,7 @@
         </div>
         {% if not hideEditLink %}
             <div class="govuk-grid-column-one-half text--right">
-                <a href="{{ path('deputy_expenses_add', { 'reportId': report.id, 'from': 'summary'}) }}" class="govuk-link behat-link-add">
+                <a href="{{ path('deputy_expenses_add', { 'reportId': report.id, 'from': 'summary'}) }}" class="govuk-!-font-size-19 govuk-!-font-weight-bold govuk-link behat-link-add">
                     <strong>
                         <span class="icon icon-plus"></span>
                         {{ 'summaryPage.addButton' | trans }}

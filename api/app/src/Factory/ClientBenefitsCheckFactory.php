@@ -10,7 +10,7 @@ use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
 use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Ramsey\Uuid\Uuid;
+use Symfony\Component\Uid\Uuid;
 
 class ClientBenefitsCheckFactory
 {
@@ -69,7 +69,7 @@ class ClientBenefitsCheckFactory
 
         $dateLastChecked = isset($formData['date_last_checked_entitlement']) ? new \DateTime($formData['date_last_checked_entitlement']) : null;
 
-        $clientBenefitsCheck = $existingEntity ?: new ClientBenefitsCheck(Uuid::uuid4());
+        $clientBenefitsCheck = $existingEntity ?: new ClientBenefitsCheck(Uuid::v4());
 
         return $clientBenefitsCheck
             ->setReport($report)
@@ -90,7 +90,7 @@ class ClientBenefitsCheckFactory
                     $moneyType = new MoneyReceivedOnClientsBehalf();
                 } else {
                     $moneyType = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->filter(function (MoneyReceivedOnClientsBehalfInterface $money) use ($moneyTypeData): bool {
-                        return $money->getId()->toString() === $moneyTypeData['id'];
+                        return $money->getId()->toRfc4122() === $moneyTypeData['id'];
                     })->first();
 
                     if ($moneyType === false) {

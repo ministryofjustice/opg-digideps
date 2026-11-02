@@ -45,43 +45,36 @@ class ReportSectionsLinkService
         ];
 
         // defined order for Client profile page (PROF or PA)
-        if ($report->hasSection('paDeputyExpenses')) { // PAs
-            // PAs
+        if ($report->isPAreport()) { // PAs
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
-                'paDeputyExpenses',
-                'gifts',
-                'actions', 'otherInfo',
-                'profDeputyCosts',
-                'profDeputyCostsEstimate',
                 'clientBenefitsCheck',
                 'bankAccounts',
-                'moneyTransfers', 'moneyIn', 'moneyOut',
-                'moneyInShort', 'moneyOutShort',
+                'gifts',
+                'moneyTransfers', 'moneyIn', 'moneyOut', 'moneyInShort', 'moneyOutShort',
                 'assets', 'debts',
+                'paDeputyExpenses',
+                'actions', 'otherInfo',
                 'documents',
             ];
-        } elseif ($report->hasSection('profDeputyCosts')) { // Professionals
+        } elseif ($report->isProfReport()) { // Professionals
             $sectionIdOrder = [
-                'decisions', 'contacts', 'visitsCare',
+                'decisions', 'contacts', 'visitsCare', 'lifestyle',
                 'clientBenefitsCheck',
                 'bankAccounts',
-                'moneyIn', 'moneyInShort', 'moneyTransfers', 'moneyOut', 'moneyOutShort',
-                'lifestyle',
                 'gifts',
+                'moneyTransfers', 'moneyIn', 'moneyOut', 'moneyInShort', 'moneyOutShort',
                 'assets', 'debts',
-                'profCurrentFees',
-                'profDeputyCosts',
-                'profDeputyCostsEstimate',
+                'profCurrentFees', 'profDeputyCosts', 'profDeputyCostsEstimate',
                 'actions', 'otherInfo',
                 'documents',
-                ];
+            ];
         } else { // Lay
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
                 'clientBenefitsCheck',
                 'bankAccounts',
-                'deputyExpenses', // Lay
+                'deputyExpenses', // Lay only
                 'gifts',
                 'moneyTransfers', 'moneyIn', 'moneyOut', 'moneyInShort', 'moneyOutShort',
                 'assets', 'debts',

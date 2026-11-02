@@ -63,6 +63,7 @@ class ReportApi
         'prof-deputy-other-costs',
         'prof-service-fees',
         'report',
+        'report-id',
         'report-documents',
         'report-prof-deputy-costs',
         'report-prof-deputy-costs-interim',

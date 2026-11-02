@@ -6,7 +6,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class RestClientException extends HttpException
 {
-    protected $data;
+    protected array $data;
 
     public function __construct($message = 'API error occurred', $code = 404, array $data = [])
     {
@@ -16,10 +16,7 @@ class RestClientException extends HttpException
         $this->data = $data;
     }
 
-    /**
-     * @return array
-     */
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }

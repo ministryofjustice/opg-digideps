@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Frontend\Unit\Form\Report\Asset;
 
 use OPG\Digideps\Frontend\Form\Report\Asset\AssetTypeTitle;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\NativeType;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -17,7 +19,7 @@ class AssetTypeTitleTest extends TestCase
     public function setUp(): void
     {
         $this->translator = self::createMock('Symfony\Contracts\Translation\TranslatorInterface');
-        $this->translator->method('trans')->with(new IsType(IsType::TYPE_STRING), [], 'domain')->willReturnCallback(fn (string $a) => "{$a}-TRANSLATED");
+        $this->translator->method('trans')->with(new IsType(NativeType::String), [], 'domain')->willReturnCallback(fn (string $a) => "{$a}-TRANSLATED");
     }
 
     public static function titleChoices(): array
@@ -29,9 +31,7 @@ class AssetTypeTitleTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider titleChoices
-     */
+    #[DataProvider('titleChoices')]
     public function testGetTitleChoices(array $input, array $expectedOutput): void
     {
         $object = new AssetTypeTitle($input, $this->translator, 'domain');

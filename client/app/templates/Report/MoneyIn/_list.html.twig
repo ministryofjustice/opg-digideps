@@ -64,9 +64,9 @@
                 <h2 class="govuk-heading-l">{{ 'summaryPage.moneyIn.listOfMoneyIns' | trans(transOptions) }}</h2>
             </div>
         {% endif %}
-        <div class="govuk-grid-column-two-half text--right">
+        <div class="govuk-grid-column-one-half text--right">
             {% if not hideEditLink %}
-            <a href="{{ path('money_in_step' , {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="govuk-link behat-link-add">
+            <a href="{{ path('money_in_step' , {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="govuk-!-font-size-19 govuk-!-font-weight-bold govuk-link behat-link-add">
                 <strong>
                     <span class="icon icon-plus"></span>
                     {{ 'summaryPage.moneyIn.addIncome' | trans(transOptions) }}
@@ -141,7 +141,7 @@
 
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-summary-list__key">
+                <th scope="col" class="govuk-table__header">
                     <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ 'summaryPage.moneyIn.list.label.totalAmount' | trans(transOptions) }}</span>
                 </th>
                 <td class="govuk-table__cell"></td>

@@ -1,0 +1,25 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% set translationDomain = "report-review" %}
+{% trans_default_domain translationDomain %}
+
+{% set preview = false %}
+{% set page = 'submitted' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block supportTitleTop %}{{ ('supportTitleTop') | trans({'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }) }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block pageContent %}
+
+    {% include '@App/Report/Report/_review_buttons.html.twig' %}
+
+    <div class="push--bottom">
+        <div class="opg-border--primary">
+            {% include '@App/Report/Rendered/body.html.twig' %}
+        </div>
+    </div>
+
+    {% include '@App/Report/Report/_review_buttons.html.twig' %}
+
+{% endblock %}

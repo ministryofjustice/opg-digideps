@@ -6,21 +6,19 @@ namespace OPG\Digideps\Backend\Entity\UserResearch;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use Ramsey\Uuid\Doctrine\UuidGenerator;
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Table(name: 'research_type')]
 #[ORM\Entity]
 class ResearchType
 {
-    public function __construct(array $formResponses, ?UuidInterface $id = null)
+    public function __construct(array $formResponses, ?Uuid $id = null)
     {
         if (empty($formResponses)) {
             throw new \RuntimeException('Must select at least one research type', 403);
         }
 
-        $this->id = $id ?? Uuid::uuid4();
+        $this->id = $id ?? Uuid::v4();
 
         $setters = array_map(function ($response): string {
             return sprintf('set%s', ucfirst($response));
@@ -33,7 +31,7 @@ class ResearchType
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearchResponse')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
-    #[ORM\OneToOne(mappedBy: 'researchType', targetEntity: UserResearchResponse::class, cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: UserResearchResponse::class, mappedBy: 'researchType', cascade: ['persist'])]
     private UserResearchResponse $userResearchResponse;
 
     #[JMS\Type('string')]
@@ -41,8 +39,8 @@ class ResearchType
     #[ORM\Id]
     #[ORM\Column(name: 'id', type: 'uuid')]
     #[ORM\GeneratedValue(strategy: 'NONE')]
-    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private UuidInterface $id;
+    #[ORM\CustomIdGenerator(class: Uuid::class)]
+    private Uuid $id;
 
     #[JMS\Type('boolean')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
@@ -76,12 +74,12 @@ class ResearchType
         return $this;
     }
 
-    public function getId(): UuidInterface
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function setId(UuidInterface $id): void
+    public function setId(Uuid $id): void
     {
         $this->id = $id;
     }

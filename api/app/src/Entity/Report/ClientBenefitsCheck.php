@@ -11,17 +11,16 @@ use Doctrine\ORM\Mapping\OrderBy;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\ClientBenefitsCheckInterface;
-use Ramsey\Uuid\Doctrine\UuidGenerator;
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Table(name: 'client_benefits_check')]
 #[ORM\Entity]
 class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 {
-    public function __construct(?UuidInterface $id = null)
+    public function __construct(?Uuid $id = null)
     {
-        $this->id = $id ?? Uuid::uuid4();
+        $this->id = $id ?? Uuid::v4();
         $this->created = new \DateTime();
         $this->typesOfMoneyReceivedOnClientsBehalf = new ArrayCollection();
     }
@@ -32,7 +31,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     #[ORM\Column(name: 'id', type: 'uuid')]
     #[ORM\GeneratedValue(strategy: 'NONE')]
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private UuidInterface $id;
+    private Uuid $id;
 
     #[JMS\Groups(['client-benefits-check'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
@@ -43,7 +42,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     #[JMS\Groups(['client-benefits-check-report'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
-    #[ORM\OneToOne(inversedBy: 'clientBenefitsCheck', targetEntity: Report::class)]
+    #[ORM\OneToOne(targetEntity: Report::class, inversedBy: 'clientBenefitsCheck')]
     private ?Report $report = null;
 
     /**
@@ -82,16 +81,16 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      */
     #[JMS\Groups(['client-benefits-check'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf>')]
-    #[ORM\OneToMany(mappedBy: 'clientBenefitsCheck', targetEntity: MoneyReceivedOnClientsBehalf::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(targetEntity: MoneyReceivedOnClientsBehalf::class, mappedBy: 'clientBenefitsCheck', cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
     #[OrderBy(['created' => 'ASC'])]
     private Collection $typesOfMoneyReceivedOnClientsBehalf;
 
-    public function getId(): UuidInterface
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function setId(UuidInterface $id): ClientBenefitsCheck
+    public function setId(Uuid $id): ClientBenefitsCheck
     {
         $this->id = $id;
 

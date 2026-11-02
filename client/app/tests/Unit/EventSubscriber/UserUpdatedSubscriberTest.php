@@ -10,6 +10,7 @@ use OPG\Digideps\Frontend\EventSubscriber\UserUpdatedSubscriber;
 use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -118,9 +119,7 @@ class UserUpdatedSubscriberTest extends TestCase
         $this->sut->auditLog($event);
     }
 
-    /**
-     * @dataProvider deputyProvider
-     */
+    #[DataProvider('deputyProvider')]
     public function testSendEmailLayDeputyDetailsHaveChanged(User $preUpdateUser, User $postUpdateUser): void
     {
         $trigger = 'A_TRIGGER';

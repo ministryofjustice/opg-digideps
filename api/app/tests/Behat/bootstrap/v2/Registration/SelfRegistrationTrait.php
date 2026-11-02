@@ -810,7 +810,7 @@ trait SelfRegistrationTrait
      */
     public function theCoDeputyShouldAppearInTheSearchResults(): void
     {
-        $xpath = '//table[@class="table-govuk-body-s"]/tbody';
+        $xpath = '//table[@class="govuk-table"]/tbody';
         $userResultsTable = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
         $this->assertStringContainsString($this->coDeputyEmail, $userResultsTable, 'Results on page');
     }

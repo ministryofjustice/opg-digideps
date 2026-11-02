@@ -74,8 +74,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
             $nextAttemptAt = $this->incrementalWaitingTimechecker->getUnfrozenAt($this->bruteForceKey);
             $nowTime = intval($this->dateTimeProvider->getDateTime()->format('U'));
             $nextAttemptIn = ceil(($nextAttemptAt - $nowTime) / 60);
-            $exception = new UnauthorisedException("Attack detected. Please try again in $nextAttemptIn minutes", 423);
-            $exception->setData($nextAttemptIn);
+            $exception = new UnauthorisedException("Attack detected. Please try again in $nextAttemptIn minutes", 423, data: $nextAttemptIn);
 
             $this->verboseLogger->warning(sprintf('Brute force limit reached in LoginRequestAuthenticator for email "%s"', $email));
 

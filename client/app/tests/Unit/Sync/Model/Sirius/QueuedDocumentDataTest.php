@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Frontend\Unit\Sync\Model\Sirius;
 
 use OPG\Digideps\Frontend\Sync\Model\Sirius\QueuedDocumentData;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class QueuedDocumentDataTest extends TestCase
 {
-    /**
-     * @dataProvider supportingDocumentProvider
-     */
+    #[DataProvider('supportingDocumentProvider')]
     public function testSupportingDocumentCanBeSynced(?string $uuid, bool $expectedResult): void
     {
         $supportingDocument = new QueuedDocumentData()

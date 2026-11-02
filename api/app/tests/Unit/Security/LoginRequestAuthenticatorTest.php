@@ -272,12 +272,6 @@ final class LoginRequestAuthenticatorTest extends TestCase
 
         $nextAttemptIn = ceil(($nowPlusOneHourTime - $nowTime) / 60);
 
-        $expectedException = new UnauthorisedException(
-            "Attack detected. Please try again in $nextAttemptIn minutes",
-            423
-        );
-        $expectedException->setData($nextAttemptIn);
-
         $request = Request::create(
             '/auth/login',
             'POST',
@@ -320,7 +314,7 @@ final class LoginRequestAuthenticatorTest extends TestCase
         } catch (UnauthorisedException $e) {
             $this->assertSame(
                 $nextAttemptIn,
-                $e->getData()
+                $e->data
             );
         }
     }

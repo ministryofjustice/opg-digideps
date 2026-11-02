@@ -21,24 +21,8 @@
   }
 }
 
-.button-secondary {
-  @include button(govuk-colour("light-grey"));
-
-  &[disabled="disabled"] {
-    background: govuk-colour("light-grey");
-  }
-}
-
-.button-warning {
-  @include button(govuk-colour("red"));
-
-  &[disabled="disabled"] {
-    background: govuk-colour("red");
-  }
-}
-
 .button-link {
-  @include media(mobile) {
+  @include govuk-media-query($until: tablet) {
     margin-left: 0;
   }
 
@@ -50,6 +34,6 @@
 
 .action-link {
   &:visited {
-    color: $link-colour;
+    color: $govuk-link-colour;
   }
 }

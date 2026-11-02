@@ -127,7 +127,7 @@
             </div>
             {% if not hideEditLink  %}
                 <div class="govuk-grid-column-one-half text--right">
-                    <a class="govuk-link behat-link-add" href="{{ path('money_in_short_add', { 'reportId': report.id, 'from': 'summary'}) }}">
+                    <a class="govuk-!-font-size-19 govuk-!-font-weight-bold govuk-link behat-link-add" href="{{ path('money_in_short_add', { 'reportId': report.id, 'from': 'summary'}) }}">
                         <strong>
                             <span class="icon icon-plus"></span>
                             {{ 'summaryPage.moneyIn.addButton' | trans }}
@@ -172,7 +172,7 @@
                         £{{ tr.amount | money_format }}
                     </td>
                     {% if not hideEditLink  %}
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
                             <a href="{{ path('money_in_short_edit', { 'reportId': report.id, 'transactionId': tr.id }) }}"
                                class="behat-link-edit govuk-link">
                                 {{ 'edit' | trans({}, 'common') }}

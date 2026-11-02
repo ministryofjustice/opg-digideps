@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Entity\UserResearch;
 
 use JMS\Serializer\Annotation as JMS;
-use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Uid\Uuid;
 
 class ResearchType
 {
@@ -13,7 +13,7 @@ class ResearchType
     private $userResearchResponse;
 
     #[JMS\Type('string')]
-    private UuidInterface $id;
+    private Uuid $id;
 
     #[JMS\Type('bool')]
     private ?bool $surveys = null;
@@ -39,12 +39,12 @@ class ResearchType
         return $this;
     }
 
-    public function getId(): UuidInterface
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function setId(UuidInterface $id): static
+    public function setId(Uuid $id): static
     {
         $this->id = $id;
 

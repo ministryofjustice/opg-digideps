@@ -99,6 +99,7 @@ class ClientApi
                 'deputy',
                 'client-organisations',
                 'organisation',
+                'court-order-basic',
             ]
         );
     }

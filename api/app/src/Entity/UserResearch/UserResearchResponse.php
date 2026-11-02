@@ -10,17 +10,16 @@ use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\Satisfaction;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\UserResearchResponseRepository;
-use Ramsey\Uuid\Doctrine\UuidGenerator;
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Table(name: 'user_research_response')]
 #[ORM\Entity(repositoryClass: UserResearchResponseRepository::class)]
 class UserResearchResponse
 {
-    public function __construct(?UuidInterface $id = null)
+    public function __construct(?Uuid $id = null)
     {
-        $this->id = $id ?? Uuid::uuid4();
+        $this->id = $id ?? Uuid::v4();
         $this->created = new \DateTime();
     }
 
@@ -42,7 +41,7 @@ class UserResearchResponse
     #[ORM\Column(name: 'id', type: 'uuid')]
     #[ORM\GeneratedValue(strategy: 'NONE')]
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private UuidInterface $id;
+    private Uuid $id;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
@@ -101,12 +100,12 @@ class UserResearchResponse
         return $this;
     }
 
-    public function getId(): UuidInterface
+    public function getId(): Uuid
     {
         return $this->id;
     }
 
-    public function setId(UuidInterface $id): UserResearchResponse
+    public function setId(Uuid $id): UserResearchResponse
     {
         $this->id = $id;
 

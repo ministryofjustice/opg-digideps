@@ -38,7 +38,6 @@
         "doctrine/collections": "^2.6.0",
         "egulias/email-validator": "^4.0.4",
         "fakerphp/faker": "^1.24.1",
-        "gbprod/uuid-normalizer": "^7.0.2",
         "guzzlehttp/guzzle": "^7.15.3",
         "jms/serializer-bundle": "^5.5.2",
         "jolicode/slack-php-api": "^4.9",
@@ -47,7 +46,6 @@
         "orbitale/imagemagick-php": "^3.3.5",
         "php-http/guzzle7-adapter": "^1.1",
         "predis/predis": "^3.5.1",
-        "ramsey/uuid": "^4.9.3",
         "symfony/asset": "^6.4.34",
         "symfony/cache": "^6.4.41",
         "symfony/config": "^6.4.37",
@@ -111,14 +109,14 @@
     ],
     "require-dev": {
         "ext-fileinfo": "*",
-        "dg/bypass-finals": "^1.10.2",
+        "dg/bypass-finals": "^1.11.0",
         "league/openapi-psr7-validator": "^0.24.0",
-        "phpstan/phpstan": "^2.2.2",
-        "phpstan/phpstan-phpunit": "^2.0.16",
-        "phpunit/phpcov": "^8.2.1",
-        "phpunit/phpunit": "^9.6.34",
+        "phpstan/phpstan": "^2.3.1",
+        "phpstan/phpstan-phpunit": "^2.1.1",
+        "phpunit/phpcov": "^13.2.0",
+        "phpunit/phpunit": "^13.4.5",
         "symfony/maker-bundle": "^1.67.0",
-        "symfony/phpunit-bridge": "^6.4.35",
-        "symfony/var-dumper": "^6.4.42"
+        "symfony/phpunit-bridge": "^6.4.48",
+        "symfony/var-dumper": "^6.4.48"
     }
 }

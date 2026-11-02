@@ -2,10 +2,10 @@
 
 namespace OPG\Digideps\Backend\EventListener;
 
-use OPG\Digideps\Backend\Exception\BusinessRulesException;
-use OPG\Digideps\Backend\Exception\HasDataInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use OPG\Digideps\Backend\Exception\UnauthorisedException;
+use OPG\Digideps\Common\Listener\ErrorLogger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -137,19 +137,16 @@ class RestInputOutputFormatter
     public function onKernelException(ExceptionEvent $event): void
     {
         $e = $event->getThrowable();
-        $data = $e instanceof HasDataInterface && $e->getData() ? $e->getData() : '';
+        $data = $e instanceof UnauthorisedException && $e->data !== null ? $e->data : '';
         $message = $e->getMessage();
         $code = (int) $e->getCode();
-        $level = 'warning'; // defeault exception level, unless override
+        $level = 'warning'; // default exception level, unless override
 
         // transform message and code
         if ($code < 400 || $code > 599) {
             $code = 500;
         }
 
-        if ($e instanceof BusinessRulesException) {
-            $code = 409;
-        }
         if ($e instanceof \InvalidArgumentException) {
             $code = 400;
         }
@@ -166,7 +163,11 @@ class RestInputOutputFormatter
         }
 
         // log exception
-        $this->logger->log($level, $message);
+        if ($code === 500) {
+            new ErrorLogger($this->logger)->onKernelException($event, true);
+        } else {
+            $this->logger->log($level, $message);
+        }
 
         $data = [
             'success' => false,

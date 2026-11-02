@@ -6,6 +6,7 @@ namespace Tests\OPG\Digideps\Frontend\Unit\Service\File;
 
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use OPG\Digideps\Frontend\Service\File\FileNameManipulation;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -20,9 +21,7 @@ class FileNameManipulationTest extends KernelTestCase
         $this->sut = new FileNameManipulation(new FinfoMimeTypeDetector());
     }
 
-    /**
-     * @dataProvider missingExtensionFilesProvider
-     */
+    #[DataProvider('missingExtensionFilesProvider')]
     public function testAddMissingFileExtension(string $relativeFilePath, string $fileName, string $expectedFilename): void
     {
         $filePath = sprintf('%s/%s', $this->projectDir, $relativeFilePath);

@@ -1,4 +1,4 @@
-FROM nginx:1.31.4-alpine3.24@sha256:db35bfc6b2951e7f8a72db5db120288c127ffaeeb4a6d4b95a26fead017d5913
+FROM nginx:1.31.8-alpine3.24-slim@sha256:f45171d36c76a8b2f5ef97108a3a8a2294248a6578a0a180edc2d78f7d2edc26
 
 ARG PLATFORM=${PLATFORM:-amd64}
 ARG APP_HOST=${APP_HOST:-127.0.0.1}
@@ -8,9 +8,10 @@ USER root
 
 WORKDIR /www/data
 
+# TODO Remove and test replacement of curl with wget
 # Install dependencies
 RUN apk --no-cache upgrade \
-    && apk --no-cache add wget
+    && apk --no-cache add wget curl
 
 COPY client/resources/public/ /www/data/public/
 COPY client/docker/web/config/default.conf /etc/nginx/conf.d/default.conf.tmpl
