@@ -98,7 +98,7 @@ class ReportController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
+        $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state', 'deputy'];
 
         // get all the groups (needed by EntityDir\Report\Status)
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, $reportJmsGroup);
@@ -128,7 +128,7 @@ class ReportController extends AbstractController
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
-            'deputy' => $client->getDeputy(),
+            'deputy' => $report->getPrimaryDeputy(),
             'report' => $report,
             'activeReport' => $activeReport,
         ]);
@@ -193,7 +193,11 @@ class ReportController extends AbstractController
                 );
             }
 
-            $report->setSubmitted(true)->setSubmitDate(new \DateTime());
+            $report
+                ->setSubmitted(true)
+                ->setSubmitDate(new \DateTime())
+                ->setSubmittedBy($currentUser)
+            ;
             $reportSubmissionService->generateReportDocuments($report);
 
             $this->reportApi->submit($report, $currentUser);
