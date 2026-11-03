@@ -26,8 +26,14 @@ class UserResearchResponse
     #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearch\ResearchType')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ORM\OneToOne(inversedBy: 'userResearchResponse', targetEntity: ResearchType::class, cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\OneToOne(targetEntity: ResearchType::class, inversedBy: 'userResearchResponse', cascade: ['persist'], orphanRemoval: true)]
     private ResearchType $researchType;
+
+    #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearch\ElectronicDeviceType')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\OneToOne(targetEntity: ElectronicDeviceType::class, inversedBy: 'userResearchResponse', cascade: ['persist'], orphanRemoval: true)]
+    private ?ElectronicDeviceType $electronicDeviceType = null;
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
@@ -84,6 +90,18 @@ class UserResearchResponse
     public function setResearchType(ResearchType $researchType): UserResearchResponse
     {
         $this->researchType = $researchType;
+
+        return $this;
+    }
+
+    public function getElectronicDeviceType(): ?ElectronicDeviceType
+    {
+        return $this->electronicDeviceType;
+    }
+
+    public function setElectronicDeviceType(ElectronicDeviceType $electronicDeviceType): UserResearchResponse
+    {
+        $this->electronicDeviceType = $electronicDeviceType;
 
         return $this;
     }

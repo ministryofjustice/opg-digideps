@@ -33,10 +33,11 @@ class UserResearchResponseRepository extends ServiceEntityRepository
     {
         $qb = $this
             ->createQueryBuilder('urr')
-            ->select('urr', 'u', 's', 'rt')
+            ->select('urr', 'u', 's', 'rt', 'edt')
             ->leftJoin('urr.satisfaction', 's')
             ->leftJoin('urr.user', 'u')
             ->leftJoin('urr.researchType', 'rt')
+            ->leftJoin('urr.electronicDeviceType', 'edt')
             ->where('urr.created > :from')->setParameter('from', $from)
             ->andWhere('urr.created < :to')->setParameter('to', $to);
 
