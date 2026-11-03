@@ -344,13 +344,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     #[JMS\Groups(['user'])]
     private $registrationRoute;
 
-    /**
-     * @var bool
-     */
-    #[JMS\Type('boolean')]
-    #[JMS\Groups(['user'])]
-    private $isPrimary;
-
     public function __construct()
     {
     }
@@ -1177,17 +1170,5 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         $this->registrationRoute = $registrationRoute;
 
         return $this;
-    }
-
-    public function setIsPrimary(bool $primary = false): static
-    {
-        $this->isPrimary = $primary;
-
-        return $this;
-    }
-
-    public function getIsPrimary(): bool
-    {
-        return $this->isPrimary;
     }
 }
