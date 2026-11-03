@@ -125,25 +125,11 @@ class UserService
             return $existingUser;
         }
 
-        // check whether the deputy already has an active primary user account, so we know whether this is a secondary
-        // user we're adding
-        $isPrimary = true;
-        $existingUser = $this->userRepository->findOneBy([
-            'deputyUid' => $deputyUid,
-            'active' => true,
-            'isPrimary' => true,
-        ]);
-
-        if (!is_null($existingUser)) {
-            $isPrimary = false;
-        }
-
         $invitedUser = new User(
             $invitedDeputyData->firstname,
             $invitedDeputyData->lastname,
             $invitedDeputyData->email
         )
-            ->setIsPrimary($isPrimary)
             ->setRoleName($invitedDeputyData->roleName)
             ->setDeputyUid($deputyUid)
             ->setActive(true)
