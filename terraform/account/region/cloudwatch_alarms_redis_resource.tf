@@ -28,7 +28,7 @@ resource "aws_cloudwatch_metric_alarm" "redis_high_cpu" {
   alarm_actions             = [aws_sns_topic.alerts.arn]
   ok_actions                = var.account.pagerduty_enabled ? [aws_sns_topic.alerts.arn] : []
   insufficient_data_actions = []
-  actions_enabled           = var.account.resource_alarms_active
+  actions_enabled           = var.account.alarms_active
   tags                      = var.default_tags
 }
 
@@ -70,6 +70,6 @@ resource "aws_cloudwatch_metric_alarm" "redis_high_evictions" {
   alarm_actions             = [aws_sns_topic.alerts.arn]
   ok_actions                = var.account.pagerduty_enabled ? [aws_sns_topic.alerts.arn] : []
   insufficient_data_actions = []
-  actions_enabled           = var.account.resource_alarms_active
+  actions_enabled           = var.account.alarms_active
   tags                      = var.default_tags
 }
