@@ -24,11 +24,6 @@ class TestUserFixtures extends AbstractDataFixture
             'isPrimary' => true,
         ],
         [
-            'id' => 'multi-client-non-primary-deputy',
-            'roleName' => 'ROLE_LAY_DEPUTY',
-            'deputyUid' => 567890098765,
-        ],
-        [
             'id' => 'main-deputy',
             'roleName' => 'ROLE_LAY_DEPUTY',
             'deputyUid' => 987654321001,
@@ -106,8 +101,7 @@ class TestUserFixtures extends AbstractDataFixture
             ->setAddressCountry('GB')
             ->setRoleName($data['roleName'])
             ->setDeputyUid($data['deputyUid'] ?? null)
-            ->setCoDeputyClientConfirmed($data['co-deputy'] ?? false)
-            ->setIsPrimary($data['isPrimary'] ?? false);
+            ->setCoDeputyClientConfirmed($data['co-deputy'] ?? false);
         $user->setPassword($this->passwordHasher->hashPassword($user, $plain));
 
         $fixtureService->persist($user);
