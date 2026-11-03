@@ -186,9 +186,9 @@ final class FixtureService
 
         $courtOrder = $this->makeCourtOrder($descriptor, $client, $type);
         /**
-         * @var null|User $primary;
+         * @var null|User $submitter;
          */
-        $primary = null;
+        $submitter = null;
 
         foreach ($deputySet->descriptors as $deputyDescriptor) {
             $user = $persons['users'][$deputyDescriptor->deputyReference] ?? null;
@@ -225,9 +225,7 @@ final class FixtureService
                 if ($user->isLayDeputy()) {
                     $user->addClient($client);
                 }
-                if ($user->getIsPrimary()) {
-                    $primary ??= $user;
-                }
+                $submitter ??= $user;
             }
         }
 
@@ -258,7 +256,7 @@ final class FixtureService
                 $report = $this->makeReport($courtOrder, $reportDescriptor);
 
                 if ($report->getSubmitDate() !== null) {
-                    $this->makeReportSubmitted($report, $reportDescriptor, $primary);
+                    $this->makeReportSubmitted($report, $reportDescriptor, $submitter);
                 } elseif ($descriptor->reportList->currentIsSubmittable && $first) {
                     $this->makeReportSubmittable($report);
                 }
@@ -408,7 +406,6 @@ final class FixtureService
                 UserType::SuperAdmin => User::ROLE_SUPER_ADMIN,
             })
             ->setCoDeputyClientConfirmed(true)
-            ->setIsPrimary($descriptor->isPrimary)
             ->setRegistrationRoute(User::SELF_REGISTER);
 
         if ($descriptor->hasRegistered) {

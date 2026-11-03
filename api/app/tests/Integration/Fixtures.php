@@ -58,7 +58,6 @@ class Fixtures
         ?\DateTime $registrationDate = null,
         ?string $phoneMain = null,
         ?int $deputyUid = null,
-        ?bool $isPrimary = null,
     ): User {
         $user = new User(
             'name' . time(),
@@ -81,9 +80,6 @@ class Fixtures
         }
         if ($deputyUid) {
             $user->setDeputyUid($deputyUid);
-        }
-        if ($isPrimary) {
-            $user->setIsPrimary($isPrimary);
         }
 
         $this->em->persist($user);

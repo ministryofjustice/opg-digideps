@@ -20,7 +20,6 @@ class UserDto
     private ?\DateTime $lastLoggedIn = null;
     private ?array $clients = null;
     private ?int $deputyUid = null;
-    private ?bool $isPrimary = null;
 
     public function getId(): ?int
     {
@@ -210,18 +209,6 @@ class UserDto
     public function setDeputyUid(?int $deputyUid): UserDto
     {
         $this->deputyUid = $deputyUid;
-
-        return $this;
-    }
-
-    public function getIsPrimary(): ?bool
-    {
-        return $this->isPrimary;
-    }
-
-    public function setIsPrimary(?bool $isPrimary): UserDto
-    {
-        $this->isPrimary = $isPrimary;
 
         return $this;
     }

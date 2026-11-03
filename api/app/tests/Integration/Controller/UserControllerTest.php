@@ -628,7 +628,6 @@ class UserControllerTest extends AbstractTestController
 
         $this->assertEquals('multi-client-primary-deputy', $data['lastname']);
         $this->assertEquals('multi-client-primary-deputy@example.org', $data['email']);
-        $this->assertTrue($data['is_primary']);
     }
 
     public function testGetPrimaryEmailNoUser(): void
@@ -651,13 +650,11 @@ class UserControllerTest extends AbstractTestController
         self::fixtures()->createUser(
             email: 'mrfake1@fakeland.fake',
             deputyUid: $deputyUid,
-            isPrimary: true
         );
 
         self::fixtures()->createUser(
             email: 'mrfake2@fakeland.fake',
             deputyUid: $deputyUid,
-            isPrimary: true
         );
 
         self::fixtures()->flush()->clear();
@@ -681,7 +678,6 @@ class UserControllerTest extends AbstractTestController
         self::fixtures()->createUser(
             email: $expectedEmail,
             deputyUid: $deputyUid,
-            isPrimary: true
         );
 
         self::fixtures()->flush()->clear();
