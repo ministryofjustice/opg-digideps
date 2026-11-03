@@ -143,7 +143,6 @@ class UserService
             $invitedDeputyData->lastname,
             $invitedDeputyData->email
         )
-            ->setIsPrimary($isPrimary)
             ->setRoleName($invitedDeputyData->roleName)
             ->setDeputyUid($deputyUid)
             ->setActive(true)
