@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Controller\Admin\Client;
 
 use OPG\Digideps\Frontend\Controller\AbstractController;
-use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
-use OPG\Digideps\Frontend\Service\Client\Internal\UserApi;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,10 +16,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route(path: '/admin/client')]
 class ClientController extends AbstractController
 {
-    public function __construct(
-        private readonly ClientApi $clientApi,
-        private readonly UserApi $userApi,
-    ) {
+    public function __construct(private readonly ClientApi $clientApi)
+    {
     }
 
     #[Route(path: '/{id}/details', name: 'admin_client_details', requirements: ['id' => '\d+'])] // //TODO define Security group (AD to remove?)
@@ -36,12 +32,6 @@ class ClientController extends AbstractController
         }
 
         $deputy = $client->getDeputy();
-
-        if ($deputy instanceof User) {
-            if (!$deputy->getIsPrimary()) {
-                $deputy = $this->userApi->getPrimaryUserAccount($deputy->getDeputyUid());
-            }
-        }
 
         return [
             'client' => $client,
