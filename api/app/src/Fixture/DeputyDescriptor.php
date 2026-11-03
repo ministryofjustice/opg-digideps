@@ -17,7 +17,6 @@ final readonly class DeputyDescriptor
         public UserType $userType = UserType::Deputy,
         public bool $hasLogin = true,
         public bool $isActive = true,
-        public bool $isPrimary = true,
         ?string $emailDomain = null,
         public bool $hasRegistered = true,
     ) {

@@ -143,11 +143,6 @@ class SelfRegisterController extends RestController
         $user->setActive(true);
         $user->setRegistrationDate(new \DateTime());
         $user->setPreRegisterValidatedDate(new \DateTime());
-
-        if (!$coDeputyVerificationData['existingDeputyAccounts']) {
-            $user->setIsPrimary(true);
-        }
-
         $this->em->persist($user);
         $this->em->flush();
 

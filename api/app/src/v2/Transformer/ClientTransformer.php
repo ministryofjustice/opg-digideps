@@ -98,8 +98,7 @@ class ClientTransformer
      *     job_title: (string | null),
      *     phone_main: (string | null),
      *     last_logged_in: (mixed | null),
-     *     deputy_uid: (int | null),
-     *     is_primary: (bool | null)}[]
+     *     deputy_uid: (int | null)}[]
      */
     private function transformDeputies(array $userDtos): array
     {
@@ -127,7 +126,6 @@ class ClientTransformer
                     'phone_main' => $userDto->getPhoneMain(),
                     'last_logged_in' => $userDto->getLastLoggedIn() instanceof \DateTime ? $userDto->getLastLoggedIn()->format('Y-m-d H:i:s') : null,
                     'deputy_uid' => $userDto->getDeputyUid(),
-                    'is_primary' => $userDto->getIsPrimary(),
                 ];
             }
         }

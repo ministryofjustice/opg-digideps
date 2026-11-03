@@ -651,13 +651,11 @@ class UserControllerTest extends AbstractTestController
         self::fixtures()->createUser(
             email: 'mrfake1@fakeland.fake',
             deputyUid: $deputyUid,
-            isPrimary: true
         );
 
         self::fixtures()->createUser(
             email: 'mrfake2@fakeland.fake',
             deputyUid: $deputyUid,
-            isPrimary: true
         );
 
         self::fixtures()->flush()->clear();
@@ -681,7 +679,6 @@ class UserControllerTest extends AbstractTestController
         self::fixtures()->createUser(
             email: $expectedEmail,
             deputyUid: $deputyUid,
-            isPrimary: true
         );
 
         self::fixtures()->flush()->clear();

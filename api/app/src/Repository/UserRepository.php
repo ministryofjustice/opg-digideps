@@ -356,9 +356,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function findPrimaryUserByDeputyUid(string $deputyUid): ?User
     {
+        $fqn = User::class;
         $query = $this
             ->getEntityManager()
-            ->createQuery("SELECT u FROM OPG\Digideps\Backend\Entity\User u WHERE u.deputyUid = :deputyUid AND u.isPrimary = True")
+            ->createQuery("SELECT u FROM {$fqn} u WHERE u.deputyUid = :deputyUid")
             ->setParameter('deputyUid', $deputyUid);
 
         return $query->getSingleResult();
@@ -402,7 +403,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $pageQueryBuilder = $this->createQueryBuilder('u')
             ->leftJoin(Deputy::class, 'd', Join::WITH, 'u.id = d.user')
             ->where('u.active = true')
-            ->andWhere('u.isPrimary = true')
             ->andWhere('u.roleName in (:roles)')
             ->andWhere('d.id IS NULL')
             ->setParameter('roles', [User::ROLE_LAY_DEPUTY, User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED])
