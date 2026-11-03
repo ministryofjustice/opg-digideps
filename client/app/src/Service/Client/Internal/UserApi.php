@@ -272,15 +272,6 @@ class UserApi
         return $value;
     }
 
-    public function getPrimaryUserAccount(int $deputyUid): User
-    {
-        return $this->restClient->get(
-            sprintf(self::GET_PRIMARY_USER_ACCOUNT_ENDPOINT, $deputyUid),
-            'User',
-            []
-        );
-    }
-
     public function updateUserCodeputyFlagToTrue(int $id, array $jmsGroups = []): void
     {
         $this->restClient->put(
