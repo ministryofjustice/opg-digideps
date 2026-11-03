@@ -79,8 +79,7 @@ class UserTestHelper
             ->setAddress1($faker->streetAddress())
             ->setAddressCountry('GB')
             ->setAddressPostcode($faker->postcode())
-            ->setAgreeTermsUse(true)
-            ->setIsPrimary($isPrimary);
+            ->setAgreeTermsUse(true);
 
         if ($deputyUid === -1) {
             $user->setDeputyUid(null);
