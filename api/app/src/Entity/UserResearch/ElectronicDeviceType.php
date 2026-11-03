@@ -15,7 +15,7 @@ class ElectronicDeviceType
     public function __construct(array $formResponses, ?Uuid $id = null)
     {
         if (empty($formResponses)) {
-            throw new \RuntimeException('Must select at least one electronic device type', 403);
+            throw new \RuntimeException('Must select at least one electronic device type', 422);
         }
 
         $this->id = $id ?? Uuid::v4();
