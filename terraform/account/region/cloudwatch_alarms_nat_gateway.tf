@@ -18,14 +18,14 @@ resource "aws_cloudwatch_metric_alarm" "nat_gateway_bytes_out" {
   ok_actions      = var.account.pagerduty_enabled ? [aws_sns_topic.alerts.arn] : []
 
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 5
-  datapoints_to_alarm = 5
-  threshold           = 40000
+  evaluation_periods  = 1
+  datapoints_to_alarm = 1
+  threshold           = 100000
   period              = 60
 
   namespace   = "AWS/NATGateway"
   metric_name = "BytesOutToDestination"
-  statistic   = "Sum"
+  statistic   = "Average"
 
   dimensions = {
     NatGatewayId = each.key

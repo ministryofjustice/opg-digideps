@@ -6,14 +6,14 @@ resource "aws_cloudwatch_metric_alarm" "ecs_network_tx_bytes" {
   ok_actions        = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
 
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 5
-  datapoints_to_alarm = 5
+  evaluation_periods  = 1
+  datapoints_to_alarm = 1
   threshold           = 300000
   period              = 60
 
   namespace   = "ECS/ContainerInsights"
   metric_name = "NetworkTxBytes"
-  statistic   = "Sum"
+  statistic   = "Average"
 
   dimensions = {
     ClusterName = aws_ecs_cluster.main.name
