@@ -187,7 +187,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[JMS\Type('integer')]
     #[JMS\Groups(['user'])]
-    #[ORM\Column(name: 'deputy_uid', type: 'bigint', nullable: true)]
+    #[ORM\Column(name: 'deputy_uid', type: 'bigint', unique: true, nullable: true)]
     private ?int $deputyUid = null;
 
     #[JMS\Type('string')]
@@ -243,11 +243,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[JMS\Groups(['user'])]
     #[ORM\Column(name: 'registration_route', type: 'string', length: 30, nullable: false, options: ['default' => 'UNKNOWN'])]
     private string $registrationRoute = self::UNKNOWN_REGISTRATION_ROUTE;
-
-    #[JMS\Type('boolean')]
-    #[JMS\Groups(['user'])]
-    #[ORM\Column(name: 'is_primary', type: 'boolean', nullable: false, options: ['default' => false])]
-    private bool $isPrimary = false;
 
     public function __construct(string $firstname, string $lastname, string $email, bool $coDeputyClientConfirmed = false)
     {
@@ -917,18 +912,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function setIsPrimary(bool $primary): User
-    {
-        $this->isPrimary = $primary;
-
-        return $this;
-    }
-
-    public function getIsPrimary(): bool
-    {
-        return $this->isPrimary;
-    }
-
     /**
      * Populate user fields from an array of data.
      *
@@ -991,10 +974,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (!empty($data['pre_register_validated_date'])) {
             $preRegisterValidateDate = new \DateTime($data['pre_register_validated_date']);
             $this->setPreRegisterValidatedDate($preRegisterValidateDate);
-        }
-
-        if (array_key_exists('is_primary', $data)) {
-            $this->setIsPrimary($data['is_primary']);
         }
 
         return $this;

@@ -1849,12 +1849,6 @@ parameters:
 			path: src/DataFixtures/TestUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$primary of method OPG\\Digideps\\Backend\\Entity\\User\:\:setIsPrimary\(\) expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/DataFixtures/TestUserFixtures.php
-
-		-
 			message: '#^Parameter \#1 \$roleName of method OPG\\Digideps\\Backend\\Entity\\User\:\:setRoleName\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -2156,12 +2150,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$deputyUid of method OPG\\Digideps\\Backend\\Entity\\User\:\:setDeputyUid\(\) expects int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Parameter \#1 \$primary of method OPG\\Digideps\\Backend\\Entity\\User\:\:setIsPrimary\(\) expects bool, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Entity/User.php
@@ -4912,12 +4900,6 @@ parameters:
 			message: '#^Cannot call method getEmail\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: src/Service/UserRegistrationService.php
-
-		-
-			message: '#^Parameter \#1 \$deputyUid of method OPG\\Digideps\\Backend\\Service\\PreRegistrationVerificationService\:\:deputyUidHasOtherUserAccounts\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/Service/UserRegistrationService.php
 
 		-

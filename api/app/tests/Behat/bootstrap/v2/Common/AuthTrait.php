@@ -579,9 +579,8 @@ trait AuthTrait
         $primaryEmailAddress = '';
 
         foreach ($allUserAccounts as $userAccount) {
-            if ($userAccount->getIsPrimary()) {
-                $primaryEmailAddress = $userAccount->getEmail();
-            }
+            $primaryEmailAddress = $userAccount->getEmail();
+            break;
         }
 
         $this->visitPath('/login');

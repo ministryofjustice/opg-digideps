@@ -4,6 +4,7 @@ namespace OPG\Digideps\Backend\Controller;
 
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
@@ -82,7 +83,6 @@ class PreRegistrationController extends RestController
 
         $user->setDeputyUid(intval($preregMatches[0]->getDeputyUid()));
         $user->setPreRegisterValidatedDate(new \DateTime());
-        $user->setIsPrimary(true);
         $this->em->persist($user);
         $this->em->flush();
 
@@ -95,7 +95,7 @@ class PreRegistrationController extends RestController
     {
         $qb = $this->em->createQueryBuilder();
         $qb->select('count(p.id)');
-        $qb->from('OPG\Digideps\Backend\Entity\PreRegistration', 'p');
+        $qb->from(PreRegistration::class, 'p');
 
         /** @var int $result */
         $result = $qb->getQuery()->getSingleScalarResult();
