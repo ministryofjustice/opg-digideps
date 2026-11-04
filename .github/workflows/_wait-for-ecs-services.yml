@@ -43,7 +43,7 @@ jobs:
           persist-credentials: false
 
       - id: deploy-key
-        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@3a15a16fcc221821c2869eecd8822c5d62af2984
+        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@e8b6e80d440613671b8d6f87b5e52a5363cc974a # v5.0.0
         with:
           deploy_key: ${{ secrets.ssh_private_key }}
 
