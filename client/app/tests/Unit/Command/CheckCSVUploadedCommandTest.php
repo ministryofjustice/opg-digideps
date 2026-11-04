@@ -263,7 +263,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->logger->expects($invocationMatcher)
             ->method('log')
             ->willReturnCallback(function (string $level, string $message) use ($invocationMatcher, $expectations): void {
-                $invocation = $invocationMatcher->getInvocationCount();
+                $invocation = $invocationMatcher->numberOfInvocations();
                 self::assertEquals($level, $expectations[$invocation][0]);
                 self::assertEquals($message, $expectations[$invocation][1]);
             });

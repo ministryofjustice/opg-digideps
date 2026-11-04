@@ -59,7 +59,7 @@ final class ClientDetails
         $keys = [
             'actionsHeader',
             'actions.checklist',
-            'actions.download',
+            'actions.viewSummary',
             'actions.manage',
             'dueDate',
             'period',
@@ -176,8 +176,8 @@ final class ClientDetails
             }
 
             if ($report->isDownloadable() && $userIsSuperAdmin) {
-                $downloadUrl = $this->urlGenerator->generate('report_pdf', ['reportId' => $report->getId()]);
-                $links[] = new Link(href: $downloadUrl, text: $this->text['actions.download']);
+                $downloadUrl = $this->urlGenerator->generate('admin_report_view_summary', ['id' => $report->getId()]);
+                $links[] = new Link(href: $downloadUrl, text: $this->text['actions.viewSummary']);
             }
 
             $cells = [

@@ -124,7 +124,7 @@ class CourtOrder
      * @return Deputy[]
      */
     #[JMS\VirtualProperty]
-    #[JMS\Groups(['court-order-full'])]
+    #[JMS\Groups(['court-order-basic', 'court-order-full'])]
     public function getActiveDeputies(): array
     {
         $activeDeputies = [];

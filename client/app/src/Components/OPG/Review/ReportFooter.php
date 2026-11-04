@@ -52,7 +52,7 @@ final class ReportFooter
         if ($declaration === 'more_deputies_not_behalf') {
             $builder->addItem($this->text['whyNot'], $report->getAgreedBehalfDeputyExplanation() ?? $this->text['notEntered']);
         }
-        $builder->addItem($this->text['declarationTime'], $report->getSubmitDate()?->format('h:i d/m/Y') ?? '');
+        $builder->addItem($this->text['declarationTime'], $report->getSubmitDate()?->format('H:i d/m/Y') ?? '');
         $builder->addItem($this->text['submittedBy'], $report->getSubmittedBy()?->getFullName() ?? '');
         return $builder->makeList();
     }

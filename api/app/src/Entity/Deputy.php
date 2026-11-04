@@ -48,6 +48,7 @@ class Deputy
     /**
      * @see DeputyType
      */
+    #[JMS\Groups(['deputy'])]
     #[ORM\Column(name: 'deputy_type', type: 'string', length: 3, nullable: false)]
     private string $deputyType;
 

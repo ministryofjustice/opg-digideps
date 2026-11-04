@@ -6,24 +6,12 @@ namespace OPG\Digideps\Frontend\TestHelpers;
 
 use OPG\Digideps\Frontend\Entity\User;
 use Faker;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Serializer\Serializer;
 
-class UserHelpers extends KernelTestCase
+class UserHelpers
 {
-    /**
-     * @return User|array|object
-     */
-    public static function createUser(?array $data = null)
+    public static function createUser(): User
     {
-        $container = self::bootKernel()->getContainer();
-        /** @var Serializer $serializer */
-        $serializer = $container->get('serializer');
         $faker = Faker\Factory::create();
-
-        if (!empty($data)) {
-            return $serializer->deserialize(json_encode($data), User::class, 'json');
-        }
 
         return new User()
             ->setId($faker->numberBetween(1, 999999999))
@@ -34,25 +22,9 @@ class UserHelpers extends KernelTestCase
             ->setEmail($faker->safeEmail());
     }
 
-    /**
-     * @return User|array|object
-     */
-    public static function createLayUser()
+    public static function createLayUser(): User
     {
         return self::createUser()->setRoleName(User::ROLE_LAY_DEPUTY);
-    }
-
-    public static function createInvitedCoDeputy(): User
-    {
-        $faker = Faker\Factory::create();
-
-        $invitedCoDeputy = self::createUser();
-
-        foreach ($invitedCoDeputy as $key => $value) {
-            unset($invitedCoDeputy->$key);
-        }
-
-        return $invitedCoDeputy->setEmail($faker->safeEmail());
     }
 
     public static function createAdminUser(): User

@@ -22,6 +22,14 @@ form:
       videoCall: One-to-one sessions via video call
       phone: One-to-one sessions on the phone
       inPerson: One-to-one sessions in person (once permitted to do so)
+  electronicDeviceTypes:
+    label: Which of the following electronic devices have you used while completing your annual report this year?
+    hint: Select all that apply
+    choices:
+      desktop: Desktop computer
+      laptop: Laptop computer
+      mobile: Mobile phone
+      tablet: iPad, or other kind of tablet
   hasAccessToVideoCallDevice:
     label: Do you have access to a tablet, laptop or computer that you can make video calls on?
     choices:

@@ -87,6 +87,7 @@ jobs:
         if: steps.cache-snyk-scanner.outputs.cache-hit != 'true'
         env:
           OPG_GITHUB_ACTIONS_REF: ${{ steps.opg_actions_ref.outputs.ref }}
+          SNYK_IMAGE_TAG: latest
         run: |
           git clone https://github.com/ministryofjustice/opg-github-actions.git /tmp/opg-github-actions
 
@@ -414,7 +415,7 @@ jobs:
       - name: Run Snyk Scan
         id: snyk_scan
         if: matrix.svc_name != 'mock-sirius' && matrix.svc_name != 'test' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
-        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@939ca6ddfc2bafefa48b0730ea0268bd75a25876 # v4.9.1
+        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@e8b6e80d440613671b8d6f87b5e52a5363cc974a # v5.0.0
         with:
           SNYK_TEST_IMAGE: ${{ matrix.svc_name }}:latest
           SNYK_TOKEN: ${{ secrets.snyk_token }}
@@ -422,6 +423,7 @@ jobs:
           sarif_filepath: ./test-results
           sarif_filename: snyk-results.sarif
           snyk_policy_path: ${{ github.workspace }}/.github/.snyk
+          snyk_image_tag: "latest"
 
       - name: Upload SNYK scan results to GitHub Security tab
         if: steps.snyk_scan.outcome == 'success' && hashFiles('test-results/snyk-results.sarif') != ''

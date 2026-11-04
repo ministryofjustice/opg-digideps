@@ -35,12 +35,10 @@ class ReportSectionLinksServiceTest extends TestCase
             ['contacts', true],
             ['visitsCare', true],
             ['lifestyle', true],
-            ['actions', true],
-            ['actions', true],
-            ['otherInfo', true],
-            ['gifts', true],
             ['clientBenefitsCheck', true],
             ['bankAccounts', true],
+            ['deputyExpenses', true],
+            ['gifts', true],
             ['moneyTransfers', true],
             ['moneyIn', true],
             ['moneyOut', true],
@@ -48,16 +46,19 @@ class ReportSectionLinksServiceTest extends TestCase
             ['moneyOutShort', true],
             ['assets', true],
             ['debts', true],
-            ['documents', true],
-            ['paDeputyExpenses', false],
-            ['profCurrentFees', false],
+            ['paDeputyExpenses', true],
             ['actions', true],
+            ['otherInfo', true],
+            ['documents', true],
+            ['profCurrentFees', false],
+            ['deputyExpenses', false],
             ['profDeputyCosts', false],
-            ['deputyExpenses', true],
+            ['profDeputyCostsEstimate', false],
+            ['paDeputyExpenses', false],
         ]);
 
-        $actual = $this->sut->getSectionParams($this->report, 'debts', 1);
-        self::assertEquals('actions', $actual['section']);
+        $actual = $this->sut->getSectionParams($this->report, 'deputyExpenses', 1);
+        self::assertEquals('gifts', $actual['section']);
 
         $actual = $this->sut->getSectionParams($this->report, 'documents', +1);
         self::assertEquals([], $actual);
@@ -65,17 +66,16 @@ class ReportSectionLinksServiceTest extends TestCase
 
     public function testGetSectionParamsPa(): void
     {
+        $this->report->method('isPAreport')->willReturn(true);
+
         $this->report->method('hasSection')->willReturnMap([
             ['decisions', true],
             ['contacts', true],
             ['visitsCare', true],
             ['lifestyle', true],
-            ['actions', true],
-            ['actions', true],
-            ['otherInfo', true],
-            ['gifts', true],
             ['clientBenefitsCheck', true],
             ['bankAccounts', true],
+            ['gifts', true],
             ['moneyTransfers', true],
             ['moneyIn', true],
             ['moneyOut', true],
@@ -83,8 +83,10 @@ class ReportSectionLinksServiceTest extends TestCase
             ['moneyOutShort', true],
             ['assets', true],
             ['debts', true],
-            ['documents', true],
             ['paDeputyExpenses', true],
+            ['actions', true],
+            ['otherInfo', true],
+            ['documents', true],
             ['profCurrentFees', false],
             ['deputyExpenses', false],
             ['profDeputyCosts', false],
@@ -92,22 +94,23 @@ class ReportSectionLinksServiceTest extends TestCase
         ]);
 
         $actual = $this->sut->getSectionParams($this->report, 'paFeeExpense', +1);
-        self::assertEquals('gifts', $actual['section']);
+        self::assertEquals('actions', $actual['section']);
     }
 
     public function testGetSectionParamsProf(): void
     {
+        $this->report->method('isPAreport')->willReturn(false);
+        $this->report->method('isProfReport')->willReturn(true);
+
+
         $this->report->method('hasSection')->willReturnMap([
             ['decisions', true],
             ['contacts', true],
             ['visitsCare', true],
             ['lifestyle', true],
-            ['actions', true],
-            ['actions', true],
-            ['otherInfo', true],
-            ['gifts', true],
             ['clientBenefitsCheck', true],
             ['bankAccounts', true],
+            ['gifts', true],
             ['moneyTransfers', true],
             ['moneyIn', true],
             ['moneyOut', true],
@@ -115,12 +118,14 @@ class ReportSectionLinksServiceTest extends TestCase
             ['moneyOutShort', true],
             ['assets', true],
             ['debts', true],
+            ['profCurrentFees', true],
+            ['profDeputyCosts', true],
+            ['profDeputyCostsEstimate', true],
+            ['actions', true],
+            ['otherInfo', true],
             ['documents', true],
             ['paDeputyExpenses', false],
-            ['profCurrentFees', false],
-            ['profDeputyCosts', true],
             ['deputyExpenses', false],
-            ['profDeputyCostsEstimate', true],
         ]);
 
         $actual = $this->sut->getSectionParams($this->report, 'profDeputyCosts', +1);

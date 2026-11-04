@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Controller\Admin\Client;
 
 use OPG\Digideps\Common\Validating\ValidatingArray;
+use OPG\Digideps\Frontend\Components\OPG\Review\Section;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Report\Checklist;
 use OPG\Digideps\Frontend\Entity\Report\Report;
@@ -36,7 +37,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Twig\Error\Error;
 
@@ -578,5 +579,37 @@ class ReportController extends AbstractController
     private function isChecklistSyncEnabled(): bool
     {
         return $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC) === '1';
+    }
+
+    #[Route(path: 'summary', name: 'admin_report_view_summary')]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
+    #[Template('@App/Admin/Client/Report/summary.html.twig')]
+    public function viewSummary(Request $request, string $id): array|RedirectResponse
+    {
+        $reportId = (int)$id;
+        $report = $this->reportApi->getReport($reportId, ReportApi::$reportGroupsAll);
+
+        // check status
+        $status = $report->getStatus();
+
+
+        $backLink = $this->generateUrl('admin_client_details', ['id' => $report->getClient()->getId()]);
+
+        if (!$report->isSubmitted()) {
+            // Redirect back to client overview if report is not submitted
+            return $this->redirectToRoute('admin_client_details', ['id' => $report->getClient()->getId()]);
+        }
+
+        $sections = [];
+        foreach ($this->reportSectionService->getReportMetadata($report)->sections->getIterator() as $section) {
+            $sections[] = new Section($report, $section);
+        }
+
+        return [
+            'report' => $report,
+            'sections' => $sections,
+            'reportStatus' => $status,
+            'backLink' => $backLink,
+        ];
     }
 }
