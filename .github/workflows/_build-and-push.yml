@@ -414,7 +414,7 @@ jobs:
       - name: Run Snyk Scan
         id: snyk_scan
         if: matrix.svc_name != 'mock-sirius' && matrix.svc_name != 'test' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
-        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@12bdbe54f92af873347bc0cd6f4e7769265c1a90 # v4.10.5
+        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@e8b6e80d440613671b8d6f87b5e52a5363cc974a # v5.0.0
         with:
           SNYK_TEST_IMAGE: ${{ matrix.svc_name }}:latest
           SNYK_TOKEN: ${{ secrets.snyk_token }}
