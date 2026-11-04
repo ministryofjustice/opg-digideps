@@ -1,4 +1,4 @@
-{% props href, text=null, noVisitedState=false, inverse=false, inNewTab=false, accessibilityText=null, class=null %}
+{%- props href, text=null, noVisitedState=false, inverse=false, inNewTab=false, accessibilityText=null, class=null -%}
 
 {% set className = "govuk-link" %}
 {% if class is not null %}
@@ -20,4 +20,4 @@
     {%- if accessibilityText is not null -%}
         <span class="govuk-visually-hidden"> {{ accessibilityText }}</span>
     {%- endif -%}
-</a>
+</a>{#--#}
