@@ -45,16 +45,16 @@ final readonly class RichTextParser
         $this->linkResolver = $linkResolver ?? [$this, 'defaultLinkResolver'];
     }
 
-    public function parse(string $key, string $domain, int $h = 1): RenderableInterface
+    public function parse(string $key, string $domain, int $h = 1, string $size = 'm'): RenderableInterface
     {
         $raw = $this->translator->trans($key, [], $domain);
         $lines = array_filter(explode("\n", $raw));
         $renderBuffer = [];
         $listBuffer = [];
         foreach ($lines as $line) {
-            $this->parseLine($line, $listBuffer, $renderBuffer, $h);
+            $this->parseLine($line, $listBuffer, $renderBuffer, $h, $size);
         }
-        $this->parseLine(null, $listBuffer, $renderBuffer, $h);
+        $this->parseLine(null, $listBuffer, $renderBuffer, $h, $size);
 
         return new RenderableArray(...$renderBuffer);
     }
@@ -63,7 +63,7 @@ final readonly class RichTextParser
      * @param array<string> $listBuffer
      * @param array<RenderableInterface> $renderBuffer
      */
-    private function parseLine(?string $line, array &$listBuffer, array &$renderBuffer, int $h): void
+    private function parseLine(?string $line, array &$listBuffer, array &$renderBuffer, int $h, string $size): void
     {
         if ($line === null) {
             if (!empty($listBuffer)) {
@@ -72,11 +72,11 @@ final readonly class RichTextParser
         } elseif (!empty($listBuffer) && $line[0] !== '-') {
             $renderBuffer[] = $this->handleList(...$listBuffer);
             $listBuffer = [];
-            $this->parseLine($line, $listBuffer, $renderBuffer, $h);
+            $this->parseLine($line, $listBuffer, $renderBuffer, $h, $size);
         } elseif ($line[0] === '-') {
             $listBuffer[] = mb_trim(mb_substr($line, 1));
         } elseif ($line[0] === '#') {
-            $renderBuffer[] = $this->handleHeader($line, $h);
+            $renderBuffer[] = $this->handleHeader($line, $h, $size);
         } else {
             $renderBuffer[] = $this->handleParagraph($line);
         }
@@ -91,10 +91,10 @@ final readonly class RichTextParser
         return $builder->makeUnorderedList();
     }
 
-    private function handleHeader(string $line, int $h): Heading
+    private function handleHeader(string $line, int $h, string $size): Heading
     {
         $line = mb_trim(mb_substr($line, 1));
-        return new Heading($this->handleText($line), $h);
+        return new Heading($this->handleText($line), $h, $size);
     }
 
     private function handleParagraph(string $line): Paragraph
