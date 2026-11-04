@@ -21,7 +21,7 @@ locals {
 }
 
 # Using resources rather than a module here due to a large list of IPs
-resource "aws_security_group_rule" "front_elb_http_in" {
+resource "aws_security_group_rule" "front_alb_http_in" {
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 80
@@ -31,7 +31,7 @@ resource "aws_security_group_rule" "front_elb_http_in" {
   description       = "Front allow list to Front LB HTTP"
 }
 
-resource "aws_security_group_rule" "front_elb_https_in" {
+resource "aws_security_group_rule" "front_alb_https_in" {
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 443

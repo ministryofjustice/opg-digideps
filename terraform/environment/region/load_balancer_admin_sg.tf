@@ -28,7 +28,7 @@ locals {
 }
 
 # Using a resource rather than module here due to a large list of IPs
-resource "aws_security_group_rule" "admin_elb_http_in" {
+resource "aws_security_group_rule" "admin_alb_http_in" {
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 80
@@ -38,7 +38,7 @@ resource "aws_security_group_rule" "admin_elb_http_in" {
   description       = "Admin allow list to Admin LB HTTPS"
 }
 
-resource "aws_security_group_rule" "admin_elb_https_in" {
+resource "aws_security_group_rule" "admin_alb_https_in" {
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 443
