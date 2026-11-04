@@ -1,4 +1,4 @@
-{% props account %}
+{%- props account -%}
 
 {% if account.bankName %}<twig:GOV:Paragraph size="m" noMargin>
     {{ account.bankName }}
@@ -17,4 +17,4 @@
 </twig:GOV:Paragraph>
 <twig:GOV:Paragraph size="s" noMargin>
     {{ 'opg.renderable.bankAccount.closed'|trans({}, 'twig-components') }}: {{ (account.closed ? 'yes' : 'no')|trans({}, 'common') }}
-</twig:GOV:Paragraph>
+</twig:GOV:Paragraph>{#--#}

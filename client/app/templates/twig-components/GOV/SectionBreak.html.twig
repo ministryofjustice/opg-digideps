@@ -1,4 +1,4 @@
-{% props visible=false, size="m" %}
+{%- props visible=false, size="m" -%}
 
 {% set className = "govuk-section-break govuk-section-break--" ~ size %}
 
@@ -6,4 +6,4 @@
     {% set className = className ~ " govuk-section-break--visible" %}
 {% endif %}
 
-<hr class="{{ className }}">
+<hr class="{{ className }}">{#--#}
