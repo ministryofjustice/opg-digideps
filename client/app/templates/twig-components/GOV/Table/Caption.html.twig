@@ -1,4 +1,4 @@
-{% props text, size="m", tagColour=null %}
+{%- props text, size="m", tagColour=null -%}
 {% set className = "govuk-table__caption govuk-table__caption--" ~ size %}
 
 <caption class="{{ className }}">
@@ -7,4 +7,4 @@
     {% else %}
         {{ text }}
     {% endif %}
-</caption>
+</caption>{#--#}

@@ -1,4 +1,4 @@
-{% props list=null, tag=null %}
+{%- props list=null, tag=null -%}
 {% set items = null %}
 {% set className = 'govuk-list' %}
 {% if list is not null %}
@@ -23,4 +23,4 @@
     {% else %}
         {% with outerScope %}{% block content %}{% endblock %}{% endwith %}
     {% endif %}
-</{{ realTag }}>
+</{{ realTag }}>{#--#}

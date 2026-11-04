@@ -1,6 +1,6 @@
 <twig:GOV:Heading size="l" h="2">
     {{ text.reportsHeading }}
-</twig:GOV:Heading>
+</twig:GOV:Heading>{#--#}
 
 {% if activeReportsTable is not null %}
     <twig:GOV:Table table="{{ activeReportsTable }}"/>
@@ -16,4 +16,4 @@
 
 {% if closedReportsTable is not null %}
     <twig:GOV:Table table="{{ closedReportsTable }}"/>
-{% endif %}
+{% endif -%}

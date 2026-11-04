@@ -1,7 +1,4 @@
-{% props
-    row,
-    scope,
-%}
+{%- props row, scope -%}
 
 <tr class="govuk-table__row">
     {% for cell in row.cells %}
@@ -15,4 +12,4 @@
             </td>
         {% endif %}
     {% endfor %}
-</tr>
+</tr>{#--#}
