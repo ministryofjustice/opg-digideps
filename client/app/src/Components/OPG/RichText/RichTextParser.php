@@ -86,7 +86,8 @@ final readonly class RichTextParser
     {
         $builder = new ListBuilder();
         foreach ($lines as $line) {
-            $builder->addItem($this->handleText($line));
+            $parts = $this->handleLine($line);
+            $builder->addItem(new RenderableArray(...$parts));
         }
         return $builder->makeUnorderedList();
     }
@@ -99,17 +100,9 @@ final readonly class RichTextParser
 
     private function handleParagraph(string $line): Paragraph
     {
-        $parts = [];
-        $matches = [];
-        foreach (preg_split('~(\[[^]]*]\([^)]+\))~', $line, flags: PREG_SPLIT_DELIM_CAPTURE) ?: [] as $part) {
-            $parts[] = match (preg_match('~\[([^]]*)]\(([^)]+)\)~', $part, $matches, flags: PREG_UNMATCHED_AS_NULL)) {
-                1 => $this->handleLink($matches[1] ?? '', $matches[2] ?? ''),
-                default => $this->handleText($part)
-            };
-        }
+        $parts = $this->handleLine($line);
         return new Paragraph(...$parts);
     }
-
 
     private function handleLink(string $hint, string $url): Link
     {
@@ -150,5 +143,21 @@ final readonly class RichTextParser
     private function defaultLinkResolver(string $uri): array
     {
         return [$uri, $uri];
+    }
+
+    /**
+     * @return array<Link|string>
+     */
+    private function handleLine(string $line): array
+    {
+        $parts = [];
+        $matches = [];
+        foreach (preg_split('~(\[[^]]*]\([^)]+\))~', $line, flags: PREG_SPLIT_DELIM_CAPTURE) ?: [] as $part) {
+            $parts[] = match (preg_match('~\[([^]]*)]\(([^)]+)\)~', $part, $matches, flags: PREG_UNMATCHED_AS_NULL)) {
+                1 => $this->handleLink($matches[1] ?? '', $matches[2] ?? ''),
+                default => $this->handleText($part)
+            };
+        }
+        return $parts;
     }
 }
