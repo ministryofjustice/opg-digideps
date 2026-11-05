@@ -6,7 +6,13 @@
         { "name": "inverse", "type": "bool", "default": "false" },
         { "name": "inNewTab", "type": "bool", "default": "false" },
         { "name": "accessibilityText", "type": "string", "default": null },
-        { "name": "text", "type": "string", "default": null }
+        { "name": "text", "type": "string", "default": null },
+        {
+            "name": "class",
+            "type": "string",
+            "default": null,
+            "info": "Extra classes to add to the <a> element, separated by whitespace"
+        }
     ],
     "examples": ["link"]
 }

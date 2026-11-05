@@ -1,4 +1,4 @@
-{% props element %}
+{%- props element -%}
 <div class="govuk-form-group">
     {% set label = element.vars.label %}
     {% if not element.vars.required %}
@@ -20,4 +20,4 @@
         {% set inputAttributes = inputAttributes|merge({'aria-invalid': 'true', 'aria-describedby': describedBy, class: inputAttributes.class ~ ' govuk-input--error'}) %}
     {% endif %}
     {{ form_widget(element, { attr: inputAttributes }) }}
-</div>
+</div>{#--#}
