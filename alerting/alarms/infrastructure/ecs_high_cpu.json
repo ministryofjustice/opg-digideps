@@ -1,0 +1,14 @@
+{
+  "name": "ecs-high-cpu",
+  "title": "An ECS service has sustained high CPU utilisation",
+  "description": "An ECS service has had average CPU utilisation at or above 85% for 45 minutes.",
+  "investigation_steps": [
+    "Open the alarm to identify the affected ECS service.",
+    "Check the service task count, scaling activity and running task health.",
+    "Review recent deployments and investigate requests or jobs causing sustained CPU usage.",
+    "The service may be in a degraded state due to high CPU usage and could be unavailable to handle requests.",
+    "Scale the service if necessary to handle the load and reduce CPU utilisation with breakglass if this is the case, or take other remedial actions to restore service health."
+  ],
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/environment/region/cloudwatch_ecs_resource_alarms.tf"
+}
