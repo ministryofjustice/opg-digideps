@@ -117,7 +117,6 @@ final class UserServiceTest extends TestCase
                 if (
                     ($criteria['deputyUid'] ?? null) === $deputyUid
                     && ($criteria['active'] ?? null) === true
-                    && ($criteria['isPrimary'] ?? null) === true
                 ) {
                     return $existingUser;
                 }
