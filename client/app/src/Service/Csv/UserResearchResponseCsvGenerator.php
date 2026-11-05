@@ -25,6 +25,7 @@ class UserResearchResponseCsvGenerator
             'Date Provided',
             'Deputyship Length Years',
             'Agreed Research Types',
+            'Electronic Device Types',
             'Has Videocall Access',
             'Email',
             'Phone Number',
@@ -33,13 +34,14 @@ class UserResearchResponseCsvGenerator
         $rows = [];
 
         foreach ($userResearchResponses as $response) {
-            if (isset($response['satisfaction']) && empty($response['satisfaction'])) {
+            if (!is_array($response) || empty($response['satisfaction'])) {
                 continue;
             }
 
             $satisfaction = $response['satisfaction'];
             $user = $response['user'];
             $dateProvided = new \DateTime($satisfaction['created']['date'])->format('Y-m-d');
+            $electronicDeviceTypes = $response['electronicDeviceType'] ?? [];
 
             $rows[] = [
                 $satisfaction['score'],
@@ -49,6 +51,7 @@ class UserResearchResponseCsvGenerator
                 $dateProvided,
                 $this->transformDeputyshipLength($response['deputyshipLength']),
                 $this->getCommaSeparatedTypesAgreedFromArrayData($response['researchType']),
+                $this->getCommaSeparatedTypesAgreedFromArrayData(is_array($electronicDeviceTypes) ? $electronicDeviceTypes : []),
                 $response['hasAccessToVideoCallDevice'] ? 'Yes' : 'No',
                 $user['email'],
                 $user['phoneMain'],
@@ -74,7 +77,7 @@ class UserResearchResponseCsvGenerator
         return 'No response';
     }
 
-    public function getCommaSeparatedTypesAgreedFromArrayData(array $researchTypeArray)
+    public function getCommaSeparatedTypesAgreedFromArrayData(array $researchTypeArray): string
     {
         $types = [];
 
