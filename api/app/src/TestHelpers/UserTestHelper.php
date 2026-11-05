@@ -22,10 +22,9 @@ class UserTestHelper
         ?Client $client = null,
         ?string $roleName = User::ROLE_LAY_DEPUTY,
         ?string $email = null,
-        ?int $deputyUid = null,
-        bool $isPrimary = true,
+        ?int $deputyUid = null
     ): User {
-        $user = self::createUser($client, $roleName, $email, $isPrimary, $deputyUid);
+        $user = self::createUser($client, $roleName, $email, $deputyUid);
 
         if (!is_null($client)) {
             $em->persist($client);
@@ -42,7 +41,6 @@ class UserTestHelper
         ?Client $client = null,
         ?string $roleName = User::ROLE_LAY_DEPUTY,
         ?string $email = null,
-        bool $isPrimary = true,
         ?int $deputyUid = null,
         ?string $firstName = null,
         ?string $lastName = null,
@@ -79,8 +77,7 @@ class UserTestHelper
             ->setAddress1($faker->streetAddress())
             ->setAddressCountry('GB')
             ->setAddressPostcode($faker->postcode())
-            ->setAgreeTermsUse(true)
-            ->setIsPrimary($isPrimary);
+            ->setAgreeTermsUse(true);
 
         if ($deputyUid === -1) {
             $user->setDeputyUid(null);
