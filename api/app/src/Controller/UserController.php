@@ -507,7 +507,7 @@ class UserController extends RestController
     public function getPrimaryEmail(int $deputyUid): ?string
     {
         /** @var array<User> $users */
-        $users = $this->userRepository->findBy(['deputyUid' => $deputyUid, 'isPrimary' => true]);
+        $users = $this->userRepository->findBy(['deputyUid' => $deputyUid]);
 
         // multiple primary accounts or no primary account
         if (count($users) !== 1) {

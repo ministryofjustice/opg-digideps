@@ -64,7 +64,7 @@ class FixtureHelper
             $email = sprintf('%s-%s@t.uk', substr($roleName, 5), $this->testRunId);
         }
 
-        return $this->userTestHelper->createUser(null, $roleName, $email, true, $deputyUid, $firstName, $lastName);
+        return $this->userTestHelper->createUser(null, $roleName, $email, $deputyUid, $firstName, $lastName);
     }
 
     public function createAndPersistUser(
@@ -325,8 +325,6 @@ class FixtureHelper
             null,
             null,
             $caseNumber,
-            false,
-            true,
             $deputyUid,
             $withOrder
         );
@@ -766,8 +764,6 @@ class FixtureHelper
             null,
             null,
             $caseNumber,
-            true,
-            true,
             $deputyUid
         );
 
@@ -884,8 +880,7 @@ class FixtureHelper
             false,
             null,
             null,
-            $caseNumber,
-            true
+            $caseNumber
         );
 
         return FixtureHelperBuilder::buildUserDetails($user);
@@ -903,8 +898,6 @@ class FixtureHelper
             null,
             null,
             $caseNumber,
-            false,
-            false,
             $deputyUid
         );
 
@@ -1053,8 +1046,6 @@ class FixtureHelper
         ?\DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
-        bool $legacyPasswordHash = false,
-        bool $isPrimary = true,
         ?int $deputyUid = null,
         bool $withOrder = true,
     ): User {
@@ -1069,8 +1060,7 @@ class FixtureHelper
             null,
             $userRole,
             sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId),
-            $deputyUid,
-            $isPrimary
+            $deputyUid
         );
 
         $this->addClientsAndReportsToLayDeputy($user, $reportType, $completed, $submitted, $startDate, $satisfactionScore, $caseNumber, $withOrder);
