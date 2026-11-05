@@ -1,4 +1,4 @@
-{% props table %}
+{%- props table -%}
 
 <table class="govuk-table">
     {% if table.caption is not null %}
@@ -21,4 +21,4 @@
             <twig:GOV:Table:Row scope="row" row="{{ row }}"/>
         {% endfor %}
     </tbody>
-</table>
+</table>{#--#}

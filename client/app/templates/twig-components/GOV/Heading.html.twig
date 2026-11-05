@@ -1,4 +1,4 @@
-{% props size = "m", h = "1", caption=null, hidden=false %}
+{%- props size = "m", h = "1", caption=null, hidden=false -%}
 {% set h_tag = "h" ~ h %}
 {% set className = "govuk-heading-" ~ size %}
 {% if hidden %}
@@ -10,4 +10,4 @@
         <span class="{{ "govuk-caption-" ~ size }}">{{ caption }}</span>
     {% endif %}
     {% with outerScope %}{% block content %}{% endblock %}{% endwith %}
-</{{ h_tag }}>
+</{{ h_tag }}>{#--#}
