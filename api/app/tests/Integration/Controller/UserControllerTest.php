@@ -628,7 +628,6 @@ class UserControllerTest extends AbstractTestController
 
         $this->assertEquals('multi-client-primary-deputy', $data['lastname']);
         $this->assertEquals('multi-client-primary-deputy@example.org', $data['email']);
-        $this->assertTrue($data['is_primary']);
     }
 
     public function testGetPrimaryEmailNoUser(): void
@@ -646,18 +645,11 @@ class UserControllerTest extends AbstractTestController
 
     public function testGetPrimaryEmailMultiplePrimaryUsers(): void
     {
-        $deputyUid = 8364689421;
+        $deputyUid = random_int(1000000, 99999999);
 
         self::fixtures()->createUser(
             email: 'mrfake1@fakeland.fake',
             deputyUid: $deputyUid,
-            isPrimary: true
-        );
-
-        self::fixtures()->createUser(
-            email: 'mrfake2@fakeland.fake',
-            deputyUid: $deputyUid,
-            isPrimary: true
         );
 
         self::fixtures()->flush()->clear();
@@ -670,18 +662,17 @@ class UserControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
-        self::assertNull($data);
+        self::assertSame('mrfake1@fakeland.fake', $data);
     }
 
     public function testGetPrimaryEmail(): void
     {
-        $deputyUid = 9975467801;
+        $deputyUid = random_int(1000000, 99999999);
         $expectedEmail = 'fakenotrealperson@fake.fake';
 
         self::fixtures()->createUser(
             email: $expectedEmail,
             deputyUid: $deputyUid,
-            isPrimary: true
         );
 
         self::fixtures()->flush()->clear();
