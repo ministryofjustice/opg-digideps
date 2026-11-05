@@ -1,4 +1,4 @@
-{% props contact %}
+{%- props contact -%}
 
 <twig:GOV:Paragraph size="m" noMargin>
     {{ contact.name }}
@@ -17,4 +17,4 @@
 </twig:GOV:Paragraph>{% endif %}
 {% if contact.country %}<twig:GOV:Paragraph size="s" noMargin>
     {{ contact.country | country_name }}
-</twig:GOV:Paragraph>{% endif %}
+</twig:GOV:Paragraph>{% endif -%}

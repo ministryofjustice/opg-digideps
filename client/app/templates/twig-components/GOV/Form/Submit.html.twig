@@ -1,4 +1,4 @@
-{% props element, buttonClass='', disabled=false %}
+{%- props element, buttonClass='', disabled=false -%}
 {% set className = 'govuk-button' %}
 {% if buttonClass is not null %}{% set className = className ~ ' ' ~ buttonClass %}{% endif %}
 {% set options = {
