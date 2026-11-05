@@ -7,6 +7,7 @@ namespace OPG\Digideps\Common\Listener;
 use OPG\Digideps\Common\Validating\ValidatingArray;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -81,6 +82,7 @@ final readonly class ErrorLogger
             if (!in_array($throwable::class, [
                 NotFoundHttpException::class,
                 AccessDeniedException::class,
+                AccessDeniedHttpException::class,
                 \InvalidArgumentException::class
             ])) {
                 return true;
