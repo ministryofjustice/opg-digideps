@@ -110,7 +110,7 @@ class FixtureController extends AbstractController
         }
 
         $fromRequest = (array) json_decode($request->getContent(), true);
-        $fromRequest['courtDate'] = (new \DateTime('-366 days'))->format('Y-m-d');
+        $fromRequest['courtDate'] = new \DateTime('-366 days')->format('Y-m-d');
 
         /** @var Deputy $deputy */
         $deputy = $this->deputyRepository->findOneBy(['email1' => $fromRequest['deputyEmail']]);
@@ -150,14 +150,18 @@ class FixtureController extends AbstractController
             throw new \InvalidArgumentException('Invalid request payload: expected array.');
         }
 
-        // Validate 'deputyEmail'
         if (!isset($fromRequest['deputyEmail']) || !is_string($fromRequest['deputyEmail'])) {
             throw new \InvalidArgumentException('Missing or invalid "deputyEmail" field in request.');
         }
 
-        $email = strtolower($fromRequest['deputyEmail']);
+        if (!isset($fromRequest['reportType']) || !is_string($fromRequest['reportType'])) {
+            throw new \InvalidArgumentException('Missing or invalid "reportType" field in request.');
+        }
 
-        // Check if user already exists
+        $email = strtolower($fromRequest['deputyEmail']);
+        $reportType = strtolower($fromRequest['reportType']);
+
+        $courtOrder = $this->generateCourtOrder($client, $reportType);
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
         if (!$user instanceof User) {
@@ -166,22 +170,14 @@ class FixtureController extends AbstractController
             $this->em->persist($deputyPreRegistration);
         }
 
-        if (!isset($fromRequest['reportType']) || !is_string($fromRequest['reportType'])) {
-            throw new \InvalidArgumentException('Missing or invalid "reportType" field in request.');
-        }
-
-        $reportType = strtolower($fromRequest['reportType']);
-        $courtOrder = null;
-
-        if ($fromRequest['deputyType'] === User::TYPE_LAY) {
+        if (in_array($fromRequest['deputyType'], [User::TYPE_LAY, User::TYPE_PROF, User::TYPE_PA])) {
             $deputy = $this->generateDeputy($user);
-            $courtOrder = $this->generateCourtOrder($client, $reportType);
-
             $deputy->associateWithCourtOrder($courtOrder);
             $this->em->persist($deputy);
         }
 
-        if (!$this->reportRepository->findOneBy(['client' => $client]) && $courtOrder !== null) {
+        $report = $this->reportRepository->findOneBy(['client' => $client]);
+        if (is_null($report)) {
             $report = $this->generateReport($fromRequest, $courtOrder);
             $this->em->persist($report);
 
@@ -189,14 +185,12 @@ class FixtureController extends AbstractController
                 $courtOrder->addReport($report);
                 $this->em->persist($courtOrder);
             }
-        } else {
-            $report = $this->reportRepository->findOneBy(['client' => $client]);
         }
 
         if ($fromRequest['deputyType'] === User::TYPE_LAY) {
             $user->setIsPrimary(true);
             $user->addClient($client);
-        } elseif ($report !== null) {
+        } else {
             $this->createOrgAndAttachParticipants($fromRequest, $user, $client, $report);
         }
 
@@ -385,7 +379,7 @@ class FixtureController extends AbstractController
             'deputyType' => $fromRequest['deputyType'],
             'email' => $fromRequest['deputyEmail'],
             'activated' => $fromRequest['activated'],
-            'coDeputyEnabled' => $fromRequest['coDeputyEnabled'],
+            'coDeputyEnabled' => array_key_exists('coDeputyEnabled', $fromRequest) ? $fromRequest['coDeputyEnabled'] : false,
             'deputyUid' => $fromRequest['deputyUid'] ?? null,
         ]);
 

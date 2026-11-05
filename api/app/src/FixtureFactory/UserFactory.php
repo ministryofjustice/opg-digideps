@@ -18,6 +18,12 @@ class UserFactory
      */
     public function create(array $data): User
     {
+        $deputyRoles = [
+            User::ROLE_LAY_DEPUTY,
+            User::ROLE_PROF_NAMED,
+            User::ROLE_PA_NAMED,
+            User::ROLE_ORG_NAMED
+        ];
         $roleName = $this->convertRoleName($data['deputyType']);
 
         $user = new User(
@@ -33,8 +39,11 @@ class UserFactory
             ->setAddressPostcode($data['postCode'] ?? 'SW1')
             ->setAddressCountry('GB')
             ->setRoleName($roleName)
-            ->setAgreeTermsUse(true)
-            ->setDeputyUid($data['deputyType'] === User::TYPE_LAY ? ($data['deputyUid'] ?? null) : null);
+            ->setAgreeTermsUse(true);
+
+        if (in_array($roleName, $deputyRoles) && !is_null($data['deputyUid'])) {
+            $user->setDeputyUid($data['deputyUid']);
+        }
 
         if ($data['activated'] === 'true' || $data['activated'] === true) {
             $user->setPassword($this->passwordHasher->hashPassword($user, 'DigidepsPass1234'));
