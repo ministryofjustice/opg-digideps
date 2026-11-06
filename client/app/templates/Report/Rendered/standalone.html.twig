@@ -3,15 +3,98 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <title>OPG Report</title>
-        <link href="application.css" rel="stylesheet" type="text/css">
         <style>
-            .govuk-summary-card__title-wrapper, .govuk-summary-list__row {
-                display: flex;
-                flex-direction: row;
+            @page { size: A4; margin: 20mm 10mm 20mm 10mm; }
+            body {
+                font-family: GDS Transport, arial, sans-serif;
+                width: 190mm;
+            }
+            .govuk-body {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+            .govuk-heading-m {
+                font-size: 1.5rem;
+                line-height: 1.25;
+            }
+            .govuk-summary-list {
+                margin: 0;
+            }
+            .govuk-summary-list__row {
+                border-bottom: 1px solid #cecece;
+                padding: 10px 0;
+            }
+            .govuk-summary-list__row:last-of-type {
+                border-bottom: none;
+            }
+            .govuk-summary-list__key, .govuk-summary-list__value {
+                display: inline-block;
+                vertical-align: top;
+                padding: 0 10px 0 0;
+            }
+            .govuk-summary-list__key, .govuk-\!-font-weight-bold, .govuk-table__caption {
+                font-weight: 700;
+            }
+            .govuk-summary-list__value {
+                margin-left: 0;
             }
             .govuk-summary-card {
-                display: flex;
-                flex-direction: column;
+                display: block;
+                border: 1px solid #cecece;
+                margin-bottom: 10px;
+                page-break-inside: avoid;
+            }
+            .govuk-summary-card__title-wrapper {
+                display: block;
+                background-color: #cecece;
+                padding: 10px;
+            }
+            .govuk-summary-card__title {
+                display: inline-block;
+                color: #0b0c0c;
+                margin: 5px 0;
+                padding: 0 10px 0 0;
+            }
+            .govuk-summary-card__content {
+                padding: 10px;
+            }
+            .govuk-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 5px;
+            }
+            .govuk-table__caption {
+                display: table-caption;
+                font-size: 1.25rem;
+                line-height: 1.25;
+                text-align: left;
+                margin-bottom: 15px;
+                margin-top: 15px;
+            }
+            .govuk-table__cell {
+                text-align: left;
+                padding: 10px;
+                border: 1px solid #cecece;
+                border-spacing: 0;
+                vertical-align: top;
+            }
+            .govuk-tag {
+                margin-left: 10px !important;
+                padding: 5px;
+            }
+            .govuk-tag--red {
+                color: #651b1b;
+                background-color: #f4d7d7;
+            }
+            .govuk-tag--green {
+                color:#083d29;
+                background-color:#cfe4dc
+            }
+            .govuk-\!-margin-0 {
+                margin: 0 !important;
+            }
+            .govuk-\!-width-one-half {
+                width: 45%;
             }
         </style>
     </head>
