@@ -39,11 +39,18 @@ class UserResearchResponseCsvGeneratorTest extends TestCase
                     'phoneMain' => '01211234567',
                  ],
                 'researchType' => [
-                    'id' => '317abaf1-33bb-44d7-abef-23fa0249ea4c',
+                    'id' => '217abaf1-33bb-44d7-abef-23fa0249ea4c',
                     'surveys' => null,
                     'videoCall' => null,
                     'phone' => 1,
                     'inPerson' => 1,
+                ],
+                'electronicDeviceType' => [
+                    'id' => '317abaf1-33bb-44d7-abef-23fa0249ea4c',
+                    'desktop' => null,
+                    'laptop' => null,
+                    'mobile' => 1,
+                    'tablet' => 1,
                 ],
             ],
             '1' => [
@@ -72,19 +79,26 @@ class UserResearchResponseCsvGeneratorTest extends TestCase
                     'phoneMain' => '01217654321',
                 ],
                 'researchType' => [
-                    'id' => '317abaf1-33bb-44d7-abef-23fa0249ea4c',
+                    'id' => '217abaf1-33bb-55d7-abef-23fa0249ea4c',
                     'surveys' => 1,
                     'videoCall' => 1,
                     'phone' => 1,
                     'inPerson' => 1,
                 ],
+                'electronicDeviceType' => [
+                    'id' => '317abaf1-33bb-55d7-abef-23fa0249ea4c',
+                    'desktop' => 1,
+                    'laptop' => 1,
+                    'mobile' => 1,
+                    'tablet' => 1,
+                ],
             ],
         ];
 
         $expectedCsv = <<<CSV
-"Satisfaction Score",Comments,"Deputy Role","Report Type","Date Provided","Deputyship Length Years","Agreed Research Types","Has Videocall Access",Email,"Phone Number"
-5,"Amazing service",ROLE_LAY_DEPUTY,102,2020-01-01,"Less than 1","phone,inPerson",Yes,test1@example.org,01211234567
-2,"Not impressed",ROLE_PROF_ADMIN,103,2020-12-12,"6 - 10","surveys,videoCall,phone,inPerson",No,test2@example.org,01217654321
+"Satisfaction Score",Comments,"Deputy Role","Report Type","Date Provided","Deputyship Length Years","Agreed Research Types","Electronic Device Types","Has Videocall Access",Email,"Phone Number"
+5,"Amazing service",ROLE_LAY_DEPUTY,102,2020-01-01,"Less than 1","phone,inPerson","mobile,tablet",Yes,test1@example.org,01211234567
+2,"Not impressed",ROLE_PROF_ADMIN,103,2020-12-12,"6 - 10","surveys,videoCall,phone,inPerson","desktop,laptop,mobile,tablet",No,test2@example.org,01217654321
 
 CSV;
 

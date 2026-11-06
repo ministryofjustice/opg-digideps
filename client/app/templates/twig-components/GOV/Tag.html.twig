@@ -1,6 +1,6 @@
-{% props text, colour %}
+{%- props text, colour -%}
 {% set className = "govuk-tag govuk-tag--" ~ colour %}
 
 <strong {{ attributes.defaults({class: className}) }}>
     {{ text }}
-</strong>
+</strong>{#--#}

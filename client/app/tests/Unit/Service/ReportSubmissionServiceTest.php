@@ -14,6 +14,7 @@ use OPG\Digideps\Frontend\Service\Csv\TransactionsCsvGenerator;
 use OPG\Digideps\Frontend\Service\File\S3FileUploader;
 use OPG\Digideps\Frontend\Service\HtmlToPdfGenerator;
 use OPG\Digideps\Frontend\Service\ReportSubmissionService;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -51,9 +52,7 @@ class ReportSubmissionServiceTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider lowOrNoAssetsReportTypeProvider
-     */
+    #[DataProvider('lowOrNoAssetsReportTypeProvider')]
     public function testGenerateReportDocumentsWithoutTransactionCsv(string $reportType): void
     {
         $report = self::createMock(Report::class);
@@ -98,9 +97,7 @@ class ReportSubmissionServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider highAssetsReportTypeProvider
-     */
+    #[DataProvider('highAssetsReportTypeProvider')]
     public function testGenerateReportDocumentsWithTransactionCsv(string $reportType): void
     {
         $report = self::createMock(Report::class);
@@ -209,9 +206,7 @@ class ReportSubmissionServiceTest extends TestCase
         self::assertContains($reportSubmission2, $reportSubmissions);
     }
 
-    /**
-     * @dataProvider downloadableProvider
-     */
+    #[DataProvider('downloadableProvider')]
     public function testAssertReportSubmissionIsDownloadable($reportSubmission): void
     {
         self::expectException(ReportSubmissionDocumentsNotDownloadableException::class);

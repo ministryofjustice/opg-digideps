@@ -1,9 +1,9 @@
-{% props
+{%- props
     h='1',
     list=null,
     questionLabel="Question",
     answerLabel="Answer"
-%}
+-%}
 
 {% set class = "govuk-heading-" ~ size %}
 {% set h_tag = "h" ~ h %}
@@ -25,4 +25,4 @@
             <twig:block name="content"></twig:block>
         {% endwith %}
     </div>
-</div>
+</div>{#--#}

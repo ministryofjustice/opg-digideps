@@ -130,8 +130,7 @@ class UserFactory
             ->setDeputyUid('7' . str_pad((string) rand(1, 99999999), 11, '0', STR_PAD_LEFT));
 
         if ($data['activated'] === 'true' || $data['activated'] === true) {
-            $user2->setPassword($this->passwordHasher->hashPassword($user2, 'DigidepsPass1234'))
-                  ->setIsPrimary(true);
+            $user2->setPassword($this->passwordHasher->hashPassword($user2, 'DigidepsPass1234'));
         } else {
             $user2->setActive(false);
         }

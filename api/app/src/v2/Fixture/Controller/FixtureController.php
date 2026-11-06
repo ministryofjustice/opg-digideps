@@ -188,7 +188,6 @@ class FixtureController extends AbstractController
         }
 
         if ($fromRequest['deputyType'] === User::TYPE_LAY) {
-            $user->setIsPrimary(true);
             $user->addClient($client);
         } else {
             $this->createOrgAndAttachParticipants($fromRequest, $user, $client, $report);
@@ -208,7 +207,6 @@ class FixtureController extends AbstractController
         // Generate primary user - update email to clearly show it's a multi-client
         $fromRequest['deputyEmail'] = str_replace(['original-lay-deputy'], 'lay-multi-client-deputy-primary', $fromRequest['deputyEmail']);
         $user = $this->generateUser($fromRequest);
-        $user->setIsPrimary(true);
         $user->addClient($client);
 
         // Generate initial deputy from the user

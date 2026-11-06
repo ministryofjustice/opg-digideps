@@ -18,15 +18,12 @@ class ClientControllerTest extends AbstractTestController
     private static $deputy4;
     private static $coDeputy;
     private static $primaryUserAccount;
-    private static $nonPrimaryUserAccount;
     private static $primaryAccountClient;
-    private static $nonPrimaryAccountClient;
     private static $primaryAccountDischargedClient;
     private static $tokenAdmin;
     private static $tokenDeputy;
     private static $tokenCoDeputy;
     private static $tokenMultiClientPrimaryDeputy;
-    private static $tokenMultiClientNonPrimaryDeputy;
     private static $tokenPa;
     private static $tokenProf;
 
@@ -81,7 +78,6 @@ class ClientControllerTest extends AbstractTestController
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenMultiClientPrimaryDeputy = $this->loginAsMultiClientPrimaryDeputy();
-            self::$tokenMultiClientNonPrimaryDeputy = $this->loginAsMultiClientNonPrimaryDeputy();
             self::$tokenCoDeputy = $this->loginAsCoDeputy();
             self::$tokenPa = $this->loginAsPa();
             self::$tokenProf = $this->loginAsProf();
@@ -105,9 +101,6 @@ class ClientControllerTest extends AbstractTestController
         self::$primaryUserAccount = self::fixtures()->getRepo(User::class)->findOneByEmail('multi-client-primary-deputy@example.org');
         self::$primaryAccountClient = self::fixtures()->createClient(self::$primaryUserAccount, ['setFirstname' => 'Multi-Client1', 'setCaseNumber' => '34566543']);
         self::$primaryAccountDischargedClient = self::fixtures()->createClient(self::$primaryUserAccount, ['setFirstname' => 'clientName', 'setCaseNumber' => '34566544', 'setDeletedAt' => new \DateTime()]);
-
-        self::$nonPrimaryUserAccount = self::fixtures()->getRepo(User::class)->findOneByEmail('multi-client-non-primary-deputy@example.org');
-        self::$nonPrimaryAccountClient = self::fixtures()->createClient(self::$nonPrimaryUserAccount, ['setFirstname' => 'Multi-Client2', 'setCaseNumber' => '78900987']);
 
         // pa
         self::$pa1 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa@example.org');
@@ -239,14 +232,9 @@ class ClientControllerTest extends AbstractTestController
     public function testFindByIdAclAllowed(): void
     {
         $url = '/client/' . self::$primaryAccountClient->getId();
-        $url2 = '/client/' . self::$nonPrimaryAccountClient->getId();
         $url3 = '/client/' . self::$pa1Client1->getId();
 
         $this->assertEndpointAllowedFor('GET', $url, self::$tokenMultiClientPrimaryDeputy);
-        $this->assertEndpointAllowedFor('GET', $url2, self::$tokenMultiClientPrimaryDeputy);
-
-        $this->assertEndpointAllowedFor('GET', $url, self::$tokenMultiClientNonPrimaryDeputy);
-        $this->assertEndpointAllowedFor('GET', $url2, self::$tokenMultiClientNonPrimaryDeputy);
 
         $this->assertEndpointAllowedFor('GET', $url3, self::$tokenPa);
     }
@@ -291,7 +279,7 @@ class ClientControllerTest extends AbstractTestController
     public function testArchiveClient(): void
     {
         $url = '/client/' . self::$pa1Client1->getId() . '/archive';
-        $this->assertEquals(1, count(self::$pa1Client1->getUsers()));
+        $this->assertCount(1, self::$pa1Client1->getUsers());
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenPa,
@@ -342,12 +330,12 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenPa,
         ])['data'];
 
-        $data = $this->assertJsonRequest('GET', $url, [
+        $data = (array)$this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
-        $this->assertCount(7, $data);
+        $this->assertCount(6, $data);
     }
 
     public function testUpdateDeputy(): void

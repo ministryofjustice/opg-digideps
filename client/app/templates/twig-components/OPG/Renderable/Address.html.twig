@@ -1,4 +1,4 @@
-{% props address %}
+{%- props address -%}
 
 {% if address.address1 %}<twig:GOV:Paragraph size="m" noMargin>
     {{ address.address1 }}
@@ -20,4 +20,4 @@
 </twig:GOV:Paragraph>{% endif %}
 {% if address.country %}<twig:GOV:Paragraph size="m" noMargin>
     {{ address.country | country_name }}
-</twig:GOV:Paragraph>{% endif %}
+</twig:GOV:Paragraph>{% endif -%}

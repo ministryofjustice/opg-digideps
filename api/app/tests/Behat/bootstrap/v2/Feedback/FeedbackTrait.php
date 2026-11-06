@@ -54,6 +54,9 @@ trait FeedbackTrait
         $this->checkOption('user_research_response_agreedResearchTypes_1');
         $this->checkOption('user_research_response_agreedResearchTypes_2');
 
+        $this->checkOption('user_research_response_electronicDeviceTypes_0');
+        $this->checkOption('user_research_response_electronicDeviceTypes_1');
+
         $this->fillField('user_research_response[hasAccessToVideoCallDevice]', 'yes');
 
         $this->pressButton('Submit');

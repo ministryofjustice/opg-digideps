@@ -26,7 +26,6 @@ class CourtOrderResponseComparer extends ResponseComparer
         WHERE d.deputy_uid IS NOT NULL
           AND d.deputy_uid != 0
           AND d.role_name = 'ROLE_LAY_DEPUTY'
-          AND d.is_primary = true
           AND d.active = true
           AND co.status = 'ACTIVE'
           AND cod.is_active = true

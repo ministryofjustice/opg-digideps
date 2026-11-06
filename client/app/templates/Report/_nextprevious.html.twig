@@ -12,7 +12,7 @@
 {% set nextConfig = section_link_params(report, sectionId, 1) | default(overviewPageConfig)%}
 
 <nav role="navigation" aria-label="Pagination">
-  <ul class="opg-pagination">
+  <ul class="opg-pagination govuk-!-padding-left-0">
     <li class="opg-pagination__item">
         <a href="{{ prevConfig.link }}" class="opg-pagination__link opg-pagination__link--previous" rel="prev" title="Navigate to previous part">
             <span class="opg-pagination__link-text">{{ 'prevNextLinks.previous' | trans({}, translationDomain) }}</span>

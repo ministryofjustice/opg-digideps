@@ -40,6 +40,11 @@ class UserResearchResponseType extends AbstractType
             return $this->translator->trans('form.agreedResearchTypes.choices.' . $researchType, [], 'report-post-submission-user-research');
         }, $typesOfResearchTransKeys);
 
+        $typesOfElectronicDevicesTransKeys = ['desktop', 'laptop', 'mobile', 'tablet'];
+        $typesOfElectronicDevicesLabels = array_map(function ($deviceType) {
+            return $this->translator->trans('form.electronicDeviceTypes.choices.' . $deviceType, [], 'report-post-submission-user-research');
+        }, $typesOfElectronicDevicesTransKeys);
+
         $deviceAccessTransKeys = ['yes', 'no'];
         $deviceAccessLabels = array_map(function ($response) {
             return $this->translator->trans('form.hasAccessToVideoCallDevice.choices.' . $response, [], 'report-post-submission-user-research');
@@ -64,6 +69,16 @@ class UserResearchResponseType extends AbstractType
                 'placeholder' => false,
                 'constraints' => [
                     new Constraints\NotBlank(['message' => 'userResearchResponse.agreedResearchTypes.notBlank']),
+                ],
+            ])
+            ->add('electronicDeviceTypes', ChoiceType::class, [
+                'choices' => array_combine($typesOfElectronicDevicesLabels, $typesOfElectronicDevicesTransKeys),
+                'expanded' => true,
+                'multiple' => true,
+                'required' => true,
+                'placeholder' => false,
+                'constraints' => [
+                    new Constraints\NotBlank(['message' => 'userResearchResponse.electronicDeviceTypes.notBlank']),
                 ],
             ])
             ->add('hasAccessToVideoCallDevice', ChoiceType::class, [

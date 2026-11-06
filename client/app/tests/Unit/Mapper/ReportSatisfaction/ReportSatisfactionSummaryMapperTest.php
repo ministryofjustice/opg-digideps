@@ -8,81 +8,50 @@ use OPG\Digideps\Frontend\Entity\Report\Satisfaction;
 use OPG\Digideps\Frontend\Mapper\DateRangeQuery;
 use OPG\Digideps\Frontend\Mapper\ReportSatisfaction\ReportSatisfactionSummaryMapper;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class ReportSatisfactionSummaryMapperTest extends TestCase
 {
-    private ReportSatisfactionSummaryMapper $sut;
-    private DateRangeQuery $query;
-    private RestClient&MockObject $restClient;
-
-    public function setUp(): void
+    public function testReturnsReportSatisfactionsByDefaultParameters(): void
     {
-        $this->restClient = $this->getMockBuilder(RestClient::class)
+        $restClient = $this->getMockBuilder(RestClient::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->sut = new ReportSatisfactionSummaryMapper($this->restClient);
-    }
+        $sut = new ReportSatisfactionSummaryMapper($restClient);
+        $query = new DateRangeQuery();
 
-    public function testReturnsReportSatisfactionsByDefaultParameters(): void
-    {
-        $this->query = new DateRangeQuery();
-
-        $this->assertRestClientIsCalledWithDefaultQueryParameters();
-        $this->assertRestClientPopulatesAnArrayOfExpectedEntities();
-        $this->assertMapperReturnsResultFromRestClient();
+        $restClient->expects(self::once())
+            ->method('get')
+            ->with('/satisfaction/satisfaction_data?orderBy=id&order=DESC', Satisfaction::class . '[]')
+            ->willReturn(['returned-from-rest-client']);
+        self::assertEquals(['returned-from-rest-client'], $sut->getBy($query));
     }
 
     public function testReturnsReportSatisfactionsByCustomParameters(): void
     {
-        $this->query = new DateRangeQuery()
+        $restClient = $this->getMockBuilder(RestClient::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $sut = new ReportSatisfactionSummaryMapper($restClient);
+        $query = new DateRangeQuery()
             ->setStartDate(new \DateTime('01-01-2001'))
             ->setEndDate(new \DateTime('02-01-2001'))
             ->setOrderBy('foo')
             ->setSortOrder('bar');
 
-        $this->assertRestClientIsCalledWithCustomQueryParameters();
-        $this->assertRestClientPopulatesAnArrayOfExpectedEntities();
-        $this->assertMapperReturnsResultFromRestClient();
-    }
-
-    private function assertRestClientIsCalledWithDefaultQueryParameters(): void
-    {
-        $this->restClient->expects(self::once())
-            ->method('get')
-            ->with('/satisfaction/satisfaction_data?orderBy=id&order=DESC', self::anything())
-            ->willReturn(['returned-from-rest-client']);
-    }
-
-    private function assertRestClientIsCalledWithCustomQueryParameters(): void
-    {
-        $this->restClient->expects(self::once())
-            ->method('get')
-            ->with($this->buildExpectedUrl(), self::anything())
-            ->willReturn(['returned-from-rest-client']);
-    }
-
-    private function buildExpectedUrl(): string
-    {
-        return sprintf('/satisfaction/satisfaction_data?%s', http_build_query([
-            'orderBy' => $this->query->getOrderBy(),
-            'order' => $this->query->getSortOrder(),
-            'fromDate' => $this->query->getStartDate()->format('Y-m-d'),
-            'toDate' => $this->query->getEndDate()->format('Y-m-d')
+        $url =  sprintf('/satisfaction/satisfaction_data?%s', http_build_query([
+            'orderBy' => $query->getOrderBy(),
+            'order' => $query->getSortOrder(),
+            'fromDate' => $query->getStartDate()->format('Y-m-d'),
+            'toDate' => $query->getEndDate()->format('Y-m-d')
         ]));
-    }
 
-    private function assertRestClientPopulatesAnArrayOfExpectedEntities(): void
-    {
-        $this->restClient->expects(self::once())
+        $restClient->expects(self::once())
             ->method('get')
-            ->with(self::anything(), Satisfaction::class . '[]');
-    }
-
-    private function assertMapperReturnsResultFromRestClient(): void
-    {
-        self::assertEquals(['returned-from-rest-client'], $this->sut->getBy($this->query));
+            ->with($url, Satisfaction::class . '[]')
+            ->willReturn(['returned-from-rest-client']);
+        self::assertEquals(['returned-from-rest-client'], $sut->getBy($query));
     }
 }

@@ -1,4 +1,4 @@
-{% props href, license=false, copyright=false %}
+{%- props href, license=false, copyright=false -%}
 
 <a
     class="govuk-footer__link{% if copyright %} govuk-footer__copyright-logo{% endif %}"
@@ -6,4 +6,4 @@
     {% if license %}rel="license"{% endif %}
 >
     {% with outerScope %}{% block content %}{% endblock %}{% endwith %}
-</a>
+</a>{#--#}

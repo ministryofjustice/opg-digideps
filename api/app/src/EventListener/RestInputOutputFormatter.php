@@ -7,6 +7,7 @@ use JMS\Serializer\SerializerInterface;
 use OPG\Digideps\Backend\Exception\UnauthorisedException;
 use OPG\Digideps\Common\Listener\ErrorLogger;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -150,7 +151,7 @@ class RestInputOutputFormatter
         if ($e instanceof \InvalidArgumentException) {
             $code = 400;
         }
-        if ($e instanceof AccessDeniedHttpException) {
+        if ($e instanceof AccessDeniedHttpException || $e instanceof AccessDeniedException) {
             $code = 403;
         }
         if ($e instanceof NotFoundHttpException) {

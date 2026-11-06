@@ -10,6 +10,7 @@ use OPG\Digideps\Frontend\Entity\Report\Document;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Security\DocumentVoter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -37,9 +38,7 @@ class DocumentVoterTest extends TestCase
         $this->document = new Document();
     }
 
-    /**
-     * @dataProvider getSupportedAttributes
-     */
+    #[DataProvider('getSupportedAttributes')]
     public function testSupports(string $attribute, int $expected): void
     {
         $this->token->method('getUser')->willReturn(null);

@@ -14,6 +14,7 @@ use OPG\Digideps\Frontend\Service\Csv\CsvBuilder;
 use OPG\Digideps\Frontend\Service\Csv\TransactionsCsvGenerator;
 use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\NativeType;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -25,7 +26,7 @@ class TransactionCsvGeneratorTest extends TestCase
     {
         $mockTranslator = self::createMock(TranslatorInterface::class);
         $mockTranslator->method('trans')
-            ->with(new IsType(IsType::TYPE_STRING), [], 'report-money-transaction')
+            ->with(new IsType(NativeType::String), [], 'report-money-transaction')
             ->willReturn('SomeCategory');
 
         $this->sut = new TransactionsCsvGenerator($mockTranslator, new CsvBuilder());

@@ -101,7 +101,7 @@ locals {
   primary_region_name    = "eu-west-1"
   account                = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
   default_secrets_prefix = contains(keys(var.accounts), local.environment) ? local.environment : "default"
-  secrets_prefix         = local.environment == "preproduction2" ? "preproduction" : local.default_secrets_prefix
+  secrets_prefix         = local.default_secrets_prefix
   subdomain              = local.account.dns.subdomain_enabled ? local.environment : ""
 
   environment = lower(terraform.workspace)
