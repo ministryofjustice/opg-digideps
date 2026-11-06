@@ -24,6 +24,10 @@ use Symfony\Component\Uid\Uuid;
 
 class AccountControllerTest extends AbstractTestController
 {
+    public static function tearDownAfterClass(): void
+    {
+    }
+
     public function testRequestMatchingError(): void
     {
         $email = $this->makeEmail();
@@ -129,7 +133,6 @@ class AccountControllerTest extends AbstractTestController
     {
         ['persons' => ['users' => ['lay1' => $user]]] = $this->fixtureService()->instantiateScenario(Scenario::newSimpleLayScenario());
 
-
         $decoded = $this->assertJsonRequest('POST', '/account/password/set', ['data' => new PasswordRequest(
             new Password('Hello World XXX'),
             new Token(),
@@ -216,7 +219,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertInstanceOf(AccountResponse::class, $response);
 
         self::$em->clear();
-        $newUser = self::$em->getRepository(User::class)->findOneBy(['email' => $email]);
+        $newUser = $this->getUserByEmail($email);
         $this->assertNotNull($newUser);
         $this->assertNull($newUser->getRegistrationDate());
 
@@ -229,11 +232,21 @@ class AccountControllerTest extends AbstractTestController
         $this->assertInstanceOf(PasswordResponse::class, $response);
 
         self::$em->clear();
-        $newUser = self::$em->getRepository(User::class)->findOneBy(['email' => $email]);
+        $newUser = $this->getUserByEmail($email);
         $this->assertNotNull($newUser);
         $this->assertNotNull($newUser->getRegistrationDate());
 
         $this->login($response->email->value, 'Hello World', self::$deputySecret);
+    }
+
+    private function getUserByEmail(string $email): ?User
+    {
+        /** @var ?User $user */
+        $user = self::$em->createQuery("SELECT c FROM " . User::class . " c WHERE c.email = :email")
+            ->setParameter('email', $email)
+            ->getOneOrNullResult();
+
+        return $user;
     }
 
     private function makeEmail(): string
