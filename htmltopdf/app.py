@@ -55,14 +55,7 @@ def application(request):
                 file_name, base_url="/tmp", media_type="screen", encoding="utf-8"
             )
 
-            html.write_pdf(
-                file_name + ".pdf",
-                stylesheets=[
-                    CSS(
-                        string="@page {size: Letter;margin: 0.2in 0.44in 0.2in 0.44in;}"
-                    )
-                ],
-            )
+            html.write_pdf(file_name + ".pdf")
             logger.log(41, f"{file_name} has been processed successfully")
         except Exception as e:
             logger.log(41, f"{file_name} has failed to process")
