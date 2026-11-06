@@ -1,4 +1,4 @@
-{% props text=[], isVisuallyHidden=false %}
+{%- props text=[], isVisuallyHidden=false -%}
 {% set className = isVisuallyHidden ? 'govuk-visually-hidden' : '' %}
 
 <div {{ attributes.defaults({class: className}) }}>
@@ -7,4 +7,4 @@
     {% else %}
         <twig:Render self="{{ text }}"/>
     {% endif %}
-</div>
+</div>{#--#}

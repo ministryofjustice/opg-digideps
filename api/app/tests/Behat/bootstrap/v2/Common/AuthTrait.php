@@ -315,12 +315,11 @@ trait AuthTrait
     }
 
     /**
-     * @Given /^a Lay Deputy tries to login with their "(primary|non-primary)" email address$/
+     * @Given /^a Lay Deputy tries to login with their "primary" email address$/
      */
-    public function aLayDeputyTriesToLoginWithTheirEmailAddress($isPrimary): void
+    public function aLayDeputyTriesToLoginWithTheirEmailAddress(): void
     {
-        $this->loggedInUserDetails = $isPrimary === 'primary' ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser
-            : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
+        $this->loggedInUserDetails = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser;
 
         $userEmail = $this->loggedInUserDetails->getUserEmail();
 
@@ -336,21 +335,6 @@ trait AuthTrait
     public function aLayDeputyWithNoCourtOrdersLogsIn(): void
     {
         $this->loggedInUserDetails = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUserNoCourtOrders;
-
-        $userEmail = $this->loggedInUserDetails->getUserEmail();
-
-        $this->visitPath('/login');
-        $this->fillField('login_email', $userEmail);
-        $this->fillField('login_password', 'DigidepsPass1234');
-        $this->pressButton('login_login');
-    }
-
-    /**
-     * @Given /^a Lay Deputy with no deputy UID tries to login with their non-primary email address$/
-     */
-    public function aLayDeputyWithNoDeputyUidTriesToLoginWithTheirEmailAddress(): void
-    {
-        $this->loggedInUserDetails = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUserWithNoDeputyUid;
 
         $userEmail = $this->loggedInUserDetails->getUserEmail();
 
@@ -417,17 +401,6 @@ trait AuthTrait
     }
 
     /**
-     * @Then /^the user tries to access their clients report overview page$/
-     */
-    public function theUserTriesToAccessTheirClientsReportOverviewPage(): void
-    {
-        $activeReportId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getCurrentReportId();
-
-        $reportOverviewUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'overview');
-        $this->visitPath($reportOverviewUrl);
-    }
-
-    /**
      * @Given /^when they log out they shouldn't see a flash message for non primary accounts$/
      *
      * @throws BehatException
@@ -443,12 +416,11 @@ trait AuthTrait
     }
 
     /**
-     * @When /^they choose their "(primary|non-primary)" Client$/
+     * @When /^they choose their "primary" Client$/
      */
-    public function theyChooseTheirFirstClient($isPrimary): void
+    public function theyChooseTheirFirstClient(): void
     {
-        $clientId = $isPrimary == 'primary' ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId()
-            : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
+        $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
 
         $urlRegex = sprintf('/client\/%d\/edit#edit-client$/', $clientId);
 
@@ -477,36 +449,15 @@ trait AuthTrait
     }
 
     /**
-     * @Then /^they should be on the "(primary|non-primary)" Client's dashboard$/
+     * @Then /^they should be on the "primary" Client's dashboard$/
      */
-    public function theyShouldBeOnThatClientSDashboard($isPrimary): void
+    public function theyShouldBeOnThatClientSDashboard(): void
     {
-        if ($isPrimary == 'primary') {
-            $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
-            $clientFirstName = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientFirstName();
-        } else {
-            $clientId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
-            $clientFirstName = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientFirstName();
-        }
+        $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
+        $clientFirstName = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientFirstName();
 
         $this->iAmOnPage(sprintf('/client\/%d\/edit#edit-client$/', $clientId));
         $this->assertPageContainsText($clientFirstName);
-    }
-
-    /**
-     * @When /^they try to access their "(primary|secondary)" discharged Client$/
-     */
-    public function theyChooseTheirDischargedClient($isPrimary): void
-    {
-        if ($isPrimary == 'primary') {
-            $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
-        } else {
-            $clientId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
-        }
-
-        $urlRegex = sprintf('/client\/%d$/', $clientId);
-
-        $this->visitPath($urlRegex);
     }
 
     /**
@@ -579,9 +530,8 @@ trait AuthTrait
         $primaryEmailAddress = '';
 
         foreach ($allUserAccounts as $userAccount) {
-            if ($userAccount->getIsPrimary()) {
-                $primaryEmailAddress = $userAccount->getEmail();
-            }
+            $primaryEmailAddress = $userAccount->getEmail();
+            break;
         }
 
         $this->visitPath('/login');

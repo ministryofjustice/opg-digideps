@@ -144,12 +144,14 @@ class IndexController extends AbstractController
         ]);
     }
 
+    // retained in case this path is referenced outside the app anywhere
     #[Route(path: '/accessibility', name: 'accessibility')]
-    public function accessibilityAction(Request $request): Response
+    #[Template('@App/Index/accessibility.html.twig')]
+    public function accessibilityAction(Request $request): array
     {
-        return $this->render('@App/Index/accessibility.html.twig', [
+        return [
             'backlink' => $this->getRefererUrlSafe($request, ['accessibility']),
-        ]);
+        ];
     }
 
     #[Route(path: '/logout', name: 'app_logout')]

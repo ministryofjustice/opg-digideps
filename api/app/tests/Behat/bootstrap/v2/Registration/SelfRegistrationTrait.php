@@ -854,7 +854,6 @@ trait SelfRegistrationTrait
         $this->loginToFrontendAs($this->layDeputyCompletedPfaHighAssetsDetails->getUserEmail());
 
         $this->interactingWithUserDetails = $this->layDeputyCompletedPfaHighAssetsDetails;
-        $this->interactingWithUserDetails = $this->layDeputyCompletedPfaHighAssetsDetails->setIsPrimary(true);
 
         $existingDeputyAccount = $this->em->getRepository(User::class)->findOneBy(
             ['email' => $this->interactingWithUserDetails->getUserEmail()]
