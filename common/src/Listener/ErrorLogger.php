@@ -19,14 +19,20 @@ final readonly class ErrorLogger
     ) {
     }
 
-    public function onKernelException(ExceptionEvent $event, bool $alwaysLog = false): void
+    public function onKernelException(ExceptionEvent $event): void
     {
-        $throwable = $event->getThrowable();
+        $this->log($event->getThrowable());
+    }
+
+    public function log(\Throwable $throwable): bool
+    {
         $class = $throwable::class;
-        if ($alwaysLog || $this->doLog($throwable)) {
+        if ($this->doLog($throwable)) {
             $log = $this->extractLog($throwable);
             $this->logger->error(json_encode($log) ?: "Error during json_encode. {$class} message was: {$throwable->getMessage()}");
+            return true;
         }
+        return false;
     }
 
     private function extractLog(?\Throwable $throwable): array
