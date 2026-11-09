@@ -315,10 +315,6 @@ services:
       $restClient: "@rest_client"
     tags: ["kernel.event_subscriber"]
 
-  OPG\Digideps\Frontend\EventSubscriber\LoginSubscriber:
-    class: OPG\Digideps\Frontend\EventSubscriber\LoginSubscriber
-    tags: ["kernel.event_subscriber"]
-
   OPG\Digideps\Frontend\EventListener\ResponseNoCacheListener:
     tags:
       - {

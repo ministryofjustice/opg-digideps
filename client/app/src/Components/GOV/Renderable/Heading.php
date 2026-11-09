@@ -10,10 +10,11 @@ final class Heading implements RenderableInterface
 {
     public function __construct(
         private readonly string $text,
-        private readonly int $h = 1
+        private readonly int $h = 1,
+        private readonly string $size = 'm'
     ) {
     }
 
     public string $componentName {get => 'GOV:Renderable:Heading';}
-    public array $props {get => ['text' => $this->text, 'h' => $this->h];}
+    public array $props {get => ['text' => $this->text, 'h' => $this->h, 'size' => $this->size];}
 }

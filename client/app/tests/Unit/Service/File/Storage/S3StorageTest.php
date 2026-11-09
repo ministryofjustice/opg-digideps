@@ -15,6 +15,7 @@ use OPG\Digideps\Frontend\Service\File\Storage\FileUploadFailedException;
 use OPG\Digideps\Frontend\Service\File\Storage\S3Storage;
 use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\NativeType;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -36,7 +37,7 @@ class S3StorageTest extends TestCase
         $awsClient = $this->createAwsMock();
         $awsClient->expects(self::once())
             ->method('putObject')
-            ->with(new IsType(IsType::TYPE_ARRAY))
+            ->with(new IsType(NativeType::Array))
             ->willReturn($this->generateAwsResult(200));
 
         $awsClient->method('waitUntil')->willReturn($awsClient);
@@ -44,7 +45,7 @@ class S3StorageTest extends TestCase
 
         $awsClient->expects(self::once())
             ->method('getObjectTagging')
-            ->with(new IsType(IsType::TYPE_ARRAY))
+            ->with(new IsType(NativeType::Array))
             ->willReturn(
                 [
                     'TagSet' => [
@@ -61,7 +62,7 @@ class S3StorageTest extends TestCase
 
         // Initial call to getObject returns fileContent
         $awsClient->method('getObject')
-            ->with(new IsType(IsType::TYPE_ARRAY))
+            ->with(new IsType(NativeType::Array))
             ->willReturn($this->generateAwsResult(200, [], $this->createMockStream($this->fileContent)));
 
         $mockLogger = self::createMock(LoggerInterface::class);
@@ -80,8 +81,9 @@ class S3StorageTest extends TestCase
         $ret = $storage1->delete($key);
         self::assertEquals(204, $ret->toArray()['@metadata']['statusCode']);
 
+        $awsClient = $this->createAwsMock();
         $awsClient->method('getObject')
-            ->with(new IsType(IsType::TYPE_ARRAY))
+            ->with(new IsType(NativeType::Array))
             ->willThrowException(new FileNotFoundException());
 
         $storage2 = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
@@ -107,7 +109,7 @@ class S3StorageTest extends TestCase
 
         $awsClient->method('putObject')->willReturn($this->generateAwsResult(200));
         $awsClient->method('getObject')
-            ->with(new IsType(IsType::TYPE_ARRAY))
+            ->with(new IsType(NativeType::Array))
             ->willReturn(
                 $this->generateAwsResult(200, [], $this->createMockStream(file_get_contents(__DIR__ . '/cat.jpg')))
             );
@@ -431,14 +433,6 @@ class S3StorageTest extends TestCase
 
     private function createAwsMock(): S3ClientInterface&MockObject
     {
-        return $this->getMockBuilder(S3ClientInterface::class)
-            ->addMethods([
-                'deleteObject',
-                'deleteObjects',
-                'getObject',
-                'listObjectVersions',
-                'putObject',
-                'getObjectTagging',
-            ])->getMockForAbstractClass();
+        return $this->getMockBuilder(MockS3Client::class)->getMock();
     }
 }

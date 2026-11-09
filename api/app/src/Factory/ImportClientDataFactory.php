@@ -19,7 +19,7 @@ class ImportClientDataFactory implements DataFactoryInterface
     ) {
         $this->errors = [];
         //TODO This needs to be removed when the registration work is done
-        $this->preventCreationOfNonOrgClients = 'JOIN staging.pa_pro_ingest ppi ON ppi.case_number = ssc.case_number';
+        $this->preventCreationOfNonOrgClients = 'JOIN staging.pa_pro_ingest ppi ON LOWER(ppi.case_number) = ssc.case_number';
     }
 
     public function getName(): string

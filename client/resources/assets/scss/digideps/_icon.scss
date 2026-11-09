@@ -12,37 +12,37 @@
 
 .icon-plus,
 .opg-icon--plus {
-  background-image: file-url("icons/icon-plus.png");
+  background-image: url("/images/icons/icon-plus.png");
 }
 
 .icon-notification,
 .opg-icon--notification {
-  background-image: file-url("icons/icon-notification.png");
+  background-image: url("/images/icons/icon-notification.png");
 }
 
 .icon-tick,
 .opg-icon--tick {
-  background-image: file-url("icons/icon-tick.png");
+  background-image: url("/images/icons/icon-tick.png");
 }
 
 .icon-cross,
 .opg-icon--cross {
-  background-image: file-url("icons/icon-cross.png");
+  background-image: url("/images/icons/icon-cross.png");
 }
 
 .icon-information,
 .opg-icon--information {
-  background-image: file-url("icons/icon-information.png");
+  background-image: url("/images/icons/icon-information.png");
 }
 
 .icon-important-small,
 .opg-icon--important-small {
-  background-image: file-url("icons/icon-important-small.png");
+  background-image: url("/images/icons/icon-important-small.png");
 }
 
 .icon-loader,
 .opg-icon--loader {
-  background-image: file-url("icons/icon-loader.gif");
+  background-image: url("/images/icons/icon-loader.gif");
 }
 
 .icon-pdf,
@@ -57,5 +57,5 @@
     height: 32px;
   }
 
-  background-image: file-url("icons/icon-pdf-2x.png");
+  background-image: url("/images/icons/icon-pdf-2x.png");
 }

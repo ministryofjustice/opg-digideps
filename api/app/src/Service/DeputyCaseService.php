@@ -35,7 +35,6 @@ class DeputyCaseService
         AND dc.user_id IS NULL
         AND c.archived_at IS NULL
         AND c.deleted_at IS NULL
-        AND ddu.is_primary IS true
         AND ddu.active IS true;
     SQL;
 

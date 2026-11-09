@@ -39,10 +39,15 @@ jobs:
       - name: restore from cross account backup
         id: restore
         run: |
+          PITR_TIME=$(date -u -d '3 hours ago' '+%Y-%m-%d %H:%M:%S')
+
+          echo "Restoring to: ${PITR_TIME}"
+
           python3 database_restore.py \
-          --environment preproduction \
-          --cluster_from digideps-preproduction \
-          --aws_backup True \
+            --environment preproduction \
+            --cluster_from digideps-preproduction \
+            --pitr "${PITR_TIME}" \
+            --aws_backup True
         working-directory: disaster-recovery/restore
 
       - name: Unset AWS variables

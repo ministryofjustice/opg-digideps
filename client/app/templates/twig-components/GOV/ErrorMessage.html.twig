@@ -1,4 +1,4 @@
-{% props message %}
+{%- props message -%}
 {% if message is iterable %}
     {% set messages = message %}
 {% else %}
@@ -11,4 +11,4 @@
         {% if not loop.first %}<br>{% endif %}
         {{ message | nl2br }}
     {% endfor %}
-</p>
+</p>{#--#}

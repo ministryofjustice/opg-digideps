@@ -14,6 +14,7 @@ use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\ClientHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -51,9 +52,7 @@ class ClientUpdatedSubscriberTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider clientProviderLogEvent
-     */
+    #[DataProvider('clientProviderLogEvent')]
     public function testLogEvent(Client $postUpdateClient, string $expectedLogMessage): void
     {
         $now = new \DateTime();
@@ -106,9 +105,7 @@ class ClientUpdatedSubscriberTest extends TestCase
         $this->sut->logEvent($event);
     }
 
-    /**
-     * @dataProvider clientProviderSendEmailDetailsChanged
-     */
+    #[DataProvider('clientProviderSendEmailDetailsChanged')]
     public function testSendEmail(Client $preUpdateClient, Client $postUpdateClient): void
     {
         $changedBy = UserHelpers::createUser()->setRoleName(User::ROLE_LAY_DEPUTY);

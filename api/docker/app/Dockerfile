@@ -134,8 +134,8 @@ RUN apk --no-cache add \
 
 # TODO Remove this once alpine upgrade available as it patches a vulnerability
 RUN apk update && apk add --upgrade \
-    "curl=8.22.0-r0" \
-    "libcurl=8.22.0-r0"
+    "curl=8.23.0-r0" \
+    "libcurl=8.23.0-r0"
 
 ##############################
 # Stage 3a: runtime image (image without test dependencies)

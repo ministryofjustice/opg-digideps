@@ -19,6 +19,7 @@ class UserResearchControllerTest extends AbstractTestController
         $validData = [
             'deputyshipLength' => 'underOne',
             'agreedResearchTypes' => ['surveys', 'videoCall', 'phone'],
+            'electronicDeviceTypes' => ['desktop', 'laptop', 'mobile', 'tablet'],
             'hasAccessToVideoCallDevice' => 'yes',
             'satisfaction' => $satisfaction->getId(),
         ];
@@ -33,6 +34,7 @@ class UserResearchControllerTest extends AbstractTestController
         $validData = [
             'deputyshipLength' => 'underOne',
             'agreedResearchTypes' => ['surveys', 'videoCall', 'phone'],
+            'electronicDeviceTypes' => ['desktop', 'laptop', 'mobile', 'tablet'],
             'hasAccessToVideoCallDevice' => 'yes',
             'satisfaction' => $satisfaction->getId(),
         ];
@@ -47,6 +49,7 @@ class UserResearchControllerTest extends AbstractTestController
         $validData = [
             'deputyshipLength' => 'underOne',
             'agreedResearchTypes' => ['surveys', 'videoCall', 'phone'],
+            'electronicDeviceTypes' => ['desktop', 'laptop', 'mobile', 'tablet'],
             'hasAccessToVideoCallDevice' => 'yes',
             'satisfaction' => $satisfaction->getId(),
         ];
@@ -61,6 +64,7 @@ class UserResearchControllerTest extends AbstractTestController
         $validData = [
             'deputyshipLength' => 'underOne',
             'agreedResearchTypes' => ['surveys', 'videoCall', 'phone'],
+            'electronicDeviceTypes' => ['desktop', 'laptop', 'mobile', 'tablet'],
             'hasAccessToVideoCallDevice' => 'yes',
             'satisfaction' => $satisfaction->getId(),
         ];
@@ -75,6 +79,7 @@ class UserResearchControllerTest extends AbstractTestController
         $validData = [
             'deputyshipLength' => 'underOne',
             'agreedResearchTypes' => ['surveys', 'videoCall', 'phone'],
+            'electronicDeviceTypes' => ['desktop', 'laptop', 'mobile', 'tablet'],
             'hasAccessToVideoCallDevice' => 'yes',
             'satisfaction' => $satisfaction->getId(),
         ];
@@ -123,6 +128,7 @@ class UserResearchControllerTest extends AbstractTestController
                 [
                     'deputyshipLength' => null,
                     'agreedResearchTypes' => ['surveys', 'videoCall', 'phone'],
+                    'electronicDeviceTypes' => ['desktop', 'laptop', 'mobile', 'tablet'],
                     'hasAccessToVideoCallDevice' => 'yes',
                 ],
             ],
@@ -130,6 +136,7 @@ class UserResearchControllerTest extends AbstractTestController
                 [
                     'deputyshipLength' => 'underOne',
                     'agreedResearchTypes' => [],
+                    'electronicDeviceTypes' => ['desktop', 'laptop', 'mobile', 'tablet'],
                     'hasAccessToVideoCallDevice' => 'yes',
                 ],
             ],
@@ -137,6 +144,15 @@ class UserResearchControllerTest extends AbstractTestController
                 [
                     'deputyshipLength' => 'underOne',
                     'agreedResearchTypes' => ['surveys'],
+                    'electronicDeviceTypes' => [],
+                    'hasAccessToVideoCallDevice' => 'yes',
+                ],
+            ],
+            [
+                [
+                    'deputyshipLength' => 'underOne',
+                    'agreedResearchTypes' => ['surveys'],
+                    'electronicDeviceTypes' => ['desktop', 'laptop', 'mobile', 'tablet'],
                     'hasAccessToVideoCallDevice' => null,
                 ],
             ],

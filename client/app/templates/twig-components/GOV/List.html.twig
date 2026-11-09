@@ -3,7 +3,7 @@
 <{{ list.tag }} {{ attributes.defaults({class: list.className}) }}>
     {% for item in list.items %}
         <li>
-            <twig:Render self="{{ item }}"/>
+                <twig:Render self="{{ item }}"/>
         </li>
     {% endfor %}
-</{{ list.tag }}>
+</{{ list.tag }}>{#--#}

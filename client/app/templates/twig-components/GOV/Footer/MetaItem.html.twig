@@ -1,4 +1,4 @@
-{% props grow=false %}
+{%- props grow=false -%}
 
 {% set className = "govuk-footer__meta-item" %}
 {% if grow %}
@@ -7,4 +7,4 @@
 
 <div {{ attributes.defaults({class: className}) }}>
     {% with outerScope %}{% block content %}{% endblock %}{% endwith %}
-</div>
+</div>{#--#}

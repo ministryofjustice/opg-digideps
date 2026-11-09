@@ -12,6 +12,7 @@ use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Service\IntlService;
 use OPG\Digideps\Frontend\Service\Mailer\MailerEmailAddress;
 use OPG\Digideps\Frontend\Service\Mailer\MailFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -252,9 +253,7 @@ class MailFactoryTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getLayReportTypes
-     */
+    #[DataProvider('getLayReportTypes')]
     public function testCreateReportSubmissionConfirmationEmailForLayDeputy(string $reportType): void
     {
         $this->router->method('generate')->with('homepage', [])->willReturn('');
@@ -304,9 +303,7 @@ class MailFactoryTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getOrgReportTypes
-     */
+    #[DataProvider('getOrgReportTypes')]
     public function testCreateReportSubmissionConfirmationEmailForOrgDeputy($reportType, $role)
     {
         $clientFullName = $this->client->getFullname();

@@ -10,6 +10,7 @@ use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Mailer\MailFactory;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -25,9 +26,7 @@ class AuditEventsTest extends TestCase
         $this->dateTimeProvider->expects(self::once())->method('getDateTime')->willReturn($this->now);
     }
 
-    /**
-     * @dataProvider startDateProvider
-     */
+    #[DataProvider('startDateProvider')]
     public function testClientDischarged(?string $expectedStartDate, ?\DateTime $actualStartDate): void
     {
         $expected = [
@@ -63,9 +62,6 @@ class AuditEventsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider emailChangeProvider
-     */
     public function testUserEmailChanged(): void
     {
         $expected = [
@@ -92,9 +88,7 @@ class AuditEventsTest extends TestCase
         self::assertEquals($expected, $actual);
     }
 
-    /**
-     * @dataProvider emailChangeProvider
-     */
+    #[DataProvider('emailChangeProvider')]
     public function testClientEmailChanged(?string $oldEmail, ?string $newEmail): void
     {
         $expected = [
@@ -129,9 +123,7 @@ class AuditEventsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider roleChangedProvider
-     */
+    #[DataProvider('roleChangedProvider')]
     public function testRoleChanged(
         string $trigger,
         string $changedFrom,
@@ -193,9 +185,7 @@ class AuditEventsTest extends TestCase
         self::assertEquals($expected, $actual);
     }
 
-    /**
-     * @dataProvider adminRoleProvider
-     */
+    #[DataProvider('adminRoleProvider')]
     public function testUserDeletedAdmin(string $role): void
     {
         $expected = [
