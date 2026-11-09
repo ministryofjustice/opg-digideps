@@ -38,7 +38,7 @@ RUN apk add --no-cache \
     "tiff==4.7.2-r0" \
     "fontconfig==2.17.1-r1" \
     "ttf-freefont==20120503-r4" \
-    "font-noto==2026.06.01-r0" \
+    "font-noto==2026.11.01-r0" \
     "terminus-font==4.49.1-r4" \
     && fc-cache -f
 
