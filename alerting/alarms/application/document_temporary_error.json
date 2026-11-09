@@ -1,0 +1,21 @@
+{
+  "name": "document-temporary-error",
+  "title": "Document synchronisation is reporting temporary errors",
+  "description": "One or more document synchronisation operations have encountered a temporary error.",
+  "investigation_steps": [
+    "Review the matching document synchronisation logs and identify the temporary errors.",
+    "Check the health of the document processing tasks and queues",
+    "Confirm that retries are succeeding and investigate if the errors continue."
+  ],
+  "logs": {
+    "log_group": "{environment}",
+    "query": [
+      "fields @timestamp, service_name, @message, @logStream",
+      "| filter @message like /queued_over_1_hour/",
+      "| sort @timestamp desc",
+      "| limit 100"
+    ]
+  },
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/environment/region/cloudwatch_alarms.tf"
+}

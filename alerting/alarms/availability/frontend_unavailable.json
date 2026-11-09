@@ -1,0 +1,12 @@
+{
+  "name": "availability-front",
+  "title": "The public frontend is unavailable",
+  "description": "The external frontend health check has reported the service as unhealthy during each of the last three minutes.",
+  "investigation_steps": [
+    "Open the frontend health-check endpoint and confirm whether it responds.",
+    "Check the frontend load balancer, target group and ECS service health. Try hitting the frontend directly to see if it responds.",
+    "If the service is unavailable, escalate this as soon as possible, an incident will likely need to be raised if this is the case."
+  ],
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/environment/global_cloudwatch_global_alarms.tf"
+}
