@@ -17,46 +17,23 @@
 
 {% block pageContent %}
     <p class="govuk-body">{{ (page ~ '.description1') | trans(transOptions) }}</p>
+<h3 id="bold-text">{{ (page ~ '.header1') | trans(transOptions) }}</h3> 
 
-    <details class="govuk-details" data-module="govuk-details">
-        <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">{{ (page ~ '.whatisMentalCapacitySummary') | trans }}</span>
-        </summary>
-        <div class="govuk-details__text">
-            <p class="govuk-body">{{ (page ~ '.whatisMentalCapacityPara1') | trans(transOptions) }}</p>
-            <p class="govuk-body">
-                {{ (page ~ '.whatisMentalCapacityPara2.beforeMarkupText') | trans(transOptions) }}
-                <a href="{{ (page ~ '.whatisMentalCapacityPara2.link') | trans(transOptions) }}">
-                    {{ (page ~ '.whatisMentalCapacityPara2.linkText') | trans(transOptions) }}
-                </a>.
-            </p>
-        </div>
-    </details>
+<div class="govuk-inset-text"> 
 
-    <details class="govuk-details" data-module="govuk-details">
-        <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">{{ (page ~ '.whatisdecisionSummary') | trans }}</span>
-        </summary>
-        <div class="govuk-details__text">
-            <p class="govuk-body">{{ (page ~ '.whatisdecisionPara1' ~ append104) | trans(transOptions) }}</p>
-            <p class="govuk-body">{{ (page ~ '.whatisdecisionPara2' ~ append104) | trans(transOptions) }}</p>
-            <ul class="govuk-list govuk-list--bullet">
-                <li>{{ (page ~ '.whatisdecisionListItem1' ~ append104) | trans(transOptions) }}</li>
-                <li>{{ (page ~ '.whatisdecisionListItem2' ~ append104) | trans(transOptions) }}</li>
-                <li>{{ (page ~ '.whatisdecisionListItem3' ~ append104) | trans(transOptions) }}</li>
-                {% if '104' not in report.type %}
-                    <li>{{ (page ~ '.whatisdecisionListItem4' ~ append104) | trans(transOptions) }}</li>
-                    <li>{{ (page ~ '.whatisdecisionListItem5' ~ append104) | trans(transOptions) }}</li>
-                    <li>{{ (page ~ '.whatisdecisionListItem6' ~ append104) | trans(transOptions) }}</li>
-                    <li>{{ (page ~ '.whatisdecisionListItem7' ~ append104) | trans(transOptions) }}</li>
-                {% endif %}
-            </ul>
-        </div>
-    </details>
+<p class="govuk-body">{{ (page ~ '.description2') | trans(transOptions) }}</p> 
 
-    {% if '104' not in report.type %}
-        <p class="govuk-body">{{ (page ~ '.description2') | trans }}</p>
-    {% endif %}
+<ul class="govuk-list govuk-list--bullet"> 
+
+<li>{{ (page ~ '.listitem1') | trans(transOptions) }}</li> 
+
+<li>{{ (page ~ '.listitem2') | trans(transOptions) }}</li>  
+
+</ul>  
+
+</div> 
+    
+      
 
     {{ macros.startSectionButton(path('decisions_mental_capacity', { 'reportId': report.id}), (page ~ '.startButton') | trans) }}
 
