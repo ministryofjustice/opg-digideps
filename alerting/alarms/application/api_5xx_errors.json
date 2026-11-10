@@ -1,0 +1,22 @@
+{
+  "name": "api-5xx-errors",
+  "title": "API is repeatedly returning HTTP 5xx responses",
+  "description": "The API has returned at least one HTTP 5xx response during each of the last five minutes.",
+  "investigation_steps": [
+    "Review the matching logs to identify the failing endpoints, status codes and errors.",
+    "Check the health of the API ECS service and its running tasks.",
+    "Check for recent deployments, database problems or failed dependencies."
+  ],
+  "logs": {
+    "log_group": "{environment}",
+    "query": [
+      "fields @timestamp, status, request_method, request_uri, upstream_status, upstream_response_time, aws_request_id, @message, @logStream",
+      "| filter service_name = \"api\"",
+      "| filter status >= 500 and status < 600",
+      "| sort @timestamp desc",
+      "| limit 100"
+    ]
+  },
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/environment/region/cloudwatch_alarms.tf"
+}

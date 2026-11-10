@@ -1,0 +1,21 @@
+{
+  "name": "document-queued-over-1hr",
+  "title": "Documents have remained queued for over one hour",
+  "description": "One or more documents have remained in the queued state for longer than one hour.",
+  "investigation_steps": [
+    "Review the matching document synchronisation logs and identify the affected documents.",
+    "Check the document processing tasks and queues.",
+    "Investigate whether processing has stopped or whether specific documents require manual intervention."
+  ],
+  "logs": {
+    "log_group": "{environment}",
+    "query": [
+      "fields @timestamp, service_name, @message, @logStream",
+      "| filter @message like /queued_over_1_hour/",
+      "| sort @timestamp desc",
+      "| limit 100"
+    ]
+  },
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/environment/region/cloudwatch_alarms.tf"
+}

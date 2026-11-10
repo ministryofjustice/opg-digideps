@@ -1,0 +1,25 @@
+{
+  "name": "ecr-image-not-found",
+  "environment_position": 1,
+  "title": "An ECS deployment attempted to use a missing image",
+  "description": "An ECS deployment or redeployment attempted to pull an image tag that does not exist in ECR.",
+  "investigation_steps": [
+    "Review the matching CloudTrail event or failing ECS task to identify the missing image tag.",
+    "Check that the expected image was successfully built and pushed to ECR and is available in the repository.",
+    "This may cause downtime if not resolved promptly, try rebuilding the image with the pipeline and ensure prod is using the correct image tag.",
+    "Check production, as this might have already caused downtime if there is no healthy container running."
+  ],
+  "logs": {
+    "log_group": "cloudtrail",
+    "query": [
+      "fields @timestamp, eventSource, eventName, errorCode, requestParameters.repositoryName, requestParameters.imageIds, responseElements.failures",
+      "| filter eventSource = \"ecr.amazonaws.com\"",
+      "| filter eventName = \"BatchGetImage\"",
+      "| filter responseElements.failures like /ImageNotFound/",
+      "| sort @timestamp desc",
+      "| limit 100"
+    ]
+  },
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/account/region/cloudtrail_ecr_image_pull_alarm.tf"
+}

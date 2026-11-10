@@ -165,7 +165,9 @@ class RestInputOutputFormatter
 
         // log exception
         if ($code === 500) {
-            new ErrorLogger($this->logger)->onKernelException($event, true);
+            if (!new ErrorLogger($this->logger)->log($event->getThrowable())) {
+                $this->logger->log($level, $message);
+            }
         } else {
             $this->logger->log($level, $message);
         }

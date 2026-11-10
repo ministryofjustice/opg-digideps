@@ -1,0 +1,14 @@
+{
+  "name": "redis-high-evictions",
+  "title": "A Redis replication group is experiencing unusual key evictions",
+  "description": "Redis key evictions have remained above the expected anomaly-detection range for 15 minutes. This means that keys are being removed from the cache more frequently than expected, potentially impacting service performance.",
+  "investigation_steps": [
+    "Open the alarm to identify the affected Redis replication group.",
+    "Check memory usage, freeable memory, cache demand and the configured eviction policy.",
+    "Determine whether cache capacity must be increased or application cache usage has unexpectedly changed.",
+    "This could lead to service degradation or unavailability if the high eviction rate persists.",
+    "Using breakglass to temporarily increase Redis capacity may be necessary to restore service performance while addressing the underlying issue."
+  ],
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/account/region/cloudwatch_redis_resource_alarms.tf"
+}
