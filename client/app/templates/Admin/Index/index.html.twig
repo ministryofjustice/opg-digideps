@@ -98,10 +98,8 @@
                     </td>
                     <td class="govuk-table__cell">{{ user.email }}</td>
                     <td class="govuk-table__cell">
-                        {% if user.active %}
-                            {{ 'yes' | trans({}, 'common') }}
-                        {% else %}
-                            {{ 'no' | trans({}, 'common') }}
+                        {{ ('activeStatus.' ~ user.activeStatus) | trans }}
+                        {% if user.activeStatus == 'inactive_password_not_set' %}
                             <br/>
                             <a class="js-return-html behat-link-send-activation-email"
                                     href="{{ path('admin_send_activation_link', {'email': user.email}) }}">

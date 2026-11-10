@@ -491,7 +491,7 @@ class Deputy
     /**
      * Return the deputy's court orders, along with a marker of whether they are active on the court order.
      *
-     * @return array
+     * @return array{courtOrder: CourtOrder, isActive: bool}[]
      */
     public function getCourtOrdersWithStatus(): array
     {

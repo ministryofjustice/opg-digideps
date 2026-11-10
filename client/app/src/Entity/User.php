@@ -138,6 +138,9 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     #[JMS\Type('boolean')]
     private $active;
 
+    #[JMS\Type('string')]
+    private ?string $activeStatus;
+
     /**
      * @var string
      */
@@ -1168,6 +1171,18 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public function setRegistrationRoute($registrationRoute): static
     {
         $this->registrationRoute = $registrationRoute;
+
+        return $this;
+    }
+
+    public function getActiveStatus(): ?string
+    {
+        return $this->activeStatus;
+    }
+
+    public function setActiveStatus(?string $activeStatus): static
+    {
+        $this->activeStatus = $activeStatus;
 
         return $this;
     }
