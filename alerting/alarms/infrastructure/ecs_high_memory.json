@@ -1,0 +1,14 @@
+{
+  "name": "ecs-high-memory",
+  "title": "An ECS service has sustained high memory utilisation",
+  "description": "An ECS service has had average memory utilisation at or above 85% for 45 minutes.",
+  "investigation_steps": [
+    "Open the alarm to identify the affected ECS service.",
+    "Check the service task count, scaling activity and running task health.",
+    "Review recent deployments and investigate memory growth or unusually expensive requests.",
+    "The service may be in a degraded state due to high memory usage and could be unavailable to handle requests.",
+    "Scale the service if necessary to handle the load and reduce memory utilisation with breakglass if this is the case, or take other remedial actions to restore service health."
+  ],
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/environment/region/cloudwatch_ecs_resource_alarms.tf"
+}

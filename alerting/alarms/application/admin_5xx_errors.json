@@ -1,0 +1,23 @@
+{
+  "name": "admin-5xx-errors",
+  "title": "Admin application is repeatedly returning HTTP 5xx responses",
+  "description": "The admin application has returned at least one HTTP 5xx response during each of the last five minutes.",
+  "investigation_steps": [
+    "Review the matching logs to identify the failing request paths, status codes and errors.",
+    "Check the health of the admin ECS service and its running tasks.",
+    "Check for recent deployments or infrastructure changes that might have caused this."
+  ],
+  "logs": {
+    "log_group": "{environment}",
+    "query": [
+      "fields @timestamp, status, request_method, request_uri, upstream_status, upstream_response_time, aws_request_id, @message, @logStream",
+      "| filter service_name = \"admin\"",
+      "| filter status >= 500 and status < 600",
+      "| filter request_uri != \"/health-check/dependencies\"",
+      "| sort @timestamp desc",
+      "| limit 100"
+    ]
+  },
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/environment/region/cloudwatch_alarms.tf"
+}
