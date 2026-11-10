@@ -1,0 +1,14 @@
+{
+  "name": "aurora-high-acu",
+  "title": "An Aurora instance is close to its maximum capacity",
+  "description": "An Aurora instance has used at least 85% of its configured maximum ACU capacity for 45 minutes.",
+  "investigation_steps": [
+    "Open the alarm to identify the affected Aurora instance.",
+    "Check database load, connections, query activity and Performance Insights.",
+    "Investigate abnormal database activity or consider increasing the configured maximum ACU capacity.",
+    "This could lead to service degradation or unavailability if the ACU usage remains high.",
+    "Using breakglass to temporarily increase the configured maximum ACU capacity may be necessary to restore service performance while addressing the underlying issue."
+  ],
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/environment/region/cloudwatch_aurora_resource_alarms.tf"
+}

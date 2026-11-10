@@ -1,0 +1,14 @@
+{
+  "name": "redis-high-cpu",
+  "title": "A Redis replication group has sustained high CPU utilisation",
+  "description": "A Redis primary node has had average engine CPU utilisation at or above 90% for 45 minutes.",
+  "investigation_steps": [
+    "Open the alarm to identify the affected Redis replication group.",
+    "Check connection counts, command activity, memory usage and application demand.",
+    "Determine whether an application problem or insufficient Redis capacity is causing the sustained usage.",
+    "This could lead to service degradation or unavailability if the high CPU usage persists.",
+    "Using breakglass to temporarily increase Redis capacity may be necessary to restore service performance while addressing the underlying issue."
+  ],
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/account/region/cloudwatch_redis_resource_alarms.tf"
+}

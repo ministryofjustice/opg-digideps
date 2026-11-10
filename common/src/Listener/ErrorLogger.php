@@ -8,6 +8,7 @@ use OPG\Digideps\Common\Validating\ValidatingArray;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -19,14 +20,20 @@ final readonly class ErrorLogger
     ) {
     }
 
-    public function onKernelException(ExceptionEvent $event, bool $alwaysLog = false): void
+    public function onKernelException(ExceptionEvent $event): void
     {
-        $throwable = $event->getThrowable();
+        $this->log($event->getThrowable());
+    }
+
+    public function log(\Throwable $throwable): bool
+    {
         $class = $throwable::class;
-        if ($alwaysLog || $this->doLog($throwable)) {
+        if ($this->doLog($throwable)) {
             $log = $this->extractLog($throwable);
             $this->logger->error(json_encode($log) ?: "Error during json_encode. {$class} message was: {$throwable->getMessage()}");
+            return true;
         }
+        return false;
     }
 
     private function extractLog(?\Throwable $throwable): array
@@ -72,6 +79,9 @@ final readonly class ErrorLogger
     private function doLog(\Throwable $throwable): bool
     {
         $code = (int)$throwable->getCode();
+        if ($code === 0 && $throwable instanceof HttpException) {
+            $code = $throwable->getStatusCode();
+        }
 
         if (
             substr_count($throwable::class, '\\') === 0

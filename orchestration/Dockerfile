@@ -60,10 +60,10 @@ RUN apk add --no-cache --update \
 # Install node runtime ONLY (no npm)
 RUN apk add --no-cache --update nodejs
 
-# Use 14 as later versions can cause issues with our backup and restore
+# Use 16 as later versions can cause issues with our backup and restore
 RUN apk add --no-cache \
-    --repository http://dl-cdn.alpinelinux.org/alpine/v3.17/main \
-    postgresql14-client=14.15-r0
+    --repository http://dl-cdn.alpinelinux.org/alpine/v3.22/main \
+    postgresql16-client=16.15-r0
 
 RUN mkdir certs && chmod 755 certs \
  && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem

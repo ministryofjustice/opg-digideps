@@ -1,0 +1,14 @@
+{
+  "name": "aurora-unusual-read-iops",
+  "title": "An Aurora instance is performing an unusual number of reads",
+  "description": "Aurora read IOPS have remained above the expected range and minimum threshold for at least ten minutes while no recognised database activity job is running. This could indicate someone is copying or exfiltrating data.",
+  "investigation_steps": [
+    "Open the alarm and compare read IOPS with recent normal activity.",
+    "Check database connections, application activity and Performance Insights for the same period.",
+    "Confirm whether the activity is expected and escalate immediately if possible data exfiltration cannot be ruled out.",
+    "Check for cron-tasks or scheduled jobs that could explain the unusual read IOPS.",
+    "If you find evidence that data exfiltration is occurring, escalate immediately and consider turning off the service if there is reasonable suspicion of ongoing data exfiltration."
+  ],
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/environment/region/cloudwatch_aurora_resource_alarms.tf"
+}
