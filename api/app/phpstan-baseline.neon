@@ -127,84 +127,6 @@ parameters:
 			path: src/Command/ProcessLayCSVCommand.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 2
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Binary operation "\+\=" between mixed and int\<0, max\> results in an error\.$#'
-			identifier: assignOp.invalid
-			count: 2
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Binary operation "\+\=" between mixed and mixed results in an error\.$#'
-			identifier: assignOp.invalid
-			count: 2
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Cannot access offset ''count'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Cannot access offset ''messages'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Cannot access offset mixed on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3Client\:\:getObject\(\) expects array\{Bucket\?\: string, IfMatch\?\: string, IfModifiedSince\?\: DateTimeInterface\|int\|string, IfNoneMatch\?\: string, IfUnmodifiedSince\?\: DateTimeInterface\|int\|string, Key\?\: string, Range\?\: string, ResponseCacheControl\?\: string, \.\.\., \.\.\.\}, array\{Bucket\: array\|bool\|float\|int\|string\|UnitEnum\|null, Key\: mixed, SaveAs\: non\-falsy\-string\} given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Parameter \#2 \$array of function implode expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, array\|bool\|float\|int\|string\|UnitEnum\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Parameter \#4 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Command/ProcessOrgCSVCommand.php
-
-		-
 			message: '#^Part \$limit \(mixed\) of encapsed string cannot be cast to string\.$#'
 			identifier: encapsedStringPart.nonString
 			count: 1
@@ -227,18 +149,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Command/UserRetentionPolicyCommand.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\UserRetentionPolicyCommand\:\:\$excludedUsers \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Command/UserRetentionPolicyCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\AccountController\:\:decode\(\) should return T of OPG\\Digideps\\Common\\Account\\AccountRequest\|OPG\\Digideps\\Common\\Account\\PasswordRequest\|OPG\\Digideps\\Common\\Account\\ResetRequest but returns OPG\\Digideps\\Common\\Account\\AccountRequest\|OPG\\Digideps\\Common\\Account\\PasswordRequest\|OPG\\Digideps\\Common\\Account\\ResetRequest\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Controller/AccountController.php
 
 		-
 			message: '#^Cannot access property \$headers on mixed\.$#'
@@ -1627,12 +1537,6 @@ parameters:
 			path: src/Controller/SelfRegisterController.php
 
 		-
-			message: '#^Cannot call method setIsPrimary\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
 			message: '#^Cannot call method setPreRegisterValidatedDate\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -2169,18 +2073,6 @@ parameters:
 		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$active \(bool\|null\) is never assigned null so it can be removed from the property type\.$#'
 			identifier: property.unusedType
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$deletionProtection \(bool\|null\) is never assigned bool so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$deletionProtection is never read, only written\.$#'
-			identifier: property.onlyWritten
 			count: 1
 			path: src/Entity/User.php
 
@@ -3188,12 +3080,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:getAllAdminAccountsUsedWithin\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Repository/UserRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:getAllDeletionProtectedAccounts\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Repository/UserRepository.php
@@ -8469,7 +8355,7 @@ parameters:
 		-
 			message: '#^Cannot access constant ADMIN_ROLES on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: classConstant.nonObject
-			count: 6
+			count: 5
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
@@ -8697,7 +8583,7 @@ parameters:
 		-
 			message: '#^Cannot call method getUserRole\(\) on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: method.nonObject
-			count: 11
+			count: 10
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
@@ -8721,7 +8607,7 @@ parameters:
 		-
 			message: '#^Cannot call method setDeletedAt\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
@@ -8757,12 +8643,6 @@ parameters:
 		-
 			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
-			count: 1
-			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:aLayDeputyTriesToLoginWithTheirEmailAddress\(\) has parameter \$isPrimary with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
@@ -9037,25 +8917,7 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:theyChooseTheirDischargedClient\(\) has parameter \$isPrimary with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:theyChooseTheirFirstClient\(\) has parameter \$isPrimary with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:theyDischargeTheDeputyFromNonPrimaryClient\(\) has parameter \$countOfClientAccounts with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:theyShouldBeOnThatClientSDashboard\(\) has parameter \$isPrimary with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
@@ -9111,7 +8973,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$clientId of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:getAdminClientDetailsUrl\(\) expects int, int\|null given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 4
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
@@ -9183,13 +9045,13 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:detach\(\) expects object, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 4
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
@@ -9561,7 +9423,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 6
+			count: 5
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
@@ -9878,12 +9740,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$email of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\:\:setUserEmail\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/Common/UserDetails.php
-
-		-
-			message: '#^Parameter \#1 \$isPrimary of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\:\:setIsPrimary\(\) expects bool\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/Common/UserDetails.php
@@ -16933,12 +16789,6 @@ parameters:
 			path: tests/Integration/Controller/SelfRegisterControllerTest.php
 
 		-
-			message: '#^Cannot access offset ''is_primary'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/Controller/SelfRegisterControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''pre_register_validated_date'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -16976,12 +16826,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method getFirstname\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/SelfRegisterControllerTest.php
-
-		-
-			message: '#^Cannot call method getIsPrimary\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 2
 			path: tests/Integration/Controller/SelfRegisterControllerTest.php
@@ -17132,12 +16976,6 @@ parameters:
 
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''is_primary'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: tests/Integration/Controller/UserControllerTest.php
