@@ -32,7 +32,7 @@ class SettingsController extends AbstractController
     #[Template('@App/Settings/index.html.twig')]
     public function indexAction(Redirector $redirector): array|RedirectResponse
     {
-        if ($this->getUser()->isDeputyOrg()) {
+        if ($this->getUser()?->isDeputyOrg()) {
             $user = $this->userApi->getUserWithData(['user-organisations', 'organisation']);
 
             return [
@@ -69,7 +69,7 @@ class SettingsController extends AbstractController
             ]));
             $request->getSession()->set('login-context', 'password-update');
 
-            $successRoute = $this->getUser()->isDeputyOrg() ? 'org_settings' : 'account_settings';
+            $successRoute = $this->getUser()?->isDeputyOrg() ? 'org_settings' : 'account_settings';
 
             return $this->redirect($this->generateUrl($successRoute));
         }
@@ -100,7 +100,7 @@ class SettingsController extends AbstractController
 
             $request->getSession()->set('login-context', 'email-update');
 
-            $successRoute = $this->getUser()->isDeputyOrg() ? 'org_settings' : 'account_settings';
+            $successRoute = $this->getUser()?->isDeputyOrg() ? 'org_settings' : 'account_settings';
 
             return $this->redirect($this->generateUrl($successRoute));
         }

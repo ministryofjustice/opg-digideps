@@ -1,5 +1,5 @@
-{%- props form -%}
+{%- props id, name, action='#', method='post', inputs -%}
 
-{{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
-    {% block content %}{% endblock %}
-{{ form_end(form, { render_rest: true }) }}
+<form id="{{ id }}" name="{{ name }}" method="{{ method }}" action="{{ action }}" novalidate="novalidate">
+    <twig:Render self="{{ inputs }}"/>
+</form>{#--#}

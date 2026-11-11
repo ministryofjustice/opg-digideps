@@ -1,0 +1,11 @@
+{%- props id, hasError=false, hasHint=false, legend, h=null, size='m' -%}
+
+<fieldset
+    class="govuk-fieldset"
+    {%- if hasError or hasHint -%}
+        aria-describedby="{% if hasHint %}{{ id }}-hint {% endif %}{% if hasError %}{{ id }}-error{% endif %}"
+    {%- endif -%}
+>
+    <twig:GOV:Form:Fieldset:Legend legend="{{ legend }}"/>
+    {% with outerScope %}{% block content %}{% endblock %}{% endwith %}
+</fieldset>

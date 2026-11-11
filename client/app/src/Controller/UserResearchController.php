@@ -69,7 +69,7 @@ class UserResearchController extends AbstractController
 
         return [
             'report' => $report,
-            'homePageName' => $this->getUser()->isLayDeputy() ? 'courtorders_for_deputy' : 'org_dashboard',
+            'homePageName' => $this->getUser()?->isLayDeputy() ? 'courtorders_for_deputy' : 'org_dashboard',
         ];
     }
 }
