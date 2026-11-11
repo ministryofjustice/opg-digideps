@@ -31,7 +31,6 @@ def main():
     gh_repository = str(os.getenv("GITHUB_REPOSITORY", ""))
     gh_run_id = str(os.getenv("GITHUB_RUN_ID", ""))
     github_workflow = str(os.getenv("GITHUB_WORKFLOW", ""))
-    actor = str(os.getenv("GITHUB_ACTOR", "actor not included"))
 
     frontend_url = (
         "https://complete-deputy-report.service.gov.uk"
@@ -47,7 +46,6 @@ def main():
     data = {
         "GithubActions": {
             "WorkflowName": github_workflow,
-            "GhActor": actor,
             "Success": args.success,
             "JobUrl": f"{gh_server}/{gh_repository}/actions/runs/{gh_run_id}",
             "Branch": args.branch,

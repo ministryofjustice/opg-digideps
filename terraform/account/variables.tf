@@ -36,6 +36,7 @@ variable "accounts" {
       sirius_account_id        = string
       apply_immediately        = bool
       secondary_region_enabled = bool
+      primary_workspace        = string
     })
   )
 }

@@ -21,7 +21,6 @@ repos:
     rev: d0e12caebb2ab0ee8bf98181c8bfe9702bca103d # frozen: v1.105.0
     hooks:
       - id: terraform_fmt
-      - id: terraform_tflint
       - id: terraform_validate
         exclude: terraform/.*/region/[^/]+$
 

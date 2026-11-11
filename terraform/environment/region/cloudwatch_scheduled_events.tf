@@ -75,45 +75,6 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
   )
 }
 
-# Sirius Org CSV Ingestion
-
-resource "aws_cloudwatch_event_rule" "csv_automation_org_processing" {
-  name                = "csv-automation-org-processing-${local.environment}"
-  description         = "Process Sirus Org CSV for Org Users  ${terraform.workspace}"
-  schedule_expression = "cron(30 2 * * ? *)"
-  is_enabled          = var.account.environment.is_production == 1 ? true : false
-  tags                = var.default_tags
-}
-
-resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
-  rule     = aws_cloudwatch_event_rule.csv_automation_org_processing.name
-  arn      = aws_ecs_cluster.main.arn
-  role_arn = aws_iam_role.events_task_runner.arn
-
-  ecs_target {
-    task_count          = 1
-    task_definition_arn = aws_ecs_task_definition.api_high_memory.arn
-    launch_type         = "FARGATE"
-    platform_version    = "1.4.0"
-
-    network_configuration {
-      security_groups  = [module.api_service_security_group.id]
-      subnets          = data.aws_subnet.application[*].id
-      assign_public_ip = false
-    }
-  }
-  input = jsonencode(
-    {
-      "containerOverrides" : [
-        {
-          "name" : "api_app",
-          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-org-csv", "--env=prod", "--no-debug", local.pa_pro_report_csv_filename]
-        }
-      ]
-    }
-  )
-}
-
 # Delete inactive users
 
 resource "aws_cloudwatch_event_rule" "delete_inactive_users" {

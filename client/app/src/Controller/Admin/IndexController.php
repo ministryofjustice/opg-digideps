@@ -278,7 +278,6 @@ class IndexController extends AbstractController
                 'expanded' => true,
                 'choices' => [
                     'upload.form.type.choices.lay' => 'lay',
-                    'upload.form.type.choices.org' => 'org',
                 ],
             ])
             ->add('save', SubmitType::class)
@@ -289,8 +288,6 @@ class IndexController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('type')->getData() === 'lay') {
                 return new RedirectResponse($router->generate('pre_registration_upload'));
-            } elseif ($form->get('type')->getData() === 'org') {
-                return new RedirectResponse($router->generate('admin_org_upload'));
             }
         }
 
@@ -369,73 +366,6 @@ class IndexController extends AbstractController
             'processStatusDate' => $processCompletedDate,
             'fileUploadedInfo' => [
                 'fileName' => $layReportFile,
-                'date' => $bucketFileInfo['LastModified'],
-            ],
-        ];
-    }
-
-    /**
-     * @throws \Exception
-     */
-    #[Route(path: '/org-csv-upload', name: 'admin_org_upload')]
-    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
-    #[Template('@App/Admin/Index/uploadOrgUsers.html.twig')]
-    public function uploadOrgUsersAction(Request $request, ClientInterface $redisClient): array|RedirectResponse
-    {
-        $processForm = $this->createForm(ProcessCSVType::class, null, [
-            'method' => 'POST',
-        ]);
-        $processForm->handleRequest($request);
-
-        if ($processForm->isSubmitted() && $processForm->isValid()) {
-            /** Run the org CSV command as a background task */
-            $email = $this->tokenStorage->getToken()->getUser()->getUserIdentifier();
-            $this->dispatcher->addListener(KernelEvents::TERMINATE, function () use ($email): void {
-                $application = new Application($this->kernel);
-                $input = new ArrayInput([
-                    'command' => 'digideps:process-org-csv',
-                    'email' => $email,
-                ]);
-
-                $output = new NullOutput();
-                $application->run($input, $output);
-            });
-
-            $this->addFlash('notice', 'CSV import process started. Keep an eye on your emails for completion.');
-
-            return $this->redirect($this->generateUrl('admin_org_upload'));
-        }
-
-        /** S3 bucket information */
-        $bucket = $this->params->get('s3_sirius_bucket');
-        $paProReportFile = $this->params->get('pa_pro_report_csv_filename');
-        $bucketFileInfo = [
-            'LastModified' => null,
-        ];
-
-        try {
-            $bucketFileInfo = $this->s3->getObject([
-                'Bucket' => $bucket,
-                'Key' => $paProReportFile,
-            ]);
-        } catch (S3Exception $e) {
-            $this->logger->warning(
-                sprintf('Error while getting S3 object: %s', $e->getMessage()),
-                ['bucket' => $bucket, 'key' => $paProReportFile]
-            );
-
-            $this->addFlash('error', 'There was a problem locating the file inside the S3 Bucket. Please contact an administrator.');
-        }
-
-        $processStatus = $redisClient->get($this->workspace . '-org-csv-processing');
-        $processCompletedDate = $redisClient->get($this->workspace . '-org-csv-completed-date');
-
-        return [
-            'processForm' => $processForm->createView(),
-            'processStatus' => $processStatus,
-            'processStatusDate' => $processCompletedDate,
-            'fileUploadedInfo' => [
-                'fileName' => $paProReportFile,
                 'date' => $bucketFileInfo['LastModified'],
             ],
         ];
