@@ -1,0 +1,24 @@
+{%- props id, hasHint=false, hasError=false -%}
+
+{% set children = block('content') %}
+
+<div id="form-group-{{ id }}" class="govuk-form-group{% if hasError %} govuk-form-group--error{% endif %}">
+    {%- if legend is not null -%}
+        <twig:GOV:Form:Fieldset
+            id="{{ id }}"
+            h="{{ hLegend }}"
+            size="{{ sizeLegend }}"
+            hasHint="{{ hasHint }}"
+            legend="{{ legend }}"
+            hasError="{{ hasError }}"
+        >
+            {%- with outerScope -%}{% autoescape false %}
+                {{ children }}
+            {% endautoescape %}{%- endwith -%}
+        </twig:GOV:Form:Fieldset>
+    {%- else -%}
+        {%- with outerScope -%}{% autoescape false %}
+            {{ children }}
+        {% endautoescape %}{%- endwith -%}
+    {% endif %}
+</div>{#--#}

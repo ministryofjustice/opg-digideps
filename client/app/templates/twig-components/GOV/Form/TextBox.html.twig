@@ -1,0 +1,35 @@
+{%- props id, name, value, label, type='text', characters=null, required=false, disabled=false, legend=null, hLegend=null, sizeLegend='m', hint=null, errors=null -%}
+
+{%- set hasError = errors is not null -%}
+{%- set hasHint = hint is not null -%}
+
+{%- set className = 'govuk-input' -%}
+{%- if characters is not null -%}
+    {%- set className = className ~ ' govuk-input--width-' ~ characters -%}
+{%- endif -%}
+
+<twig:GOV:Form:FormGroup
+    id="{{ id }}"
+    legend="{{ legend }}"
+    hLegend="{{ hLegend }}"
+    sizeLegend="{{ sizeLegend }}"
+    hasHint="{{ hasHint }}"
+    hasError="{{ hasError }}"
+>
+    <label class="govuk-label" for="{{ id }}">
+        {{- label -}}
+    </label>
+    {% if hasHint %}
+        <twig:GOV:Form:Hint hint="{{ hint }}" id="{{ id }}"/>
+    {% endif %}
+    {% if hasError %}
+        <twig:GOV:ErrorMessage message="{{ errors }}"/>
+    {% endif %}
+    <input
+        class="{{ className }}"
+        id="{{ id }}"
+        name="{{ name }}"
+        type="{{ type }}"
+        value="{{ value }}"
+    />
+</twig:GOV:Form:FormGroup>{#--#}

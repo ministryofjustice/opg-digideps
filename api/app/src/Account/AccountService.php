@@ -8,6 +8,8 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Common\Account\AcceptRequest;
+use OPG\Digideps\Common\Account\AcceptResponse;
 use OPG\Digideps\Common\Account\AccountError;
 use OPG\Digideps\Common\Account\AccountRequest;
 use OPG\Digideps\Common\Account\AccountResponse;
@@ -51,6 +53,18 @@ final readonly class AccountService
             return $user;
         }
         return $this->requestPasswordResetForUser($user);
+    }
+
+    public function acceptTerms(AcceptRequest $request): AcceptResponse|AccountError
+    {
+        $user = $this->entityManager->find(User::class, $request->userId);
+        if ($user === null) {
+            return AccountError::UnknownUser;
+        }
+        $user->setAgreeTermsUse(true);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+        return new AcceptResponse();
     }
 
     private function requestPasswordResetForUser(User $user): AccountResponse

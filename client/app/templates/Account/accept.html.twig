@@ -1,0 +1,8 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% block htmlTitle %}{{ 'opg.account.accept.title' | trans({}, 'twig-components') }}{% endblock %}
+{% block pageTitle %}{{ 'opg.account.accept.title' | trans({}, 'twig-components') }}{% endblock %}
+
+{% block pageContent %}
+    <twig:OPG:Account:Accept form="{{ form }}"/>
+{% endblock %}
