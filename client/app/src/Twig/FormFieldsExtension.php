@@ -2,6 +2,7 @@
 
 namespace OPG\Digideps\Frontend\Twig;
 
+use OPG\Digideps\Frontend\Components\GOV\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormView;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -295,8 +296,11 @@ class FormFieldsExtension extends AbstractExtension
      * get form errors list and render them inside Components/Alerts/error_summary.html.twig
      * Usage: {{ form_errors_list(form) }}.
      */
-    public function renderFormErrorsList(FormView $form): void
+    public function renderFormErrorsList(FormView|Form $form): void
     {
+        if ($form instanceof Form) {
+            $form = $form->view;
+        }
         $formErrorMessages = $this->getErrorsFromFormViewRecursive($form);
 
         /** @var array $vars */
