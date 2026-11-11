@@ -1,5 +1,9 @@
 # Build Stage
 FROM golang:1.27.3-alpine3.24@sha256:d530cf60723abf1ffae0cd16bb546b379ec0550d2f3815e5b16ed69dbc00fba4 AS build
+
+# TODO Remove as temporary workaround until Alpine ships the patched package
+RUN apk update && apk add --upgrade "zlib==1.4-r0"
+
 WORKDIR /go/src/clamav-rest
 
 COPY file-scanner/. .
