@@ -9,7 +9,6 @@ def github_actions_message(message):
     logger.info(f"Attempting to process github actions event for branch {branch}")
 
     workflow_name = message["WorkflowName"]
-    github_actor = message["GhActor"]
     success = message["Success"]
     job_url = message["JobUrl"]
     frontend_url = message["FrontendUrl"]
@@ -45,7 +44,6 @@ def github_actions_message(message):
             workflow_name=workflow_name,
             workflow_type=workflow_type,
             extra_emoji=extra_emoji,
-            github_actor=github_actor,
             status_emoji=status_emoji,
             success_string=success_string,
             job_url=job_url,
@@ -55,7 +53,9 @@ def github_actions_message(message):
             commit_message=commit_message,
         )
 
-    channel = "team" if len(failure_reason) > 0 else "default"
+    channel = (
+        "team" if (path_to_live and success == "yes") or failure_reason else "default"
+    )
 
     payload = {"text": formatted_text, "channel": channel}
 

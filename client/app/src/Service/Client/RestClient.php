@@ -96,7 +96,11 @@ class RestClient implements RestClientInterface
             $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
         } catch (RestClientException $e) {
             if ($e->getCode() === 423) {
-                throw new TooManyLoginAttemptsAuthenticationException($e->getData()['data']);
+                $threshold = $e->getData()['data'] ?? null;
+
+                throw new TooManyLoginAttemptsAuthenticationException(
+                    is_numeric($threshold) ? (int) $threshold : null
+                );
             } else {
                 throw new BadCredentialsException('Invalid credentials.', 498);
             }
