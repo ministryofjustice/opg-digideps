@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Components\OPG\Account;
 
-use Symfony\Component\Form\FormView;
+use OPG\Digideps\Frontend\Components\GOV\Form;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
@@ -17,14 +17,14 @@ final class Request
     /** @var array<string, string|bool|null> */
     public array $props;
 
-    public FormView $form;
+    public Form $form;
 
     public function __construct(
         private readonly TranslatorInterface $translator,
     ) {
     }
 
-    public function mount(FormView $form, bool $accountCreated, ?string $deputyEmail): void
+    public function mount(Form $form, bool $accountCreated, ?string $deputyEmail): void
     {
         $this->form = $form;
 
