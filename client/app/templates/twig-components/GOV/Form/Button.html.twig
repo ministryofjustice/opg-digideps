@@ -1,0 +1,18 @@
+{%- props id, name, label, type='submit', kind='primary', disabled=false, value=null -%}
+
+{%- set className = "govuk-button" -%}
+{%- if kind != 'primary' -%}
+    {% set className = className ~ ' govuk-button--' ~ kind -%}
+{%- endif -%}
+
+<button
+    id="{{ id }}"
+    name="{{ name }}"
+    type="{{ type }}"
+    class="{{ className }}"
+    {% if disabled %}disabled aria-disabled="true"{% endif %}
+    data-module="govuk-button"
+    data-prevent-double-click="true"
+>
+    {{- label -}}
+</button>{#--#}

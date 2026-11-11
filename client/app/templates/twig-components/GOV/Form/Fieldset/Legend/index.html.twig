@@ -1,0 +1,11 @@
+{%- props legend -%}
+
+<legend class="govuk-fieldset__legend govuk-fieldset__legend--{{ legend.size }}">
+    {%- if legend.h is not null -%}
+        <twig:GOV:Form:Fieldset:Legend:Heading h="{{ legend.h }}">
+            {{- legend.text -}}
+        </twig:GOV:Form:Fieldset:Legend:Heading>
+    {%-else -%}
+        {{- legend.text -}}
+    {%- endif -%}
+</legend>{#--#}
