@@ -50,10 +50,6 @@ final class UserRetentionPolicyCommandTest extends KernelTestCase
             ->with('-24 months')
             ->willReturn(null);
 
-        $this->userRepository->expects(self::once())
-            ->method('getAllDeletionProtectedAccounts')
-            ->willReturn([1, 2, 3, 4, 5, 6]);
-
         $result = $this->commandTester->execute([]);
         $this->assertEquals(0, $result);
     }
@@ -69,10 +65,6 @@ final class UserRetentionPolicyCommandTest extends KernelTestCase
             ->method('getAllAdminAccountsNotUsedWithin')
             ->with('-24 months')
             ->willReturn($user);
-
-        $this->userRepository->expects(self::once())
-            ->method('getAllDeletionProtectedAccounts')
-            ->willReturn([2, 3, 4, 5, 6]);
 
         $trigger = 'USER_DELETED_AUTOMATION';
         $userRetentionEvent = new UserRetentionPolicyCommandEvent($user, $trigger);
@@ -105,25 +97,15 @@ final class UserRetentionPolicyCommandTest extends KernelTestCase
         $activeSuperAdmin->setId(3);
         $activeSuperAdmin->setLastLoggedIn(new \DateTime('-2 months'));
 
-        $inactiveSuperAdminProtected = new User('', '', '');
-        $inactiveSuperAdminProtected->setRoleName(User::ROLE_SUPER_ADMIN);
-        $inactiveSuperAdminProtected->setId(4);
-        $inactiveSuperAdminProtected->setLastLoggedIn(new \DateTime('-26 months'));
-
         $expectedInactiveAdminUsersReturned = [
             $inactiveAdminUser,
             $inactiveAdminManagerUser,
-            $inactiveSuperAdminProtected,
         ];
 
         $this->userRepository->expects(self::once())
             ->method('getAllAdminAccountsNotUsedWithin')
             ->with('-24 months')
             ->willReturn($expectedInactiveAdminUsersReturned);
-
-        $this->userRepository->expects(self::once())
-            ->method('getAllDeletionProtectedAccounts')
-            ->willReturn([4]);
 
         $trigger = 'USER_DELETED_AUTOMATION';
 
