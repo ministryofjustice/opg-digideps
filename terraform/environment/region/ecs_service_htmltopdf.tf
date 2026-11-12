@@ -69,7 +69,7 @@ locals {
       image       = local.images.htmltopdf,
       mountPoints = [],
       name        = "htmltopdf",
-      user        = "htmltopdf"
+      user        = "gotenberg"
       portMappings = [{
         name          = "htmltopdf-port",
         containerPort = 8080,

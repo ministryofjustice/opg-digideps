@@ -24,7 +24,6 @@ class UserRetentionPolicyCommand extends Command
 
     private array $inactiveAdminUserIds = [];
 
-    private array $excludedUsers = [];
 
     public function __construct(
         private UserRepository $userRepository,
@@ -36,16 +35,13 @@ class UserRetentionPolicyCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setDescription('Deletes inactive admin user accounts')
-        ;
+        $this->setDescription('Deletes inactive admin user accounts');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $getInactiveAdminUsers = $this->userRepository->getAllAdminAccountsNotUsedWithin('-24 months');
-            $this->excludedUsers = $this->userRepository->getAllDeletionProtectedAccounts();
 
             if (is_array($getInactiveAdminUsers)) {
                 foreach ($getInactiveAdminUsers as $adminUser) {
@@ -80,18 +76,16 @@ class UserRetentionPolicyCommand extends Command
 
     private function storeUserIdForDeletion(User $user): void
     {
-        if (!in_array($user->getId(), $this->excludedUsers)) {
-            $this->inactiveAdminUserIds[] = $user->getId();
+        $this->inactiveAdminUserIds[] = $user->getId();
 
-            $event = new UserRetentionPolicyCommandEvent($user, AuditEvents::USER_DELETED_AUTOMATION);
-            $this->eventDispatcher->dispatch($event, UserRetentionPolicyCommandEvent::NAME);
+        $event = new UserRetentionPolicyCommandEvent($user, AuditEvents::USER_DELETED_AUTOMATION);
+        $this->eventDispatcher->dispatch($event, UserRetentionPolicyCommandEvent::NAME);
 
-            $this->verboseLogger->notice(
-                sprintf(
-                    'Deleted user account with id: %d at admin permission level due to 2 year expiry.',
-                    $user->getId()
-                )
-            );
-        }
+        $this->verboseLogger->notice(
+            sprintf(
+                'Deleted user account with id: %d at admin permission level due to 2 year expiry.',
+                $user->getId()
+            )
+        );
     }
 }
