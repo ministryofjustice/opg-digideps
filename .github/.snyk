@@ -8,3 +8,7 @@ ignore:
     - '*':
         reason: "No fix currently, not accessible in production"
         expires: '2026-11-05T00:00:00.000Z'
+  SNYK-GOLANG-GITHUBCOMGOMARKDOWNMARKDOWNPARSER-21196716
+    - '*':
+        reason: "No fix currently"
+        expires: '2027-01-01T00:00:00.000Z'
