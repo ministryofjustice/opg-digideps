@@ -45,9 +45,11 @@ class HtmlToPdfGenerator
             ),
         ];
 
-        $fontFiles = glob(
-            $this->basePath . '/fonts/*.woff'
-        );
+        $fontFiles = glob($this->basePath . '/fonts/*.woff');
+
+        if ($fontFiles === false) {
+            $fontFiles = [];
+        }
 
         $i = 2;
 
@@ -68,7 +70,6 @@ class HtmlToPdfGenerator
         curl_setopt($ch, CURLOPT_URL, $this->url . '/forms/chromium/convert/html');
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
 
         $httpCode = 0;
