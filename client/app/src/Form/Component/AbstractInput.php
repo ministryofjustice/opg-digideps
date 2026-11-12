@@ -11,20 +11,26 @@ use Symfony\Component\Form\FormErrorIterator;
 
 abstract readonly class AbstractInput
 {
+    protected LabelRecipe $label;
+    protected ?LegendRecipe $legend;
+    protected ?HintRecipe $hint;
+
     protected function __construct(
         /**
          * @var class-string $symfonyType
          */
         public string $symfonyType,
         public string $name,
-        public string $label,
-        public ?LegendRecipe $legend,
-        public ?HintRecipe $hint,
+        string|LabelRecipe $label,
+        string|LegendRecipe|null $legend,
+        string|HintRecipe|null $hint,
         public bool $required,
         public bool $disabled,
         public ?Constraints $constraints,
-        public bool $repeated = false
     ) {
+        $this->legend = is_string($legend) ? new LegendRecipe($legend) : $legend;
+        $this->label = is_string($label) ? new LabelRecipe($label) : $label;
+        $this->hint = is_string($hint) ? new HintRecipe($hint) : $hint;
     }
 
     abstract public function render(ValidatingArray $variables): RenderableInterface;

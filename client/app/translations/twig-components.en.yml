@@ -25,6 +25,9 @@ gov:
       privacy: Privacy notice
       cookies: Cookies
       accessibility: Accessibility
+  form:
+    label:
+      optional: "(optional)"
 opg:
   accessibility:
     statement:

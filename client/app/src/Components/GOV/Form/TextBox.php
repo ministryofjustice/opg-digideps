@@ -5,30 +5,33 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Components\GOV\Form;
 
 use OPG\Digideps\Frontend\Components\RenderableInterface;
+use OPG\Digideps\Frontend\Form\Component\HintRecipe;
+use OPG\Digideps\Frontend\Form\Component\LabelRecipe;
+use OPG\Digideps\Frontend\Form\Component\LegendRecipe;
 
 final class TextBox implements RenderableInterface
 {
     /**
-     * @var array<string> $errors
+     * @var ?array<string> $errors
      */
-    private readonly array $errors;
+    private readonly ?array $errors;
 
     public function __construct(
         private readonly string $id,
         private readonly string $name,
         private readonly string $type,
-        private readonly string $label,
+        private readonly LabelRecipe $label,
+        private readonly ?string $prefix,
+        private readonly ?string $suffix,
         private readonly string $value,
         private readonly ?int $characters,
         private readonly bool $required,
         private readonly bool $disabled,
-        private readonly ?string $legend,
-        private readonly ?int $hLegend,
-        private readonly string $sizeLegend,
-        private readonly ?string $hint,
+        private readonly ?LegendRecipe $legend,
+        private readonly ?HintRecipe $hint,
         string ...$errors
     ) {
-        $this->errors = $errors;
+        $this->errors = empty($errors) ? null : $errors;
     }
 
     public string $componentName { get => 'GOV:Form:TextBox'; }
@@ -39,14 +42,14 @@ final class TextBox implements RenderableInterface
             'type' => $this->type,
             'value' => $this->value,
             'label' => $this->label,
+            'prefix' => $this->prefix,
+            'suffix' => $this->suffix,
             'characters' => $this->characters,
             'required' => $this->required,
             'disabled' => $this->disabled,
             'legend' => $this->legend,
-            'hLegend' => $this->hLegend,
-            'sizeLegend' => $this->sizeLegend,
             'hint' => $this->hint,
-            'errors' => empty($this->errors) ? null : $this->errors,
+            'errors' => $this->errors,
         ];
     }
 }

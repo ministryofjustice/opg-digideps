@@ -1,4 +1,4 @@
-{%- props id, hasHint=false, hasError=false -%}
+{%- props id, legend=null, hasHint=false, hasError=false -%}
 
 {% set children = block('content') %}
 
@@ -6,10 +6,8 @@
     {%- if legend is not null -%}
         <twig:GOV:Form:Fieldset
             id="{{ id }}"
-            h="{{ hLegend }}"
-            size="{{ sizeLegend }}"
-            hasHint="{{ hasHint }}"
             legend="{{ legend }}"
+            hasHint="{{ hasHint }}"
             hasError="{{ hasError }}"
         >
             {%- with outerScope -%}{% autoescape false %}

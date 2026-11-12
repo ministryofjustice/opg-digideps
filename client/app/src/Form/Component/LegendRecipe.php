@@ -7,7 +7,7 @@ namespace OPG\Digideps\Frontend\Form\Component;
 final readonly class LegendRecipe
 {
     public function __construct(
-        public ?string $text = null,
+        public string $text,
         public ?int $h = null,
         public string $size = 'm'
     ) {

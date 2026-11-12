@@ -13,19 +13,21 @@ abstract readonly class AbstractRepeatedInput extends AbstractInput
     public AbstractInput $primary;
     public AbstractInput $repeat;
 
+    public LabelRecipe $repeatLabel;
+
     /**
      * @param class-string $symfonyType
      */
     protected function __construct(
         string $symfonyType,
         string $name,
-        string $label,
+        LabelRecipe|string $label,
         ?LegendRecipe $legend,
         ?HintRecipe $hint,
         bool $required,
         bool $disabled,
         ?Constraints $constraints,
-        public string $repeatLabel,
+        string $repeatLabel,
         public string $repeatError,
     ) {
         parent::__construct(
@@ -38,6 +40,7 @@ abstract readonly class AbstractRepeatedInput extends AbstractInput
             $disabled,
             $constraints,
         );
+        $this->repeatLabel = new LabelRecipe($repeatLabel);
         $this->primary = $this->makeChild($this->name, $this->label, $this->constraints);
         $this->repeat = $this->makeChild("{$this->name}_repeat_", $this->repeatLabel, new Constraints(
             new Expression(expression: "this.getParent().get('{$this->name}').getData() === this.getData()", message: $this->repeatError)
@@ -54,5 +57,5 @@ abstract readonly class AbstractRepeatedInput extends AbstractInput
         return $this->repeat->render($variables);
     }
 
-    abstract protected function makeChild(string $name, string $label, ?Constraints $constraints): AbstractInput;
+    abstract protected function makeChild(string $name, LabelRecipe $label, ?Constraints $constraints): AbstractInput;
 }

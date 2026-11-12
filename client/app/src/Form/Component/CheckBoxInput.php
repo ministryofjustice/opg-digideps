@@ -37,15 +37,13 @@ final readonly class CheckBoxInput extends AbstractInput
         return new CheckBox(
             $variables->getStringOrThrow('id'),
             $variables->getStringOrThrow('full_name'),
-            $this->label,
+            $this->label->text,
             $variables->getStringOrThrow('value'),
             $variables->getBooleanOrThrow('data'),
             $this->required,
             $this->disabled,
-            $this->legend?->text,
-            $this->legend?->h,
-            $this->legend->size ?? 'm',
-            $this->hint?->text,
+            $this->legend,
+            $this->hint,
             ...AbstractInput::extractErrorMessages($variables)
         );
     }

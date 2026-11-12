@@ -13,7 +13,7 @@ final readonly class EmailInput extends AbstractInput
 {
     public function __construct(
         string $name,
-        string $label,
+        LabelRecipe|string $label,
         bool $required = true,
         bool $disabled = false,
         public ?int $characters = null,
@@ -40,14 +40,14 @@ final readonly class EmailInput extends AbstractInput
             $variables->getStringOrThrow('full_name'),
             'email',
             $this->label,
+            null,
+            null,
             $variables->getStringOrDefault('data', ''),
             $this->characters,
             $this->required,
             $this->disabled,
-            $this->legend?->text,
-            $this->legend?->h,
-            $this->legend->size ?? 'm',
-            $this->hint?->text,
+            $this->legend,
+            $this->hint,
             ...AbstractInput::extractErrorMessages($variables)
         );
     }

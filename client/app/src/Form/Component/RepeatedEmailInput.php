@@ -10,7 +10,7 @@ final readonly class RepeatedEmailInput extends AbstractRepeatedInput
 {
     public function __construct(
         string $name,
-        string $label,
+        LabelRecipe|string $label,
         string $repeatLabel,
         string $repeatError,
         bool $required = true,
@@ -34,7 +34,7 @@ final readonly class RepeatedEmailInput extends AbstractRepeatedInput
         );
     }
 
-    protected function makeChild(string $name, string $label, ?Constraints $constraints): AbstractInput
+    protected function makeChild(string $name, LabelRecipe $label, ?Constraints $constraints): AbstractInput
     {
         return new EmailInput(
             $name,

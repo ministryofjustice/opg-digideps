@@ -151,12 +151,6 @@ parameters:
 			path: src/Command/UserRetentionPolicyCommand.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\UserRetentionPolicyCommand\:\:\$excludedUsers \(array\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Command/UserRetentionPolicyCommand.php
-
-		-
 			message: '#^Cannot access property \$headers on mixed\.$#'
 			identifier: property.nonObject
 			count: 2
@@ -2083,18 +2077,6 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$deletionProtection \(bool\|null\) is never assigned bool so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$deletionProtection is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\User\:\:\$phoneAlternative is never read, only written\.$#'
 			identifier: property.onlyWritten
 			count: 1
@@ -3098,12 +3080,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:getAllAdminAccountsUsedWithin\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Repository/UserRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:getAllDeletionProtectedAccounts\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Repository/UserRepository.php

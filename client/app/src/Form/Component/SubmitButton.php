@@ -30,7 +30,7 @@ final readonly class SubmitButton extends AbstractInput
         return new Button(
             $variables->getStringOrThrow('id'),
             $variables->getStringOrThrow('full_name'),
-            $this->label
+            $this->label->text
         );
     }
 }

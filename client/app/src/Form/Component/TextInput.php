@@ -13,12 +13,14 @@ final readonly class TextInput extends AbstractInput
 {
     public function __construct(
         string $name,
-        string $label,
+        LabelRecipe|string $label,
         bool $required = true,
         bool $disabled = false,
         public ?int $characters = null,
         ?LegendRecipe $legend = null,
-        ?HintRecipe $hint = null,
+        HintRecipe|string|null $hint = null,
+        public ?string $prefix = null,
+        public ?string $suffix = null,
         ?Constraints $constraints = null
     ) {
         parent::__construct(
@@ -40,14 +42,14 @@ final readonly class TextInput extends AbstractInput
             $variables->getStringOrThrow('full_name'),
             'text',
             $this->label,
+            $this->prefix,
+            $this->suffix,
             $variables->getStringOrDefault('data', ''),
             $this->characters,
             $this->required,
             $this->disabled,
-            $this->legend?->text,
-            $this->legend?->h,
-            $this->legend->size ?? 'm',
-            $this->hint?->text,
+            $this->legend,
+            $this->hint,
             ...AbstractInput::extractErrorMessages($variables)
         );
     }

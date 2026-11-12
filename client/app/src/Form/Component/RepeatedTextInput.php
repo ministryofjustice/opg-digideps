@@ -10,7 +10,7 @@ final readonly class RepeatedTextInput extends AbstractRepeatedInput
 {
     public function __construct(
         string $name,
-        string $label,
+        LabelRecipe|string $label,
         string $repeatLabel,
         string $repeatError,
         bool $required = true,
@@ -18,6 +18,8 @@ final readonly class RepeatedTextInput extends AbstractRepeatedInput
         public ?int $characters = null,
         ?LegendRecipe $legend = null,
         ?HintRecipe $hint = null,
+        public ?string $prefix = null,
+        public ?string $suffix = null,
         ?Constraints $constraints = null,
     ) {
         parent::__construct(
@@ -34,7 +36,7 @@ final readonly class RepeatedTextInput extends AbstractRepeatedInput
         );
     }
 
-    protected function makeChild(string $name, string $label, ?Constraints $constraints): AbstractInput
+    protected function makeChild(string $name, LabelRecipe $label, ?Constraints $constraints): AbstractInput
     {
         return new TextInput(
             $name,
@@ -44,6 +46,8 @@ final readonly class RepeatedTextInput extends AbstractRepeatedInput
             $this->characters,
             $this->legend,
             $this->hint,
+            $this->prefix,
+            $this->suffix,
             $constraints
         );
     }
