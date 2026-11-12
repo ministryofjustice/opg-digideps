@@ -215,7 +215,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse')]
     #[JMS\Groups(['user', 'satisfaction', 'user-research'])]
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserResearchResponse::class, cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: UserResearchResponse::class, mappedBy: 'user', cascade: ['persist'])]
     private Collection $userResearchResponse;
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
@@ -225,13 +225,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'user')]
     private ?User $createdBy = null;
 
-    #[JMS\Type('boolean')]
-    #[JMS\Groups(['user'])]
-    #[ORM\Column(name: 'deletion_protection', type: 'boolean', nullable: true, options: ['default' => null])]
-    private ?bool $deletionProtection = null;
-
     #[JMS\Type('OPG\Digideps\Backend\Entity\Deputy')]
-    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Deputy::class)]
+    #[ORM\OneToOne(targetEntity: Deputy::class, mappedBy: 'user')]
     private ?Deputy $deputy = null;
 
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]

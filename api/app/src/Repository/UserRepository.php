@@ -280,15 +280,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $result->getResult();
     }
 
-    public function getAllDeletionProtectedAccounts()
-    {
-        $dql = 'SELECT u.id FROM OPG\Digideps\Backend\Entity\User u WHERE u.deletionProtection = true';
-
-        $stmt = $this->getEntityManager()->createQuery($dql);
-
-        return $stmt->getResult();
-    }
-
     public function findByFiltersWithCounts(
         $q,
         int $offset,
