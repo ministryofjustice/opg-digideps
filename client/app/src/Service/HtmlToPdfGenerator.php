@@ -8,12 +8,14 @@ namespace OPG\Digideps\Frontend\Service;
  */
 class HtmlToPdfGenerator
 {
+    private string $basePath;
+
     public function __construct(
         private readonly string $url,
         private readonly int $timeoutSeconds
     ) {
+        $this->basePath = '/var/www/public/assets/fallback/stylesheets';
     }
-
     /**
      * @return bool true if working
      */
@@ -30,33 +32,50 @@ class HtmlToPdfGenerator
 
     public function getPdfFromHtml(string $html): string|false
     {
-        // Example from https://github.com/openlabs/docker-htmltopdf-aas/issues/18
-        $data = [
-            'contents' => base64_encode($html),
-            'options' => [
-                'encoding' => 'utf-8',
-            ],
+        $postFields = [
+            'files[0]' => new \CURLStringFile(
+                $html,
+                'index.html',
+                'text/html'
+            ),
+            'files[1]' => new \CURLFile(
+                $this->basePath . '/application.css',
+                'text/css',
+                'application.css'
+            ),
         ];
-        $dataString = json_encode($data);
-        $headers = [
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($dataString),
-        ];
+
+        $fontFiles = glob(
+            $this->basePath . '/fonts/*.woff'
+        );
+
+        $i = 2;
+
+        foreach ($fontFiles as $fontFile) {
+            $postFields["files[$i]"] = new \CURLFile(
+                $fontFile,
+                'font/woff',
+                basename($fontFile)
+            );
+
+            ++$i;
+        }
 
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeoutSeconds);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds); // timeout in seconds
-        curl_setopt($ch, CURLOPT_URL, $this->url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds);
+        curl_setopt($ch, CURLOPT_URL, $this->url . '/forms/chromium/convert/html');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
 
         $httpCode = 0;
         $count = 0;
         $pdfBody = false;
-        while ($httpCode !== 200 and $count < 3) {
+
+        while ($httpCode !== 200 && $count < 3) {
             $pdfBody = curl_exec($ch);
 
             if (!is_string($pdfBody)) {
@@ -64,11 +83,12 @@ class HtmlToPdfGenerator
             }
 
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
             ++$count;
         }
 
         curl_close($ch);
 
-        return $pdfBody;
+        return $httpCode === 200 ? $pdfBody : false;
     }
 }
