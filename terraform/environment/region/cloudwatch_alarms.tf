@@ -3,6 +3,47 @@ data "aws_sns_topic" "alerts" {
   name = "alerts"
 }
 
+# ========== External Outage Detected ==========
+
+resource "aws_cloudwatch_log_metric_filter" "pingdom_health_checks" {
+  name           = "PingdomHealthChecks.${local.environment}"
+  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
+
+  pattern = "{($.service_name = \"frontend\") && ($.status = 200) && ($.request_uri = \"/health-check/pingdom\")}"
+
+  metric_transformation {
+    name          = "PingdomHealthChecks.${local.environment}"
+    namespace     = "DigiDeps/Availability"
+    value         = "1"
+    default_value = "0"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "pingdom_health_checks_missing" {
+  alarm_name        = "${local.environment}-service-possibly-unavailable"
+  alarm_description = "No successful Pingdom health checks received within the last 5 minutes. Check service!"
+
+  namespace   = aws_cloudwatch_log_metric_filter.pingdom_health_checks.metric_transformation[0].namespace
+  metric_name = aws_cloudwatch_log_metric_filter.pingdom_health_checks.metric_transformation[0].name
+
+  statistic = "Sum"
+  period    = 300
+  threshold = 1
+
+  comparison_operator = "LessThanThreshold"
+
+  evaluation_periods  = 1
+  datapoints_to_alarm = 1
+
+  treat_missing_data = "breaching"
+
+  alarm_actions   = [data.aws_sns_topic.alerts.arn]
+  ok_actions      = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
+  actions_enabled = var.account.environment.alarms_active
+
+  tags = var.default_tags
+}
+
 # ========== Log Error Alarms ==========
 
 resource "aws_cloudwatch_log_metric_filter" "php_critical_errors" {
