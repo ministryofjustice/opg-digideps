@@ -1,77 +1,129 @@
-##############################
-# Stage 1: Base image
-##############################
-FROM python:3.13.17-alpine3.24@sha256:fa0bb0d0cd7c7d6cef30a69094d32ac2b71c7304c87c6107fec100e1ee4eda02 as base
+# Runtime assets source
+FROM gotenberg/gotenberg:8.39.0-chromium@sha256:558943677cf9092df83ff654c2645856dcb9ddf777f359243789688e74f3bcdd AS source
 
-# TODO Remove as temporary workaround until Alpine ships the patched package
-RUN apk update && apk add --upgrade "zlib==1.4-r0"
+# Patch pdftk-all.jar
+FROM alpine:3.24.3 AS jar-patch
 
-WORKDIR /
+ARG COMMONS_LANG3_VERSION=3.18.0
+ARG COMMONS_LANG3_SHA1=fb14946f0e39748a6571de0635acbe44e7885491
 
-##############################
-# Stage X: Upgrade pinned apk packages (used only as target for pinned upgrades)
-##############################
-FROM base AS upgrade-pinned-apk-packages
-USER root
-COPY htmltopdf/Dockerfile .
-COPY scripts/upgrade_apk/check-apk-ver.sh .
+RUN apk add --no-cache curl zip unzip
 
-CMD sh -c "./check-apk-ver.sh"
+COPY --from=source /usr/bin/pdftk-all.jar /work/pdftk-all.jar
 
-##############################
-# Stage 2: Runtime image
-##############################
-FROM base AS runtime
+WORKDIR /work
 
-CMD sh -c "./check-apk-ver.sh"
+RUN set -eux; \
+    curl -fsSLo cl3.jar \
+        https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/${COMMONS_LANG3_VERSION}/commons-lang3-${COMMONS_LANG3_VERSION}.jar; \
+    echo "${COMMONS_LANG3_SHA1}  cl3.jar" | sha1sum -c -; \
+    mkdir new; \
+    unzip -q cl3.jar -d new 'org/*' 'META-INF/maven/org.apache.commons/*'; \
+    zip -q -d pdftk-all.jar \
+        'org/apache/commons/lang3/*' \
+        'META-INF/maven/org.apache.commons/commons-lang3/*'; \
+    (cd new && zip -q -r ../pdftk-all.jar .)
 
-ENV PYTHONUNBUFFERED=1
+# Build patched gotenberg/pdfcpu
+FROM golang:1.27.3-trixie@sha256:fbb7ae40b62ff8afe31662df570d39b4f5052ac32b90dae8e60d7657a20a74f4 AS go-patch
 
-RUN addgroup -S htmltopdf \
- && adduser -S htmltopdf -G htmltopdf
+ARG BROTOLI_COMMIT=33c2a9884269798192b5ecf171288f98939dbe42
+ARG ECHO_COMMIT=a6a9673a54d2c719ceb32ce6a929d35483acfb2b
+ARG GO_JOSE_COMMIT=a0111f82742fa92bceec9ede40845e73319e6230
+ARG GOTENBERG_VERSION=8.39.0
+ARG KLAUSPOST_COMPRESS_COMMIT=7f5d8528720c895a6106f201719f87eb030a565d
+ARG PDFCPU_VERSION=v0.15.0
+ARG X_NET_COMMIT=3de643db506517b3e652a13cc0b56034cea6b8e6
 
-# Install curl for healthcheck, requirements for pdf generation and fonts
+ENV CGO_ENABLED=0
+
+ADD https://github.com/gotenberg/gotenberg.git#e4ee0f29d648f8d5a0a766dd797d108361905deb /src/gotenberg
+ADD https://github.com/pdfcpu/pdfcpu.git#f2686555086a2e76dc19f602ea1897f6e3baae4d /src/pdfcpu
+
+WORKDIR /src/gotenberg
+
+RUN go get \
+        github.com/labstack/echo/v5@${ECHO_COMMIT} \
+        golang.org/x/net@${X_NET_COMMIT} \
+        github.com/klauspost/compress@${KLAUSPOST_COMPRESS_COMMIT} \
+        github.com/go-jose/go-jose/v4@${GO_JOSE_COMMIT} \
+        github.com/andybalholm/brotli@${BROTOLI_COMMIT} \
+    && go mod tidy \
+    && go mod download \
+    && go mod verify \
+    && go build \
+        -o /out/gotenberg-chromium \
+        -ldflags "-s -w -X 'github.com/gotenberg/gotenberg/v8/cmd.Version=${GOTENBERG_VERSION}'" \
+        cmd/gotenberg-chromium/main.go
+
+WORKDIR /src/pdfcpu
+
+RUN go mod download \
+    && go mod verify \
+    && go build \
+        -o /out/pdfcpu \
+        -ldflags "-s -w \
+            -X 'main.version=${PDFCPU_VERSION}' \
+            -X 'github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model.VersionStr=${PDFCPU_VERSION}' \
+            -X main.builtBy=gotenberg" \
+        ./cmd/pdfcpu \
+    && /out/pdfcpu version
+
+# Alpine runtime
+FROM alpine:3.24
+
 RUN apk add --no-cache \
-    "curl==8.23.0-r0" \
-    "cairo==1.18.4-r1" \
-    "pango==1.57.1-r0" \
-    "gdk-pixbuf==2.44.7-r1" \
-    "jpeg==9f-r0" \
-    "libwebp==1.6.0-r0" \
-    "tiff==4.7.2-r0" \
-    "fontconfig==2.17.1-r1" \
-    "ttf-freefont==20120503-r4" \
-    "font-noto==2026.11.01-r0" \
-    "terminus-font==4.49.1-r4" \
-    && fc-cache -f
+    bash \
+    ca-certificates \
+    chromium \
+    exiftool \
+    font-noto \
+    font-noto-cjk \
+    font-noto-emoji \
+    openjdk21-jre \
+    qpdf \
+    ttf-dejavu \
+    tzdata
 
-COPY --from=ghcr.io/astral-sh/uv@sha256:32a7bb39b496babbd997b0a39a4d66c126bdaf5661b302bf6f06abda8deca6ff /uv /uvx /bin/
-COPY htmltopdf/uv.lock .
-COPY htmltopdf/pyproject.toml .
-RUN uv export --locked -o requirements.txt \
-    && python -m pip install --no-cache-dir -r requirements.txt
+# Runtime assets from official image
+COPY --from=source /opt/gotenberg /opt/gotenberg
 
-# Copy app and entrypoint
-COPY --chown=htmltopdf:htmltopdf htmltopdf/docker-entrypoint.sh /docker-entrypoint.sh
-COPY --chown=htmltopdf:htmltopdf htmltopdf/app.py /app.py
-COPY --chown=htmltopdf:htmltopdf htmltopdf/clean-tmp /etc/periodic/hourly/clean-tmp
+# Patched binaries
+COPY --from=go-patch /out/gotenberg-chromium /usr/bin/gotenberg
+COPY --from=go-patch /out/pdfcpu /usr/bin/pdfcpu
+COPY --from=jar-patch /work/pdftk-all.jar /usr/bin/pdftk-all.jar
 
-# Static assets
-# NOTE: the resources container has to be built first for these CSS files to exist
-COPY --chown=htmltopdf:htmltopdf client/resources/public/assets/*/stylesheets/formatted-report.css ./tmp/
-COPY --chown=htmltopdf:htmltopdf client/resources/public/assets/*/stylesheets/application.css ./tmp/
+# pdftk wrapper
+RUN printf '#!/bin/bash\nexec java -jar /usr/bin/pdftk-all.jar "$@"\n' \
+    > /usr/bin/pdftk \
+ && chmod 0755 /usr/bin/pdftk
 
-# Check processes script
-COPY --chown=htmltopdf:htmltopdf scripts/process_checks/check_processes.sh /check_processes.sh
+RUN adduser -D -u 1001 gotenberg \
+ && chown -R gotenberg:gotenberg \
+      /home/gotenberg \
+      /opt/gotenberg
 
-COPY scripts/hardening/harden.sh /harden.sh
+ENV CHROMIUM_BIN_PATH=/usr/bin/chromium
+ENV CHROMIUM_HYPHEN_DATA_DIR_PATH=/opt/gotenberg/chromium-hyphen-data
+ENV EXIFTOOL_BIN_PATH=/usr/bin/exiftool
+ENV GOTENBERG_VERSIONS_DIR_PATH=/opt/gotenberg/versions
+ENV HOME=/home/gotenberg
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV OTEL_LOGS_EXPORTER=none
+ENV OTEL_METRICS_EXPORTER=none
+ENV OTEL_TRACES_EXPORTER=none
+ENV PATH=/opt/java/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PDFCPU_BIN_PATH=/usr/bin/pdfcpu
+ENV PDFENGINES_CONVERT_ENGINES=
+ENV PDFTK_BIN_PATH=/usr/bin/pdftk
+ENV QPDF_BIN_PATH=/usr/bin/qpdf
+ENV TZ=UTC
 
-# Permissions and hardening
-RUN chmod +x /etc/periodic/hourly/clean-tmp /docker-entrypoint.sh \
-    && /harden.sh htmltopdf && rm /harden.sh
+WORKDIR /home/gotenberg
 
-USER htmltopdf
+USER gotenberg
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+EXPOSE 8080
 
-CMD ["-b", "0.0.0.0:8080", "--log-file", "-", "app:application"]
+ENTRYPOINT ["/usr/bin/gotenberg", "--api-port=8080"]
