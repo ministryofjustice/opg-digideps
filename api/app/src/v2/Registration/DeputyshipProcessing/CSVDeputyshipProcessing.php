@@ -57,11 +57,4 @@ readonly class CSVDeputyshipProcessing
     {
         return $this->layUploader->handleNewMultiClients($multiclientApplyDbChanges);
     }
-
-    public function orgProcessing(array $data): array
-    {
-        $rowCount = count($data);
-        $this->verboseLogger->notice("Skipping org ingest. Received {$rowCount} rows.");
-        return [];
-    }
 }

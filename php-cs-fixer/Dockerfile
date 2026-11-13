@@ -1,5 +1,8 @@
 FROM php:8.4.27-alpine3.24@sha256:8d29b132476e5f54633d30bfbfa0b0b7c95a9cb0c308b3175d61351aea73b643
 
+# TODO Remove as temporary workaround until Alpine ships the patched package
+RUN apk update && apk add --upgrade "zlib==1.4-r0"
+
 RUN apk add --no-cache curl
 
 RUN curl -L \

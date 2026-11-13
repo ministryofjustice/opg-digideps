@@ -3,6 +3,9 @@
 ##############################
 FROM python:3.13.17-alpine3.24@sha256:fa0bb0d0cd7c7d6cef30a69094d32ac2b71c7304c87c6107fec100e1ee4eda02 as base
 
+# TODO Remove as temporary workaround until Alpine ships the patched package
+RUN apk update && apk add --upgrade "zlib==1.4-r0"
+
 WORKDIR /
 
 ##############################
