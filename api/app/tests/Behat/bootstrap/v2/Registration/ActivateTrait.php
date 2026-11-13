@@ -141,39 +141,41 @@ trait ActivateTrait
     }
 
     /**
-     * @Then /^the partially registered users \'([^\']*)\' should \'([^\']*)\' set$/
+     * @Then /^the partially registered users registration date should \'([^\']*)\' set$/
+     * @throws BehatException
      */
-    public function thePartiallyRegisteredUsersShouldSet(string $property, string $toBeOrNotToBe): void
+    public function thePartiallyRegisteredUsersRegistrationDateShouldSet(string $toBeOrNotToBe): void
     {
         $this->fillInField('admin_q', $this->getUserForTestRun()['email']);
         $this->pressButton('Search');
-
-        $headerByProperty = match (strtolower($property)) {
-            'active flag' => 'Active',
-            'registration date' => 'Registration date'
-        };
 
         $assertionByExpectation = match (strtolower($toBeOrNotToBe)) {
             'not be' => false,
             'be' => true
         };
 
-        switch ($headerByProperty) {
-            case 'Active':
-                $matchingString = $assertionByExpectation ? 'Yes' : 'No';
-                break;
-            case 'Registration date':
-                $matchingString = $assertionByExpectation ? new \DateTime()->format('j/m/Y') : 'Not registered';
-                break;
-            default:
-                $supportedProperties = ['Registration date', 'Active flag'];
-                throw new BehatException(sprintf('"%s" is not a supported property. Supported properties are %s.', $property, implode(', ', $supportedProperties)));
-        }
+        $matchingString = $assertionByExpectation ? new \DateTime()->format('j/m/Y') : 'Not registered';
 
-        $cellValue = $this->getTableCellByUniqueRowValueAndHeader($headerByProperty, $this->getUserForTestRun()['email']);
+        $cellValue = $this->getTableCellByUniqueRowValueAndHeader('Registration date', $this->getUserForTestRun()['email']);
 
         if (!str_contains($cellValue, $matchingString)) {
-            throw new BehatException(sprintf('Expected "%s" property to be "%s", got "%s"', $headerByProperty, $matchingString, $cellValue));
+            throw new BehatException(sprintf('Expected "%s" property to be "%s", got "%s"', 'Registration date', $matchingString, $cellValue));
+        }
+    }
+
+    /**
+     * @Then /^the partially registered users active status should be \'([^\']*)\'$/
+     * @throws BehatException
+     */
+    public function thePartiallyRegisteredUsersActiveStatusShouldSet(string $activeStatus): void
+    {
+        $this->fillInField('admin_q', $this->getUserForTestRun()['email']);
+        $this->pressButton('Search');
+
+        $cellValue = $this->getTableCellByUniqueRowValueAndHeader('Active', $this->getUserForTestRun()['email']);
+
+        if (!str_contains($cellValue, $activeStatus)) {
+            throw new BehatException(sprintf('Expected "%s" property to be "%s", got "%s"', 'Active', $activeStatus, $cellValue));
         }
     }
 
