@@ -192,6 +192,7 @@ opg:
     clientDetails:
       actions:
         checklist: Checklist
+        restore: Restore report
         viewSummary: View report
         manage: Manage
       actionsHeader: Actions

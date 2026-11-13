@@ -26,8 +26,8 @@ class CourtOrder
     #[JMS\Type('string')]
     private string $status;
 
-    #[JMS\Type('DateTime')]
-    public \DateTime $orderMadeDate;
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    public ?\DateTime $orderMadeDate = null;
 
     /**
      * @var Deputy[]

@@ -14,6 +14,7 @@ use OPG\Digideps\Frontend\Components\OPG\Renderable\Div;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Model\PossibleReportReplacement;
 use OPG\Digideps\Frontend\Twig\Filters;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -48,7 +49,13 @@ final class ClientDetails
         $this->activeReportsTable = $this->makeReportsTable($reportsByCategory['active'], 'active', $userIsSuperAdmin);
         $this->submittedReportsTable = $this->makeReportsTable($reportsByCategory['submitted'], 'submitted', $userIsSuperAdmin, needsSubmittedColumn: true);
         $this->incompleteReportsTable = $this->makeReportsTable($reportsByCategory['incomplete'], 'incomplete', $userIsSuperAdmin);
-        $this->closedReportsTable = $this->makeReportsTable($reportsByCategory['closed'], 'closed', $userIsSuperAdmin, needsManageLink: false);
+        $this->closedReportsTable = $this->makeReportsTable(
+            $reportsByCategory['closed'],
+            'closed',
+            $userIsSuperAdmin,
+            needsManageLink: false,
+            possibleReportReplacements: $client->findPossibleReportReplacements()
+        );
     }
 
     /**
@@ -59,6 +66,7 @@ final class ClientDetails
         $keys = [
             'actionsHeader',
             'actions.checklist',
+            'actions.restore',
             'actions.viewSummary',
             'actions.manage',
             'dueDate',
@@ -125,13 +133,15 @@ final class ClientDetails
 
     /**
      * @param array<Report> $reports
+     * @param array<PossibleReportReplacement> $possibleReportReplacements
      */
     private function makeReportsTable(
         array $reports,
         string $captionKey,
         bool $userIsSuperAdmin = false,
         bool $needsManageLink = true,
-        bool $needsSubmittedColumn = false
+        bool $needsSubmittedColumn = false,
+        array $possibleReportReplacements = []
     ): ?Table {
         if (empty($reports)) {
             return null;
@@ -143,7 +153,7 @@ final class ClientDetails
             tagColour: Filters::statusToTagColour($captionKey)
         );
 
-        $actionsCell = new Cell(new Div([$this->text['actionsHeader']], isVisuallyHidden: true), isHeader: true);
+        $actionsHeaderCell = new Cell(new Div([$this->text['actionsHeader']], isVisuallyHidden: true), isHeader: true);
 
         $columns = [1, 1, 1, 1];
         $header = [$this->text['period'], $this->text['type'], $this->text['dueDate']];
@@ -153,7 +163,7 @@ final class ClientDetails
             $header[] = $this->text['submitted'];
         }
 
-        $header[] = $actionsCell;
+        $header[] = $actionsHeaderCell;
 
         $tableBuilder = new TableBuilder(caption: $caption)
             ->addColumns(...$columns)
@@ -180,6 +190,15 @@ final class ClientDetails
                 $links[] = new Link(href: $downloadUrl, text: $this->text['actions.viewSummary']);
             }
 
+            $possibleReportReplacement = $this->getPossibleReportReplacement($report, $possibleReportReplacements);
+            if ($possibleReportReplacement !== null) {
+                $replaceRestoreUrl = $this->urlGenerator->generate(
+                    'admin_report_restore',
+                    ['restoreFromReportId' => $possibleReportReplacement->getId()]
+                );
+                $links[] = new Link(href: $replaceRestoreUrl, text: $this->text['actions.restore']);
+            }
+
             $cells = [
                 $period,
                 "OPG{$report->getType()}",
@@ -196,5 +215,21 @@ final class ClientDetails
         }
 
         return $tableBuilder->makeTable();
+    }
+
+    /**
+     * @param Report $report Report we want to find possible replacements for
+     * @param array<PossibleReportReplacement> $possibleReportReplacements
+     *
+     * If more than one possible replacement report is found, null is returned.
+     */
+    private function getPossibleReportReplacement(Report $report, array $possibleReportReplacements): ?Report
+    {
+        $reportId = $report->getId();
+        $possiblesForReport = array_filter($possibleReportReplacements, fn ($pr) => $pr->replaceReport->getId() === $reportId);
+        if (count($possiblesForReport) !== 1) {
+            return null;
+        }
+        return $possiblesForReport[0]->withReport;
     }
 }
