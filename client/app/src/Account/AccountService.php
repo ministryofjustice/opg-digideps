@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Account;
 
+use OPG\Digideps\Common\Account\AcceptRequest;
+use OPG\Digideps\Common\Account\AcceptResponse;
 use OPG\Digideps\Common\Account\AccountError;
 use OPG\Digideps\Common\Account\AccountRequest;
 use OPG\Digideps\Common\Account\AccountResponse;
@@ -56,7 +58,20 @@ final readonly class AccountService
             if ($response instanceof AccountError) {
                 return $response;
             }
-            return $this->sendConfirmPasswordEmail($response);
+            return $response->email;
+        } catch (\Throwable $_) {
+            return AccountError::NetworkError;
+        }
+    }
+
+    public function sendAcceptRequest(AcceptRequest $request): ?AccountError
+    {
+        try {
+            $response = AcceptResponse::jsonDeserialize($this->getRawResponse('/account/accept', $request));
+            if ($response instanceof AccountError) {
+                return $response;
+            }
+            return null;
         } catch (\Throwable $_) {
             return AccountError::NetworkError;
         }
@@ -67,12 +82,7 @@ final readonly class AccountService
         return $this->mailer->sendSetPasswordEmail($response, $isReset) ? $response->email : AccountError::EmailError;
     }
 
-    private function sendConfirmPasswordEmail(PasswordResponse $response): Email|AccountError
-    {
-        return $this->mailer->sendConfirmPasswordEmail($response) ? $response->email : AccountError::EmailError;
-    }
-
-    private function getRawResponse(string $path, AccountRequest|PasswordRequest|ResetRequest $request): string
+    private function getRawResponse(string $path, AccountRequest|PasswordRequest|ResetRequest|AcceptRequest $request): string
     {
         $json = json_encode($request);
         if ($json === false) {

@@ -6,6 +6,7 @@ namespace OPG\Digideps\Backend\Controller;
 
 use OPG\Digideps\Backend\Account\AccountService;
 use OPG\Digideps\Backend\Account\PasswordService;
+use OPG\Digideps\Common\Account\AcceptRequest;
 use OPG\Digideps\Common\Account\AccountRequest;
 use OPG\Digideps\Common\Account\PasswordRequest;
 use OPG\Digideps\Common\Account\ResetRequest;
@@ -25,32 +26,24 @@ final class AccountController extends AbstractController
     #[Route('/account/request', name: 'account_request', methods: 'POST')]
     public function request(Request $request): JsonResponse
     {
-        return new JsonResponse($this->accountService->requestAccount($this->decode(AccountRequest::class, $request->getContent())));
+        return new JsonResponse($this->accountService->requestAccount(AccountRequest::jsonDeserialize($request->getContent())));
     }
 
     #[Route('/account/password/reset', name: 'account_password_reset', methods: 'POST')]
     public function reset(Request $request): JsonResponse
     {
-        return new JsonResponse($this->accountService->requestPasswordReset($this->decode(ResetRequest::class, $request->getContent())));
+        return new JsonResponse($this->accountService->requestPasswordReset(ResetRequest::jsonDeserialize($request->getContent())));
     }
 
     #[Route('/account/password/set', name: 'account_password_set', methods: 'POST')]
     public function set(Request $request): JsonResponse
     {
-        return new JsonResponse($this->passwordService->setPasswordFromRequest($this->decode(PasswordRequest::class, $request->getContent())));
+        return new JsonResponse($this->passwordService->setPasswordFromRequest(PasswordRequest::jsonDeserialize($request->getContent())));
     }
 
-    /**
-     * @template T of AccountRequest|ResetRequest|PasswordRequest
-     * @param class-string<T> $class
-     * @return T
-     */
-    private function decode(string $class, string $json): AccountRequest|ResetRequest|PasswordRequest
+    #[Route('/account/accept', name: 'account_accept', methods: 'POST')]
+    public function accept(Request $request): JsonResponse
     {
-        return match ($class) {
-            AccountRequest::class => AccountRequest::jsonDeserialize($json),
-            ResetRequest::class => ResetRequest::jsonDeserialize($json),
-            PasswordRequest::class => PasswordRequest::jsonDeserialize($json)
-        };
+        return new JsonResponse($this->accountService->acceptTerms(AcceptRequest::jsonDeserialize($request->getContent())));
     }
 }

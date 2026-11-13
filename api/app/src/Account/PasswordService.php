@@ -7,7 +7,9 @@ namespace OPG\Digideps\Backend\Account;
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Account\AccountToken;
 use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Utility\Environment;
 use OPG\Digideps\Common\Account\AccountError;
+use OPG\Digideps\Common\Account\Area;
 use OPG\Digideps\Common\Account\Email;
 use OPG\Digideps\Common\Account\MaximumTokenAge;
 use OPG\Digideps\Common\Account\Password;
@@ -15,6 +17,7 @@ use OPG\Digideps\Common\Account\PasswordRequest;
 use OPG\Digideps\Common\Account\PasswordResponse;
 use OPG\Digideps\Common\Account\Token;
 use OPG\Digideps\Common\Account\ValidationKey;
+use OPG\Digideps\Common\Deputy\DeputyType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final readonly class PasswordService
@@ -23,6 +26,7 @@ final readonly class PasswordService
         private EntityManagerInterface $entityManager,
         private UserPasswordHasherInterface $passwordHasher,
         private BruteForceSentinel $bruteForceSentinel,
+        private Environment $environment,
     ) {
     }
 
@@ -37,16 +41,24 @@ final readonly class PasswordService
             return $user;
         }
 
-        if ($this->getValidationKeyFromUser($user)->value !== $request->validationKey->value) {
+        if (!hash_equals($this->getValidationKeyFromUser($user)->value, $request->validationKey->value)) {
             return AccountError::TokenInvalid;
         }
         $this->setUserPassword($user, $request->password, true);
-        return new PasswordResponse(new Email($user->getEmail()));
+        return new PasswordResponse(
+            new Email($user->getEmail()),
+            $user->hasAdminRole() ? Area::Admin : Area::Deputy,
+            $user->deriveDeputyType() ?? DeputyType::LAY
+        );
     }
 
     public function setUserPassword(User $user, Password $password, bool $flush = false): void
     {
         $user->setPassword($this->passwordHasher->hashPassword($user, $password->value));
+        if ($user->getRegistrationDate() === null) {
+            $user->setRegistrationDate(new \DateTime());
+        }
+        $user->setActive(true);
         $this->entityManager->persist($user);
         if ($flush) {
             $this->entityManager->flush();
@@ -81,6 +93,6 @@ final readonly class PasswordService
 
     public function getValidationKeyFromUser(User $user): ValidationKey
     {
-        return new ValidationKey(md5('digideps' . $user->getEmail() . self::class));
+        return new ValidationKey(hash('tiger128,4', $user->getEmail() . $this->environment->validationKeyPepper));
     }
 }

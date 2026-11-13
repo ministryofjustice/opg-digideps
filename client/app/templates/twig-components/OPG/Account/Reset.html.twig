@@ -1,0 +1,14 @@
+{%- props form -%}
+
+<twig:GOV:Paragraph>
+    {{ 'subtitle' | trans({}, 'password-forgotten') }}
+</twig:GOV:Paragraph>
+
+<twig:GOV:Form form="{{ form }}">
+    <twig:GOV:Form:TextInput element="{{ form.email }}"/>
+    <twig:GOV:Form:Submit element="{{ form.submit }}"/>
+</twig:GOV:Form>
+
+<twig:GOV:Link href="{{ path('login') }}">{{ 'returnToSignIn' | trans({}, 'password-forgotten') }}</twig:GOV:Link>
+
+<twig:GOV:SectionBreak/>{#--#}

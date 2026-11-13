@@ -8,6 +8,8 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Common\Account\AcceptRequest;
+use OPG\Digideps\Common\Account\AcceptResponse;
 use OPG\Digideps\Common\Account\AccountError;
 use OPG\Digideps\Common\Account\AccountRequest;
 use OPG\Digideps\Common\Account\AccountResponse;
@@ -53,6 +55,18 @@ final readonly class AccountService
         return $this->requestPasswordResetForUser($user);
     }
 
+    public function acceptTerms(AcceptRequest $request): AcceptResponse|AccountError
+    {
+        $user = $this->entityManager->find(User::class, $request->userId);
+        if ($user === null) {
+            return AccountError::UnknownUser;
+        }
+        $user->setAgreeTermsUse(true);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+        return new AcceptResponse();
+    }
+
     private function requestPasswordResetForUser(User $user): AccountResponse
     {
         return new AccountResponse(
@@ -76,12 +90,12 @@ final readonly class AccountService
             $deputy->getLastname(),
             $deputy->getEmail1(),
         );
+        $user->setRegistrationRoute(User::ACCOUNT_REQUEST);
         $user->setRoleName(match ($deputy->getDeputyType()) {
             DeputyType::LAY => User::ROLE_LAY_DEPUTY,
             DeputyType::PRO => User::ROLE_PROF_NAMED,
             DeputyType::PA => User::ROLE_PA_NAMED,
         });
-        $user->setActive(true);
         $user->setDeputyUid($deputy->getDeputyUid());
         $deputy->setUser($user);
         $user->setDeputy($deputy);
