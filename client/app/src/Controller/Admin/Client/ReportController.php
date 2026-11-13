@@ -592,7 +592,6 @@ class ReportController extends AbstractController
         // check status
         $status = $report->getStatus();
 
-
         $backLink = $this->generateUrl('admin_client_details', ['id' => $report->getClient()->getId()]);
 
         if (!$report->isSubmitted()) {
@@ -611,5 +610,14 @@ class ReportController extends AbstractController
             'reportStatus' => $status,
             'backLink' => $backLink,
         ];
+    }
+
+    #[Route(path: 'replace', name: 'admin_report_restore')]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
+    public function restoreAction(Request $request, string $id): Response
+    {
+        $reportToBeReplacedId = (int) $id;
+        $replacementReportId = $request->getPayload()->getInt('restoreFromReportId');
+        return new Response("report replacement confirmation page here; replace {$reportToBeReplacedId} with {$replacementReportId}");
     }
 }
