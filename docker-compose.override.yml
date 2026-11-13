@@ -63,10 +63,6 @@ services:
       - ./api/app/postgres.env:/var/www/postgres.env
       - ./common/src:/var/www/vendor/digideps/common/src
 
-  htmltopdf:
-    volumes:
-      - ./htmltopdf/app.py:/app.py
-
   mock-notify-api:
     volumes:
       - ./client/app/govuk-notifications.yaml:/tmp/govuk-notifications.yaml

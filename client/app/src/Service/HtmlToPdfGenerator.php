@@ -2,24 +2,28 @@
 
 namespace OPG\Digideps\Frontend\Service;
 
+use Gotenberg\Exceptions\GotenbergApiErrored;
+use Gotenberg\Gotenberg;
+use Gotenberg\Stream;
+use Psr\Log\LoggerInterface;
+
 /**
- * Client to connect to docker-htmltopdf-aas
- * https://github.com/openlabs/docker-htmltopdf-aas.
+ * Client to send HTML to htmltopdf container for conversion
  */
 class HtmlToPdfGenerator
 {
+    private string $basePath;
+
     public function __construct(
         private readonly string $url,
-        private readonly int $timeoutSeconds
+        private readonly LoggerInterface $logger
     ) {
+        $this->basePath = '/var/www/public/assets/fallback/stylesheets';
     }
 
-    /**
-     * @return bool true if working
-     */
     public function isAlive(): bool
     {
-        $pdf = $this->getPdfFromHtml('test');
+        $pdf = $this->getPdfFromHtml('test', includeAssets: false);
 
         if ($pdf === false) {
             $pdf = '';
@@ -28,47 +32,50 @@ class HtmlToPdfGenerator
         return strlen($pdf) > 700 && preg_match('/PDF-\d/', $pdf);
     }
 
-    public function getPdfFromHtml(string $html): string|false
+    public function getPdfFromHtml(string $html, bool $includeAssets = true): string|false
     {
-        // Example from https://github.com/openlabs/docker-htmltopdf-aas/issues/18
-        $data = [
-            'contents' => base64_encode($html),
-            'options' => [
-                'encoding' => 'utf-8',
-            ],
-        ];
-        $dataString = json_encode($data);
-        $headers = [
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($dataString),
-        ];
+        $assets = [];
 
-        $ch = curl_init();
+        if ($includeAssets) {
+            // add font files
+            $fontFiles = glob($this->basePath . '/fonts/*.woff*') ?: [];
 
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeoutSeconds);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds); // timeout in seconds
-        curl_setopt($ch, CURLOPT_URL, $this->url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            foreach ($fontFiles as $fontFile) {
+                $assets[] = Stream::path($fontFile, basename($fontFile));
+            }
+
+            // read in application.css and munge the font paths
+            $css = file_get_contents($this->basePath . '/application.css') ?: '';
+            if (!empty($css)) {
+                /** @var string $css */
+                $css = str_replace('url(./fonts/', 'url(', $css);
+
+                $assets[] = Stream::string('application.css', $css);
+            }
+        }
+
+        $request = Gotenberg::chromium($this->url)
+            ->pdf()
+            ->emulateScreenMediaType()
+            ->assets(...$assets)
+            ->html(Stream::string('index.html', $html));
 
         $httpCode = 0;
         $count = 0;
-        $pdfBody = false;
-        while ($httpCode !== 200 and $count < 3) {
-            $pdfBody = curl_exec($ch);
+        $pdfBody = '';
 
-            if (!is_string($pdfBody)) {
-                $pdfBody = '';
+        while ($httpCode !== 200 && $count < 3) {
+            try {
+                $response = Gotenberg::send($request);
+                $httpCode = $response->getStatusCode();
+                $pdfBody = $response->getBody()->getContents();
+            } catch (GotenbergApiErrored $e) {
+                $this->logger->error('Error while converting HTML to PDF: ' . $e->getMessage());
             }
 
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             ++$count;
         }
 
-        curl_close($ch);
-
-        return $pdfBody;
+        return $httpCode === 200 ? $pdfBody : false;
     }
 }
