@@ -2,9 +2,13 @@
 
 namespace OPG\Digideps\Frontend\Service;
 
+use Gotenberg\Exceptions\GotenbergApiErrored;
+use Gotenberg\Gotenberg;
+use Gotenberg\Stream;
+use Psr\Log\LoggerInterface;
+
 /**
- * Client to connect to docker-htmltopdf-aas
- * https://github.com/openlabs/docker-htmltopdf-aas.
+ * Client to send HTML to htmltopdf container for conversion
  */
 class HtmlToPdfGenerator
 {
@@ -12,16 +16,14 @@ class HtmlToPdfGenerator
 
     public function __construct(
         private readonly string $url,
-        private readonly int $timeoutSeconds
+        private readonly LoggerInterface $logger
     ) {
         $this->basePath = '/var/www/public/assets/fallback/stylesheets';
     }
-    /**
-     * @return bool true if working
-     */
+
     public function isAlive(): bool
     {
-        $pdf = $this->getPdfFromHtml('test');
+        $pdf = $this->getPdfFromHtml('test', includeAssets: false);
 
         if ($pdf === false) {
             $pdf = '';
@@ -30,64 +32,49 @@ class HtmlToPdfGenerator
         return strlen($pdf) > 700 && preg_match('/PDF-\d/', $pdf);
     }
 
-    public function getPdfFromHtml(string $html): string|false
+    public function getPdfFromHtml(string $html, bool $includeAssets = true): string|false
     {
-        $postFields = [
-            'files[0]' => new \CURLStringFile(
-                $html,
-                'index.html',
-                'text/html'
-            ),
-            'files[1]' => new \CURLFile(
-                $this->basePath . '/application.css',
-                'text/css',
-                'application.css'
-            ),
-        ];
+        $assets = [];
 
-        $fontFiles = glob(
-            $this->basePath . '/fonts/*.woff'
-        );
+        if ($includeAssets) {
+            // add font files
+            $fontFiles = glob($this->basePath . '/fonts/*.woff*') ?: [];
 
-        $i = 2;
+            foreach ($fontFiles as $fontFile) {
+                $assets[] = Stream::path($fontFile, basename($fontFile));
+            }
 
-        foreach ($fontFiles as $fontFile) {
-            $postFields["files[$i]"] = new \CURLFile(
-                $fontFile,
-                'font/woff',
-                basename($fontFile)
-            );
+            // read in application.css and munge the font paths
+            $css = file_get_contents($this->basePath . '/application.css') ?: '';
+            if (!empty($css)) {
+                /** @var string $css */
+                $css = str_replace('url(./fonts/', 'url(', $css);
 
-            ++$i;
+                $assets[] = Stream::string('application.css', $css);
+            }
         }
 
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeoutSeconds);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds);
-        curl_setopt($ch, CURLOPT_URL, $this->url . '/forms/chromium/convert/html');
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+        $request = Gotenberg::chromium($this->url)
+            ->pdf()
+            ->emulateScreenMediaType()
+            ->assets(...$assets)
+            ->html(Stream::string('index.html', $html));
 
         $httpCode = 0;
         $count = 0;
-        $pdfBody = false;
+        $pdfBody = '';
 
         while ($httpCode !== 200 && $count < 3) {
-            $pdfBody = curl_exec($ch);
-
-            if (!is_string($pdfBody)) {
-                $pdfBody = '';
+            try {
+                $response = Gotenberg::send($request);
+                $httpCode = $response->getStatusCode();
+                $pdfBody = $response->getBody()->getContents();
+            } catch (GotenbergApiErrored $e) {
+                $this->logger->error('Error while converting HTML to PDF: ' . $e->getMessage());
             }
-
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             ++$count;
         }
-
-        curl_close($ch);
 
         return $httpCode === 200 ? $pdfBody : false;
     }
