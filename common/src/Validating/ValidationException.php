@@ -6,8 +6,9 @@ namespace OPG\Digideps\Common\Validating;
 
 class ValidationException extends \Exception
 {
-    public function __construct(string $expected, mixed $got)
+    public function __construct(null|int|string $key, string $expected, mixed $got)
     {
-        parent::__construct("Expected value of type {$expected}. Got: " . var_export($got, true));
+        $key ??= 'NULL';
+        parent::__construct("Expected value of type {$expected} for key {$key}. Got: " . var_export($got, true));
     }
 }
