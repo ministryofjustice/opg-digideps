@@ -10,12 +10,10 @@ use OPG\Digideps\Common\Report\ReportType;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Traits\ActiveAudit;
 use OPG\Digideps\Frontend\Entity\Traits\IsSoftDeleteableEntity;
+use OPG\Digideps\Frontend\Model\PossibleReportReplacement;
 use OPG\Digideps\Frontend\Validator\Constraints\YearMustBeFourDigitsAndValid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @phpstan-type PossibleReplacements array{replaceReport: Report, withReport: Report}
- */
 #[YearMustBeFourDigitsAndValid(groups: ['client-court-date'])]
 class Client
 {
@@ -927,10 +925,10 @@ class Client
      * 1. possible can replace active if possible's type is pfa or hybrid, and active's type is pfa or hybrid
      * 2. possible can replace active if possible's type is hw and active's type is hw, and neither report is hybrid
      *
-     * @return array<PossibleReplacements> It is feasible this will have more than two elements, so callers may
+     * @return array<PossibleReportReplacement> It is feasible this will have more than two elements, so callers may
      * want to log if this happens and not present the possible replacements to the user
      */
-    public function findPossibleReplacements(): array
+    public function findPossibleReportReplacements(): array
     {
         // get all active reports on active court orders (max 2)
         /** @var array<Report> $activeReports */
@@ -1001,10 +999,7 @@ class Client
                         && ($activeReportType->courtOrderType === CourtOrderType::PFA || $activeReportType->courtOrderKind === CourtOrderKind::Hybrid)
                     )
                 ) {
-                    $possibleReplacements[] = [
-                        'replaceReport' => $activeReport,
-                        'withReport' => $candidateReplacementReport
-                    ];
+                    $possibleReplacements[] = new PossibleReportReplacement($activeReport, $candidateReplacementReport);
                 }
             }
         }
