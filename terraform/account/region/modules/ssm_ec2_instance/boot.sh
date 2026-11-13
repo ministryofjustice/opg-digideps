@@ -209,7 +209,7 @@ rm -rf /tmp/*
 dnf install -y https://s3.eu-west-1.amazonaws.com/amazon-ssm-eu-west-1/latest/linux_amd64/amazon-ssm-agent.rpm
 systemctl enable amazon-ssm-agent
 systemctl start amazon-ssm-agent
-yum install -y postgresql15
+yum install -y postgresql16
 echo "SSM Instance Loaded!" | tee /dev/console
 EOF
 
