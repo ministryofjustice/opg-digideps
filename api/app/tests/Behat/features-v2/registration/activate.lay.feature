@@ -9,13 +9,13 @@ Feature: Activate user account - Lay Users
         When the user clicks the activate account link in their email
         And they complete all except the last step in the registration flow
         And a case manager accesses the admin app
-        Then the partially registered users 'active flag' should 'not be' set
-        And the partially registered users 'registration date' should 'not be' set
+        Then the partially registered users active status should be 'Active'
+        And the partially registered users registration date should 'not be' set
         When the user completes the final registration step
         Then I should be on the Lay homepage
         And an admin user accesses the admin app
-        Then the partially registered users 'active flag' should 'be' set
-        And the partially registered users 'registration date' should 'be' set
+        Then the partially registered users active status should be 'Inactive - No active court orders'
+        And the partially registered users registration date should 'be' set
 
         # Test removed for the time being due to a bug in the registration journey, ticket ref: DDLS-
 #    @super-admin @admin

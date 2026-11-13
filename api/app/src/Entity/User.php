@@ -311,6 +311,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->active ?? false;
     }
 
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('active_status')]
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user'])]
+    public function isActiveStatus(): string
+    {
+        if ($this->password === null || trim($this->password) === '') {
+            return 'inactive_password_not_set';
+        }
+
+        $deputy = $this->getDeputy();
+        if ($deputy === null) {
+            return 'active_without_deputy';
+        }
+
+        foreach ($deputy->getCourtOrdersWithStatus() as $entry) {
+            $courtOrder = $entry['courtOrder'];
+
+            if ($entry['isActive'] && $courtOrder->isActive()) {
+                return 'active_with_court_order';
+            }
+        }
+
+        return 'inactive_no_active_court_order';
+    }
+
     public function setRegistrationDate(?\DateTime $registrationDate): static
     {
         $this->registrationDate = $registrationDate;
