@@ -6,6 +6,7 @@ use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\CourtOrder;
 use OPG\Digideps\Frontend\Entity\Deputy;
 use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Model\PossibleReportReplacement;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -147,11 +148,11 @@ class ClientTest extends TestCase
         $client->courtOrders = [$hw1, $hw2, $activeHw, $pfa1, $pfa2, $activePfa];
 
         $expected = [
-            ['replaceReport' => $activeHwReport, 'withReport' => $hw2Report],
-            ['replaceReport' => $activePfaReport, 'withReport' => $pfa2Report]
+            new PossibleReportReplacement($activeHwReport, $hw2Report),
+            new PossibleReportReplacement($activePfaReport, $pfa2Report)
         ];
 
-        self::assertEquals($expected, $client->findPossibleReplacements());
+        self::assertEquals($expected, $client->findPossibleReportReplacements());
     }
 
     /**
