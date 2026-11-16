@@ -16,7 +16,7 @@ final readonly class ValidatingArray
 
     protected function getUnvalidated(int|string|null $key): mixed
     {
-        return $key === null ? null : $this->data[$key] ?? null;
+        return $key === null ? array_first($this->data) : $this->data[$key] ?? null;
     }
 
     public function getValidatingArrayOrNull(string|int|null $key): ?ValidatingArray
