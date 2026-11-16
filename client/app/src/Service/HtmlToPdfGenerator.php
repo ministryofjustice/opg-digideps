@@ -22,13 +22,13 @@ class HtmlToPdfGenerator
 
     public function isAlive(): bool
     {
-        $pdf = $this->getPdfFromHtml('test', includeAssets: false);
+        $ch = curl_init($this->url . '/health');
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeoutSeconds);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_exec($ch);
 
-        if ($pdf === false) {
-            $pdf = '';
-        }
-
-        return strlen($pdf) > 700 && preg_match('/PDF-\d/', $pdf);
+        return curl_getinfo($ch, CURLINFO_RESPONSE_CODE) === 200;
     }
 
     public function getPdfFromHtml(string $html, bool $includeAssets = true, ?int $reportId = null): string|false

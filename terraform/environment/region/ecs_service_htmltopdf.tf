@@ -80,7 +80,7 @@ locals {
       healthCheck = {
         command = [
           "CMD-SHELL",
-          "curl --fail -X POST -H 'Content-Type:application/json' -d '{\"contents\":\"dGVzdA==\"}' -o /dev/null http://localhost:8080/ || exit 1"
+          "wget --quiet http://localhost:8080/health || exit 1"
         ],
         interval = 30,
         timeout  = 5,
