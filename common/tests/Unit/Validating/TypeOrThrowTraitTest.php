@@ -16,7 +16,7 @@ class TypeOrThrowTraitTest extends TestCase
         $validatingArray = new ValidatingArray($array);
         $this->assertSame(2, $validatingArray->getIntegerOrThrow('two'));
         $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('Expected value of type int. Got: 3.0');
+        $this->expectExceptionMessage('Expected value of type int for key three. Got: 3.0');
         $validatingArray->getIntegerOrThrow('three');
     }
 
@@ -26,7 +26,7 @@ class TypeOrThrowTraitTest extends TestCase
         $validatingArray = new ValidatingArray($array);
         $this->assertSame(3.0, $validatingArray->getFloatOrThrow('three'));
         $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('Expected value of type float. Got: NULL');
+        $this->expectExceptionMessage('Expected value of type float for key 5. Got: NULL');
         $validatingArray->getFloatOrThrow(5);
     }
 
@@ -37,7 +37,7 @@ class TypeOrThrowTraitTest extends TestCase
         $validatingArray = new ValidatingArray($array);
         $this->assertSame($test, $validatingArray->getArrayOrThrow('three'));
         $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('Expected value of type array. Got: 2');
+        $this->expectExceptionMessage('Expected value of type array for key two. Got: 2');
         $validatingArray->getArrayOrThrow('two');
     }
 
@@ -47,7 +47,7 @@ class TypeOrThrowTraitTest extends TestCase
         $validatingArray = new ValidatingArray($array);
         $this->assertSame('1', $validatingArray->getStringOrThrow(0));
         $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage("Expected value of type string. Got: array (\n  0 => 3.0,\n  1 => NULL,\n)");
+        $this->expectExceptionMessage("Expected value of type string for key three. Got: array (\n  0 => 3.0,\n  1 => NULL,\n)");
         $validatingArray->getStringOrThrow('three');
     }
 
@@ -57,7 +57,7 @@ class TypeOrThrowTraitTest extends TestCase
         $validatingArray = new ValidatingArray($array);
         $this->assertInstanceOf(\DateTime::class, $validatingArray->getObjectOrThrow('a', \DateTime::class));
         $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('Expected value of type Tests\OPG\Digideps\Common\Unit\Validating\TypeOrThrowTraitTest. Got: \'Tests\\\\OPG\\\\Digideps\\\\Common\\\\Unit\\\\Validating\\\\TypeOrThrowTraitTest\'');
+        $this->expectExceptionMessage('Expected value of type Tests\OPG\Digideps\Common\Unit\Validating\TypeOrThrowTraitTest for key b. Got: \'Tests\\\\OPG\\\\Digideps\\\\Common\\\\Unit\\\\Validating\\\\TypeOrThrowTraitTest\'');
         $validatingArray->getObjectOrThrow('b', TypeOrThrowTraitTest::class);
     }
 }

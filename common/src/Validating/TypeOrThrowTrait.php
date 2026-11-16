@@ -11,31 +11,31 @@ trait TypeOrThrowTrait
     public function getBooleanOrThrow(string|int|null $key): bool
     {
         $value = $this->getUnvalidated($key);
-        return is_bool($value) ? $value : throw new ValidationException('bool', $value);
+        return is_bool($value) ? $value : throw new ValidationException($key, 'bool', $value);
     }
 
     public function getIntegerOrThrow(string|int|null $key): int
     {
         $value = $this->getUnvalidated($key);
-        return is_int($value) ? $value : throw new ValidationException('int', $value);
+        return is_int($value) ? $value : throw new ValidationException($key, 'int', $value);
     }
 
     public function getStringOrThrow(string|int|null $key): string
     {
         $value = $this->getUnvalidated($key);
-        return is_string($value) ? $value : throw new ValidationException('string', $value);
+        return is_string($value) ? $value : throw new ValidationException($key, 'string', $value);
     }
 
     public function getFloatOrThrow(string|int|null $key): float
     {
         $value = $this->getUnvalidated($key);
-        return is_float($value) ? $value : throw new ValidationException('float', $value);
+        return is_float($value) ? $value : throw new ValidationException($key, 'float', $value);
     }
 
     public function getArrayOrThrow(string|int|null $key): array
     {
         $value = $this->getUnvalidated($key);
-        return is_array($value) ? $value : throw new ValidationException('array', $value);
+        return is_array($value) ? $value : throw new ValidationException($key, 'array', $value);
     }
 
     /**
@@ -46,6 +46,6 @@ trait TypeOrThrowTrait
     public function getObjectOrThrow(string|int|null $key, string $class): object
     {
         $value = $this->getUnvalidated($key);
-        return is_object($value) && is_a($value, $class, true) ? $value : throw new ValidationException($class, $value);
+        return is_object($value) && is_a($value, $class, true) ? $value : throw new ValidationException($key, $class, $value);
     }
 }
