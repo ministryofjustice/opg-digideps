@@ -29,6 +29,7 @@
         }
     },
     "require": {
+        "ext-curl": "*",
         "ext-dom": "*",
         "ext-openssl": "*",
         "ext-zip": "*",
@@ -39,6 +40,7 @@
         "doctrine/collections": "^2.6.0",
         "egulias/email-validator": "^4.0.4",
         "fakerphp/faker": "^1.24.1",
+        "gotenberg/gotenberg-php": "^3.4",
         "guzzlehttp/guzzle": "^7.16.1",
         "jms/serializer-bundle": "^5.5.2",
         "jolicode/slack-php-api": "^4.10",

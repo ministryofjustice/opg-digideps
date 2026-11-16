@@ -122,6 +122,9 @@ ENV TZ=UTC
 
 WORKDIR /home/gotenberg
 
+#COPY scripts/hardening/harden.sh /harden.sh
+#RUN /harden.sh gotenberg && rm /harden.sh
+
 USER gotenberg
 
 EXPOSE 8080
