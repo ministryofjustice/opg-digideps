@@ -5,9 +5,7 @@ namespace OPG\Digideps\Backend\Security;
 use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -21,8 +19,6 @@ class ReportVoter extends Voter
     public function __construct(
         private readonly Security $security,
         private readonly ReportAccessService $reportAccessService,
-        private readonly AuthorizationCheckerInterface $authorizationChecker,
-        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -63,13 +59,6 @@ class ReportVoter extends Voter
             return true;
         }
 
-        $vote =  in_array($report->getId(), $this->reportAccessService->getVisibleReportIdsGivenUserId($user->getId()));
-
-        if (!$vote && $this->authorizationChecker->isGranted('edit', $report->getClient())) {
-            $this->logger->alert("Naughty access to report {$report->getId()} of client {$report->getClient()->getId()} by user {$user->getId()}");
-            return true;
-        }
-
-        return $vote;
+        return in_array($report->getId(), $this->reportAccessService->getVisibleReportIdsGivenUserId($user->getId()));
     }
 }
