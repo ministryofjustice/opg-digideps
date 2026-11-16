@@ -124,6 +124,7 @@ trait SelfRegistrationTrait
 
         $this->assertStringEqualsString($caseNumberIn, $regDetails['caseNumber'], 'caseNumber');
 
+        /** @var array<array> $codeputy */
         $codeputy = $regDetails['codeputy'];
         $client = $regDetails['client'];
 

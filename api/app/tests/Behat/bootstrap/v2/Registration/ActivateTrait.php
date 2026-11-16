@@ -146,7 +146,9 @@ trait ActivateTrait
      */
     public function thePartiallyRegisteredUsersRegistrationDateShouldSet(string $toBeOrNotToBe): void
     {
-        $this->fillInField('admin_q', $this->getUserForTestRun()['email']);
+        /** @var string $email */
+        $email = $this->getUserForTestRun()['email'];
+        $this->fillInField('admin_q', $email);
         $this->pressButton('Search');
 
         $assertionByExpectation = match (strtolower($toBeOrNotToBe)) {
@@ -156,7 +158,7 @@ trait ActivateTrait
 
         $matchingString = $assertionByExpectation ? new \DateTime()->format('j/m/Y') : 'Not registered';
 
-        $cellValue = $this->getTableCellByUniqueRowValueAndHeader('Registration date', $this->getUserForTestRun()['email']);
+        $cellValue = $this->getTableCellByUniqueRowValueAndHeader('Registration date', $email);
 
         if (!str_contains($cellValue, $matchingString)) {
             throw new BehatException(sprintf('Expected "%s" property to be "%s", got "%s"', 'Registration date', $matchingString, $cellValue));
