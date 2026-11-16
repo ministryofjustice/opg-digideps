@@ -51,8 +51,8 @@ variable "accounts" {
       ecs = object({
         scale_min             = number
         scale_max             = number
-        task_count            = number
-        scan_count            = number
+        primary_task_count    = number
+        support_task_count    = number
         cpu_low               = string
         memory_low            = string
         memory_high           = string

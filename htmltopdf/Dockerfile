@@ -1,13 +1,31 @@
-# Runtime assets source
+##############################
+# Stage 0.1: Build the base gotenberg
+##############################
 FROM gotenberg/gotenberg:8.39.0-chromium@sha256:558943677cf9092df83ff654c2645856dcb9ddf777f359243789688e74f3bcdd AS source
 
+##############################
+# Stage 0.1: Build the base alpine
+##############################
 FROM alpine:3.24.4@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf as alpine-base
 # TODO Remove as temporary workaround until Alpine ships the patched package
 # For musl vuln apparently 1.2.6-r3 has the sec patch
 RUN apk update && apk add --upgrade \
     "zlib==1.4-r0"
 
-# Patch pdftk-all.jar
+
+##############################
+# Stage X: Upgrade pinned apk packages (used only as target for pinned upgrades)
+##############################
+FROM alpine-base AS upgrade-pinned-apk-packages
+USER root
+COPY htmltopdf/Dockerfile .
+COPY scripts/upgrade_apk/check-apk-ver.sh .
+
+CMD sh -c "./check-apk-ver.sh"
+
+##############################
+# Stage 1.0: Patch vulnerabilities in jar file
+##############################
 FROM alpine-base AS jar-patch
 
 ARG COMMONS_LANG3_VERSION=3.18.0
@@ -30,7 +48,9 @@ RUN set -eux; \
         'META-INF/maven/org.apache.commons/commons-lang3/*'; \
     (cd new && zip -q -r ../pdftk-all.jar .)
 
-# Build patched gotenberg/pdfcpu
+##############################
+# Stage 1.1: Patch vulnerabilities in gotenberg main go app
+##############################
 FROM golang:1.27.3-trixie@sha256:fbb7ae40b62ff8afe31662df570d39b4f5052ac32b90dae8e60d7657a20a74f4 AS go-patch
 
 ARG BROTOLI_COMMIT=33c2a9884269798192b5ecf171288f98939dbe42
@@ -75,21 +95,22 @@ RUN go mod download \
         ./cmd/pdfcpu \
     && /out/pdfcpu version
 
-# Alpine runtime
+##############################
+# Stage 2.0: Main build of final image
+##############################
 FROM alpine-base
 
-RUN apk add --no-cache \
-    bash \
-    ca-certificates \
-    chromium \
-    exiftool \
-    font-noto \
-    font-noto-cjk \
-    font-noto-emoji \
-    openjdk21-jre \
-    qpdf \
-    ttf-dejavu \
-    tzdata
+RUN apk update && apk add --no-cache \
+    "ca-certificates==20261020-r0" \
+    "chromium==156.0.8078.79-r0" \
+    "exiftool==13.55-r0" \
+    "font-noto==2026.11.01-r0" \
+    "font-noto-cjk==0_git20220127-r1" \
+    "font-noto-emoji==2.051-r0" \
+    "openjdk21-jre==21.0.13.0.3_p1-r0" \
+    "qpdf==12.3.2-r0" \
+    "font-dejavu==2.37-r6" \
+    "tzdata==2026f-r0"
 
 # Runtime assets from official image
 COPY --from=source /opt/gotenberg /opt/gotenberg
@@ -135,7 +156,7 @@ RUN chmod 0755 /entrypoint.sh
 COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh gotenberg && rm /harden.sh
 
-USER root
+USER gotenberg
 
 EXPOSE 8080
 

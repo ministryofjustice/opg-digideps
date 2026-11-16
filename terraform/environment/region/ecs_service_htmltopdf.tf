@@ -18,7 +18,7 @@ resource "aws_ecs_service" "htmltopdf" {
   name                    = aws_ecs_task_definition.htmltopdf.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.htmltopdf.arn
-  desired_count           = 1
+  desired_count           = var.account.ecs.support_task_count
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
