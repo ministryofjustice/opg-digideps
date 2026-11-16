@@ -139,7 +139,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     private $active;
 
     #[JMS\Type('string')]
-    private ?string $activeStatus;
+    private ?string $activeStatus; // @phpstan-ignore property.onlyRead
 
     /**
      * @var string
@@ -1178,12 +1178,5 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public function getActiveStatus(): ?string
     {
         return $this->activeStatus;
-    }
-
-    public function setActiveStatus(?string $activeStatus): static
-    {
-        $this->activeStatus = $activeStatus;
-
-        return $this;
     }
 }
