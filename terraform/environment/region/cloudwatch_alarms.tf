@@ -39,7 +39,7 @@ resource "aws_cloudwatch_metric_alarm" "pingdom_health_checks_missing" {
 
   alarm_actions   = [data.aws_sns_topic.alerts.arn]
   ok_actions      = var.account.environment.is_production == 1 ? [data.aws_sns_topic.alerts.arn] : []
-  actions_enabled = var.account.environment.alarms_active
+  actions_enabled = var.account.environment.is_production == 1 ? true : false
 
   tags = var.default_tags
 }
