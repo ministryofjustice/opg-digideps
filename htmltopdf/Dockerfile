@@ -1,8 +1,14 @@
 # Runtime assets source
 FROM gotenberg/gotenberg:8.39.0-chromium@sha256:558943677cf9092df83ff654c2645856dcb9ddf777f359243789688e74f3bcdd AS source
 
+FROM alpine:3.24.4@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf as alpine-base
+# TODO Remove as temporary workaround until Alpine ships the patched package
+# For musl vuln apparently 1.2.6-r3 has the sec patch
+RUN apk update && apk add --upgrade \
+    "zlib==1.4-r0"
+
 # Patch pdftk-all.jar
-FROM alpine:3.24.3 AS jar-patch
+FROM alpine-base AS jar-patch
 
 ARG COMMONS_LANG3_VERSION=3.18.0
 ARG COMMONS_LANG3_SHA1=fb14946f0e39748a6571de0635acbe44e7885491
@@ -70,7 +76,7 @@ RUN go mod download \
     && /out/pdfcpu version
 
 # Alpine runtime
-FROM alpine:3.24
+FROM alpine-base
 
 RUN apk add --no-cache \
     bash \
@@ -122,11 +128,15 @@ ENV TZ=UTC
 
 WORKDIR /home/gotenberg
 
-#COPY scripts/hardening/harden.sh /harden.sh
-#RUN /harden.sh gotenberg && rm /harden.sh
+COPY --chown=gotenberg:gotenberg htmltopdf/gotenberg.env /etc/gotenberg.env
+COPY --chown=gotenberg:gotenberg htmltopdf/entrypoint.sh /entrypoint.sh
+RUN chmod 0755 /entrypoint.sh
 
-USER gotenberg
+COPY scripts/hardening/harden.sh /harden.sh
+RUN /harden.sh gotenberg && rm /harden.sh
+
+USER root
 
 EXPOSE 8080
 
-ENTRYPOINT ["/usr/bin/gotenberg", "--api-port=8080"]
+ENTRYPOINT ["/entrypoint.sh", "--api-port=8080"]
