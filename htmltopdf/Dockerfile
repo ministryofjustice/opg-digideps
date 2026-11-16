@@ -3,6 +3,7 @@
 ##############################
 FROM gotenberg/gotenberg:8.39.0-chromium@sha256:558943677cf9092df83ff654c2645856dcb9ddf777f359243789688e74f3bcdd AS source
 
+
 ##############################
 # Stage 0.1: Build the base alpine
 ##############################
@@ -23,33 +24,9 @@ COPY scripts/upgrade_apk/check-apk-ver.sh .
 
 CMD sh -c "./check-apk-ver.sh"
 
-##############################
-# Stage 1.0: Patch vulnerabilities in jar file
-##############################
-FROM alpine-base AS jar-patch
-
-ARG COMMONS_LANG3_VERSION=3.18.0
-ARG COMMONS_LANG3_SHA1=fb14946f0e39748a6571de0635acbe44e7885491
-
-RUN apk add --no-cache curl zip unzip
-
-COPY --from=source /usr/bin/pdftk-all.jar /work/pdftk-all.jar
-
-WORKDIR /work
-
-RUN set -eux; \
-    curl -fsSLo cl3.jar \
-        https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/${COMMONS_LANG3_VERSION}/commons-lang3-${COMMONS_LANG3_VERSION}.jar; \
-    echo "${COMMONS_LANG3_SHA1}  cl3.jar" | sha1sum -c -; \
-    mkdir new; \
-    unzip -q cl3.jar -d new 'org/*' 'META-INF/maven/org.apache.commons/*'; \
-    zip -q -d pdftk-all.jar \
-        'org/apache/commons/lang3/*' \
-        'META-INF/maven/org.apache.commons/commons-lang3/*'; \
-    (cd new && zip -q -r ../pdftk-all.jar .)
 
 ##############################
-# Stage 1.1: Patch vulnerabilities in gotenberg main go app
+# Stage 1.0: Patch vulnerabilities in gotenberg main go app
 ##############################
 FROM golang:1.27.3-trixie@sha256:fbb7ae40b62ff8afe31662df570d39b4f5052ac32b90dae8e60d7657a20a74f4 AS go-patch
 
@@ -82,18 +59,6 @@ RUN go get \
         -ldflags "-s -w -X 'github.com/gotenberg/gotenberg/v8/cmd.Version=${GOTENBERG_VERSION}'" \
         cmd/gotenberg-chromium/main.go
 
-WORKDIR /src/pdfcpu
-
-RUN go mod download \
-    && go mod verify \
-    && go build \
-        -o /out/pdfcpu \
-        -ldflags "-s -w \
-            -X 'main.version=${PDFCPU_VERSION}' \
-            -X 'github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model.VersionStr=${PDFCPU_VERSION}' \
-            -X main.builtBy=gotenberg" \
-        ./cmd/pdfcpu \
-    && /out/pdfcpu version
 
 ##############################
 # Stage 2.0: Main build of final image
@@ -102,49 +67,39 @@ FROM alpine-base
 
 RUN apk update && apk add --no-cache \
     "ca-certificates==20261020-r0" \
-    "chromium==156.0.8078.79-r0" \
-    "exiftool==13.55-r0" \
-    "font-noto==2026.11.01-r0" \
-    "font-noto-cjk==0_git20220127-r1" \
-    "font-noto-emoji==2.051-r0" \
-    "openjdk21-jre==21.0.13.0.3_p1-r0" \
-    "qpdf==12.3.2-r0" \
-    "font-dejavu==2.37-r6" \
-    "tzdata==2026f-r0"
+    "chromium==156.0.8078.79-r0"
 
 # Runtime assets from official image
 COPY --from=source /opt/gotenberg /opt/gotenberg
 
 # Patched binaries
 COPY --from=go-patch /out/gotenberg-chromium /usr/bin/gotenberg
-COPY --from=go-patch /out/pdfcpu /usr/bin/pdfcpu
-COPY --from=jar-patch /work/pdftk-all.jar /usr/bin/pdftk-all.jar
-
-# pdftk wrapper
-RUN printf '#!/bin/bash\nexec java -jar /usr/bin/pdftk-all.jar "$@"\n' \
-    > /usr/bin/pdftk \
- && chmod 0755 /usr/bin/pdftk
 
 RUN adduser -D -u 1001 gotenberg \
  && chown -R gotenberg:gotenberg \
       /home/gotenberg \
       /opt/gotenberg
 
+# We don't use any of the pdf engines but no way to remove so we fake the executable with fakesh
+RUN mkdir /etc/fakebin \
+    && touch /etc/fakebin/fakesh \
+    && chown gotenberg:gotenberg /etc/fakebin/fakesh \
+    && chmod 400 /etc/fakebin/fakesh
+
+# Fake engine executable path variables
+ENV PDFCPU_BIN_PATH=/etc/fakebin/fakesh
+ENV PDFTK_BIN_PATH=/etc/fakebin/fakesh
+ENV QPDF_BIN_PATH=/etc/fakebin/fakesh
+ENV EXIFTOOL_BIN_PATH=/etc/fakebin/fakesh
+
+# Gotenberg Settings
 ENV CHROMIUM_BIN_PATH=/usr/bin/chromium
 ENV CHROMIUM_HYPHEN_DATA_DIR_PATH=/opt/gotenberg/chromium-hyphen-data
-ENV EXIFTOOL_BIN_PATH=/usr/bin/exiftool
 ENV GOTENBERG_VERSIONS_DIR_PATH=/opt/gotenberg/versions
 ENV HOME=/home/gotenberg
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
-ENV OTEL_LOGS_EXPORTER=none
-ENV OTEL_METRICS_EXPORTER=none
-ENV OTEL_TRACES_EXPORTER=none
-ENV PATH=/opt/java/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV PDFCPU_BIN_PATH=/usr/bin/pdfcpu
-ENV PDFENGINES_CONVERT_ENGINES=
-ENV PDFTK_BIN_PATH=/usr/bin/pdftk
-ENV QPDF_BIN_PATH=/usr/bin/qpdf
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV TZ=UTC
 
 WORKDIR /home/gotenberg
@@ -152,6 +107,12 @@ WORKDIR /home/gotenberg
 COPY --chown=gotenberg:gotenberg htmltopdf/gotenberg.env /etc/gotenberg.env
 COPY --chown=gotenberg:gotenberg htmltopdf/entrypoint.sh /entrypoint.sh
 RUN chmod 0755 /entrypoint.sh
+
+# Fake file to remove telemetry warnings
+RUN mkdir -p /var/lib/dbus \
+    && touch /var/lib/dbus/machine-id \
+    && chown gotenberg:gotenberg /var/lib/dbus/machine-id \
+    && chmod 400 /var/lib/dbus/machine-id
 
 COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh gotenberg && rm /harden.sh
