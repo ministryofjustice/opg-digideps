@@ -79,7 +79,7 @@ services:
       ]
 
   OPG\Digideps\Frontend\Service\HtmlToPdfGenerator:
-    arguments: ["%htmltopdf_address%", "@logger"]
+    arguments: ["%htmltopdf_address%", 60, "@logger"]
 
   htmltopdf:
     alias: OPG\Digideps\Frontend\Service\HtmlToPdfGenerator
