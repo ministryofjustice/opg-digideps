@@ -7,15 +7,25 @@ namespace OPG\Digideps\Frontend\Service\Mailer;
 use OPG\Digideps\Common\Mail\MailSenderInterface;
 use OPG\Digideps\Common\Mail\NotifyMail;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 final readonly class MailApi implements MailSenderInterface
 {
-    public function __construct(private RestClient $restClient)
+    public function __construct(private RestClient $restClient, private RequestStack $stack)
     {
     }
 
     public function send(NotifyMail $email): bool
     {
+        //TODO FOR TESTING ONLY REMOVE BEFORE RELEASE
+        $json = json_encode($email->parameters, JSON_PRETTY_PRINT);
+        $session = $this->stack->getSession();
+        if ($session instanceof FlashBagAwareSessionInterface) {
+            $session->getFlashBag()->add('notice', $json);
+            return true;
+        }
+
         return $this->restClient->apiCall('post', '/notify/send', json_encode($email), 'raw', authenticated: false) === 'ok';
     }
 }
