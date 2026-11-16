@@ -317,7 +317,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[JMS\Groups(['user'])]
     public function isActiveStatus(): string
     {
-        if ($this->password === null || trim($this->password) === '') {
+        if ($this->password === null) {
             return 'inactive_password_not_set';
         }
 
