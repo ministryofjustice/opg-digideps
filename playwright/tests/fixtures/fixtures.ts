@@ -75,7 +75,7 @@ export interface Scenario {
 }
 
 interface Fixture {
-  data: Scenario | UserDetails[];
+  data: Scenario[] | UserDetails[];
 }
 
 interface FixtureCallback {
@@ -104,7 +104,7 @@ async function getAuthToken(user: TestUser): Promise<string | null> {
 // path should include leading "/"
 export function createFixtureViaApi(
   path: string,
-  body: UserSpec[] | OrderSpec | { [key: string]: string | string[] },
+  body: UserSpec[] | OrderSpec[] | { [key: string]: string | string[] },
 ): FixtureCallback {
   return async (authToken: string): Promise<Fixture> => {
     const res = await fetch(
