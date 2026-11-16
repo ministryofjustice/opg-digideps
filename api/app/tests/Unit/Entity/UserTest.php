@@ -12,29 +12,26 @@ use PHPUnit\Framework\TestCase;
 
 final class UserTest extends TestCase
 {
-    /**
-     * @return array<string, array{?string}>
-     */
-    public static function passwordsNotSetProvider(): array
+    public function testActiveStatusIsInactiveWhenPasswordIsNotSet(): void
     {
-        return [
-            'null password' => [null],
-            'empty password' => [''],
-            'whitespace password' => [" \t\n"],
-        ];
-    }
-
-    #[DataProvider('passwordsNotSetProvider')]
-    public function testActiveStatusIsInactiveWhenPasswordIsNotSet(?string $password): void
-    {
-        $user = new User('', '', '')->setPassword($password);
+        $user = new User('', '', '')->setPassword(null);
 
         self::assertSame('inactive_password_not_set', $user->isActiveStatus());
     }
 
-    public function testActiveStatusIsActiveWithoutDeputy(): void
+    public static function passwordSetProvider(): array
     {
-        $user = new User('', '', '')->setPassword('password');
+        return [
+            'empty password' => [''],
+            'whitespace password' => [" \t\n"],
+            'password set' => ['password'],
+        ];
+    }
+
+    #[DataProvider('passwordSetProvider')]
+    public function testActiveStatusIsActiveWithoutDeputy(string $password): void
+    {
+        $user = new User('', '', '')->setPassword($password);
 
         self::assertSame('active_without_deputy', $user->isActiveStatus());
     }
