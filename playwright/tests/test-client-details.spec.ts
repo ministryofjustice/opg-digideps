@@ -9,8 +9,8 @@ import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminClientDetailsPage from "./pages/AdminClientDetailsPage";
 
 test("reports are organised according to their status", async ({ page }) => {
-  const runTest = async (scenario: Scenario) => {
-    const clientId = scenario["orders"][0]["clientId"];
+  const runTest = async (scenarios: Scenario[]) => {
+    const clientId = scenarios[0]["orders"][0]["clientId"];
 
     const adminLoginPage = new AdminLoginPage(page);
     await adminLoginPage.loginAdmin(getAdminUserFixture());
@@ -26,7 +26,7 @@ test("reports are organised according to their status", async ({ page }) => {
   };
 
   await setupFixture(
-    createFixtureViaApi("/fixtures/scenarios/generic", {
+    createFixtureViaApi("/fixtures/scenarios/generic", [{
       reportType: "OPG102",
       reports: [
         // submitted and complete
@@ -49,15 +49,15 @@ test("reports are organised according to their status", async ({ page }) => {
         { startDate: new Date("2026-01-02") },
       ],
       deputies: [{ ref: "client-details-user-1", type: "LAY" }],
-    }),
-  ).then((fixture) => runTest(fixture.data as Scenario));
+    }]),
+  ).then((fixture) => runTest(fixture.data as Scenario[]));
 });
 
 test("active reports on closed orders are displayed separately", async ({
   page,
 }) => {
-  const runTest = async (scenario: Scenario) => {
-    const clientId = scenario["orders"][0]["clientId"];
+  const runTest = async (scenarios: Scenario[]) => {
+    const clientId = scenarios[0]["orders"][0]["clientId"];
 
     const adminLoginPage = new AdminLoginPage(page);
     await adminLoginPage.loginAdmin(getAdminUserFixture());
@@ -77,7 +77,7 @@ test("active reports on closed orders are displayed separately", async ({
   };
 
   await setupFixture(
-    createFixtureViaApi("/fixtures/scenarios/generic", {
+    createFixtureViaApi("/fixtures/scenarios/generic", [{
       active: false,
       reportType: "OPG104",
       reports: [
@@ -87,6 +87,6 @@ test("active reports on closed orders are displayed separately", async ({
         { startDate: new Date("2026-01-02") },
       ],
       deputies: [{ ref: "client-details-user-2", type: "LAY" }],
-    }),
-  ).then((fixture) => runTest(fixture.data as Scenario));
+    }]),
+  ).then((fixture) => runTest(fixture.data as Scenario[]));
 });
