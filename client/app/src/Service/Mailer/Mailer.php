@@ -34,7 +34,7 @@ readonly class Mailer
 
     public function sendResetPasswordEmail(User $passwordResetUser): bool
     {
-        return $this->mailSender->send($this->mailFactory->createResetPasswordEmailOld($passwordResetUser));
+        return $this->mailApi->send($this->mailFactory->createResetPasswordEmailOld($passwordResetUser));
     }
 
     public function sendUpdateClientDetailsEmail(Client $updatedClient): bool
