@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f88d915af0adca8383242eb8399829b1",
+    "content-hash": "f6d596f12e5177bbed19b794bf84993e",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -342,15 +342,15 @@
             "dist": {
                 "type": "path",
                 "url": "../../common",
-                "reference": "97922fd5cbe311783320ebd0d5ce918b13214b6a"
+                "reference": "bf28394ce0e7867e7633d70161fa88edae9db3ba"
             },
             "require": {
                 "jms/serializer-bundle": "^5.5.2",
-                "monolog/monolog": "^3.12.0",
-                "symfony/form": "^6.4.46",
-                "symfony/security-core": "^6.4.49",
+                "monolog/monolog": "^3.12.1",
+                "symfony/form": "^6.4.47",
+                "symfony/security-core": "^6.4.50",
                 "symfony/uid": "^6.4.48",
-                "symfony/validator": "^6.4.47"
+                "symfony/validator": "^6.4.48"
             },
             "require-dev": {
                 "dg/bypass-finals": "^1.11.0",
@@ -952,85 +952,6 @@
                 "source": "https://github.com/googleapis/php-jwt/tree/v7.2.1"
             },
             "time": "2026-09-28T17:51:46+00:00"
-        },
-        {
-            "name": "gotenberg/gotenberg-php",
-            "version": "v3.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/gotenberg/gotenberg-php.git",
-                "reference": "a4b9ea841200edc4dbfa9cabe7b97e91c8c2f17f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/gotenberg/gotenberg-php/zipball/a4b9ea841200edc4dbfa9cabe7b97e91c8c2f17f",
-                "reference": "a4b9ea841200edc4dbfa9cabe7b97e91c8c2f17f",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "guzzlehttp/psr7": "^2.7 || ^3.0",
-                "php": "^8.3",
-                "php-http/discovery": "^1.20",
-                "psr/http-client": "^1.0",
-                "psr/http-message": "^2.0"
-            },
-            "require-dev": {
-                "doctrine/coding-standard": "^14.0",
-                "phpstan/phpstan": "^2.1",
-                "phpunit/phpunit": "^12.4",
-                "squizlabs/php_codesniffer": "^4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Gotenberg\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Julien Neuhart",
-                    "email": "neuhart.julien@gmail.com",
-                    "homepage": "https://github.com/gulien",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A PHP client for interacting with Gotenberg, a developer-friendly API for converting numerous document formats into PDF files, and more!",
-            "homepage": "https://github.com/gotenberg/gotenberg-php",
-            "keywords": [
-                "Gotenberg",
-                "LibreOffice",
-                "chrome",
-                "chromium",
-                "convert",
-                "csv",
-                "docx",
-                "excel",
-                "factur-x",
-                "html",
-                "markdown",
-                "pdf",
-                "pdf-a",
-                "pdf-ua",
-                "pptx",
-                "word",
-                "xlsx"
-            ],
-            "support": {
-                "issues": "https://github.com/gotenberg/gotenberg-php/issues",
-                "source": "https://github.com/gotenberg/gotenberg-php/tree/v3.4.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/gulien",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-11-13T10:17:24+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -12615,5 +12536,5 @@
     "platform-overrides": {
         "php": "8.4.27"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
