@@ -12027,7 +12027,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''email'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 16
+			count: 18
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
@@ -12771,7 +12771,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$uniqueValueThatAppearsInRow of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Registration\\RegistrationFeatureContext\:\:getTableCellByUniqueRowValueAndHeader\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
+			count: 2
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
