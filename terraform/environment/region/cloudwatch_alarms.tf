@@ -20,7 +20,7 @@ resource "aws_cloudwatch_log_metric_filter" "pingdom_health_checks" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "pingdom_health_checks_missing" {
-  alarm_name        = "${local.environment}-service-possibly-unavailable"
+  alarm_name        = "${local.environment}-external-service-pings-failed"
   alarm_description = "No successful Pingdom health checks received within the last 5 minutes. Check service!"
 
   namespace   = aws_cloudwatch_log_metric_filter.pingdom_health_checks.metric_transformation[0].namespace
