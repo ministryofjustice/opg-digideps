@@ -118,10 +118,12 @@ final class FixtureService
             'organisations' => [],
         ],
         bool $flush = true,
+        ?Client $client = null,
     ): array {
         $this->refreshCounter();
 
-        $client = $this->makeClient();
+        $client ??= $this->makeClient();
+
         /**
          * @var array<OrderPair> $orders
          */

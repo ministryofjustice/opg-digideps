@@ -198,7 +198,8 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * Create a single court order with associated deputies and reports
+     * Create one or more court orders with associated deputies and reports, all associated with the same
+     * client.
      */
     #[Route('/fixtures/scenarios/generic', name: 'fixtures_scenarios_generic', methods: ['POST'])]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
@@ -212,6 +213,7 @@ class FixtureController extends AbstractController
         $startDate = new \DateTimeImmutable();
 
         $persons = ['users' => [], 'deputies' => [], 'organisations' => []];
+        $client = null;
 
         /** @var array $courtOrderPayload */
         foreach ($courtOrderPayloads as $courtOrderPayload) {
@@ -219,9 +221,10 @@ class FixtureController extends AbstractController
 
             $courtOrder = $this->convertPayload(new ValidatingArray($courtOrderPayload), $startDate);
 
-            $scenario = $this->fixtureService->instantiateScenario(new Scenario($courtOrder), $persons);
+            $scenario = $this->fixtureService->instantiateScenario(new Scenario($courtOrder), $persons, client: $client);
 
             $persons = $scenario['persons'];
+            $client = $scenario['client'];
 
             $scenarios[] = $this->jsonifyScenario($scenario);
         }
