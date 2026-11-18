@@ -319,7 +319,7 @@ class Report implements StartEndDateComparableInterface
     private $wishToProvideDocumentation;
 
     /**
-     * @var array
+     * @var String[]
      */
     #[JMS\Type('array')]
     private array $availableSections = [];
@@ -1039,13 +1039,16 @@ class Report implements StartEndDateComparableInterface
         return $attachmentName;
     }
 
+    /**
+     * @return String[]
+     */
     public function getAvailableSections(): array
     {
         return $this->availableSections;
     }
 
     /**
-     * @param array $availableSections
+     * @param String[] $availableSections
      */
     public function setAvailableSections(array $availableSections): static
     {
