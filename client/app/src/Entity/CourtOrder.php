@@ -130,13 +130,8 @@ class CourtOrder
 
     public function getActiveReport(): ?Report
     {
-        foreach ($this->reports as $report) {
-            if (!$report->isSubmitted() && !$report->getUnSubmitDate()) {
-                return $report;
-            }
-        }
+        return array_find($this->reports, fn ($report) => !$report->isSubmitted() && !$report->getUnSubmitDate());
 
-        return null;
     }
 
     public function getUnsubmittedReport(): ?Report
