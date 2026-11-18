@@ -3,14 +3,10 @@
 namespace OPG\Digideps\Frontend\Entity;
 
 use JMS\Serializer\Annotation as JMS;
-use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Common\Deputy\DeputyType;
-use OPG\Digideps\Common\Report\ReportType;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Traits\ActiveAudit;
 use OPG\Digideps\Frontend\Entity\Traits\IsSoftDeleteableEntity;
-use OPG\Digideps\Frontend\Model\PossibleReportReplacement;
 use OPG\Digideps\Frontend\Validator\Constraints\YearMustBeFourDigitsAndValid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -228,6 +224,11 @@ class Client
      */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     private $archivedAt;
+
+    // 'withReport' can be restored over the top of 'replaceReport' wrt this client
+    /** @var array<array{replaceReport: int, withReport: int}> $possibleReportReplacements */
+    #[JMS\Type('array<array<string, int>>')]
+    public array $possibleReportReplacements = [];
 
     /**
      * @return User[]
@@ -663,20 +664,6 @@ class Client
     /**
      * @return Report|null
      */
-    public function getActiveReport()
-    {
-        foreach ($this->getReports() as $report) {
-            if (!$report->isSubmitted() && !$report->getUnSubmitDate()) {
-                return $report;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @return Report|null
-     */
     public function getUnsubmittedReport()
     {
         return array_find($this->getReports(), fn ($report) => !$report->isSubmitted() && $report->getUnSubmitDate());
@@ -913,100 +900,11 @@ class Client
     }
 
     /**
-     * Find reports on closed court orders for this client which could replace (be "restored" over)
-     * the current active report(s) on current active court order(s) for the client.
-     *
-     * TARGET REPORTS = active reports associated with one or both active court order(s) on the client
-     *
-     * POSSIBLE REPLACEMENT REPORTS = reports where submitted=false which is associated with one or both of the
-     * most-recently closed court order(s) on the client
-     *
-     * Determine compatibility of each possible replacement with each active report:
-     * 1. possible can replace active if possible's type is pfa or hybrid, and active's type is pfa or hybrid
-     * 2. possible can replace active if possible's type is hw and active's type is hw, and neither report is hybrid
-     *
-     * @return array<PossibleReportReplacement> It is feasible this will have more than two elements, so callers may
-     * want to log if this happens and not present the possible replacements to the user
+     * @param array<array{replaceReport: int, withReport: int}> $possibleReportReplacements
      */
-    public function findPossibleReportReplacements(): array
+    public function setPossibleReportReplacements(array $possibleReportReplacements): static
     {
-        // get all active reports on active court orders (max 2)
-        /** @var array<Report> $activeReports */
-        $activeReports = [];
-
-        /** @var array<CourtOrder> $closedCourtOrders */
-        $closedCourtOrders = [];
-
-        foreach ($this->courtOrders as $courtOrder) {
-            if ($courtOrder->getStatus() === 'ACTIVE') {
-                $act = $courtOrder->getActiveReport();
-                if ($act !== null) {
-                    $activeReports[] = $act;
-                }
-            } else {
-                $closedCourtOrders[] = $courtOrder;
-            }
-        }
-
-        // we're only interested in the latest closed court orders
-        $latestPfa = null;
-        $latestHw = null;
-        foreach ($closedCourtOrders as $closedCourtOrder) {
-            $madeDate = $closedCourtOrder->orderMadeDate;
-            $orderType = CourtOrderType::tryFrom($closedCourtOrder->getOrderType());
-
-            if ($orderType === CourtOrderType::PFA && ($latestPfa === null || ($latestPfa->orderMadeDate < $madeDate))) {
-                $latestPfa = $closedCourtOrder;
-            } elseif ($orderType === CourtOrderType::HW && ($latestHw === null || ($latestHw->orderMadeDate < $madeDate))) {
-                $latestHw = $closedCourtOrder;
-            }
-        }
-
-        // possible replacements: get all reports with submitted=false on closed court orders which could be restored;
-        // note that getActiveReport() checks for both !submitted and !un_submit_date (so these possible
-        // replacements could have a submit_date but have never passed checklist processing)
-        $candidateReplacementReports = array_filter(
-            [$latestPfa?->getActiveReport(), $latestHw?->getActiveReport()],
-            fn (?Report $report) => $report !== null
-        );
-
-        // determine compatibility of each active report with each possible replacement report
-        $possibleReplacements = [];
-        foreach ($activeReports as $activeReport) {
-            $activeReportType = ReportType::tryFrom($activeReport->getType());
-            if ($activeReportType === null) {
-                continue;
-            }
-
-            foreach ($candidateReplacementReports as $candidateReplacementReport) {
-                $candidateReplacementReportType = ReportType::tryFrom($candidateReplacementReport->getType());
-                if ($candidateReplacementReportType === null) {
-                    continue;
-                }
-
-                if (
-                    (
-                        // active hw-only report can be replaced by hw-only report
-                        ($activeReportType->courtOrderKind === CourtOrderKind::Single || $activeReportType->courtOrderKind === CourtOrderKind::Dual)
-                        && ($candidateReplacementReportType->courtOrderKind === CourtOrderKind::Single || $candidateReplacementReportType->courtOrderKind === CourtOrderKind::Dual)
-                        && $activeReportType->courtOrderType === CourtOrderType::HW
-                        && $candidateReplacementReportType->courtOrderType === CourtOrderType::HW
-                    )
-                    ||
-                    (
-                        // active pfa or hybrid report can be replaced by pfa or hybrid report
-                        ($candidateReplacementReportType->courtOrderType === CourtOrderType::PFA || $candidateReplacementReportType->courtOrderKind === CourtOrderKind::Hybrid)
-                        && ($activeReportType->courtOrderType === CourtOrderType::PFA || $activeReportType->courtOrderKind === CourtOrderKind::Hybrid)
-                    )
-                ) {
-                    $possibleReplacements[] = new PossibleReportReplacement($activeReport, $candidateReplacementReport);
-                }
-            }
-        }
-
-        error_log("+++++++++++++++++++++");
-        error_log(print_r($possibleReplacements, true));
-
-        return $possibleReplacements;
+        $this->possibleReportReplacements = $possibleReportReplacements;
+        return $this;
     }
 }
