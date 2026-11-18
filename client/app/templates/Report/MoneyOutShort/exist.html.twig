@@ -20,7 +20,7 @@
     {{ form_checkbox_group(form.moneyOutExists, 'existPage.moneyOut.form', {
         'fieldSetClass' : 'govuk-radios--inline',
         'legendText' : 'existPage.moneyOut.form.exist.label' | trans(transOptions, translationDomain),
-        'hintText' : 'You do not need to include deputy expenses, gifts or transfers between John’s accounts. We ask you about these outgoings in other sections of the report.',
+        'hintText' : 'existPage.form.exist.hint' | trans(transOptions, translationDomain),
         legend: {
             isPageHeading: true,
             caption: 'existPage.moneyOut.supportTitle' | trans
