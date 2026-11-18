@@ -6,7 +6,7 @@ namespace Tests\OPG\Digideps\Frontend\Unit\Twig;
 
 use Dom\Element;
 use Dom\HTMLDocument;
-use OPG\Digideps\Frontend\Service\ReportSectionsLinkService;
+use OPG\Digideps\Frontend\Service\ReportSectionsMetaService;
 use OPG\Digideps\Frontend\Twig\ComponentsExtension;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -25,7 +25,7 @@ class ComponentsExtensionTest extends TestCase
     public function setUp(): void
     {
         $this->translator = self::createMock(TranslatorInterface::class);
-        $reportSectionsLinkService = self::createMock(ReportSectionsLinkService::class);
+        $reportSectionsLinkService = self::createMock(ReportSectionsMetaService::class);
 
         $this->sut = new ComponentsExtension($this->translator, $reportSectionsLinkService);
     }

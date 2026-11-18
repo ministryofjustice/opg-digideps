@@ -4,7 +4,7 @@ namespace OPG\Digideps\Frontend\Twig;
 
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
-use OPG\Digideps\Frontend\Service\ReportSectionsLinkService;
+use OPG\Digideps\Frontend\Service\ReportSectionsMetaService;
 use Symfony\Component\Intl\Countries;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -14,18 +14,10 @@ use Twig\TwigFunction;
 
 class ComponentsExtension extends AbstractExtension
 {
-    private TranslatorInterface $translator;
-    private ReportSectionsLinkService $reportSectionsLinkService;
-
-    /**
-     * ComponentsExtension constructor.
-     */
     public function __construct(
-        TranslatorInterface $translator,
-        ReportSectionsLinkService $reportSectionsLinkService,
+        private readonly TranslatorInterface $translator,
+        private readonly ReportSectionsMetaService $reportSectionsMetaService,
     ) {
-        $this->translator = $translator;
-        $this->reportSectionsLinkService = $reportSectionsLinkService;
     }
 
     public function getFunctions(): array
@@ -35,7 +27,7 @@ class ComponentsExtension extends AbstractExtension
             new TwigFunction('progress_bar_report_submission', [$this, 'progressBarReportSubmission'], ['needs_environment' => true]),
             new TwigFunction('accordionLinks', [$this, 'renderAccordionLinks']),
             new TwigFunction('section_link_params', function (Report $report, string $sectionId, int $offset) {
-                return $this->reportSectionsLinkService->getSectionParams($report, $sectionId, $offset);
+                return $this->reportSectionsMetaService->getSectionParams($report, $sectionId, $offset);
             }),
             new TwigFunction('class_const', function ($className, $constant) {
                 return constant("$className::$constant");

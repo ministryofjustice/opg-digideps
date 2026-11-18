@@ -5,27 +5,27 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Frontend\Unit\Service;
 
 use OPG\Digideps\Frontend\Entity\Report\Report;
-use OPG\Digideps\Frontend\Service\ReportSectionsLinkService;
+use OPG\Digideps\Frontend\Service\ReportSectionsMetaService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 
-class ReportSectionLinksServiceTest extends TestCase
+class ReportSectionMetaServiceTest extends TestCase
 {
-    protected ReportSectionsLinkService $sut;
+    protected ReportSectionsMetaService $sut;
     private Report&MockObject $report;
 
     public function setUp(): void
     {
         $router = self::createMock(RouterInterface::class);
-        $router->method('generate')->willReturnCallback(function ($a, $b) {
+        $router->method('generate')->willReturnCallback(function (string $a, array $b) {
             return $a . http_build_query($b);
         });
         $this->report = self::createMock(Report::class);
 
         $this->report->method('getId')->willReturn(1);
 
-        $this->sut = new ReportSectionsLinkService($router);
+        $this->sut = new ReportSectionsMetaService($router);
     }
 
     public function testGetSectionParamsLay(): void

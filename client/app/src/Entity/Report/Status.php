@@ -139,7 +139,7 @@ class Status
         return $this;
     }
 
-    public function getMoneyTransferState(): array
+    public function getMoneyTransfersState(): array
     {
         return $this->moneyTransferState;
     }
