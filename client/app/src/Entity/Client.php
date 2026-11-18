@@ -1004,6 +1004,9 @@ class Client
             }
         }
 
+        error_log("+++++++++++++++++++++");
+        error_log(print_r($possibleReplacements, true));
+
         return $possibleReplacements;
     }
 }
