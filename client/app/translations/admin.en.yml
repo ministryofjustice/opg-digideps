@@ -241,3 +241,9 @@ labels:
   active: ACTIVE
   submitted: SUBMITTED
   incomplete: INCOMPLETE
+
+activeStatus:
+  active_with_court_order: Active
+  inactive_no_active_court_order: Inactive - No active court orders
+  inactive_password_not_set: Inactive - Password not set
+  active_without_deputy: Active

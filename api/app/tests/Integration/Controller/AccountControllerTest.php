@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
+use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
 use OPG\Digideps\Backend\Fixture\DeputyDescriptor;
 use OPG\Digideps\Backend\Fixture\DeputySet;
@@ -23,6 +24,10 @@ use Symfony\Component\Uid\Uuid;
 
 class AccountControllerTest extends AbstractTestController
 {
+    public static function tearDownAfterClass(): void
+    {
+    }
+
     public function testRequestMatchingError(): void
     {
         $email = $this->makeEmail();
@@ -128,7 +133,6 @@ class AccountControllerTest extends AbstractTestController
     {
         ['persons' => ['users' => ['lay1' => $user]]] = $this->fixtureService()->instantiateScenario(Scenario::newSimpleLayScenario());
 
-
         $decoded = $this->assertJsonRequest('POST', '/account/password/set', ['data' => new PasswordRequest(
             new Password('Hello World XXX'),
             new Token(),
@@ -167,8 +171,15 @@ class AccountControllerTest extends AbstractTestController
     {
         ['persons' => ['users' => ['lay1' => $user]]] = $this->fixtureService()->instantiateScenario(Scenario::newSimpleLayScenario());
 
+        $email = $user->getEmail();
+        $originalRegistrationDate = new \DateTime('2024-05-10 12:34:56');
+        $user->setRegistrationDate($originalRegistrationDate);
+        self::$em->persist($user);
+        self::$em->flush();
+        self::$em->clear();
+
         $decoded = $this->assertJsonRequest('POST', '/account/password/reset', ['data' => new ResetRequest(
-            new Email($user->getEmail()),
+            new Email($email),
         )]);
 
         $response = AccountResponse::jsonDeserialize(json_encode($decoded) ?: '');
@@ -180,6 +191,13 @@ class AccountControllerTest extends AbstractTestController
         )]);
         $response = PasswordResponse::jsonDeserialize(json_encode($decoded) ?: '');
         $this->assertInstanceOf(PasswordResponse::class, $response);
+
+        self::$em->clear();
+        $persistedUser = self::$em->getRepository(User::class)->findOneBy(['email' => $email]);
+        $this->assertNotNull($persistedUser);
+        $this->assertNotNull($persistedUser->getRegistrationDate());
+        $this->assertEquals($originalRegistrationDate, $persistedUser->getRegistrationDate());
+
         $this->login($response->email->value, 'Hello World XXX', self::$deputySecret);
     }
 
@@ -199,6 +217,12 @@ class AccountControllerTest extends AbstractTestController
         )]);
         $response = AccountResponse::jsonDeserialize(json_encode($decoded) ?: '');
         $this->assertInstanceOf(AccountResponse::class, $response);
+
+        self::$em->clear();
+        $newUser = $this->getUserByEmail($email);
+        $this->assertNotNull($newUser);
+        $this->assertNull($newUser->getRegistrationDate());
+
         $decoded = $this->assertJsonRequest('POST', '/account/password/set', ['data' => new PasswordRequest(
             new Password('Hello World'),
             $response->token,
@@ -206,7 +230,23 @@ class AccountControllerTest extends AbstractTestController
         )]);
         $response = PasswordResponse::jsonDeserialize(json_encode($decoded) ?: '');
         $this->assertInstanceOf(PasswordResponse::class, $response);
+
+        self::$em->clear();
+        $newUser = $this->getUserByEmail($email);
+        $this->assertNotNull($newUser);
+        $this->assertNotNull($newUser->getRegistrationDate());
+
         $this->login($response->email->value, 'Hello World', self::$deputySecret);
+    }
+
+    private function getUserByEmail(string $email): ?User
+    {
+        /** @var ?User $user */
+        $user = self::$em->createQuery("SELECT c FROM " . User::class . " c WHERE c.email = :email")
+            ->setParameter('email', $email)
+            ->getOneOrNullResult();
+
+        return $user;
     }
 
     private function makeEmail(): string

@@ -47,6 +47,10 @@ final readonly class PasswordService
     public function setUserPassword(User $user, Password $password, bool $flush = false): void
     {
         $user->setPassword($this->passwordHasher->hashPassword($user, $password->value));
+        if ($user->getRegistrationDate() === null) {
+            $user->setRegistrationDate(new \DateTime());
+        }
+
         $this->entityManager->persist($user);
         if ($flush) {
             $this->entityManager->flush();
