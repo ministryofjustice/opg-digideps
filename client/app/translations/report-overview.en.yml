@@ -81,7 +81,7 @@ contacts:
     done: "{0} No contacts | {1} 1 contact | ]1,Inf[ %count% contacts"
 
 heading.healthAndWelfare: "Health and welfare"
-visits_care:
+visitsCare:
   subSectionTitle: "Visits and care"
   subSectionDescription: "Give us an overview of who is looking after %client%"
   label:
@@ -92,26 +92,26 @@ lifestyle:
   label:
     done: "Finished"
 heading.propFinance: "%client%'s property and finances"
-deputy_expenses:
+deputyExpenses:
   subSectionTitle: "Deputy expenses"
   subSectionDescription: "Claim for things you paid for on %client%'s behalf"
   label:
     done: "{0} No expenses | {1} 1 expense | ]1,Inf[ %count% expenses"
-pa_fee_expense:
+paFeeExpense:
   subSectionTitle: "Deputy fees and expenses"
   subSectionDescription: "Any fees or expenses you have charged in line with the practice direction"
   label:
     done: "Finished"
-prof_current_fees:
+profCurrentFees:
   subSectionTitle: "Current fees and expenses"
   subSectionDescription: "Any fees or expenses you have charged in line with the practice direction"
   label:
     done: "Finished"
-prof_deputy_costs:
+profDeputyCosts:
   subSectionTitle: "Deputy costs"
   label:
     done: "Finished"
-prof_deputy_costs_estimate:
+profDeputyCostsEstimate:
   subSectionTitle: "Deputy costs estimate"
   label:
     done: "Finished"
@@ -121,36 +121,36 @@ gifts:
   subSectionDescription: Tell us about gifts you've given to other people on %client%'s behalf
   label:
     done: "{0} No gifts | {1} 1 gift | ]1,Inf[ %count% gifts"
-bank_accounts:
+bankAccounts:
   subSectionTitle: "Accounts"
   subSectionTitleNotBalanced: "Accounts not balanced"
   subSectionDescription: "Add %client%'s bank, building society and savings accounts"
   label:
     done: "{0} No accounts | {1} 1 account | ]1,Inf[ %count% accounts"
     addReason: "Add reason"
-money_transfers:
+moneyTransfers:
   subSectionTitle: "Money transfers"
   subSectionDescription: "Provide details of money transferred between %client%'s accounts"
   label:
     done: "{0} No transfers | {1} 1 transfer | ]1,Inf[ %count% transfers"
-money_in:
+moneyIn:
   subSectionTitle: "Money in"
   subSectionDescription: "Enter details of money paid into %client%'s accounts"
   label:
     done: "{0} No money in | {1} 1 item | ]1,Inf[ %count% items"
-money_out:
+moneyOut:
   subSectionTitle: "Money out"
   subSectionDescription: "Enter details of money you've spent on %client%'s living and other costs"
   label:
     done: "{0} No money out | {1} 1 item | ]1,Inf[ %count% items"
 
-money_in_short:
+moneyInShort:
   subSectionTitle: "Money in"
   subSectionDescription: "Tell us about money paid into %client%'s accounts"
   label:
     done: "{0} No money in | {1} 1 item over £1,000 | ]1,Inf[ %count% items over £1,000"
     low-assets-done: "money in"
-money_out_short:
+moneyOutShort:
   subSectionTitle: "Money out"
   subSectionDescription: "Tell us about money you have spent on %client%'s living and welfare costs"
   label:
@@ -185,7 +185,7 @@ actions:
   subSectionDescription: What significant decisions will you need to take for %client% in the next year?
   label:
     done: "Finished"
-other_info:
+otherInfo:
   subSectionTitle: "Any other information"
   subSectionDescription: "Is there anything else you want to tell us about the deputyship?"
   label:
@@ -198,7 +198,7 @@ documents:
   label:
     done: "{0} No documents | {1} 1 document | ]1,Inf[ %count% documents"
 
-client_benefits_check:
+clientBenefitsCheck:
   subSectionTitle: "Benefits check and money others received"
   subSectionDescription: "Tell us if you checked what benefits %client% is entitled to, and about any money other people or organisations received on %client%’s behalf."
   label:
