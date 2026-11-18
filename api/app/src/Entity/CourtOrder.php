@@ -364,4 +364,9 @@ class CourtOrder
         }
         return null;
     }
+
+    public function getActiveReport(): ?Report
+    {
+        return array_find($this->getReports()->toArray(), fn ($report) => $report->getSubmitted() !== true && $report->getUnSubmitDate() === null);
+    }
 }

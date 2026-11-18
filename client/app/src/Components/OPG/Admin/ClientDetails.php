@@ -14,7 +14,6 @@ use OPG\Digideps\Frontend\Components\OPG\Renderable\Div;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
-use OPG\Digideps\Frontend\Model\PossibleReportReplacement;
 use OPG\Digideps\Frontend\Twig\Filters;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -54,7 +53,7 @@ final class ClientDetails
             'closed',
             $userIsSuperAdmin,
             needsManageLink: false,
-            possibleReportReplacements: $client->findPossibleReportReplacements()
+            possibleReportReplacements: $client->possibleReportReplacements
         );
     }
 
@@ -133,7 +132,7 @@ final class ClientDetails
 
     /**
      * @param array<Report> $reports
-     * @param array<PossibleReportReplacement> $possibleReportReplacements
+     * @param array<array{replaceReport: int, withReport: int}> $possibleReportReplacements
      */
     private function makeReportsTable(
         array $reports,
@@ -190,11 +189,11 @@ final class ClientDetails
                 $links[] = new Link(href: $downloadUrl, text: $this->text['actions.viewSummary']);
             }
 
-            $possibleReportReplacement = $this->getPossibleReportReplacement($report, $possibleReportReplacements);
-            if ($possibleReportReplacement !== null) {
+            $possibleReportReplacementId = $this->getPossibleReportReplacement($report, $possibleReportReplacements);
+            if ($possibleReportReplacementId !== null) {
                 $replaceRestoreUrl = $this->urlGenerator->generate(
                     'admin_report_restore',
-                    ['restoreFromReportId' => $possibleReportReplacement->getId()]
+                    ['restoreFromReportId' => $possibleReportReplacementId]
                 );
                 $links[] = new Link(href: $replaceRestoreUrl, text: $this->text['actions.restore']);
             }
@@ -219,17 +218,17 @@ final class ClientDetails
 
     /**
      * @param Report $report Report we want to find possible replacements for
-     * @param array<PossibleReportReplacement> $possibleReportReplacements
+     * @param array<array{replaceReport: int, withReport: int}> $possibleReportReplacements
      *
-     * If more than one possible replacement report is found, null is returned.
+     * If more than one possible replacement report is found, or none, null is returned.
      */
-    private function getPossibleReportReplacement(Report $report, array $possibleReportReplacements): ?Report
+    private function getPossibleReportReplacement(Report $report, array $possibleReportReplacements): ?int
     {
         $reportId = $report->getId();
-        $possiblesForReport = array_filter($possibleReportReplacements, fn ($pr) => $pr->replaceReport->getId() === $reportId);
+        $possiblesForReport = array_filter($possibleReportReplacements, fn ($pr) => $pr['replaceReport'] === $reportId);
         if (count($possiblesForReport) !== 1) {
             return null;
         }
-        return $possiblesForReport[0]->withReport;
+        return $possiblesForReport[0]['withReport'];
     }
 }

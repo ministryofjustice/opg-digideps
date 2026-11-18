@@ -40,6 +40,8 @@ class ClientController extends RestController
             throw new NotFoundHttpException(sprintf('Client id %s not found', $id));
         }
 
+        error_log("++++++++++++++++++++++++++++++++++\n" . print_r($data, true));
+
         $dto = $this->clientAssembler->assembleFromArray($data);
 
         $transformedOrg = null;
