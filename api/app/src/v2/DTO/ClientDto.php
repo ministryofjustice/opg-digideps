@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Backend\v2\DTO;
 
 use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\PossibleReportReplacement;
 
 class ClientDto
 {
@@ -22,6 +23,7 @@ class ClientDto
     private ?DeputyDto $deputy = null;
     private ?array $deputies = null;
 
+    /** @var array<PossibleReportReplacement> */
     private array $possibleReportReplacements = [];
 
     public function getId(): ?int
@@ -171,11 +173,17 @@ class ClientDto
         return $this;
     }
 
+    /**
+     * @return array<PossibleReportReplacement>
+     */
     public function getPossibleReportReplacements(): array
     {
         return $this->possibleReportReplacements;
     }
 
+    /**
+     * @param array<PossibleReportReplacement> $possibleReportReplacements
+     */
     public function setPossibleReportReplacements(array $possibleReportReplacements): static
     {
         $this->possibleReportReplacements = $possibleReportReplacements;
