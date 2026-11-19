@@ -11,7 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 final readonly class HiddenInput extends AbstractInput
 {
-    public function __construct(string $name)
+    public function __construct(string $name, ?Constraints $constraints = null)
     {
         parent::__construct(
             HiddenType::class,
@@ -21,7 +21,7 @@ final readonly class HiddenInput extends AbstractInput
             null,
             false,
             false,
-            null
+            $constraints
         );
     }
 
