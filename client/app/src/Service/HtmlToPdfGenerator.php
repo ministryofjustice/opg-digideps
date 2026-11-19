@@ -48,11 +48,10 @@ class HtmlToPdfGenerator
                 $postFields["font_{$index}"] = new \CURLFile($fontFile, mime_type: 'font/woff2', posted_filename: basename($fontFile));
             }
 
-            // read in application.css and munge the font and image paths
+            // read in application.css and munge the font paths
             $css = file_get_contents($this->assetsPath . '/application.css') ?: '';
 
             if (!empty($css)) {
-                // fix font paths
                 /** @var string $css */
                 $css = str_replace('url(./fonts/', 'url(', $css);
             }
