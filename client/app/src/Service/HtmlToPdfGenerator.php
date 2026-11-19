@@ -86,7 +86,14 @@ class HtmlToPdfGenerator
             /** @var string $css */
             $css = str_replace('url(./fonts/', 'url(', $css);
 
-            $postFields['css'] = new \CURLStringFile($css, postname: 'application.css', mime: 'text/html');
+            $postFields['css_report'] = new \CURLStringFile($css, postname: 'application.css', mime: 'text/css');
+
+            // read in the print CSS used for checklists
+            $postFields['css_checklist'] = new \CURLFile(
+                $this->assetsPath . '/formatted-report.css',
+                mime_type: 'text/css',
+                posted_filename: 'formatted-report.css'
+            );
         }
 
         $ch = curl_init($this->url . '/forms/chromium/convert/html');
