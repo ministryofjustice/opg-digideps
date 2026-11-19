@@ -10,14 +10,17 @@ use Psr\Log\LoggerInterface;
  */
 class HtmlToPdfGenerator
 {
-    private string $basePath;
+    private string $assetsPath;
+    private string $imagesPath;
 
     public function __construct(
         private readonly string $url,
         private readonly int $timeoutSeconds,
         private readonly LoggerInterface $logger
     ) {
-        $this->basePath = '/var/www/public/assets/fallback/stylesheets';
+        $basePath = '/var/www/public';
+        $this->assetsPath = $basePath . '/assets/fallback/stylesheets';
+        $this->imagesPath = $basePath . '/images';
     }
 
     public function isAlive(): bool
@@ -42,20 +45,48 @@ class HtmlToPdfGenerator
 
         if ($includeAssets) {
             // add woff2 font files (we don't need the fallback woff fonts)
-            $fontFiles = glob($this->basePath . '/fonts/*.woff2') ?: [];
+            $fontFiles = glob($this->assetsPath . '/fonts/*.woff2') ?: [];
 
             foreach ($fontFiles as $index => $fontFile) {
                 $postFields["font_{$index}"] = new \CURLFile($fontFile, mime_type: 'font/woff2', posted_filename: basename($fontFile));
             }
 
-            // read in application.css and munge the font paths
-            $css = file_get_contents($this->basePath . '/application.css') ?: '';
-            if (!empty($css)) {
-                /** @var string $css */
-                $css = str_replace('url(./fonts/', 'url(', $css);
+            // read in application.css and munge the font and image paths
+            $css = file_get_contents($this->assetsPath . '/application.css') ?: '';
 
-                $postFields['css'] = new \CURLStringFile($css, postname: 'application.css', mime: 'text/html');
+            if (!empty($css)) {
+                // add image files
+                $matches = [];
+                preg_match_all('|url\(/images/([^;)]+)|', $css, $matches);
+                $imageUrls = array_unique($matches[1]);
+
+                $preFilenames = [];
+                foreach ($imageUrls as $index => $imageUrl) {
+                    $path = $this->imagesPath . '/' . $imageUrl;
+                    $filename = basename($path);
+                    $preFilenames[] = dirname($path) . '/';
+
+                    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+                    $mime = match ($ext) {
+                        'gif' => 'image/gif',
+                        'png' => 'image/png',
+                        'jpg' => 'image/jpg',
+                        'svg' => 'image/svg+xml',
+                        default => 'application/octet'
+                    };
+
+                    $postFields["image_{$index}"] = new \CURLFile($path, mime_type: $mime, posted_filename: $filename);
+                }
+
+                $preFilenames = array_unique($preFilenames);
+                $css = str_replace($preFilenames, '', $css);
             }
+
+            // fix font paths
+            /** @var string $css */
+            $css = str_replace('url(./fonts/', 'url(', $css);
+
+            $postFields['css'] = new \CURLStringFile($css, postname: 'application.css', mime: 'text/html');
         }
 
         $ch = curl_init($this->url . '/forms/chromium/convert/html');
