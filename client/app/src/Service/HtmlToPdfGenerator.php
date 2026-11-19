@@ -11,16 +11,13 @@ use Psr\Log\LoggerInterface;
 class HtmlToPdfGenerator
 {
     private string $assetsPath;
-    private string $imagesPath;
 
     public function __construct(
         private readonly string $url,
         private readonly int $timeoutSeconds,
         private readonly LoggerInterface $logger
     ) {
-        $basePath = '/var/www/public';
-        $this->assetsPath = $basePath . '/assets/fallback/stylesheets';
-        $this->imagesPath = $basePath . '/images';
+        $this->assetsPath = '/var/www/public/assets/fallback/stylesheets';
     }
 
     public function isAlive(): bool
@@ -55,40 +52,14 @@ class HtmlToPdfGenerator
             $css = file_get_contents($this->assetsPath . '/application.css') ?: '';
 
             if (!empty($css)) {
-                // add image files
-                $matches = [];
-                preg_match_all('|url\(/images/([^;)]+)|', $css, $matches);
-                $imageUrls = array_unique($matches[1]);
-
-                $preFilenames = [];
-                foreach ($imageUrls as $index => $imageUrl) {
-                    $path = $this->imagesPath . '/' . $imageUrl;
-                    $filename = basename($path);
-                    $preFilenames[] = dirname($path) . '/';
-
-                    $ext = pathinfo($filename, PATHINFO_EXTENSION);
-                    $mime = match ($ext) {
-                        'gif' => 'image/gif',
-                        'png' => 'image/png',
-                        'jpg' => 'image/jpg',
-                        'svg' => 'image/svg+xml',
-                        default => 'application/octet'
-                    };
-
-                    $postFields["image_{$index}"] = new \CURLFile($path, mime_type: $mime, posted_filename: $filename);
-                }
-
-                $preFilenames = array_unique($preFilenames);
-                $css = str_replace($preFilenames, '', $css);
+                // fix font paths
+                /** @var string $css */
+                $css = str_replace('url(./fonts/', 'url(', $css);
             }
-
-            // fix font paths
-            /** @var string $css */
-            $css = str_replace('url(./fonts/', 'url(', $css);
 
             $postFields['css_report'] = new \CURLStringFile($css, postname: 'application.css', mime: 'text/css');
 
-            // read in the print CSS used for checklists
+            // add the CSS used for checklists
             $postFields['css_checklist'] = new \CURLFile(
                 $this->assetsPath . '/formatted-report.css',
                 mime_type: 'text/css',
