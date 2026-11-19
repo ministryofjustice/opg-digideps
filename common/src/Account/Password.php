@@ -20,6 +20,11 @@ final readonly class Password implements \JsonSerializable
 
     public static function isValid(string $value): bool
     {
-        return !empty($value);
+        return !(
+            strlen($value) < 14
+            || $value === mb_strtolower($value)
+            || $value === mb_strtoupper($value)
+            || preg_match('~\d~', $value) !== 1
+        );
     }
 }

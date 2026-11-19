@@ -130,7 +130,7 @@ class AccountControllerTest extends AbstractTestController
 
 
         $decoded = $this->assertJsonRequest('POST', '/account/password/set', ['data' => new PasswordRequest(
-            new Password('Hello World XXX'),
+            new Password('Hello World XXX 123'),
             new Token(),
             new ValidationKey('12345678901234567890123456789012')
         )]);
@@ -145,7 +145,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertInstanceOf(AccountResponse::class, $resetResponse);
 
         $decoded = $this->assertJsonRequest('POST', '/account/password/set', ['data' => new PasswordRequest(
-            new Password('Hello World XXX'),
+            new Password('Hello World XXX 123'),
             new Token(),
             $resetResponse->validationKey
         )]);
@@ -154,7 +154,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertSame(AccountError::TokenInvalid, $response);
 
         $decoded = $this->assertJsonRequest('POST', '/account/password/set', ['data' => new PasswordRequest(
-            new Password('Hello World XXX'),
+            new Password('Hello World XXX 123'),
             $resetResponse->token,
             $resetResponse->validationKey
         )]);
@@ -174,13 +174,13 @@ class AccountControllerTest extends AbstractTestController
         $response = AccountResponse::jsonDeserialize(json_encode($decoded) ?: '');
         $this->assertInstanceOf(AccountResponse::class, $response);
         $decoded = $this->assertJsonRequest('POST', '/account/password/set', ['data' => new PasswordRequest(
-            new Password('Hello World XXX'),
+            new Password('Hello World XXX 123'),
             $response->token,
             $response->validationKey
         )]);
         $response = PasswordResponse::jsonDeserialize(json_encode($decoded) ?: '');
         $this->assertInstanceOf(PasswordResponse::class, $response);
-        $this->login($response->email->value, 'Hello World XXX', self::$deputySecret);
+        $this->login($response->email->value, 'Hello World XXX 123', self::$deputySecret);
     }
 
     public function testRequestFlow(): void
@@ -200,13 +200,13 @@ class AccountControllerTest extends AbstractTestController
         $response = AccountResponse::jsonDeserialize(json_encode($decoded) ?: '');
         $this->assertInstanceOf(AccountResponse::class, $response);
         $decoded = $this->assertJsonRequest('POST', '/account/password/set', ['data' => new PasswordRequest(
-            new Password('Hello World'),
+            new Password('Hello World 123 123'),
             $response->token,
             $response->validationKey
         )]);
         $response = PasswordResponse::jsonDeserialize(json_encode($decoded) ?: '');
         $this->assertInstanceOf(PasswordResponse::class, $response);
-        $this->login($response->email->value, 'Hello World', self::$deputySecret);
+        $this->login($response->email->value, 'Hello World 123 123', self::$deputySecret);
     }
 
     private function makeEmail(): string
