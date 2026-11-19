@@ -10,7 +10,6 @@ use OPG\Digideps\Backend\v2\Assembler\OrganisationAssembler;
 use OPG\Digideps\Backend\v2\Transformer\ClientTransformer;
 use OPG\Digideps\Backend\v2\Transformer\OrganisationTransformer;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -28,8 +27,7 @@ class ClientController extends RestController
         private readonly OrganisationAssembler $orgAssembler,
         private readonly ClientTransformer $clientTransformer,
         private readonly OrganisationTransformer $orgTransformer,
-        EntityManagerInterface $em,
-        private readonly LoggerInterface $logger
+        EntityManagerInterface $em
     ) {
         parent::__construct($em);
     }
@@ -51,7 +49,7 @@ class ClientController extends RestController
             $transformedOrg = $this->orgTransformer->transform($orgDto, ['total_user_count', 'total_client_count', 'users', 'clients']);
         }
 
-        $transformedDto = $this->clientTransformer->transform($dto);
+        $transformedDto = $this->clientTransformer->transform($dto, [], $transformedOrg);
 
         /* @var Client $client */
         $client = $this->findEntityBy(Client::class, $transformedDto['id']);
@@ -75,18 +73,18 @@ class ClientController extends RestController
             throw new NotFoundHttpException(sprintf('Client id %s not found', $id));
         }
 
-        // TO REMOVE
-        $data = $this->repository->getArrayById($id);
-        $this->logger->error("\n>>>>>>>>>>>>>>>>>>>>>>> ORIGINAL ENTITY \n" . json_encode($data, JSON_PRETTY_PRINT) . "<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
-        // TO REMOVE
-
         $dto = $this->clientAssembler->assembleFromEntity($client);
 
-        $transformedDto = $this->clientTransformer->transform($dto);
+        // note that we have to do assemble/transform separately for the organisation
+        // to avoid circular references
+        $transformedOrg = null;
+        $organisation = $client->getOrganisation();
+        if ($organisation !== null) {
+            $orgDto = $this->orgAssembler->assembleFromEntity($organisation);
+            $transformedOrg = $this->orgTransformer->transform($orgDto, ['total_user_count', 'total_client_count', 'users', 'clients']);
+        }
 
-        // TO REMOVE
-        $this->logger->error("\n>>>>>>>>>>>>>>>>>>>>>>> TARGET ENTITY \n" . json_encode($transformedDto, JSON_PRETTY_PRINT) . "<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
-        // TO REMOVE
+        $transformedDto = $this->clientTransformer->transform($dto, [], $transformedOrg);
 
         /* @var Client $client */
         $client = $this->findEntityBy(Client::class, $transformedDto['id']);
