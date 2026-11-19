@@ -22,6 +22,8 @@ class ClientDto
     private ?DeputyDto $deputy = null;
     private ?array $deputies = null;
 
+    private array $possibleReportReplacements = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -166,6 +168,17 @@ class ClientDto
     {
         $this->deputies = $deputies;
 
+        return $this;
+    }
+
+    public function getPossibleReportReplacements(): array
+    {
+        return $this->possibleReportReplacements;
+    }
+
+    public function setPossibleReportReplacements(array $possibleReportReplacements): static
+    {
+        $this->possibleReportReplacements = $possibleReportReplacements;
         return $this;
     }
 }
