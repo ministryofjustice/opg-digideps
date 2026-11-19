@@ -612,12 +612,11 @@ class ReportController extends AbstractController
         ];
     }
 
-    #[Route(path: 'replace', name: 'admin_report_restore')]
+    #[Route(path: 'restore', name: 'admin_report_restore')]
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
-    public function restoreAction(Request $request, string $id): Response
+    public function restoreAction(Request $request, int $id): Response
     {
-        $reportToBeReplacedId = (int) $id;
-        $replacementReportId = $request->getPayload()->getInt('restoreFromReportId');
-        return new Response("report replacement confirmation page here; replace {$reportToBeReplacedId} with {$replacementReportId}");
+        $replacementReportId = $request->query->getInt('restoreFromReportId');
+        return new Response("report replacement confirmation page here; replace {$id} with {$replacementReportId}");
     }
 }

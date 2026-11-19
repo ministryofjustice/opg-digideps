@@ -169,31 +169,32 @@ final class ClientDetails
             ->addHeader(...$header);
 
         foreach ($reports as $report) {
+            $reportId = $report->getId();
             $period = str_replace(' to ', '-', $report->getPeriod());
 
             $links = [];
 
             if ($needsManageLink) {
-                $manageUrl = $this->urlGenerator->generate('admin_report_manage', ['id' => $report->getId()]);
+                $manageUrl = $this->urlGenerator->generate('admin_report_manage', ['id' => $reportId]);
                 $accessText = "{$period} {$this->text['report']}";
                 $links[] = new Link(href: $manageUrl, text: $this->text['actions.manage'], accessibilityText: $accessText);
             }
 
             if ($report->isCheckable()) {
-                $checklistUrl = $this->urlGenerator->generate('admin_report_checklist', ['id' => $report->getId()]);
+                $checklistUrl = $this->urlGenerator->generate('admin_report_checklist', ['id' => $reportId]);
                 $links[] = new Link(href: $checklistUrl, text: $this->text['actions.checklist']);
             }
 
             if ($report->isDownloadable() && $userIsSuperAdmin) {
-                $downloadUrl = $this->urlGenerator->generate('admin_report_view_summary', ['id' => $report->getId()]);
+                $downloadUrl = $this->urlGenerator->generate('admin_report_view_summary', ['id' => $reportId]);
                 $links[] = new Link(href: $downloadUrl, text: $this->text['actions.viewSummary']);
             }
 
-            $possibleReportReplacementId = $this->getPossibleReportReplacement($report, $possibleReportReplacements);
-            if ($possibleReportReplacementId !== null) {
+            $replaceableReportId = $this->getReplaceableReportId($report, $possibleReportReplacements);
+            if ($replaceableReportId !== null) {
                 $replaceRestoreUrl = $this->urlGenerator->generate(
                     'admin_report_restore',
-                    ['restoreFromReportId' => $possibleReportReplacementId]
+                    ['id' => $replaceableReportId, 'restoreFromReportId' => $reportId]
                 );
                 $links[] = new Link(href: $replaceRestoreUrl, text: $this->text['actions.restore']);
             }
@@ -219,16 +220,22 @@ final class ClientDetails
     /**
      * @param Report $report Report we want to find possible replacements for
      * @param array<array{replaceReport: int, withReport: int}> $possibleReportReplacements
+     * @return ?int The ID of the the report which can be replaced
      *
      * If more than one possible replacement report is found, or none, null is returned.
      */
-    private function getPossibleReportReplacement(Report $report, array $possibleReportReplacements): ?int
+    private function getReplaceableReportId(Report $report, array $possibleReportReplacements): ?int
     {
+        if (empty($possibleReportReplacements)) {
+            return null;
+        }
+
         $reportId = $report->getId();
-        $possiblesForReport = array_filter($possibleReportReplacements, fn ($pr) => $pr['replaceReport'] === $reportId);
+
+        $possiblesForReport = array_filter($possibleReportReplacements, fn ($pr) => $pr['withReport'] === $reportId);
         if (count($possiblesForReport) !== 1) {
             return null;
         }
-        return $possiblesForReport[0]['withReport'];
+        return $possiblesForReport[0]['replaceReport'];
     }
 }
