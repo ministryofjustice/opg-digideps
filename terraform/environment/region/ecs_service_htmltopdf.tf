@@ -80,11 +80,12 @@ locals {
       healthCheck = {
         command = [
           "CMD-SHELL",
-          "wget --quiet http://localhost:8080/health || exit 1"
+          "wget --spider --quiet http://127.0.0.1:8080/health || exit 1"
         ],
-        interval = 30,
-        timeout  = 5,
-        retries  = 3
+        startPeriod = 60,
+        interval    = 30,
+        timeout     = 5,
+        retries     = 3
       },
       logConfiguration = {
         logDriver = "awslogs",
