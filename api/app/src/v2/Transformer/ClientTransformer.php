@@ -2,6 +2,7 @@
 
 namespace OPG\Digideps\Backend\v2\Transformer;
 
+use OPG\Digideps\Backend\Entity\PossibleReportReplacement;
 use OPG\Digideps\Backend\v2\DTO\ClientDto;
 use OPG\Digideps\Backend\v2\DTO\DeputyDto;
 use OPG\Digideps\Backend\v2\DTO\ReportDto;
@@ -25,8 +26,11 @@ class ClientTransformer
             'email' => $dto->getEmail(),
             'archived_at' => $this->transformArchivedAt($dto),
             'deleted_at' => $this->transformDeletedAt($dto),
-            'total_report_count' => $dto->getReportCount(),
+            'total_report_count' => $dto->getReportCount()
         ];
+
+        $possibleReportReplacements = $this->transformPossibleReportReplacements($dto->getPossibleReportReplacements());
+        $transformed['possible_report_replacements'] = $possibleReportReplacements;
 
         if (!in_array('reports', $exclude) && !empty($dto->getReports())) {
             $transformed['reports'] = $this->transformReports($dto->getReports());
@@ -123,6 +127,22 @@ class ClientTransformer
                     'last_logged_in' => $userDto->getLastLoggedIn() instanceof \DateTime ? $userDto->getLastLoggedIn()->format('Y-m-d H:i:s') : null,
                     'deputy_uid' => $userDto->getDeputyUid(),
                 ];
+            }
+        }
+
+        return $transformed;
+    }
+
+    /**
+     * @return array<array{replaceReport: int, withReport: int}>
+     */
+    private function transformPossibleReportReplacements(array $possibleReportReplacements): array
+    {
+        $transformed = [];
+
+        foreach ($possibleReportReplacements as $possibleReportReplacement) {
+            if ($possibleReportReplacement instanceof PossibleReportReplacement) {
+                $transformed[] = $possibleReportReplacement->jsonSerialize();
             }
         }
 
