@@ -1,0 +1,14 @@
+{
+  "name": "waf-high-block-volume",
+  "title": "AWS WAF is blocking an unusually high volume of requests",
+  "description": "AWS WAF has blocked more than 25,000 requests within a 5-minute period. This may indicate malicious activity, bot traffic, a denial-of-service attempt, or an unexpected increase in requests being blocked by WAF rules.",
+  "investigation_steps": [
+    "Open the CloudWatch alarm and identify the affected environment.",
+    "Review WAF logs to determine the source IPs, countries, request patterns and terminating rules responsible for the blocked traffic.",
+    "Check whether the blocked traffic is concentrated on a single source, distributed across many clients, or associated with a known bot or vulnerability scan.",
+    "Confirm that application availability, load balancer health and backend services are operating normally.",
+    "If legitimate traffic appears to be affected or service degradation is observed, escalate immediately and consider whether WAF rules require adjustment."
+  ],
+  "confluence_link": "",
+  "terraform_link": "https://github.com/ministryofjustice/opg-digideps/blob/main/terraform/account/region/cloudwatch_alarms_waf.tf"
+}
