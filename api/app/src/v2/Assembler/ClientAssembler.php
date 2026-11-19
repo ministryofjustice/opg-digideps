@@ -66,7 +66,7 @@ class ClientAssembler
         $dto->setCaseNumber($client->getCaseNumber());
         $dto->setFirstName($client->getFirstname());
         $dto->setLastName($client->getLastname());
-        $dto->setReportCount($client->getTotalReportCount());
+        $dto->setPossibleReportReplacements($client->findPossibleReportReplacements());
 
         $email = $client->getEmail();
         if (!empty($email)) {
@@ -88,6 +88,7 @@ class ClientAssembler
             $reports[] = $this->reportDtoAssembler->assembleFromEntity($report);
         }
         $dto->setReports($reports);
+        $dto->setReportCount(count($reports));
 
         $deputy = $client->getDeputy();
         if ($deputy !== null) {
@@ -96,7 +97,7 @@ class ClientAssembler
 
         $users = [];
         foreach ($client->getUsers() as $user) {
-            $users[] = $this->assembleClientDeputyFromEntity($user);
+            $users[] = $this->assembleUserDtoFromEntity($user);
         }
         $dto->setDeputies($users);
 
@@ -142,7 +143,7 @@ class ClientAssembler
     }
 
     // built here rather than via UserAssembler, which depends on this class
-    private function assembleClientDeputyFromEntity(User $user): UserDto
+    private function assembleUserDtoFromEntity(User $user): UserDto
     {
         $dto = new UserDto();
 
