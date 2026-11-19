@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Repository;
 
-use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
 
 class ClientRepository extends ServiceEntityRepository
 {
@@ -94,6 +96,20 @@ class ClientRepository extends ServiceEntityRepository
         $this->getEntityManager()->getFilters()->enable('softdeleteable');
 
         return count($result) === 0 ? null : $result[0];
+    }
+
+    public function getEntityById(int $id): ?Client
+    {
+        /** @var SoftDeleteableFilter $filter */
+        $filter = $this->getEntityManager()->getFilters()->getFilter('softdeleteable');
+        $filter->disableForEntity(Client::class);
+
+        /** @var ?Client $result */
+        $result = $this->findOneBy(['id' => $id]);
+
+        $this->getEntityManager()->getFilters()->enable('softdeleteable');
+
+        return $result;
     }
 
     /**
