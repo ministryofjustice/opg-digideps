@@ -29,6 +29,7 @@
         }
     },
     "require": {
+        "ext-curl": "*",
         "ext-dom": "*",
         "ext-openssl": "*",
         "ext-zip": "*",

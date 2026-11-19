@@ -1,0 +1,31 @@
+#!/bin/sh
+exec /usr/bin/gotenberg \
+	--api-download-from-max-concurrency 0 \
+	--api-download-from-max-entries 0 \
+    --api-disable-download-from \
+	--chromium-disable-javascript \
+	--api-timeout 60s \
+	--chromium-max-concurrency 6 \
+    --chromium-max-queue-size 10 \
+    --log-level info \
+    --pdfengines-disable-routes \
+	--pdfengines-merge-engines pdfcpu \
+	--pdfengines-split-engines pdfcpu \
+	--pdfengines-flatten-engines pdfcpu \
+	--pdfengines-convert-engines pdfcpu \
+	--pdfengines-encrypt-engines pdfcpu \
+	--pdfengines-embed-engines pdfcpu \
+	--pdfengines-watermark-engines pdfcpu \
+	--pdfengines-stamp-engines pdfcpu \
+	--pdfengines-rotate-engines pdfcpu \
+	--pdfengines-factur-x-engines pdfcpu \
+	--pdfengines-read-metadata-engines pdfcpu \
+	--pdfengines-write-metadata-engines pdfcpu \
+	--pdfengines-embed-metadata-engines pdfcpu \
+	--pdfengines-read-bookmarks-engines pdfcpu \
+	--pdfengines-write-bookmarks-engines pdfcpu \
+	--pdfengines-optimize-images-engines pdfcpu \
+    --prometheus-disable-collect \
+    --prometheus-disable-route-telemetry \
+    --webhook-disable \
+	"$@"

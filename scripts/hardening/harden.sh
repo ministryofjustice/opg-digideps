@@ -19,14 +19,14 @@ chown root:root /usr/bin/github_pubkeys && \
 echo "Remove world-writeable permissions except for /tmp/"
 find / -xdev -type d -perm +0002 -exec chmod o-w {} + \
   && find / -xdev -type f -perm +0002 -exec chmod o-w {} + \
-  && chmod 777 /tmp/ \
+  && chmod 1777 /tmp/ \
   && chown $CONTAINER_USER:root /tmp/
 
 echo "Remove unnecessary user accounts."
 sed -i -r "/^(user|root|sshd|$CONTAINER_USER|nobody)/!d" /etc/group
 sed -i -r "/^(user|root|sshd|$CONTAINER_USER|nobody)/!d" /etc/passwd
 
-if [[ $CONTAINER_USER != "clamav" ]]
+if [ "$CONTAINER_USER" != "clamav" ]
 then
 	echo "Remove existing crontabs, if any."
 	rm -fr /var/spool/cron \
@@ -49,13 +49,13 @@ find $sysdirs -xdev -type d \
   -exec chown root:root {} \; \
   -exec chmod 0755 {} \;
 
-if [[ $CONTAINER_USER == "clamav"]]
+if [ "$CONTAINER_USER" == "clamav" ]
 then
 	echo "changing clamav folder ownership"
 	chown -R clamav:clamav /etc/clamav
 fi
 
-if [[ $CONTAINER_USER == "www-data" ]]
+if [ "$CONTAINER_USER" == "www-data" ]
 then
 	echo "Putting back ownership of php-fpm.d for $CONTAINER_USER"
 	chown -R $CONTAINER_USER:$CONTAINER_USER /usr/local/etc/php-fpm.d
@@ -105,13 +105,13 @@ echo "Remove fstab since we do not need it."
 rm -f /etc/fstab
 
 
-if [[ ${CONTAINER_USER} == "htmltopdf" ]]
+if [ "${CONTAINER_USER}" == "gotenberg" ]
 then
 	echo "Remove all but a handful of admin commands."
 	find /sbin /usr/sbin ! -type d -a ! -name apk -a ! -name ln ! -name crond -delete
 fi
 
-if [[ ${CONTAINER_USER} == "www-data" ]]
+if [ "${CONTAINER_USER}" == "www-data" ]
 then
 	find /sbin /usr/sbin ! -type d -a ! -name apk -a ! -name ln -delete
 fi

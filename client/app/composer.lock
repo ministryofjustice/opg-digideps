@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "38455cc571282dde97abe40653e98f23",
+    "content-hash": "f6d596f12e5177bbed19b794bf84993e",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -342,15 +342,15 @@
             "dist": {
                 "type": "path",
                 "url": "../../common",
-                "reference": "7922835f34b5fdb95071e0eed2d556ff7b90e5b4"
+                "reference": "bf28394ce0e7867e7633d70161fa88edae9db3ba"
             },
             "require": {
                 "jms/serializer-bundle": "^5.5.2",
-                "monolog/monolog": "^3.12.0",
-                "symfony/form": "^6.4.46",
-                "symfony/security-core": "^6.4.49",
+                "monolog/monolog": "^3.12.1",
+                "symfony/form": "^6.4.47",
+                "symfony/security-core": "^6.4.50",
                 "symfony/uid": "^6.4.48",
-                "symfony/validator": "^6.4.47"
+                "symfony/validator": "^6.4.48"
             },
             "require-dev": {
                 "dg/bypass-finals": "^1.11.0",
@@ -380,7 +380,7 @@
                     "phpstan --memory-limit=512M"
                 ],
                 "tests:unit": [
-                    "phpunit"
+                    "phpunit --testsuite=unit"
                 ],
                 "tests:serialise": [
                     "phpunit --testsuite=serialise"
@@ -12525,6 +12525,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
+        "ext-curl": "*",
         "ext-dom": "*",
         "ext-openssl": "*",
         "ext-zip": "*"
