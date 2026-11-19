@@ -14,7 +14,10 @@ class ClientDto
     private ?\DateTime $archivedAt = null;
     private ?\DateTime $deletedAt = null;
     private int $reportCount = 0;
-    private ?array $reports = null;
+
+    /** @var array<ReportDto> */
+    private array $reports = [];
+
     private Organisation|OrganisationDto|array|null $organisation = null;
     private ?DeputyDto $deputy = null;
     private ?array $deputies = null;
@@ -130,6 +133,9 @@ class ClientDto
         return $this;
     }
 
+    /**
+     * @param array<ReportDto> $reports
+     */
     public function setReports(array $reports): static
     {
         $this->reports = $reports;

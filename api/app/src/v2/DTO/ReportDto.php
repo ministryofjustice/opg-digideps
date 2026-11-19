@@ -80,7 +80,7 @@ class ReportDto
         return $this;
     }
 
-    public function setSubmitted(bool $submitted): static
+    public function setSubmitted(?bool $submitted): static
     {
         $this->submitted = $submitted;
 
@@ -94,14 +94,14 @@ class ReportDto
         return $this;
     }
 
-    public function setSubmitDate(\DateTime $submitDate): static
+    public function setSubmitDate(?\DateTime $submitDate): static
     {
         $this->submitDate = $submitDate;
 
         return $this;
     }
 
-    public function setUnSubmitDate(\DateTime $unSubmitDate): static
+    public function setUnSubmitDate(?\DateTime $unSubmitDate): static
     {
         $this->unSubmitDate = $unSubmitDate;
 

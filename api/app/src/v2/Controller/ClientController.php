@@ -10,6 +10,7 @@ use OPG\Digideps\Backend\v2\Assembler\OrganisationAssembler;
 use OPG\Digideps\Backend\v2\Transformer\ClientTransformer;
 use OPG\Digideps\Backend\v2\Transformer\OrganisationTransformer;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -27,20 +28,19 @@ class ClientController extends RestController
         private readonly OrganisationAssembler $orgAssembler,
         private readonly ClientTransformer $clientTransformer,
         private readonly OrganisationTransformer $orgTransformer,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        private readonly LoggerInterface $logger
     ) {
         parent::__construct($em);
     }
 
-    #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Route(path: '/{id}/old', requirements: ['id' => '\d+'], methods: ['GET'])]
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_DEPUTY')"))]
-    public function getById(int $id): JsonResponse
+    public function getByIdOld(int $id): JsonResponse
     {
         if (null === ($data = $this->repository->getArrayById($id))) {
             throw new NotFoundHttpException(sprintf('Client id %s not found', $id));
         }
-
-        error_log("++++++++++++++++++++++++++++++++++\n" . print_r($data, true));
 
         $dto = $this->clientAssembler->assembleFromArray($data);
 
@@ -51,7 +51,42 @@ class ClientController extends RestController
             $transformedOrg = $this->orgTransformer->transform($orgDto, ['total_user_count', 'total_client_count', 'users', 'clients']);
         }
 
-        $transformedDto = $this->clientTransformer->transform($dto, [], $transformedOrg);
+        $transformedDto = $this->clientTransformer->transform($dto);
+
+        /* @var Client $client */
+        $client = $this->findEntityBy(Client::class, $transformedDto['id']);
+
+        if (!$this->isGranted('view', $client)) {
+            if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
+                throw $this->createAccessDeniedException('Client does not belong to user');
+            }
+        }
+
+        return $this->buildSuccessResponse($transformedDto);
+    }
+
+    #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_DEPUTY')"))]
+    public function getById(int $id): JsonResponse
+    {
+        $client = $this->repository->getEntityById($id);
+
+        if ($client === null) {
+            throw new NotFoundHttpException(sprintf('Client id %s not found', $id));
+        }
+
+        // TO REMOVE
+        $data = $this->repository->getArrayById($id);
+        $this->logger->error("\n>>>>>>>>>>>>>>>>>>>>>>> ORIGINAL ENTITY \n" . json_encode($data, JSON_PRETTY_PRINT) . "<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
+        // TO REMOVE
+
+        $dto = $this->clientAssembler->assembleFromEntity($client);
+
+        $transformedDto = $this->clientTransformer->transform($dto);
+
+        // TO REMOVE
+        $this->logger->error("\n>>>>>>>>>>>>>>>>>>>>>>> TARGET ENTITY \n" . json_encode($transformedDto, JSON_PRETTY_PRINT) . "<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
+        // TO REMOVE
 
         /* @var Client $client */
         $client = $this->findEntityBy(Client::class, $transformedDto['id']);
@@ -81,8 +116,11 @@ class ClientController extends RestController
             throw $this->createAccessDeniedException('Cannot access archived reports');
         }
 
-        /* @var $client Client */
-        $client = $this->findEntityBy(Client::class, $transformedDto['id']);
+        /** @var int $clientId */
+        $clientId = $transformedDto['id'] ?? 0;
+
+        /* @var ?Client $client */
+        $client = $this->findEntityBy(Client::class, $clientId);
 
         if (!$this->isGranted('view', $client)) {
             if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
