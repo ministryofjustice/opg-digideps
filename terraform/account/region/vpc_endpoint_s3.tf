@@ -68,4 +68,21 @@ data "aws_iam_policy_document" "s3_endpoint" {
       "arn:aws:s3:::digideps*/*"
     ]
   }
+
+  statement {
+    sid    = "AllowAmazonRepo"
+    effect = "Allow"
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    actions = [
+      "s3:GetObject",
+      "s3:ListBucket"
+    ]
+    resources = [
+      "arn:aws:s3:::al2023-repos-eu-west-1-de612dc2",
+      "arn:aws:s3:::al2023-repos-eu-west-1-de612dc2/*"
+    ]
+  }
 }
