@@ -679,20 +679,21 @@ class Client
 
     public function getOrganisation(): ?Organisation
     {
-        if ($this->organisation === null) {
-            foreach ($this->getActiveCourtOrders() as $courtOrder) {
-                $organisation = $courtOrder->getOrganisation();
-                if ($organisation !== null) {
-                    return $organisation;
+        $organisations = [];
+        foreach ($this->getActiveCourtOrders() as $order) {
+            foreach ($order->getActiveDeputies() as $deputy) {
+                $organisation = $deputy->getOrganisation();
+                if ($organisation !== null && $organisation->isActivated()) {
+                    $organisations[$organisation->getId()] = $organisation;
                 }
             }
         }
-        return $this->organisation;
+        return array_values($organisations)[0] ?? null;
     }
 
     public function setOrganisation(?Organisation $organisation): static
     {
-        $this->organisation = $organisation;
+        //$this->organisation = $organisation;
 
         return $this;
     }
