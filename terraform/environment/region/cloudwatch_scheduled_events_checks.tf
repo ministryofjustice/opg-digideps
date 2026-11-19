@@ -271,36 +271,6 @@ resource "aws_cloudwatch_event_target" "lay_csv_processing_check" {
   )
 }
 
-# Org CSV Processing Check
-
-resource "aws_cloudwatch_event_rule" "org_csv_processing_check" {
-  name                = "check-org-csv-processing-${terraform.workspace}"
-  description         = "Execute the Org CSV user processing check for ${terraform.workspace}"
-  schedule_expression = "cron(16 09 * * ? *)"
-  is_enabled          = var.account.environment.is_production == 1 ? true : false
-}
-
-
-resource "aws_cloudwatch_event_target" "org_csv_processing_check" {
-  target_id = "check-org-csv-processing-${terraform.workspace}"
-  arn       = data.aws_lambda_function.monitor_notify_lambda.arn
-  rule      = aws_cloudwatch_event_rule.org_csv_processing_check.name
-  input = jsonencode(
-    {
-      scheduled-event-detail = {
-        job-name                   = "org_csv_processing_check"
-        log-group                  = terraform.workspace,
-        log-entries                = ["org_csv_processing"],
-        search-timespan            = "24 hours",
-        bank-holidays              = "true",
-        channel-identifier-absent  = "team",
-        channel-identifier-success = "scheduled-jobs",
-        channel-identifier-failure = "team"
-      }
-    }
-  )
-}
-
 # Resubmit re-submittable error checklists check
 
 resource "aws_cloudwatch_event_rule" "resubmit_error_checklists_check" {

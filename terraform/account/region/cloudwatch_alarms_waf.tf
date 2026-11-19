@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_log_metric_filter" "waf_blocked_requests" {
   name           = "WAFBlockedRequests.${var.account.name}"
-  log_group_name = "aws-waf-logs-production"
+  log_group_name = "aws-waf-logs-${var.account.name}"
 
   pattern = "{ $.action = \"BLOCK\" }"
 
