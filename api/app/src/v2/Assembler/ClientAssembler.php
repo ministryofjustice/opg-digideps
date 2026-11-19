@@ -6,6 +6,7 @@ namespace OPG\Digideps\Backend\v2\Assembler;
 
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\v2\Assembler\Report\ReportSummaryAssembler;
 use OPG\Digideps\Backend\v2\DTO\ClientDto;
 use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
@@ -20,7 +21,6 @@ class ClientAssembler
     public function __construct(
         private readonly ReportSummaryAssembler $reportDtoAssembler,
         private readonly DeputyAssembler $deputyAssembler,
-        private readonly OrganisationAssembler $orgAssembler,
     ) {
     }
 
@@ -94,12 +94,11 @@ class ClientAssembler
             $dto->setDeputy($this->deputyAssembler->assembleFromEntity($deputy));
         }
 
-        $org = $client->getOrganisation();
-
-        if ($org !== null) {
-            $orgDto = $this->orgAssembler->assembleFromEntity($org);
-            $dto->setOrganisation($orgDto);
+        $users = [];
+        foreach ($client->getUsers() as $user) {
+            $users[] = $this->assembleClientDeputyFromEntity($user);
         }
+        $dto->setDeputies($users);
 
         return $dto;
     }
@@ -140,5 +139,31 @@ class ClientAssembler
         }
 
         return $dtos;
+    }
+
+    // built here rather than via UserAssembler, which depends on this class
+    private function assembleClientDeputyFromEntity(User $user): UserDto
+    {
+        $dto = new UserDto();
+
+        $this->setPropertiesFromData($dto, [
+            'id' => $user->getId(),
+            'firstName' => $user->getFirstname(),
+            'lastName' => $user->getLastname(),
+            'email' => $user->getEmail(),
+            'roleName' => $user->getRoleName(),
+            'address1' => $user->getAddress1(),
+            'address2' => $user->getAddress2(),
+            'address3' => $user->getAddress3(),
+            'addressPostcode' => $user->getAddressPostcode(),
+            'addressCountry' => $user->getAddressCountry(),
+            'active' => $user->getActive(),
+            'jobTitle' => $user->getJobTitle(),
+            'phoneMain' => $user->getPhoneMain(),
+            'lastLoggedIn' => $user->getLastLoggedIn(),
+            'deputyUid' => $user->getDeputyUid(),
+        ]);
+
+        return $dto;
     }
 }

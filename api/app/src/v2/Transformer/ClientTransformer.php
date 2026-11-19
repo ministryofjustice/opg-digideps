@@ -4,7 +4,6 @@ namespace OPG\Digideps\Backend\v2\Transformer;
 
 use OPG\Digideps\Backend\v2\DTO\ClientDto;
 use OPG\Digideps\Backend\v2\DTO\DeputyDto;
-use OPG\Digideps\Backend\v2\DTO\OrganisationDto;
 use OPG\Digideps\Backend\v2\DTO\ReportDto;
 use OPG\Digideps\Backend\v2\DTO\UserDto;
 
@@ -13,11 +12,10 @@ class ClientTransformer
     public function __construct(
         private readonly ReportTransformer $reportTransformer,
         private readonly DeputyTransformer $deputyTransformer,
-        private readonly OrganisationTransformer $organisationTransformer,
     ) {
     }
 
-    public function transform(ClientDto $dto, array $exclude = []): array
+    public function transform(ClientDto $dto, array $exclude = [], ?array $org = null): array
     {
         $transformed = [
             'id' => $dto->getId(),
@@ -34,8 +32,8 @@ class ClientTransformer
             $transformed['reports'] = $this->transformReports($dto->getReports());
         }
 
-        if (!in_array('organisation', $exclude) && $dto->getOrganisation() instanceof OrganisationDto) {
-            $transformed['organisation'] = $this->organisationTransformer->transform($dto->getOrganisation(), ['total_user_count', 'total_client_count', 'users', 'clients']);
+        if (!in_array('organisation', $exclude) && $org !== null) {
+            $transformed['organisation'] = $org;
         }
 
         if (!in_array('deputy', $exclude) && $dto->getDeputy() instanceof DeputyDto) {
