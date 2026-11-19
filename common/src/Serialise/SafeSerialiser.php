@@ -16,10 +16,11 @@ final readonly class SafeSerialiser
     /**
      * @template T of object
      * @param class-string<T> $class
-     * @return T|null
+     * @return T
      */
-    public function deserialise(string $class, string $serialised): ?object
+    public function deserialise(string $class, string $serialised): object
     {
+        $object = null;
         if ($this->register()) {
             $object = \unserialize($serialised);
             if (!$this->unregister()) {
@@ -32,7 +33,8 @@ final readonly class SafeSerialiser
                 return $object;
             }
         }
-        return null;
+        $got = get_debug_type($object);
+        throw new \TypeError("Failed to deserialise into the desired type {$class}, got {$got}");
     }
 
     private function callback(string $class): void
