@@ -32,6 +32,14 @@ data "aws_iam_policy_document" "ecs_task_logs" {
       "logs:PutLogEvents"
     ]
   }
+
+  statement {
+    effect  = "Allow"
+    actions = ["kms:GenerateDataKey"]
+    resources = [
+      data.aws_kms_alias.cloudwatch_application_logs_encryption.arn,
+    ]
+  }
 }
 
 data "aws_iam_role" "ecs_autoscaling_service_role" {
