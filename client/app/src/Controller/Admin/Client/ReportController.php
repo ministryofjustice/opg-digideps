@@ -21,6 +21,7 @@ use OPG\Digideps\Frontend\Form\Admin\ManageReportConfirmType;
 use OPG\Digideps\Frontend\Form\Admin\ManageSubmittedReportType;
 use OPG\Digideps\Frontend\Form\Admin\ReportChecklistType;
 use OPG\Digideps\Frontend\Form\Admin\ReviewChecklistType;
+use OPG\Digideps\Frontend\Form\Report\ReportRestoreType;
 use OPG\Digideps\Frontend\Report\ReportSectionService;
 use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
@@ -613,10 +614,27 @@ class ReportController extends AbstractController
     }
 
     #[Route(path: 'restore', name: 'admin_report_restore')]
+    #[Template('@App/Admin/Client/Report/restore.html.twig')]
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
-    public function restoreAction(Request $request, int $id): Response
+    public function restoreAction(Request $request, int $id): array
     {
-        $replacementReportId = $request->query->getInt('restoreFromReportId');
-        return new Response("report replacement confirmation page here; replace {$id} with {$replacementReportId}");
+        $form = $this->createRenderableForm(
+            ReportRestoreType::class,
+            $this->generateUrl('admin_report_restore', ['id' => $id]),
+            [
+                'replaceableReportId' => $id,
+                'restoreFromReportId' => $request->query->getInt('restoreFromReportId')
+            ]
+        );
+
+        if ($form->handleRequest($request)) {
+            // confirm was clicked so send request to restore the report
+        }
+
+        // "report replacement confirmation page here; replace {$id} with {$replacementReportId}"
+
+        return [
+            'form' => $form->render()
+        ];
     }
 }

@@ -170,6 +170,10 @@ opg:
       number: Account number
       joint: Joint account
       closed: Closed
+  report:
+    restore:
+      confirm:
+        label: Confirm
   review:
     reportHeader:
       title: Deputy report for %reportTypeHeading% decisions
