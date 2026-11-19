@@ -21,7 +21,10 @@ class PossibleReportReplacement implements \JsonSerializable
     ) {
     }
 
-    public function jsonSerialize(): mixed
+    /**
+     * @return array{replaceReport: int, withReport: int}
+     */
+    public function jsonSerialize(): array
     {
         return [
             'replaceReport' => $this->replaceReport->getId(),
