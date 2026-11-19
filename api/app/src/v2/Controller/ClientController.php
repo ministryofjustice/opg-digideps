@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\v2\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Controller\RestController;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Repository\ClientRepository;
@@ -9,7 +12,6 @@ use OPG\Digideps\Backend\v2\Assembler\ClientAssembler;
 use OPG\Digideps\Backend\v2\Assembler\OrganisationAssembler;
 use OPG\Digideps\Backend\v2\Transformer\ClientTransformer;
 use OPG\Digideps\Backend\v2\Transformer\OrganisationTransformer;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -32,37 +34,6 @@ class ClientController extends RestController
         parent::__construct($em);
     }
 
-    #[Route(path: '/{id}/old', requirements: ['id' => '\d+'], methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_DEPUTY')"))]
-    public function getByIdOld(int $id): JsonResponse
-    {
-        if (null === ($data = $this->repository->getArrayById($id))) {
-            throw new NotFoundHttpException(sprintf('Client id %s not found', $id));
-        }
-
-        $dto = $this->clientAssembler->assembleFromArray($data);
-
-        $transformedOrg = null;
-
-        if (isset($data['organisation'])) {
-            $orgDto = $this->orgAssembler->assembleFromArray($data['organisation']);
-            $transformedOrg = $this->orgTransformer->transform($orgDto, ['total_user_count', 'total_client_count', 'users', 'clients']);
-        }
-
-        $transformedDto = $this->clientTransformer->transform($dto, [], $transformedOrg);
-
-        /* @var Client $client */
-        $client = $this->findEntityBy(Client::class, $transformedDto['id']);
-
-        if (!$this->isGranted('view', $client)) {
-            if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
-                throw $this->createAccessDeniedException('Client does not belong to user');
-            }
-        }
-
-        return $this->buildSuccessResponse($transformedDto);
-    }
-
     #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_DEPUTY')"))]
     public function getById(int $id): JsonResponse
@@ -70,7 +41,13 @@ class ClientController extends RestController
         $client = $this->repository->getEntityById($id);
 
         if ($client === null) {
-            throw new NotFoundHttpException(sprintf('Client id %s not found', $id));
+            throw new NotFoundHttpException("Client id {$id} not found");
+        }
+
+        if (!$this->isGranted('view', $client)) {
+            if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
+                throw $this->createAccessDeniedException('Client does not belong to user');
+            }
         }
 
         $dto = $this->clientAssembler->assembleFromEntity($client);
@@ -85,15 +62,6 @@ class ClientController extends RestController
         }
 
         $transformedDto = $this->clientTransformer->transform($dto, [], $transformedOrg);
-
-        /* @var Client $client */
-        $client = $this->findEntityBy(Client::class, $transformedDto['id']);
-
-        if (!$this->isGranted('view', $client)) {
-            if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
-                throw $this->createAccessDeniedException('Client does not belong to user');
-            }
-        }
 
         return $this->buildSuccessResponse($transformedDto);
     }
