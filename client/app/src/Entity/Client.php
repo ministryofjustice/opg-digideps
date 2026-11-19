@@ -228,6 +228,8 @@ class Client
     // 'withReport' can be restored over the top of 'replaceReport' wrt this client
     /** @var array<array{replaceReport: int, withReport: int}> $possibleReportReplacements */
     #[JMS\Type('array<array<string, int>>')]
+    #[JMS\Groups(['client'])]
+    #[JMS\SerializedName('possible_report_replacements')]
     public array $possibleReportReplacements = [];
 
     /**
