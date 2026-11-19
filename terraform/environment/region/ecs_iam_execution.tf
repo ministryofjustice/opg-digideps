@@ -116,6 +116,14 @@ data "aws_iam_policy_document" "execution_role" {
       data.aws_kms_alias.secretmanager.target_key_arn,
     ]
   }
+
+  statement {
+    effect  = "Allow"
+    actions = ["kms:GenerateDataKey"]
+    resources = [
+      data.aws_kms_alias.cloudwatch_application_logs_encryption.arn,
+    ]
+  }
 }
 
 locals {
