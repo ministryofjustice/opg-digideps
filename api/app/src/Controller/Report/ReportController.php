@@ -21,6 +21,8 @@ use OPG\Digideps\Backend\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
+use OPG\Digideps\Common\Report\ReportReplacement;
+use OPG\Digideps\Common\Report\ReportRestoreResponse;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -900,5 +902,20 @@ class ReportController extends RestController
         $this->em->flush();
 
         return $report;
+    }
+
+    /*
+     * Restore one report over the top of another.
+     * This actually swaps the court orders between the two reports.
+     */
+    #[Route(path: '/restore', methods: ['POST'])]
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function restore(Request $request): ReportRestoreResponse
+    {
+        $reportReplacement = ReportReplacement::jsonDeserialize((string)$request->getContent());
+
+        // TODO check reports can be swapped, do the swap
+
+        return new ReportRestoreResponse(true);
     }
 }
