@@ -837,7 +837,7 @@ class Client
                         && ($activeReportType->courtOrderType === CourtOrderType::PFA || $activeReportType->courtOrderKind === CourtOrderKind::Hybrid)
                     )
                 ) {
-                    $possibleReplacements[] = new ReportReplacement($activeReport, $candidateReplacementReport);
+                    $possibleReplacements[] = new ReportReplacement($activeReport->getId(), $candidateReplacementReport->getId());
                 }
             }
         }
