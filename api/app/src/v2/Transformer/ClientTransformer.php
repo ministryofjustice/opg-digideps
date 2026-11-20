@@ -2,11 +2,11 @@
 
 namespace OPG\Digideps\Backend\v2\Transformer;
 
-use OPG\Digideps\Backend\Entity\ReportReplacement;
 use OPG\Digideps\Backend\v2\DTO\ClientDto;
 use OPG\Digideps\Backend\v2\DTO\DeputyDto;
 use OPG\Digideps\Backend\v2\DTO\ReportDto;
 use OPG\Digideps\Backend\v2\DTO\UserDto;
+use OPG\Digideps\Common\Report\ReportReplacement;
 
 class ClientTransformer
 {

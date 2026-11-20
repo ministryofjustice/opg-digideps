@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Backend\Entity;
+namespace OPG\Digideps\Common\Report;
 
 /**
  * A pair of reports, where $replaceReport is the report which could be replaced,
