@@ -14,7 +14,7 @@ use OPG\Digideps\Frontend\Components\OPG\Renderable\Div;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
-use OPG\Digideps\Frontend\Form\Report\ReportRestoreType;
+use OPG\Digideps\Frontend\Form\Admin\ReportRestoreType;
 use OPG\Digideps\Frontend\Twig\Filters;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -54,7 +54,8 @@ final class ClientDetails
             'closed',
             $userIsSuperAdmin,
             needsManageLink: false,
-            possibleReportReplacements: $client->possibleReportReplacements
+            possibleReportReplacements: $client->possibleReportReplacements,
+            clientId: $client->getId()
         );
     }
 
@@ -141,7 +142,8 @@ final class ClientDetails
         bool $userIsSuperAdmin = false,
         bool $needsManageLink = true,
         bool $needsSubmittedColumn = false,
-        array $possibleReportReplacements = []
+        array $possibleReportReplacements = [],
+        ?int $clientId = null
     ): ?Table {
         if (empty($reports)) {
             return null;
@@ -195,7 +197,11 @@ final class ClientDetails
             if ($replaceableReportId !== null) {
                 $replaceRestoreUrl = $this->urlGenerator->generate(
                     'admin_report_restore',
-                    ['id' => $replaceableReportId, ReportRestoreType::RESTORE_FROM_REPORT_ID => $reportId]
+                    [
+                        'id' => $replaceableReportId,
+                        ReportRestoreType::RESTORE_FROM_REPORT_ID => $reportId,
+                        ReportRestoreType::CLIENT_ID => $clientId
+                    ]
                 );
                 $links[] = new Link(href: $replaceRestoreUrl, text: $this->text['actions.restore']);
             }

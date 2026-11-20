@@ -2,23 +2,22 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Frontend\Form\Report;
+namespace OPG\Digideps\Frontend\Form\Admin;
 
 use OPG\Digideps\Frontend\Form\Component\AbstractFormType;
-use OPG\Digideps\Frontend\Form\Component\Constraints;
 use OPG\Digideps\Frontend\Form\Component\HiddenInput;
 use OPG\Digideps\Frontend\Form\Component\SubmitButton;
-use Symfony\Component\Validator\Constraints\Positive;
-use Symfony\Component\Validator\Constraints\Type;
 
 class ReportRestoreType extends AbstractFormType
 {
     public const string RESTORE_FROM_REPORT_ID = 'restoreFromReportId';
+    public const string CLIENT_ID = 'clientId';
 
     protected function defineInputs(callable $t): array
     {
         return [
-            new HiddenInput(self::RESTORE_FROM_REPORT_ID, new Constraints(new Type('integer'), new Positive())),
+            new HiddenInput(self::RESTORE_FROM_REPORT_ID),
+            new HiddenInput(self::CLIENT_ID),
             new SubmitButton('submit', $t('confirm.label'))
         ];
     }
