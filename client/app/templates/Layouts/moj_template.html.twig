@@ -5,7 +5,7 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 
     <title>
-        {% if form is defined and not form.vars.valid %}Error: {% endif %}{% block htmlTitle %}Deputy report{% endblock %}
+        {% if form is defined and ((form.view is defined and not form.view.vars.valid) or (form.vars is defined and not form.vars.valid)) %}Error: {% endif %}{% block htmlTitle %}Deputy report{% endblock %}
     </title>
 
     {% block link %}
