@@ -8,14 +8,11 @@ use Aws\Command;
 use Aws\Exception\AwsException;
 use Aws\Result;
 use GuzzleHttp\Exception\TransferException;
-use JoliCode\Slack\Api\Client;
-use JoliCode\Slack\Exception\SlackErrorResponse;
 use OPG\Digideps\Frontend\Command\CheckCSVUploadedCommand;
 use OPG\Digideps\Frontend\Service\Audit\AwsAuditLogHandler;
 use OPG\Digideps\Frontend\Service\Client\GovUK\BankHolidaysAPIClient;
-use OPG\Digideps\Frontend\Service\Client\Slack\ClientFactory;
-use OPG\Digideps\Frontend\Service\SecretManagerService;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
+use PHPUnit\Framework\Constraint\RegularExpression;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -24,20 +21,17 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class CheckCSVUploadedCommandTest extends KernelTestCase
 {
-    private const string NO_UPLOAD_MESSAGE_REGEX = '/:cat_spin: The (LAY|ORG) CSV has not been uploaded within the past 24 hours/';
+    private const string NO_UPLOAD_MESSAGE_REGEX = '/\\[CheckCSVUploadedCommand\\] - The (LAY|ORG) CSV has not been uploaded within the past 24 hours/';
 
     private BankHolidaysAPIClient&MockObject $bankHolidayAPI;
     private DateTimeProvider&MockObject $dateTimeProvider;
     private AwsAuditLogHandler&MockObject $awsAuditLogHandler;
-    private SecretManagerService&MockObject $secretManagerService;
-    private ClientFactory&MockObject $slackClientFactory;
     private LoggerInterface&MockObject $logger;
     private \DateTime $now;
 
     private CommandTester $commandTester;
 
     private string $auditLogGroupName;
-    private string $slackSecret;
 
     private array $supportedCSVs = [
         CheckCSVUploadedCommand::LAY_CSV,
@@ -52,16 +46,12 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->bankHolidayAPI = self::createMock(BankHolidaysAPIClient::class);
         $this->dateTimeProvider = self::createMock(DateTimeProvider::class);
         $this->awsAuditLogHandler = self::createMock(AwsAuditLogHandler::class);
-        $this->secretManagerService = self::createMock(SecretManagerService::class);
-        $this->slackClientFactory = self::createMock(ClientFactory::class);
         $this->logger = self::createMock(LoggerInterface::class);
         $this->auditLogGroupName = '/something/logs';
 
         $sut = new CheckCSVUploadedCommand(
             $this->bankHolidayAPI,
             $this->dateTimeProvider,
-            $this->secretManagerService,
-            $this->slackClientFactory,
             $this->awsAuditLogHandler,
             $this->logger,
             $this->auditLogGroupName
@@ -76,7 +66,6 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->commandTester = new CommandTester($command);
 
         $this->now = new \DateTime();
-        $this->slackSecret = 'AFAKETOKEN';
     }
 
     public function testExecuteOnNonBankHolidaysWhenAllCSVsHaveBeenUploadedSlackIsNotPostedTo(): void
@@ -88,9 +77,6 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             CheckCSVUploadedCommand::ORG_CSV,
         ]);
 
-        $this->secretManagerService->expects(self::never())->method('getSecret');
-        $this->slackClientFactory->expects(self::never())->method('createClient');
-
         $result = $this->commandTester->execute([]);
 
         self::assertEquals(0, $result, sprintf('Expected command to return 0, got %d', $result));
@@ -101,8 +87,6 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(true);
 
         $this->awsAuditLogHandler->expects(self::never())->method('getLogEventsByLogStream');
-        $this->secretManagerService->expects(self::never())->method('getSecret');
-        $this->slackClientFactory->expects(self::never())->method('createClient');
 
         $result = $this->commandTester->execute([]);
 
@@ -114,28 +98,9 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(false);
 
-        $this->secretManagerService->expects(self::atLeastOnce())
-            ->method('getSecret')
-            ->with('opg-response-slack-token')
-            ->willReturn($this->slackSecret);
-
-        $slackClient = self::createMock(Client::class);
-
-        $slackClient->expects(self::exactly(2))
-            ->method('chatPostMessage')
-            ->willReturnCallback(function (array $params) {
-                /** @var string $text */
-                $text = $params['text'];
-
-                self::assertEquals('opg-alerts', $params['username']);
-                self::assertEquals('opg-digideps-team', $params['channel']);
-                self::assertMatchesRegularExpression(self::NO_UPLOAD_MESSAGE_REGEX, $text);
-            });
-
-        $this->slackClientFactory->expects(self::atLeast(1))
-            ->method('createClient')
-            ->with($this->slackSecret)
-            ->willReturn($slackClient);
+        $this->logger->expects(self::exactly(2))
+            ->method('error')
+            ->with(new RegularExpression(self::NO_UPLOAD_MESSAGE_REGEX));
 
         $result = $this->commandTester->execute([]);
 
@@ -147,24 +112,9 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(true, [CheckCSVUploadedCommand::ORG_CSV]);
 
-        $this->secretManagerService->expects(self::once())
-            ->method('getSecret')
-            ->with('opg-response-slack-token')
-            ->willReturn($this->slackSecret);
-
-        $slackClient = self::createMock(Client::class);
-        $slackClient->expects(self::once())
-            ->method('chatPostMessage')
-            ->with([
-              'username' => 'opg-alerts',
-              'channel' => 'opg-digideps-team',
-              'text' => ':cat_spin: The LAY CSV has not been uploaded within the past 24 hours',
-            ]);
-
-        $this->slackClientFactory->expects(self::once())
-            ->method('createClient')
-            ->with($this->slackSecret)
-            ->willReturn($slackClient);
+        $this->logger->expects(self::once())
+            ->method('error')
+            ->with('[CheckCSVUploadedCommand] - The LAY CSV has not been uploaded within the past 24 hours');
 
         $result = $this->commandTester->execute([]);
 
@@ -176,27 +126,9 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->aCsvUploadedEventExists(true);
 
-        $this->secretManagerService->expects(self::atLeastOnce())
-            ->method('getSecret')
-            ->with('opg-response-slack-token')
-            ->willReturn($this->slackSecret);
-
-        $slackClient = self::createMock(Client::class);
-        $slackClient->expects(self::exactly(2))
-            ->method('chatPostMessage')
-            ->willReturnCallback(function (array $params) {
-                /** @var string $text */
-                $text = $params['text'];
-
-                self::assertEquals('opg-alerts', $params['username']);
-                self::assertEquals('opg-digideps-team', $params['channel']);
-                self::assertMatchesRegularExpression(self::NO_UPLOAD_MESSAGE_REGEX, $text);
-            });
-
-        $this->slackClientFactory->expects(self::atLeastOnce())
-            ->method('createClient')
-            ->with($this->slackSecret)
-            ->willReturn($slackClient);
+        $this->logger->expects(self::exactly(2))
+            ->method('error')
+            ->with(new RegularExpression(self::NO_UPLOAD_MESSAGE_REGEX));
 
         $result = $this->commandTester->execute([]);
 
@@ -208,65 +140,9 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->todayIsABankHoliday(false);
         $this->cannotRetrieveAuditLogs();
 
-        $this->secretManagerService->expects(self::once())
-            ->method('getSecret')
-            ->with('opg-response-slack-token')
-            ->willReturn($this->slackSecret);
-
-        $slackClient = self::createMock(Client::class);
-        $slackClient->expects(self::once())
-            ->method('chatPostMessage')
-            ->with([
-                'username' => 'opg-alerts',
-                'channel' => 'opg-digideps-devs',
-                'text' => 'Failed to retrieve audit logs during CSV upload check. Error message: The service cannot complete the request.',
-            ]);
-
-        $this->slackClientFactory->expects(self::once())
-            ->method('createClient')
-            ->with($this->slackSecret)
-            ->willReturn($slackClient);
-
-        $result = $this->commandTester->execute([]);
-
-        self::assertEquals(1, $result, sprintf('Expected command to return 1, got %d', $result));
-    }
-
-    public function testExecuteErrorIsLoggedIfSlackPostIsNotSuccessful(): void
-    {
-        $this->todayIsABankHoliday(false);
-        $this->cannotRetrieveAuditLogs();
-
-        $this->secretManagerService->expects(self::once())
-            ->method('getSecret')
-            ->with('opg-response-slack-token')
-            ->willReturn($this->slackSecret);
-
-        $slackClient = self::createMock(Client::class);
-
-        $slackClient->expects(self::once())
-            ->method('chatPostMessage')
-            ->willThrowException(new SlackErrorResponse('500', null));
-
-        $this->slackClientFactory->expects(self::once())
-            ->method('createClient')
-            ->with($this->slackSecret)
-            ->willReturn($slackClient);
-
-
-        $expectations = [
-            1 => ['notice', 'Posting CSV upload check to slack'],
-            2 => ['error', 'Failed to post to Slack during CSV upload check: Slack returned error code "500"'],
-        ];
-
-        $invocationMatcher = self::exactly(count($expectations));
-        $this->logger->expects($invocationMatcher)
-            ->method('log')
-            ->willReturnCallback(function (string $level, string $message) use ($invocationMatcher, $expectations): void {
-                $invocation = $invocationMatcher->numberOfInvocations();
-                self::assertEquals($level, $expectations[$invocation][0]);
-                self::assertEquals($message, $expectations[$invocation][1]);
-            });
+        $this->logger->expects(self::once())
+            ->method('warning')
+            ->with('[CheckCSVUploadedCommand] - Failed to retrieve audit logs during CSV upload check. Error message: The service cannot complete the request.');
 
         $result = $this->commandTester->execute([]);
 
@@ -285,25 +161,9 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             ->method('getBankHolidays')
             ->willThrowException(new TransferException('Something went wrong oops'));
 
-        $this->secretManagerService->expects(self::once())
-            ->method('getSecret')
-            ->with('opg-response-slack-token')
-            ->willReturn($this->slackSecret);
-
-        $slackClient = self::createMock(Client::class);
-
-        $slackClient->expects(self::once())
-            ->method('chatPostMessage')
-            ->with([
-                'username' => 'opg-alerts',
-                'channel' => 'opg-digideps-devs',
-                'text' => 'Failed to retrieve bank holidays from Gov.uk. Error message: Something went wrong oops',
-            ]);
-
-        $this->slackClientFactory->expects(self::once())
-            ->method('createClient')
-            ->with($this->slackSecret)
-            ->willReturn($slackClient);
+        $this->logger->expects(self::once())
+            ->method('warning')
+            ->with('[CheckCSVUploadedCommand] - Failed to retrieve bank holidays from Gov.uk. Error message: Something went wrong oops');
 
         $result = $this->commandTester->execute([]);
 
