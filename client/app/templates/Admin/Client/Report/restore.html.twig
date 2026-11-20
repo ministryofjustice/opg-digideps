@@ -1,7 +1,7 @@
 {% extends '@App/Layouts/application.html.twig' %}
 
-{% block htmlTitle %}{{ 'htmlTitle' | trans({}, 'register') }}{% endblock %}
-{% block pageTitle %}{{ 'pageTitle' | trans({}, 'register') }}{% endblock %}
+{% block htmlTitle %}{{ 'opg.report.restore.title' | trans({}, 'twig-components') }}{% endblock %}
+{% block pageTitle %}{{ 'opg.report.restore.title' | trans({}, 'twig-components') }}{% endblock %}
 
 {% block pageContent %}
     <twig:Render self="{{ form }}"/>
