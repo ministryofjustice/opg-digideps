@@ -7,6 +7,7 @@ namespace OPG\Digideps\Frontend\Controller\Admin\Client;
 use OPG\Digideps\Common\Report\ReportReplacement;
 use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Common\Validating\ValidationException;
+use OPG\Digideps\Frontend\Admin\ReportService;
 use OPG\Digideps\Frontend\Components\OPG\Review\Section;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Report\Checklist;
@@ -53,6 +54,7 @@ class ReportController extends AbstractController
         private readonly FormFactoryInterface $formFactory,
         private readonly ReportSectionService $reportSectionService,
         private readonly ParameterStoreService $parameterStore,
+        private readonly ReportService $reportService,
     ) {
     }
 
@@ -641,10 +643,9 @@ class ReportController extends AbstractController
                 intval($form->getStringOrThrow(ReportRestoreType::RESTORE_FROM_REPORT_ID))
             );
 
-            // TODO send request to API
+            $restoreResponse = $this->reportService->restoreReport($requestBody);
 
-            $replacementWorked = (bool)array_rand([true, false]);
-            if ($replacementWorked) {
+            if ($restoreResponse->success) {
                 $this->addFlash('notice', 'Report restore complete');
             } else {
                 $this->addFlash('error', 'Report restore failed');
@@ -659,7 +660,7 @@ class ReportController extends AbstractController
             return $this->redirect($redirectUrl);
         }
 
-        // "report replacement confirmation page here; replace {$id} with {$replacementReportId}"
+        // TODO proper text on confirm page
 
         return [
             'form' => $form->render()
