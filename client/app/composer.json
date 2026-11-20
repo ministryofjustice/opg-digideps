@@ -6,7 +6,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.4.27"
+            "php": "8.4.28"
         },
         "allow-plugins": {
             "php-http/discovery": true
