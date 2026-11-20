@@ -760,7 +760,7 @@ class Client
      * 1. possible can replace active if possible's type is pfa or hybrid, and active's type is pfa or hybrid
      * 2. possible can replace active if possible's type is hw and active's type is hw, and neither report is hybrid
      *
-     * @return array<PossibleReportReplacement>
+     * @return array<ReportReplacement>
      */
     #[JMS\VirtualProperty]
     #[JMS\Type("array<array<string, int>>")]
@@ -837,7 +837,7 @@ class Client
                         && ($activeReportType->courtOrderType === CourtOrderType::PFA || $activeReportType->courtOrderKind === CourtOrderKind::Hybrid)
                     )
                 ) {
-                    $possibleReplacements[] = new PossibleReportReplacement($activeReport, $candidateReplacementReport);
+                    $possibleReplacements[] = new ReportReplacement($activeReport, $candidateReplacementReport);
                 }
             }
         }

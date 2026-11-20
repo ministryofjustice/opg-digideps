@@ -13,7 +13,7 @@ use OPG\Digideps\Backend\Entity\Report\Report;
  * This has to be calculated by looking at reports and court orders associated
  * with the client.
  */
-class PossibleReportReplacement implements \JsonSerializable
+class ReportReplacement implements \JsonSerializable
 {
     public function __construct(
         public Report $replaceReport,
