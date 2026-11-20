@@ -7,7 +7,7 @@ namespace Tests\OPG\Digideps\Backend\Unit\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
-use OPG\Digideps\Backend\Entity\PossibleReportReplacement;
+use OPG\Digideps\Backend\Entity\ReportReplacement;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
@@ -200,8 +200,8 @@ final class ClientTest extends TestCase
         $client->setCourtOrders(new ArrayCollection([$hw1, $hw2, $activeHw, $pfa1, $pfa2, $activePfa]));
 
         $expected = [
-            new PossibleReportReplacement($activeHwReport, $hw2Report),
-            new PossibleReportReplacement($activePfaReport, $pfa2Report)
+            new ReportReplacement($activeHwReport, $hw2Report),
+            new ReportReplacement($activePfaReport, $pfa2Report)
         ];
 
         self::assertEquals($expected, $client->findPossibleReportReplacements());
