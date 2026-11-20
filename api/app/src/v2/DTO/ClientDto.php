@@ -3,7 +3,7 @@
 namespace OPG\Digideps\Backend\v2\DTO;
 
 use OPG\Digideps\Backend\Entity\Organisation;
-use OPG\Digideps\Backend\Entity\ReportReplacement;
+use OPG\Digideps\Common\Report\ReportReplacement;
 
 class ClientDto
 {

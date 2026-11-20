@@ -15,6 +15,7 @@ use OPG\Digideps\Backend\Entity\Traits\IsSoftDeleteableEntity;
 use OPG\Digideps\Backend\Repository\ClientRepository;
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\Report\ReportReplacement;
 use OPG\Digideps\Common\Report\ReportType;
 
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
