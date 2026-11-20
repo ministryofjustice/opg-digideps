@@ -2,7 +2,7 @@
 
 namespace OPG\Digideps\Backend\v2\Transformer;
 
-use OPG\Digideps\Backend\Entity\PossibleReportReplacement;
+use OPG\Digideps\Backend\Entity\ReportReplacement;
 use OPG\Digideps\Backend\v2\DTO\ClientDto;
 use OPG\Digideps\Backend\v2\DTO\DeputyDto;
 use OPG\Digideps\Backend\v2\DTO\ReportDto;
@@ -141,7 +141,7 @@ class ClientTransformer
         $transformed = [];
 
         foreach ($possibleReportReplacements as $possibleReportReplacement) {
-            if ($possibleReportReplacement instanceof PossibleReportReplacement) {
+            if ($possibleReportReplacement instanceof ReportReplacement) {
                 $transformed[] = $possibleReportReplacement->jsonSerialize();
             }
         }
