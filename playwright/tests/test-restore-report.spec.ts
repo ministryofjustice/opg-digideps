@@ -2,11 +2,14 @@ import { test } from "@playwright/test";
 import { createFixtureViaApi, getAdminUserFixture, Scenario, setupFixture } from "./fixtures/fixtures";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminClientDetailsPage from "./pages/AdminClientDetailsPage";
+import AdminRestoreReportPage from "./pages/AdminRestoreReportPage";
 
-test("reports are organised according to their status", async ({ page }) => {
+test("a PFA report on a closed court order can be restored over the active PFA report", async ({ page }) => {
   const runTest = async (scenarios: Scenario[]) => {
     console.log(JSON.stringify(scenarios, null, 2));
     const clientId = scenarios[0]["orders"][0]["clientId"];
+    const replaceableReportId = scenarios[1]["orders"][0]["reports"][0]["id"];
+    const restoreFromReportId = scenarios[0]["orders"][0]["reports"][0]["id"];
 
     const adminLoginPage = new AdminLoginPage(page);
     await adminLoginPage.loginAdmin(getAdminUserFixture());
@@ -14,9 +17,12 @@ test("reports are organised according to their status", async ({ page }) => {
     const adminClientDetailsPage = new AdminClientDetailsPage(page, clientId);
     await adminClientDetailsPage.goto();
 
-    // check that the report on the active court order is swappable with
+    // confirm that the report on the active court order is swappable with
     // the report on the closed court order
+    await adminClientDetailsPage.restoreReport("2024-2025");
 
+    const adminRestoreReportPage = new AdminRestoreReportPage(page, replaceableReportId, restoreFromReportId);
+    await adminRestoreReportPage.isExpected();
 
     return Promise.resolve();
   };
