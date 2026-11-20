@@ -622,8 +622,8 @@ class ReportController extends AbstractController
             ReportRestoreType::class,
             $this->generateUrl('admin_report_restore', ['id' => $id]),
             [
-                'replaceableReportId' => $id,
-                'restoreFromReportId' => $request->query->getInt('restoreFromReportId')
+                ReportRestoreType::REPLACEABLE_REPORT_ID => $id,
+                ReportRestoreType::RESTORE_FROM_REPORT_ID => $request->query->getInt('restoreFromReportId')
             ]
         );
 
