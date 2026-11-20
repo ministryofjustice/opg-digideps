@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f6d596f12e5177bbed19b794bf84993e",
+    "content-hash": "64e6081428f66c9f54ce183c5009eaa7",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -342,7 +342,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../common",
-                "reference": "bf28394ce0e7867e7633d70161fa88edae9db3ba"
+                "reference": "c0feeed95ebb3996e625075363717932d2dcf339"
             },
             "require": {
                 "jms/serializer-bundle": "^5.5.2",
@@ -12534,7 +12534,7 @@
         "ext-fileinfo": "*"
     },
     "platform-overrides": {
-        "php": "8.4.27"
+        "php": "8.4.28"
     },
     "plugin-api-version": "2.6.0"
 }
