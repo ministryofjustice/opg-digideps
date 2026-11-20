@@ -217,6 +217,7 @@ opg:
       closed: Closed
   report:
     restore:
+      title: Restore report
       confirm:
         label: Confirm
   review:
