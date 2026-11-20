@@ -38,7 +38,6 @@
         "doctrine/orm": "^3.7.6",
         "fakerphp/faker": "^1.24.1",
         "jms/serializer-bundle": "^5.5.2",
-        "lcobucci/jwt": "^4.3",
         "league/csv": "^9.29.0",
         "monolog/monolog": "^3.12.1",
         "predis/predis": "^3.7.1",

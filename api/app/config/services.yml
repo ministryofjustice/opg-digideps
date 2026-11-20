@@ -52,7 +52,6 @@ services:
             $fixtureParams: "%fixtures%"
             $symfonyEnvironment: "%kernel.environment%"
             $projectDir: "%kernel.project_dir%"
-            $frontendHost: "%env(JWT_HOST)%"
             $workspace: "%workspace%"
             $sessionPrefix: "%env(SESSION_PREFIX)%"
             Predis\ClientInterface: "@predis"
@@ -352,13 +351,6 @@ services:
 
     Aws\SecretsManager\SecretsManagerClient:
         arguments: ["%secrets_manager_client_params%"]
-
-    OPG\Digideps\Backend\Service\SecretManagerService:
-        arguments:
-            [
-                '@Aws\SecretsManager\SecretsManagerClient',
-                "%env(SECRETS_PREFIX)%",
-            ]
 
     Aws\CloudWatchLogs\CloudWatchLogsClient:
         class: Aws\CloudWatchLogs\CloudWatchLogsClient
