@@ -143,10 +143,6 @@ services:
   Aws\SecretsManager\SecretsManagerClient:
     arguments: ["%secrets_manager_client_params%"]
 
-  OPG\Digideps\Frontend\Service\SecretManagerService:
-    arguments:
-      ['@Aws\SecretsManager\SecretsManagerClient', "%env(SECRETS_PREFIX)%"]
-
   OPG\Digideps\Frontend\Sync\Serializer\SiriusDocumentUploadNormalizer:
     tags: ["serializer.normalizer"]
 
