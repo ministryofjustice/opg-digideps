@@ -35,4 +35,14 @@ export default class AdminClientDetailsPage {
     // well as the visible "Period" cell
     await expect(periodCell).toHaveCount(countPeriod);
   }
+
+  async restoreReport(period: string) {
+    await this.page
+      .getByRole("row")
+      .filter({
+        has: this.page.getByRole("cell", { name: period, exact: true }),
+      })
+      .getByRole("link", { name: "Restore report", exact: true })
+      .click();
+  }
 }
