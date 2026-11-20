@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity;
 
-use OPG\Digideps\Backend\Entity\Report\Report;
-
 /**
  * A pair of reports, where $replaceReport is the report which could be replaced,
  * and $withReport is the report which could replace it, for a client.
@@ -16,8 +14,8 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 class ReportReplacement implements \JsonSerializable
 {
     public function __construct(
-        public Report $replaceReport,
-        public Report $withReport
+        public int $replaceReport,
+        public int $withReport
     ) {
     }
 
@@ -27,8 +25,8 @@ class ReportReplacement implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'replaceReport' => $this->replaceReport->getId(),
-            'withReport' => $this->withReport->getId()
+            'replaceReport' => $this->replaceReport,
+            'withReport' => $this->withReport
         ];
     }
 }
