@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Controller\Admin\Client;
 
+use OPG\Digideps\Common\Report\ReportReplacement;
 use OPG\Digideps\Common\Validating\ValidatingArray;
+use OPG\Digideps\Common\Validating\ValidationException;
 use OPG\Digideps\Frontend\Components\OPG\Review\Section;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Report\Checklist;
@@ -20,8 +22,8 @@ use OPG\Digideps\Frontend\Form\Admin\ManageActiveReportType;
 use OPG\Digideps\Frontend\Form\Admin\ManageReportConfirmType;
 use OPG\Digideps\Frontend\Form\Admin\ManageSubmittedReportType;
 use OPG\Digideps\Frontend\Form\Admin\ReportChecklistType;
+use OPG\Digideps\Frontend\Form\Admin\ReportRestoreType;
 use OPG\Digideps\Frontend\Form\Admin\ReviewChecklistType;
-use OPG\Digideps\Frontend\Form\Report\ReportRestoreType;
 use OPG\Digideps\Frontend\Report\ReportSectionService;
 use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
@@ -613,22 +615,48 @@ class ReportController extends AbstractController
         ];
     }
 
-    #[Route(path: 'restore', name: 'admin_report_restore')]
+    /**
+     * @throws ValidationException
+     */
+    #[Route(path: 'restore', name: 'admin_report_restore', methods: ['GET', 'POST'])]
     #[Template('@App/Admin/Client/Report/restore.html.twig')]
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
-    public function restoreAction(Request $request, int $id): array
+    public function restoreAction(Request $request, int $id): array|RedirectResponse
     {
         $form = $this->createRenderableForm(
             ReportRestoreType::class,
             $this->generateUrl('admin_report_restore', ['id' => $id]),
             [
                 ReportRestoreType::RESTORE_FROM_REPORT_ID =>
-                    $request->query->getInt(ReportRestoreType::RESTORE_FROM_REPORT_ID)
+                    $request->query->getInt(ReportRestoreType::RESTORE_FROM_REPORT_ID),
+                ReportRestoreType::CLIENT_ID =>
+                    $request->query->getInt(ReportRestoreType::CLIENT_ID)
             ]
         );
 
         if ($form->handleRequest($request)) {
-            // confirm was clicked so send request to restore the report
+            // "Confirm" was clicked
+            $requestBody = new ReportReplacement(
+                $id,
+                intval($form->getStringOrThrow(ReportRestoreType::RESTORE_FROM_REPORT_ID))
+            );
+
+            // TODO send request to API
+
+            $replacementWorked = (bool)array_rand([true, false]);
+            if ($replacementWorked) {
+                $this->addFlash('notice', 'Report restore complete');
+            } else {
+                $this->addFlash('error', 'Report restore failed');
+            }
+
+            // redirect back to client
+            $redirectUrl = $this->generateUrl(
+                'admin_client_details',
+                ['id' => $form->getStringOrThrow(ReportRestoreType::CLIENT_ID)]
+            );
+
+            return $this->redirect($redirectUrl);
         }
 
         // "report replacement confirmation page here; replace {$id} with {$replacementReportId}"

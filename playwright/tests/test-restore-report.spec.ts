@@ -21,7 +21,9 @@ test("a PFA report on a closed court order can be restored over the active PFA r
     // the report on the closed court order
     await adminClientDetailsPage.restoreReport("2024-2025");
 
-    const adminRestoreReportPage = new AdminRestoreReportPage(page, replaceableReportId, restoreFromReportId);
+    const adminRestoreReportPage = new AdminRestoreReportPage(
+      page, replaceableReportId, restoreFromReportId, clientId
+    );
     await adminRestoreReportPage.isExpected();
 
     return Promise.resolve();
