@@ -6,7 +6,7 @@ module "ssm_endpoint_vpc" {
   service             = "ssm"
   service_short_title = "ssm"
   tags                = var.default_tags
-  policy              = var.account.name == "development" ? data.aws_iam_policy_document.ssm_endpoint.json : ""
+  policy              = data.aws_iam_policy_document.ssm_endpoint.json
 }
 
 data "aws_iam_policy_document" "ssm_endpoint" {
