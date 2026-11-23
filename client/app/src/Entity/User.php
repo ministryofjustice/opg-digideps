@@ -77,6 +77,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public const string ORG_ADMIN_INVITE = 'ORG_ADMIN_INVITE';
     public const string CO_DEPUTY_INVITE = 'CO_DEPUTY_INVITE';
     public const string UNKNOWN_REGISTRATION_ROUTE = 'UNKNOWN';
+    public const string ACCOUNT_REQUEST = 'ACCOUNT_REQUEST';
 
     /**
      * @var int
