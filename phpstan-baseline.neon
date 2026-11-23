@@ -6943,7 +6943,7 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/FeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$data of function http_build_query expects array\|object, mixed given\.$#'
+			message: '#^Parameter \#1 \$data of function http_build_query expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/FeatureContext.php
@@ -10957,7 +10957,7 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/DeputyManagement/DeputyManagementFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$data of function http_build_query expects array\|object, mixed given\.$#'
+			message: '#^Parameter \#1 \$data of function http_build_query expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/DeputyManagement/DeputyManagementFeatureContext.php
@@ -15187,7 +15187,7 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/UserManagement/UserManagementFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$data of function http_build_query expects array\|object, mixed given\.$#'
+			message: '#^Parameter \#1 \$data of function http_build_query expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/UserManagement/UserManagementFeatureContext.php
@@ -20333,6 +20333,18 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: client/app/config/bootstrap.php
+
+		-
+			message: '#^Method OPG\\Digideps\\Frontend\\Account\\AccountService\:\:sendSetPasswordEmail\(\) never returns OPG\\Digideps\\Common\\Account\\AccountError so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: client/app/src/Account/AccountService.php
+
+		-
+			message: '#^Property OPG\\Digideps\\Frontend\\Account\\AccountService\:\:\$mailer is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: client/app/src/Account/AccountService.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:getLogEvents\(\) should return array\|int but returns mixed\.$#'
@@ -29647,7 +29659,7 @@ parameters:
 			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
 
 		-
-			message: '#^Parameter \#1 \$data of function http_build_query expects array\|object, mixed given\.$#'
+			message: '#^Parameter \#1 \$data of function http_build_query expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
