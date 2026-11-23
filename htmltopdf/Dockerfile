@@ -67,7 +67,7 @@ FROM alpine-base
 
 RUN apk update && apk add --no-cache \
     "ca-certificates==20261020-r0" \
-    "chromium==156.0.8078.79-r0"
+    "chromium==158.0.8127.36-r0"
 
 # Runtime assets from official image
 COPY --from=source /opt/gotenberg /opt/gotenberg
