@@ -119,9 +119,9 @@ data "aws_iam_policy_document" "execution_role" {
 
   statement {
     effect  = "Allow"
-    actions = ["kms:GenerateDataKey"]
+    actions = ["kms:GenerateDataKey*"]
     resources = [
-      data.aws_kms_alias.cloudwatch_application_logs_encryption.arn,
+      data.aws_kms_alias.cloudwatch_application_logs_encryption.target_key_arn,
     ]
   }
 }

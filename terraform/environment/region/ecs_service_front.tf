@@ -18,7 +18,7 @@ resource "aws_ecs_service" "front" {
   name                    = aws_ecs_task_definition.front.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.front.arn
-  desired_count           = var.account.ecs.task_count
+  desired_count           = var.account.ecs.primary_task_count
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"

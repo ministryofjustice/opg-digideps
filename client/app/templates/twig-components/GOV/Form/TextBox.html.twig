@@ -1,0 +1,48 @@
+{%- props id, name, value, label, type='text', characters=null, required=false, disabled=false, legend=null, hint=null, errors=null, prefix=null, suffix=null -%}
+
+{%- set hasError = errors is not null -%}
+{%- set hasHint = hint is not null -%}
+
+{%- set className = 'govuk-input' -%}
+{%- if characters is not null -%}
+    {%- set className = className ~ ' govuk-input--width-' ~ characters -%}
+{%- endif -%}
+{%- if hasError -%}
+    {%- set className = className ~ ' govuk-input--error' -%}
+{%- endif -%}
+
+<twig:GOV:Form:FormGroup
+    id="{{ id }}"
+    legend="{{ legend }}"
+    hasHint="{{ hasHint }}"
+    hasError="{{ hasError }}"
+>
+    <twig:GOV:Form:Label id="{{ id }}" label="{{ label }}" required="{{ required }}"/>
+    {%- if hasHint -%}
+        <twig:GOV:Form:Hint hint="{{ hint }}" id="{{ id }}"/>
+    {%- endif -%}
+    {%- if hasError -%}
+        <twig:GOV:ErrorMessage message="{{ errors }}"/>
+    {%- endif -%}
+    {%- if prefix is null and suffix is null -%}
+        <input
+            class="{{ className }}"
+            id="{{ id }}"
+            name="{{ name }}"
+            type="{{ type }}"
+            value="{{ value }}"
+        />
+    {%- else -%}
+        <div class="govuk-input__wrapper">
+            {%- if prefix is not null -%}<div class="govuk-input__prefix" aria-hidden="true">{{ prefix }}</div>{%- endif -%}
+            <input
+                    class="{{ className }}"
+                    id="{{ id }}"
+                    name="{{ name }}"
+                    type="{{ type }}"
+                    value="{{ value }}"
+            />
+            {%- if suffix is not null -%}<div class="govuk-input__suffix" aria-hidden="true">{{ suffix }}</div>{%- endif -%}
+        </div>
+    {%- endif -%}
+</twig:GOV:Form:FormGroup>{#--#}

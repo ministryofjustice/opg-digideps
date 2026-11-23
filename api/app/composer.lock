@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "89a572ea4eb13edffb8e6344777c466d",
+    "content-hash": "17e25686975484cb0bc41fcbd773e88b",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -163,15 +163,15 @@
             "dist": {
                 "type": "path",
                 "url": "../../common",
-                "reference": "7922835f34b5fdb95071e0eed2d556ff7b90e5b4"
+                "reference": "c0feeed95ebb3996e625075363717932d2dcf339"
             },
             "require": {
                 "jms/serializer-bundle": "^5.5.2",
-                "monolog/monolog": "^3.12.0",
-                "symfony/form": "^6.4.46",
-                "symfony/security-core": "^6.4.49",
+                "monolog/monolog": "^3.12.1",
+                "symfony/form": "^6.4.47",
+                "symfony/security-core": "^6.4.50",
                 "symfony/uid": "^6.4.48",
-                "symfony/validator": "^6.4.47"
+                "symfony/validator": "^6.4.48"
             },
             "require-dev": {
                 "dg/bypass-finals": "^1.11.0",
@@ -201,7 +201,7 @@
                     "phpstan --memory-limit=512M"
                 ],
                 "tests:unit": [
-                    "phpunit"
+                    "phpunit --testsuite=unit"
                 ],
                 "tests:serialise": [
                     "phpunit --testsuite=serialise"
@@ -12711,7 +12711,7 @@
     },
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.4.27"
+        "php": "8.4.28"
     },
     "plugin-api-version": "2.6.0"
 }

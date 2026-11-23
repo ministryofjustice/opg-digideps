@@ -30,7 +30,7 @@ final readonly class FixClientOrganisationFactory implements DataFactoryInterfac
                     FROM (
                         SELECT
                             c.id,
-                            ARRAY_AGG(DISTINCT o.id ORDER BY o.id) FILTER(WHERE o.id IS NOT NULL)  AS organisation_ids
+                            ARRAY_AGG(DISTINCT o.id ORDER BY o.id) FILTER(WHERE o.id IS NOT NULL) AS organisation_ids
                         FROM client c
                         JOIN court_order co
                             ON co.client_id = c.id
@@ -43,7 +43,6 @@ final readonly class FixClientOrganisationFactory implements DataFactoryInterfac
                             AND d.organisation_id IS NOT NULL
                         LEFT JOIN organisation o
                             ON o.id = d.organisation_id
-                            AND o.is_activated
                             AND o.deleted_at IS NULL
                         GROUP BY c.id
                     ) cos

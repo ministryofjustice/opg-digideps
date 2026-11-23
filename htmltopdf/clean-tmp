@@ -1,3 +1,0 @@
-#!/bin/sh
-
-find /tmp -mmin +5 -type f -delete

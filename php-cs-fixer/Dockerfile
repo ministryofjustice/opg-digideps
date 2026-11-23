@@ -1,4 +1,4 @@
-FROM php:8.4.27-alpine3.24@sha256:8d29b132476e5f54633d30bfbfa0b0b7c95a9cb0c308b3175d61351aea73b643
+FROM php:8.4.28-alpine3.24@sha256:5b84d9d7524ac30fe65dc50de6117efa54b777c38b4f3d9060d7f2dfe070bf9c
 
 # TODO Remove as temporary workaround until Alpine ships the patched package
 RUN apk update && apk add --upgrade "zlib==1.4-r0"
