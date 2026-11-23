@@ -78,6 +78,10 @@ class Redirector
         if ($user->hasAdminRole()) {
             return false;
         }
+        // neither do they to new style registration
+        if ($user->getRegistrationRoute() === User::ACCOUNT_REQUEST) {
+            return false;
+        }
 
         if ($user->getIsCoDeputy() || $user->getRegistrationRoute() === User::CO_DEPUTY_INVITE) {
             $coDeputyClientConfirmed = $user->getCoDeputyClientConfirmed();

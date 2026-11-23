@@ -43,16 +43,11 @@ class Lockdown:
             "Version": "2012-10-17",
             "Statement": [
                 {
-                    "Sid": "EmergencyLockdown",
+                    "Sid": "EmergencyDataLockdown",
                     "Effect": "Deny",
-                    "NotPrincipal": {
-                        "AWS": self.breakglass_role_arn,
-                    },
-                    "Action": "s3:*",
-                    "Resource": [
-                        f"arn:aws:s3:::{self.bucket_name}",
-                        f"arn:aws:s3:::{self.bucket_name}/*",
-                    ],
+                    "NotPrincipal": {"AWS": self.breakglass_role_arn},
+                    "Action": ["s3:GetObject", "s3:GetObjectVersion"],
+                    "Resource": f"arn:aws:s3:::{self.bucket_name}/*",
                 }
             ],
         }
