@@ -95,6 +95,10 @@ locals {
         {
           name      = "SECRETS_FRONT_KEY",
           valueFrom = data.aws_secretsmanager_secret.front_api_client_secret.arn
+        },
+        {
+          name      = "VALIDATION_KEY_PEPPER",
+          valueFrom = data.aws_secretsmanager_secret.validation_key_pepper.arn
         }
       ],
       environment = concat(local.api_base_variables, local.api_service_variables, local.api_integration_test_variables, local.api_testing_app_variables)

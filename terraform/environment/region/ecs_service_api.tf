@@ -18,7 +18,7 @@ resource "aws_ecs_service" "api" {
   name                    = aws_ecs_task_definition.api.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.api.arn
-  desired_count           = var.account.ecs.task_count
+  desired_count           = var.account.ecs.primary_task_count
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
@@ -157,6 +157,10 @@ locals {
         {
           name      = "SECRETS_FRONT_KEY",
           valueFrom = data.aws_secretsmanager_secret.front_api_client_secret.arn
+        },
+        {
+          name      = "VALIDATION_KEY_PEPPER",
+          valueFrom = data.aws_secretsmanager_secret.validation_key_pepper.arn
         }
       ],
       environment = concat(local.api_base_variables, local.api_service_variables, local.api_service_app_variables)

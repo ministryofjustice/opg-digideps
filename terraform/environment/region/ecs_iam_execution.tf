@@ -116,6 +116,14 @@ data "aws_iam_policy_document" "execution_role" {
       data.aws_kms_alias.secretmanager.target_key_arn,
     ]
   }
+
+  statement {
+    effect  = "Allow"
+    actions = ["kms:GenerateDataKey*"]
+    resources = [
+      data.aws_kms_alias.cloudwatch_application_logs_encryption.target_key_arn,
+    ]
+  }
 }
 
 locals {
@@ -127,6 +135,7 @@ locals {
     data.aws_secretsmanager_secret.front_api_client_secret.arn,
     data.aws_secretsmanager_secret.admin_frontend_secret.arn,
     data.aws_secretsmanager_secret.admin_api_client_secret.arn,
+    data.aws_secretsmanager_secret.validation_key_pepper.arn,
   ]
   execution_role_secrets_resources_pre = concat(
     local.execution_role_secrets_resources,
