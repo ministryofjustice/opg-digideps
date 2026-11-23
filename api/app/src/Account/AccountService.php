@@ -39,6 +39,11 @@ final readonly class AccountService
                 ? AccountError::PasswordSet : AccountError::AccountTaken;
         }
 
+        $existingUser = $this->getUserFromEmail($request->deputyEmail);
+        if ($existingUser !== null && $existingUser->getId() !== $user->getId()) {
+            return AccountError::PasswordSet;
+        }
+
         $user->setEmail($request->deputyEmail->value);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
@@ -49,8 +54,8 @@ final readonly class AccountService
     public function requestPasswordReset(ResetRequest $request): AccountResponse|AccountError
     {
         $user = $this->getUserFromEmail($request->userEmail);
-        if ($user instanceof AccountError) {
-            return $user;
+        if ($user === null) {
+            return AccountError::UnknownEmail;
         }
         return $this->requestPasswordResetForUser($user);
     }
@@ -162,9 +167,8 @@ final readonly class AccountService
         }
     }
 
-    private function getUserFromEmail(Email $email): User|AccountError
+    private function getUserFromEmail(Email $email): ?User
     {
-        return $this->entityManager->getRepository(User::class)
-            ->findOneBy(['email' => strtolower($email->value)]) ?? AccountError::UnknownEmail;
+        return $this->entityManager->getRepository(User::class)->findOneBy(['email' => strtolower($email->value)]);
     }
 }
