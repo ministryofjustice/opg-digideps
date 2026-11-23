@@ -78,6 +78,20 @@ data "aws_iam_policy_document" "lambda_security" {
   }
 
   statement {
+    sid    = "allowLogsKMSDecrypt"
+    effect = "Allow"
+    resources = [
+      module.logs_kms.eu_west_1_target_key_arn,
+      module.logs_application_kms.eu_west_1_target_key_arn
+    ]
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey",
+      "kms:DescribeKey"
+    ]
+  }
+
+  statement {
     sid    = "ReadLogsAndInsights"
     effect = "Allow"
     actions = [

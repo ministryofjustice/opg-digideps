@@ -50,6 +50,10 @@ data "aws_secretsmanager_secret" "custom_sql_db_password" {
   name = join("/", compact([var.secrets_prefix, "custom-sql-db-password"]))
 }
 
+data "aws_secretsmanager_secret" "validation_key_pepper" {
+  name = join("/", compact([var.secrets_prefix, "validation-key-pepper"]))
+}
+
 data "aws_secretsmanager_secret" "anonymise-default-pw" {
   count = var.account.environment.name == "preproduction" ? 1 : 0
   name  = "anonymisation-default-user-pw"
