@@ -12,6 +12,7 @@ enum AccountError: string implements \JsonSerializable
     case TokenInvalid = 'TokenInvalid';
     case EmailError = 'EmailError';
     case UnknownEmail = 'UnknownEmail';
+    case UnknownUser = 'UnknownUser';
     case NetworkError = 'NetworkError';
 
     public function jsonSerialize(): array

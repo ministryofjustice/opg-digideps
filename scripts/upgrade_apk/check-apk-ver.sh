@@ -5,7 +5,7 @@ DOCKERFILE=${1:-Dockerfile}
 
 apk update >/dev/null
 
-grep -oE '"[^"]+=[^"]+"' "$DOCKERFILE" |
+grep -oE '"[a-zA-Z0-9+_.-]+==[^"]+"' "$DOCKERFILE" |
 while read -r entry; do
     package=$(echo "$entry" | cut -d'"' -f2 | cut -d= -f1 | xargs)
     current=$(echo "$entry" | cut -d'"' -f2 | awk -F'==' '{print $2}' | xargs)

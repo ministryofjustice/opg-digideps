@@ -2,73 +2,91 @@
 
 namespace OPG\Digideps\Frontend\Service;
 
+use Gotenberg\Gotenberg;
+use Psr\Log\LoggerInterface;
+
 /**
- * Client to connect to docker-htmltopdf-aas
- * https://github.com/openlabs/docker-htmltopdf-aas.
+ * Client to send HTML to htmltopdf container for conversion
  */
 class HtmlToPdfGenerator
 {
+    private string $basePath;
+
     public function __construct(
         private readonly string $url,
-        private readonly int $timeoutSeconds
+        private readonly int $timeoutSeconds,
+        private readonly LoggerInterface $logger
     ) {
+        $this->basePath = '/var/www/public/assets/fallback/stylesheets';
     }
 
-    /**
-     * @return bool true if working
-     */
     public function isAlive(): bool
     {
-        $pdf = $this->getPdfFromHtml('test');
+        $ch = curl_init($this->url . '/health');
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeoutSeconds);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_exec($ch);
 
-        if ($pdf === false) {
-            $pdf = '';
-        }
-
-        return strlen($pdf) > 700 && preg_match('/PDF-\d/', $pdf);
+        return curl_getinfo($ch, CURLINFO_RESPONSE_CODE) === 200;
     }
 
-    public function getPdfFromHtml(string $html): string|false
+    public function getPdfFromHtml(string $html, bool $includeAssets = true, ?int $reportId = null): string|false
     {
-        // Example from https://github.com/openlabs/docker-htmltopdf-aas/issues/18
-        $data = [
-            'contents' => base64_encode($html),
-            'options' => [
-                'encoding' => 'utf-8',
-            ],
-        ];
-        $dataString = json_encode($data);
-        $headers = [
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($dataString),
+        $postFields = [
+            // required for gotenberg to use the screen media selectors in the CSS, rather than print
+            'emulatedMediaType' => 'screen',
+
+            'html' => new \CURLStringFile($html, postname: 'index.html', mime: 'text/html')
         ];
 
-        $ch = curl_init();
+        if ($includeAssets) {
+            // add woff2 font files (we don't need the fallback woff fonts)
+            $fontFiles = glob($this->basePath . '/fonts/*.woff2') ?: [];
 
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeoutSeconds);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds); // timeout in seconds
-        curl_setopt($ch, CURLOPT_URL, $this->url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-        $httpCode = 0;
-        $count = 0;
-        $pdfBody = false;
-        while ($httpCode !== 200 and $count < 3) {
-            $pdfBody = curl_exec($ch);
-
-            if (!is_string($pdfBody)) {
-                $pdfBody = '';
+            foreach ($fontFiles as $index => $fontFile) {
+                $postFields["font_{$index}"] = new \CURLFile($fontFile, mime_type: 'font/woff2', posted_filename: basename($fontFile));
             }
 
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            // read in application.css and munge the font paths
+            $css = file_get_contents($this->basePath . '/application.css') ?: '';
+            if (!empty($css)) {
+                /** @var string $css */
+                $css = str_replace('url(./fonts/', 'url(', $css);
+
+                $postFields['css'] = new \CURLStringFile($css, postname: 'application.css', mime: 'text/html');
+            }
+        }
+
+        $ch = curl_init($this->url . '/forms/chromium/convert/html');
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeoutSeconds);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $count = 0;
+        $pdfBody = false;
+        $httpCode = 0;
+
+        while ($httpCode !== 200 && $count < 3) {
+            // will be either string or false because CURLOPT_RETURNTRANSFER option is true
+            /** @var string|false $pdfBody */
+            $pdfBody = curl_exec($ch);
+
+            $httpCode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+
             ++$count;
         }
 
-        curl_close($ch);
+        if ($httpCode !== 200) {
+            $msg = "Error while converting HTML to PDF; last response code was {$httpCode}";
+            if ($reportId !== null) {
+                $msg .= " (for report ID {$reportId})";
+            }
+            $this->logger->error($msg);
+        }
 
-        return $pdfBody;
+        return $httpCode === 200 ? $pdfBody : false;
     }
 }

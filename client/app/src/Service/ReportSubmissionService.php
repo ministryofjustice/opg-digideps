@@ -114,7 +114,7 @@ class ReportSubmissionService
             'showSummary' => $showSummary,
         ]);
 
-        $pdf = $this->htmltopdf->getPdfFromHtml($html);
+        $pdf = $this->htmltopdf->getPdfFromHtml($html, reportId: $report->getId());
 
         if (!$pdf) {
             $this->logger->error(sprintf('html_to_pdf_generation - failure - Error with pdf generation on report id: %d', $report->getId()));

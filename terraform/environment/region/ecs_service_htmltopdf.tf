@@ -18,7 +18,7 @@ resource "aws_ecs_service" "htmltopdf" {
   name                    = aws_ecs_task_definition.htmltopdf.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.htmltopdf.arn
-  desired_count           = 1
+  desired_count           = var.account.ecs.support_task_count
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
@@ -69,7 +69,7 @@ locals {
       image       = local.images.htmltopdf,
       mountPoints = [],
       name        = "htmltopdf",
-      user        = "htmltopdf"
+      user        = "gotenberg"
       portMappings = [{
         name          = "htmltopdf-port",
         containerPort = 8080,
@@ -80,11 +80,12 @@ locals {
       healthCheck = {
         command = [
           "CMD-SHELL",
-          "curl --fail -X POST -H 'Content-Type:application/json' -d '{\"contents\":\"dGVzdA==\"}' -o /dev/null http://localhost:8080/ || exit 1"
+          "wget --spider --quiet http://127.0.0.1:8080/health || exit 1"
         ],
-        interval = 30,
-        timeout  = 5,
-        retries  = 3
+        startPeriod = 60,
+        interval    = 30,
+        timeout     = 5,
+        retries     = 3
       },
       logConfiguration = {
         logDriver = "awslogs",

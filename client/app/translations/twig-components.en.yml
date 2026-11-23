@@ -25,6 +25,9 @@ gov:
       privacy: Privacy notice
       cookies: Cookies
       accessibility: Accessibility
+  form:
+    label:
+      optional: "(optional)"
 opg:
   accessibility:
     statement:
@@ -128,6 +131,18 @@ opg:
         PasswordSet: |
           Our records show that you have already registered with this email address.
           Please sign in to continue. Please call %helplineNumber% if you are unable to sign in.
+    accept:
+      title: Read and agree to our terms of use
+      content: |-
+        To use the ‘Complete the deputy report’ service, you must agree to our terms of use.
+        # Seeing this page for the second time?
+        Our terms of use have changed. You must agree to our updated terms before you use the service.
+        # Next steps
+        [Read our terms of use](terms) and check the box on this page to confirm you agree.
+      checkbox:
+        label: I have read and agree to the ‘Complete the deputy report’ terms of use
+        required: You must check the box to show you agree to the terms of use before continuing.
+        submit: Continue
   admin:
     clientDetails:
       actions:
