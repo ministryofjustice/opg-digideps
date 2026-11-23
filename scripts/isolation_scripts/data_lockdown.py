@@ -9,19 +9,6 @@ from botocore.exceptions import ClientError
 
 REGION = "eu-west-1"
 
-LOCKDOWN_POLICY_TEMPLATE = {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "EmergencyLockdown",
-            "Effect": "Deny",
-            "Principal": "*",
-            "Action": "s3:*",
-            "Resource": [],
-        }
-    ],
-}
-
 
 class Lockdown:
     def __init__(self, environment: str):
@@ -41,6 +28,34 @@ class Lockdown:
             "rds",
             region_name=REGION,
         )
+
+        self.sts = boto3.client(
+            "sts",
+            region_name=REGION,
+        )
+
+        self.account_id = self.sts.get_caller_identity()["Account"]
+
+        self.breakglass_role_arn = f"arn:aws:iam::{self.account_id}:role/breakglass"
+
+    def build_lockdown_policy(self) -> dict:
+        return {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "EmergencyLockdown",
+                    "Effect": "Deny",
+                    "NotPrincipal": {
+                        "AWS": self.breakglass_role_arn,
+                    },
+                    "Action": "s3:*",
+                    "Resource": [
+                        f"arn:aws:s3:::{self.bucket_name}",
+                        f"arn:aws:s3:::{self.bucket_name}/*",
+                    ],
+                }
+            ],
+        }
 
     def save_state(self, state: dict) -> None:
         with open(self.state_file, "w") as f:
@@ -64,12 +79,7 @@ class Lockdown:
             raise
 
     def apply_lockdown_policy(self) -> None:
-        policy = LOCKDOWN_POLICY_TEMPLATE.copy()
-
-        policy["Statement"][0]["Resource"] = [
-            f"arn:aws:s3:::{self.bucket_name}",
-            f"arn:aws:s3:::{self.bucket_name}/*",
-        ]
+        policy = self.build_lockdown_policy()
 
         self.s3.put_bucket_policy(
             Bucket=self.bucket_name,
