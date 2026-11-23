@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 final readonly class BruteForceSentinel
 {
-    private const int MIN_SECONDS_APART = 3600;
+    private const int MIN_SECONDS_APART = 60;
 
     public function __construct(
         #[Autowire(service: 'predis')]
