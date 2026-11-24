@@ -64,7 +64,7 @@ class ReportRepository extends ServiceEntityRepository
 
             foreach ($active->getClient()->findPossibleReportReplacements() as $possible) {
                 if ($possible->replaceReport === $replacement->replaceReport && $possible->withReport === $replacement->withReport) {
-                    $active->swapCourtOrdersWith($archived);
+                    $active->swapCourtOrdersAndDatesWith($archived);
                     return true;
                 }
             }
