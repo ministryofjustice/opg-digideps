@@ -162,6 +162,9 @@ opg:
         closed: unsubmitted (closed court orders)
       restoreConfirmation:
         heading: Report details
+        title: Are you sure you want to restore this report?
+        confirm:
+          label: Confirm
         courtOrders: "Court order reference number(s): %references%"
         client: "Name of client: %name%"
         type: "Type of report: %type%"
@@ -186,11 +189,6 @@ opg:
       number: Account number
       joint: Joint account
       closed: Closed
-  report:
-    restore:
-      title: Restore report
-      confirm:
-        label: Confirm
   review:
     reportHeader:
       title: Deputy report for %reportTypeHeading% decisions
