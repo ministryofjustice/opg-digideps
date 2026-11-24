@@ -29,9 +29,11 @@ test("user can request an account if they enter valid details", async ({
   await setupFixture(
     // creates a deputy and client record, which is what we need
     // in the db to verify the user requesting an account
-    createFixtureViaApi("/fixtures/scenarios/generic", [{
-      deputies: [{ ref: deputyRef, type: "LAY", hasRegistered: false }],
-    }]),
+    createFixtureViaApi("/fixtures/scenarios/generic", [
+      {
+        deputies: [{ ref: deputyRef, type: "LAY", hasRegistered: false }],
+      },
+    ]),
   ).then((fixture) => runTest(fixture.data as Scenario[]));
 });
 
