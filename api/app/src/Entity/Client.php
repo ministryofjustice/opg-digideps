@@ -769,8 +769,9 @@ class Client
     #[JMS\Groups(['client'])]
     public function findPossibleReportReplacements(): array
     {
-        // get all active reports on active court orders (max 2)
-        /** @var array<Report> $activeReports */
+        // get all active reports on active court orders (max 2); keyed by ID because a hybrid
+        // report is linked to both of its sibling court orders and would otherwise appear twice
+        /** @var array<int, Report> $activeReports */
         $activeReports = [];
 
         /** @var array<CourtOrder> $closedCourtOrders */
@@ -780,7 +781,7 @@ class Client
             if ($courtOrder->getStatus() === 'ACTIVE') {
                 $act = $courtOrder->getActiveReport();
                 if ($act !== null) {
-                    $activeReports[] = $act;
+                    $activeReports[$act->getId()] = $act;
                 }
             } else {
                 $closedCourtOrders[] = $courtOrder;
@@ -803,11 +804,16 @@ class Client
 
         // possible replacements: get all reports with submitted=false on closed court orders which could be restored;
         // note that getActiveReport() checks for both !submitted and !un_submit_date (so these possible
-        // replacements could have a submit_date but have never passed checklist processing)
-        $candidateReplacementReports = array_filter(
-            [$latestPfa?->getActiveReport(), $latestHw?->getActiveReport()],
-            fn (?Report $report) => $report !== null
-        );
+        // replacements could have a submit_date but have never passed checklist processing);
+        // keyed by ID so a hybrid report on both latest closed court orders is only included once
+        /** @var array<int, Report> $candidateReplacementReports */
+        $candidateReplacementReports = [];
+        foreach ([$latestPfa, $latestHw] as $latestClosedCourtOrder) {
+            $candidate = $latestClosedCourtOrder?->getActiveReport();
+            if ($candidate !== null) {
+                $candidateReplacementReports[$candidate->getId()] = $candidate;
+            }
+        }
 
         // determine compatibility of each active report with each possible replacement report
         $possibleReplacements = [];
