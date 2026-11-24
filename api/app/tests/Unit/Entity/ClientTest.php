@@ -125,54 +125,6 @@ final class ClientTest extends TestCase
         self::assertEquals('abc123df', $sut->getCaseNumber());
     }
 
-    /*
-     public static function inactiveReportProvider(): array
-    {
-        return [
-            'No reports' => [],
-            'Submitted report' => [new Report()->setSubmitted(true)],
-            'Unsubmitted report' => [new Report()->setSubmitted(true)->setUnSubmitDate(new \DateTime())],
-        ];
-    }
-
-    #[DataProvider('inactiveReportProvider')]
-    public function testGetActiveReportNull(?Report $report = null): void
-    {
-        $this->courtOrder->setReports($report ? [$report] : []);
-
-        $result = $this->courtOrder->getActiveReport();
-
-        self::assertNull($result);
-    }
-
-    public function testGetActiveReportsOneActiveReport(): void
-    {
-        $report = new Report();
-        $this->courtOrder->setReports([$report]);
-
-        $result = $this->courtOrder->getActiveReport();
-
-        self::assertSame($report, $result);
-    }
-
-    public function testGetFirstActiveReport(): void
-    {
-        $inactiveReport = new Report()->setSubmitted(true);
-        $activeReport1 = new Report();
-        $activeReport2 = new Report();
-
-        $this->courtOrder->setReports([
-            $inactiveReport,
-            $activeReport1,
-            $activeReport2,
-        ]);
-
-        $result = $this->courtOrder->getActiveReport();
-
-        self::assertSame($activeReport1, $result);
-    }
-     */
-
     public function testFindPossibleReplacementsDuals(): void
     {
         $client = new Client();
