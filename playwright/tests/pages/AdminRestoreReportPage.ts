@@ -19,19 +19,32 @@ export default class AdminRestoreReportPage {
     );
   }
 
-  async expectConfirmation(reportType: string, period: string) {
+  async expectConfirmation(details: {
+    courtOrderReferences: string;
+    clientName: string;
+    reportType: string;
+    period: string;
+  }) {
     await expect(
-      this.page.getByText(
-        `You are about to restore the ${reportType} report for ${period}; this will replace all information in the currently active report. All deputies currently active on this case will be able to see and edit this information.`,
-        { exact: true },
-      ),
+      this.page.getByRole("heading", { name: "Report details", level: 2 }),
     ).toBeVisible();
+    for (const line of [
+      `Court order reference number(s): ${details.courtOrderReferences}`,
+      `Name of client: ${details.clientName}`,
+      `Type of report: ${details.reportType}`,
+      `Reporting period: ${details.period}`,
+      "Please note:",
+    ]) {
+      await expect(this.page.getByText(line, { exact: true })).toBeVisible();
+    }
     await expect(
-      this.page.getByText(
-        "If the appropriate report type for the active report is different from the report type of the restored report, then only sections shared between these reports will be restored.",
-        { exact: true },
-      ),
-    ).toBeVisible();
+      this.page.locator("ul.govuk-list--bullet").getByRole("listitem"),
+    ).toHaveText([
+      "restoring this report will reinstate all the information previously entered by the deputy in their unsubmitted report",
+      "you must have explained to the deputy that the information can then be viewed and edited by all deputies on the active court order for this report",
+      "if the report type on the active court order is different from the unsubmitted report only shared sections will be restored",
+      "the restored report type will be updated to match the type in the active court order",
+    ]);
     await expect(
       this.page.getByRole("button", { name: "Confirm" }),
     ).toBeVisible();
