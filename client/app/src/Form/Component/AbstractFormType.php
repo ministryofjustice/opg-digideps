@@ -13,11 +13,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractFormType extends AbstractType
 {
-    /**
-     * @var array<AbstractInput> $inputs
-     */
-    private array $inputs;
-
     abstract protected string $translationDomain {get;}
     abstract protected string $translationPrefix {get;}
 
@@ -27,29 +22,33 @@ abstract class AbstractFormType extends AbstractType
 
     /**
      * @param callable(?string, array<string, string>=): string $t
+     * @param array<string, mixed> $options the form's resolved options, including any defined in configureOptions()
      * @return array<AbstractInput>
      */
-    abstract protected function defineInputs(callable $t): array;
+    abstract protected function defineInputs(callable $t, array $options): array;
 
     /**
-     * @return array<AbstractInput>
+     * Inputs can depend on the options of the form being built, so are not cached on the (shared) form type.
+     *
+     * @param array<string, mixed> $options
+     * @return array<string, AbstractInput>
      */
-    private function getInputs(): array
+    private function getInputs(array $options): array
     {
-        if (empty($this->inputs)) {
-            $inputs = $this->defineInputs(fn (?string $key, array $parameters = []) =>  $key === null ? '' : $this->translator->trans("{$this->translationPrefix}.{$key}", $parameters, $this->translationDomain));
-            $namedInputs = [];
-            foreach ($inputs as $input) {
-                $namedInputs[$input->name] = $input;
-            }
-            $this->inputs = $namedInputs;
+        $inputs = $this->defineInputs(
+            fn (?string $key, array $parameters = []) =>  $key === null ? '' : $this->translator->trans("{$this->translationPrefix}.{$key}", $parameters, $this->translationDomain),
+            $options
+        );
+        $namedInputs = [];
+        foreach ($inputs as $input) {
+            $namedInputs[$input->name] = $input;
         }
-        return $this->inputs;
+        return $namedInputs;
     }
 
     final public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        foreach ($this->getInputs() as $input) {
+        foreach ($this->getInputs($options) as $input) {
 
             if ($input instanceof AbstractRepeatedInput) {
                 $this->buildInput($input->primary, $builder);
@@ -72,7 +71,10 @@ abstract class AbstractFormType extends AbstractType
         $builder->add($input->name, $input->symfonyType, $options);
     }
 
-    final public function render(FormView $form): Form
+    /**
+     * @param array<string, mixed> $options the resolved options the form was created with
+     */
+    final public function render(FormView $form, array $options): Form
     {
         $renderables = [];
         $errors = [];
@@ -80,7 +82,7 @@ abstract class AbstractFormType extends AbstractType
         $variables = new ValidatingArray((array)$form->vars);
         $errors[$variables->getStringOrThrow('id')] = AbstractInput::extractErrorMessages($variables);
 
-        $inputs = $this->getInputs();
+        $inputs = $this->getInputs($options);
         /**
         * @var string $childName
         */

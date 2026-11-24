@@ -48,6 +48,9 @@ export default class AdminRestoreReportPage {
     await expect(
       this.page.getByRole("button", { name: "Confirm" }),
     ).toBeVisible();
+    await expect(
+      this.page.getByRole("link", { name: "Cancel", exact: true }),
+    ).toHaveAttribute("href", `/admin/client/${String(this.clientId)}/details`);
   }
 
   async confirmRestore() {
