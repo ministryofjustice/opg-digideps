@@ -45,11 +45,12 @@ export default class AdminRestoreReportPage {
       "if the report type on the active court order is different from the unsubmitted report only shared sections will be restored",
       "the restored report type will be updated to match the type in the active court order",
     ]);
+    const buttonGroup = this.page.locator(".govuk-button-group");
     await expect(
-      this.page.getByRole("button", { name: "Confirm" }),
+      buttonGroup.getByRole("button", { name: "Confirm" }),
     ).toBeVisible();
     await expect(
-      this.page.getByRole("link", { name: "Cancel", exact: true }),
+      buttonGroup.getByRole("link", { name: "Cancel", exact: true }),
     ).toHaveAttribute("href", `/admin/client/${String(this.clientId)}/details`);
   }
 
