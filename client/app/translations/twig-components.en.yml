@@ -158,6 +158,10 @@ opg:
           first: Password
           second: Confirm password
         submit: Save password
+      errors:
+        NetworkError: An error occurred while setting up your account. Please try again later.
+        TokenInvalid: This link is no longer valid. Please wait at least one minute, then try again using the most recent link the Office of the Public Guardian (OPG) emailed you.
+        TokenExpired: This link is expired. Please generate a new link.
     accept:
       title: Read and agree to our terms of use
       content: |-
@@ -170,6 +174,9 @@ opg:
         label: I have read and agree to the ‘Complete the deputy report’ terms of use
         required: You must check the box to show you agree to the terms of use before continuing.
         submit: Continue
+      errors:
+        NetworkError: An error occurred. Please try again later.
+        UnknownUser: An error occurred. Please try again later.
     reset:
       content: |-
         To reset your password, enter your email address and check your email for confirmation.
@@ -181,6 +188,9 @@ opg:
         tooLong: The email cannot be longer than 60 characters
         invalidFormat: This email is not valid
       returnLink: Return to sign in
+      errors:
+        NetworkError: An error occurred. Please try again later.
+        UnknownEmail: We don’t recognise that email address. Please enter the email you used to set up your ‘Complete the deputy report’ account.
   admin:
     clientDetails:
       actions:
