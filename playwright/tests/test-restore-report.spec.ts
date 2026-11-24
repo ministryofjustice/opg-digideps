@@ -25,6 +25,13 @@ test("a PFA report on a closed court order can be restored over the active PFA r
     const adminClientDetailsPage = new AdminClientDetailsPage(page, clientId);
     await adminClientDetailsPage.goto();
 
+    await adminClientDetailsPage.expectReport("active", "2025-2026", "OPG103");
+    await adminClientDetailsPage.expectReport(
+      "unsubmitted (closed court orders)",
+      "2024-2025",
+      "OPG102",
+    );
+
     // confirm that the report on the active court order is swappable with
     // the report on the closed court order
     await adminClientDetailsPage.restoreReport("2024-2025");
@@ -45,11 +52,12 @@ test("a PFA report on a closed court order can be restored over the active PFA r
     await new PageOpgBanner(page).expectSuccessMessage(
       "Report restore complete",
     );
-    await adminClientDetailsPage.expectReportsTable("active", "2024-2025");
-    await adminClientDetailsPage.expectReportsTable(
+    // the reports have swapped, but each table keeps its reporting period
+    await adminClientDetailsPage.expectReport("active", "2025-2026", "OPG102");
+    await adminClientDetailsPage.expectReport(
       "unsubmitted (closed court orders)",
-      "2025-2026",
-      1,
+      "2024-2025",
+      "OPG103",
     );
   };
 
@@ -61,7 +69,7 @@ test("a PFA report on a closed court order can be restored over the active PFA r
         active: false,
         reports: [
           {
-            startDate: new Date("2024-01-02"),
+            startDate: new Date("2024-07-01"),
           },
         ],
       },
@@ -72,7 +80,7 @@ test("a PFA report on a closed court order can be restored over the active PFA r
         active: true,
         reports: [
           {
-            startDate: new Date("2025-01-01"),
+            startDate: new Date("2025-07-01"),
           },
         ],
       },

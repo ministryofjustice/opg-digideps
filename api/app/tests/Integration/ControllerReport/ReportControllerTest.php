@@ -100,20 +100,30 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('GET', $url, self::$tokenDeputy);
     }
 
-    public function testRestoreSwapsStoredCourtOrderLinks(): void
+    public function testRestoreSwapsStoredCourtOrderLinksAndDates(): void
     {
         $deputies = DeputySet::oneLay();
         ['orders' => [
-            ['pfa' => ['order' => $activePfa, 'reports' => [$active]]],
+            ['pfa' => ['reports' => [$active]]],
             ['pfa' => ['order' => $closedPfa, 'reports' => [$archived]], 'hw' => ['order' => $closedHw]],
         ]] = self::$fixtureService->instantiateScenario(new Scenario(
-            new CourtOrderDescriptor($deputies),
-            new Scenario(new CourtOrderDescriptor($deputies, active: false, single: false))
+            new CourtOrderDescriptor($deputies, madeDate: new \DateTimeImmutable('2025-07-01')),
+            new Scenario(new CourtOrderDescriptor($deputies, madeDate: new \DateTimeImmutable('2024-07-01'), active: false, single: false))
         ));
         // The archived report still has both links even if the orders are no longer siblings.
         $closedPfa->setSibling(null);
         $closedHw->setSibling(null);
+        $archived->setDueDate(new \DateTime('2025-08-14'));
         self::$em->flush();
+
+        $connection = self::$em->getConnection();
+        $sql = 'SELECT pfa_court_order_id, hw_court_order_id, start_date, end_date, due_date FROM report WHERE id = ?';
+        $activeBefore = $connection->fetchNumeric($sql, [$active->getId()]);
+        $archivedBefore = $connection->fetchNumeric($sql, [$archived->getId()]);
+        self::assertIsArray($activeBefore);
+        self::assertIsArray($archivedBefore);
+        self::assertSame(['2025-07-01', '2026-06-30'], array_slice($activeBefore, 2, 2));
+        self::assertSame(['2024-07-01', '2025-06-30', '2025-08-14'], array_slice($archivedBefore, 2));
 
         $options = [
             'AuthToken' => self::$tokenAdmin,
@@ -123,10 +133,9 @@ class ReportControllerTest extends AbstractTestController
         self::assertSame(['success' => true, 'error' => null], $result);
         $this->assertJsonRequest('POST', '/report/restore', $options + ['mustFail' => true]);
 
-        $connection = self::$em->getConnection();
-        $sql = 'SELECT pfa_court_order_id, hw_court_order_id FROM report WHERE id = ?';
-        self::assertSame([$activePfa->getId(), null], $connection->fetchNumeric($sql, [$archived->getId()]));
-        self::assertSame([$closedPfa->getId(), $closedHw->getId()], $connection->fetchNumeric($sql, [$active->getId()]));
+        // each report takes the other's court orders and dates, so each court order keeps its reporting period
+        self::assertSame($activeBefore, $connection->fetchNumeric($sql, [$archived->getId()]));
+        self::assertSame($archivedBefore, $connection->fetchNumeric($sql, [$active->getId()]));
     }
 
     public function testRestoreRejectsInvalidRequests(): void
