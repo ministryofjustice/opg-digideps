@@ -23,7 +23,9 @@ use Doctrine\ORM\NonUniqueResultException;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 use OPG\Digideps\Common\Report\ReportReplacement;
 use OPG\Digideps\Common\Report\ReportRestoreResponse;
+use OPG\Digideps\Common\Validating\ValidationException;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -904,18 +906,20 @@ class ReportController extends RestController
         return $report;
     }
 
-    /*
-     * Restore one report over the top of another.
-     * This actually swaps the court orders between the two reports.
-     */
     #[Route(path: '/restore', methods: ['POST'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
-    public function restore(Request $request): ReportRestoreResponse
+    public function restore(Request $request): JsonResponse
     {
-        $reportReplacement = ReportReplacement::jsonDeserialize((string)$request->getContent());
+        try {
+            $replacement = ReportReplacement::jsonDeserialize($request->getContent());
+        } catch (ValidationException) {
+            return new JsonResponse(new ReportRestoreResponse(false, 'Expected two report IDs.'), JsonResponse::HTTP_BAD_REQUEST);
+        }
 
-        // TODO check reports can be swapped, do the swap
+        if (!$this->repository->restoreReport($replacement)) {
+            return new JsonResponse(new ReportRestoreResponse(false, 'These reports are not eligible for restoration.'));
+        }
 
-        return new ReportRestoreResponse(true);
+        return new JsonResponse(new ReportRestoreResponse(true));
     }
 }
