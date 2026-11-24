@@ -1250,7 +1250,7 @@ class Report
         return $this;
     }
 
-    public function swapCourtOrdersAndDatesWith(Report $other): void
+    public function swapCourtOrdersWith(Report $other): void
     {
         // Historical links need not match the court orders' current sibling relationships.
         $pfa = $this->pfaCourtOrder;
@@ -1258,10 +1258,6 @@ class Report
 
         $this->assignCourtOrders($other->pfaCourtOrder, $other->hwCourtOrder);
         $other->assignCourtOrders($pfa, $hw);
-
-        [$this->startDate, $other->startDate] = [$other->startDate, $this->startDate];
-        [$this->endDate, $other->endDate] = [$other->endDate, $this->endDate];
-        [$this->dueDate, $other->dueDate] = [$other->dueDate, $this->dueDate];
     }
 
     private function assignCourtOrders(?CourtOrder $pfa, ?CourtOrder $hw): void
