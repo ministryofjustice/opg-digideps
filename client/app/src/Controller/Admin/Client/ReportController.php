@@ -633,8 +633,7 @@ class ReportController extends AbstractController
             [
                 ReportRestoreType::RESTORE_FROM_REPORT_ID =>
                     $request->query->getString(ReportRestoreType::RESTORE_FROM_REPORT_ID),
-                ReportRestoreType::CLIENT_ID =>
-                    $request->query->getInt(ReportRestoreType::CLIENT_ID)
+                ReportRestoreType::CLIENT_ID => (string) $clientId
             ],
             [ReportRestoreType::CANCEL_URL => $this->generateUrl('admin_client_details', ['id' => $clientId])]
         );
