@@ -13,50 +13,20 @@ parameters:
 			path: config/bootstrap.php
 
 		-
-			message: '#^Cannot access offset ''events'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
+			message: '#^Method OPG\\Digideps\\Frontend\\Account\\AccountService\:\:sendSetPasswordEmail\(\) never returns OPG\\Digideps\\Common\\Account\\AccountError so it can be removed from the return type\.$#'
+			identifier: return.unusedType
 			count: 1
-			path: src/Command/CheckCSVUploadedCommand.php
+			path: src/Account/AccountService.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:alertNoCSVsWereUploaded\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Property OPG\\Digideps\\Frontend\\Account\\AccountService\:\:\$mailer is never read, only written\.$#'
+			identifier: property.onlyWritten
 			count: 1
-			path: src/Command/CheckCSVUploadedCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:checkCsvsHaveBeenUploadedAndAlert\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Command/CheckCSVUploadedCommand.php
+			path: src/Account/AccountService.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:getLogEvents\(\) should return array\|int but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Command/CheckCSVUploadedCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:getLogStreams\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Command/CheckCSVUploadedCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:postSlackMessage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Command/CheckCSVUploadedCommand.php
-
-		-
-			message: '#^Parameter \#1 \$apiToken of method OPG\\Digideps\\Frontend\\Service\\Client\\Slack\\ClientFactory\:\:createClient\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Command/CheckCSVUploadedCommand.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_column expects array, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Command/CheckCSVUploadedCommand.php
 
@@ -5221,78 +5191,6 @@ parameters:
 			path: src/Mapper/DateRangeQuery.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Model\\Email\:\:getFromEmailNotifyID\(\) should return string\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Model/Email.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Model\\Email\:\:getFromName\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Model/Email.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Model\\Email\:\:getParameters\(\) should return array\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Model/Email.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Model\\Email\:\:getSubject\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Model/Email.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Model\\Email\:\:getTemplate\(\) should return string\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Model/Email.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Model\\Email\:\:getToEmail\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Model/Email.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Model\\Email\:\:\$fromEmailNotifyID has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Model/Email.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Model\\Email\:\:\$fromName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Model/Email.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Model\\Email\:\:\$parameters has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Model/Email.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Model\\Email\:\:\$subject has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Model/Email.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Model\\Email\:\:\$template has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Model/Email.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Model\\Email\:\:\$toEmail has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Model/Email.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Model\\EmailAttachment\:\:__construct\(\) has parameter \$content with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -5557,12 +5455,6 @@ parameters:
 			path: src/Service/Audit/AuditEvents.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_flip expects array\<int\|string\>, array\<string, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/Audit/AuditEvents.php
-
-		-
 			message: '#^Cannot access offset ''logStreamName'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -5711,18 +5603,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: src/Service/Availability/SiriusApiAvailability.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Client\\GovUK\\BankHolidaysAPIClient\:\:getBankHolidays\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Service/Client/GovUK/BankHolidaysAPIClient.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Service\\Client\\GovUK\\BankHolidaysAPIClient\:\:\$logger is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Service/Client/GovUK/BankHolidaysAPIClient.php
 
 		-
 			message: '#^Cannot call method getUser\(\) on Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\|null\.$#'
@@ -6225,7 +6105,7 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: src/Service/Client/RestClient.php
 
 		-
@@ -6237,17 +6117,11 @@ parameters:
 		-
 			message: '#^Cannot call method getHeader\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 2
-			path: src/Service/Client/RestClient.php
-
-		-
-			message: '#^Cannot call method getId\(\) on \(class\-string&T of mixed\)\|\(object&T of mixed\)\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: src/Service/Client/RestClient.php
 
 		-
-			message: '#^Cannot call method hasHeader\(\) on mixed\.$#'
+			message: '#^Cannot call method getId\(\) on \(class\-string&T of mixed\)\|\(object&T of mixed\)\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: src/Service/Client/RestClient.php
@@ -7801,30 +7675,6 @@ parameters:
 			path: src/Service/File/Verifier/VerificationStatus.php
 
 		-
-			message: '#^Parameter \#1 \$string of function strlen expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/HtmlToPdfGenerator.php
-
-		-
-			message: '#^Parameter \#3 \$value of function curl_setopt expects array\|string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/HtmlToPdfGenerator.php
-
-		-
-			message: '#^Parameter \#3 \$value of function curl_setopt expects bool, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/HtmlToPdfGenerator.php
-
-		-
-			message: '#^Parameter \#3 \$value of function curl_setopt expects non\-empty\-string, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/HtmlToPdfGenerator.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Service\\Logger\:\:debug\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -7915,12 +7765,6 @@ parameters:
 			path: src/Service/Mailer/MailFactory.php
 
 		-
-			message: '#^Parameter \#1 \$toEmail of method OPG\\Digideps\\Frontend\\Model\\Email\:\:setToEmail\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/Mailer/MailFactory.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -7934,18 +7778,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$loggedInUser of method OPG\\Digideps\\Frontend\\Service\\Audit\\AuditEvents\:\:emailSent\(\) expects OPG\\Digideps\\Frontend\\Entity\\User\|string\|null, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/Mailer/MailSender.php
-
-		-
-			message: '#^Parameter \#2 \$templateId of method Alphagov\\Notifications\\Client\:\:sendEmail\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/Mailer/MailSender.php
-
-		-
-			message: '#^Parameter \#3 \$personalisation of method Alphagov\\Notifications\\Client\:\:sendEmail\(\) expects array, array\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Service/Mailer/MailSender.php
@@ -8279,12 +8111,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Service\\SecretManagerService\:\:getSecret\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Service/SecretManagerService.php
 
 		-
 			message: '#^Cannot cast mixed to int\.$#'
@@ -9105,13 +8931,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\InvocationStubber\:\:with\(\)\.$#'
 			identifier: method.notFound
-			count: 34
-			path: tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Cannot access offset ''ClientSecret'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 31
 			path: tests/Unit/Service/Client/RestClientTest.php
 
 		-
@@ -9129,7 +8949,7 @@ parameters:
 		-
 			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 32
+			count: 29
 			path: tests/Unit/Service/Client/RestClientTest.php
 
 		-
@@ -9141,12 +8961,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \(mixed\) of echo cannot be converted to string\.$#'
 			identifier: echo.nonString
-			count: 1
-			path: tests/Unit/Service/Client/RestClientTest.php
-
-		-
-			message: '#^Parameter \#3 \$body of class GuzzleHttp\\Psr7\\Response constructor expects Psr\\Http\\Message\\StreamInterface\|resource\|string\|null, string\|false given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/Unit/Service/Client/RestClientTest.php
 
@@ -9439,27 +9253,9 @@ parameters:
 			path: tests/Unit/Service/Mailer/MailFactoryTest.php
 
 		-
-			message: '#^Cannot call method getFromEmailNotifyID\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Cannot call method getFromName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
 			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: tests/Unit/Service/Mailer/MailFactoryTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Mailer\\MailFactoryTest\:\:assertStaticEmailProperties\(\) has parameter \$email with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
 			path: tests/Unit/Service/Mailer/MailFactoryTest.php
 
 		-

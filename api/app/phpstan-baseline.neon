@@ -153,13 +153,13 @@ parameters:
 		-
 			message: '#^Cannot access property \$headers on mixed\.$#'
 			identifier: property.nonObject
-			count: 2
+			count: 1
 			path: src/Controller/AuthController.php
 
 		-
 			message: '#^Cannot call method set\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: src/Controller/AuthController.php
 
 		-
@@ -251,12 +251,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Controller/CoDeputyController.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Controller\\JWTController\:\:\$authService is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Controller/JWTController.php
 
 		-
 			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
@@ -4117,48 +4111,6 @@ parameters:
 			path: src/Service/Formatter/RestFormatter.php
 
 		-
-			message: '#^Cannot access offset ''e'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Cannot access offset ''n'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Cannot access offset ''rsa'' on array\|false\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Parameter \#1 \$contents of static method Lcobucci\\JWT\\Signer\\Key\\InMemory\:\:plainText\(\) expects non\-empty\-string, string given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Parameter \#1 \$key of function openssl_pkey_get_details expects OpenSSLAsymmetricKey, OpenSSLAsymmetricKey\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Parameter \#1 \$string of function base64_decode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Service/JWT/JWTService.php
-
-		-
-			message: '#^Parameter \#1 \$string of function base64_encode expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Service/JWT/JWTService.php
-
-		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
 			identifier: nullCoalesce.expr
 			count: 1
@@ -4625,12 +4577,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Service/RestHandler/Report/DeputyCostsReportUpdateHandler.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Service\\SecretManagerService\:\:getSecret\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Service/SecretManagerService.php
 
 		-
 			message: '#^Call to an undefined method object\:\:setTime\(\)\.$#'
@@ -15481,12 +15427,6 @@ parameters:
 			path: tests/Integration/Controller/AbstractTestController.php
 
 		-
-			message: '#^Cannot call method createNewJWT\(\) on OPG\\Digideps\\Backend\\Service\\JWT\\JWTService\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/AbstractTestController.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:assertEndpointAllowedFor\(\) has parameter \$data with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -15620,12 +15560,6 @@ parameters:
 
 		-
 			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:\$em \(Doctrine\\ORM\\EntityManager\) does not accept object\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: tests/Integration/Controller/AbstractTestController.php
-
-		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:\$jwtService \(OPG\\Digideps\\Backend\\Service\\JWT\\JWTService\|null\) does not accept object\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: tests/Integration/Controller/AbstractTestController.php
@@ -16211,96 +16145,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: tests/Integration/Controller/HealthControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''code'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/Controller/JsonHttpTestClient.php
-
-		-
-			message: '#^Cannot access offset ''data'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/Controller/JsonHttpTestClient.php
-
-		-
-			message: '#^Cannot access offset ''email'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/Controller/JsonHttpTestClient.php
-
-		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/Controller/JsonHttpTestClient.php
-
-		-
-			message: '#^Cannot access offset ''success'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: tests/Integration/Controller/JsonHttpTestClient.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\JsonHttpTestClient\:\:assertEndpointNeedsAuth\(\) has parameter \$authToken with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Integration/Controller/JsonHttpTestClient.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\JsonHttpTestClient\:\:assertEndpointNeedsAuth\(\) has parameter \$method with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Integration/Controller/JsonHttpTestClient.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\JsonHttpTestClient\:\:assertEndpointNeedsAuth\(\) has parameter \$uri with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Integration/Controller/JsonHttpTestClient.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\JsonHttpTestClient\:\:assertJsonRequest\(\) has parameter \$method with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Integration/Controller/JsonHttpTestClient.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\JsonHttpTestClient\:\:assertJsonRequest\(\) has parameter \$uri with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Integration/Controller/JsonHttpTestClient.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\JsonHttpTestClient\:\:assertJsonRequest\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: tests/Integration/Controller/JsonHttpTestClient.php
-
-		-
-			message: '#^Parameter \#1 \$assertion of function assert expects bool\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/JsonHttpTestClient.php
-
-		-
-			message: '#^Parameter \#1 \$method of method Symfony\\Component\\BrowserKit\\AbstractBrowser\:\:request\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/JsonHttpTestClient.php
-
-		-
-			message: '#^Parameter \#2 \$uri of method Symfony\\Component\\BrowserKit\\AbstractBrowser\:\:request\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/JsonHttpTestClient.php
-
-		-
-			message: '#^Parameter \#6 \$content of method Symfony\\Component\\BrowserKit\\AbstractBrowser\:\:request\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/JsonHttpTestClient.php
 
 		-
 			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MoneyReceivedOnClientsBehalf\|false\.$#'
