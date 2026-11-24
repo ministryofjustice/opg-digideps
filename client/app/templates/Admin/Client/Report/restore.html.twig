@@ -4,5 +4,6 @@
 {% block pageTitle %}{{ 'opg.report.restore.title' | trans({}, 'twig-components') }}{% endblock %}
 
 {% block pageContent %}
+    <twig:OPG:Admin:ClientDetails restoreFromReport="{{ restoreFromReport }}"/>
     <twig:Render self="{{ form }}"/>
 {% endblock %}

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Components\OPG\Admin;
 
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\Report\ReportType;
 use OPG\Digideps\Frontend\Components\GOV\Link;
 use OPG\Digideps\Frontend\Components\GOV\Table\Caption;
 use OPG\Digideps\Frontend\Components\GOV\Table\Cell;
@@ -25,23 +27,43 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 final class ClientDetails
 {
     /** @var array<string, string> $text */
-    public array $text;
+    public array $text = [];
 
-    public ?Table $activeReportsTable;
-    public ?Table $submittedReportsTable;
-    public ?Table $incompleteReportsTable;
-    public ?Table $closedReportsTable;
+    /** @var array{warning: string, sharedSections: string}|null */
+    public ?array $restoreConfirmation = null;
+
+    public ?Table $activeReportsTable = null;
+    public ?Table $submittedReportsTable = null;
+    public ?Table $incompleteReportsTable = null;
+    public ?Table $closedReportsTable = null;
 
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly Security $security,
     ) {
-        $this->text = $this->makeText();
     }
 
-    public function mount(Client $client): void
+    public function mount(?Client $client = null, ?Report $restoreFromReport = null): void
     {
+        if ($client === null && $restoreFromReport !== null) {
+            $type = ReportType::from($restoreFromReport->getType());
+            $typeKey = $type->courtOrderKind === CourtOrderKind::Hybrid ? 'hybrid' : $type->courtOrderType->value;
+            $this->restoreConfirmation = [
+                'warning' => $this->translate('restoreConfirmation.warning', [
+                    '%reportType%' => $this->translate("restoreConfirmation.reportType.{$typeKey}"),
+                    '%reportingPeriod%' => $restoreFromReport->getPeriod(),
+                ]),
+                'sharedSections' => $this->translate('restoreConfirmation.sharedSections'),
+            ];
+            return;
+        }
+
+        if ($client === null || $restoreFromReport !== null) {
+            throw new \InvalidArgumentException('Provide either a client or a report to restore, but not both.');
+        }
+
+        $this->text = $this->makeText();
         $userIsSuperAdmin = in_array(User::ROLE_SUPER_ADMIN, $this->security->getUser()?->getRoles() ?? []);
 
         $reportsByCategory = $this->categoriseReports($client->getReports());
@@ -91,13 +113,10 @@ final class ClientDetails
         return $translations;
     }
 
-    private function translate(string $key): string
+    /** @param array<string, string> $parameters */
+    private function translate(string $key, array $parameters = []): string
     {
-        try {
-            return $this->translator->trans("opg.admin.clientDetails.{$key}", [], 'twig-components');
-        } catch (\Throwable $t) {
-            return "$t";
-        }
+        return $this->translator->trans("opg.admin.clientDetails.{$key}", $parameters, 'twig-components');
     }
 
     /**

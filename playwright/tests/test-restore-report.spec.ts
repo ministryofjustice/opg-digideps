@@ -1,10 +1,18 @@
 import { test } from "@playwright/test";
-import { createFixtureViaApi, getAdminUserFixture, Scenario, setupFixture } from "./fixtures/fixtures";
+import {
+  createFixtureViaApi,
+  getAdminUserFixture,
+  Scenario,
+  setupFixture,
+} from "./fixtures/fixtures";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminClientDetailsPage from "./pages/AdminClientDetailsPage";
 import AdminRestoreReportPage from "./pages/AdminRestoreReportPage";
+import PageOpgBanner from "./pageComponents/PageOpgBanner";
 
-test("a PFA report on a closed court order can be restored over the active PFA report", async ({ page }) => {
+test("a PFA report on a closed court order can be restored over the active PFA report", async ({
+  page,
+}) => {
   const runTest = async (scenarios: Scenario[]) => {
     console.log(JSON.stringify(scenarios, null, 2));
     const clientId = scenarios[0]["orders"][0]["clientId"];
@@ -22,11 +30,27 @@ test("a PFA report on a closed court order can be restored over the active PFA r
     await adminClientDetailsPage.restoreReport("2024-2025");
 
     const adminRestoreReportPage = new AdminRestoreReportPage(
-      page, replaceableReportId, restoreFromReportId, clientId
+      page,
+      replaceableReportId,
+      restoreFromReportId,
+      clientId,
     );
     await adminRestoreReportPage.isExpected();
+    await adminRestoreReportPage.expectConfirmation(
+      "Property and Financial Affairs",
+      "2024 to 2025",
+    );
+    await adminRestoreReportPage.confirmRestore();
 
-    return Promise.resolve();
+    await new PageOpgBanner(page).expectSuccessMessage(
+      "Report restore complete",
+    );
+    await adminClientDetailsPage.expectReportsTable("active", "2024-2025");
+    await adminClientDetailsPage.expectReportsTable(
+      "unsubmitted (closed court orders)",
+      "2025-2026",
+      1,
+    );
   };
 
   await setupFixture(
@@ -37,20 +61,20 @@ test("a PFA report on a closed court order can be restored over the active PFA r
         active: false,
         reports: [
           {
-            startDate: new Date("2024-01-02")
-          }
-        ]
+            startDate: new Date("2024-01-02"),
+          },
+        ],
       },
       // unsubmitted report on active court order (can be replaced by report
       // on closed order)
       {
-        reportType: "OPG102",
+        reportType: "OPG103",
         active: true,
         reports: [
           {
-            startDate: new Date("2025-01-01")
-          }
-        ]
+            startDate: new Date("2025-01-01"),
+          },
+        ],
       },
     ]),
   ).then((fixture) => runTest(fixture.data as Scenario[]));
