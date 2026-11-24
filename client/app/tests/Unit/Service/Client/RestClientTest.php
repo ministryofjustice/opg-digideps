@@ -7,7 +7,6 @@ namespace Tests\OPG\Digideps\Frontend\Unit\Service\Client;
 use GuzzleHttp\Psr7\Utils;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use JMS\Serializer\SerializerInterface;
 use OPG\Digideps\Common\Registration\SelfRegisterData;
 use OPG\Digideps\Frontend\Entity\User;
@@ -15,7 +14,6 @@ use OPG\Digideps\Frontend\Exception\RestClientException;
 use OPG\Digideps\Frontend\Service\Client\Exception\NoSuccess;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
-use OPG\Digideps\Frontend\Service\JWT\JWTService;
 use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\NativeType;
@@ -24,7 +22,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -32,7 +29,6 @@ class RestClientTest extends TestCase
 {
     private string $clientSecret = 'secret-123';
     private string $sessionToken = 'sessionToken347349r783';
-    private JWTService&MockObject $jwtService;
     private ClientInterface&MockObject $client;
     private SerializerInterface&MockObject $serialiser;
     private RedisStorage&MockObject $redisStorage;
@@ -49,7 +45,6 @@ class RestClientTest extends TestCase
         $this->serialiser = self::createMock(SerializerInterface::class);
         $this->logger = self::createMock(LoggerInterface::class);
         $this->endpointResponse = self::createMock(ResponseInterface::class);
-        $this->jwtService = self::createMock(JWTService::class);
 
         $this->parameterBag = self::createMock(ParameterBagInterface::class);
         $this->parameterBag->method('get')->with('kernel.debug')->willReturn(false);
@@ -68,7 +63,6 @@ class RestClientTest extends TestCase
             $this->logger,
             $this->clientSecret,
             $this->parameterBag,
-            $this->jwtService
         );
 
         $this->sut->setLoggedUserId(1);
@@ -470,7 +464,6 @@ class RestClientTest extends TestCase
             $this->logger,
             $this->clientSecret,
             $parameterBag,
-            $this->jwtService
         );
         $object->setLoggedUserId(1);
 
@@ -506,75 +499,5 @@ class RestClientTest extends TestCase
 
         self::assertTrue($actual[0]['time'] > 0);
         self::assertTrue($actual[0]['time'] < 1);
-    }
-
-    public function testJWTReturnedWhenSuperAdminLogsIn(): void
-    {
-        $expectedLoggedInUser = self::createMock(User::class);
-        $expectedLoggedInUser->method('getId')->willReturn(1);
-        $expectedLoggedInUser->method('getRolename')->willReturn('ROLE_SUPER_ADMIN');
-        $userArray = ['id' => 1, 'firstname' => 'Peter'];
-        $userJson = json_encode($userArray);
-
-        $encodedJWT = 'not-real-jwt';
-
-        $request = new Request();
-        $request->headers->set('x-aws-request-id', 'THIS_IS_THE_REQUEST_ID');
-
-        // Create a mock for RequestStack
-        $requestStackMock = self::createMock(RequestStack::class);
-        $requestStackMock->method('getCurrentRequest')->willReturn($request);
-
-        $container = self::createMock(ContainerInterface::class);
-        $container->method('has')->with('request_stack')->willReturn(true);
-        $container->method('get')->with('request_stack')->willReturn($requestStackMock);
-
-        $sut = new RestClient(
-            $container,
-            $this->client,
-            $this->redisStorage,
-            $this->serialiser,
-            $this->logger,
-            $this->clientSecret,
-            $this->parameterBag,
-            $this->jwtService
-        );
-
-        $credentialsArray = ['username' => 'u', 'password' => 'p'];
-        $credentialsJson = json_encode($credentialsArray);
-        $this->serialiser->method('serialize')->with($credentialsArray, 'json', null)->willReturn($credentialsJson);
-        $this->serialiser->method('deserialize')->willReturnMap([
-            [$userJson, 'array', 'json', null, ['success' => true, 'data' => $userArray]],
-            [$userJson, User::class, 'json', null, $expectedLoggedInUser],
-        ]);
-
-        $loginResponse = new GuzzleResponse(200, ['AuthToken' => $this->sessionToken, 'JWT' => [0 => $encodedJWT]], $userJson);
-
-        $this->client->method('request')->willReturnCallback(function (string $method, string $path, array $options) use ($loginResponse, $credentialsJson) {
-            self::assertSame('post', $method);
-            self::assertSame('/auth/login', $path);
-            self::assertTrue(
-                isset($options['body'], $options['headers']['ClientSecret'])
-                && $options['body'] === $credentialsJson
-                && $options['headers']['ClientSecret'] === $this->clientSecret
-            );
-            return $loginResponse;
-        });
-
-        $this->jwtService->expects(self::atLeastOnce())
-            ->method('getUrn')
-            ->with($encodedJWT)
-            ->willReturn('urn:opg:digideps:users:1');
-
-        $this->redisStorage->expects(self::atLeastOnce())
-            ->method('set')
-            ->with('urn:opg:digideps:users:1-jwt', $encodedJWT);
-
-        $this->logger->expects(self::never())->method('warning');
-
-        [$actualUser, $actualAuthToken] = $sut->login($credentialsArray);
-
-        self::assertEquals($expectedLoggedInUser, $actualUser);
-        self::assertEquals($this->sessionToken, $actualAuthToken);
     }
 }

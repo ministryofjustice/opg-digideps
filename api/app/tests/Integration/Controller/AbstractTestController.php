@@ -8,7 +8,6 @@ use OPG\Digideps\Backend\DataFixtures\TestUserFixtures;
 use OPG\Digideps\Backend\Fixture\FixtureService;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
-use OPG\Digideps\Backend\Service\JWT\JWTService;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
@@ -22,7 +21,6 @@ abstract class AbstractTestController extends WebTestCase
     protected static KernelBrowser $frameworkBundleClient;
     protected static string $deputySecret;
     protected static string $adminSecret;
-    protected static ?JWTService $jwtService;
     protected ?int $loggedInUserId = null;
 
     public static function setUpBeforeClass(): void
@@ -50,7 +48,6 @@ abstract class AbstractTestController extends WebTestCase
         self::$fixtures = new Fixtures(self::$em);
         self::$em->clear();
 
-        self::$jwtService = static::getContainer()->get(JWTService::class);
         self::$deputySecret = getenv('SECRETS_FRONT_KEY') ?: '';
         self::$adminSecret = getenv('SECRETS_ADMIN_KEY') ?: '';
     }
@@ -68,7 +65,7 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * @param array $options with keys method, uri, data, mustSucceed, mustFail, assertId
      */
-    public function assertJsonRequest($method, $uri, array $options = [], bool $withValidJwt = false): array
+    public function assertJsonRequest($method, $uri, array $options = []): array
     {
         $headers = ['CONTENT_TYPE' => 'application/json'];
         if (isset($options['AuthToken'])) {
@@ -76,10 +73,6 @@ abstract class AbstractTestController extends WebTestCase
         }
         if (isset($options['ClientSecret'])) {
             $headers['HTTP_ClientSecret'] = $options['ClientSecret'];
-        }
-
-        if ($withValidJwt) {
-            $headers['HTTP_JWT'] = self::$jwtService->createNewJWT();
         }
 
         $rawData = null;
