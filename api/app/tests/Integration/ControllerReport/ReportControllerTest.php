@@ -100,7 +100,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('GET', $url, self::$tokenDeputy);
     }
 
-    public function testRestoreSwapsStoredCourtOrderLinks(): void
+    public function testRestoreSwapsStoredCourtOrderLinksAndUpdatesRestoredReportType(): void
     {
         $deputies = DeputySet::oneLay();
         ['orders' => [
@@ -114,6 +114,8 @@ class ReportControllerTest extends AbstractTestController
         $closedPfa->setSibling(null);
         $closedHw->setSibling(null);
         self::$em->flush();
+        self::assertSame('103', $active->getType());
+        self::assertSame('103-4', $archived->getType());
 
         $options = [
             'AuthToken' => self::$tokenAdmin,
@@ -124,9 +126,9 @@ class ReportControllerTest extends AbstractTestController
         $this->assertJsonRequest('POST', '/report/restore', $options + ['mustFail' => true]);
 
         $connection = self::$em->getConnection();
-        $sql = 'SELECT pfa_court_order_id, hw_court_order_id FROM report WHERE id = ?';
-        self::assertSame([$activePfa->getId(), null], $connection->fetchNumeric($sql, [$archived->getId()]));
-        self::assertSame([$closedPfa->getId(), $closedHw->getId()], $connection->fetchNumeric($sql, [$active->getId()]));
+        $sql = 'SELECT pfa_court_order_id, hw_court_order_id, type FROM report WHERE id = ?';
+        self::assertSame([$activePfa->getId(), null, '103'], $connection->fetchNumeric($sql, [$archived->getId()]));
+        self::assertSame([$closedPfa->getId(), $closedHw->getId(), '103'], $connection->fetchNumeric($sql, [$active->getId()]));
     }
 
     public function testRestoreRejectsInvalidRequests(): void
