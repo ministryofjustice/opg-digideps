@@ -24,11 +24,12 @@ abstract class AbstractController extends SymfonyAbstractController
     /**
      * @template T of AbstractFormType
      * @param class-string<T> $typeClass
+     * @param array<string, mixed> $options options defined by the form type's configureOptions()
      * @return RenderableForm<T>
      */
-    protected function createRenderableForm(string $typeClass, ?string $action = null, mixed $data = null): RenderableForm
+    protected function createRenderableForm(string $typeClass, ?string $action = null, mixed $data = null, array $options = []): RenderableForm
     {
-        $options = array_filter(['action' => $action]);
+        $options = array_filter(['action' => $action]) + $options;
         /**
          * @var FormFactoryInterface $factory
          */
@@ -39,7 +40,7 @@ abstract class AbstractController extends SymfonyAbstractController
          */
         $type = $builder->getType()->getInnerType();
         $form = $builder->getForm();
-        return new RenderableForm($type, $form, fn () => $this->createRenderableForm($typeClass, $action));
+        return new RenderableForm($type, $form, fn () => $this->createRenderableForm($typeClass, $action, options: $options));
     }
 
     protected function getUser(): ?User

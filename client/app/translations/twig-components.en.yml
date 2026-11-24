@@ -165,6 +165,8 @@ opg:
         title: Are you sure you want to restore this report?
         confirm:
           label: Confirm
+        cancel:
+          label: Cancel
         courtOrders: "Court order reference number(s): %references%"
         client: "Name of client: %name%"
         type: "Type of report: %type%"

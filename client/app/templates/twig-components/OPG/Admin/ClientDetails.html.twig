@@ -1,18 +1,18 @@
 {% if restoreConfirmation is not null %}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+    <twig:GOV:Layout:Row>
+        <twig:GOV:Layout:Column n="2" d="3">
             <twig:GOV:Heading size="m" h="2">{{ restoreConfirmation.heading }}</twig:GOV:Heading>
             {% for detail in restoreConfirmation.details %}
                 <twig:GOV:Paragraph>{{ detail }}</twig:GOV:Paragraph>
             {% endfor %}
             <twig:GOV:Paragraph>{{ restoreConfirmation.notesHeading }}</twig:GOV:Paragraph>
             <twig:GOV:List list="{{ restoreConfirmation.notes }}"/>
-        </div>
-    </div>
+        </twig:GOV:Layout:Column>
+    </twig:GOV:Layout:Row>
 {% else %}
     <twig:GOV:Heading size="l" h="2">
         {{ text.reportsHeading }}
-    </twig:GOV:Heading>{#--#}
+    </twig:GOV:Heading>
 
     {% if activeReportsTable is not null %}
         <twig:GOV:Table table="{{ activeReportsTable }}"/>
