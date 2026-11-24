@@ -205,6 +205,16 @@ opg:
         submitted: submitted
         incomplete: incomplete
         closed: unsubmitted (closed court orders)
+      restoreConfirmation:
+        reportType:
+          pfa: Property and Financial Affairs
+          hw: Health and Welfare
+          hybrid: Property and Financial Affairs with Health and Welfare
+        warning: >-
+          You are about to restore the %reportType% report for %reportingPeriod%; this will replace all information in the currently active report.
+          All deputies currently active on this case will be able to see and edit this information.
+        sharedSections: >-
+          If the appropriate report type for the active report is different from the report type of the restored report, then only sections shared between these reports will be restored.
       submitted: Submitted
       type: Type
   helplineNumber: 0300 456 0300
