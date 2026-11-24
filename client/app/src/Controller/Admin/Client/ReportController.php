@@ -630,18 +630,18 @@ class ReportController extends AbstractController
             $this->generateUrl('admin_report_restore', ['id' => $id]),
             [
                 ReportRestoreType::RESTORE_FROM_REPORT_ID =>
-                    $request->query->getInt(ReportRestoreType::RESTORE_FROM_REPORT_ID),
+                    $request->query->getString(ReportRestoreType::RESTORE_FROM_REPORT_ID),
                 ReportRestoreType::CLIENT_ID =>
                     $request->query->getInt(ReportRestoreType::CLIENT_ID)
             ]
         );
+        // read after handleRequest() so a POST uses the submitted hidden field rather than the (absent) query param
+        $submitted = $form->handleRequest($request);
+        $restoreFromReportId = intval($form->getStringOrThrow(ReportRestoreType::RESTORE_FROM_REPORT_ID));
 
-        if ($form->handleRequest($request)) {
+        if ($submitted) {
             // "Confirm" was clicked
-            $requestBody = new ReportReplacement(
-                $id,
-                intval($form->getStringOrThrow(ReportRestoreType::RESTORE_FROM_REPORT_ID))
-            );
+            $requestBody = new ReportReplacement($id, $restoreFromReportId);
 
             $restoreResponse = $this->reportService->restoreReport($requestBody);
 
@@ -660,9 +660,8 @@ class ReportController extends AbstractController
             return $this->redirect($redirectUrl);
         }
 
-        // TODO proper text on confirm page
-
         return [
+            'restoreFromReport' => $this->reportApi->getReport($restoreFromReportId),
             'form' => $form->render()
         ];
     }
