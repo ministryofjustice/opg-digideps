@@ -23,5 +23,5 @@ class ReportRestoreType extends AbstractFormType
     }
 
     protected string $translationDomain { get => 'twig-components'; }
-    protected string $translationPrefix { get => 'opg.report.restore'; }
+    protected string $translationPrefix { get => 'opg.admin.clientDetails.restoreConfirmation'; }
 }
