@@ -31,7 +31,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Uid\UuidV7;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsController]
@@ -73,11 +72,7 @@ class AccountController extends AbstractController
                 $deputyEmail = $response;
             } elseif ($response instanceof AccountError) {
                 // add a form-level error message
-                $formErrorMessage = $this->translator->trans(
-                    "opg.account.request.errors.{$response->value}",
-                    ['%helplineNumber%' => $this->translator->trans('opg.helplineNumber', [], 'twig-components')],
-                    'twig-components'
-                );
+                $formErrorMessage = $this->translateError($response);
 
                 $form->addError(new FormError($formErrorMessage));
             }
@@ -102,7 +97,7 @@ class AccountController extends AbstractController
             if ($result instanceof Email) {
                 $this->addFlash('notice', "Send email to {$result->value}.");
             } else {
-                $this->addFlash('error', "{$result->value}");
+                $this->addFlash('error', $this->translateError($result));
             }
             $form = $form->recreate();
         }
@@ -138,7 +133,7 @@ class AccountController extends AbstractController
                 new ValidationKey($key)
             ));
             if ($result instanceof AccountError) {
-                $this->addFlash('error', $result->value);
+                $this->addFlash('error', $this->translateError($result));
                 return new RedirectResponse($this->generateUrl($errorRoute));
             } else {
                 return new RedirectResponse($this->generateUrl('login'));
@@ -151,11 +146,11 @@ class AccountController extends AbstractController
     private function validateToken(string $key, string $token): bool
     {
         if (!ValidationKey::isValid($key) || !Token::isValid($token)) {
-            $this->addFlash('error', UuidV7::v7());
+            $this->addFlash('error', $this->translateError(AccountError::TokenInvalid));
             return false;
         }
         if (new Token($token)->age > MaximumTokenAge::PasswordReset->value) {
-            $this->addFlash('error', '');
+            $this->addFlash('error', $this->translateError(AccountError::TokenExpired));
             return false;
         }
 
@@ -188,10 +183,19 @@ class AccountController extends AbstractController
                 }
                 return new RedirectResponse($page);
             } else {
-                $this->addFlash('error', $response->value);
+                $this->addFlash('error', $this->translateError($response));
             }
         }
 
         return ['form' => $form->render()];
+    }
+
+    private function translateError(AccountError $result): string
+    {
+        return $this->translator->trans(
+            "opg.account.errors.{$result->value}",
+            ['%helplineNumber%' => $this->translator->trans('opg.helplineNumber', [], 'twig-components')],
+            'twig-components'
+        );
     }
 }
