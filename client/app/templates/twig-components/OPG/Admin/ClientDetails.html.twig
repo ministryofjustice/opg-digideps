@@ -1,8 +1,12 @@
 {% if restoreConfirmation is not null %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <twig:GOV:Paragraph>{{ restoreConfirmation.warning }}</twig:GOV:Paragraph>
-            <twig:GOV:Paragraph>{{ restoreConfirmation.sharedSections }}</twig:GOV:Paragraph>
+            <twig:GOV:Heading size="m" h="2">{{ restoreConfirmation.heading }}</twig:GOV:Heading>
+            {% for detail in restoreConfirmation.details %}
+                <twig:GOV:Paragraph>{{ detail }}</twig:GOV:Paragraph>
+            {% endfor %}
+            <twig:GOV:Paragraph>{{ restoreConfirmation.notesHeading }}</twig:GOV:Paragraph>
+            <twig:GOV:List list="{{ restoreConfirmation.notes }}"/>
         </div>
     </div>
 {% else %}
