@@ -625,15 +625,18 @@ class ReportController extends AbstractController
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function restoreAction(Request $request, int $id): array|RedirectResponse
     {
+        $clientId = $request->query->getInt(ReportRestoreType::CLIENT_ID);
         $form = $this->createRenderableForm(
             ReportRestoreType::class,
-            $this->generateUrl('admin_report_restore', ['id' => $id]),
+            // keep the client ID in the action so the cancel link still works if a POST is re-rendered
+            $this->generateUrl('admin_report_restore', ['id' => $id, ReportRestoreType::CLIENT_ID => $clientId]),
             [
                 ReportRestoreType::RESTORE_FROM_REPORT_ID =>
                     $request->query->getString(ReportRestoreType::RESTORE_FROM_REPORT_ID),
                 ReportRestoreType::CLIENT_ID =>
                     $request->query->getInt(ReportRestoreType::CLIENT_ID)
-            ]
+            ],
+            [ReportRestoreType::CANCEL_URL => $this->generateUrl('admin_client_details', ['id' => $clientId])]
         );
         // read after handleRequest() so a POST uses the submitted hidden field rather than the (absent) query param
         $submitted = $form->handleRequest($request);

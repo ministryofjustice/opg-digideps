@@ -18,7 +18,7 @@ class AccountRequestType extends AbstractFormType
     /**
      * @inheritDoc
      */
-    protected function defineInputs(callable $t): array
+    protected function defineInputs(callable $t, array $options): array
     {
         return [
             new TextInput(
