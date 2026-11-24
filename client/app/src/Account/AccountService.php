@@ -79,7 +79,7 @@ final readonly class AccountService
 
     private function sendSetPasswordEmail(AccountResponse $response, bool $isReset = false): Email|AccountError
     {
-        return $this->mailer->sendSetPasswordEmail($response, $isReset) ? $response->email : AccountError::EmailError;
+        return $response->email; //Needs DDLS-1705 return $this->mailer->sendSetPasswordEmail($response, $isReset) ? $response->email : AccountError::EmailError;
     }
 
     private function getRawResponse(string $path, AccountRequest|PasswordRequest|ResetRequest|AcceptRequest $request): string
