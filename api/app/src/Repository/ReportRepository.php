@@ -8,6 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
@@ -18,6 +19,7 @@ use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory as ReportMoneyShortCat
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\SynchronisableInterface;
 use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
+use OPG\Digideps\Common\Report\ReportReplacement;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -36,6 +38,39 @@ class ReportRepository extends ServiceEntityRepository
     public function clear(): void
     {
         $this->registry->getManager()->clear();
+    }
+
+    public function restoreReport(ReportReplacement $replacement): bool
+    {
+        return $this->getEntityManager()->wrapInTransaction(function () use ($replacement): bool {
+            /** @var array<int, Report> $reports */
+            $reports = $this->createQueryBuilder('r', 'r.id')
+                ->where('r.id IN (:ids)')
+                ->setParameter('ids', [$replacement->replaceReport, $replacement->withReport])
+                ->orderBy('r.id', 'ASC')
+                ->getQuery()
+                ->setLockMode(LockMode::PESSIMISTIC_WRITE)
+                ->getResult();
+
+            if (count($reports) !== 2) {
+                return false;
+            }
+
+            $active = $reports[$replacement->replaceReport];
+            $archived = $reports[$replacement->withReport];
+            if ($active->getClient() !== $archived->getClient()) {
+                return false;
+            }
+
+            foreach ($active->getClient()->findPossibleReportReplacements() as $possible) {
+                if ($possible->replaceReport === $replacement->replaceReport && $possible->withReport === $replacement->withReport) {
+                    $active->swapCourtOrdersWith($archived);
+                    return true;
+                }
+            }
+
+            return false;
+        });
     }
 
     public function addFeesToReportIfMissing(Report $report): ?int
