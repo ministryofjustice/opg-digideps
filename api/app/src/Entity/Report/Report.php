@@ -1231,8 +1231,6 @@ class Report
 
     public function setCourtOrder(CourtOrder $courtOrder): static
     {
-        $this->pfaCourtOrder?->removeReport($this);
-        $this->hwCourtOrder?->removeReport($this);
         $this->pfaCourtOrder?->getSibling()?->removeReport($this);
         $this->hwCourtOrder?->getSibling()?->removeReport($this);
 
@@ -1244,8 +1242,31 @@ class Report
                 $sibling = null;
             }
         }
-        $this->pfaCourtOrder = $courtOrder->getOrderType() === CourtOrderType::PFA ? $courtOrder : $sibling;
-        $this->hwCourtOrder = $courtOrder->getOrderType() === CourtOrderType::HW ? $courtOrder : $sibling;
+        $this->assignCourtOrders(
+            $courtOrder->getOrderType() === CourtOrderType::PFA ? $courtOrder : $sibling,
+            $courtOrder->getOrderType() === CourtOrderType::HW ? $courtOrder : $sibling
+        );
+
+        return $this;
+    }
+
+    public function swapCourtOrdersWith(Report $other): void
+    {
+        // Historical links need not match the court orders' current sibling relationships.
+        $pfa = $this->pfaCourtOrder;
+        $hw = $this->hwCourtOrder;
+
+        $this->assignCourtOrders($other->pfaCourtOrder, $other->hwCourtOrder);
+        $other->assignCourtOrders($pfa, $hw);
+    }
+
+    private function assignCourtOrders(?CourtOrder $pfa, ?CourtOrder $hw): void
+    {
+        $this->pfaCourtOrder?->removeReport($this);
+        $this->pfaCourtOrder = $pfa;
+
+        $this->hwCourtOrder?->removeReport($this);
+        $this->hwCourtOrder = $hw;
 
         if ($this->pfaCourtOrder !== null && !$this->pfaCourtOrder->getReports()->contains($this)) {
             $this->pfaCourtOrder->getReports()->add($this);
@@ -1253,8 +1274,6 @@ class Report
         if ($this->hwCourtOrder !== null && !$this->hwCourtOrder->getReports()->contains($this)) {
             $this->hwCourtOrder->getReports()->add($this);
         }
-
-        return $this;
     }
 
     #[ORM\PrePersist]
