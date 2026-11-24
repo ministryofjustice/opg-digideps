@@ -1231,6 +1231,8 @@ class Report
 
     public function setCourtOrder(CourtOrder $courtOrder): static
     {
+        $this->pfaCourtOrder?->removeReport($this);
+        $this->hwCourtOrder?->removeReport($this);
         $this->pfaCourtOrder?->getSibling()?->removeReport($this);
         $this->hwCourtOrder?->getSibling()?->removeReport($this);
 
