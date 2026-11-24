@@ -24,6 +24,10 @@ test("a PFA report on a closed court order can be restored over the active PFA r
 
     const adminClientDetailsPage = new AdminClientDetailsPage(page, clientId);
     await adminClientDetailsPage.goto();
+    const clientName = await page
+      .getByRole("heading", { level: 1 })
+      .filter({ hasText: scenarios[0].client.lastName })
+      .innerText();
 
     await adminClientDetailsPage.expectReport("active", "2025-2026", "OPG103");
     await adminClientDetailsPage.expectReport(
@@ -43,10 +47,14 @@ test("a PFA report on a closed court order can be restored over the active PFA r
       clientId,
     );
     await adminRestoreReportPage.isExpected();
-    await adminRestoreReportPage.expectConfirmation(
-      "Property and Financial Affairs",
-      "2024 to 2025",
-    );
+    await adminRestoreReportPage.expectConfirmation({
+      courtOrderReferences: scenarios[0].orders
+        .map((order) => order.courtOrderUid)
+        .join(", "),
+      clientName,
+      reportType: "Personal and Financial Affairs",
+      period: "1 July 2024 to 30 June 2025",
+    });
     await adminRestoreReportPage.confirmRestore();
 
     await new PageOpgBanner(page).expectSuccessMessage(

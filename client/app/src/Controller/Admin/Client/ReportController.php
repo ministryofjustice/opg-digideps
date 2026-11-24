@@ -661,7 +661,7 @@ class ReportController extends AbstractController
         }
 
         return [
-            'restoreFromReport' => $this->reportApi->getReport($restoreFromReportId),
+            'restoreFromReport' => $this->reportApi->getReport($restoreFromReportId, ['report-with-court-orders', 'court-order-basic']),
             'form' => $form->render()
         ];
     }
