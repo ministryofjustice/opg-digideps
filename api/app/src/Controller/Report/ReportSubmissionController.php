@@ -23,6 +23,7 @@ class ReportSubmissionController extends RestController
         null,
         Document::SYNC_STATUS_TEMPORARY_ERROR,
         Document::SYNC_STATUS_PERMANENT_ERROR,
+        Document::SYNC_STATUS_IN_PROGRESS,
     ];
 
     private static array $jmsGroups = [
