@@ -156,7 +156,7 @@ class DocumentControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['row_limit' => 100],
-        ], true);
+        ]);
 
         self::assertCount(1, json_decode($return['data'], true));
     }
@@ -172,7 +172,7 @@ class DocumentControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
             'data' => ['syncStatus' => Document::SYNC_STATUS_SUCCESS],
-        ], true);
+        ]);
 
         self::assertEquals(self::$document1->getId(), $response['data']['id']);
         self::assertEquals(Document::SYNC_STATUS_SUCCESS, $response['data']['synchronisation_status']);

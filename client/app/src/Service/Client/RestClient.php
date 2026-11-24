@@ -11,7 +11,6 @@ use OPG\Digideps\Common\Registration\SelfRegisterData;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Exception\RestClientException;
 use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
-use OPG\Digideps\Frontend\Service\JWT\JWTService;
 use OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -72,7 +71,6 @@ class RestClient implements RestClientInterface
         protected LoggerInterface $logger,
         protected string $clientSecret,
         protected ParameterBagInterface $params,
-        protected JWTService $jwtService
     ) {
         $saveHistory = $params->get('kernel.debug');
         if ($saveHistory !== true) {
@@ -108,31 +106,6 @@ class RestClient implements RestClientInterface
 
         $user = $this->arrayToEntity(User::class, $this->extractDataArray($response));
         $authToken = $response->getHeader(RestClient::HEADER_AUTH_TOKEN)[0];
-
-        // Temporarily scoping this to super admins until we're happy with the flow
-        if ($response->hasHeader(self::HEADER_JWT) && $user->getRoleName() === User::ROLE_SUPER_ADMIN) {
-            try {
-                /** @var ?string $jwt */
-                $jwt = $response->getHeader(self::HEADER_JWT)[0] ?? null;
-
-                if ($jwt === null) {
-                    throw new \HttpHeaderException(
-                        sprintf('Expected JWT header "%s" not found in API response', self::HEADER_JWT)
-                    );
-                }
-
-                $subjectUrn = $this->jwtService->getUrn($jwt);
-
-                // Move to secure cookie in next iteration
-                $this->redisStorage->set(sprintf('%s-jwt', $subjectUrn), $jwt);
-            } catch (\Throwable $e) {
-                $jwtDecodeFailureReason = sprintf('Failed to decode JWT - %s', $e->getMessage());
-                $this->logger->warning($jwtDecodeFailureReason);
-
-                throw new \RuntimeException('Problems decoding JWT - try again');
-            }
-        }
-
         return [$user, $authToken];
     }
 

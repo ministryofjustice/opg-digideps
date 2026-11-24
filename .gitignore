@@ -86,3 +86,6 @@ zap/ModernReport/
 
 # Playwright
 /playwright/test-results/
+
+# Downloaded during build
+/client/app/bank-holidays.json
