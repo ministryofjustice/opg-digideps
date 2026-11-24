@@ -7,6 +7,7 @@ namespace OPG\Digideps\Frontend\Components\OPG\Admin;
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\Report\ReportType;
 use OPG\Digideps\Frontend\Components\GOV\Link;
+use OPG\Digideps\Frontend\Components\GOV\List\UnorderedList;
 use OPG\Digideps\Frontend\Components\GOV\Table\Caption;
 use OPG\Digideps\Frontend\Components\GOV\Table\Cell;
 use OPG\Digideps\Frontend\Components\GOV\Table\Table;
@@ -14,6 +15,7 @@ use OPG\Digideps\Frontend\Components\GOV\Table\TableBuilder;
 use OPG\Digideps\Frontend\Components\OPG\Renderable\ActionsList;
 use OPG\Digideps\Frontend\Components\OPG\Renderable\Div;
 use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\CourtOrder;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Form\Admin\ReportRestoreType;
@@ -29,7 +31,7 @@ final class ClientDetails
     /** @var array<string, string> $text */
     public array $text = [];
 
-    /** @var array{warning: string, sharedSections: string}|null */
+    /** @var array{heading: string, details: list<string>, notesHeading: string, notes: UnorderedList}|null */
     public ?array $restoreConfirmation = null;
 
     public ?Table $activeReportsTable = null;
@@ -47,15 +49,7 @@ final class ClientDetails
     public function mount(?Client $client = null, ?Report $restoreFromReport = null): void
     {
         if ($client === null && $restoreFromReport !== null) {
-            $type = ReportType::from($restoreFromReport->getType());
-            $typeKey = $type->courtOrderKind === CourtOrderKind::Hybrid ? 'hybrid' : $type->courtOrderType->value;
-            $this->restoreConfirmation = [
-                'warning' => $this->translate('restoreConfirmation.warning', [
-                    '%reportType%' => $this->translate("restoreConfirmation.reportType.{$typeKey}"),
-                    '%reportingPeriod%' => $restoreFromReport->getPeriod(),
-                ]),
-                'sharedSections' => $this->translate('restoreConfirmation.sharedSections'),
-            ];
+            $this->setRestoreConfirmation($restoreFromReport);
             return;
         }
 
@@ -79,6 +73,34 @@ final class ClientDetails
             possibleReportReplacements: $client->possibleReportReplacements,
             clientId: $client->getId()
         );
+    }
+
+    private function setRestoreConfirmation(Report $report): void
+    {
+        $type = ReportType::from($report->getType());
+        $typeKey = $type->courtOrderKind === CourtOrderKind::Hybrid ? 'hybrid' : $type->courtOrderType->value;
+        $courtOrderUids = array_map(fn (CourtOrder $order) => $order->getCourtOrderUid(), $report->getCourtOrders());
+
+        $this->restoreConfirmation = [
+            'heading' => $this->translate('restoreConfirmation.heading'),
+            'details' => [
+                $this->translate('restoreConfirmation.courtOrders', ['%references%' => implode(', ', $courtOrderUids)]),
+                $this->translate('restoreConfirmation.client', ['%name%' => $report->getClient()->getFullname()]),
+                $this->translate('restoreConfirmation.type', ['%type%' => $this->translate("restoreConfirmation.reportType.{$typeKey}")]),
+                $this->translate('restoreConfirmation.period', [
+                    '%startDate%' => $report->getStartDate()?->format('j F Y') ?? '',
+                    '%endDate%' => $report->getEndDate()?->format('j F Y') ?? '',
+                ]),
+            ],
+            'notesHeading' => $this->translate('restoreConfirmation.notesHeading'),
+            'notes' => new UnorderedList(
+                true,
+                $this->translate('restoreConfirmation.notes.reinstate'),
+                $this->translate('restoreConfirmation.notes.deputyAccess'),
+                $this->translate('restoreConfirmation.notes.sharedSections'),
+                $this->translate('restoreConfirmation.notes.reportType'),
+            ),
+        ];
     }
 
     /**
