@@ -258,7 +258,7 @@ final class ClientDetails
 
         $reportId = $report->getId();
 
-        $possiblesForReport = array_filter($possibleReportReplacements, fn ($pr) => $pr['withReport'] === $reportId);
+        $possiblesForReport = array_values(array_filter($possibleReportReplacements, fn ($pr) => $pr['withReport'] === $reportId));
         if (count($possiblesForReport) !== 1) {
             return null;
         }

@@ -207,6 +207,31 @@ final class ClientTest extends TestCase
         self::assertEquals($expected, $client->findPossibleReportReplacements());
     }
 
+    public function testFindPossibleReplacementsHybridsDoesNotDuplicateReports(): void
+    {
+        $client = new Client();
+
+        // a hybrid report is linked to both its pfa and hw court orders
+        $closedPfa = $this->createOrder(id: 10, uid: '12345678', madeDate: '2025-02-02', client: $client, kind: CourtOrderKind::Hybrid, status: 'CLOSED');
+        $closedHw = $this->createOrder(id: 11, uid: '22345678', madeDate: '2025-02-02', client: $client, type: CourtOrderType::HW, courtOrderReportType: CourtOrderReportType::OPG104, kind: CourtOrderKind::Hybrid, status: 'CLOSED');
+        $closedPfa->setSibling($closedHw);
+        $closedHw->setSibling($closedPfa);
+        $closedReport = $this->createReport(id: 100, courtOrder: $closedPfa, type: '102-4');
+
+        $activePfa = $this->createOrder(id: 20, uid: '32345678', madeDate: '2026-02-02', client: $client, kind: CourtOrderKind::Hybrid);
+        $activeHw = $this->createOrder(id: 21, uid: '42345678', madeDate: '2026-02-02', client: $client, type: CourtOrderType::HW, courtOrderReportType: CourtOrderReportType::OPG104, kind: CourtOrderKind::Hybrid);
+        $activePfa->setSibling($activeHw);
+        $activeHw->setSibling($activePfa);
+        $activeReport = $this->createReport(id: 200, courtOrder: $activePfa, type: '102-4');
+
+        $client->setCourtOrders(new ArrayCollection([$closedPfa, $closedHw, $activePfa, $activeHw]));
+
+        self::assertEquals(
+            [new ReportReplacement($activeReport->getId(), $closedReport->getId())],
+            $client->findPossibleReportReplacements()
+        );
+    }
+
     private function createOrder(
         int $id,
         string $uid,
@@ -214,13 +239,14 @@ final class ClientTest extends TestCase
         Client $client,
         CourtOrderType $type = CourtOrderType::PFA,
         CourtOrderReportType $courtOrderReportType = CourtOrderReportType::OPG102,
+        CourtOrderKind $kind = CourtOrderKind::Single,
         string $status = 'ACTIVE'
     ): CourtOrder {
         $courtOrder = new CourtOrder(
             $uid,
             $type,
             $courtOrderReportType,
-            CourtOrderKind::Single,
+            $kind,
             new \DateTime($madeDate),
             $client,
             $status
