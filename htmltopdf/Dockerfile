@@ -1,7 +1,7 @@
 ##############################
 # Stage 0.1: Build the base gotenberg
 ##############################
-FROM gotenberg/gotenberg:8.39.0-chromium@sha256:558943677cf9092df83ff654c2645856dcb9ddf777f359243789688e74f3bcdd AS source
+FROM gotenberg/gotenberg:9.9.3-chromium@sha256:558943677cf9092df83ff654c2645856dcb9ddf777f359243789688e74f3bcdd AS source
 
 
 ##############################
