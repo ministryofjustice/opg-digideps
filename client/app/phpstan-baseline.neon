@@ -1003,12 +1003,6 @@ parameters:
 			path: src/Controller/ClientController.php
 
 		-
-			message: '#^Cannot call method getActiveReport\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
 			message: '#^Cannot call method getFirstname\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -5350,12 +5344,6 @@ parameters:
 			message: '#^Parameter \#1 \$data of function unserialize expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: src/Security/SessionAuthenticator.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Security\\SessionAuthenticator\:\:\$tokenStorage is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
 			path: src/Security/SessionAuthenticator.php
 
 		-
