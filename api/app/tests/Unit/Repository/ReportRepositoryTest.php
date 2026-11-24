@@ -104,7 +104,7 @@ final class ReportRepositoryTest extends TestCase
      * @param array<ReportReplacement> $possibleReplacements
      */
     #[DataProvider('possibleReplacementsIncludingRequestedProvider')]
-    public function testRestoreReportSwapsCourtOrdersWhenReplacementIsPossible(array $possibleReplacements): void
+    public function testRestoreReportSwapsCourtOrdersAndUpdatesRestoredReportTypeWhenReplacementIsPossible(array $possibleReplacements): void
     {
         $client = self::createConfiguredStub(Client::class, ['findPossibleReportReplacements' => $possibleReplacements]);
         $replaceReport = $this->createReportForClient($client);
@@ -115,8 +115,13 @@ final class ReportRepositoryTest extends TestCase
             self::WITH_REPORT_ID => $withReport,
         ]);
 
+        $replaceReport->method('getType')->willReturn('102');
         $replaceReport->expects(self::once())->method('swapCourtOrdersWith')->with(self::identicalTo($withReport));
+        $replaceReport->expects(self::never())->method('setType');
+        $replaceReport->expects(self::never())->method('updateSectionsStatusCache');
         $withReport->expects(self::never())->method('swapCourtOrdersWith');
+        $withReport->expects(self::once())->method('setType')->with('102')->willReturnSelf();
+        $withReport->expects(self::once())->method('updateSectionsStatusCache');
 
         self::assertTrue($this->sut->restoreReport($replacement));
     }
@@ -144,7 +149,7 @@ final class ReportRepositoryTest extends TestCase
         $reports = [];
         foreach ($foundReportIds as $id) {
             $reports[$id] = $this->createReportForClient($client);
-            $reports[$id]->expects(self::never())->method('swapCourtOrdersWith');
+            $this->expectReportUnchanged($reports[$id]);
         }
 
         $replacement = new ReportReplacement($replaceReportId, $withReportId);
@@ -161,9 +166,9 @@ final class ReportRepositoryTest extends TestCase
         $withReportClient->expects(self::never())->method('findPossibleReportReplacements');
 
         $replaceReport = $this->createReportForClient($replaceReportClient);
-        $replaceReport->expects(self::never())->method('swapCourtOrdersWith');
+        $this->expectReportUnchanged($replaceReport);
         $withReport = $this->createReportForClient($withReportClient);
-        $withReport->expects(self::never())->method('swapCourtOrdersWith');
+        $this->expectReportUnchanged($withReport);
 
         $replacement = new ReportReplacement(self::REPLACE_REPORT_ID, self::WITH_REPORT_ID);
         $this->expectLockedReportQueryInTransaction($replacement, [
@@ -199,9 +204,9 @@ final class ReportRepositoryTest extends TestCase
     {
         $client = self::createConfiguredStub(Client::class, ['findPossibleReportReplacements' => $possibleReplacements]);
         $replaceReport = $this->createReportForClient($client);
-        $replaceReport->expects(self::never())->method('swapCourtOrdersWith');
+        $this->expectReportUnchanged($replaceReport);
         $withReport = $this->createReportForClient($client);
-        $withReport->expects(self::never())->method('swapCourtOrdersWith');
+        $this->expectReportUnchanged($withReport);
 
         $replacement = new ReportReplacement(self::REPLACE_REPORT_ID, self::WITH_REPORT_ID);
         $this->expectLockedReportQueryInTransaction($replacement, [
@@ -218,6 +223,13 @@ final class ReportRepositoryTest extends TestCase
         $report->method('getClient')->willReturn($client);
 
         return $report;
+    }
+
+    private function expectReportUnchanged(Report&MockObject $report): void
+    {
+        $report->expects(self::never())->method('swapCourtOrdersWith');
+        $report->expects(self::never())->method('setType');
+        $report->expects(self::never())->method('updateSectionsStatusCache');
     }
 
     /**

@@ -61,8 +61,9 @@ test("a PFA report on a closed court order can be restored over the active PFA r
       "Report restore complete",
     );
     // the reports have swapped court orders, and each keeps its own dates, so
-    // the active report now has the dates of the report restored from
-    await adminClientDetailsPage.expectReport("active", "2024-2025", "OPG102");
+    // the active report now has the dates of the report restored from; the
+    // restored report also takes the type of the report it replaced
+    await adminClientDetailsPage.expectReport("active", "2024-2025", "OPG103");
     await adminClientDetailsPage.expectReport(
       "unsubmitted (closed court orders)",
       "2025-2026",
