@@ -26,7 +26,7 @@ class CourtOrder
     #[JMS\Type('string')]
     private string $status;
 
-    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    #[JMS\Type("DateTime<'Y-m-d H:i:s', '', ['Y-m-d H:i:s', 'Y-m-d\TH:i:sP']>")]
     public ?\DateTime $orderMadeDate = null;
 
     /**
