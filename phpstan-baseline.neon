@@ -73,6 +73,12 @@ parameters:
 			path: api/app/src/Command/ApiComparison.php
 
 		-
+			message: '#^Property OPG\\Digideps\\Backend\\Command\\ApiComparison\:\:\$defaultName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: api/app/src/Command/ApiComparison.php
+
+		-
 			message: '#^Binary operation "\+\=" between mixed and int\<0, max\> results in an error\.$#'
 			identifier: assignOp.invalid
 			count: 1
@@ -20335,18 +20341,6 @@ parameters:
 			path: client/app/config/bootstrap.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Account\\AccountService\:\:sendSetPasswordEmail\(\) never returns OPG\\Digideps\\Common\\Account\\AccountError so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: client/app/src/Account/AccountService.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Account\\AccountService\:\:\$mailer is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: client/app/src/Account/AccountService.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:getLogEvents\(\) should return array\|int but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -20458,12 +20452,6 @@ parameters:
 			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, array\|bool\|float\|int\|string\|UnitEnum\|null given\.$#'
 			identifier: argument.type
 			count: 2
-			path: client/app/src/Command/ProcessLayCSVCommand.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Command\\ProcessLayCSVCommand\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
 			path: client/app/src/Command/ProcessLayCSVCommand.php
 
 		-
