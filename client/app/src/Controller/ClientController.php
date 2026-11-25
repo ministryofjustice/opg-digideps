@@ -60,7 +60,7 @@ class ClientController extends AbstractController
     #[Template('@App/Client/edit.html.twig')]
     public function editClientDetailsAction(Request $request, int $clientId): array|RedirectResponse
     {
-        $reportDeclarationId = $request->query->getInt('reportDeclarationId');
+        $reportDeclarationId = filter_var($request->query->get('reportDeclarationId'), FILTER_VALIDATE_INT) ?: 0;
 
         /** @var Client|null $preUpdateClient */
         $preUpdateClient = $this->clientApi->getById($clientId);
