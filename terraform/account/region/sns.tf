@@ -66,4 +66,11 @@ resource "aws_sns_topic_subscription" "cis_aws_foundations_standard_lambda" {
   endpoint  = aws_lambda_function.monitor_notify_lambda.arn
 
   depends_on = [aws_lambda_permission.sns_cis_aws_foundations_standard]
+
+  filter_policy = jsonencode({
+    AlarmName = [{
+      "anything-but" = "CIS-3.1-UnauthorisedAPICalls"
+    }]
+  })
+  filter_policy_scope = "MessageBody"
 }

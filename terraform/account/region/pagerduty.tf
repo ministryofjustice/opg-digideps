@@ -57,4 +57,11 @@ resource "aws_sns_topic_subscription" "pagerduty_cis_alerts" {
   endpoint_auto_confirms = true
   endpoint               = local.pagerduty_endpoint
   raw_message_delivery   = false
+
+  filter_policy = jsonencode({
+    AlarmName = [{
+      "anything-but" = "CIS-3.1-UnauthorisedAPICalls"
+    }]
+  })
+  filter_policy_scope = "MessageBody"
 }
