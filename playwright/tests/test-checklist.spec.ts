@@ -17,8 +17,8 @@ const deputyReference = "test-checklist-user";
 test("visiting the checklist submitted page does not resubmit checklist", async ({
   page,
 }) => {
-  const runTest = async (scenarios: Scenario[], user: TestUser) => {
-    const submittedReport = scenarios[0].orders[0].reports.find(
+  const runTest = async (scenario: Scenario, user: TestUser) => {
+    const submittedReport = scenario.orders[0].reports.find(
       (reportDetails) => reportDetails.submitted,
     );
 
@@ -76,7 +76,7 @@ test("visiting the checklist submitted page does not resubmit checklist", async 
 
   await Promise.all([scenarioPromise, userPromise]).then(
     async ([scenario, user]) => {
-      await runTest(scenario.data as Scenario[], user);
+      await runTest(scenario.data as Scenario, user);
     },
   );
 });

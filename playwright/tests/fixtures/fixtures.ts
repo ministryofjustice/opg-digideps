@@ -75,7 +75,7 @@ export interface Scenario {
 }
 
 interface Fixture {
-  data: Scenario[] | UserDetails[];
+  data: Scenario | Scenario[] | UserDetails[];
 }
 
 interface FixtureCallback {
