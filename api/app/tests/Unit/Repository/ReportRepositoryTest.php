@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -265,6 +266,10 @@ final class ReportRepositoryTest extends TestCase
             ->willReturnSelf();
         $query->method('setFirstResult')->willReturnSelf();
         $query->method('setMaxResults')->willReturnSelf();
+        $query->expects(self::once())
+            ->method('setLockMode')
+            ->with(LockMode::PESSIMISTIC_WRITE)
+            ->willReturnSelf();
         $query->expects(self::once())->method('getResult')->willReturn($result);
 
         $this->mockEm->expects(self::once())

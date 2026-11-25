@@ -8,6 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
@@ -48,6 +49,7 @@ class ReportRepository extends ServiceEntityRepository
                 ->setParameter('ids', [$replacement->replaceReport, $replacement->withReport])
                 ->orderBy('r.id', 'ASC')
                 ->getQuery()
+                ->setLockMode(LockMode::PESSIMISTIC_WRITE)
                 ->getResult();
 
             if (count($reports) !== 2) {
