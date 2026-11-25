@@ -8,7 +8,7 @@ resource "aws_cloudwatch_metric_alarm" "ecs_network_tx_bytes" {
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 1
   datapoints_to_alarm = 1
-  threshold           = 300000
+  threshold           = 400000
   period              = 60
 
   namespace   = "ECS/ContainerInsights"

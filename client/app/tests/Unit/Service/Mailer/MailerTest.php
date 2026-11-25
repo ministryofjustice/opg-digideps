@@ -5,39 +5,33 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\Mailer;
 
 use Faker\Factory;
-use OPG\Digideps\Frontend\Model\Email;
+use OPG\Digideps\Common\Account\Email;
+use OPG\Digideps\Common\Mail\EmailTemplate;
+use OPG\Digideps\Common\Mail\MailSenderInterface;
+use OPG\Digideps\Common\Mail\NotifyMail;
 use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\Service\Mailer\MailFactory;
-use OPG\Digideps\Frontend\Service\Mailer\MailSender;
 use OPG\Digideps\Frontend\TestHelpers\ClientHelpers;
 use OPG\Digideps\Frontend\TestHelpers\ReportHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Uid\Uuid;
 
 class MailerTest extends TestCase
 {
-    private MockObject&MailFactory $mailFactory;
-    private MockObject&MailSender $mailSender;
-    private Mailer $sut;
-
-    public function setUp(): void
-    {
-        $this->mailFactory = self::createMock(MailFactory::class);
-        $this->mailSender = self::createMock(MailSender::class);
-        $this->sut = new Mailer($this->mailFactory, $this->mailSender);
-    }
-
     public function testSendActivationEmail(): void
     {
         $activatedUser = UserHelpers::createUser();
         $activationEmail = $this->createEmail();
 
-        $this->mailFactory->expects(self::once())->method('createActivationEmail')->with($activatedUser)->willReturn($activationEmail);
-        $this->mailSender->expects(self::once())->method('send')->with($activationEmail);
+        $mailFactory = self::createMock(MailFactory::class);
+        $mailSender = self::createMock(MailSenderInterface::class);
 
-        $this->sut->sendActivationEmail($activatedUser);
+        $mailFactory->expects(self::once())->method('createActivationEmail')->with($activatedUser)->willReturn($activationEmail);
+        $mailSender->expects(self::once())->method('send')->with($activationEmail);
+
+        new Mailer($mailFactory, $mailSender, $this->createStub(MailSenderInterface::class))->sendActivationEmail($activatedUser);
     }
 
     #[DataProvider('deputyNameProvider')]
@@ -46,10 +40,13 @@ class MailerTest extends TestCase
         $invitedUser = UserHelpers::createUser();
         $invitationEmail = $this->createEmail();
 
-        $this->mailFactory->expects(self::once())->method('createInvitationEmail')->with($invitedUser)->willReturn($invitationEmail);
-        $this->mailSender->expects(self::once())->method('send')->with($invitationEmail);
+        $mailFactory = self::createMock(MailFactory::class);
+        $mailSender = self::createMock(MailSenderInterface::class);
 
-        $this->sut->sendInvitationEmail($invitedUser, $deputyName);
+        $mailFactory->expects(self::once())->method('createInvitationEmail')->with($invitedUser)->willReturn($invitationEmail);
+        $mailSender->expects(self::once())->method('send')->with($invitationEmail);
+
+        new Mailer($mailFactory, $mailSender, $this->createStub(MailSenderInterface::class))->sendInvitationEmail($invitedUser, $deputyName);
     }
 
     public static function deputyNameProvider(): array
@@ -65,10 +62,13 @@ class MailerTest extends TestCase
         $passwordResetUser = UserHelpers::createUser();
         $passwordResetEmail = $this->createEmail();
 
-        $this->mailFactory->expects(self::once())->method('createResetPasswordEmail')->with($passwordResetUser)->willReturn($passwordResetEmail);
-        $this->mailSender->expects(self::once())->method('send')->with($passwordResetEmail);
+        $mailFactory = self::createMock(MailFactory::class);
+        $mailSender = self::createMock(MailSenderInterface::class);
 
-        $this->sut->sendResetPasswordEmail($passwordResetUser);
+        $mailFactory->expects(self::once())->method('createResetPasswordEmailOld')->with($passwordResetUser)->willReturn($passwordResetEmail);
+        $mailSender->expects(self::once())->method('send')->with($passwordResetEmail);
+
+        new Mailer($mailFactory, $mailSender, $this->createStub(MailSenderInterface::class))->sendResetPasswordEmail($passwordResetUser);
     }
 
     public function testSendUpdateClientDetailsEmail(): void
@@ -76,14 +76,17 @@ class MailerTest extends TestCase
         $updatedClient = ClientHelpers::createClient();
         $updatedClientDetailsEmail = $this->createEmail();
 
-        $this->mailFactory->expects(self::once())
+        $mailFactory = self::createMock(MailFactory::class);
+        $mailSender = self::createMock(MailSenderInterface::class);
+
+        $mailFactory->expects(self::once())
             ->method('createUpdateClientDetailsEmail')
             ->with($updatedClient)
             ->willReturn($updatedClientDetailsEmail);
 
-        $this->mailSender->expects(self::atLeastOnce())->method('send')->with($updatedClientDetailsEmail);
+        $mailSender->expects(self::atLeastOnce())->method('send')->with($updatedClientDetailsEmail);
 
-        $this->sut->sendUpdateClientDetailsEmail($updatedClient);
+        new Mailer($mailFactory, $mailSender, $this->createStub(MailSenderInterface::class))->sendUpdateClientDetailsEmail($updatedClient);
     }
 
     public function testSendUpdateDeputyDetailsEmail(): void
@@ -91,14 +94,17 @@ class MailerTest extends TestCase
         $updatedDeputy = UserHelpers::createUser();
         $updatedDeputyDetailsEmail = $this->createEmail();
 
-        $this->mailFactory->expects(self::once())
+        $mailFactory = self::createMock(MailFactory::class);
+        $mailSender = self::createMock(MailSenderInterface::class);
+
+        $mailFactory->expects(self::once())
             ->method('createUpdateDeputyDetailsEmail')
             ->with($updatedDeputy)
             ->willReturn($updatedDeputyDetailsEmail);
 
-        $this->mailSender->expects(self::atLeastOnce())->method('send')->with($updatedDeputyDetailsEmail);
+        $mailSender->expects(self::atLeastOnce())->method('send')->with($updatedDeputyDetailsEmail);
 
-        $this->sut->sendUpdateDeputyDetailsEmail($updatedDeputy);
+        new Mailer($mailFactory, $mailSender, $this->createStub(MailSenderInterface::class))->sendUpdateDeputyDetailsEmail($updatedDeputy);
     }
 
     public function testSendReportSubmissionConfirmationEmail(): void
@@ -108,26 +114,28 @@ class MailerTest extends TestCase
         $newReport = ReportHelpers::createReport();
         $submittedReportConfirmationEmail = $this->createEmail();
 
-        $this->mailFactory->expects(self::once())
+        $mailFactory = self::createMock(MailFactory::class);
+        $mailSender = self::createMock(MailSenderInterface::class);
+
+        $mailFactory->expects(self::once())
             ->method('createReportSubmissionConfirmationEmail')
             ->with($submittedByDeputy, $submittedReport, $newReport)
             ->willReturn($submittedReportConfirmationEmail);
 
-        $this->mailSender->expects(self::atLeastOnce())->method('send')->with($submittedReportConfirmationEmail);
+        $mailSender->expects(self::atLeastOnce())->method('send')->with($submittedReportConfirmationEmail);
 
-        $this->sut->sendReportSubmissionConfirmationEmail($submittedByDeputy, $submittedReport, $newReport);
+        new Mailer($mailFactory, $mailSender, $this->createStub(MailSenderInterface::class))->sendReportSubmissionConfirmationEmail($submittedByDeputy, $submittedReport, $newReport);
     }
 
-    private function createEmail(): Email
+    private function createEmail(): NotifyMail
     {
         $faker = Factory::create();
 
-        return new Email()
-            ->setFromEmailNotifyID($faker->uuid())
-            ->setToEmail($faker->safeEmail())
-            ->setFromName($faker->name())
-            ->setSubject($faker->realText(35))
-            ->setTemplate($faker->uuid())
-            ->setParameters((array)$faker->words());
+        return new NotifyMail(
+            new Email($faker->safeEmail()),
+            EmailTemplate::Activation,
+            ['a' => 'A' , 'b' => 'B'],
+            Uuid::v4()
+        );
     }
 }

@@ -307,7 +307,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $documents = [
             ['null.pdf', null, true],
             ['QUEUED.pdf', Document::SYNC_STATUS_QUEUED, false],
-            ['IN_PROGRESS.pdf', Document::SYNC_STATUS_IN_PROGRESS, false],
+            ['IN_PROGRESS.pdf', Document::SYNC_STATUS_IN_PROGRESS, true],
             ['SUCCESS.pdf', Document::SYNC_STATUS_SUCCESS, false],
             ['TEMPORARY_ERROR.pdf', Document::SYNC_STATUS_TEMPORARY_ERROR, true],
             ['PERMANENT_ERROR.pdf', Document::SYNC_STATUS_PERMANENT_ERROR, true],
