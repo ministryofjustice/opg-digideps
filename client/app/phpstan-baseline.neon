@@ -13,18 +13,6 @@ parameters:
 			path: config/bootstrap.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Account\\AccountService\:\:sendSetPasswordEmail\(\) never returns OPG\\Digideps\\Common\\Account\\AccountError so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: src/Account/AccountService.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Account\\AccountService\:\:\$mailer is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Account/AccountService.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Command\\CheckCSVUploadedCommand\:\:getLogEvents\(\) should return array\|int but returns mixed\.$#'
 			identifier: return.type
 			count: 1
