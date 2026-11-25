@@ -6,7 +6,7 @@ module "sts_endpoint_vpc" {
   service             = "sts"
   service_short_title = "sts"
   tags                = var.default_tags
-  policy              = var.account.name == "development" ? data.aws_iam_policy_document.sts_endpoint.json : ""
+  policy              = data.aws_iam_policy_document.sts_endpoint.json
 }
 
 data "aws_iam_policy_document" "sts_endpoint" {

@@ -113,6 +113,11 @@ final readonly class AccountService
         $user->setPhoneMain($deputy->getPhoneMain());
         $user->setPhoneAlternative($deputy->getPhoneAlternative());
 
+        //Todo Remove asap
+        foreach ($deputy->getClients() as $client) {
+            $user->addClient($client);
+        }
+
         return $user;
     }
 

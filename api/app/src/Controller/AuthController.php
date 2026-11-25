@@ -7,7 +7,6 @@ use OPG\Digideps\Backend\EventListener\RestInputOutputFormatter;
 use OPG\Digideps\Backend\Security\HeaderTokenAuthenticator;
 use OPG\Digideps\Backend\Security\RedisUserProvider;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
-use OPG\Digideps\Backend\Service\JWT\JWTService;
 use Doctrine\ORM\EntityManagerInterface;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
@@ -21,7 +20,6 @@ class AuthController extends RestController
 {
     public function __construct(
         private readonly RestFormatter $restFormatter,
-        private readonly JWTService $JWTService,
         private readonly LoggerInterface $logger,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly string $workspace,
@@ -58,14 +56,6 @@ class AuthController extends RestController
                 });
             } else {
                 throw new \Exception('User token is not available');
-            }
-
-            if ($user->getRoleName() === User::ROLE_SUPER_ADMIN) {
-                $jwt = $this->JWTService->createNewJWT($user);
-
-                $restInputOutputFormatter->addResponseModifier(function ($response) use ($jwt): void {
-                    $response->headers->set('JWT', $jwt);
-                });
             }
 
             // needed for redirector

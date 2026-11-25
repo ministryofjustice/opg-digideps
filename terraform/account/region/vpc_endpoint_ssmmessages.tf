@@ -6,7 +6,7 @@ module "ssmmessages_endpoint_vpc" {
   service             = "ssmmessages"
   service_short_title = "ssmmessages"
   tags                = var.default_tags
-  policy              = var.account.name == "development" ? data.aws_iam_policy_document.ssmmessages_endpoint.json : ""
+  policy              = data.aws_iam_policy_document.ssmmessages_endpoint.json
 }
 
 data "aws_iam_policy_document" "ssmmessages_endpoint" {

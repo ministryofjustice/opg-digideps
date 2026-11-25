@@ -4,7 +4,6 @@ namespace OPG\Digideps\Backend\Service\Auth;
 
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\UserRepository;
-use OPG\Digideps\Backend\Service\JWT\JWTService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -13,7 +12,6 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 class AuthService
 {
     public const string HEADER_CLIENT_SECRET = 'ClientSecret';
-    public const string HEADER_JWT = 'JWT';
     private array $clientSecrets = [];
 
     public function __construct(
@@ -21,7 +19,6 @@ class AuthService
         private readonly UserRepository $userRepository,
         private readonly RoleHierarchyInterface $roleHierarchy,
         private readonly array $clientPermissions,
-        private readonly JWTService $JWTService,
         private readonly UserPasswordHasherInterface $passwordHasher
     ) {
         if (empty($clientPermissions)) {
@@ -101,23 +98,6 @@ class AuthService
 
         // Get all roles available to this user
         $availableRoles = $this->roleHierarchy->getReachableRoleNames([$roleName]);
-        foreach ($availableRoles as $role) {
-            if (in_array($role, $permittedRoles)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function JWTIsValid(Request $request): bool
-    {
-        $jwt = $request->headers->get(self::HEADER_JWT);
-
-        if (!is_null($jwt)) {
-            return $this->JWTService->verify($jwt);
-        }
-
-        return false;
+        return array_any($availableRoles, fn ($role) => in_array($role, $permittedRoles));
     }
 }

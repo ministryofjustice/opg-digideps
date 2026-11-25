@@ -6,6 +6,7 @@ use OPG\Digideps\Backend\DBAL\ConnectionWrapper;
 use Aws\SecretsManager\SecretsManagerClient;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
+use PHPUnit\Framework\Attributes\RequiresOperatingSystemFamily;
 use PHPUnit\Framework\TestCase;
 
 class ConnectionWrapperTest extends TestCase
@@ -39,6 +40,7 @@ class ConnectionWrapperTest extends TestCase
         $this->assertTrue($this->connection->isConnected());
     }
 
+    #[RequiresOperatingSystemFamily('Linux')]
     public function testChangePasswordAndConnect()
     {
         // Connect to a real (not mocked) DB, Redis and Secret Manager after changing the DB password

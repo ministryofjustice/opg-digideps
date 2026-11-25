@@ -7,9 +7,6 @@
         "sort-packages": true,
         "platform": {
             "php": "8.4.28"
-        },
-        "allow-plugins": {
-            "php-http/discovery": true
         }
     },
     "minimum-stability": "stable",
@@ -42,7 +39,6 @@
         "fakerphp/faker": "^1.24.1",
         "guzzlehttp/guzzle": "^7.16.1",
         "jms/serializer-bundle": "^5.5.2",
-        "jolicode/slack-php-api": "^4.10",
         "league/mime-type-detection": "^1.17",
         "monolog/monolog": "^3.12.1",
         "orbitale/imagemagick-php": "^3.3.5",
@@ -82,11 +78,11 @@
         "symfony/ux-twig-component": "^2.36",
         "symfony/validator": "^6.4.50",
         "symfony/web-profiler-bundle": "^6.4.50",
+        "symfony/yaml": "^6.4.50",
         "twig/extra-bundle": "^3.29",
         "twig/html-extra": "^3.29",
         "twig/intl-extra": "^3.30",
-        "twig/twig": "^3.30",
-        "web-token/jwt-framework": "^3.4.13"
+        "twig/twig": "^3.30"
     },
     "require-dev": {
         "ext-fileinfo": "*",

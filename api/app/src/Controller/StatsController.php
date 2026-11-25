@@ -6,12 +6,10 @@ namespace OPG\Digideps\Backend\Controller;
 
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
-use OPG\Digideps\Backend\Exception\UnauthorisedException;
 use OPG\Digideps\Backend\Repository\AssetRepository;
 use OPG\Digideps\Backend\Repository\BankAccountRepository;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Repository\UserRepository;
-use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use OPG\Digideps\Backend\Service\Stats\QueryFactory;
 use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
@@ -29,7 +27,6 @@ class StatsController extends RestController
         private readonly ReportRepository $reportRepository,
         private readonly AssetRepository $assetRepository,
         private readonly BankAccountRepository $bankAccountRepository,
-        private readonly AuthService $authService,
         EntityManagerInterface $em
     ) {
         parent::__construct($em);
@@ -47,13 +44,9 @@ class StatsController extends RestController
 
     #[Route(path: 'stats/deputies/lay/active', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
-    public function getActiveLays(Request $request): array
+    public function getActiveLays(): array
     {
-        if ($this->authService->JWTIsValid($request)) {
-            return $this->userRepository->findActiveLaysInLastYear();
-        }
-
-        throw new UnauthorisedException('JWT is not valid');
+        return $this->userRepository->findActiveLaysInLastYear();
     }
 
     #[Route(path: 'stats/admins/report_data', methods: ['GET'])]

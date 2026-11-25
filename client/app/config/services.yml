@@ -117,12 +117,6 @@ services:
       $credentialProvider: '@OPG\Digideps\Frontend\Service\AWS\DefaultCredentialProvider'
       $signer: '@OPG\Digideps\Frontend\Service\AWS\SignatureV4Signer'
 
-  OPG\Digideps\Frontend\Service\Client\GovUK\BankHolidaysAPIClient:
-    class: OPG\Digideps\Frontend\Service\Client\GovUK\BankHolidaysAPIClient
-    arguments:
-      $httpClient: '@GuzzleHttp\Client'
-      $logger: "@logger"
-
   OPG\Digideps\Frontend\Service\AWS\DefaultCredentialProvider:
     class: OPG\Digideps\Frontend\Service\AWS\DefaultCredentialProvider
 
@@ -142,10 +136,6 @@ services:
 
   Aws\SecretsManager\SecretsManagerClient:
     arguments: ["%secrets_manager_client_params%"]
-
-  OPG\Digideps\Frontend\Service\SecretManagerService:
-    arguments:
-      ['@Aws\SecretsManager\SecretsManagerClient', "%env(SECRETS_PREFIX)%"]
 
   OPG\Digideps\Frontend\Sync\Serializer\SiriusDocumentUploadNormalizer:
     tags: ["serializer.normalizer"]

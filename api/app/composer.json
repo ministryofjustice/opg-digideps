@@ -30,6 +30,7 @@
     },
     "require": {
         "ext-openssl": "*",
+        "alphagov/notifications-php-client": "^7.1.1",
         "aws/aws-sdk-php": "^3.403.2",
         "digideps/common": "^1.0",
         "doctrine/dbal": "^3.10.7",
@@ -38,9 +39,9 @@
         "doctrine/orm": "^3.7.6",
         "fakerphp/faker": "^1.24.1",
         "jms/serializer-bundle": "^5.5.2",
-        "lcobucci/jwt": "^4.3",
         "league/csv": "^9.29.0",
         "monolog/monolog": "^3.12.1",
+        "php-http/guzzle7-adapter": "^1.1",
         "predis/predis": "^3.7.1",
         "stof/doctrine-extensions-bundle": "^1.15.3",
         "symfony/cache": "^6.4.50",

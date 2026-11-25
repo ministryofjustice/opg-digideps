@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Command;
 
+use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Service\Audit\AwsAuditLogHandler;
-use OPG\Digideps\Frontend\Service\Client\GovUK\BankHolidaysAPIClient;
-use OPG\Digideps\Frontend\Service\Client\Slack\ClientFactory;
-use OPG\Digideps\Frontend\Service\SecretManagerService;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Aws\Exception\AwsException;
 use Psr\Log\LoggerInterface;
@@ -16,11 +14,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CheckCSVUploadedCommand extends DaemonableCommand
 {
-    public const string CSV_NOT_UPLOADED_SLACK_MESSAGE = ':cat_spin: The %s CSV has not been uploaded within the past 24 hours';
-    public const string FAILED_TO_RETRIEVE_BANK_HOLIDAYS_SLACK_MESSAGE = 'Failed to retrieve bank holidays from Gov.uk. Error message: %s';
-    public const string FAILED_TO_RETRIEVE_AUDIT_LOG_SLACK_MESSAGE = 'Failed to retrieve audit logs during CSV upload check. Error message: %s';
-    public const string LOG_GROUP_NOT_CREATED_SLACK_MESSAGE = 'A log group with the name "%s" could not be found. Unable to determine if CSVs have been uploaded.';
-    public const string UNEXPECTED_ERROR_SLACK_MESSAGE = 'An unexpected error occurred during CSV upload check. Error message: %s';
+    public const string CSV_NOT_UPLOADED_MESSAGE = 'check_csv_uploaded - failure - The %s CSV has not been uploaded within the past 24 hours';
+    public const string FAILED_TO_RETRIEVE_BANK_HOLIDAYS_MESSAGE = 'check_csv_uploaded - failure - Failed to retrieve bank holidays from Gov.uk. Error message: %s';
+    public const string FAILED_TO_RETRIEVE_AUDIT_LOG_MESSAGE = 'check_csv_uploaded - failure - Failed to retrieve audit logs during CSV upload check. Error message: %s';
+    public const string LOG_GROUP_NOT_CREATED_MESSAGE = 'check_csv_uploaded - failure - A log group with the name "%s" could not be found. Unable to determine if CSVs have been uploaded.';
+    public const string UNEXPECTED_ERROR_MESSAGE = 'check_csv_uploaded - failure - An unexpected error occurred during CSV upload check. Error message: %s';
 
     public const string LAY_CSV = 'LAY';
     public const string ORG_CSV = 'ORG';
@@ -31,13 +29,10 @@ class CheckCSVUploadedCommand extends DaemonableCommand
     private \DateTime $now;
 
     public function __construct(
-        private BankHolidaysAPIClient $bankHolidayAPIClient,
-        private DateTimeProvider $dateTimeProvider,
-        private SecretManagerService $secretManagerService,
-        private ClientFactory $slackClientFactory,
-        private AwsAuditLogHandler $awsAuditLogHandler,
-        private LoggerInterface $logger,
-        private string $auditLogGroupName
+        private readonly DateTimeProvider $dateTimeProvider,
+        private readonly AwsAuditLogHandler $awsAuditLogHandler,
+        private readonly LoggerInterface $logger,
+        private readonly string $auditLogGroupName
     ) {
         parent::__construct();
     }
@@ -57,14 +52,17 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         $currentDate = $this->now->format('Y-m-d');
 
         try {
-            $dates = $this->bankHolidayAPIClient->getBankHolidays();
+            $path = realpath(__DIR__ . '/../../bank-holidays.json') ?: throw new \LogicException('bank-holidays.json not found');
+            $rawDates = file_get_contents($path) ?: throw new \LogicException('Could not read bank-holidays.json');
+            $dates = new ValidatingArray((array)json_decode($rawDates, true));
         } catch (\Throwable $e) {
-            $this->postSlackMessage(sprintf(self::FAILED_TO_RETRIEVE_BANK_HOLIDAYS_SLACK_MESSAGE, $e->getMessage()), 'opg-digideps-devs');
+            $this->logger->warning(sprintf(self::FAILED_TO_RETRIEVE_BANK_HOLIDAYS_MESSAGE, $e->getMessage()));
 
             return 1;
         }
 
-        $isBankHoliday = array_search($currentDate, array_column($dates['england-and-wales']['events'], 'date'));
+        $events = $dates->getValidatingArrayOrNull('england-and-wales')?->getArrayOrNull('events') ?? [];
+        $isBankHoliday = in_array($currentDate, array_column($events, 'date'));
 
         // Do not alert on Bank Holidays
         if ($isBankHoliday === false) {
@@ -113,7 +111,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
 
                 return 0;
             } else {
-                $this->postSlackMessage(sprintf(self::FAILED_TO_RETRIEVE_AUDIT_LOG_SLACK_MESSAGE, $e->getMessage()), 'opg-digideps-devs');
+                $this->logger->warning(sprintf(self::FAILED_TO_RETRIEVE_AUDIT_LOG_MESSAGE, $e->getMessage()));
 
                 return 1;
             }
@@ -122,27 +120,28 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         return $logEvents;
     }
 
-    private function getLogStreams()
+    private function getLogStreams(): mixed
     {
         try {
             return $this->awsAuditLogHandler->getLogStreams($this->auditLogGroupName);
         } catch (AwsException $e) {
             if ($e->getAwsErrorCode() === 'ResourceNotFoundException') {
-                $this->postSlackMessage(sprintf(self::LOG_GROUP_NOT_CREATED_SLACK_MESSAGE, $this->auditLogGroupName), 'opg-digideps-devs');
+                $this->logger->warning(sprintf(self::LOG_GROUP_NOT_CREATED_MESSAGE, $this->auditLogGroupName));
             } else {
-                $this->postSlackMessage(sprintf(self::UNEXPECTED_ERROR_SLACK_MESSAGE, $e->getAwsErrorMessage()), 'opg-digideps-devs');
+                $this->logger->warning(sprintf(self::UNEXPECTED_ERROR_MESSAGE, $e->getAwsErrorMessage()));
             }
         }
+        return null;
     }
 
-    private function alertNoCSVsWereUploaded()
+    private function alertNoCSVsWereUploaded(): void
     {
         foreach ([self::LAY_CSV, self::ORG_CSV] as $csvType) {
-            $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, $csvType), 'opg-digideps-team');
+            $this->logger->error(sprintf(self::CSV_NOT_UPLOADED_MESSAGE, $csvType));
         }
     }
 
-    private function checkCsvsHaveBeenUploadedAndAlert(array $events)
+    private function checkCsvsHaveBeenUploadedAndAlert(array $events): void
     {
         $typesAndRegexes = [
             self::LAY_CSV => '/"role_type":"LAY"/',
@@ -153,29 +152,8 @@ class CheckCSVUploadedCommand extends DaemonableCommand
             $uploadEvents = preg_grep($regex, $events);
 
             if (empty($uploadEvents)) {
-                $this->postSlackMessage(sprintf(self::CSV_NOT_UPLOADED_SLACK_MESSAGE, $type), 'opg-digideps-team');
+                $this->logger->error(sprintf(self::CSV_NOT_UPLOADED_MESSAGE, $type));
             }
-        }
-    }
-
-    private function postSlackMessage(string $message, string $channel)
-    {
-        $token = $this->secretManagerService->getSecret(SecretManagerService::SLACK_APP_TOKEN_SECRET_NAME);
-
-        $client = $this->slackClientFactory->createClient($token);
-
-        try {
-            $this->logger->log('notice', 'Posting CSV upload check to slack');
-
-            $client->chatPostMessage(
-                [
-                    'username' => 'opg-alerts',
-                    'channel' => $channel,
-                    'text' => $message,
-                ]
-            );
-        } catch (\Throwable $e) {
-            $this->logger->log('error', sprintf('Failed to post to Slack during CSV upload check: %s', $e->getMessage()));
         }
     }
 }

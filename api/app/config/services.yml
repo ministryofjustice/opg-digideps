@@ -38,6 +38,8 @@ parameters:
         - "blueyonder.co.uk"
         - "btopenworld.com"
 
+    fallback_notify_base_uri: null
+
 services:
     em:
         alias: doctrine.orm.default_entity_manager
@@ -52,7 +54,6 @@ services:
             $fixtureParams: "%fixtures%"
             $symfonyEnvironment: "%kernel.environment%"
             $projectDir: "%kernel.project_dir%"
-            $frontendHost: "%env(JWT_HOST)%"
             $workspace: "%workspace%"
             $sessionPrefix: "%env(SESSION_PREFIX)%"
             Predis\ClientInterface: "@predis"
@@ -353,13 +354,6 @@ services:
     Aws\SecretsManager\SecretsManagerClient:
         arguments: ["%secrets_manager_client_params%"]
 
-    OPG\Digideps\Backend\Service\SecretManagerService:
-        arguments:
-            [
-                '@Aws\SecretsManager\SecretsManagerClient',
-                "%env(SECRETS_PREFIX)%",
-            ]
-
     Aws\CloudWatchLogs\CloudWatchLogsClient:
         class: Aws\CloudWatchLogs\CloudWatchLogsClient
         arguments: ["%cloudwatch_logs_client_params%"]
@@ -507,3 +501,17 @@ services:
         arguments:
             - "%workspace%"
             - "%env(VALIDATION_KEY_PEPPER)%"
+
+    OPG\Digideps\Common\Mail\MailSenderInterface: '@OPG\Digideps\Backend\Mail\MailSender'
+
+    Http\Adapter\Guzzle7\Client:
+        class: Http\Adapter\Guzzle7\Client
+
+    Alphagov\Notifications\Client:
+        class: Alphagov\Notifications\Client
+        arguments:
+            $config:
+                httpClient: '@Http\Adapter\Guzzle7\Client'
+                apiKey: "%env(NOTIFY_API_KEY)%"
+                # Setting the URI to null defaults to the uri defined in the package
+                baseUrl: "%env(default:fallback_notify_base_uri:NOTIFY_API_BASE_URI)%"

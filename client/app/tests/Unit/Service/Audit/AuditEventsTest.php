@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\Audit;
 
+use OPG\Digideps\Common\Account\Email;
+use OPG\Digideps\Common\Mail\EmailTemplate;
+use OPG\Digideps\Common\Mail\NotifyMail;
 use OPG\Digideps\Frontend\Entity\User;
-use OPG\Digideps\Frontend\Model\Email;
 use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
-use OPG\Digideps\Frontend\Service\Mailer\MailFactory;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Uid\Uuid;
 
 class AuditEventsTest extends TestCase
 {
@@ -307,19 +309,20 @@ class AuditEventsTest extends TestCase
     public function testEmailSent(): void
     {
         $loggedInUser = UserHelpers::createSuperAdminUser();
-        $email = new Email()
-            ->setTemplate(MailFactory::ACTIVATION_TEMPLATE_ID)
-            ->setToEmail('a@b.com')
-            ->setParameters(['some' => 'info'])
-            ->setFromEmailNotifyID('abc123');
+        $email = new NotifyMail(
+            new Email('a@b.com'),
+            EmailTemplate::Activation,
+            ['some' => 'info'],
+            Uuid::fromString('07e7fdb3-ad81-4105-b6b6-c3854e0c6caa')
+        );
 
         $expected = [
             'logged_in_user_email' => $loggedInUser->getEmail(),
             'recipient_email' => 'a@b.com',
-            'template_name' => 'ACTIVATION_TEMPLATE_ID',
+            'template_name' => 'Activation',
             'notify_template_id' => '07e7fdb3-ad81-4105-b6b6-c3854e0c6caa',
             'email_parameters' => ['some' => 'info'],
-            'from_address_id' => 'abc123',
+            'from_address_id' => '07e7fdb3-ad81-4105-b6b6-c3854e0c6caa',
             'sent_on' => $this->now->format(\DateTime::ATOM),
             'event' => 'EMAIL_SENT',
             'type' => 'audit',
@@ -336,21 +339,22 @@ class AuditEventsTest extends TestCase
     public function testEmailNotSent(): void
     {
         $loggedInUser = UserHelpers::createSuperAdminUser();
-        $email = new Email()
-            ->setTemplate(MailFactory::ACTIVATION_TEMPLATE_ID)
-            ->setToEmail('a@b.com')
-            ->setParameters(['more' => 'stuff'])
-            ->setFromEmailNotifyID('xyz987');
+        $email = new NotifyMail(
+            new Email('a@b.com'),
+            EmailTemplate::Activation,
+            ['more' => 'stuff'],
+            Uuid::fromString('07e7fdb3-ad81-4105-b6b6-c3854e0c6caa')
+        );
 
         $error = new \Exception('Something went wrong');
 
         $expected = [
             'logged_in_user_email' => $loggedInUser->getEmail(),
             'recipient_email' => 'a@b.com',
-            'template_name' => 'ACTIVATION_TEMPLATE_ID',
+            'template_name' => 'Activation',
             'notify_template_id' => '07e7fdb3-ad81-4105-b6b6-c3854e0c6caa',
             'email_parameters' => ['more' => 'stuff'],
-            'from_address_id' => 'xyz987',
+            'from_address_id' => '07e7fdb3-ad81-4105-b6b6-c3854e0c6caa',
             'sent_on' => $this->now->format(\DateTime::ATOM),
             'event' => 'EMAIL_NOT_SENT',
             'type' => 'audit',

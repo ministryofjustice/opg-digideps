@@ -6,7 +6,7 @@ Feature: Court order - sending invitations to other deputies
         Given a Lay Deputy has not started a Pfa Low Assets report
         And I am associated with '1' 'pfa' court order(s)
         And I visit the page of a court order that 'I am' associated with
-        And I click on "invite-codeputy-button"
+        And I follow "Invite another deputy"
         Then I should see the first name of the client on the court order as the invitee
         When I invite a co-deputy to the court order
         Then I should be on the page for the court order

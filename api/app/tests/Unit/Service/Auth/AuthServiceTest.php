@@ -7,9 +7,7 @@ namespace Tests\OPG\Digideps\Backend\Unit\Service\Auth;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
-use OPG\Digideps\Backend\Service\JWT\JWTService;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -34,14 +32,12 @@ final class AuthServiceTest extends TestCase
     private UserRepository&MockObject $userRepo;
     private LoggerInterface&MockObject $logger;
     private UserPasswordHasherInterface&MockObject $passwordHasher;
-    private JWTService&MockObject $JWTService;
 
     public function setUp(): void
     {
         $this->userRepo = $this->createMock(UserRepository::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->passwordHasher = $this->createMock(UserPasswordHasherInterface::class);
-        $this->JWTService = $this->createMock(JWTService::class);
 
         $hierarchy = [
             'ROLE_SUPER_ADMIN' => ['ROLE_ADMIN'],
@@ -55,7 +51,6 @@ final class AuthServiceTest extends TestCase
             $this->userRepo,
             $this->roleHierarchy,
             $this->clientPermissions,
-            $this->JWTService,
             $this->passwordHasher,
         );
     }
@@ -69,7 +64,6 @@ final class AuthServiceTest extends TestCase
             $this->userRepo,
             $this->roleHierarchy,
             [],
-            $this->JWTService,
             $this->passwordHasher
         );
     }
@@ -175,36 +169,5 @@ final class AuthServiceTest extends TestCase
         $request->headers->set(AuthService::HEADER_CLIENT_SECRET, $clientSecret);
 
         $this->assertEquals($expectedResult, $this->authService->isSecretValidForRole($role, $request));
-    }
-
-    #[Test]
-    public function jWTIsValid(): void
-    {
-        $this->JWTService->expects($this->once())->method('verify')->with('not-a.real-jwt')->willReturn(true);
-
-        $request = new Request();
-        $request->headers->set(AuthService::HEADER_JWT, 'not-a.real-jwt');
-
-        $this->assertTrue($this->authService->JWTIsValid($request));
-    }
-
-    #[DataProvider('JWTValidFailureProvider')]
-    #[Test]
-    public function jWTIsValidFailures(Request $request): void
-    {
-        $this->assertFalse($this->authService->JWTIsValid($request));
-    }
-
-    public static function JWTValidFailureProvider(): array
-    {
-        $requestNoHeader = new Request();
-
-        $requestHeaderNull = new Request();
-        $requestHeaderNull->headers->set(AuthService::HEADER_JWT, null);
-
-        return [
-            'JWT header does not exist' => [$requestNoHeader],
-            'JWT header exists but is null' => [$requestHeaderNull],
-        ];
     }
 }

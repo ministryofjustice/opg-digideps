@@ -3,6 +3,7 @@
 namespace Tests\OPG\Digideps\Backend\Integration\Command;
 
 use OPG\Digideps\Backend\Command\SatisfactionPerformanceStatsCommand;
+use PHPUnit\Framework\Attributes\RequiresOperatingSystemFamily;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -20,6 +21,7 @@ class SatisfactionPerformanceStatsCommandTest extends KernelTestCase
         $this->commandTester = new CommandTester($command);
     }
 
+    #[RequiresOperatingSystemFamily('Linux')]
     public function testExecuteSuccessful()
     {
         $this->commandTester->execute([]);

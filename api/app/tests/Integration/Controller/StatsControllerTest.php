@@ -35,8 +35,7 @@ class StatsControllerTest extends AbstractTestController
             [
                 'mustSucceed' => true,
                 'AuthToken' => $this->loginAsSuperAdmin(),
-            ],
-            true
+            ]
         );
 
         self::assertIsArray($response);

@@ -19,6 +19,14 @@ final readonly class ValidatingArray
         return $key === null ? array_first($this->data) : $this->data[$key] ?? null;
     }
 
+    /**
+     * @return array<int|string>
+     */
+    public function keys(): array
+    {
+        return array_keys($this->data);
+    }
+
     public function getValidatingArrayOrNull(string|int|null $key): ?ValidatingArray
     {
         $value = $this->getArrayOrNull($key);

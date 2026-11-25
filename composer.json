@@ -12,11 +12,11 @@
     "lint:phpstan:baseline:force": "phpstan --memory-limit=512M --generate-baseline"
   },
   "require": {
-    "php": "^8.4.7"
+    "php": "^8.4.28"
   },
   "require-dev": {
-    "phpstan/phpstan": "^2.2.6",
-    "phpstan/phpstan-phpunit": "^2.0.18",
-    "friendsofphp/php-cs-fixer": "^3.95.16"
+    "phpstan/phpstan": "^2.3.7",
+    "phpstan/phpstan-phpunit": "^2.1.2",
+    "friendsofphp/php-cs-fixer": "^3.95.32"
   }
 }

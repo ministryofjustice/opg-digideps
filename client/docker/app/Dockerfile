@@ -139,6 +139,9 @@ RUN mkdir -p var/cache var/logs /var/log/app \
 # Pwned Passwords
 COPY --chown=www-data:www-data client/docker/app/extra/commonpasswords.txt /tmp/commonpasswords.txt
 
+ADD https://www.gov.uk/bank-holidays.json bank-holidays.json
+RUN chown www-data:www-data bank-holidays.json
+
 ##############################
 # Stage 3a: Runtime (production)
 ##############################
