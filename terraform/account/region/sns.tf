@@ -53,3 +53,17 @@ resource "aws_sns_topic_subscription" "guardduty_findings" {
 
   depends_on = [aws_lambda_permission.sns_guardduty_findings]
 }
+
+data "aws_sns_topic" "cis_aws_foundations_standard" {
+  count = var.account.name == "production" ? 1 : 0
+  name  = "cis_aws_foundations_standard"
+}
+
+resource "aws_sns_topic_subscription" "cis_aws_foundations_standard_lambda" {
+  count     = var.account.name == "production" ? 1 : 0
+  topic_arn = data.aws_sns_topic.cis_aws_foundations_standard[0].arn
+  protocol  = "lambda"
+  endpoint  = aws_lambda_function.monitor_notify_lambda.arn
+
+  depends_on = [aws_lambda_permission.sns_cis_aws_foundations_standard]
+}

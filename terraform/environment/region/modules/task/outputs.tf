@@ -43,3 +43,7 @@ output "name" {
 output "task_definition_arn" {
   value = aws_ecs_task_definition.task.arn
 }
+
+output "task_definition_arn_without_revision" {
+  value = aws_ecs_task_definition.task.arn_without_revision
+}

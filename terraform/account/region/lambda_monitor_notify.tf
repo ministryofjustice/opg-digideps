@@ -280,3 +280,17 @@ resource "aws_lambda_permission" "sns_guardduty_findings" {
     ]
   }
 }
+
+resource "aws_lambda_permission" "sns_cis_aws_foundations_standard" {
+  count          = var.account.name == "production" ? 1 : 0
+  statement_id   = "AllowExecutionFromCISFoundationsSNSTopic"
+  action         = "lambda:InvokeFunction"
+  function_name  = aws_lambda_function.monitor_notify_lambda.function_name
+  principal      = "sns.amazonaws.com"
+  source_arn     = data.aws_sns_topic.cis_aws_foundations_standard[0].arn
+  source_account = data.aws_caller_identity.current.account_id
+
+  lifecycle {
+    replace_triggered_by = [aws_lambda_function.monitor_notify_lambda]
+  }
+}

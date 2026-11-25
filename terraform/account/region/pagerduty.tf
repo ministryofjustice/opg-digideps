@@ -48,3 +48,13 @@ resource "aws_sns_topic_subscription" "pagerduty_availability_alerts" {
   endpoint               = local.pagerduty_endpoint
   raw_message_delivery   = false
 }
+
+resource "aws_sns_topic_subscription" "pagerduty_cis_alerts" {
+  count = local.pagerduty_is_enabled ? 1 : 0
+
+  topic_arn              = data.aws_sns_topic.cis_aws_foundations_standard[0].arn
+  protocol               = "https"
+  endpoint_auto_confirms = true
+  endpoint               = local.pagerduty_endpoint
+  raw_message_delivery   = false
+}
