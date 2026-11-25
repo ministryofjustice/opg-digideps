@@ -102,7 +102,7 @@ services:
       $requestSigner: '@OPG\Digideps\Frontend\Service\AWS\RequestSigner'
       $baseUrl: "%env(SIRIUS_API_BASE_URI)%"
       $serializer: "@serializer"
-      $logger: "@logger"
+      $verboseLogger: "@logger"
 
   OPG\Digideps\Frontend\Service\Client\Sirius\SiriusHealthCheckClient:
     class: OPG\Digideps\Frontend\Service\Client\Sirius\SiriusHealthCheckClient
