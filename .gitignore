@@ -60,6 +60,7 @@ log/pact.log
 lambdas/functions/security_lambda/security.zip
 ecs-helper
 opg-ecs-helper_*.tar.gz
+**/lockdown-state-*.json
 
 # Lambda specific
 **lambda*.zip

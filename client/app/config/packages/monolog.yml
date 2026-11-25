@@ -9,7 +9,7 @@ monolog:
       channels: ["!translation", "!verbose"]
       bubble: false
       include_stacktraces: true
-    csv:
+    custom:
       type: stream
       path: php://stderr
       level: notice

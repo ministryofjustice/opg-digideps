@@ -8,7 +8,7 @@ monolog:
       formatter: opg_json_formatter
       channels: ["!verbose"]
       bubble: false
-    csv:
+    custom:
       type: stream
       path: php://stderr
       level: "%verbose_log_level%"
