@@ -6,7 +6,7 @@ module "secrets_endpoint_vpc" {
   service             = "secretsmanager"
   service_short_title = "secrets"
   tags                = var.default_tags
-  policy              = var.account.name == "development" ? data.aws_iam_policy_document.secrets_endpoint.json : ""
+  policy              = data.aws_iam_policy_document.secrets_endpoint.json
 }
 
 data "aws_iam_policy_document" "secrets_endpoint" {

@@ -6,7 +6,7 @@ module "ec2messages_endpoint_vpc" {
   service             = "ec2messages"
   service_short_title = "ec2messages"
   tags                = var.default_tags
-  policy              = var.account.name == "development" ? data.aws_iam_policy_document.ec2messages_endpoint.json : ""
+  policy              = data.aws_iam_policy_document.ec2messages_endpoint.json
 }
 
 data "aws_iam_policy_document" "ec2messages_endpoint" {
