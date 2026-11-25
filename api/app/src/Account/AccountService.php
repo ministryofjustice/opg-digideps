@@ -45,6 +45,9 @@ final readonly class AccountService
         }
 
         $user->setEmail($request->deputyEmail->value);
+        if ($deputy->getOrganisation() !== null) {
+            $this->entityManager->persist($deputy->getOrganisation());
+        }
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
@@ -105,9 +108,9 @@ final readonly class AccountService
         $deputy->setUser($user);
         $user->setDeputy($deputy);
 
-        $user->getOrganisations()->clear();
         if ($deputy->getOrganisation() !== null) {
             $user->getOrganisations()->add($deputy->getOrganisation());
+            $deputy->getOrganisation()->addUser($user);
         }
         $user->setAddress1($deputy->getAddress1());
         $user->setAddress2($deputy->getAddress2());
