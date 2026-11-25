@@ -13,7 +13,7 @@ existPage:
   form:
     exist:
       label: Has any money been taken out of %client%'s account(s) during this reporting period?
-      hint: You don't need to include deputy expenses, gifts or transfers between %client%'s accounts. We ask you about these outgoings in other sections of the report.
+      hint: You do not need to include deputy expenses, gifts or transfers between %client%'s accounts. We ask you about these outgoings in other sections of the report.
     save:
       label: Save and continue
     choices:
