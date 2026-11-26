@@ -8,7 +8,6 @@ enum AccountError: string implements \JsonSerializable
 {
     case MatchingError = 'MatchingError';
     case AccountTaken = 'AccountTaken';
-    case PasswordSet = 'PasswordSet';
     case TokenInvalid = 'TokenInvalid';
     case EmailError = 'EmailError';
     case UnknownEmail = 'UnknownEmail';

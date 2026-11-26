@@ -35,13 +35,11 @@ final readonly class AccountService
 
         $user = $this->getUserFromDeputy($deputy);
         if ($user->getPassword() !== null) {
-            return $user->getEmail() === strtolower($request->deputyEmail->value)
-                ? AccountError::PasswordSet : AccountError::AccountTaken;
+            return AccountError::AccountTaken;
         }
-
         $existingUser = $this->getUserFromEmail($request->deputyEmail);
         if ($existingUser !== null && $existingUser->getId() !== $user->getId()) {
-            return AccountError::PasswordSet;
+            return AccountError::AccountTaken;
         }
 
         $user->setEmail($request->deputyEmail->value);

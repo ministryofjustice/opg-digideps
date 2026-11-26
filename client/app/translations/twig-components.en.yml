@@ -128,9 +128,6 @@ opg:
           The information you've given us does not match our records.
           Please call %helplineNumber% to make sure we have a record of your deputyship.
         NetworkError: An error occurred while setting up your account. Please try again later.
-        PasswordSet: |
-          Our records show that you have already registered with this email address.
-          Please sign in to continue. Please call %helplineNumber% if you are unable to sign in.
     password:
       content: |-
         To %action% your password, type your %quality% password in the box below and then confirm the password in the second box.
