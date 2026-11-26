@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
 use Doctrine\DBAL\Exception;
-use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
 use OPG\Digideps\Backend\Factory\DataFactoryInterface;
 use OPG\Digideps\Backend\Factory\DataFactoryResult;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipIngester;
@@ -19,6 +18,7 @@ use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoad
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -160,7 +160,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $stubCSVLoaderResult = $this->createStub(DeputyshipsCSVLoaderResult::class);
         $stubCSVLoaderResult->loadedOk = true;
 
-        $candidates = [$this->createStub(StagingSelectedCandidate::class)];
+        $candidates = [['orderUid' => '11112222', 'action' => DeputyshipCandidateAction::InsertOrder]];
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator($candidates), 1);
 
         $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
@@ -224,7 +224,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $stubCSVLoaderResult = $this->createStub(DeputyshipsCSVLoaderResult::class);
         $stubCSVLoaderResult->loadedOk = true;
 
-        $candidates = [$this->createStub(StagingSelectedCandidate::class)];
+        $candidates = [['orderUid' => '11112222', 'action' => DeputyshipCandidateAction::InsertOrder]];
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator($candidates), 1);
 
         $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
