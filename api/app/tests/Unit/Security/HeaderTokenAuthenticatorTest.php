@@ -7,6 +7,7 @@ namespace Tests\OPG\Digideps\Backend\Unit\Security;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Security\HeaderTokenAuthenticator;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
@@ -18,6 +19,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
 use Tests\OPG\Digideps\Backend\Unit\PredisMock;
 
+#[AllowMockObjectsWithoutExpectations]
 final class HeaderTokenAuthenticatorTest extends TestCase
 {
     private PredisMock&MockObject $redisClient;

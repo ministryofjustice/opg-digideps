@@ -14,6 +14,7 @@ use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
 use OPG\Digideps\Backend\Service\DateTimeProvider;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -28,6 +29,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 
+#[AllowMockObjectsWithoutExpectations]
 final class LoginRequestAuthenticatorTest extends TestCase
 {
     private UserRepository&MockObject $userRepo;

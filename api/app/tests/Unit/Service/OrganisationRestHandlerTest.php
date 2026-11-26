@@ -12,6 +12,7 @@ use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\RestHandler\OrganisationCreationException;
 use OPG\Digideps\Backend\Service\RestHandler\OrganisationRestHandler;
 use OPG\Digideps\Backend\Service\RestHandler\OrganisationUpdateException;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -20,6 +21,7 @@ use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+#[AllowMockObjectsWithoutExpectations]
 final class OrganisationRestHandlerTest extends TestCase
 {
     private EntityManager&MockObject $em;

@@ -15,64 +15,90 @@ use OPG\Digideps\Backend\Entity\Report\Fee;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class ReportRepositoryTest extends TestCase
 {
-    private Report&MockObject $mockReport;
-    private EntityManagerInterface&MockObject $mockEm;
-    private ReportRepository $sut;
-
-    public function setUp(): void
-    {
-        $stubMetaClass = self::createStub(ClassMetadata::class);
-
-        $this->mockEm = self::createConfiguredMock(EntityManagerInterface::class, ['getClassMetadata' => $stubMetaClass]);
-
-        $stubManagerRegistry = self::createConfiguredStub(ManagerRegistry::class, ['getManagerForClass' => $this->mockEm]);
-
-        $clientSearchFilter = self::createStub(ClientSearchFilter::class);
-
-        $stubClient = self::createStub(Client::class);
-        $this->mockReport = self::createConfiguredMock(Report::class, ['getClient' => $stubClient]);
-
-        $this->sut = new ReportRepository(
-            $stubManagerRegistry,
-            $clientSearchFilter,
-            new ReportAccessService($this->createStub(EntityManagerInterface::class))
-        );
-    }
-
     /**
      * @throws ORMException
      */
     public function testAddFeesToReportIfMissingForNonPAUser(): void
     {
-        $this->mockReport->expects(self::once())->method('isPAReport')->willReturn(false);
+        $stubMetaClass = self::createStub(ClassMetadata::class);
 
-        $this->assertNull($this->sut->addFeesToReportIfMissing($this->mockReport));
+        $stubEm = self::createConfiguredStub(EntityManagerInterface::class, ['getClassMetadata' => $stubMetaClass]);
+
+        $stubManagerRegistry = self::createConfiguredStub(ManagerRegistry::class, ['getManagerForClass' => $stubEm]);
+
+        $clientSearchFilter = self::createStub(ClientSearchFilter::class);
+
+        $stubClient = self::createStub(Client::class);
+        $mockReport = self::createConfiguredMock(Report::class, ['getClient' => $stubClient]);
+
+        $sut = new ReportRepository(
+            $stubManagerRegistry,
+            $clientSearchFilter,
+            new ReportAccessService($this->createStub(EntityManagerInterface::class))
+        );
+
+        $mockReport->expects(self::once())->method('isPAReport')->willReturn(false);
+
+        $this->assertNull($sut->addFeesToReportIfMissing($mockReport));
     }
 
     public function testAddFeesToReportIfMissingForPAUserWithFeesMissing(): void
     {
-        $this->mockReport->expects(self::once())->method('getFees')->willReturn(new ArrayCollection([]));
+        $stubMetaClass = self::createStub(ClassMetadata::class);
 
-        $this->mockReport->expects(self::exactly(count(Fee::$feeTypeIds)))->method('addFee')->willReturnSelf();
+        $stubEm = self::createConfiguredStub(EntityManagerInterface::class, ['getClassMetadata' => $stubMetaClass]);
 
-        $this->mockReport->expects(self::once())->method('isPAReport')->willReturn(true);
+        $stubManagerRegistry = self::createConfiguredStub(ManagerRegistry::class, ['getManagerForClass' => $stubEm]);
 
-        $this->assertEquals(7, $this->sut->addFeesToReportIfMissing($this->mockReport));
+        $clientSearchFilter = self::createStub(ClientSearchFilter::class);
+
+        $stubClient = self::createStub(Client::class);
+        $mockReport = self::createConfiguredMock(Report::class, ['getClient' => $stubClient]);
+
+        $sut = new ReportRepository(
+            $stubManagerRegistry,
+            $clientSearchFilter,
+            new ReportAccessService($this->createStub(EntityManagerInterface::class))
+        );
+
+        $mockReport->expects(self::once())->method('getFees')->willReturn(new ArrayCollection([]));
+
+        $mockReport->expects(self::exactly(count(Fee::$feeTypeIds)))->method('addFee')->willReturnSelf();
+
+        $mockReport->expects(self::once())->method('isPAReport')->willReturn(true);
+
+        $this->assertEquals(7, $sut->addFeesToReportIfMissing($mockReport));
     }
 
     public function testAddFeesToReportIfMissingForPAUserWithFeesNotMissing(): void
     {
-        $this->mockReport->expects(self::once())->method('getFees')->willReturn(new ArrayCollection(['foo']));
-        $this->mockReport->expects(self::once())->method('isPAReport')->willReturn(true);
+        $stubMetaClass = self::createStub(ClassMetadata::class);
 
-        $this->mockReport->expects(self::never())->method('addFee');
-        $this->mockEm->expects(self::never())->method('persist');
+        $mockEm = self::createConfiguredMock(EntityManagerInterface::class, ['getClassMetadata' => $stubMetaClass]);
 
-        $this->assertEquals(0, $this->sut->addFeesToReportIfMissing($this->mockReport));
+        $stubManagerRegistry = self::createConfiguredStub(ManagerRegistry::class, ['getManagerForClass' => $mockEm]);
+
+        $clientSearchFilter = self::createStub(ClientSearchFilter::class);
+
+        $stubClient = self::createStub(Client::class);
+        $mockReport = self::createConfiguredMock(Report::class, ['getClient' => $stubClient]);
+
+        $sut = new ReportRepository(
+            $stubManagerRegistry,
+            $clientSearchFilter,
+            new ReportAccessService($this->createStub(EntityManagerInterface::class))
+        );
+
+        $mockReport->expects(self::once())->method('getFees')->willReturn(new ArrayCollection(['foo']));
+        $mockReport->expects(self::once())->method('isPAReport')->willReturn(true);
+
+        $mockReport->expects(self::never())->method('addFee');
+        $mockEm->expects(self::never())->method('persist');
+
+        $this->assertEquals(0, $sut->addFeesToReportIfMissing($mockReport));
     }
 }

@@ -13,6 +13,7 @@ use OPG\Digideps\Backend\Security\RegistrationTokenAuthenticator;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -27,6 +28,7 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
+#[AllowMockObjectsWithoutExpectations]
 final class RegistrationTokenAuthenticatorTest extends TestCase
 {
     private UserRepository&Stub $userRepo;

@@ -10,8 +10,6 @@ use OPG\Digideps\Backend\Command\ProcessLayCSVCommand;
 use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Service\DeputyCaseService;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -21,62 +19,25 @@ use Tests\OPG\Digideps\Backend\Unit\S3ClientMock;
 
 final class ProcessLayCSVCommandTest extends KernelTestCase
 {
-    private S3ClientMock&MockObject $s3;
-    private ParameterBagInterface&MockObject $params;
-    private string $csvFilename;
-    private LoggerInterface&Stub $logger;
-    private CSVDeputyshipProcessing&MockObject $csvProcessing;
-    private PreRegistrationRepository&Stub $preReg;
-    private DeputyCaseService&MockObject $deputyCaseService;
-    private CommandTester $commandTester;
+    private const CSV_FILENAME = 'layDeputyReport.csv';
 
-    public function setUp(): void
+    public function testExecuteWithSuccessfulFilePull(): void
     {
-        $kernel = self::createKernel();
-        $app = new Application($kernel);
-
-        // TODO Refactor CSV Process so we can mock this properly
         copy(dirname(dirname(__DIR__)) . '/csv/layDeputyReport.csv', '/tmp/layDeputyReport.csv');
 
-        $this->s3 = self::createMock(S3ClientMock::class);
-
-        $this->params = self::createMock(ParameterBagInterface::class);
-        $this->params->expects(self::once())
+        $params = self::createMock(ParameterBagInterface::class);
+        $params->expects(self::once())
             ->method('get')
             ->with('s3_sirius_bucket')
             ->willReturn('bucket');
 
-        $this->csvFilename = 'layDeputyReport.csv';
-
-        $this->logger = self::createStub(LoggerInterface::class);
-        $this->csvProcessing = self::createMock(CSVDeputyshipProcessing::class);
-        $this->preReg = self::createStub(PreRegistrationRepository::class);
-        $this->deputyCaseService = self::createMock(DeputyCaseService::class);
-
-        $setUp = new ProcessLayCSVCommand(
-            $this->s3,
-            $this->params,
-            $this->logger,
-            $this->csvProcessing,
-            $this->preReg,
-            $this->deputyCaseService,
-        );
-
-        $app->add($setUp);
-
-        $commandName = ProcessLayCSVCommand::$defaultName;
-        self::assertIsString($commandName);
-        $command = $app->find($commandName);
-        $this->commandTester = new CommandTester($command);
-    }
-
-    public function testExecuteWithSuccessfulFilePull(): void
-    {
-        $this->s3->expects(self::once())
+        $s3 = self::createMock(S3ClientMock::class);
+        $s3->expects(self::once())
             ->method('getObject')
             ->willReturn(new Result());
 
-        $this->csvProcessing->expects(self::once())
+        $csvProcessing = self::createMock(CSVDeputyshipProcessing::class);
+        $csvProcessing->expects(self::once())
             ->method('layProcessing')
             ->willReturn([
                 'added' => 1,
@@ -86,7 +47,7 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
                 'source' => 'sirius',
             ]);
 
-        $this->csvProcessing->expects(self::once())
+        $csvProcessing->expects(self::once())
             ->method('layProcessingHandleNewMultiClients')
             ->willReturn([
                 'new-clients-found' => 0,
@@ -95,13 +56,22 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
                 'details' => [],
             ]);
 
-        $this->deputyCaseService->expects(self::once())
+        $deputyCaseService = self::createMock(DeputyCaseService::class);
+        $deputyCaseService->expects(self::once())
             ->method('addMissingDeputyCaseAssociations')
             ->willReturn(0);
 
-        $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
-        $this->commandTester->assertCommandIsSuccessful();
-        $output = $this->commandTester->getDisplay();
+        $commandTester = $this->commandTesterFor(new ProcessLayCSVCommand(
+            $s3,
+            $params,
+            self::createStub(LoggerInterface::class),
+            $csvProcessing,
+            self::createStub(PreRegistrationRepository::class),
+            $deputyCaseService,
+        ));
+        $commandTester->execute(['csv-filename' => self::CSV_FILENAME]);
+        $commandTester->assertCommandIsSuccessful();
+        $output = $commandTester->getDisplay();
 
         $this->assertStringContainsString(
             'lay_csv_processing - success - Finished processing LayCSV. Output:',
@@ -111,12 +81,27 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
 
     public function testExecuteWithFailedFilePullS3Error(): void
     {
-        $this->s3->expects(self::once())
+        $params = self::createMock(ParameterBagInterface::class);
+        $params->expects(self::once())
+            ->method('get')
+            ->with('s3_sirius_bucket')
+            ->willReturn('bucket');
+
+        $s3 = self::createMock(S3ClientMock::class);
+        $s3->expects(self::once())
             ->method('getObject')
             ->willThrowException(self::createStub(S3Exception::class));
 
-        $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
-        $output = $this->commandTester->getDisplay();
+        $commandTester = $this->commandTesterFor(new ProcessLayCSVCommand(
+            $s3,
+            $params,
+            self::createStub(LoggerInterface::class),
+            self::createStub(CSVDeputyshipProcessing::class),
+            self::createStub(PreRegistrationRepository::class),
+            self::createStub(DeputyCaseService::class),
+        ));
+        $commandTester->execute(['csv-filename' => self::CSV_FILENAME]);
+        $output = $commandTester->getDisplay();
 
         $this->assertStringContainsString(
             'lay_csv_processing - failure - Error retrieving file layDeputyReport.csv from bucket',
@@ -129,16 +114,41 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
         // Required so we can trigger missing column exception with bad file
         copy(dirname(dirname(__DIR__)) . '/csv/layDeputyReport-bad.csv', '/tmp/layDeputyReport.csv');
 
-        $this->s3->expects(self::once())
+        $params = self::createMock(ParameterBagInterface::class);
+        $params->expects(self::once())
+            ->method('get')
+            ->with('s3_sirius_bucket')
+            ->willReturn('bucket');
+
+        $s3 = self::createMock(S3ClientMock::class);
+        $s3->expects(self::once())
             ->method('getObject')
             ->willReturn(new Result());
 
-        $this->commandTester->execute(['csv-filename' => $this->csvFilename]);
-        $output = $this->commandTester->getDisplay();
+        $commandTester = $this->commandTesterFor(new ProcessLayCSVCommand(
+            $s3,
+            $params,
+            self::createStub(LoggerInterface::class),
+            self::createStub(CSVDeputyshipProcessing::class),
+            self::createStub(PreRegistrationRepository::class),
+            self::createStub(DeputyCaseService::class),
+        ));
+        $commandTester->execute(['csv-filename' => self::CSV_FILENAME]);
+        $output = $commandTester->getDisplay();
 
         $this->assertStringContainsString(
-            "CSV file /tmp/{$this->csvFilename} does not contain all expected columns in header",
+            'CSV file /tmp/' . self::CSV_FILENAME . ' does not contain all expected columns in header',
             $output
         );
+    }
+
+    private function commandTesterFor(ProcessLayCSVCommand $command): CommandTester
+    {
+        $app = new Application(self::createKernel());
+        $app->add($command);
+        $commandName = ProcessLayCSVCommand::$defaultName;
+        self::assertIsString($commandName);
+
+        return new CommandTester($app->find($commandName));
     }
 }

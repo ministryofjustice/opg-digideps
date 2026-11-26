@@ -7,6 +7,7 @@ namespace Tests\OPG\Digideps\Backend\Unit\Service;
 use Monolog\Level;
 use Monolog\LogRecord;
 use OPG\Digideps\Backend\Service\RequestIdLoggerProcessor;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+#[AllowMockObjectsWithoutExpectations]
 final class RequestIdLoggerProcessorTest extends TestCase
 {
     private Container&MockObject $container;

@@ -11,8 +11,10 @@ use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
 use OPG\Digideps\Backend\Factory\StagingSelectedCandidateFactory;
 use OPG\Digideps\Backend\Repository\CourtOrderDeputyRepository;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
 {
     private CourtOrderDeputyRepository $courtOrderDeputyRepository;

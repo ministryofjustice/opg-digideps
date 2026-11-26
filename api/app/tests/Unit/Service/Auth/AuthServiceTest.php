@@ -7,6 +7,7 @@ namespace Tests\OPG\Digideps\Backend\Unit\Service\Auth;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
+#[AllowMockObjectsWithoutExpectations]
 final class AuthServiceTest extends TestCase
 {
     private AuthService $authService;

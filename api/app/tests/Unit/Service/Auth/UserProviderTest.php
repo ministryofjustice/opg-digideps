@@ -7,11 +7,13 @@ namespace Tests\OPG\Digideps\Backend\Unit\Service\Auth;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Security\RedisUserProvider;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tests\OPG\Digideps\Backend\Unit\PredisMock;
 
+#[AllowMockObjectsWithoutExpectations]
 final class UserProviderTest extends TestCase
 {
     private UserRepository&MockObject $repo;
