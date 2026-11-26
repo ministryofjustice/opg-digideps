@@ -78,11 +78,11 @@ class UserDeputyServiceTest extends TestCase
     {
         $deputyUid = 512436785;
 
-        $mockDeputy = self::createMock(Deputy::class);
+        $stubDeputy = self::createStub(Deputy::class);
 
         $mockUser = self::createMock(User::class);
         $mockUser->expects(self::once())->method('getDeputyUid')->willReturn($deputyUid);
-        $mockUser->expects(self::once())->method('setDeputy')->with($mockDeputy);
+        $mockUser->expects(self::once())->method('setDeputy')->with($stubDeputy);
 
         $this->mockUserRepository->expects(self::once())
             ->method('findUsersWithoutDeputies')
@@ -99,11 +99,11 @@ class UserDeputyServiceTest extends TestCase
         $this->mockDeputyService->expects(self::once())
             ->method('createDeputyFromUser')
             ->with($mockUser)
-            ->willReturn($mockDeputy);
+            ->willReturn($stubDeputy);
 
         $this->mockDeputyRepository->expects(self::once())
             ->method('save')
-            ->with($mockDeputy);
+            ->with($stubDeputy);
 
         $this->mockUserRepository->expects(self::once())
             ->method('save')

@@ -49,7 +49,7 @@ final class UserProviderTest extends TestCase
 
     public function testloadUserByUsernameFound(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
         $this->redis->set('token', 1);
         $this->repo->expects($this->once())->method('find')->with(1)->willReturn($user);
         $this->logger->expects($this->never())->method('warning');
@@ -68,7 +68,7 @@ final class UserProviderTest extends TestCase
 
     public function testgenerateRandomTokenAndStore(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
         $user->method('getId')->willReturn(123);
 
         $tokenMatchPattern = '/^testing_123_[0-9a-f]{5,40}[\d]{1,}/';

@@ -34,7 +34,7 @@ final class OrganisationVoterTest extends KernelTestCase
     {
         $this->subject->addUser($this->user);
 
-        $token = self::createMock(TokenInterface::class);
+        $token = self::createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($this->user);
 
         $attributes = [$this->sut::VIEW];
@@ -45,7 +45,7 @@ final class OrganisationVoterTest extends KernelTestCase
 
     public function testOrganisationDoesNotContainLoggedInUser(): void
     {
-        $token = self::createMock(TokenInterface::class);
+        $token = self::createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($this->user);
 
         $attributes = [$this->sut::VIEW, $this->sut::EDIT];
@@ -56,7 +56,7 @@ final class OrganisationVoterTest extends KernelTestCase
 
     public function testUnrecognisedAttribute(): void
     {
-        $token = self::createMock(TokenInterface::class);
+        $token = self::createStub(TokenInterface::class);
         $token->method('getUser')->willReturn($this->user);
 
         $attributes = ['some-other-attribute'];
@@ -69,7 +69,7 @@ final class OrganisationVoterTest extends KernelTestCase
     {
         $subject = new \DateTime();
 
-        $token = self::createMock(TokenInterface::class);
+        $token = self::createStub(TokenInterface::class);
 
         $attributes = [$this->sut::VIEW, $this->sut::EDIT];
         $voteResult = $this->sut->vote($token, $subject, $attributes);

@@ -8,6 +8,7 @@ use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Security\HeaderTokenAuthenticator;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,14 +22,14 @@ final class HeaderTokenAuthenticatorTest extends TestCase
 {
     private PredisMock&MockObject $redisClient;
     private UserRepository&MockObject $userRepository;
-    private LoggerInterface&MockObject $logger;
+    private LoggerInterface&Stub $logger;
     private HeaderTokenAuthenticator $sut;
 
     public function setUp(): void
     {
         $this->redisClient = self::createMock(PredisMock::class);
         $this->userRepository = self::createMock(UserRepository::class);
-        $this->logger = self::createMock(LoggerInterface::class);
+        $this->logger = self::createStub(LoggerInterface::class);
 
         $this->sut = new HeaderTokenAuthenticator(
             $this->redisClient,

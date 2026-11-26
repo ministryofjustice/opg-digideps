@@ -150,7 +150,7 @@ final class S3StorageTest extends TestCase
         $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
         $fileContent = file_get_contents(__DIR__ . '/cat.jpg');
 
-        $stubLogger = self::createMock(LoggerInterface::class);
+        $stubLogger = self::createStub(LoggerInterface::class);
 
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $stubLogger);
 
@@ -393,7 +393,7 @@ final class S3StorageTest extends TestCase
             ->with(['Bucket' => 'unit_test_bucket', 'Key' => $key])
             ->willThrowException($s3Exception);
 
-        $logger = self::createMock(LoggerInterface::class);
+        $logger = self::createStub(LoggerInterface::class);
 
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $logger);
 
@@ -418,7 +418,7 @@ final class S3StorageTest extends TestCase
             ->with(['Bucket' => 'unit_test_bucket', 'Key' => $key])
             ->willThrowException($s3Exception);
 
-        $logger = self::createMock(LoggerInterface::class);
+        $logger = self::createStub(LoggerInterface::class);
 
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $logger);
 
@@ -443,7 +443,7 @@ final class S3StorageTest extends TestCase
             ->with(['Bucket' => 'unit_test_bucket', 'Key' => $key])
             ->willThrowException($s3Exception);
 
-        $logger = self::createMock(LoggerInterface::class);
+        $logger = self::createStub(LoggerInterface::class);
 
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $logger);
 

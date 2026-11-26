@@ -45,7 +45,7 @@ final class LoginRequestAuthenticatorTest extends TestCase
         $this->incrementalWaitingTimeChecker = self::createMock(AttemptsIncrementalWaitingChecker::class);
         $this->authService = self::createMock(AuthService::class);
         $this->tokenStorage = self::createMock(TokenStorageInterface::class);
-        $verboseLogger = self::createMock(LoggerInterface::class);
+        $verboseLogger = self::createStub(LoggerInterface::class);
         $this->dateTimeProvider = self::createMock(DateTimeProvider::class);
 
         $this->sut = new LoginRequestAuthenticator(

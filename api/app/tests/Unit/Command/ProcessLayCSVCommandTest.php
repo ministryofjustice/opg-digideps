@@ -11,6 +11,7 @@ use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Service\DeputyCaseService;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -23,9 +24,9 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
     private S3ClientMock&MockObject $s3;
     private ParameterBagInterface&MockObject $params;
     private string $csvFilename;
-    private LoggerInterface&MockObject $logger;
+    private LoggerInterface&Stub $logger;
     private CSVDeputyshipProcessing&MockObject $csvProcessing;
-    private PreRegistrationRepository&MockObject $preReg;
+    private PreRegistrationRepository&Stub $preReg;
     private DeputyCaseService&MockObject $deputyCaseService;
     private CommandTester $commandTester;
 
@@ -47,9 +48,9 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
 
         $this->csvFilename = 'layDeputyReport.csv';
 
-        $this->logger = self::createMock(LoggerInterface::class);
+        $this->logger = self::createStub(LoggerInterface::class);
         $this->csvProcessing = self::createMock(CSVDeputyshipProcessing::class);
-        $this->preReg = self::createMock(PreRegistrationRepository::class);
+        $this->preReg = self::createStub(PreRegistrationRepository::class);
         $this->deputyCaseService = self::createMock(DeputyCaseService::class);
 
         $setUp = new ProcessLayCSVCommand(

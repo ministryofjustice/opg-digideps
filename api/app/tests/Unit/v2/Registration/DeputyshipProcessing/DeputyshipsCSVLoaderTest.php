@@ -12,6 +12,7 @@ use OPG\Digideps\Backend\v2\CSV\CSVChunker;
 use OPG\Digideps\Backend\v2\CSV\CSVChunkerFactory;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -19,15 +20,15 @@ final class DeputyshipsCSVLoaderTest extends TestCase
 {
     private EntityManager|MockObject $mockEm;
     private CSVChunkerFactory|MockObject $mockCSVChunkerFactory;
-    private LoggerInterface|MockObject $mockLogger;
+    private LoggerInterface&Stub $stubLogger;
     private DeputyshipsCSVLoader $sut;
 
     public function setUp(): void
     {
         $this->mockEm = $this->createMock(EntityManager::class);
         $this->mockCSVChunkerFactory = $this->createMock(CSVChunkerFactory::class);
-        $this->mockLogger = $this->createMock(LoggerInterface::class);
-        $this->sut = new DeputyshipsCSVLoader($this->mockEm, $this->mockCSVChunkerFactory, $this->mockLogger);
+        $this->stubLogger = $this->createStub(LoggerInterface::class);
+        $this->sut = new DeputyshipsCSVLoader($this->mockEm, $this->mockCSVChunkerFactory, $this->stubLogger);
     }
 
     public function testLoadThrowsCSVException(): void
@@ -57,13 +58,13 @@ final class DeputyshipsCSVLoaderTest extends TestCase
         $sd3 = new StagingDeputyship();
         $records = new \ArrayIterator([$sd1, $sd2, $sd3]);
 
-        $mockChunker = $this->createMock(CSVChunker::class);
+        $stubChunker = $this->createStub(CSVChunker::class);
 
         // work-around for the removal of willReturnConsecutive from phpunit...
         $caller = new \stdClass();
         $caller->callNumber = 1;
 
-        $mockChunker->method('getChunk')->willReturnCallback(function () use ($records, $caller): ?array {
+        $stubChunker->method('getChunk')->willReturnCallback(function () use ($records, $caller): ?array {
             if ($caller->callNumber > count($records)) {
                 return null;
             }
@@ -78,7 +79,7 @@ final class DeputyshipsCSVLoaderTest extends TestCase
             ->expects($this->once())
             ->method('create')
             ->with($fileLocation, StagingDeputyship::class, $chunkSize)
-            ->willReturn($mockChunker);
+            ->willReturn($stubChunker);
 
         $this->mockEm->expects($this->exactly(2))->method('beginTransaction');
         $this->mockEm->expects($this->exactly(2))->method('commit');

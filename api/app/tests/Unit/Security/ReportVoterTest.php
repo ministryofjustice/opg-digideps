@@ -27,11 +27,11 @@ class ReportVoterTest extends TestCase
         } else {
             $security->expects($this->once())->method('isGranted')->with('ROLE_ADMIN')->willReturn($admin);
         }
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result->method('fetchFirstColumn')->willReturn($reportIds);
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection->method('executeQuery')->willReturn($result);
-        $em = $this->createMock(EntityManagerInterface::class);
+        $em = $this->createStub(EntityManagerInterface::class);
         $em->method('getConnection')->willReturn($connection);
         return new ReportVoter($security, new ReportAccessService($em));
     }

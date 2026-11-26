@@ -8,7 +8,7 @@ use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\PreRegistrationVerificationService;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -22,16 +22,16 @@ final class PreRegistrationVerificationServiceTest extends TestCase
         string $deputySurname,
         string $deputyPostCode,
         string $deputyUid,
-    ): PreRegistration&MockObject {
-        $mock = $this->createMock(PreRegistration::class);
-        $mock->method('getCaseNumber')->willReturn($caseNumber);
-        $mock->method('getClientLastname')->willReturn($clientLastname);
-        $mock->method('getDeputyFirstname')->willReturn('DFirs');
-        $mock->method('getDeputySurname')->willReturn($deputySurname);
-        $mock->method('getDeputyPostCode')->willReturn($deputyPostCode);
-        $mock->method('getDeputyUid')->willReturn($deputyUid);
+    ): PreRegistration&Stub {
+        $stub = $this->createStub(PreRegistration::class);
+        $stub->method('getCaseNumber')->willReturn($caseNumber);
+        $stub->method('getClientLastname')->willReturn($clientLastname);
+        $stub->method('getDeputyFirstname')->willReturn('DFirs');
+        $stub->method('getDeputySurname')->willReturn($deputySurname);
+        $stub->method('getDeputyPostCode')->willReturn($deputyPostCode);
+        $stub->method('getDeputyUid')->willReturn($deputyUid);
 
-        return $mock;
+        return $stub;
     }
 
     public function setUp(): void
@@ -45,8 +45,8 @@ final class PreRegistrationVerificationServiceTest extends TestCase
         $preRegMLD2B  = $this->makePreReg('44444444', 'CSurn', 'Sibling', '', 'MLDB');
         $singleLayDep = $this->makePreReg('55555555', 'Smith', 'Jones', 'ABC 123', '10000001');
 
-        $mockPreRegRepo = $this->createMock(PreRegistrationRepository::class);
-        $mockPreRegRepo->method('findByCaseNumber')->willReturnMap([
+        $stubPreRegRepo = $this->createStub(PreRegistrationRepository::class);
+        $stubPreRegRepo->method('findByCaseNumber')->willReturnMap([
             ['11111111', [$crLayHasPC]],
             ['22222222', [$crLayNoPC]],
             ['33333333', [$preRegMLD1A, $preRegMLD1B, $preRegMLD1C]],
@@ -56,10 +56,10 @@ final class PreRegistrationVerificationServiceTest extends TestCase
             ['WRONG678', []],
         ]);
 
-        $mockUserRepo = $this->createMock(UserRepository::class);
-        $serializer   = $this->createMock(SerializerInterface::class);
+        $stubUserRepo = $this->createStub(UserRepository::class);
+        $serializer   = $this->createStub(SerializerInterface::class);
 
-        $this->preRegistrationVerificationService = new PreRegistrationVerificationService($serializer, $mockPreRegRepo, $mockUserRepo);
+        $this->preRegistrationVerificationService = new PreRegistrationVerificationService($serializer, $stubPreRegRepo, $stubUserRepo);
     }
 
 

@@ -43,7 +43,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $this->authService = self::createMock(AuthService::class);
         $this->attemptsInTimeChecker = self::createMock(AttemptsInTimeChecker::class);
         $this->incrementalWaitingTimeChecker = self::createMock(AttemptsIncrementalWaitingChecker::class);
-        $verboseLogger = self::createMock(LoggerInterface::class);
+        $verboseLogger = self::createStub(LoggerInterface::class);
 
         $this->sut = new RegistrationTokenAuthenticator(
             $this->userRepo,

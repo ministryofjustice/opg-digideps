@@ -22,6 +22,7 @@ use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
@@ -31,7 +32,7 @@ final class ReportServiceTest extends TestCase
     private Report $report;
     private Document $document1;
     private EntityManager&MockObject $em;
-    private PreRegistrationRepository&MockObject $mockPreRegistrationRepository;
+    private PreRegistrationRepository&Stub $stubPreRegistrationRepository;
     private ReportService $sut;
 
     public function setUp(): void
@@ -62,9 +63,9 @@ final class ReportServiceTest extends TestCase
                 return null;
             }
 
-            $this->mockPreRegistrationRepository = self::createMock(PreRegistrationRepository::class);
+            $this->stubPreRegistrationRepository = self::createStub(PreRegistrationRepository::class);
 
-            return $this->mockPreRegistrationRepository;
+            return $this->stubPreRegistrationRepository;
         });
 
         $this->sut = new ReportService($this->em, new NullLogger());

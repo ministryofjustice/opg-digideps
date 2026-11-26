@@ -26,19 +26,19 @@ final class ReportRepositoryTest extends TestCase
 
     public function setUp(): void
     {
-        $mockMetaClass = self::createMock(ClassMetadata::class);
+        $stubMetaClass = self::createStub(ClassMetadata::class);
 
-        $this->mockEm = self::createConfiguredMock(EntityManagerInterface::class, ['getClassMetadata' => $mockMetaClass]);
+        $this->mockEm = self::createConfiguredMock(EntityManagerInterface::class, ['getClassMetadata' => $stubMetaClass]);
 
-        $mockManagerRegistry = self::createConfiguredMock(ManagerRegistry::class, ['getManagerForClass' => $this->mockEm]);
+        $stubManagerRegistry = self::createConfiguredStub(ManagerRegistry::class, ['getManagerForClass' => $this->mockEm]);
 
-        $clientSearchFilter = self::createMock(ClientSearchFilter::class);
+        $clientSearchFilter = self::createStub(ClientSearchFilter::class);
 
-        $mockClient = self::createMock(Client::class);
-        $this->mockReport = self::createConfiguredMock(Report::class, ['getClient' => $mockClient]);
+        $stubClient = self::createStub(Client::class);
+        $this->mockReport = self::createConfiguredMock(Report::class, ['getClient' => $stubClient]);
 
         $this->sut = new ReportRepository(
-            $mockManagerRegistry,
+            $stubManagerRegistry,
             $clientSearchFilter,
             new ReportAccessService($this->createStub(EntityManagerInterface::class))
         );

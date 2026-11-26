@@ -14,6 +14,7 @@ use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderAndDeput
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -23,7 +24,7 @@ final class DeputyshipsCandidatesSelectorTest extends TestCase
     private StagingDeputyshipRepository&MockObject $mockStagingDeputyshipRepository;
     private CourtOrderAndDeputyCandidatesFactory&MockObject $mockCourtOrderAndDeputyCandidatesFactory;
     private StagingSelectedCandidateRepository&MockObject $mockStagingSelectedCandidateRepository;
-    private LoggerInterface&MockObject $mockLogger;
+    private LoggerInterface&Stub $stubLogger;
     private DeputyshipsCandidatesSelector $sut;
 
     public function setUp(): void
@@ -32,14 +33,14 @@ final class DeputyshipsCandidatesSelectorTest extends TestCase
         $this->mockStagingDeputyshipRepository = $this->createMock(StagingDeputyshipRepository::class);
         $this->mockCourtOrderAndDeputyCandidatesFactory = $this->createMock(CourtOrderAndDeputyCandidatesFactory::class);
         $this->mockStagingSelectedCandidateRepository = $this->createMock(StagingSelectedCandidateRepository::class);
-        $this->mockLogger = $this->createMock(LoggerInterface::class);
+        $this->stubLogger = $this->createStub(LoggerInterface::class);
 
         $this->sut = new DeputyshipsCandidatesSelector(
             $this->mockEntityManager,
             $this->mockStagingDeputyshipRepository,
             $this->mockCourtOrderAndDeputyCandidatesFactory,
             $this->mockStagingSelectedCandidateRepository,
-            $this->mockLogger,
+            $this->stubLogger,
         );
     }
 
@@ -68,13 +69,13 @@ final class DeputyshipsCandidatesSelectorTest extends TestCase
             ->expects($this->once())
             ->method('commit');
 
-        $mockStagingDeputyship1 = $this->createMock(StagingDeputyship::class);
-        $mockStagingDeputyship2 = $this->createMock(StagingDeputyship::class);
+        $stubStagingDeputyship1 = $this->createStub(StagingDeputyship::class);
+        $stubStagingDeputyship2 = $this->createStub(StagingDeputyship::class);
 
         $this->mockStagingDeputyshipRepository
             ->expects($this->once())
             ->method('findAllPaged')
-            ->willReturn(new \ArrayIterator([$mockStagingDeputyship1, $mockStagingDeputyship2]));
+            ->willReturn(new \ArrayIterator([$stubStagingDeputyship1, $stubStagingDeputyship2]));
 
         $this->mockCourtOrderAndDeputyCandidatesFactory
             ->expects($this->once())

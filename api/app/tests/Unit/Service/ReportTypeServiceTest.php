@@ -26,7 +26,7 @@ class ReportTypeServiceTest extends TestCase
             DeputyType::LAY
         );
 
-        $courtOrder1 = $this->createMock(CourtOrder::class);
+        $courtOrder1 = $this->createStub(CourtOrder::class);
         $courtOrder1->method('getDesiredReportType')->willReturn($reportType1);
 
         $reportType2 = new ReportType(
@@ -36,7 +36,7 @@ class ReportTypeServiceTest extends TestCase
             DeputyType::LAY
         );
 
-        $courtOrder2 = $this->createMock(CourtOrder::class);
+        $courtOrder2 = $this->createStub(CourtOrder::class);
         $courtOrder2->method('getDesiredReportType')->willReturn($reportType2);
 
         $sut = ReportTypeService::determineReportType([$courtOrder1, $courtOrder2]);
@@ -54,10 +54,10 @@ class ReportTypeServiceTest extends TestCase
             DeputyType::LAY
         );
 
-        $courtOrder1 = $this->createMock(CourtOrder::class);
+        $courtOrder1 = $this->createStub(CourtOrder::class);
         $courtOrder1->method('getDesiredReportType')->willReturn($reportType);
 
-        $courtOrder2 = $this->createMock(CourtOrder::class);
+        $courtOrder2 = $this->createStub(CourtOrder::class);
         $courtOrder2->method('getDesiredReportType')->willReturn($reportType);
 
         $sut = ReportTypeService::determineReportType([$courtOrder1, $courtOrder2]);

@@ -10,12 +10,12 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class ClientSearchFilterTest extends TestCase
 {
-    private EntityManagerInterface&MockObject $em;
+    private EntityManagerInterface&Stub $em;
     private QueryBuilder $qb;
     private ClientSearchFilter $sut;
 
@@ -57,7 +57,7 @@ final class ClientSearchFilterTest extends TestCase
 
     private function initEntityManager(): ClientSearchFilterTest
     {
-        $this->em = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
+        $this->em = $this->createStub(EntityManagerInterface::class);
         $this->em->method('getConfiguration')->willReturn(new Configuration());
         $this->em->method('createQuery')->willReturn(new Query($this->em));
 

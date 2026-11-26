@@ -53,7 +53,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $report->setId($this->reportId);
 
         $reportRepo = self::createMock(ReportRepository::class);
-        $em = self::createMock(EntityManagerInterface::class);
+        $em = self::createStub(EntityManagerInterface::class);
 
         $reportRepo->expects(self::once())
             ->method('find')
@@ -133,7 +133,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
             ->with($this->reportId)
             ->willReturn($report);
 
-        $em = self::createMock(EntityManagerInterface::class);
+        $em = self::createStub(EntityManagerInterface::class);
 
         $sut = new ClientBenefitsCheckFactory($reportRepo, $em);
 

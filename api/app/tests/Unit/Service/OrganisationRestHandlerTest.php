@@ -33,7 +33,7 @@ final class OrganisationRestHandlerTest extends TestCase
         $this->em = self::createMock(EntityManager::class);
         $this->validator = self::createMock(ValidatorInterface::class);
         $this->orgRepository = self::createMock(OrganisationRepository::class);
-        $userRepository = self::createMock(UserRepository::class);
+        $userRepository = self::createStub(UserRepository::class);
         $this->orgFactory = self::createMock(OrganisationFactory::class);
         $sharedDomains = ['gmail.com'];
         $this->sut = new OrganisationRestHandler(

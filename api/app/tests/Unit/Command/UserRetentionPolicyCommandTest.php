@@ -10,6 +10,7 @@ use OPG\Digideps\Backend\Event\UserRetentionPolicyCommandEvent;
 use OPG\Digideps\Backend\EventDispatcher\ObservableEventDispatcher;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -18,8 +19,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 final class UserRetentionPolicyCommandTest extends KernelTestCase
 {
     private UserRepository&MockObject $userRepository;
-    private ObservableEventDispatcher&MockObject $eventDispatcher;
-    private LoggerInterface&MockObject $logger;
+    private ObservableEventDispatcher&Stub $eventDispatcher;
+    private LoggerInterface&Stub $logger;
     private CommandTester $commandTester;
 
     public function setUp(): void
@@ -28,8 +29,8 @@ final class UserRetentionPolicyCommandTest extends KernelTestCase
         $app = new Application($kernel);
 
         $this->userRepository = self::createMock(UserRepository::class);
-        $this->eventDispatcher = self::createMock(ObservableEventDispatcher::class);
-        $this->logger = self::createMock(LoggerInterface::class);
+        $this->eventDispatcher = self::createStub(ObservableEventDispatcher::class);
+        $this->logger = self::createStub(LoggerInterface::class);
 
         $sut = new UserRetentionPolicyCommand(
             $this->userRepository,

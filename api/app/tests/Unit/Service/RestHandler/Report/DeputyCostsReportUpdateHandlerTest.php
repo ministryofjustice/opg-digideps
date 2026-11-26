@@ -14,11 +14,12 @@ use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class DeputyCostsReportUpdateHandlerTest extends TestCase
 {
-    private EntityManager&MockObject $em;
+    private EntityManager&Stub $em;
     private Report&MockObject $report;
     private DeputyCostsReportUpdateHandler $sut;
 
@@ -37,9 +38,7 @@ final class DeputyCostsReportUpdateHandlerTest extends TestCase
             ->onlyMethods(['updateSectionsStatusCache'])
             ->getMock();
 
-        $this->em = $this->getMockBuilder(EntityManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->em = $this->createStub(EntityManager::class);
 
         $this->sut = new DeputyCostsReportUpdateHandler($this->em);
     }

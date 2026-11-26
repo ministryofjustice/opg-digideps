@@ -28,6 +28,7 @@ use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class ReportStatusServiceTest extends TestCase
@@ -38,13 +39,13 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function decisions(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getDecisionsState()['state']);
     }
 
-    private function getReportMocked(array $reportMethods = []): Report&MockObject
+    private function getReportStubbed(array $reportMethods = []): Report&Stub
     {
-        $report = self::createConfiguredMock(
+        $report = self::createConfiguredStub(
             Report::class,
             $reportMethods + [
             'getSectionStatusesCached' => [],
@@ -64,17 +65,17 @@ final class ReportStatusServiceTest extends TestCase
             'getReasonForNoContacts' => null,
             'getSignificantDecisionsMade' => null,
             'getReasonForNoDecisions' => null,
-            'getVisitsCare' => self::createConfiguredMock(VisitsCare::class, [
+            'getVisitsCare' => self::createConfiguredStub(VisitsCare::class, [
                 'getDoYouLiveWithClient' => null,
                 'getDoesClientReceivePaidCare' => null,
                 'getWhoIsDoingTheCaring' => null,
                 'getDoesClientHaveACarePlan' => null,
             ]),
-            'getLifestyle' => self::createConfiguredMock(Lifestyle::class, [
+            'getLifestyle' => self::createConfiguredStub(Lifestyle::class, [
                 'getCareAppointments' => null,
                 'getDoesClientUndertakeSocialActivities' => null,
             ]),
-            'getAction' => self::createConfiguredMock(Action::class, [
+            'getAction' => self::createConfiguredStub(Action::class, [
                 'getDoYouExpectFinancialDecisions' => null,
                 'getDoYouHaveConcerns' => null,
             ]),
@@ -132,7 +133,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function contacts(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getContactsState()['state']);
     }
 
@@ -140,7 +141,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function visitsCare(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getVisitsCareState()['state']);
     }
 
@@ -170,7 +171,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function lifestyle(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getLifestyleState()['state']);
     }
 
@@ -178,7 +179,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function bankAccount(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getBankAccountsState()['state']);
     }
 
@@ -186,7 +187,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function moneyTransfer(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getMoneyTransferState()['state']);
     }
 
@@ -194,7 +195,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function moneyIn(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getMoneyInState()['state']);
     }
 
@@ -202,7 +203,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function moneyOut(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getMoneyOutState()['state']);
     }
 
@@ -229,7 +230,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function moneyInShort(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getMoneyInShortState()['state']);
     }
 
@@ -256,7 +257,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function moneyOutShort(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getMoneyOutShortState()['state']);
     }
 
@@ -264,7 +265,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function expenses(array $mocks, string $state): void
     {
-        $report = $this->getReportMocked($mocks);
+        $report = $this->getReportStubbed($mocks);
         $object = new ReportStatusService($report);
         $this->assertEquals($state, $object->getExpensesState()['state']);
     }
@@ -282,7 +283,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function paFeeExpenses(array $mocks, string $state): void
     {
-        $report = $this->getReportMocked(['isPAreport' => true] + $mocks);
+        $report = $this->getReportStubbed(['isPAreport' => true] + $mocks);
         $object = new ReportStatusService($report);
         $this->assertEquals($state, $object->getPaFeesExpensesState()['state']);
     }
@@ -351,7 +352,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function profDeputyCosts(array $mocks, string $state): void
     {
-        $report = $this->getReportMocked([...$mocks]);
+        $report = $this->getReportStubbed([...$mocks]);
         $object = new ReportStatusService($report);
         $this->assertEquals($state, $object->getProfDeputyCostsState()['state']);
     }
@@ -443,14 +444,14 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function gifts(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getGiftsState()['state']);
     }
 
     #[DataProvider('documentsProvider')]
     public function testGetDocumentState(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getDocumentsState()['state']);
     }
 
@@ -458,7 +459,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function assets(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getAssetsState()['state']);
     }
 
@@ -466,7 +467,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function debts(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getDebtsState()['state']);
     }
 
@@ -474,7 +475,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function balance(array $mocks, string $state): void
     {
-        $report = $this->getReportMocked($mocks);
+        $report = $this->getReportStubbed($mocks);
         $object = new ReportStatusService($report);
         $this->assertEquals($state, $object->getBalanceState()['state']);
     }
@@ -483,7 +484,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function actions(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getActionsState()['state']);
     }
 
@@ -491,7 +492,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function otherinfo(array $mocks, string $state): void
     {
-        $object = new ReportStatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportStubbed($mocks));
         $this->assertEquals($state, $object->getOtherInfoState()['state']);
     }
 
@@ -771,7 +772,7 @@ final class ReportStatusServiceTest extends TestCase
 
     public function testGetStatusIgnoringDueDateReadyToSubmit(): void
     {
-        $report = self::createMock(Report::class);
+        $report = self::createStub(Report::class);
 
         $report->method('getAvailableSections')->willReturn([Report::SECTION_GIFTS]);
         $report->method('getSectionStatusesCached')->willReturn([]);
