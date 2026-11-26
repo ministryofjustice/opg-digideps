@@ -22,11 +22,11 @@ class ClientRepository extends ServiceEntityRepository
     /**
      * Search Clients.
      *
-     * @param string $query     Search query
-     * @param string $orderBy   field to order by
+     * @param string $query Search query
+     * @param string $orderBy field to order by
      * @param string $sortOrder order of field order ASC|DESC
-     * @param int    $limit     number of results to return
-     * @param int    $offset
+     * @param int $limit number of results to return
+     * @param int $offset
      */
     public function searchClients(string $query = '', string $orderBy = 'lastname', string $sortOrder = 'ASC', int $limit = 100, int $offset = 0): array
     {
@@ -104,12 +104,47 @@ class ClientRepository extends ServiceEntityRepository
         $filter = $this->getEntityManager()->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Client::class);
 
-        /** @var ?Client $result */
-        $result = $this->findOneBy(['id' => $id]);
+        try {
+            $qb = $this->createQueryBuilder('c')
+                ->addSelect('r', 'nd', 'o', 'u', 'hwCo', 'pfaCo')
+                ->leftJoin('c.reports', 'r')
+                ->leftJoin('c.deputy', 'nd')
+                ->leftJoin('c.organisation', 'o')
+                ->leftJoin('c.users', 'u')
+                ->leftJoin('r.hwCourtOrder', 'hwCo')
+                ->leftJoin('r.pfaCourtOrder', 'pfaCo')
+                ->where('c.id = :id')
+                ->setParameter('id', $id);
 
-        $this->getEntityManager()->getFilters()->enable('softdeleteable');
+            // Doctrine otherwise queries each inverse one-to-one section during report hydration,
+            // even though client detail assembly only reads report summaries
+            foreach (['visitsCare', 'lifestyle', 'action', 'mentalCapacity', 'clientBenefitsCheck', 'checklist', 'reviewChecklist', 'satisfaction'] as $section) {
+                $qb->addSelect($section)->leftJoin('r.' . $section, $section);
+            }
 
-        return $result;
+            /** @var ?Client $client */
+            $client = $qb->getQuery()->getOneOrNullResult();
+
+            if ($client !== null) {
+                // Load each court-order report collection separately to avoid a PFA x HW
+                // history cross product when calculating replacement eligibility;
+                // note result is intentionality ignored: we're just warming the cache
+                foreach (['pfaReports', 'hwReports'] as $reports) {
+                    $this->createQueryBuilder('c')
+                        ->addSelect('co', 'r')
+                        ->leftJoin('c.courtOrders', 'co')
+                        ->leftJoin('co.' . $reports, 'r')
+                        ->where('c.id = :id')
+                        ->setParameter('id', $id)
+                        ->getQuery()
+                        ->getResult();
+                }
+            }
+
+            return $client;
+        } finally {
+            $this->getEntityManager()->getFilters()->enable('softdeleteable');
+        }
     }
 
     /**
