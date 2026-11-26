@@ -14,11 +14,13 @@ use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistratio
 use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use OPG\Digideps\Backend\v2\Registration\Uploader\LayDeputyshipProcessor;
 use OPG\Digideps\Backend\v2\Registration\Uploader\LayDeputyshipUploader;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class LayDeputyshipUploaderTest extends KernelTestCase
 {
     private EntityManager|MockObject $em;

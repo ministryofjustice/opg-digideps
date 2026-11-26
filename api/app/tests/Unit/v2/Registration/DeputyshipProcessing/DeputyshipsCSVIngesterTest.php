@@ -19,11 +19,13 @@ use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoad
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 use function PHPUnit\Framework\isInstanceOf;
 
+#[AllowMockObjectsWithoutExpectations]
 final class DeputyshipsCSVIngesterTest extends TestCase
 {
     private DeputyshipsCSVLoader&MockObject $mockDeputyshipsCSVLoader;

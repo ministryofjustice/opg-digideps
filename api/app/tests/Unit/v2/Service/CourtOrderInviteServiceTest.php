@@ -16,9 +16,11 @@ use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Service\DeputyService;
 use OPG\Digideps\Backend\Service\UserService;
 use OPG\Digideps\Backend\v2\DTO\InviteeDto;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class CourtOrderInviteServiceTest extends TestCase
 {
     private PreRegistrationRepository&MockObject $mockPreRegistrationRepository;

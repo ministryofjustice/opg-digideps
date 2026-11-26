@@ -13,21 +13,14 @@ use PHPUnit\Framework\TestCase;
 
 final class DeputyshipBuilderTest extends TestCase
 {
-    private DeputyshipCandidatesConverter $mockConverter;
-    private DeputyshipBuilder $sut;
-
-    public function setUp(): void
-    {
-        $this->mockConverter = $this->createMock(DeputyshipCandidatesConverter::class);
-
-        $this->sut = new DeputyshipBuilder($this->mockConverter);
-    }
-
     public function testBuildNoCandidatesFail(): void
     {
+        $stubConverter = $this->createStub(DeputyshipCandidatesConverter::class);
+        $sut = new DeputyshipBuilder($stubConverter);
+
         $candidates = new \ArrayIterator([]);
 
-        $results = iterator_to_array($this->sut->build($candidates));
+        $results = iterator_to_array($sut->build($candidates));
 
         /** @var DeputyshipBuilderResult $result */
         $result = $results[0];
@@ -37,6 +30,9 @@ final class DeputyshipBuilderTest extends TestCase
 
     public function testBuildSuccess(): void
     {
+        $mockConverter = $this->createMock(DeputyshipCandidatesConverter::class);
+        $sut = new DeputyshipBuilder($mockConverter);
+
         // candidates for two separate orders
         $orderUid1 = '11112222';
         $candidateOrder1_1 = ['action' => DeputyshipCandidateAction::InsertOrderDeputy, 'orderUid' => $orderUid1];
@@ -59,7 +55,7 @@ final class DeputyshipBuilderTest extends TestCase
 
         // two groups should be passed to the converter
         $uidsExpected = [$orderUid1, $orderUid2];
-        $this->mockConverter->expects($this->exactly(2))
+        $mockConverter->expects($this->exactly(2))
             ->method('convert')
             ->willReturnCallback(function ($calledWith) use ($uidsExpected, $caller): DeputyshipBuilderResult {
                 $this->assertEquals($uidsExpected[$caller->counter], $calledWith->orderUid);
@@ -68,7 +64,7 @@ final class DeputyshipBuilderTest extends TestCase
                 return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
             });
 
-        $results = $this->sut->build($candidates);
+        $results = $sut->build($candidates);
 
         self::assertCount(2, iterator_to_array($results));
     }

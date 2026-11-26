@@ -20,9 +20,11 @@ use OPG\Digideps\Backend\v2\Registration\Uploader\LayDeputyshipProcessor;
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
+#[AllowMockObjectsWithoutExpectations]
 final class LayDeputyshipProcessorTest extends TestCase
 {
     private EntityManagerInterface $mockEm;

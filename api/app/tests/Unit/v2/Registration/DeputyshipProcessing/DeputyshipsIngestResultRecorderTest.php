@@ -10,18 +10,20 @@ use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipBuilderR
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
+#[AllowMockObjectsWithoutExpectations]
 final class DeputyshipsIngestResultRecorderTest extends TestCase
 {
-    private LoggerInterface $mockLogger;
+    private LoggerInterface $stubLogger;
     private DeputyshipsIngestResultRecorder $sut;
 
     public function setUp(): void
     {
-        $this->mockLogger = self::createMock(LoggerInterface::class);
-        $this->sut = new DeputyshipsIngestResultRecorder($this->mockLogger);
+        $this->stubLogger = self::createStub(LoggerInterface::class);
+        $this->sut = new DeputyshipsIngestResultRecorder($this->stubLogger);
     }
 
     public function testRecordCsvLoadResultFailure(): void
@@ -99,16 +101,19 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
 
     public function testDryRun(): void
     {
-        $this->sut->setDryRun(true);
+        $mockLogger = $this->createMock(LoggerInterface::class);
+        $sut = new DeputyshipsIngestResultRecorder($mockLogger);
+
+        $sut->setDryRun(true);
 
         // logger should only log at warning level
-        $this->mockLogger->expects($this->once())->method('warning')->willReturnCallback(
+        $mockLogger->expects($this->once())->method('warning')->willReturnCallback(
             function (string $message): void {
                 self::assertStringContainsString('failed to load deputyships CSV from', $message);
             }
         );
 
         // record a failed ingest step
-        $this->sut->recordCsvLoadResult(new DeputyshipsCSVLoaderResult('/tmp/test.csv', false));
+        $sut->recordCsvLoadResult(new DeputyshipsCSVLoaderResult('/tmp/test.csv', false));
     }
 }
