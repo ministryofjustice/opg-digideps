@@ -55,12 +55,18 @@ class DeputyshipCandidatesGroup implements \IteratorAggregate
                     $group->insertOrder = $candidate;
                     break;
                 case DeputyshipCandidateAction::InsertOrderReport:
-                    $group->insertOthers[(string)$candidate['reportId']] ??= $candidate;
+                    $reportId = $candidate['reportId'] ?? null;
+                    if ($reportId !== null) {
+                        $group->insertOthers[(string)$reportId] ??= $candidate;
+                    }
                     break;
                 case DeputyshipCandidateAction::InsertOrderDeputy:
-                    $group->insertOthers[(string)$candidate['deputyId']] ??= $candidate;
-                    if ($candidate['deputyStatusOnOrder'] ?? false) {
-                        $group->insertOthers[(string)$candidate['deputyId']]['deputyStatusOnOrder'] = true;
+                    $deputyId = $candidate['deputyId'] ?? null;
+                    if ($deputyId !== null) {
+                        $group->insertOthers[(string)$deputyId] ??= $candidate;
+                        if ($candidate['deputyStatusOnOrder'] ?? false) {
+                            $group->insertOthers[(string)$deputyId]['deputyStatusOnOrder'] = true;
+                        }
                     }
                     break;
                 case DeputyshipCandidateAction::UpdateDeputyStatus:
