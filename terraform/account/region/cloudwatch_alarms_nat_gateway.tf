@@ -55,7 +55,7 @@ resource "aws_cloudwatch_metric_alarm" "nat_gateway_bytes_out" {
   metric_query {
     id = "alarm_condition"
 
-    expression = "IF(database_activity > 0, nat_bytes - 200000, nat_bytes - 100000)"
+    expression = "IF(database_activity > 0, nat_bytes - 300000, nat_bytes - 200000)"
 
     label       = "Conditional NAT threshold"
     return_data = true
