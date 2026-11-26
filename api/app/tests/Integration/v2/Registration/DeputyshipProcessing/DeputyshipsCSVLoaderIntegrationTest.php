@@ -11,18 +11,19 @@ use League\Csv\UnavailableStream;
 use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
 use OPG\Digideps\Backend\v2\CSV\CSVChunkerFactory;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\LoggerInterface;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 
-class DeputyshipsCSVLoaderIntegrationIntegrationTest extends ApiIntegrationTestCase
+class DeputyshipsCSVLoaderIntegrationTest extends ApiIntegrationTestCase
 {
     private static CSVChunkerFactory $chunkerFactory;
-    private static LoggerInterface $logger;
+    private static LoggerInterface&Stub $logger;
 
     public function setUp(): void
     {
         self::$chunkerFactory = new CSVChunkerFactory();
-        self::$logger = $this->createMock(LoggerInterface::class);
+        self::$logger = $this->createStub(LoggerInterface::class);
     }
 
     /**
