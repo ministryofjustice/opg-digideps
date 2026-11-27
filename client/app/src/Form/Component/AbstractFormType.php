@@ -57,7 +57,6 @@ abstract class AbstractFormType extends AbstractType
     final public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         foreach ($this->getInputs($options) as $input) {
-
             if ($input instanceof AbstractRepeatedInput) {
                 $this->buildInput($input->primary, $builder);
                 $this->buildInput($input->repeat, $builder);
