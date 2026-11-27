@@ -35,13 +35,24 @@ final readonly class AccountService
 
         $user = $this->getUserFromDeputy($deputy);
         if ($user->getPassword() !== null) {
-            return $user->getEmail() === strtolower($request->deputyEmail->value)
-                ? AccountError::PasswordSet : AccountError::AccountTaken;
+            return AccountError::AccountTaken;
+        }
+        $existingUser = $this->getUserFromEmail($request->deputyEmail);
+        if ($existingUser !== null && $existingUser->getId() !== $user->getId()) {
+            return AccountError::AccountTaken;
         }
 
         $user->setEmail($request->deputyEmail->value);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+        if ($deputy->getOrganisation() !== null) {
+            $organisation = $deputy->getOrganisation();
+            $organisation->addUser($user);
+            $user->addOrganisation($organisation);
+            $this->entityManager->persist($user);
+            $this->entityManager->persist($organisation);
+            $this->entityManager->flush();
+        }
 
         return $this->requestPasswordResetForUser($user);
     }
@@ -49,8 +60,8 @@ final readonly class AccountService
     public function requestPasswordReset(ResetRequest $request): AccountResponse|AccountError
     {
         $user = $this->getUserFromEmail($request->userEmail);
-        if ($user instanceof AccountError) {
-            return $user;
+        if ($user === null) {
+            return AccountError::UnknownEmail;
         }
         return $this->requestPasswordResetForUser($user);
     }
@@ -100,9 +111,9 @@ final readonly class AccountService
         $deputy->setUser($user);
         $user->setDeputy($deputy);
 
-        $user->getOrganisations()->clear();
         if ($deputy->getOrganisation() !== null) {
             $user->getOrganisations()->add($deputy->getOrganisation());
+            $deputy->getOrganisation()->addUser($user);
         }
         $user->setAddress1($deputy->getAddress1());
         $user->setAddress2($deputy->getAddress2());
@@ -162,9 +173,8 @@ final readonly class AccountService
         }
     }
 
-    private function getUserFromEmail(Email $email): User|AccountError
+    private function getUserFromEmail(Email $email): ?User
     {
-        return $this->entityManager->getRepository(User::class)
-            ->findOneBy(['email' => strtolower($email->value)]) ?? AccountError::UnknownEmail;
+        return $this->entityManager->getRepository(User::class)->findOneBy(['email' => strtolower($email->value)]);
     }
 }
