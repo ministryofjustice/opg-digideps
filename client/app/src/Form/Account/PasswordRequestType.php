@@ -18,7 +18,7 @@ class PasswordRequestType extends AbstractFormType
     protected string $translationDomain { get => 'twig-components'; }
     protected string $translationPrefix { get => 'opg.account.password.form'; }
 
-    protected function defineInputs(callable $t): array
+    protected function defineInputs(callable $t, array $options): array
     {
         return [
             new RepeatedPasswordInput(
