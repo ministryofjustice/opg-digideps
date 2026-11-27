@@ -80,6 +80,6 @@ final readonly class RenderableForm
 
     public function render(): Form
     {
-        return $this->type->render($this->form->createView(), $this->form->getConfig()->getOptions());
+        return $this->type->render($this->form->createView());
     }
 }

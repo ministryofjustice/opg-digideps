@@ -2,7 +2,6 @@
 
 namespace OPG\Digideps\Frontend\Form\Account;
 
-use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Form\Component\AbstractFormType;
 use OPG\Digideps\Frontend\Form\Component\Constraints;
 use OPG\Digideps\Frontend\Form\Component\HintRecipe;
@@ -19,7 +18,7 @@ class AccountRequestType extends AbstractFormType
     /**
      * @inheritDoc
      */
-    protected function defineInputs(callable $t, ValidatingArray $options): array
+    protected function defineInputs(callable $t): array
     {
         return [
             new TextInput(

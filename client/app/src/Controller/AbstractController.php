@@ -4,6 +4,7 @@ namespace OPG\Digideps\Frontend\Controller;
 
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Form\Component\AbstractFormType;
+use OPG\Digideps\Frontend\Form\Component\AbstractParametrisedFormType;
 use OPG\Digideps\Frontend\Form\Component\RenderableForm;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -22,14 +23,21 @@ abstract class AbstractController extends SymfonyAbstractController
     }
 
     /**
-     * @template T of AbstractFormType
+     * @template P of ?object
+     * @template T of AbstractFormType<P>
      * @param class-string<T> $typeClass
-     * @param array<string, mixed> $options options defined by the form type's configureOptions()
+     * @param P $parameter
      * @return RenderableForm<T>
      */
-    protected function createRenderableForm(string $typeClass, ?string $action = null, mixed $data = null, array $options = []): RenderableForm
+    protected function createRenderableForm(string $typeClass, ?string $action = null, ?object $parameter = null, mixed $data = null): RenderableForm
     {
-        $options = array_filter(['action' => $action]) + $options;
+        if (is_a($typeClass, AbstractParametrisedFormType::class, true)) {
+            if ($parameter === null) {
+                throw new \ValueError("Argument 'parameter' may not be null if using a AbstractParametrisedFormType");
+            }
+            $typeClass::setParameters($parameter);
+        }
+        $options = array_filter(['action' => $action]);
         /**
          * @var FormFactoryInterface $factory
          */
@@ -40,7 +48,7 @@ abstract class AbstractController extends SymfonyAbstractController
          */
         $type = $builder->getType()->getInnerType();
         $form = $builder->getForm();
-        return new RenderableForm($type, $form, fn () => $this->createRenderableForm($typeClass, $action, options: $options));
+        return new RenderableForm($type, $form, fn () => $this->createRenderableForm($typeClass, $action));
     }
 
     protected function getUser(): ?User

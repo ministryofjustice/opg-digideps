@@ -2575,24 +2575,6 @@ parameters:
 			path: src/Kernel.php
 
 		-
-			message: '#^Call to method sendEmail\(\) on an unknown class Alphagov\\Notifications\\Client\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Mail/MailSender.php
-
-		-
-			message: '#^Parameter \$notifyClient of method OPG\\Digideps\\Backend\\Mail\\MailSender\:\:__construct\(\) has invalid type Alphagov\\Notifications\\Client\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Mail/MailSender.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Mail\\MailSender\:\:\$notifyClient has unknown class Alphagov\\Notifications\\Client as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Mail/MailSender.php
-
-		-
 			message: '#^Class OPG\\Digideps\\Backend\\Repository\\AssetRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Form\Account;
 
-use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Form\Component\AbstractFormType;
 use OPG\Digideps\Frontend\Form\Component\Constraints;
 use OPG\Digideps\Frontend\Form\Component\RepeatedPasswordInput;
@@ -19,7 +18,7 @@ class PasswordRequestType extends AbstractFormType
     protected string $translationDomain { get => 'twig-components'; }
     protected string $translationPrefix { get => 'opg.account.password.form'; }
 
-    protected function defineInputs(callable $t, ValidatingArray $options): array
+    protected function defineInputs(callable $t): array
     {
         return [
             new RepeatedPasswordInput(

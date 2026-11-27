@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Form\Account;
 
-use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Form\Component\AbstractFormType;
 use OPG\Digideps\Frontend\Form\Component\CheckBoxInput;
 use OPG\Digideps\Frontend\Form\Component\Constraints;
@@ -16,7 +15,7 @@ class AcceptRequestType extends AbstractFormType
     /**
      * @inheritDoc
      */
-    protected function defineInputs(callable $t, ValidatingArray $options): array
+    protected function defineInputs(callable $t): array
     {
         return [
             new CheckBoxInput(

@@ -73,12 +73,6 @@ parameters:
 			path: api/app/src/Command/ApiComparison.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Command\\ApiComparison\:\:\$defaultName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Command/ApiComparison.php
-
-		-
 			message: '#^Binary operation "\+\=" between mixed and int\<0, max\> results in an error\.$#'
 			identifier: assignOp.invalid
 			count: 1
@@ -4931,30 +4925,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: api/app/src/v2/Assembler/UserAssembler.php
-
-		-
-			message: '#^Cannot access offset ''organisation'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/v2/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\v2\\Assembler\\ClientAssembler\:\:assembleFromArray\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\v2\\Assembler\\OrganisationAssembler\:\:assembleFromArray\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#2 \$criteriaOrId of method OPG\\Digideps\\Backend\\Controller\\RestController\:\:findEntityBy\(\) expects array\|int, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/src/v2/Controller/ClientController.php
 
 		-
 			message: '#^Parameter \#1 \$email of class OPG\\Digideps\\Backend\\v2\\DTO\\InviteeDto constructor expects string, mixed given\.$#'
@@ -21313,12 +21283,6 @@ parameters:
 			path: client/app/src/Controller/ClientController.php
 
 		-
-			message: '#^Cannot call method getActiveReport\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/ClientController.php
-
-		-
 			message: '#^Cannot call method getFirstname\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -29687,12 +29651,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: client/app/tests/Unit/Sync/Command/ChecklistSyncCommandTest.php
-
-		-
-			message: '#^Call to an undefined static method OPG\\Digideps\\Frontend\\Sync\\Command\\DocumentSyncCommand\:\:getDefaultName\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: client/app/tests/Unit/Sync/Command/DocumentSyncCommandTest.php
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Command\\DocumentSyncCommandTest\:\:testSleepsWhenTurnedOff\(\) has no return type specified\.$#'

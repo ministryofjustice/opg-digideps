@@ -24,6 +24,7 @@ use OPG\Digideps\Frontend\Form\Admin\ManageReportConfirmType;
 use OPG\Digideps\Frontend\Form\Admin\ManageSubmittedReportType;
 use OPG\Digideps\Frontend\Form\Admin\ReportChecklistType;
 use OPG\Digideps\Frontend\Form\Admin\ReportRestoreType;
+use OPG\Digideps\Frontend\Form\Admin\ReportRestoreTypeParameter;
 use OPG\Digideps\Frontend\Form\Admin\ReviewChecklistType;
 use OPG\Digideps\Frontend\Report\ReportSectionService;
 use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
@@ -630,12 +631,11 @@ class ReportController extends AbstractController
             ReportRestoreType::class,
             // keep the client ID in the action so the cancel link still works if a POST is re-rendered
             $this->generateUrl('admin_report_restore', ['id' => $id, ReportRestoreType::CLIENT_ID => $clientId]),
+            new ReportRestoreTypeParameter($this->generateUrl('admin_client_details', ['id' => $clientId])),
             [
-                ReportRestoreType::RESTORE_FROM_REPORT_ID =>
-                    $request->query->getString(ReportRestoreType::RESTORE_FROM_REPORT_ID),
-                ReportRestoreType::CLIENT_ID => (string) $clientId
-            ],
-            [ReportRestoreType::CANCEL_URL => $this->generateUrl('admin_client_details', ['id' => $clientId])]
+                ReportRestoreType::RESTORE_FROM_REPORT_ID => $request->query->getString(ReportRestoreType::RESTORE_FROM_REPORT_ID),
+                ReportRestoreType::CLIENT_ID => (string)$clientId
+            ]
         );
         // read after handleRequest() so a POST uses the submitted hidden field rather than the (absent) query param
         $submitted = $form->handleRequest($request);
