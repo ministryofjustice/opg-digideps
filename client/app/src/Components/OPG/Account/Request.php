@@ -34,12 +34,14 @@ final class Request
         $this->props = ['accountCreated' => $accountCreated];
 
         $signInText = $this->translator->trans('opg.account.request.signIn', [], 'twig-components');
+        $telephoneNumber = $this->translator->trans('contact.digideps.telephoneNumber', [], 'twig-components');
         $contentKey = $accountCreated ? 'opg.account.created.content' : 'opg.account.request.content';
 
         $this->content = new RichTextParser($this->translator, [
             '%signInPath%' => '/login',
             '%signIn%' => $signInText,
             '%signInCaps%' => ucfirst($signInText),
+            '%telephoneNumber%' => $telephoneNumber,
             '%deputyEmail%' => $deputyEmail ?? ''
         ])->parse($contentKey, 'twig-components');
     }

@@ -192,7 +192,7 @@ class AccountController extends AbstractController
     {
         return $this->translator->trans(
             "opg.account.{$domain}.errors.{$result->value}",
-            ['%helplineNumber%' => $this->translator->trans('opg.helplineNumber', [], 'twig-components')],
+            ['%telephoneNumber%' => $this->translator->trans('contact.digideps.telephoneNumber', [], 'twig-components')],
             'twig-components'
         );
     }

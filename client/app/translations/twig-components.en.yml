@@ -104,18 +104,28 @@ opg:
       signUp:
         label: Sign up
       content: |
-        You need to give your name, your email address, your postcode and your client's last name and case number. This is so we can create your secure deputy account.
+        Enter your details to create your secure deputy account.
 
-        If you already have an account, [%signIn%](%signInPath%).
+        # If you already have an account
+
+        If you already have an account, please [%signIn%](%signInPath%).
+
+        # Need to set a password?
+
+        To get an email with a new link inviting you to set your password, please re-enter your details.
+
+        # Get help
+
+        For help registering or signing in, contact the Office of the Public Guardian (OPG) on %telephoneNumber%.
       signIn: sign in
       errors:
         AccountTaken: |
           Our records show that an account already exists for this deputyship.
-          Please sign in using your registered email address. Please call %helplineNumber% if you are unable to sign in.
+          Please sign in using your registered email address. Please call %telephoneNumber% if you are unable to sign in.
         EmailError: An error occurred while setting up your account. Please try again later.
         MatchingError: |
           The information you've given us does not match our records.
-          Please call %helplineNumber% to make sure we have a record of your deputyship.
+          Please call %telephoneNumber% to make sure we have a record of your deputyship.
         NetworkError: An error occurred while setting up your account. Please try again later.
     created:
       content: |
@@ -206,7 +216,6 @@ opg:
         closed: unsubmitted (closed court orders)
       submitted: Submitted
       type: Type
-  helplineNumber: 0300 456 0300
   optional: (optional)
   renderable:
     bankAccount:
