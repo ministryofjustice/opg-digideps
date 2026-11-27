@@ -28,7 +28,7 @@ class SiriusApiGatewayClient
         private readonly RequestSigner $requestSigner,
         private readonly string $baseUrl,
         private readonly Serializer $serializer,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $verboseLogger
     ) {
     }
 
@@ -49,8 +49,7 @@ class SiriusApiGatewayClient
     {
         $reportJson = $this->serializer->serialize(['report' => ['data' => $upload]], 'json');
 
-        $this->logger->warning('Syncing reportPDF document');
-        $this->logger->warning($reportJson);
+        $this->verboseLogger->notice('Syncing reportPDF document');
 
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_REPORT_ENDPOINT, $caseRef),
@@ -70,8 +69,7 @@ class SiriusApiGatewayClient
     {
         $reportJson = $this->serializer->serialize(['supporting_document' => ['data' => $upload]], 'json');
 
-        $this->logger->warning("Syncing supporting document ID with UUID: $submissionUuid");
-        $this->logger->warning($reportJson);
+        $this->verboseLogger->notice("Syncing supporting document ID with UUID: $submissionUuid");
 
         $signedRequest = $this->buildSignedRequest(
             sprintf(self::SIRIUS_SUPPORTING_DOCUMENTS_ENDPOINT, $caseRef, $submissionUuid),
