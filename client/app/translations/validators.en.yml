@@ -650,6 +650,11 @@ opg:
       caseNumber:
         wrongLength: Please enter an 8 or 10 character case number
 
+clientBenefit:
+  form:
+    moneyDetails:
+      tooLong: Enter no more than {{ limit }} characters
+
 #       COMMON ELEMENTS
 # ====================================================================================================
 
