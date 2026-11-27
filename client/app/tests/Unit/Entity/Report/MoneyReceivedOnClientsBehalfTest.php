@@ -29,6 +29,42 @@ class MoneyReceivedOnClientsBehalfTest extends TestCase
         self::assertCount($expectedViolationCount, $result);
     }
 
+    public function testTextFieldsCannotExceed255Characters(): void
+    {
+        $sut = new MoneyReceivedOnClientsBehalf()
+            ->setMoneyType(str_repeat('a', 256))
+            ->setAmount(20)
+            ->setWhoReceivedMoney(str_repeat('b', 256));
+
+        $validator = Validation::createValidatorBuilder()
+            ->enableAttributeMapping()
+            ->getValidator();
+
+        $result = $validator->validate($sut, null, 'client-benefits-check');
+
+        self::assertCount(2, $result);
+        self::assertSame(['moneyType', 'whoReceivedMoney'], array_map(
+            static fn ($violation) => $violation->getPropertyPath(),
+            iterator_to_array($result)
+        ));
+    }
+
+    public function testTextFieldsAllow255Characters(): void
+    {
+        $sut = new MoneyReceivedOnClientsBehalf()
+            ->setMoneyType(str_repeat('a', 255))
+            ->setAmount(20)
+            ->setWhoReceivedMoney(str_repeat('b', 255));
+
+        $validator = Validation::createValidatorBuilder()
+            ->enableAttributeMapping()
+            ->getValidator();
+
+        $result = $validator->validate($sut, null, 'client-benefits-check');
+
+        self::assertCount(0, $result);
+    }
+
     public static function invalidDataProvider(): array
     {
         return [

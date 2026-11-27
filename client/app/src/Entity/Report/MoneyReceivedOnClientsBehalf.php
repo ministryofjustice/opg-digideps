@@ -7,6 +7,7 @@ namespace OPG\Digideps\Frontend\Entity\Report;
 use OPG\Digideps\Frontend\Entity\MoneyReceivedOnClientsBehalfInterface;
 use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterface
 {
@@ -25,6 +26,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     #[CustomAssert\MoneyReceivedOnClientsBehalf(groups: ['client-benefits-check'])]
+    #[Assert\Length(max: 255, maxMessage: 'clientBenefit.form.moneyDetails.tooLong', groups: ['client-benefits-check'])]
     private ?string $moneyType = null;
 
     #[JMS\Type('float')]
@@ -43,6 +45,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'client-benefits-check'])]
     #[CustomAssert\MoneyReceivedOnClientsBehalf(groups: ['client-benefits-check'])]
+    #[Assert\Length(max: 255, maxMessage: 'clientBenefit.form.moneyDetails.tooLong', groups: ['client-benefits-check'])]
     private ?string $whoReceivedMoney;
 
     public function getId(): ?string
