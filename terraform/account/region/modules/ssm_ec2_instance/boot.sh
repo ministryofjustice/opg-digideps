@@ -149,7 +149,7 @@ connect_to_database() {
     PGPASSWORD="$password" psql -h "$HOST" -U "$user" -d api -p 5432
 
   elif [[ "$access" == "read" ]]; then
-    ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+    ACCOUNT_ID=$(aws rds describe-db-clusters --db-cluster-identifier "$database" --query 'DBClusters[0].DBClusterArn' --output text | cut -d: -f5)
 	HOST=$(get_db_host "$database" "$access")
 
 	if [[ -z "$HOST" || "$HOST" == "None" ]]; then
