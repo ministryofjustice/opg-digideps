@@ -16,6 +16,11 @@ abstract class AbstractFormType extends AbstractType
     abstract protected string $translationDomain {get;}
     abstract protected string $translationPrefix {get;}
 
+    /**
+     * @var array<string, AbstractInput>
+     */
+    private array $inputs = [];
+
     public function __construct(private readonly TranslatorInterface $translator)
     {
     }
@@ -35,15 +40,18 @@ abstract class AbstractFormType extends AbstractType
      */
     private function getInputs(array $options): array
     {
-        $inputs = $this->defineInputs(
-            fn (?string $key, array $parameters = []) =>  $key === null ? '' : $this->translator->trans("{$this->translationPrefix}.{$key}", $parameters, $this->translationDomain),
-            $options
-        );
-        $namedInputs = [];
-        foreach ($inputs as $input) {
-            $namedInputs[$input->name] = $input;
+        if (empty($this->inputs)) {
+            $inputs = $this->defineInputs(
+                fn (?string $key, array $parameters = []) => $key === null ? '' : $this->translator->trans("{$this->translationPrefix}.{$key}", $parameters, $this->translationDomain),
+                $options
+            );
+            $namedInputs = [];
+            foreach ($inputs as $input) {
+                $namedInputs[$input->name] = $input;
+            }
+            $this->inputs = $namedInputs;
         }
-        return $namedInputs;
+        return $this->inputs;
     }
 
     final public function buildForm(FormBuilderInterface $builder, array $options): void
