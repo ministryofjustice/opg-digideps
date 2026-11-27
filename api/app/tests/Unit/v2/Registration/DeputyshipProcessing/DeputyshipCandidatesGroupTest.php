@@ -10,6 +10,26 @@ use PHPUnit\Framework\TestCase;
 
 final class DeputyshipCandidatesGroupTest extends TestCase
 {
+    public function testRejectsDeputyCandidateWithMissingId(): void
+    {
+        $candidates = [
+            ['action' => DeputyshipCandidateAction::InsertOrder, 'orderUid' => '555445566'],
+            ['action' => DeputyshipCandidateAction::InsertOrderDeputy, 'orderUid' => '555445566'],
+        ];
+
+        self::assertNull(DeputyshipCandidatesGroup::create('555445566', $candidates));
+    }
+
+    public function testRejectsDeputyCandidateWithNullId(): void
+    {
+        $candidates = [
+            ['action' => DeputyshipCandidateAction::InsertOrder, 'orderUid' => '555445566'],
+            ['action' => DeputyshipCandidateAction::InsertOrderDeputy, 'orderUid' => '555445566', 'deputyId' => null],
+        ];
+
+        self::assertNull(DeputyshipCandidatesGroup::create('555445566', $candidates));
+    }
+
     public function testDeputyshipCandidatesGroup(): void
     {
         $expectedInsertOthers = [

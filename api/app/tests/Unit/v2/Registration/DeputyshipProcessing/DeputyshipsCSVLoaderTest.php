@@ -11,44 +11,40 @@ use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
 use OPG\Digideps\Backend\v2\CSV\CSVChunker;
 use OPG\Digideps\Backend\v2\CSV\CSVChunkerFactory;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 final class DeputyshipsCSVLoaderTest extends TestCase
 {
-    private EntityManager|MockObject $mockEm;
-    private CSVChunkerFactory|MockObject $mockCSVChunkerFactory;
-    private LoggerInterface|MockObject $mockLogger;
-    private DeputyshipsCSVLoader $sut;
-
-    public function setUp(): void
-    {
-        $this->mockEm = $this->createMock(EntityManager::class);
-        $this->mockCSVChunkerFactory = $this->createMock(CSVChunkerFactory::class);
-        $this->mockLogger = $this->createMock(LoggerInterface::class);
-        $this->sut = new DeputyshipsCSVLoader($this->mockEm, $this->mockCSVChunkerFactory, $this->mockLogger);
-    }
-
     public function testLoadThrowsCSVException(): void
     {
+        $stubEm = $this->createStub(EntityManager::class);
+        $mockCSVChunkerFactory = $this->createMock(CSVChunkerFactory::class);
+        $stubLogger = $this->createStub(LoggerInterface::class);
+        $sut = new DeputyshipsCSVLoader($stubEm, $mockCSVChunkerFactory, $stubLogger);
+
         $fileLocation = '/tmp/test.csv';
         $chunkSize = 10000;
         $exception = new CSVException('error with csv file');
 
-        $this->mockCSVChunkerFactory
+        $mockCSVChunkerFactory
             ->expects($this->once())
             ->method('create')
             ->with($fileLocation, StagingDeputyship::class, $chunkSize)
             ->willThrowException($exception);
 
-        $result = $this->sut->load($fileLocation);
+        $result = $sut->load($fileLocation);
 
         $this->assertFalse($result->loadedOk);
     }
 
     public function testLoadSuccess(): void
     {
+        $mockEm = $this->createMock(EntityManager::class);
+        $mockCSVChunkerFactory = $this->createMock(CSVChunkerFactory::class);
+        $stubLogger = $this->createStub(LoggerInterface::class);
+        $sut = new DeputyshipsCSVLoader($mockEm, $mockCSVChunkerFactory, $stubLogger);
+
         $fileLocation = '/tmp/test.csv';
         $chunkSize = 10000;
 
@@ -57,13 +53,13 @@ final class DeputyshipsCSVLoaderTest extends TestCase
         $sd3 = new StagingDeputyship();
         $records = new \ArrayIterator([$sd1, $sd2, $sd3]);
 
-        $mockChunker = $this->createMock(CSVChunker::class);
+        $stubChunker = $this->createStub(CSVChunker::class);
 
         // work-around for the removal of willReturnConsecutive from phpunit...
         $caller = new \stdClass();
         $caller->callNumber = 1;
 
-        $mockChunker->method('getChunk')->willReturnCallback(function () use ($records, $caller): ?array {
+        $stubChunker->method('getChunk')->willReturnCallback(function () use ($records, $caller): ?array {
             if ($caller->callNumber > count($records)) {
                 return null;
             }
@@ -74,19 +70,19 @@ final class DeputyshipsCSVLoaderTest extends TestCase
             return [$record];
         });
 
-        $this->mockCSVChunkerFactory
+        $mockCSVChunkerFactory
             ->expects($this->once())
             ->method('create')
             ->with($fileLocation, StagingDeputyship::class, $chunkSize)
-            ->willReturn($mockChunker);
+            ->willReturn($stubChunker);
 
-        $this->mockEm->expects($this->exactly(2))->method('beginTransaction');
-        $this->mockEm->expects($this->exactly(2))->method('commit');
-        $this->mockEm->expects($this->exactly(4))->method('flush');
-        $this->mockEm->expects($this->exactly(3))->method('clear');
+        $mockEm->expects($this->exactly(2))->method('beginTransaction');
+        $mockEm->expects($this->exactly(2))->method('commit');
+        $mockEm->expects($this->exactly(4))->method('flush');
+        $mockEm->expects($this->exactly(3))->method('clear');
 
         // chunker returns three chunks, then null
-        $this->mockEm->expects($this->exactly(3))
+        $mockEm->expects($this->exactly(3))
             ->method('persist')
             ->willReturnCallback(function ($record) use ($records): void {
                 $validValues = array_merge(iterator_to_array($records), [null]);
@@ -97,12 +93,12 @@ final class DeputyshipsCSVLoaderTest extends TestCase
         $mockQuery->expects($this->once())->method('execute');
 
         $qualified = StagingDeputyship::class;
-        $this->mockEm->expects($this->once())
+        $mockEm->expects($this->once())
             ->method('createQuery')
             ->with("DELETE FROM {$qualified} sd")
             ->willReturn($mockQuery);
 
-        $result = $this->sut->load($fileLocation);
+        $result = $sut->load($fileLocation);
 
         $this->assertTrue($result->loadedOk);
     }

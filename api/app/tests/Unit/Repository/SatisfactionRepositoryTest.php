@@ -13,26 +13,27 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ManagerRegistry;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 class SatisfactionRepositoryTest extends TestCase
 {
     private SatisfactionRepository $sut;
-    private EntityManagerInterface $mockEm;
+    private EntityManagerInterface&Stub $stubEm;
 
     protected function setUp(): void
     {
-        $this->mockEm = $this->createMock(EntityManagerInterface::class);
+        $this->stubEm = $this->createStub(EntityManagerInterface::class);
 
-        $mockRegistry = $this->createMock(ManagerRegistry::class);
+        $stubRegistry = $this->createStub(ManagerRegistry::class);
 
-        $mockMetadata = $this->createMock(ClassMetadata::class);
-        $mockMetadata->name = Satisfaction::class;
+        $stubMetadata = $this->createStub(ClassMetadata::class);
+        $stubMetadata->name = Satisfaction::class;
 
-        $mockRegistry->method('getManagerForClass')->willReturn($this->mockEm);
-        $this->mockEm->method('getClassMetadata')->willReturn($mockMetadata);
+        $stubRegistry->method('getManagerForClass')->willReturn($this->stubEm);
+        $this->stubEm->method('getClassMetadata')->willReturn($stubMetadata);
 
-        $this->sut = new SatisfactionRepository($mockRegistry);
+        $this->sut = new SatisfactionRepository($stubRegistry);
     }
 
     public function testFindAllSatisfactionSubmissionsReturnsQueryResults(): void
@@ -45,12 +46,12 @@ class SatisfactionRepositoryTest extends TestCase
             ['id' => 2, 'score' => 4, 'comments' => 'Good',  'deputyRole' => 'LAY', 'reportType' => '103', 'created' => '2026-03-20'],
         ];
 
-        $mockQuery = $this->createMock(Query::class);
-        $mockQuery->method('setParameters')->willReturnSelf();
-        $mockQuery->method('getResult')->willReturn($expectedRows);
+        $stubQuery = $this->createStub(Query::class);
+        $stubQuery->method('setParameters')->willReturnSelf();
+        $stubQuery->method('getResult')->willReturn($expectedRows);
 
-        $this->mockEm->method('createQuery')
-            ->willReturn($mockQuery);
+        $this->stubEm->method('createQuery')
+            ->willReturn($stubQuery);
 
         $result = $this->sut->findAllSatisfactionSubmissions($fromDate, $toDate);
 
@@ -59,7 +60,7 @@ class SatisfactionRepositoryTest extends TestCase
 
     public function testGetSatisfactionDataForPeriodReturnsEmptyWhenNoDbRows(): void
     {
-        $this->setUpDbalMocks([]);
+        $this->setUpDbalStubs([]);
 
         $result = $this->sut->getSatisfactionDataForPeriod(
             new \DateTime('2026-03-01'),
@@ -71,7 +72,7 @@ class SatisfactionRepositoryTest extends TestCase
 
     public function testGetSatisfactionDataForPeriodReturnsEmptyWhenAllScoresAreZero(): void
     {
-        $this->setUpDbalMocks([[
+        $this->setUpDbalStubs([[
             'very_dissatisfied' => 0,
             'dissatisfied'      => 0,
             'neither'           => 0,
@@ -92,7 +93,7 @@ class SatisfactionRepositoryTest extends TestCase
         $statsStartDate = new \DateTime('2026-03-01');
         $statsEndDate   = new \DateTime('2026-03-31 23:59:59');
 
-        $this->setUpDbalMocks([[
+        $this->setUpDbalStubs([[
             'very_dissatisfied' => 1,
             'dissatisfied'      => 1,
             'neither'           => 2,
@@ -131,7 +132,7 @@ class SatisfactionRepositoryTest extends TestCase
 
     public function testGetSatisfactionDataForPeriodCalculates100PercentSatisfaction(): void
     {
-        $this->setUpDbalMocks([[
+        $this->setUpDbalStubs([[
             'very_dissatisfied' => 0,
             'dissatisfied'      => 0,
             'neither'           => 0,
@@ -150,7 +151,7 @@ class SatisfactionRepositoryTest extends TestCase
 
     public function testGetSatisfactionDataForPeriodCalculates0PercentSatisfaction(): void
     {
-        $this->setUpDbalMocks([[
+        $this->setUpDbalStubs([[
             'very_dissatisfied' => 5,
             'dissatisfied'      => 5,
             'neither'           => 0,
@@ -167,17 +168,17 @@ class SatisfactionRepositoryTest extends TestCase
         $this->assertSame(0, $byType['user-satisfaction-percent']['count']);
     }
 
-    private function setUpDbalMocks(array $rows): void
+    private function setUpDbalStubs(array $rows): void
     {
-        $mockResult = $this->createMock(Result::class);
-        $mockResult->method('fetchAllAssociative')->willReturn($rows);
+        $stubResult = $this->createStub(Result::class);
+        $stubResult->method('fetchAllAssociative')->willReturn($rows);
 
-        $mockStmt = $this->createMock(Statement::class);
-        $mockStmt->method('executeQuery')->willReturn($mockResult);
+        $stubStmt = $this->createStub(Statement::class);
+        $stubStmt->method('executeQuery')->willReturn($stubResult);
 
-        $mockConn = $this->createMock(Connection::class);
-        $mockConn->method('prepare')->willReturn($mockStmt);
+        $stubConn = $this->createStub(Connection::class);
+        $stubConn->method('prepare')->willReturn($stubStmt);
 
-        $this->mockEm->method('getConnection')->willReturn($mockConn);
+        $this->stubEm->method('getConnection')->willReturn($stubConn);
     }
 }

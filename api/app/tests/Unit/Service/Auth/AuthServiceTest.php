@@ -7,6 +7,7 @@ namespace Tests\OPG\Digideps\Backend\Unit\Service\Auth;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
+#[AllowMockObjectsWithoutExpectations]
 final class AuthServiceTest extends TestCase
 {
     private AuthService $authService;
@@ -98,7 +100,7 @@ final class AuthServiceTest extends TestCase
 
     public function testGetUserByEmailAndPasswordMismatchPassword(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
         $user->method('getPassword')->willReturn('encodedPassword');
 
         $this->userRepo->expects($this->once())->method('findOneBy')->with(['email' => 'email@example.org'])->willReturn($user);
@@ -110,7 +112,7 @@ final class AuthServiceTest extends TestCase
 
     public function testGetUserByEmailAndPasswordCorrect(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
         $user->method('getPassword')->willReturn('encodedPassword');
 
         $this->userRepo->expects($this->once())->method('findOneBy')->with(['email' => 'email@example.org'])->willReturn($user);
@@ -121,7 +123,7 @@ final class AuthServiceTest extends TestCase
 
     public function testGetUserByToken(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
 
         $this->userRepo->expects($this->once())
             ->method('findOneBy')

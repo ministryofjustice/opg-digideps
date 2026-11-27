@@ -16,9 +16,11 @@ use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Service\DeputyService;
 use OPG\Digideps\Backend\Service\UserService;
 use OPG\Digideps\Backend\v2\DTO\InviteeDto;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class CourtOrderInviteServiceTest extends TestCase
 {
     private PreRegistrationRepository&MockObject $mockPreRegistrationRepository;
@@ -49,7 +51,7 @@ final class CourtOrderInviteServiceTest extends TestCase
     {
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope', User::ROLE_ORG_TEAM_MEMBER);
 
-        $invitingUser = self::createMock(User::class);
+        $invitingUser = self::createStub(User::class);
 
         $invited = $this->sut->inviteLayDeputy('1122334455', $invitingUser, $inviteeDTO);
 
@@ -63,7 +65,7 @@ final class CourtOrderInviteServiceTest extends TestCase
 
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
 
-        $invitingUser = self::createMock(User::class);
+        $invitingUser = self::createStub(User::class);
 
         $this->mockCourtOrderService->expects(self::once())
             ->method('getByUidAsUser')
@@ -82,7 +84,7 @@ final class CourtOrderInviteServiceTest extends TestCase
 
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
 
-        $invitingUser = self::createMock(User::class);
+        $invitingUser = self::createStub(User::class);
         $mockCourtOrder = self::createMock(CourtOrder::class);
         $mockClient = self::createMock(Client::class);
 
@@ -107,7 +109,7 @@ final class CourtOrderInviteServiceTest extends TestCase
 
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
 
-        $invitingUser = self::createMock(User::class);
+        $invitingUser = self::createStub(User::class);
         $mockCourtOrder = self::createMock(CourtOrder::class);
         $mockClient = self::createMock(Client::class);
 
@@ -137,7 +139,7 @@ final class CourtOrderInviteServiceTest extends TestCase
 
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
 
-        $invitingUser = self::createMock(User::class);
+        $invitingUser = self::createStub(User::class);
         $mockCourtOrder = self::createMock(CourtOrder::class);
         $mockClient = self::createMock(Client::class);
         $mockPreRegistration = self::createMock(PreRegistration::class);
@@ -172,7 +174,7 @@ final class CourtOrderInviteServiceTest extends TestCase
 
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
 
-        $invitingUser = self::createMock(User::class);
+        $invitingUser = self::createStub(User::class);
         $mockCourtOrder = self::createMock(CourtOrder::class);
         $mockClient = self::createMock(Client::class);
         $mockPreregistration = self::createMock(PreRegistration::class);
@@ -219,12 +221,12 @@ final class CourtOrderInviteServiceTest extends TestCase
 
         $inviteeDTO = new InviteeDto('foo@bar.com', 'Herbert', 'Glope');
 
-        $invitingUser = self::createMock(User::class);
+        $invitingUser = self::createStub(User::class);
         $mockCourtOrder = self::createMock(CourtOrder::class);
         $mockClient = self::createMock(Client::class);
         $mockPreregistration = self::createMock(PreRegistration::class);
-        $mockDeputy = self::createMock(Deputy::class);
-        $mockInvitedUser = self::createMock(User::class);
+        $stubDeputy = self::createStub(Deputy::class);
+        $stubInvitedUser = self::createStub(User::class);
 
         $this->mockCourtOrderService->expects(self::once())
             ->method('getByUidAsUser')
@@ -251,16 +253,16 @@ final class CourtOrderInviteServiceTest extends TestCase
         $this->mockUserService->expects(self::once())
             ->method('getOrAddUser')
             ->with($inviteeDTO, $invitingUser, $deputyUid, $clientId)
-            ->willReturn($mockInvitedUser);
+            ->willReturn($stubInvitedUser);
 
         $this->mockDeputyService->expects(self::once())
             ->method('getOrAddDeputy')
-            ->with(self::isInstanceOf(Deputy::class), $mockInvitedUser)
-            ->willReturn($mockDeputy);
+            ->with(self::isInstanceOf(Deputy::class), $stubInvitedUser)
+            ->willReturn($stubDeputy);
 
         $this->mockCourtOrderService->expects(self::once())
             ->method('associateCourtOrderWithDeputy')
-            ->with($mockDeputy, $mockCourtOrder, true);
+            ->with($stubDeputy, $mockCourtOrder, true);
 
         $result = $this->sut->inviteLayDeputy($courtOrderUid, $invitingUser, $inviteeDTO);
 

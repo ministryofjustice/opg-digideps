@@ -29,8 +29,8 @@ class DeputyshipCandidatesGroup implements \IteratorAggregate
     public array $updates = [];
 
     /**
-     * If group is invalid (i.e. has multiple order UIDs) this returns null, as a candidate group
-     * cannot be created.
+     * If the group has multiple order UIDs or an InsertOrderDeputy candidate without a deputy ID,
+     * this returns null, as a candidate group cannot be created.
      *
      * @param array<array<string, mixed>> $candidatesList List of candidates represented as arrays
      */
@@ -55,12 +55,19 @@ class DeputyshipCandidatesGroup implements \IteratorAggregate
                     $group->insertOrder = $candidate;
                     break;
                 case DeputyshipCandidateAction::InsertOrderReport:
-                    $group->insertOthers[(string)$candidate['reportId']] ??= $candidate;
+                    $reportId = $candidate['reportId'] ?? null;
+                    if ($reportId !== null) {
+                        $group->insertOthers[(string)$reportId] ??= $candidate;
+                    }
                     break;
                 case DeputyshipCandidateAction::InsertOrderDeputy:
-                    $group->insertOthers[(string)$candidate['deputyId']] ??= $candidate;
+                    $deputyId = $candidate['deputyId'] ?? null;
+                    if ($deputyId === null) {
+                        return null;
+                    }
+                    $group->insertOthers[(string)$deputyId] ??= $candidate;
                     if ($candidate['deputyStatusOnOrder'] ?? false) {
-                        $group->insertOthers[(string)$candidate['deputyId']]['deputyStatusOnOrder'] = true;
+                        $group->insertOthers[(string)$deputyId]['deputyStatusOnOrder'] = true;
                     }
                     break;
                 case DeputyshipCandidateAction::UpdateDeputyStatus:

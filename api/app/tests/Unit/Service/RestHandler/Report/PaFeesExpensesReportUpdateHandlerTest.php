@@ -5,66 +5,33 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\Service\RestHandler\Report;
 
 use Doctrine\ORM\EntityManager;
-use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler;
-use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Common\CourtOrder\CourtOrderType;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class PaFeesExpensesReportUpdateHandlerTest extends TestCase
 {
-    private EntityManager&MockObject $em;
-    private Report&MockObject $report;
-    private ReportRepository&MockObject $reportRepo;
-    private PaFeesExpensesReportUpdateHandler $sut;
-
-    public function setUp(): void
-    {
-        $date = new \DateTime('now', new \DateTimeZone('Europe/London'));
-        $this->report = $this->getMockBuilder(Report::class)
-            ->setConstructorArgs([new CourtOrder(
-                '',
-                CourtOrderType::PFA,
-                CourtOrderReportType::OPG102,
-                CourtOrderKind::Single,
-                new \DateTime(),
-                new Client()
-            ), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
-            ->onlyMethods(['updateSectionsStatusCache'])
-            ->getMock();
-
-        $this->em = $this->getMockBuilder(EntityManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->reportRepo = $this->getMockBuilder(ReportRepository::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['addFeesToReportIfMissing'])
-            ->getMock();
-
-        $this->sut = new PaFeesExpensesReportUpdateHandler($this->em);
-    }
-
     /**
      * Fees only get created when reason is empty.
      */
     public function testInitialiseFeesGetCreated(): void
     {
-        $this->ensureSectionStatusCacheWillBeUpdated();
-        $this->em->expects($this->once())
+        $report = $this->createMock(Report::class);
+        $report->expects($this->once())->method('updateSectionsStatusCache')
+            ->with([Report::SECTION_PA_DEPUTY_EXPENSES]);
+        $reportRepo = $this->createMock(ReportRepository::class);
+        $em = $this->createMock(EntityManager::class);
+        $em->expects($this->once())
             ->method('getRepository')
             ->with(Report::class)
-            ->willReturn($this->reportRepo);
-        $this->reportRepo->expects($this->once())
+            ->willReturn($reportRepo);
+        $reportRepo->expects($this->once())
             ->method('addFeesToReportIfMissing')
-            ->with($this->report);
+            ->with($report);
 
-        $this->invokeHandler(['reason_for_no_fees' => null]);
+        $sut = new PaFeesExpensesReportUpdateHandler($em);
+        $sut->handle($report, ['reason_for_no_fees' => null]);
     }
 
     /**
@@ -72,23 +39,15 @@ final class PaFeesExpensesReportUpdateHandlerTest extends TestCase
      */
     public function testInitialiseFeesDontGetCreated(): void
     {
-        $this->ensureSectionStatusCacheWillBeUpdated();
-        $this->reportRepo->expects($this->never())
-            ->method('addFeesToReportIfMissing')
-            ->with($this->report);
-
-        $this->invokeHandler(['reason_for_no_fees' => 'some reason']);
-    }
-
-    private function invokeHandler(array $data): void
-    {
-        $this->sut->handle($this->report, $data);
-    }
-
-    private function ensureSectionStatusCacheWillBeUpdated(): void
-    {
-        $this->report->expects($this->once())
-            ->method('updateSectionsStatusCache')
+        $report = $this->createMock(Report::class);
+        $report->expects($this->once())->method('updateSectionsStatusCache')
             ->with([Report::SECTION_PA_DEPUTY_EXPENSES]);
+        $reportRepo = $this->createMock(ReportRepository::class);
+        $reportRepo->expects($this->never())->method('addFeesToReportIfMissing');
+        $em = $this->createStub(EntityManager::class);
+        $em->method('getRepository')->willReturn($reportRepo);
+
+        $sut = new PaFeesExpensesReportUpdateHandler($em);
+        $sut->handle($report, ['reason_for_no_fees' => 'some reason']);
     }
 }

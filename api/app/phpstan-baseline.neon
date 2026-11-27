@@ -15373,12 +15373,6 @@ parameters:
 			path: tests/Integration/ApiIntegrationTestCase.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipsCSVIngester\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/Integration/Command/IngestDeputyshipsCSVCommandTest.php
-
-		-
 			message: '#^Return type of call to method PHPUnit\\Framework\\TestCase\:\:createMock\(\) contains unresolvable type\.$#'
 			identifier: method.unresolvableReturnType
 			count: 1
@@ -16257,12 +16251,6 @@ parameters:
 		-
 			message: '#^Cannot call method getTitle\(\) on OPG\\Digideps\\Backend\\Entity\\Note\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/NoteControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\NoteControllerTest\:\:testAdd\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: tests/Integration/Controller/NoteControllerTest.php
 
@@ -19555,50 +19543,8 @@ parameters:
 			path: tests/Unit/Factory/OrganisationFactoryTest.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/Model/DeputyshipProcessingLookupCacheTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Repository\\CourtOrderRepository\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/Model/DeputyshipProcessingLookupCacheTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Repository\\DeputyRepository\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/Model/DeputyshipProcessingLookupCacheTest.php
-
-		-
-			message: '#^Cannot call method method\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Unit/Model/DeputyshipProcessingLookupCacheTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Unit/Model/DeputyshipProcessingLookupCacheTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManagerInterface\:\:method\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/Unit/Repository/SatisfactionRepositoryTest.php
-
-		-
 			message: '#^Cannot access offset ''count'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: tests/Unit/Repository/SatisfactionRepositoryTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 2
 			path: tests/Unit/Repository/SatisfactionRepositoryTest.php
 
@@ -19745,54 +19691,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: tests/Unit/Service/RequestIdLoggerProcessorTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Repository\\DeputyRepository\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 6
-			path: tests/Unit/Service/UserDeputyServiceTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 5
-			path: tests/Unit/Service/UserDeputyServiceTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Service\\DeputyService\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/Service/UserDeputyServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Psr\\Log\\LoggerInterface\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/Service/UserDeputyServiceTest.php
-
-		-
-			message: '#^Cannot call method method\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 13
-			path: tests/Unit/Service/UserDeputyServiceTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 6
-			path: tests/Unit/Service/UserDeputyServiceTest.php
-
-		-
-			message: '#^Cannot call method willReturnCallback\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Unit/Service/UserDeputyServiceTest.php
-
-		-
-			message: '#^Cannot call method with\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 7
-			path: tests/Unit/Service/UserDeputyServiceTest.php
 
 		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''OPG\\\\Digideps\\\\Backend\\\\Service\\\\Stats\\\\Query\\\\Query'' and OPG\\Digideps\\Backend\\Service\\Stats\\Query\\Query will always evaluate to true\.$#'
@@ -19993,26 +19891,8 @@ parameters:
 			path: tests/Unit/v2/Registration/DeputyshipProcessing/CourtOrderAndDeputyCandidatesFactoryTest.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Domain\\Deputyship\\DeputyshipCandidatesConverter\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipBuilderTest.php
-
-		-
 			message: '#^Cannot access property \$orderUid on mixed\.$#'
 			identifier: property.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipBuilderTest.php
-
-		-
-			message: '#^Cannot call method method\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipBuilderTest.php
-
-		-
-			message: '#^Cannot call method willReturnCallback\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipBuilderTest.php
 
@@ -20059,46 +19939,10 @@ parameters:
 			path: tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipCandidatesGroupTest.php
 
 		-
-			message: '#^Parameter \#1 \$candidates of class OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipCandidatesSelectorResult constructor expects Traversable\<mixed, array\<string, mixed\>\>, ArrayIterator\<int, OPG\\Digideps\\Backend\\Entity\\Staging\\StagingSelectedCandidate&PHPUnit\\Framework\\MockObject\\MockObject\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsCSVIngesterTest.php
-
-		-
 			message: '#^Return type of call to method PHPUnit\\Framework\\TestCase\:\:createMock\(\) contains unresolvable type\.$#'
 			identifier: method.unresolvableReturnType
 			count: 1
 			path: tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsCSVIngesterTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManager\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 6
-			path: tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsCSVLoaderTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\CSV\\CSVChunkerFactory\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsCSVLoaderTest.php
-
-		-
-			message: '#^Call to an undefined method Psr\\Log\\LoggerInterface\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsIngestResultRecorderTest.php
-
-		-
-			message: '#^Cannot call method method\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsIngestResultRecorderTest.php
-
-		-
-			message: '#^Cannot call method willReturnCallback\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsIngestResultRecorderTest.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\SelfRegistration\\Factory\\LayDeputyshipDtoCollectionAssemblerFactory\:\:create\(\) invoked with 1 parameter, 0 required\.$#'
@@ -20135,60 +19979,6 @@ parameters:
 			identifier: method.nonObject
 			count: 5
 			path: tests/Unit/v2/Registration/Uploader/LayClientMatcherTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManagerInterface\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 5
-			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\Assembler\\ClientAssembler\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\Registration\\Uploader\\LayClientMatcher\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
-
-		-
-			message: '#^Call to an undefined method Psr\\Log\\LoggerInterface\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
-
-		-
-			message: '#^Cannot call method method\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 11
-			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
-
-		-
-			message: '#^Cannot call method willThrowException\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
-
-		-
-			message: '#^Cannot call method with\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
 
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'

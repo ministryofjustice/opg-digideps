@@ -14,9 +14,11 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\CourtOrderRepository;
 use OPG\Digideps\Backend\Service\ReportService;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipChange;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class ReportTransitionServiceTest extends TestCase
 {
     private ReportService&MockObject $mockReportService;

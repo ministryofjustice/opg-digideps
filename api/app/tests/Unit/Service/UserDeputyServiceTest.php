@@ -15,29 +15,20 @@ use Psr\Log\LoggerInterface;
 
 class UserDeputyServiceTest extends TestCase
 {
-    private DeputyService $mockDeputyService;
-    private UserRepository $mockUserRepository;
-    private DeputyRepository $mockDeputyRepository;
-    private LoggerInterface $mockLogger;
-    private UserDeputyService $sut;
-
-    public function setUp(): void
-    {
-        $this->mockDeputyService = self::createMock(DeputyService::class);
-        $this->mockUserRepository = self::createMock(UserRepository::class);
-        $this->mockDeputyRepository = self::createMock(DeputyRepository::class);
-        $this->mockLogger = self::createMock(LoggerInterface::class);
-
-        $this->sut = new UserDeputyService(
-            $this->mockDeputyService,
-            $this->mockUserRepository,
-            $this->mockDeputyRepository,
-            $this->mockLogger,
-        );
-    }
-
     public function testAddMissingDeputyAssociationsDeputyDoesExistAndDoesNotHaveAnExistingUser(): void
     {
+        $stubDeputyService = self::createStub(DeputyService::class);
+        $mockUserRepository = self::createMock(UserRepository::class);
+        $mockDeputyRepository = self::createMock(DeputyRepository::class);
+        $stubLogger = self::createStub(LoggerInterface::class);
+
+        $sut = new UserDeputyService(
+            $stubDeputyService,
+            $mockUserRepository,
+            $mockDeputyRepository,
+            $stubLogger,
+        );
+
         $deputyUid = 512436785;
         $deputyId = 1;
 
@@ -45,19 +36,19 @@ class UserDeputyServiceTest extends TestCase
         $mockUser = self::createMock(User::class);
 
         // expect user repo to provide list of users whose deputy UID is in pre-reg but who have no deputy
-        $this->mockUserRepository->expects(self::once())
+        $mockUserRepository->expects(self::once())
             ->method('findUsersWithoutDeputies')
             ->willReturnCallback(function () use ($mockUser) {
                 yield $mockUser;
             });
 
-        $this->mockDeputyRepository
+        $mockDeputyRepository
             ->expects(self::once())->method('getUidToIdMapping')
             ->willReturn(["$deputyUid" => $deputyId]);
 
         $mockUser->expects(self::once())->method('getDeputyUid')->willReturn($deputyUid);
 
-        $this->mockDeputyRepository->expects(self::once())
+        $mockDeputyRepository->expects(self::once())
             ->method('find')
             ->with($deputyId)
             ->willReturn($mockDeputy);
@@ -67,24 +58,36 @@ class UserDeputyServiceTest extends TestCase
 
         $mockUser->expects(self::once())->method('setDeputy')->with($mockDeputy);
 
-        $this->mockUserRepository->expects(self::once())->method('save')->with($mockUser);
+        $mockUserRepository->expects(self::once())->method('save')->with($mockUser);
 
-        $actual = $this->sut->addMissingUserDeputies();
+        $actual = $sut->addMissingUserDeputies();
 
         self::assertEquals(1, $actual);
     }
 
     public function testAddMissingDeputyAssociationsDeputyDoesNotExist(): void
     {
+        $mockDeputyService = self::createMock(DeputyService::class);
+        $mockUserRepository = self::createMock(UserRepository::class);
+        $mockDeputyRepository = self::createMock(DeputyRepository::class);
+        $stubLogger = self::createStub(LoggerInterface::class);
+
+        $sut = new UserDeputyService(
+            $mockDeputyService,
+            $mockUserRepository,
+            $mockDeputyRepository,
+            $stubLogger,
+        );
+
         $deputyUid = 512436785;
 
-        $mockDeputy = self::createMock(Deputy::class);
+        $stubDeputy = self::createStub(Deputy::class);
 
         $mockUser = self::createMock(User::class);
         $mockUser->expects(self::once())->method('getDeputyUid')->willReturn($deputyUid);
-        $mockUser->expects(self::once())->method('setDeputy')->with($mockDeputy);
+        $mockUser->expects(self::once())->method('setDeputy')->with($stubDeputy);
 
-        $this->mockUserRepository->expects(self::once())
+        $mockUserRepository->expects(self::once())
             ->method('findUsersWithoutDeputies')
             ->willReturnCallback(function () use ($mockUser) {
                 yield $mockUser;
@@ -92,30 +95,42 @@ class UserDeputyServiceTest extends TestCase
 
         // this returns a deputy UID to ID mapping which does not include the user's deputy UID,
         // so a new deputy will be created
-        $this->mockDeputyRepository
+        $mockDeputyRepository
             ->expects(self::once())->method('getUidToIdMapping')
             ->willReturn(['53428321' => 1]);
 
-        $this->mockDeputyService->expects(self::once())
+        $mockDeputyService->expects(self::once())
             ->method('createDeputyFromUser')
             ->with($mockUser)
-            ->willReturn($mockDeputy);
+            ->willReturn($stubDeputy);
 
-        $this->mockDeputyRepository->expects(self::once())
+        $mockDeputyRepository->expects(self::once())
             ->method('save')
-            ->with($mockDeputy);
+            ->with($stubDeputy);
 
-        $this->mockUserRepository->expects(self::once())
+        $mockUserRepository->expects(self::once())
             ->method('save')
             ->with($mockUser);
 
-        $actual = $this->sut->addMissingUserDeputies();
+        $actual = $sut->addMissingUserDeputies();
 
         self::assertEquals(1, $actual);
     }
 
     public function testAddMissingDeputyAssociationsDeputyDoesExistAndDoesHaveAnExistingUser(): void
     {
+        $stubDeputyService = self::createStub(DeputyService::class);
+        $mockUserRepository = self::createMock(UserRepository::class);
+        $mockDeputyRepository = self::createMock(DeputyRepository::class);
+        $mockLogger = self::createMock(LoggerInterface::class);
+
+        $sut = new UserDeputyService(
+            $stubDeputyService,
+            $mockUserRepository,
+            $mockDeputyRepository,
+            $mockLogger,
+        );
+
         $deputyUid = 512436791;
         $userId = $deputyId = 1;
 
@@ -124,19 +139,19 @@ class UserDeputyServiceTest extends TestCase
         $mockExistingUser = self::createMock(User::class);
 
         // expect user repo to provide list of users whose deputy UID is in pre-reg but who have no deputy
-        $this->mockUserRepository->expects(self::once())
+        $mockUserRepository->expects(self::once())
             ->method('findUsersWithoutDeputies')
             ->willReturnCallback(function () use ($mockUser) {
                 yield $mockUser;
             });
 
-        $this->mockDeputyRepository
+        $mockDeputyRepository
             ->expects(self::once())->method('getUidToIdMapping')
             ->willReturn(["$deputyUid" => $deputyId]);
 
         $mockUser->expects(self::once())->method('getDeputyUid')->willReturn($deputyUid);
 
-        $this->mockDeputyRepository->expects(self::once())
+        $mockDeputyRepository->expects(self::once())
             ->method('find')
             ->with($deputyId)
             ->willReturn($mockDeputy);
@@ -146,7 +161,7 @@ class UserDeputyServiceTest extends TestCase
         $mockDeputy->expects(self::once())->method('getId')->willReturn($deputyId);
         $mockExistingUser->expects(self::once())->method('getId')->willReturn($userId);
 
-        $this->mockLogger->expects(self::once())->method('error')->with(
+        $mockLogger->expects(self::once())->method('error')->with(
             sprintf(
                 'Deputy with ID %d already associated with user with ID %d',
                 $deputyId,
@@ -154,7 +169,7 @@ class UserDeputyServiceTest extends TestCase
             )
         );
 
-        $actual = $this->sut->addMissingUserDeputies();
+        $actual = $sut->addMissingUserDeputies();
 
         self::assertEquals(0, $actual);
     }

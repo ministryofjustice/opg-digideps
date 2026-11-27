@@ -107,7 +107,7 @@ final class UserServiceTest extends TestCase
         $clientId = 1837478367;
         $invitee = new InviteeDto('foo@bar.com', 'Karban', 'Steelcore');
 
-        $existingUser = self::createMock(User::class);
+        $existingUser = self::createStub(User::class);
         $existingUser->method('getDeputyUid')->willReturn($deputyUid);
 
         $this->userRepository->expects(self::atLeastOnce())

@@ -7,11 +7,13 @@ namespace Tests\OPG\Digideps\Backend\Unit\Service\Auth;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Security\RedisUserProvider;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tests\OPG\Digideps\Backend\Unit\PredisMock;
 
+#[AllowMockObjectsWithoutExpectations]
 final class UserProviderTest extends TestCase
 {
     private UserRepository&MockObject $repo;
@@ -49,7 +51,7 @@ final class UserProviderTest extends TestCase
 
     public function testloadUserByUsernameFound(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
         $this->redis->set('token', 1);
         $this->repo->expects($this->once())->method('find')->with(1)->willReturn($user);
         $this->logger->expects($this->never())->method('warning');
@@ -68,7 +70,7 @@ final class UserProviderTest extends TestCase
 
     public function testgenerateRandomTokenAndStore(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
         $user->method('getId')->willReturn(123);
 
         $tokenMatchPattern = '/^testing_123_[0-9a-f]{5,40}[\d]{1,}/';

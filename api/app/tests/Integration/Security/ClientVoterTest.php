@@ -10,25 +10,28 @@ use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Security\ClientVoter;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
+#[AllowMockObjectsWithoutExpectations]
 class ClientVoterTest extends KernelTestCase
 {
     private ClientVoter $voter;
     private Security&MockObject $security;
-    private TokenInterface&MockObject $token;
+    private TokenInterface&Stub $token;
     private User $user;
     private int $decision;
 
     public function setUp(): void
     {
         $this->user = new User('', '', '');
-        $this->token = $this->createMock(TokenInterface::class);
+        $this->token = $this->createStub(TokenInterface::class);
         $this->security = $this->getMockBuilder(Security::class)->disableOriginalConstructor()->getMock();
         $this->voter = new ClientVoter($this->security);
     }

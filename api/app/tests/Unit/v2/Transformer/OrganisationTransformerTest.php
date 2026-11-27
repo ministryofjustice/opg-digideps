@@ -23,12 +23,9 @@ final class OrganisationTransformerTest extends TestCase
             ->setEmailIdentifier('bar')
             ->setIsActivated(true);
 
-        $userTransformer = $this
-            ->getMockBuilder(UserTransformer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $userTransformer = $this->createStub(UserTransformer::class);
 
-        $clientTransformer = $this->createMock(ClientTransformer::class);
+        $clientTransformer = $this->createStub(ClientTransformer::class);
 
         $transformed = new OrganisationTransformer($userTransformer, $clientTransformer)
             ->transform($dto, ['users', 'total_user_count', 'total_client_count']);
@@ -65,7 +62,7 @@ final class OrganisationTransformerTest extends TestCase
                 ['user_two' => 'transformed']
             );
 
-        $clientTransformer = $this->createMock(ClientTransformer::class);
+        $clientTransformer = $this->createStub(ClientTransformer::class);
 
         $transformed = new OrganisationTransformer($userTransformer, $clientTransformer)
             ->transform($dto, ['total_client_count', 'clients']);

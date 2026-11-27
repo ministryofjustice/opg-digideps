@@ -11,18 +11,18 @@ use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Service\DateTimeProvider;
 use OPG\Digideps\Backend\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class ReportSubmissionSummaryTransformerTest extends TestCase
 {
     private ReportSubmissionSummaryTransformer $sut;
-    private DateTimeProvider&MockObject $dateTimeProvider;
+    private DateTimeProvider&Stub $dateTimeProvider;
     private array $result;
 
     public function setUp(): void
     {
-        $this->dateTimeProvider = $this->createMock(DateTimeProvider::class);
+        $this->dateTimeProvider = $this->createStub(DateTimeProvider::class);
 
         $this->sut = new ReportSubmissionSummaryTransformer($this->dateTimeProvider);
 
@@ -113,13 +113,9 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
         return $reportSubmission;
     }
 
-    private function buildReportOfType(array $data): MockObject&Report
+    private function buildReportOfType(array $data): Report&Stub
     {
-        /** @var Report&MockObject $report */
-        $report = $this
-            ->getMockBuilder(Report::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $report = $this->createStub(Report::class);
 
         $client = new Client()->setCaseNumber($data['client']['case_number']);
         $report->method('getClient')->willReturn($client);
@@ -129,8 +125,7 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
 
     private function buildDocumentWith(array $document): Document
     {
-        /** @var Report&MockObject $report */
-        $report = $this->getMockBuilder(Report::class)->disableOriginalConstructor()->getMock();
+        $report = $this->createStub(Report::class);
 
         return new Document($report, $document['filename'])
             ->setIsReportPdf($document['is_report_pdf']);

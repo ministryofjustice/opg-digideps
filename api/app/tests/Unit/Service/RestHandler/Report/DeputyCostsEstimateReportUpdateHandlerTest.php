@@ -14,10 +14,12 @@ use OPG\Digideps\Backend\Service\RestHandler\Report\DeputyCostsEstimateReportUpd
 use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
 {
     private EntityManager&MockObject $em;

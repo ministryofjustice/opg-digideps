@@ -80,11 +80,6 @@ class NoteControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testAdd()
-    {
-        $this->markTestIncomplete('needs endpoint to rely on client Id first');
-    }
-
     public function testgetOneById()
     {
         $noteId = self::$pa1Client1Note1->getId();

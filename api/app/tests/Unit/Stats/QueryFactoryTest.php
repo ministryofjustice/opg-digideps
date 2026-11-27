@@ -18,7 +18,7 @@ final class QueryFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        $em = self::createMock(EntityManager::class);
+        $em = self::createStub(EntityManager::class);
         $this->factory = new QueryFactory($em);
     }
 

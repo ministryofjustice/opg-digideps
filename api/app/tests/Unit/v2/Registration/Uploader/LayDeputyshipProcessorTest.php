@@ -25,50 +25,38 @@ use Psr\Log\LoggerInterface;
 
 final class LayDeputyshipProcessorTest extends TestCase
 {
-    private EntityManagerInterface $mockEm;
-    private ClientAssembler $mockClientAssembler;
-    private LoggerInterface $mockLogger;
-    private LayClientMatcher $mockClientMatcher;
-    private UserRepository $mockUserRepository;
-    private LayDeputyshipProcessor $sut;
-
-    public function setUp(): void
-    {
-        $this->mockEm = $this->createMock(EntityManagerInterface::class);
-        $this->mockClientAssembler = $this->createMock(ClientAssembler::class);
-        $this->mockClientMatcher = $this->createMock(LayClientMatcher::class);
-        $this->mockLogger = $this->createMock(LoggerInterface::class);
-
-        $this->mockUserRepository = $this->createMock(UserRepository::class);
-
-        $this->sut = new LayDeputyshipProcessor(
-            $this->mockEm,
-            $this->mockClientAssembler,
-            $this->mockClientMatcher,
-            $this->mockLogger
-        );
-    }
-
     /*
      * Unable to find the user to associate the client with -> error
      */
     public function testProcessRowNoUserException(): void
     {
+        $stubEm = $this->createStub(EntityManagerInterface::class);
+        $stubClientAssembler = $this->createStub(ClientAssembler::class);
+        $mockClientMatcher = $this->createMock(LayClientMatcher::class);
+        $mockLogger = $this->createMock(LoggerInterface::class);
+
+        $sut = new LayDeputyshipProcessor(
+            $stubEm,
+            $stubClientAssembler,
+            $mockClientMatcher,
+            $mockLogger
+        );
+
         // Expectations
         $layDeputyshipDto = new LayDeputyshipDto();
         $layDeputyshipDto->setDeputyUid('11111111');
         $layDeputyshipDto->setCaseNumber('99999999');
 
-        $this->mockClientMatcher->expects($this->once())
+        $mockClientMatcher->expects($this->once())
             ->method('matchDto')
             ->willThrowException(new Exception('Error matching Lay Deputy DTO to database'));
 
-        $this->mockLogger->expects($this->once())
+        $mockLogger->expects($this->once())
             ->method('warning')
             ->with($this->matchesRegularExpression('/Error matching Lay Deputy DTO to database/'));
 
         // Test
-        $output = $this->sut->processLayDeputyship($layDeputyshipDto);
+        $output = $sut->processLayDeputyship($layDeputyshipDto);
 
         // Assert
         $this->assertEquals([], $output['entityDetails']);
@@ -81,6 +69,18 @@ final class LayDeputyshipProcessorTest extends TestCase
     // matching client and report -> possible co-deputy, so do nothing
     public function testProcessRowMatchingClientAndReport(): void
     {
+        $stubEm = $this->createStub(EntityManagerInterface::class);
+        $stubClientAssembler = $this->createStub(ClientAssembler::class);
+        $mockClientMatcher = $this->createMock(LayClientMatcher::class);
+        $stubLogger = $this->createStub(LoggerInterface::class);
+
+        $sut = new LayDeputyshipProcessor(
+            $stubEm,
+            $stubClientAssembler,
+            $mockClientMatcher,
+            $stubLogger
+        );
+
         // Expectations
         $layDeputyshipDto = new LayDeputyshipDto();
         $existingClient = new Client();
@@ -101,13 +101,13 @@ final class LayDeputyshipProcessorTest extends TestCase
             activeClientExistsForCase: true,
         );
 
-        $this->mockClientMatcher->expects($this->once())
+        $mockClientMatcher->expects($this->once())
             ->method('matchDto')
             ->with($layDeputyshipDto)
             ->willReturn($clientMatch);
 
         // Test
-        $output = $this->sut->processLayDeputyship($layDeputyshipDto);
+        $output = $sut->processLayDeputyship($layDeputyshipDto);
 
         // Assert
         $expected = [
@@ -122,6 +122,20 @@ final class LayDeputyshipProcessorTest extends TestCase
     // no matching client -> create a new client and report
     public function testProcessRowNoMatchingClient(): void
     {
+        $mockEm = $this->createMock(EntityManagerInterface::class);
+        $mockClientAssembler = $this->createMock(ClientAssembler::class);
+        $mockClientMatcher = $this->createMock(LayClientMatcher::class);
+        $stubLogger = $this->createStub(LoggerInterface::class);
+
+        $mockUserRepository = $this->createMock(UserRepository::class);
+
+        $sut = new LayDeputyshipProcessor(
+            $mockEm,
+            $mockClientAssembler,
+            $mockClientMatcher,
+            $stubLogger
+        );
+
         // Expectations
         $orderDate = new \DateTime('2025-02-14');
 
@@ -135,9 +149,9 @@ final class LayDeputyshipProcessorTest extends TestCase
         $user = new User('', '', '');
         $user->setDeputyUid(222222222);
 
-        $this->mockEm->expects($this->once())->method('getRepository')->willReturn($this->mockUserRepository);
+        $mockEm->expects($this->once())->method('getRepository')->willReturn($mockUserRepository);
 
-        $this->mockUserRepository->expects($this->once())
+        $mockUserRepository->expects($this->once())
             ->method('findPrimaryUserByDeputyUid')
             ->with('222222222')
             ->willReturn($user);
@@ -149,31 +163,31 @@ final class LayDeputyshipProcessorTest extends TestCase
             activeClientExistsForCase: false,
         );
 
-        $this->mockClientMatcher->expects($this->once())
+        $mockClientMatcher->expects($this->once())
             ->method('matchDto')
             ->with($layDeputyshipDto)
             ->willReturn($clientMatch);
 
         $mockClient = $this->createMock(Client::class);
 
-        $this->mockClientAssembler->expects($this->once())
+        $mockClientAssembler->expects($this->once())
             ->method('assembleFromLayDeputyshipDto')
             ->with($layDeputyshipDto)
             ->willReturn($mockClient);
 
         $mockClient->expects($this->once())->method('addUser')->with($user);
 
-        $this->mockEm->expects($this->once())->method('persist');
-        $this->mockEm->expects($this->once())->method('flush');
-        $this->mockEm->expects($this->once())->method('commit');
-        $this->mockEm->expects($this->once())->method('clear');
+        $mockEm->expects($this->once())->method('persist');
+        $mockEm->expects($this->once())->method('flush');
+        $mockEm->expects($this->once())->method('commit');
+        $mockEm->expects($this->once())->method('clear');
 
         $mockClient->expects($this->once())->method('getUsers')->willReturn(new ArrayCollection([$user]));
         $mockClient->expects($this->once())->method('getId')->willReturn(33333333);
         $mockClient->expects($this->once())->method('getCaseNumber')->willReturn('88888888');
 
         // Test
-        $output = $this->sut->processLayDeputyship($layDeputyshipDto);
+        $output = $sut->processLayDeputyship($layDeputyshipDto);
 
         // Assert
         $expected = [

@@ -11,8 +11,10 @@ use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
 use OPG\Digideps\Backend\Factory\StagingSelectedCandidateFactory;
 use OPG\Digideps\Backend\Repository\CourtOrderDeputyRepository;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
 {
     private CourtOrderDeputyRepository $courtOrderDeputyRepository;
@@ -50,7 +52,7 @@ final class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
         $stagingDeputyship->caseNumber = '1234567T';
 
         $existingClientId = 1;
-        $expectedCandidate = $this->createMock(StagingSelectedCandidate::class);
+        $expectedCandidate = $this->createStub(StagingSelectedCandidate::class);
 
         $this->deputyshipLookupCache
             ->expects($this->once())
@@ -90,8 +92,8 @@ final class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
 
         $existingClientId = 1;
         $existingDeputyId = 2;
-        $expectedCourtOrderCandidate = $this->createMock(StagingSelectedCandidate::class);
-        $expectedCourtOrderDeputyCandidate = $this->createMock(StagingSelectedCandidate::class);
+        $expectedCourtOrderCandidate = $this->createStub(StagingSelectedCandidate::class);
+        $expectedCourtOrderDeputyCandidate = $this->createStub(StagingSelectedCandidate::class);
 
         $this->deputyshipLookupCache
             ->expects($this->once())
@@ -138,7 +140,7 @@ final class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
 
         $existingCourtOrderId = 1;
         $currentOrderStatus = 'OPEN';
-        $expectedCandidate = $this->createMock(StagingSelectedCandidate::class);
+        $expectedCandidate = $this->createStub(StagingSelectedCandidate::class);
 
         $this->deputyshipLookupCache
             ->expects($this->once())
@@ -206,7 +208,7 @@ final class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
 
         $existingCourtOrderId = 1;
         $existingDeputyId = 2;
-        $expectedCandidate = $this->createMock(StagingSelectedCandidate::class);
+        $expectedCandidate = $this->createStub(StagingSelectedCandidate::class);
 
         $this->deputyshipLookupCache
             ->expects($this->once())
@@ -249,7 +251,7 @@ final class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase
         $existingCourtOrderId = 1;
         $existingDeputyId = 2;
 
-        $expectedCandidate = $this->createMock(StagingSelectedCandidate::class);
+        $expectedCandidate = $this->createStub(StagingSelectedCandidate::class);
 
         $existingRelationship = new CourtOrderDeputy();
         $existingRelationship->setIsActive(false);
