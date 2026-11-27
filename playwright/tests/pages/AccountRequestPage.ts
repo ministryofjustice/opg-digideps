@@ -51,7 +51,7 @@ export default class AccountRequestPage {
   }
 
   async expectSuccessMessage() {
-    await expect(this.page.getByText("Please check your email")).toBeVisible();
+    await expect(this.page.getByText("To activate your account, you must set a password")).toBeVisible();
   }
 
   async expectNotMatchedErrorMessage() {

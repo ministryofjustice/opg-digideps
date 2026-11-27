@@ -103,31 +103,38 @@ opg:
         help: This is 8 or 10 characters long and can be found on your court order
       signUp:
         label: Sign up
-      intro: |
-        You need to give your name, your email address, your postcode and your client's last name
-        and case number. This is so we can create your secure deputy account.
-      ifYouAlreadyHaveAnAccount: If you already have an account, please
+      content: |
+        Enter your details to create your secure deputy account.
+
+        # If you already have an account
+
+        If you already have an account, please [%signIn%](%signInPath%).
+
+        # Need to set a password?
+
+        To get an email with a new link inviting you to set your password, please re-enter your details.
+
+        # Get help
+
+        For help registering or signing in, contact the Office of the Public Guardian (OPG) on %telephoneNumber%.
       signIn: sign in
-      accountCreated:
-        subHeading: Please check your email
-        linkSentTo: We've sent a link to
-        activationReminder: that you will need to visit to activate your deputy account.
-        expirationNote: |
-          You'll need to use this link within 1 hour, otherwise you'll have
-          to enter your registration details again.
-        checkJunk: |
-          If you have not received the email within a few minutes, please check your spam,
-          bulk, and junk email folders: it may have been mistakenly blocked by your email provider.
       errors:
         AccountTaken: |
           Our records show that an account already exists for this deputyship.
-          Please sign in using your registered email address. Please call %helplineNumber%
-          if you are unable to sign in.
+          Please sign in using your registered email address. Please call %telephoneNumber% if you are unable to sign in.
         EmailError: An error occurred while setting up your account. Please try again later.
         MatchingError: |
           The information you've given us does not match our records.
-          Please call %helplineNumber% to make sure we have a record of your deputyship.
+          Please call %telephoneNumber% to make sure we have a record of your deputyship.
         NetworkError: An error occurred while setting up your account. Please try again later.
+    created:
+      notice: Set a password to activate your account with the Complete the deputy report service.
+      content: |
+        # What happens next
+
+        To activate your account, you must set a password. The Office of the Public Guardian (OPG) has emailed you a link to set your password. This link will remain valid for 1 hour.
+
+        If you don’t receive an email or the link expires, you can [return to the registration page](%registrationPath%) to request a new link.
     password:
       content: |-
         To %action% your password, type your %quality% password in the box below and then confirm the password in the second box.
@@ -206,7 +213,6 @@ opg:
         closed: unsubmitted (closed court orders)
       submitted: Submitted
       type: Type
-  helplineNumber: 0300 456 0300
   optional: (optional)
   renderable:
     bankAccount:

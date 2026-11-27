@@ -69,7 +69,10 @@ class AccountController extends AbstractController
 
             if ($response instanceof Email) {
                 $accountCreated = true;
-                $deputyEmail = $response;
+                $this->addFlash(
+                    'notice',
+                    $this->translator->trans('opg.account.created.notice', [], 'twig-components')
+                );
             } elseif ($response instanceof AccountError) {
                 // add a form-level error message
                 $form->addError(new FormError($this->translateError($response, 'request')));
@@ -78,8 +81,7 @@ class AccountController extends AbstractController
 
         return [
             'form' => $form->render(),
-            'accountCreated' => $accountCreated,
-            'deputyEmail' => $deputyEmail
+            'accountCreated' => $accountCreated
         ];
     }
 
@@ -192,7 +194,7 @@ class AccountController extends AbstractController
     {
         return $this->translator->trans(
             "opg.account.{$domain}.errors.{$result->value}",
-            ['%helplineNumber%' => $this->translator->trans('opg.helplineNumber', [], 'twig-components')],
+            ['%telephoneNumber%' => $this->translator->trans('contact.digideps.telephoneNumber', [], 'twig-components')],
             'twig-components'
         );
     }
