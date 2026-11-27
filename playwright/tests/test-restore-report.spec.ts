@@ -14,7 +14,6 @@ test("a PFA report on a closed court order can be restored over the active PFA r
   page,
 }) => {
   const runTest = async (scenarios: Scenario[]) => {
-    console.log(JSON.stringify(scenarios, null, 2));
     const clientId = scenarios[0]["orders"][0]["clientId"];
     const replaceableReportId = scenarios[1]["orders"][0]["reports"][0]["id"];
     const restoreFromReportId = scenarios[0]["orders"][0]["reports"][0]["id"];
