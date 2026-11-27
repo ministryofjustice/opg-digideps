@@ -28,7 +28,7 @@ final class Request
     ) {
     }
 
-    public function mount(Form $form, bool $accountCreated, ?string $deputyEmail): void
+    public function mount(Form $form, bool $accountCreated): void
     {
         $this->form = $form;
         $this->props = ['accountCreated' => $accountCreated];
@@ -39,10 +39,10 @@ final class Request
 
         $this->content = new RichTextParser($this->translator, [
             '%signInPath%' => '/login',
+            '%registrationPath%' => '/account/request',
             '%signIn%' => $signInText,
             '%signInCaps%' => ucfirst($signInText),
-            '%telephoneNumber%' => $telephoneNumber,
-            '%deputyEmail%' => $deputyEmail ?? ''
+            '%telephoneNumber%' => $telephoneNumber
         ])->parse($contentKey, 'twig-components');
     }
 }

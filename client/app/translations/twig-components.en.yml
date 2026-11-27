@@ -128,16 +128,13 @@ opg:
           Please call %telephoneNumber% to make sure we have a record of your deputyship.
         NetworkError: An error occurred while setting up your account. Please try again later.
     created:
+      notice: Set a password to activate your account with the Complete the deputy report service.
       content: |
-        # Please check your email
+        # What happens next
 
-        We've sent a link to %deputyEmail% that you will need to visit to activate your deputy account.
+        To activate your account, you must set a password. The Office of the Public Guardian (OPG) has emailed you a link to set your password. This link will remain valid for 1 hour.
 
-        You'll need to use this link within 1 hour, otherwise you'll have to enter your registration details again.
-
-        If you have not received the email within a few minutes, please check your spam, bulk, and junk email folders: it may have been mistakenly blocked by your email provider.
-
-        [%signInCaps%](%signInPath%)
+        If you don’t receive an email or the link expires, you can [return to the registration page](%registrationPath%) to request a new link.
     password:
       content: |-
         To %action% your password, type your %quality% password in the box below and then confirm the password in the second box.
