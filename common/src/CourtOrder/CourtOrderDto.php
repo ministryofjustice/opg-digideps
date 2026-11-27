@@ -24,7 +24,7 @@ class CourtOrderDto implements \JsonSerializable
             'order_type' => $this->orderType->value ?? '',
             'order_report_type' => $this->orderReportType->value ?? '',
             'status' => $this->status,
-            'order_made_date' => $this->orderMadeDate->format('Y-m-d'),
+            'order_made_date' => $this->orderMadeDate->format('Y-m-d H:i:s'),
         ];
     }
 }

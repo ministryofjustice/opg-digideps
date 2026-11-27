@@ -991,12 +991,6 @@ parameters:
 			path: src/Controller/ClientController.php
 
 		-
-			message: '#^Cannot call method getActiveReport\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
 			message: '#^Cannot call method getFirstname\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1

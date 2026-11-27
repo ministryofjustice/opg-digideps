@@ -26,6 +26,9 @@ class CourtOrder
     #[JMS\Type('string')]
     private string $status;
 
+    #[JMS\Type("DateTime<'Y-m-d H:i:s', '', ['Y-m-d H:i:s', 'Y-m-d\TH:i:sP']>")]
+    public ?\DateTime $orderMadeDate = null;
+
     /**
      * @var Deputy[]
      */
@@ -127,13 +130,8 @@ class CourtOrder
 
     public function getActiveReport(): ?Report
     {
-        foreach ($this->reports as $report) {
-            if (!$report->isSubmitted() && !$report->getUnSubmitDate()) {
-                return $report;
-            }
-        }
+        return array_find($this->reports, fn ($report) => !$report->isSubmitted() && !$report->getUnSubmitDate());
 
-        return null;
     }
 
     public function getUnsubmittedReport(): ?Report

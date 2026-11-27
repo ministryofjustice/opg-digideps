@@ -100,6 +100,53 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('GET', $url, self::$tokenDeputy);
     }
 
+    public function testRestoreSwapsStoredCourtOrderLinksAndUpdatesRestoredReportType(): void
+    {
+        $deputies = DeputySet::oneLay();
+        ['orders' => [
+            ['pfa' => ['order' => $activePfa, 'reports' => [$active]]],
+            ['pfa' => ['order' => $closedPfa, 'reports' => [$archived]], 'hw' => ['order' => $closedHw]],
+        ]] = self::$fixtureService->instantiateScenario(new Scenario(
+            new CourtOrderDescriptor($deputies),
+            new Scenario(new CourtOrderDescriptor($deputies, active: false, single: false))
+        ));
+        // The archived report still has both links even if the orders are no longer siblings.
+        $closedPfa->setSibling(null);
+        $closedHw->setSibling(null);
+        self::$em->flush();
+        self::assertSame('103', $active->getType());
+        self::assertSame('103-4', $archived->getType());
+
+        $options = [
+            'AuthToken' => self::$tokenAdmin,
+            'data' => ['replaceReport' => $active->getId(), 'withReport' => $archived->getId()],
+        ];
+        $result = $this->assertJsonRequest('POST', '/report/restore', $options);
+        self::assertSame(['success' => true, 'error' => null], $result);
+        $this->assertJsonRequest('POST', '/report/restore', $options + ['mustFail' => true]);
+
+        $connection = self::$em->getConnection();
+        $sql = 'SELECT pfa_court_order_id, hw_court_order_id, type FROM report WHERE id = ?';
+        self::assertSame([$activePfa->getId(), null, '103'], $connection->fetchNumeric($sql, [$archived->getId()]));
+        self::assertSame([$closedPfa->getId(), $closedHw->getId(), '103'], $connection->fetchNumeric($sql, [$active->getId()]));
+    }
+
+    public function testRestoreRejectsInvalidRequests(): void
+    {
+        $this->assertEndpointNotAllowedFor('POST', '/report/restore', self::$tokenDeputy);
+        $options = ['AuthToken' => self::$tokenAdmin, 'mustFail' => true];
+
+        $this->assertJsonRequest('POST', '/report/restore', $options + ['data' => [], 'assertResponseCode' => 400]);
+
+        $id = self::$report103->getId();
+        foreach ([$id, -1, self::$report2->getId()] as $otherId) {
+            $this->assertJsonRequest('POST', '/report/restore', $options + [
+                'data' => ['replaceReport' => $id, 'withReport' => $otherId],
+                'assertResponseCode' => 200,
+            ]);
+        }
+    }
+
     public function testGetByIdAuthPa(): void
     {
         $urlReport1 = '/report/' . self::$pa1Client1Report1->getId();

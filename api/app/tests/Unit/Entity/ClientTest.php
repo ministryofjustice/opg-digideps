@@ -4,8 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Entity;
 
-use PHPUnit\Framework\Attributes\DataProvider;
+use Doctrine\Common\Collections\ArrayCollection;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Common\CourtOrder\CourtOrderType;
+use OPG\Digideps\Common\Report\ReportReplacement;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -116,5 +123,104 @@ final class ClientTest extends TestCase
         $sut->setCaseNumber('ABC123dF');
 
         self::assertEquals('abc123df', $sut->getCaseNumber());
+    }
+
+    public function testFindPossibleReplacementsDuals(): void
+    {
+        $client = new Client();
+
+        // two closed hw court orders for client (doesn't matter if oldest has a report or not)
+        $hw1 = $this->createOrder(id: 10, uid: '12345678', madeDate: '2025-02-02', client: $client, type: CourtOrderType::HW, courtOrderReportType: CourtOrderReportType::OPG104, status: 'CLOSED');
+
+        $hw2 = $this->createOrder(id: 11, uid: '22345678', madeDate: '2026-02-02', client: $client, type: CourtOrderType::HW, courtOrderReportType: CourtOrderReportType::OPG104, status: 'CLOSED');
+        $hw2Report = $this->createReport(id: 110, courtOrder: $hw2, type: '104');
+
+        // active hw court order compatible with latest closed hw court order
+        $activeHw = $this->createOrder(id: 12, uid: '32345678', madeDate: '2026-11-12', client: $client, type: CourtOrderType::HW, courtOrderReportType: CourtOrderReportType::OPG104);
+        $activeHwReport = $this->createReport(id: 120, courtOrder: $activeHw, type: '104');
+
+        // two closed pfa court orders for client (doesn't matter if oldest has a report or not)
+        $pfa1 = $this->createOrder(id: 20, uid: '42345678', madeDate: '2025-02-02', client: $client, status: 'CLOSED');
+
+        $pfa2 = $this->createOrder(id: 21, uid: '52345678', madeDate: '2026-02-02', client: $client, status: 'CLOSED');
+        $pfa2Report = $this->createReport(id: 210, courtOrder: $pfa2);
+
+        // active pfa court order compatible with latest closed pfa court order
+        $activePfa = $this->createOrder(id: 22, uid: '62345678', madeDate: '2026-11-11', client: $client);
+        $activePfaReport = $this->createReport(id: 220, courtOrder: $activePfa);
+
+        $client->setCourtOrders(new ArrayCollection([$hw1, $hw2, $activeHw, $pfa1, $pfa2, $activePfa]));
+
+        $expected = [
+            new ReportReplacement($activeHwReport->getId(), $hw2Report->getId()),
+            new ReportReplacement($activePfaReport->getId(), $pfa2Report->getId())
+        ];
+
+        self::assertEquals($expected, $client->findPossibleReportReplacements());
+    }
+
+    public function testFindPossibleReplacementsHybridsDoesNotDuplicateReports(): void
+    {
+        $client = new Client();
+
+        // a hybrid report is linked to both its pfa and hw court orders
+        $closedPfa = $this->createOrder(id: 10, uid: '12345678', madeDate: '2025-02-02', client: $client, kind: CourtOrderKind::Hybrid, status: 'CLOSED');
+        $closedHw = $this->createOrder(id: 11, uid: '22345678', madeDate: '2025-02-02', client: $client, type: CourtOrderType::HW, courtOrderReportType: CourtOrderReportType::OPG104, kind: CourtOrderKind::Hybrid, status: 'CLOSED');
+        $closedPfa->setSibling($closedHw);
+        $closedHw->setSibling($closedPfa);
+        $closedReport = $this->createReport(id: 100, courtOrder: $closedPfa, type: '102-4');
+
+        $activePfa = $this->createOrder(id: 20, uid: '32345678', madeDate: '2026-02-02', client: $client, kind: CourtOrderKind::Hybrid);
+        $activeHw = $this->createOrder(id: 21, uid: '42345678', madeDate: '2026-02-02', client: $client, type: CourtOrderType::HW, courtOrderReportType: CourtOrderReportType::OPG104, kind: CourtOrderKind::Hybrid);
+        $activePfa->setSibling($activeHw);
+        $activeHw->setSibling($activePfa);
+        $activeReport = $this->createReport(id: 200, courtOrder: $activePfa, type: '102-4');
+
+        $client->setCourtOrders(new ArrayCollection([$closedPfa, $closedHw, $activePfa, $activeHw]));
+
+        self::assertEquals(
+            [new ReportReplacement($activeReport->getId(), $closedReport->getId())],
+            $client->findPossibleReportReplacements()
+        );
+    }
+
+    private function createOrder(
+        int $id,
+        string $uid,
+        string $madeDate,
+        Client $client,
+        CourtOrderType $type = CourtOrderType::PFA,
+        CourtOrderReportType $courtOrderReportType = CourtOrderReportType::OPG102,
+        CourtOrderKind $kind = CourtOrderKind::Single,
+        string $status = 'ACTIVE'
+    ): CourtOrder {
+        $courtOrder = new CourtOrder(
+            $uid,
+            $type,
+            $courtOrderReportType,
+            $kind,
+            new \DateTime($madeDate),
+            $client,
+            $status
+        );
+        $courtOrder->setId($id);
+        return $courtOrder;
+    }
+
+    /**
+     * @param string $type e.g. '102', '103', '102-4'
+     */
+    private function createReport(
+        int $id,
+        CourtOrder $courtOrder,
+        \DateTime $startDate = new \DateTime(),
+        \DateTime $endDate = new \DateTime(),
+        string $type = '102'
+    ): Report {
+        $report = new Report($courtOrder, $type, $startDate, $endDate, false);
+        $report->setId($id);
+        $report->setSubmitted(false);
+        $report->setUnSubmitDate(null);
+        return $report;
     }
 }

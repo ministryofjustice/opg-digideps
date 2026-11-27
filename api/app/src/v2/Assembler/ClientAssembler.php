@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\v2\Assembler;
 
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\v2\Assembler\Report\ReportSummaryAssembler;
 use OPG\Digideps\Backend\v2\DTO\ClientDto;
 use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
 use OPG\Digideps\Backend\v2\DTO\OrganisationDto;
 use OPG\Digideps\Backend\v2\DTO\UserDto;
 use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
-use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
 
 class ClientAssembler
 {
@@ -18,7 +20,7 @@ class ClientAssembler
 
     public function __construct(
         private readonly ReportSummaryAssembler $reportDtoAssembler,
-        private readonly DeputyAssembler $deputyAssembler
+        private readonly DeputyAssembler $deputyAssembler,
     ) {
     }
 
@@ -64,31 +66,42 @@ class ClientAssembler
         $dto->setCaseNumber($client->getCaseNumber());
         $dto->setFirstName($client->getFirstname());
         $dto->setLastName($client->getLastname());
-        $dto->setReportCount($client->getTotalReportCount());
+        $dto->setPossibleReportReplacements($client->findPossibleReportReplacements());
 
-        return $dto;
-    }
-
-    public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto): Client
-    {
-        $client = new Client()
-            ->setCaseNumber($dto->getCaseNumber())
-            ->setFirstname($dto->getClientFirstname())
-            ->setLastname($dto->getClientLastname())
-            ->setAddress($dto->getClientAddress1() ?: null)
-            ->setAddress2($dto->getClientAddress2() ?: null)
-            ->setAddress3($dto->getClientAddress3() ?: null)
-            ->setAddress4($dto->getClientAddress4() ?: null)
-            ->setAddress5($dto->getClientAddress5() ?: null)
-            ->setDateOfBirth($dto->getClientDateOfBirth() ?: null)
-            ->setCourtDate($dto->getCourtDate() ?: null);
-
-        if (!empty($dto->getClientPostCode())) {
-            $client->setPostcode($dto->getClientPostCode());
-            $client->setCountry('GB'); // postcode given means a UK address is given
+        $email = $client->getEmail();
+        if (!empty($email)) {
+            $dto->setEmail($email);
         }
 
-        return $client;
+        $archivedAt = $client->getArchivedAt();
+        if ($archivedAt !== null) {
+            $dto->setArchivedAt($archivedAt);
+        }
+
+        $deletedAt = $client->getDeletedAt();
+        if ($deletedAt !== null) {
+            $dto->setDeletedAt($deletedAt);
+        }
+
+        $reports = [];
+        foreach ($client->getReports() as $report) {
+            $reports[] = $this->reportDtoAssembler->assembleFromEntity($report);
+        }
+        $dto->setReports($reports);
+        $dto->setReportCount(count($reports));
+
+        $deputy = $client->getDeputy();
+        if ($deputy !== null) {
+            $dto->setDeputy($this->deputyAssembler->assembleFromEntity($deputy));
+        }
+
+        $users = [];
+        foreach ($client->getUsers() as $user) {
+            $users[] = $this->assembleUserDtoFromEntity($user);
+        }
+        $dto->setDeputies($users);
+
+        return $dto;
     }
 
     public function assembleFromLayDeputyshipDto(LayDeputyshipDto $dto): Client
@@ -127,5 +140,31 @@ class ClientAssembler
         }
 
         return $dtos;
+    }
+
+    // built here rather than via UserAssembler, which depends on this class
+    private function assembleUserDtoFromEntity(User $user): UserDto
+    {
+        $dto = new UserDto();
+
+        $this->setPropertiesFromData($dto, [
+            'id' => $user->getId(),
+            'firstName' => $user->getFirstname(),
+            'lastName' => $user->getLastname(),
+            'email' => $user->getEmail(),
+            'roleName' => $user->getRoleName(),
+            'address1' => $user->getAddress1(),
+            'address2' => $user->getAddress2(),
+            'address3' => $user->getAddress3(),
+            'addressPostcode' => $user->getAddressPostcode(),
+            'addressCountry' => $user->getAddressCountry(),
+            'active' => $user->getActive(),
+            'jobTitle' => $user->getJobTitle(),
+            'phoneMain' => $user->getPhoneMain(),
+            'lastLoggedIn' => $user->getLastLoggedIn(),
+            'deputyUid' => $user->getDeputyUid(),
+        ]);
+
+        return $dto;
     }
 }

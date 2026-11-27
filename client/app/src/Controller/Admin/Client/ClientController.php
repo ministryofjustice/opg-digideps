@@ -25,7 +25,7 @@ class ClientController extends AbstractController
     #[Template('@App/Admin/Client/Client/details.html.twig')]
     public function detailsAction(int $id): RedirectResponse|array
     {
-        $client = $this->clientApi->getWithUsersV2($id);
+        $client = $this->clientApi->getWithUsersV2($id, ['client', 'client-report-replacements']);
 
         if ($client->getArchivedAt() !== null) {
             return $this->redirectToRoute('admin_client_archived', ['id' => $client->getId()]);

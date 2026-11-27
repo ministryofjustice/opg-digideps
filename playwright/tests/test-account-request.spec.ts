@@ -11,9 +11,9 @@ test("user can request an account if they enter valid details", async ({
 }) => {
   const deputyRef = "account-request-user-1";
 
-  const runTest = async (scenario: Scenario) => {
-    const deputy = scenario.deputies[deputyRef];
-    const client = scenario.client;
+  const runTest = async (scenarios: Scenario[]) => {
+    const deputy = scenarios[0].deputies[deputyRef];
+    const client = scenarios[0].client;
 
     const accountRequestPage = new AccountRequestPage(page);
     await accountRequestPage.goto();
@@ -29,10 +29,12 @@ test("user can request an account if they enter valid details", async ({
   await setupFixture(
     // creates a deputy and client record, which is what we need
     // in the db to verify the user requesting an account
-    createFixtureViaApi("/fixtures/scenarios/generic", {
-      deputies: [{ ref: deputyRef, type: "LAY", hasRegistered: false }],
-    }),
-  ).then((fixture) => runTest(fixture.data as Scenario));
+    createFixtureViaApi("/fixtures/scenarios/generic", [
+      {
+        deputies: [{ ref: deputyRef, type: "LAY", hasRegistered: false }],
+      },
+    ]),
+  ).then((fixture) => runTest(fixture.data as Scenario[]));
 });
 
 test("user account request is rejected if they enter non-matching details", async ({

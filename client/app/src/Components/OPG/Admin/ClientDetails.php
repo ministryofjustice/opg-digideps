@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Components\OPG\Admin;
 
+use OPG\Digideps\Common\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Common\Report\ReportType;
 use OPG\Digideps\Frontend\Components\GOV\Link;
+use OPG\Digideps\Frontend\Components\GOV\List\UnorderedList;
 use OPG\Digideps\Frontend\Components\GOV\Table\Caption;
 use OPG\Digideps\Frontend\Components\GOV\Table\Cell;
 use OPG\Digideps\Frontend\Components\GOV\Table\Table;
@@ -12,8 +15,10 @@ use OPG\Digideps\Frontend\Components\GOV\Table\TableBuilder;
 use OPG\Digideps\Frontend\Components\OPG\Renderable\ActionsList;
 use OPG\Digideps\Frontend\Components\OPG\Renderable\Div;
 use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\CourtOrder;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Form\Admin\ReportRestoreType;
 use OPG\Digideps\Frontend\Twig\Filters;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -24,23 +29,35 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 final class ClientDetails
 {
     /** @var array<string, string> $text */
-    public array $text;
+    public array $text = [];
 
-    public ?Table $activeReportsTable;
-    public ?Table $submittedReportsTable;
-    public ?Table $incompleteReportsTable;
-    public ?Table $closedReportsTable;
+    /** @var array{heading: string, details: list<string>, notesHeading: string, notes: UnorderedList}|null */
+    public ?array $restoreConfirmation = null;
+
+    public ?Table $activeReportsTable = null;
+    public ?Table $submittedReportsTable = null;
+    public ?Table $incompleteReportsTable = null;
+    public ?Table $closedReportsTable = null;
 
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly Security $security,
     ) {
-        $this->text = $this->makeText();
     }
 
-    public function mount(Client $client): void
+    public function mount(?Client $client = null, ?Report $restoreFromReport = null): void
     {
+        if ($client === null && $restoreFromReport !== null) {
+            $this->setRestoreConfirmation($restoreFromReport);
+            return;
+        }
+
+        if ($client === null || $restoreFromReport !== null) {
+            throw new \InvalidArgumentException('Provide either a client or a report to restore, but not both.');
+        }
+
+        $this->text = $this->makeText();
         $userIsSuperAdmin = in_array(User::ROLE_SUPER_ADMIN, $this->security->getUser()?->getRoles() ?? []);
 
         $reportsByCategory = $this->categoriseReports($client->getReports());
@@ -48,7 +65,42 @@ final class ClientDetails
         $this->activeReportsTable = $this->makeReportsTable($reportsByCategory['active'], 'active', $userIsSuperAdmin);
         $this->submittedReportsTable = $this->makeReportsTable($reportsByCategory['submitted'], 'submitted', $userIsSuperAdmin, needsSubmittedColumn: true);
         $this->incompleteReportsTable = $this->makeReportsTable($reportsByCategory['incomplete'], 'incomplete', $userIsSuperAdmin);
-        $this->closedReportsTable = $this->makeReportsTable($reportsByCategory['closed'], 'closed', $userIsSuperAdmin, needsManageLink: false);
+        $this->closedReportsTable = $this->makeReportsTable(
+            $reportsByCategory['closed'],
+            'closed',
+            $userIsSuperAdmin,
+            needsManageLink: false,
+            possibleReportReplacements: $client->possibleReportReplacements,
+            clientId: $client->getId()
+        );
+    }
+
+    private function setRestoreConfirmation(Report $report): void
+    {
+        $type = ReportType::from($report->getType());
+        $typeKey = $type->courtOrderKind === CourtOrderKind::Hybrid ? 'hybrid' : $type->courtOrderType->value;
+        $courtOrderUids = array_map(fn (CourtOrder $order) => $order->getCourtOrderUid(), $report->getCourtOrders());
+
+        $this->restoreConfirmation = [
+            'heading' => $this->translate('restoreConfirmation.heading'),
+            'details' => [
+                $this->translate('restoreConfirmation.courtOrders', ['%references%' => implode(', ', $courtOrderUids)]),
+                $this->translate('restoreConfirmation.client', ['%name%' => $report->getClient()->getFullname()]),
+                $this->translate('restoreConfirmation.type', ['%type%' => $this->translate("restoreConfirmation.reportType.{$typeKey}")]),
+                $this->translate('restoreConfirmation.period', [
+                    '%startDate%' => $report->getStartDate()?->format('j F Y') ?? '',
+                    '%endDate%' => $report->getEndDate()?->format('j F Y') ?? '',
+                ]),
+            ],
+            'notesHeading' => $this->translate('restoreConfirmation.notesHeading'),
+            'notes' => new UnorderedList(
+                true,
+                $this->translate('restoreConfirmation.notes.reinstate'),
+                $this->translate('restoreConfirmation.notes.deputyAccess'),
+                $this->translate('restoreConfirmation.notes.sharedSections'),
+                $this->translate('restoreConfirmation.notes.reportType'),
+            ),
+        ];
     }
 
     /**
@@ -59,6 +111,7 @@ final class ClientDetails
         $keys = [
             'actionsHeader',
             'actions.checklist',
+            'actions.restore',
             'actions.viewSummary',
             'actions.manage',
             'dueDate',
@@ -82,13 +135,10 @@ final class ClientDetails
         return $translations;
     }
 
-    private function translate(string $key): string
+    /** @param array<string, string> $parameters */
+    private function translate(string $key, array $parameters = []): string
     {
-        try {
-            return $this->translator->trans("opg.admin.clientDetails.{$key}", [], 'twig-components');
-        } catch (\Throwable $t) {
-            return "$t";
-        }
+        return $this->translator->trans("opg.admin.clientDetails.{$key}", $parameters, 'twig-components');
     }
 
     /**
@@ -125,13 +175,16 @@ final class ClientDetails
 
     /**
      * @param array<Report> $reports
+     * @param array<array{replaceReport: int, withReport: int}> $possibleReportReplacements
      */
     private function makeReportsTable(
         array $reports,
         string $captionKey,
         bool $userIsSuperAdmin = false,
         bool $needsManageLink = true,
-        bool $needsSubmittedColumn = false
+        bool $needsSubmittedColumn = false,
+        array $possibleReportReplacements = [],
+        ?int $clientId = null
     ): ?Table {
         if (empty($reports)) {
             return null;
@@ -143,7 +196,7 @@ final class ClientDetails
             tagColour: Filters::statusToTagColour($captionKey)
         );
 
-        $actionsCell = new Cell(new Div([$this->text['actionsHeader']], isVisuallyHidden: true), isHeader: true);
+        $actionsHeaderCell = new Cell(new Div([$this->text['actionsHeader']], isVisuallyHidden: true), isHeader: true);
 
         $columns = [1, 1, 1, 1];
         $header = [$this->text['period'], $this->text['type'], $this->text['dueDate']];
@@ -153,31 +206,45 @@ final class ClientDetails
             $header[] = $this->text['submitted'];
         }
 
-        $header[] = $actionsCell;
+        $header[] = $actionsHeaderCell;
 
         $tableBuilder = new TableBuilder(caption: $caption)
             ->addColumns(...$columns)
             ->addHeader(...$header);
 
         foreach ($reports as $report) {
+            $reportId = $report->getId();
             $period = str_replace(' to ', '-', $report->getPeriod());
 
             $links = [];
 
             if ($needsManageLink) {
-                $manageUrl = $this->urlGenerator->generate('admin_report_manage', ['id' => $report->getId()]);
+                $manageUrl = $this->urlGenerator->generate('admin_report_manage', ['id' => $reportId]);
                 $accessText = "{$period} {$this->text['report']}";
                 $links[] = new Link(href: $manageUrl, text: $this->text['actions.manage'], accessibilityText: $accessText);
             }
 
             if ($report->isCheckable()) {
-                $checklistUrl = $this->urlGenerator->generate('admin_report_checklist', ['id' => $report->getId()]);
+                $checklistUrl = $this->urlGenerator->generate('admin_report_checklist', ['id' => $reportId]);
                 $links[] = new Link(href: $checklistUrl, text: $this->text['actions.checklist']);
             }
 
             if ($report->isDownloadable() && $userIsSuperAdmin) {
-                $downloadUrl = $this->urlGenerator->generate('admin_report_view_summary', ['id' => $report->getId()]);
+                $downloadUrl = $this->urlGenerator->generate('admin_report_view_summary', ['id' => $reportId]);
                 $links[] = new Link(href: $downloadUrl, text: $this->text['actions.viewSummary']);
+            }
+
+            $replaceableReportId = $this->getReplaceableReportId($report, $possibleReportReplacements);
+            if ($replaceableReportId !== null) {
+                $replaceRestoreUrl = $this->urlGenerator->generate(
+                    'admin_report_restore',
+                    [
+                        'id' => $replaceableReportId,
+                        ReportRestoreType::RESTORE_FROM_REPORT_ID => $reportId,
+                        ReportRestoreType::CLIENT_ID => $clientId
+                    ]
+                );
+                $links[] = new Link(href: $replaceRestoreUrl, text: $this->text['actions.restore']);
             }
 
             $cells = [
@@ -196,5 +263,27 @@ final class ClientDetails
         }
 
         return $tableBuilder->makeTable();
+    }
+
+    /**
+     * @param Report $report Report we want to find possible replacements for
+     * @param array<array{replaceReport: int, withReport: int}> $possibleReportReplacements
+     * @return ?int The ID of the the report which can be replaced
+     *
+     * If more than one possible replacement report is found, or none, null is returned.
+     */
+    private function getReplaceableReportId(Report $report, array $possibleReportReplacements): ?int
+    {
+        if (empty($possibleReportReplacements)) {
+            return null;
+        }
+
+        $reportId = $report->getId();
+
+        $possiblesForReport = array_values(array_filter($possibleReportReplacements, fn ($pr) => $pr['withReport'] === $reportId));
+        if (count($possiblesForReport) !== 1) {
+            return null;
+        }
+        return $possiblesForReport[0]['replaceReport'];
     }
 }

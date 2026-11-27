@@ -1,0 +1,7 @@
+{%- props -%}
+{% set children = block('content') %}
+<div class="govuk-button-group">
+    {%- with outerScope -%}{% autoescape false %}
+        {{ children }}
+    {% endautoescape %}{%- endwith -%}
+</div>{#--#}

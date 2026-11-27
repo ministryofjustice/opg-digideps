@@ -197,65 +197,39 @@ class FixtureController extends AbstractController
         return $this->jsonifyScenario($details);
     }
 
+    /**
+     * Create one or more court orders with associated deputies and reports, all associated with the same
+     * client.
+     */
     #[Route('/fixtures/scenarios/generic', name: 'fixtures_scenarios_generic', methods: ['POST'])]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function scenarioGeneric(Request $request): array
     {
         $this->checkIfAccessible();
 
-        $startDate = new \DateTimeImmutable()->sub(new \DateInterval('P1Y'));
+        $scenarios = [];
 
-        $courtOrderPayload = new ValidatingArray($request->getPayload()->all());
+        $courtOrderPayloads = $request->getPayload()->all();
+        $startDate = new \DateTimeImmutable();
 
-        $deputyDescriptors = [];
+        $persons = ['users' => [], 'deputies' => [], 'organisations' => []];
+        $client = null;
 
-        /** @var array $deputyPayload */
-        foreach ($courtOrderPayload->getArrayOrDefault('deputies', []) as $deputyPayload) {
-            $deputy = new ValidatingArray($deputyPayload);
-            $deputyType = DeputyType::tryFrom($deputy->getStringOrDefault('type', '')) ?? DeputyType::LAY;
-            $deputyHasRegistered = $deputy->getBooleanOrDefault('hasRegistered', false);
-            $deputyDescriptors[] = new DeputyDescriptor($deputy->getStringOrThrow('ref'), $deputyType, hasRegistered: $deputyHasRegistered);
+        /** @var array $courtOrderPayload */
+        foreach ($courtOrderPayloads as $courtOrderPayload) {
+            $startDate = $startDate->sub(new \DateInterval('P1Y'));
+
+            $courtOrder = $this->convertPayload(new ValidatingArray($courtOrderPayload), $startDate);
+
+            $scenario = $this->fixtureService->instantiateScenario(new Scenario($courtOrder), $persons, client: $client);
+
+            $persons = $scenario['persons'];
+            $client = $scenario['client'];
+
+            $scenarios[] = $this->jsonifyScenario($scenario);
         }
 
-        $reportType = CourtOrderReportType::tryFrom($courtOrderPayload->getStringOrDefault('reportType', ''))
-            ?? CourtOrderReportType::OPG102;
-
-        $reportDescriptors = [];
-        /** @var array $reportPayload */
-        foreach ($courtOrderPayload->getArrayOrDefault('reports', []) as $reportPayload) {
-            $report = new ValidatingArray($reportPayload);
-
-            $startDateStr = $report->getStringOrNull('startDate');
-            if ($startDateStr !== null) {
-                $startDate = new \DateTimeImmutable($startDateStr);
-            }
-
-            $submitDateStr = $report->getStringOrNull('submitDate');
-            $submitDate = $submitDateStr === null ? null : new \DateTimeImmutable($submitDateStr);
-
-            $unSubmitDateStr = $report->getStringOrNull('unSubmitDate');
-            $unSubmitDate = $unSubmitDateStr === null ? null : new \DateTimeImmutable($unSubmitDateStr);
-
-            $submitted = $report->getBooleanOrDefault('submitted', $submitDate !== null);
-
-            $reportDescriptors[] = new ReportDescriptor(
-                startDate: $startDate,
-                submitDate: $submitDate,
-                unSubmitDate: $unSubmitDate,
-                submitted: $submitted
-            );
-        }
-
-        $courtOrder = new CourtOrderDescriptor(
-            deputySet: new DeputySet(...$deputyDescriptors),
-            reportType: $reportType,
-            active: $courtOrderPayload->getBooleanOrDefault('active', true),
-            reportList: new ReportList(true, ...$reportDescriptors)
-        );
-
-        $scenario = $this->fixtureService->instantiateScenario(new Scenario($courtOrder));
-
-        return $this->jsonifyScenario($scenario);
+        return $scenarios;
     }
 
     /**
@@ -348,5 +322,56 @@ class FixtureController extends AbstractController
         if ($this->workspace === 'production') {
             throw new \RuntimeException('User not found', 404);
         }
+    }
+
+    // see OrderSpec in playwright fixtures for the $courtOrderPayload structure (usually a POST request body)
+    private function convertPayload(ValidatingArray $courtOrderPayload, \DateTimeImmutable $startDate): CourtOrderDescriptor
+    {
+        $deputyDescriptors = [];
+
+        /** @var array $deputyPayload */
+        foreach ($courtOrderPayload->getArrayOrDefault('deputies', []) as $deputyPayload) {
+            $deputy = new ValidatingArray($deputyPayload);
+            $deputyType = DeputyType::tryFrom($deputy->getStringOrDefault('type', '')) ?? DeputyType::LAY;
+            $deputyHasRegistered = $deputy->getBooleanOrDefault('hasRegistered', false);
+            $deputyDescriptors[] = new DeputyDescriptor($deputy->getStringOrThrow('ref'), $deputyType, hasRegistered: $deputyHasRegistered);
+        }
+
+        $reportType = CourtOrderReportType::tryFrom($courtOrderPayload->getStringOrDefault('reportType', ''))
+            ?? CourtOrderReportType::OPG102;
+
+        $reportDescriptors = [];
+
+        /** @var array $reportPayload */
+        foreach ($courtOrderPayload->getArrayOrDefault('reports', []) as $reportPayload) {
+            $report = new ValidatingArray($reportPayload);
+
+            $startDateStr = $report->getStringOrNull('startDate');
+            if ($startDateStr !== null) {
+                $startDate = new \DateTimeImmutable($startDateStr);
+            }
+
+            $submitDateStr = $report->getStringOrNull('submitDate');
+            $submitDate = $submitDateStr === null ? null : new \DateTimeImmutable($submitDateStr);
+
+            $unSubmitDateStr = $report->getStringOrNull('unSubmitDate');
+            $unSubmitDate = $unSubmitDateStr === null ? null : new \DateTimeImmutable($unSubmitDateStr);
+
+            $submitted = $report->getBooleanOrDefault('submitted', $submitDate !== null);
+
+            $reportDescriptors[] = new ReportDescriptor(
+                startDate: $startDate,
+                submitDate: $submitDate,
+                unSubmitDate: $unSubmitDate,
+                submitted: $submitted
+            );
+        }
+
+        return new CourtOrderDescriptor(
+            deputySet: new DeputySet(...$deputyDescriptors),
+            reportType: $reportType,
+            active: $courtOrderPayload->getBooleanOrDefault('active', true),
+            reportList: new ReportList(true, ...$reportDescriptors)
+        );
     }
 }

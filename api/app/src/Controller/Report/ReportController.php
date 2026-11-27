@@ -21,7 +21,11 @@ use OPG\Digideps\Backend\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
+use OPG\Digideps\Common\Report\ReportReplacement;
+use OPG\Digideps\Common\Report\ReportRestoreResponse;
+use OPG\Digideps\Common\Validating\ValidationException;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -900,5 +904,22 @@ class ReportController extends RestController
         $this->em->flush();
 
         return $report;
+    }
+
+    #[Route(path: '/restore', methods: ['POST'])]
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function restore(Request $request): JsonResponse
+    {
+        try {
+            $replacement = ReportReplacement::jsonDeserialize($request->getContent());
+        } catch (ValidationException) {
+            return new JsonResponse(new ReportRestoreResponse(false, 'Expected two report IDs.'), JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        if (!$this->repository->restoreReport($replacement)) {
+            return new JsonResponse(new ReportRestoreResponse(false, 'These reports are not eligible for restoration.'));
+        }
+
+        return new JsonResponse(new ReportRestoreResponse(true));
     }
 }

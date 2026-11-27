@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Form\Account;
 
+use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Form\Component\AbstractFormType;
 use OPG\Digideps\Frontend\Form\Component\Constraints;
 use OPG\Digideps\Frontend\Form\Component\EmailInput;
@@ -20,7 +21,7 @@ class ResetRequestType extends AbstractFormType
     /**
      * @inheritDoc
      */
-    protected function defineInputs(callable $t): array
+    protected function defineInputs(callable $t, ValidatingArray $options): array
     {
         return [
             new EmailInput(

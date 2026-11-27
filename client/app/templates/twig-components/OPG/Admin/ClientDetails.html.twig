@@ -1,19 +1,32 @@
-<twig:GOV:Heading size="l" h="2">
-    {{ text.reportsHeading }}
-</twig:GOV:Heading>{#--#}
+{% if restoreConfirmation is not null %}
+    <twig:GOV:Layout:Row>
+        <twig:GOV:Layout:Column n="2" d="3">
+            <twig:GOV:Heading size="m" h="2">{{ restoreConfirmation.heading }}</twig:GOV:Heading>
+            {% for detail in restoreConfirmation.details %}
+                <twig:GOV:Paragraph>{{ detail }}</twig:GOV:Paragraph>
+            {% endfor %}
+            <twig:GOV:Paragraph>{{ restoreConfirmation.notesHeading }}</twig:GOV:Paragraph>
+            <twig:GOV:List list="{{ restoreConfirmation.notes }}"/>
+        </twig:GOV:Layout:Column>
+    </twig:GOV:Layout:Row>
+{% else %}
+    <twig:GOV:Heading size="l" h="2">
+        {{ text.reportsHeading }}
+    </twig:GOV:Heading>
 
-{% if activeReportsTable is not null %}
-    <twig:GOV:Table table="{{ activeReportsTable }}"/>
-{% endif %}
+    {% if activeReportsTable is not null %}
+        <twig:GOV:Table table="{{ activeReportsTable }}"/>
+    {% endif %}
 
-{% if submittedReportsTable is not null %}
-    <twig:GOV:Table table="{{ submittedReportsTable }}"/>
-{% endif %}
+    {% if submittedReportsTable is not null %}
+        <twig:GOV:Table table="{{ submittedReportsTable }}"/>
+    {% endif %}
 
-{% if incompleteReportsTable is not null %}
-    <twig:GOV:Table table="{{ incompleteReportsTable }}"/>
-{% endif %}
+    {% if incompleteReportsTable is not null %}
+        <twig:GOV:Table table="{{ incompleteReportsTable }}"/>
+    {% endif %}
 
-{% if closedReportsTable is not null %}
-    <twig:GOV:Table table="{{ closedReportsTable }}"/>
+    {% if closedReportsTable is not null %}
+        <twig:GOV:Table table="{{ closedReportsTable }}"/>
+    {% endif %}
 {% endif -%}

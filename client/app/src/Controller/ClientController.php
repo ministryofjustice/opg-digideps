@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Frontend\Controller;
 
 use OPG\Digideps\Frontend\Entity\Client;
-use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Event\RegistrationFailedEvent;
 use OPG\Digideps\Frontend\Event\RegistrationSucceededEvent;
@@ -61,7 +60,8 @@ class ClientController extends AbstractController
     #[Template('@App/Client/edit.html.twig')]
     public function editClientDetailsAction(Request $request, int $clientId): array|RedirectResponse
     {
-        $from = $request->get('from');
+        $reportDeclarationId = filter_var($request->query->get('reportDeclarationId'), FILTER_VALIDATE_INT) ?: 0;
+
         /** @var Client|null $preUpdateClient */
         $preUpdateClient = $this->clientApi->getById($clientId);
 
@@ -72,8 +72,13 @@ class ClientController extends AbstractController
             throw new \RuntimeException("User $userId does not have a client");
         }
 
+        $options = ['clientId' => $clientId, 'action' => 'edit'];
+        if ($reportDeclarationId !== 0) {
+            $options['reportDeclarationId'] = $reportDeclarationId;
+        }
+
         $form = $this->createForm(ClientType::class, clone $preUpdateClient, [
-            'action' => $this->generateUrl('client_edit', ['clientId' => $clientId, 'action' => 'edit', 'from' => $from]),
+            'action' => $this->generateUrl('client_edit', $options),
             'validation_groups' => ['lay-deputy-client-edit'],
             'include_court_date_field' => false,
         ]);
@@ -88,10 +93,8 @@ class ClientController extends AbstractController
 
             $this->addFlash('clientEditSuccess', htmlentities((string) $postUpdateClient->getFirstname()) . "'s details have been saved");
 
-            $activeReport = $postUpdateClient->getActiveReport();
-
-            if ($from === 'declaration' && $activeReport instanceof Report) {
-                return $this->redirect($this->generateUrl('report_confirm_details', ['reportId' => $activeReport->getId()]));
+            if ($reportDeclarationId > 0) {
+                return $this->redirect($this->generateUrl('report_confirm_details', ['reportId' => $reportDeclarationId]));
             }
 
             return $this->redirect($this->generateUrl('deputyship_details_clients'));

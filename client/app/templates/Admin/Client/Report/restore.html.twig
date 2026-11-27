@@ -1,0 +1,9 @@
+{% extends '@App/Layouts/application.html.twig' %}
+
+{% block htmlTitle %}{{ 'opg.admin.clientDetails.restoreConfirmation.title' | trans({}, 'twig-components') }}{% endblock %}
+{% block pageTitle %}{{ 'opg.admin.clientDetails.restoreConfirmation.title' | trans({}, 'twig-components') }}{% endblock %}
+
+{% block pageContent %}
+    <twig:OPG:Admin:ClientDetails restoreFromReport="{{ restoreFromReport }}"/>
+    <twig:Render self="{{ form }}"/>
+{% endblock %}

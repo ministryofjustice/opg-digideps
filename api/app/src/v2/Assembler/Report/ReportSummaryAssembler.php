@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\v2\Assembler\Report;
 
+use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
 use OPG\Digideps\Backend\v2\DTO\ReportDto;
 use OPG\Digideps\Common\CourtOrder\CourtOrderDto;
@@ -40,6 +43,35 @@ class ReportSummaryAssembler
             );
         }
 
+        $dto->setCourtOrders($courtOrders);
+
+        return $dto;
+    }
+
+    public function assembleFromEntity(Report $report): ReportDto
+    {
+        $dto = new ReportDto();
+
+        $dto->setId($report->getId());
+        $dto->setType("{$report->getReportType()}");
+        $dto->setSubmitted($report->getSubmitted());
+        $dto->setStartDate($report->getStartDate());
+        $dto->setEndDate($report->getEndDate());
+        $dto->setDueDate($report->getDueDate());
+        $dto->setSubmitDate($report->getSubmitDate());
+        $dto->setUnSubmitDate($report->getUnSubmitDate());
+
+        $courtOrders = [];
+        foreach ($report->getCourtOrders() as $courtOrder) {
+            $courtOrders[] = new CourtOrderDto(
+                $courtOrder->getId(),
+                $courtOrder->getCourtOrderUid(),
+                $courtOrder->getOrderType(),
+                $courtOrder->getOrderReportType(),
+                $courtOrder->getStatus(),
+                $courtOrder->getOrderMadeDate()
+            );
+        }
         $dto->setCourtOrders($courtOrders);
 
         return $dto;

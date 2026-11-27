@@ -18,7 +18,6 @@ test("visiting the checklist submitted page does not resubmit checklist", async 
   page,
 }) => {
   const runTest = async (scenario: Scenario, user: TestUser) => {
-    // const reportId = scenario.orders[0].reports[0].id;
     const submittedReport = scenario.orders[0].reports.find(
       (reportDetails) => reportDetails.submitted,
     );

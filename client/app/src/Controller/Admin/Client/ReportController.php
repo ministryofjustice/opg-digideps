@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Controller\Admin\Client;
 
+use OPG\Digideps\Common\Report\ReportReplacement;
 use OPG\Digideps\Common\Validating\ValidatingArray;
+use OPG\Digideps\Common\Validating\ValidationException;
+use OPG\Digideps\Frontend\Admin\ReportService;
 use OPG\Digideps\Frontend\Components\OPG\Review\Section;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Report\Checklist;
@@ -20,6 +23,7 @@ use OPG\Digideps\Frontend\Form\Admin\ManageActiveReportType;
 use OPG\Digideps\Frontend\Form\Admin\ManageReportConfirmType;
 use OPG\Digideps\Frontend\Form\Admin\ManageSubmittedReportType;
 use OPG\Digideps\Frontend\Form\Admin\ReportChecklistType;
+use OPG\Digideps\Frontend\Form\Admin\ReportRestoreType;
 use OPG\Digideps\Frontend\Form\Admin\ReviewChecklistType;
 use OPG\Digideps\Frontend\Report\ReportSectionService;
 use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
@@ -50,6 +54,7 @@ class ReportController extends AbstractController
         private readonly FormFactoryInterface $formFactory,
         private readonly ReportSectionService $reportSectionService,
         private readonly ParameterStoreService $parameterStore,
+        private readonly ReportService $reportService,
     ) {
     }
 
@@ -592,7 +597,6 @@ class ReportController extends AbstractController
         // check status
         $status = $report->getStatus();
 
-
         $backLink = $this->generateUrl('admin_client_details', ['id' => $report->getClient()->getId()]);
 
         if (!$report->isSubmitted()) {
@@ -610,6 +614,57 @@ class ReportController extends AbstractController
             'sections' => $sections,
             'reportStatus' => $status,
             'backLink' => $backLink,
+        ];
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    #[Route(path: 'restore', name: 'admin_report_restore', methods: ['GET', 'POST'])]
+    #[Template('@App/Admin/Client/Report/restore.html.twig')]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
+    public function restoreAction(Request $request, int $id): array|RedirectResponse
+    {
+        $clientId = $request->query->getInt(ReportRestoreType::CLIENT_ID);
+        $form = $this->createRenderableForm(
+            ReportRestoreType::class,
+            // keep the client ID in the action so the cancel link still works if a POST is re-rendered
+            $this->generateUrl('admin_report_restore', ['id' => $id, ReportRestoreType::CLIENT_ID => $clientId]),
+            [
+                ReportRestoreType::RESTORE_FROM_REPORT_ID =>
+                    $request->query->getString(ReportRestoreType::RESTORE_FROM_REPORT_ID),
+                ReportRestoreType::CLIENT_ID => (string) $clientId
+            ],
+            [ReportRestoreType::CANCEL_URL => $this->generateUrl('admin_client_details', ['id' => $clientId])]
+        );
+        // read after handleRequest() so a POST uses the submitted hidden field rather than the (absent) query param
+        $submitted = $form->handleRequest($request);
+        $restoreFromReportId = intval($form->getStringOrThrow(ReportRestoreType::RESTORE_FROM_REPORT_ID));
+
+        if ($submitted) {
+            // "Confirm" was clicked
+            $requestBody = new ReportReplacement($id, $restoreFromReportId);
+
+            $restoreResponse = $this->reportService->restoreReport($requestBody);
+
+            if ($restoreResponse->success) {
+                $this->addFlash('notice', 'Report restore complete');
+            } else {
+                $this->addFlash('error', 'Report restore failed');
+            }
+
+            // redirect back to client
+            $redirectUrl = $this->generateUrl(
+                'admin_client_details',
+                ['id' => $form->getStringOrThrow(ReportRestoreType::CLIENT_ID)]
+            );
+
+            return $this->redirect($redirectUrl);
+        }
+
+        return [
+            'restoreFromReport' => $this->reportApi->getReport($restoreFromReportId, ['report-with-court-orders', 'court-order-basic']),
+            'form' => $form->render()
         ];
     }
 }
