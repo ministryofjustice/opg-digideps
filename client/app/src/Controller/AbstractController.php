@@ -28,6 +28,7 @@ abstract class AbstractController extends SymfonyAbstractController
      * @param class-string<T> $typeClass
      * @param P $parameter
      * @return RenderableForm<T>
+     * @noinspection PhpDocSignatureInspection (False positive on $parameter)
      */
     protected function createRenderableForm(string $typeClass, ?string $action = null, ?object $parameter = null, mixed $data = null): RenderableForm
     {
@@ -35,7 +36,7 @@ abstract class AbstractController extends SymfonyAbstractController
             if ($parameter === null) {
                 throw new \ValueError("Argument 'parameter' may not be null if using a AbstractParametrisedFormType");
             }
-            $typeClass::setParameters($parameter);
+            $typeClass::setParameter($parameter);
         }
         $options = array_filter(['action' => $action]);
         /**

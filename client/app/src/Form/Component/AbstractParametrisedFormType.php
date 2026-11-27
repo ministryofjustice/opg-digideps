@@ -24,7 +24,7 @@ abstract class AbstractParametrisedFormType extends AbstractFormType
     /**
      * @param T $parameter
      */
-    final public static function setParameters(object $parameter): void
+    final public static function setParameter(object $parameter): void
     {
         self::$parameterSource ??= $parameter;
     }
