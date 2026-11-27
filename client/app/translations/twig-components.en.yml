@@ -128,9 +128,37 @@ opg:
           The information you've given us does not match our records.
           Please call %helplineNumber% to make sure we have a record of your deputyship.
         NetworkError: An error occurred while setting up your account. Please try again later.
-        PasswordSet: |
-          Our records show that you have already registered with this email address.
-          Please sign in to continue. Please call %helplineNumber% if you are unable to sign in.
+    password:
+      content: |-
+        To %action% your password, type your %quality% password in the box below and then confirm the password in the second box.
+        Your password must have:
+        - at least 14 characters
+        - at least 1 uppercase letter
+        - at least 1 lowercase letter
+        - at least 1 number
+      reset:
+        action: reset
+        quality: new
+      set:
+        action: set
+        quality: desired
+      form:
+        notBlank: "You cannot leave this blank: please enter a password"
+        doesNotMatch: The passwords you entered do not match.
+        tooShort: The password must have at least 14 characters
+        tooLong: The password cannot be longer than 50 characters
+        tooCommon: Your password is too easy for someone to guess. Please choose a different password.
+        noLowercase: The password must have at least one lowercase letter
+        noUppercase: The password must have at least one capital letter
+        noNumber: The password must have at least one number
+        label:
+          first: Password
+          second: Confirm password
+        submit: Save password
+      errors:
+        NetworkError: An error occurred while setting up your account. Please try again later.
+        TokenInvalid: This link is no longer valid. Please wait at least one minute, then try again using the most recent link the Office of the Public Guardian (OPG) emailed you.
+        TokenExpired: This link is expired. Please generate a new link.
     accept:
       title: Read and agree to our terms of use
       content: |-
@@ -143,6 +171,23 @@ opg:
         label: I have read and agree to the ‘Complete the deputy report’ terms of use
         required: You must check the box to show you agree to the terms of use before continuing.
         submit: Continue
+      errors:
+        NetworkError: An error occurred. Please try again later.
+        UnknownUser: An error occurred. Please try again later.
+    reset:
+      content: |-
+        To reset your password, enter your email address and check your email for confirmation.
+      email:
+        label: Your email address
+        hint: We sent your registration link to this email address
+        submit: Reset your password
+        notBlank: Enter an email address
+        tooLong: The email cannot be longer than 60 characters
+        invalidFormat: This email is not valid
+      returnLink: Return to sign in
+      errors:
+        NetworkError: An error occurred. Please try again later.
+        UnknownEmail: We don’t recognise that email address. Please enter the email you used to set up your ‘Complete the deputy report’ account.
   admin:
     clientDetails:
       actions:

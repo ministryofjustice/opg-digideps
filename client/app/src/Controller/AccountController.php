@@ -8,11 +8,19 @@ use OPG\Digideps\Common\Account\AcceptRequest;
 use OPG\Digideps\Common\Account\AccountError;
 use OPG\Digideps\Common\Account\AccountRequest;
 use OPG\Digideps\Common\Account\Email;
+use OPG\Digideps\Common\Account\MaximumTokenAge;
 use OPG\Digideps\Common\Account\NonEmptyString;
+use OPG\Digideps\Common\Account\Password;
+use OPG\Digideps\Common\Account\PasswordRequest;
+use OPG\Digideps\Common\Account\ResetRequest;
+use OPG\Digideps\Common\Account\Token;
+use OPG\Digideps\Common\Account\ValidationKey;
 use OPG\Digideps\Frontend\Account\AccountService;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Form\Account\AcceptRequestType;
 use OPG\Digideps\Frontend\Form\Account\AccountRequestType;
+use OPG\Digideps\Frontend\Form\Account\PasswordRequestType;
+use OPG\Digideps\Frontend\Form\Account\ResetRequestType;
 use OPG\Digideps\Frontend\Validator\RouteValidator;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
@@ -64,13 +72,7 @@ class AccountController extends AbstractController
                 $deputyEmail = $response;
             } elseif ($response instanceof AccountError) {
                 // add a form-level error message
-                $formErrorMessage = $this->translator->trans(
-                    "opg.account.request.errors.{$response->value}",
-                    ['%helplineNumber%' => $this->translator->trans('opg.helplineNumber', [], 'twig-components')],
-                    'twig-components'
-                );
-
-                $form->addError(new FormError($formErrorMessage));
+                $form->addError(new FormError($this->translateError($response, 'request')));
             }
         }
 
@@ -79,6 +81,78 @@ class AccountController extends AbstractController
             'accountCreated' => $accountCreated,
             'deputyEmail' => $deputyEmail
         ];
+    }
+
+    #[Route('/account/forgotten', name: 'account_forgotten', methods: ['GET', 'POST'])]
+    #[Template('@App/Account/reset.html.twig')]
+    public function requestPasswordAction(Request $request): array
+    {
+        $form = $this->createRenderableForm(ResetRequestType::class, $this->generateUrl('account_forgotten'));
+
+        if ($form->handleRequest($request)) {
+            $email = new Email(strtolower($form->getStringOrThrow('email')));
+            $result = $this->accountService->sendResetRequest(new ResetRequest($email));
+            if ($result instanceof Email) {
+                $this->addFlash('notice', "Send email to {$result->value}.");
+            } else {
+                $this->addFlash('error', $this->translateError($result, 'reset'));
+            }
+            $form = $form->recreate();
+        }
+
+        return ['form' => $form->render()];
+    }
+
+    #[Route('/account/activate/{key}/{token}', name: 'account_activate', methods: ['GET', 'POST'])]
+    #[Template('@App/Account/password.html.twig')]
+    public function activateAction(Request $request, string $key, string $token): array|RedirectResponse
+    {
+        return $this->processPasswordRequest($request, 'account_activate', 'account_request', $key, $token, false);
+    }
+
+    #[Route('/account/reset/{key}/{token}', name: 'account_reset', methods: ['GET', 'POST'])]
+    #[Template('@App/Account/password.html.twig')]
+    public function passwordResetAction(Request $request, string $key, string $token): array|RedirectResponse
+    {
+        return $this->processPasswordRequest($request, 'account_reset', 'account_forgotten', $key, $token, true);
+    }
+
+    private function processPasswordRequest(Request $request, string $actionRoute, string $errorRoute, string $key, string $token, bool $isReset): array|RedirectResponse
+    {
+        if (!$this->validateToken($key, $token)) {
+            return new RedirectResponse($this->generateUrl($errorRoute));
+        }
+
+        $form = $this->createRenderableForm(PasswordRequestType::class, $this->generateUrl($actionRoute, ['key' => $key, 'token' => $token]));
+        if ($form->handleRequest($request)) {
+            $result = $this->accountService->sendPasswordRequest(new PasswordRequest(
+                new Password($form->getStringOrThrow('password')),
+                new Token($token),
+                new ValidationKey($key)
+            ));
+            if ($result instanceof AccountError) {
+                $this->addFlash('error', $this->translateError($result, 'password'));
+                return new RedirectResponse($this->generateUrl($errorRoute));
+            } else {
+                return new RedirectResponse($this->generateUrl('login'));
+            }
+        }
+
+        return ['form' => $form->render(), 'isReset' => $isReset];
+    }
+
+    private function validateToken(string $key, string $token): bool
+    {
+        if (!ValidationKey::isValid($key) || !Token::isValid($token)) {
+            $this->addFlash('error', $this->translateError(AccountError::TokenInvalid, 'password'));
+            return false;
+        }
+        if (new Token($token)->age > MaximumTokenAge::PasswordReset->value) {
+            $this->addFlash('error', $this->translateError(AccountError::TokenExpired, 'password'));
+            return false;
+        }
+
+        return true;
     }
 
     #[Route('/account/accept', name: 'account_accept', methods: ['GET', 'POST'])]
@@ -107,10 +181,19 @@ class AccountController extends AbstractController
                 }
                 return new RedirectResponse($page);
             } else {
-                $this->addFlash('error', $response->value);
+                $this->addFlash('error', $this->translateError($response, 'accept'));
             }
         }
 
         return ['form' => $form->render()];
+    }
+
+    private function translateError(AccountError $result, string $domain): string
+    {
+        return $this->translator->trans(
+            "opg.account.{$domain}.errors.{$result->value}",
+            ['%helplineNumber%' => $this->translator->trans('opg.helplineNumber', [], 'twig-components')],
+            'twig-components'
+        );
     }
 }
