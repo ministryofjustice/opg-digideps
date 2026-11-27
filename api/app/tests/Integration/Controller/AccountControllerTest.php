@@ -57,7 +57,7 @@ class AccountControllerTest extends AbstractTestController
         )]);
         $response = AccountResponse::jsonDeserialize(json_encode($decoded) ?: '');
         $this->assertInstanceOf(AccountError::class, $response);
-        $this->assertSame(AccountError::PasswordSet, $response);
+        $this->assertSame(AccountError::AccountTaken, $response);
     }
 
     public function testRequestAccountTaken(): void
