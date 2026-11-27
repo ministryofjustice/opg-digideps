@@ -2,6 +2,10 @@
 
 This app is the [Complete the deputy report][service] service. It provides an online reporting service that has a publicly available frontend used by deputies to submit their reports, and a VPN restricted admin area for case managers to review submitted reports.
 
+## High-Level Service Architecture
+
+![DigiDeps high-level service architecture](./docs/architecture.svg)
+
 ## Quicker start
 
 If you have `make` and `brew` installed it is suggested that you run the following command;
