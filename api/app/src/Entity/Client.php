@@ -766,7 +766,7 @@ class Client
     #[JMS\VirtualProperty]
     #[JMS\Type("array<array<string, int>>")]
     #[JMS\SerializedName('possible_report_replacements')]
-    #[JMS\Groups(['client'])]
+    #[JMS\Groups(['client-report-replacements'])]
     public function findPossibleReportReplacements(): array
     {
         // get all active reports on active court orders (max 2); keyed by ID because a hybrid

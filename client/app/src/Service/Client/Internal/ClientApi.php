@@ -80,9 +80,12 @@ class ClientApi
         return (is_array($clients) && !empty($clients[0]) && $clients[0] instanceof Client) ? $clients[0] : null;
     }
 
-    public function getWithUsersV2(int $clientId)
+    /**
+     * @param array<string> $jmsGroups
+     */
+    public function getWithUsersV2(int $clientId, array $jmsGroups = [])
     {
-        return $this->restClient->get(sprintf(self::GET_CLIENT_BY_ID_V2, $clientId), Client::class);
+        return $this->restClient->get(sprintf(self::GET_CLIENT_BY_ID_V2, $clientId), Client::class, $jmsGroups);
     }
 
     public function getById(int $clientId)
