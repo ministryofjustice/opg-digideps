@@ -1,0 +1,166 @@
+flowchart LR
+  deputy["Deputy"]
+  caseManager["Case Manager (Via VPN)"]
+
+  frontUrl["Production URL: https://complete-deputy-report.service.gov.uk"]
+  adminUrl["Admin URL: https://admin.complete-deputy-report.service.gov.uk"]
+  dns["Route 53 DNS"]
+
+  subgraph production["DigiDeps Production AWS Account - eu-west-1"]
+    direction LR
+
+    waf["AWS WAF Web ACL"]
+
+    frontAlb["Frontend Application Load Balancer - HTTPS 443"]
+    frontTarget["Frontend Target Group - HTTP 8080"]
+
+    adminAlb["Admin Application Load Balancer - HTTPS 443"]
+    adminTarget["Admin Target Group - HTTP 8080"]
+
+    subgraph ecs["Amazon ECS (Amazon Elastic Container Service)"]
+      direction LR
+
+      subgraph frontService["Deputy Frontend Service"]
+        direction LR
+        frontWeb["NGINX Web Container :8080"]
+        frontApp["PHP Application Container :9000"]
+        frontWeb -->|"FastCGI :9000"| frontApp
+      end
+
+      subgraph adminService["Case Manager Admin Service"]
+        direction LR
+        adminWeb["NGINX Web Container :8080"]
+        adminApp["PHP Application Container :9000"]
+        adminWeb -->|"FastCGI :9000"| adminApp
+      end
+
+      subgraph apiService["Internal API Service"]
+        direction LR
+        apiWeb["NGINX API Container :8080"]
+        apiApp["PHP API Container :9000"]
+        apiWeb -->|"FastCGI :9000"| apiApp
+      end
+
+      scanner["File Scanner"]
+      pdf["HTML-to-PDF Generator"]
+      siriusSync["Sirius Document and Checklist Sync"]
+    end
+
+    aurora[("Aurora PostgreSQL")]
+    redis[("Redis Sessions and Cache")]
+    uploads[("Deputy Report Uploads - S3 Bucket")]
+    accessLogs[("S3 ALB Access Logs")]
+    cloudwatch["CloudWatch Logs"]
+
+    backupSchedule["EventBridge - Daily 01:00 UTC"]
+    backupTask["Cross-Account Backup Task"]
+
+    waf -->|"Filters Requests To"| frontAlb
+    waf -->|"Filters Requests To"| adminAlb
+
+    frontAlb --> frontTarget
+    frontTarget -->|"HTTP :8080"| frontWeb
+
+    adminAlb --> adminTarget
+    adminTarget -->|"HTTP :8080"| adminWeb
+
+    frontApp -->|"Deputy Login Requests, Report Data and Checklist Requests"| apiWeb
+    adminApp <-->|"Report Review and Case Management"| apiWeb
+    siriusSync <-->|"Finds Queued Reports and Checklists"| apiWeb
+
+    frontApp -->|"Scans Uploaded Files"| scanner
+    adminApp -->|"Scans Uploaded Files"| scanner
+
+    frontApp <-->|"Generates and Retrieves Report PDFs"| pdf
+    adminApp <-->|"Generates and Retrieves Report PDFs"| pdf
+
+    frontApp <-->|"Uploads and Retrieves Report Documents"| uploads
+    adminApp -->|"Views Submitted Documents"| uploads
+
+    apiApp <-->|"Deputy Account Lookup and Logins. Stores and Retrieves Deputy, Client, Report, Checklist and Sync Data"| aurora
+    frontApp <-->|"Session Data"| redis
+    adminApp <-->|"Session Data"| redis
+    apiApp <-->|"Session Data and Cache"| redis
+
+    frontWeb -.-> cloudwatch
+    frontApp -.-> cloudwatch
+    adminWeb -.-> cloudwatch
+    adminApp -.-> cloudwatch
+    apiApp -.-> cloudwatch
+    siriusSync -.-> cloudwatch
+    frontAlb -.-> accessLogs
+    adminAlb -.-> accessLogs
+
+    backupSchedule --> backupTask
+    aurora -->|"Snapshot Source"| backupTask
+  end
+
+  subgraph external["External Services"]
+    direction TB
+
+    auth["Amazon Cognito - Entra ID Sign-In"]
+    notify["GOV.UK Notify"]
+
+    subgraph sirius["Sirius"]
+      direction LR
+      integration["Deputy Reporting API Gateway and Lambda"]
+      siriusCase["Sirius Case Management"]
+      siriusBucket[("Sirius Document S3 Bucket")]
+      integration -->|"Creates or Updates Reports and Documents"| siriusCase
+    end
+  end
+
+  subgraph backup["Separate Backup AWS Account"]
+    direction LR
+    backupRole["Cross-Account Backup Role"]
+    snapshots[("Aurora Snapshot Copies")]
+    backupRole --> snapshots
+  end
+
+  deputy -->|"Signs In and Submits Deputy Reports"| frontUrl
+  caseManager -->|"Signs In and Reviews Submitted Reports"| adminUrl
+
+  frontUrl -->|"DNS Lookup"| dns
+  adminUrl -->|"DNS Lookup"| dns
+  dns -->|"Production Traffic"| waf
+
+  adminAlb <-->|"OIDC Sign-In"| auth
+
+  frontApp -->|"Email Notifications"| notify
+  adminApp -->|"Email Notifications"| notify
+  apiApp -->|"Email Notifications"| notify
+
+  siriusSync -->|"Queued Reports, Checklists and Document Details"| integration
+  uploads -->|"Report PDFs and Supporting Documents"| integration
+  siriusBucket -->|"Existing Sirius Documents"| apiApp
+
+  backupTask -->|"Assumes Role"| backupRole
+
+  classDef userStyle fill:#E2E8F0,stroke:#475569,color:#0F172A,stroke-width:2px
+  classDef dnsStyle fill:#F3E8FF,stroke:#9333EA,color:#581C87,stroke-width:2px
+  classDef networkStyle fill:#DBEAFE,stroke:#2563EB,color:#1E3A8A,stroke-width:2px
+  classDef wafStyle fill:#FCE7F3,stroke:#DB2777,color:#831843,stroke-width:2px
+  classDef computeStyle fill:#DCFCE7,stroke:#16A34A,color:#14532D,stroke-width:2px
+  classDef dataStyle fill:#FEF3C7,stroke:#D97706,color:#78350F,stroke-width:2px
+  classDef logsStyle fill:#EDE9FE,stroke:#7C3AED,color:#4C1D95,stroke-width:2px
+  classDef externalStyle fill:#FCE7F3,stroke:#DB2777,color:#831843,stroke-width:2px
+  classDef backupStyle fill:#E0F2FE,stroke:#0284C7,color:#0C4A6E,stroke-width:2px
+
+  class deputy,caseManager userStyle
+  class frontUrl,adminUrl,dns dnsStyle
+  class waf wafStyle
+  class frontAlb,frontTarget,adminAlb,adminTarget networkStyle
+  class frontWeb,frontApp,adminWeb,adminApp,apiWeb,apiApp,scanner,pdf,siriusSync,backupSchedule,backupTask computeStyle
+  class aurora,redis,uploads,accessLogs,snapshots,siriusBucket dataStyle
+  class cloudwatch logsStyle
+  class auth,notify,integration,siriusCase externalStyle
+  class backupRole backupStyle
+
+  style production fill:#F8FAFC,stroke:#64748B,stroke-width:2px
+  style ecs fill:#F0FDF4,stroke:#86EFAC,stroke-width:2px
+  style frontService fill:#F0FDF4,stroke:#86EFAC,stroke-width:2px
+  style adminService fill:#F0FDF4,stroke:#86EFAC,stroke-width:2px
+  style apiService fill:#F0FDF4,stroke:#86EFAC,stroke-width:2px
+  style external fill:#FFF1F2,stroke:#FDA4AF,stroke-width:2px
+  style sirius fill:#FDF2F8,stroke:#F9A8D4,stroke-width:2px
+  style backup fill:#F0F9FF,stroke:#7DD3FC,stroke-width:2px
