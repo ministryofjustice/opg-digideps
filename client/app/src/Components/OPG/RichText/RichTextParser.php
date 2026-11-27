@@ -154,7 +154,10 @@ final readonly class RichTextParser
         $matches = [];
         foreach (preg_split('~(\[[^]]*]\([^)]+\))~', $line, flags: PREG_SPLIT_DELIM_CAPTURE) ?: [] as $part) {
             $parts[] = match (preg_match('~\[([^]]*)]\(([^)]+)\)~', $part, $matches, flags: PREG_UNMATCHED_AS_NULL)) {
-                1 => $this->handleLink($matches[1] ?? '', $matches[2] ?? ''),
+                1 => $this->handleLink(
+                    $this->handleText($matches[1] ?? ''),
+                    $this->handleText($matches[2] ?? '')
+                ),
                 default => $this->handleText($part)
             };
         }
