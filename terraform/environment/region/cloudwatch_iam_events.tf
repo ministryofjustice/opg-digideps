@@ -37,14 +37,14 @@ locals {
   ]
   combined_events_task_role_list = tolist(concat(local.events_task_role_list, local.events_task_dr_role_list))
 
-  events_dr_task_list = var.account.db.dr_backup ? [module.disaster_recovery_backup[0].task_definition_arn] : []
+  events_dr_task_list = var.account.db.dr_backup ? ["${module.disaster_recovery_backup[0].task_definition_arn_without_revision}:*"] : []
   events_task_list = [
-    aws_ecs_task_definition.check_csv_uploaded.arn,
-    aws_ecs_task_definition.api.arn,
-    aws_ecs_task_definition.api_high_memory.arn,
-    module.analyse.task_definition_arn,
-    module.performance_data.task_definition_arn,
-    module.sleep_mode.task_definition_arn
+    "${aws_ecs_task_definition.check_csv_uploaded.arn_without_revision}:*",
+    "${aws_ecs_task_definition.api.arn_without_revision}:*",
+    "${aws_ecs_task_definition.api_high_memory.arn_without_revision}:*",
+    "${module.analyse.task_definition_arn_without_revision}:*",
+    "${module.performance_data.task_definition_arn_without_revision}:*",
+    "${module.sleep_mode.task_definition_arn_without_revision}:*"
   ]
   combined_events_task_list = tolist(concat(local.events_task_list, local.events_dr_task_list))
 }
