@@ -23,7 +23,7 @@ class ReportRestoreType extends AbstractFormType
             ->setInfo(self::CANCEL_URL, 'URL the cancel link alongside the submit button points to');
     }
 
-    protected function defineInputs(callable $t, array $options): array
+    protected function defineInputs(callable $t, ValidatingArray $options): array
     {
         return [
             new HiddenInput(self::RESTORE_FROM_REPORT_ID),
@@ -32,7 +32,7 @@ class ReportRestoreType extends AbstractFormType
                 'submit',
                 $t('confirm.label'),
                 $t('cancel.label'),
-                new ValidatingArray($options)->getStringOrThrow(self::CANCEL_URL)
+                $options->getStringOrThrow(self::CANCEL_URL)
             ),
         ];
     }

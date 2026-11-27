@@ -27,10 +27,9 @@ abstract class AbstractFormType extends AbstractType
 
     /**
      * @param callable(?string, array<string, string>=): string $t
-     * @param array<string, mixed> $options the form's resolved options, including any defined in configureOptions()
      * @return array<AbstractInput>
      */
-    abstract protected function defineInputs(callable $t, array $options): array;
+    abstract protected function defineInputs(callable $t, ValidatingArray $options): array;
 
     /**
      * Inputs can depend on the options of the form being built, so are not cached on the (shared) form type.
@@ -43,7 +42,7 @@ abstract class AbstractFormType extends AbstractType
         if (empty($this->inputs)) {
             $inputs = $this->defineInputs(
                 fn (?string $key, array $parameters = []) => $key === null ? '' : $this->translator->trans("{$this->translationPrefix}.{$key}", $parameters, $this->translationDomain),
-                $options
+                new ValidatingArray($options)
             );
             $namedInputs = [];
             foreach ($inputs as $input) {
